@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project name="blueseer" default="main" basedir=".">
+    <!-- Sets variables which can later be used. -->
+    <!-- The value of a property is accessed via ${} -->
+    <property name="src.dir" location="../src" />
+    <property name="build.dir" location="../build" />
+    <property name="dist.dir" location="../dist" />
+    <property name="test.dir" location="../scripts/test" />
+    <property name="lib.dir" location="../mylib" />
+    <property name="classpath.property" 
+	    value="dist/" />
+
+    <path id="build.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Deletes the existing build, docs and dist directory-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${dist.dir}" />
+    </target>
+
+    <!-- Creates the  build, docs and dist directory-->
+    <target name="makedir">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${dist.dir}" />
+	 <copy todir="${dist.dir}">
+         <fileset dir="${lib.dir}"/>
+         </copy>
+    </target>
+
+    <!-- Compiles the java code (including the usage of library for JUnit -->
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false">
+        </javac>
+1
+    </target>
+
+
+    <!--Creates the deployable jar file  -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
+		<fileset dir="${src.dir}" includes="images/**/*.png"/>
+		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
+            <manifest>
+                <attribute name="Main-Class" value="bsmf" />
+            </manifest>
+        </jar>
+	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}"/>
+    </target>
+
+<target name="run">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+	    <fileset dir="../mylib" includes="*.jar"/>
+    </path>
+    <echo message="${runtime.path}"/>
+    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="test">
+        </java>
+</target>
+
+
+    <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+
+</project>

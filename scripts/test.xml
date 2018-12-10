@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project name="blueseer" default="main" basedir=".">
+    <!-- Sets variables which can later be used. -->
+    <!-- The value of a property is accessed via ${} -->
+    <property name="src.dir" location="../src" />
+    <property name="build.dir" location="../build" />
+    <property name="dist.dir" location="../dist" />
+    <property name="distlib.dir" location="../dist/lib" />
+    <property name="lib.dir" location="../mylib" />
+    <property name="docs.dir" location="../javadoc" />
+    <property name="manifest.file" value="${jar.dir}/MANIFEST.MF"/>
+    <property name="classpath.property" value="dist/" />
+
+    <path id="build.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Deletes the existing build, docs and dist directory-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${docs.dir}" />
+        <delete dir="${dist.dir}" />
+    </target>
+
+    <!-- Creates the  build, docs and dist directory-->
+    <target name="makedir">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${docs.dir}" />
+        <mkdir dir="${dist.dir}" />
+	<mkdir dir="${dist.dir}/lib" />
+	<copy todir="${distlib.dir}">
+		<fileset dir="${lib.dir}"/>
+	   <!-- <globmapper from="*" to="*.bak"/> -->
+         </copy>
+    </target>
+
+    <!-- Compiles the java code (including the usage of library for JUnit -->
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath">
+        </javac>
+
+    </target>
+
+    <!-- Creates Javadoc -->
+    <target name="docs" depends="compile">
+        <javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+            <!-- Define which files / directory should get included, we include all -->
+             <fileset dir="${src.dir}">
+                <include name="**" />
+             </fileset>
+        </javadoc>
+    </target>
+
+    <!--Creates the deployable jar file  -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="bsmf.MainFrame" />
+            </manifest>
+	    <fileset dir="${src.dir}">
+		    <include name="images/**/*.png"/>
+	    </fileset>
+	<zipgroupfileset dir="${distlib.dir}" includes="**/*.jar"/>
+        </jar>
+    </target>
+
+<target name="run">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+	    <fileset dir="." includes="*.jar"/>
+	    <fileset dir="../dist/lib" includes="*.jar"/>
+    </path>
+    <echo message = "Ant classpath directory: ${classpath.property}/"/>
+        <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path">
+        </java>
+</target>
+
+
+    <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+
+</project>

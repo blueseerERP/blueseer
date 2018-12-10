@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/vaughnte/avm/codedir/java/blueseer/jasper/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select ap_site, ap_curr, apd_vend, apd_ref, apd_voamt, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms, vd_addr, vd_name, vd_line1, vd_city || " " || vd_state || " " || vd_zip as 'vd_citystatezip' from apd_mstr 
+inner join vd_mstr on vd_addr = apd_vend
+inner join ap_mstr on ap_nbr = apd_nbr
+where apd_batch = $P{myid}
+order by apd_vend;]]>
+	</queryString>
+	<field name="ap_site" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ap_curr" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="apd_vend" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="apd_ref" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="apd_voamt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_ap_acct" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_ap_cc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_bank" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_terms" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_addr" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_line1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vd_citystatezip" class="java.lang.Integer"/>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{apd_voamt}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="4" splitType="Stretch">
+			<staticText>
+				<reportElement x="367" y="-36" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Check Generic]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="86" splitType="Stretch">
+			<textField>
+				<reportElement x="29" y="29" width="121" height="19" uuid="a6adeeef-769f-4fc9-80e3-a61e58c31921"/>
+				<textFieldExpression><![CDATA[$F{vd_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="9" width="121" height="19" uuid="a3899a5b-3288-4594-979c-39242c078717"/>
+				<textFieldExpression><![CDATA[$F{vd_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="50" width="136" height="17" uuid="8ad439c4-5ea0-4484-bd4d-58d571a70ec2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vd_citystatezip}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operation]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<staticText>
+				<reportElement x="109" y="0" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<textFieldExpression><![CDATA[$F{apd_ref}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="0" width="110" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{apd_voamt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

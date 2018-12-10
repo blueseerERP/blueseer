@@ -1,0 +1,26 @@
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "clock_code" (
+  "clc_code" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
+  "clc_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "clc_payable" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "clc_syscode" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO "clock_code" VALUES ('00','Successfull clockin & clockout',1,1);
+INSERT INTO "clock_code" VALUES ('01','Clockin and No Clockout',0,1);
+INSERT INTO "clock_code" VALUES ('66','Exception - Pending Review',0,1);
+INSERT INTO "clock_code" VALUES ('14','Tardy',0,1);
+INSERT INTO "clock_code" VALUES ('20','Medical Leave',0,0);
+INSERT INTO "clock_code" VALUES ('21','Other - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('24','Holiday - Paid',1,0);
+INSERT INTO "clock_code" VALUES ('02','Bereavement - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('04','Jury Duty',1,0);
+INSERT INTO "clock_code" VALUES ('06','Vacation - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('07','Lack of Work - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('25','FMLA - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('27','Disciplinary Layoff - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('96','Termination',0,0);
+INSERT INTO "clock_code" VALUES ('23','Holiday - Unpaid',0,0);
+INSERT INTO "clock_code" VALUES ('16','Alternate Schedule',0,1);
+INSERT INTO "clock_code" VALUES ('13','Early',0,1);

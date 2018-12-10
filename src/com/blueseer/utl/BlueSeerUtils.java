@@ -1,0 +1,254 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.blueseer.utl;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+/**
+ *
+ * @author vaughnte
+ */
+public class BlueSeerUtils {
+    
+    public static DateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
+    public static String convertDateFormat(String format, String indate) {
+       String mydate = "";
+        if (format.equals("yyyyMMdd") && indate.length() == 8) {
+           mydate = indate.substring(0,4) + "-" + indate.substring(4,6) + "-" + indate.substring(6);
+        }
+        if (format.equals("yyMMdd") && indate.length() == 6 ) {
+           mydate = "20" + indate.substring(0,2) + "-" + indate.substring(2,4) + "-" + indate.substring(4);
+        }
+        if (format.equals("yyyy-MM-dd hh:mm:ss") && indate.length() == 19) {
+           mydate = indate.substring(0,10);
+        }
+       return mydate;
+    }
+    
+    public static boolean isSet(ArrayList list, Integer index) {
+     return index != null && index >=0 && index < list.size() && list.get(index) != null;
+     }
+    
+    public static boolean isSet(String[] list, Integer index) {
+     return index != null && index >=0 && index < list.length && list[index] != null;
+     }
+     
+    public static boolean ConvertStringToBool(String i) {
+        boolean b;
+        if (i != null && i.equals("1") ) {
+            b = true;
+        } else {
+            b = false;
+        }
+        return b;
+    }
+     
+    public static String ConvertIntToYesNo(int i) {
+        String s;
+        if (i == 1) {
+            s = "YES";
+        } else {
+            s = "NO";
+        }
+        return s;
+    }
+      
+    public static int boolToInt(boolean b) {
+        return b ? 1 : 0;
+    }
+
+    public static String xNull(String mystring) {
+       String returnstring = "";
+       returnstring = (mystring == null) ? "" : mystring;
+       return returnstring;
+   }
+      
+    public static String convertToX(boolean i) {
+        String mystring = null;
+        if (i) {
+            mystring = "X";
+        } else {
+            mystring = "";
+        }
+        return mystring;
+
+    }
+
+    public static boolean isParsableToInt(String i) {
+        try {
+            Integer.parseInt(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+    
+    public static boolean isParsableToDouble(String i) {
+        try {
+            Double.parseDouble(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+    
+    public static String setDateFormat(Date date) {
+       String mydate = "";
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+       return mydate = sdf.format(date);
+    }
+            
+    public static boolean isValidDateStr(String date) {
+    try {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      sdf.setLenient(false);
+      sdf.parse(date);
+    }
+    catch (ParseException e) {
+      return false;
+    }
+    catch (IllegalArgumentException e) {
+      return false;
+    }
+    return true;
+  }
+    
+    public static boolean isMoneyFormat(String value) {
+     boolean myreturn = false;
+     int i = value.lastIndexOf('.');
+     if(i != -1 && value.substring(i + 1).length() == 2)
+         myreturn = true;
+     return myreturn;
+  }
+    
+    public class LineWrapCellRenderer extends JTextArea implements TableCellRenderer {
+        int rowHeight = 0;  // current max row height for this scan
+        @Override
+        public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column)
+        {
+            setText((String) value);
+            setWrapStyleWord(true);
+            setLineWrap(true);
+          //  setBackground(Color.YELLOW);
+
+          // current table column width in pixels
+        int colWidth = table.getColumnModel().getColumn(column).getWidth();
+
+        // set the text area width (height doesn't matter here)
+        setSize(new Dimension(colWidth, 1)); 
+
+        // get the text area preferred height and add the row margin
+        int height = getPreferredSize().height + table.getRowMargin();
+
+            // ensure the row height fits the cell with most lines
+            if (column == 0 || height > rowHeight) {
+                table.setRowHeight(row, height);
+                rowHeight = height;
+            }
+           return this;
+            }
+
+}
+    
+    public static class FormatRenderer extends DefaultTableCellRenderer
+{
+	private Format formatter;
+
+	/*
+	 *   Use the specified formatter to format the Object
+	 */
+	public FormatRenderer(Format formatter)
+	{
+		this.formatter = formatter;
+	}
+
+	public void setValue(Object value)
+	{
+		//  Format the Object before setting its value in the renderer
+
+		try
+		{
+			if (value != null)
+				value = formatter.format(value);
+		}
+		catch(IllegalArgumentException e) {}
+
+		super.setValue(value);
+	}
+
+	/*
+	 *  Use the default date/time formatter for the default locale
+	 */
+	
+}
+  
+    public static class NumberRenderer extends FormatRenderer
+{
+	/*
+	 *  Use the specified number formatter and right align the text
+	 */
+	public NumberRenderer(NumberFormat formatter)
+	{
+                
+		super(formatter);
+                formatter.setMinimumFractionDigits(2);
+                formatter.setMaximumFractionDigits(2);
+		setHorizontalAlignment( SwingConstants.RIGHT );
+                
+	}
+
+        
+        public static NumberRenderer getNumberRenderer()
+	{
+		return new NumberRenderer( NumberFormat.getNumberInstance() );
+	}
+	/*
+	 *  Use the default currency formatter for the default locale
+	 */
+	public static NumberRenderer getCurrencyRenderer()
+	{
+		return new NumberRenderer( NumberFormat.getCurrencyInstance() );
+               
+	}
+
+	/*
+	 *  Use the default integer formatter for the default locale
+	 */
+	public static NumberRenderer getIntegerRenderer()
+	{
+		return new NumberRenderer( NumberFormat.getIntegerInstance() );
+	}
+
+	/*
+	 *  Use the default percent formatter for the default locale
+	 */
+	public static NumberRenderer getPercentRenderer()
+	{
+		return new NumberRenderer( NumberFormat.getPercentInstance() );
+	}
+}
+  
+     
+    
+}

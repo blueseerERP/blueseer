@@ -1,0 +1,51 @@
+-- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (i686)
+--
+-- Host: localhost    Database: vmpdb
+-- ------------------------------------------------------
+-- Server version	5.5.47-0+deb8u1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `panel_mstr`
+--
+
+DROP TABLE IF EXISTS `panel_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `panel_mstr` (
+  `panel_id` varchar(50) NOT NULL DEFAULT '',
+  `panel_desc` varchar(100) NOT NULL DEFAULT '',
+  `panel_core` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `panel_mstr`
+--
+
+LOCK TABLES `panel_mstr` WRITE;
+/*!40000 ALTER TABLE `panel_mstr` DISABLE KEYS */;
+INSERT INTO `panel_mstr` VALUES ('ARAging','',1),('GLAcctBalYTD','',1),('ReportPanel','',1),('BackFlushMaintPanel','',1),('BackGroundPanel','',1),('ReqChartView','',1),('ClockDetailRptPanel','',1),('CustPriceMstr','',1),('CustXrefMaintPanel','',1),('OVDevBrowse','',1),('OVDevPanel','',1),('EmployeeMaster','',1),('GLAcctBalRpt1','',1),('GLAcctBalRpt2','',1),('GLAcctBalRpt3','',1),('GLCalMaint','',1),('GLTranMaint','',1),('GenCodeMaintPanel','',1),('ItemLevelMaint','',1),('ItemMastSearch','',1),('LedgerBalanceExport','',1),('ARMaintPanel','',1),('AboutPanel','',1),('LedgerAcctMstrPanel','',1),('BOMMaintPanel','',1),('BOMTree','',1),('CarrierMaintPanel','',1),('CostRollUpPanel','',1),('CustMaintPanel','',1),('CustXrefRpt1','',1),('DefaultMstrPanel','',1),('DeptMaintPanel','',1),('EDILoadPanel','',1),('EDILogBrowse','',1),('EDITPBrowse','',1),('EDITPMaintPanel','',1),('FileOrderLoadPanel','',1),('FreightMaintPanel','',1),('InventoryMiscPanel','',1),('ItemMastMaintPanel','',1),('ItemMastRoutingRpt1','',1),('LocationMaintPanel','',1),('WareHouseMaint','',1),('UOMMaint','',1),('OrderControl','',1),('OrderSource','',1),('OrderSourceBrowse','',1),('DOMaint','',1),('DOBrowse','',1),('FOMaint','',1),('FOBrowse','',1),('FTPMaint','',1),('CurrencyMaint','',1),('ExchangeMaint','',1),('LocationTransferPanel','',1),('MRPBrowse1','',1),('OrderReport1','',1),('OrderMaintPanel','',1),('PaymentMaintPanel','',1),('ProdCodeMaintPanel','',1),('ProdSchedPanel','',1),('ProjectMstrPanel','',1),('QPRMaintPanel','',1),('ReqMaintPanel','',1),('ReworkReportPanel','',1),('RoutingMaintPanel','',1),('OrderReportSched','',1),('ScrapMaintPanel','',1),('ScrapReportPanel','',1),('ScrapChartView','',1),('ShipConfirmPanel','',1),('ShipMaintPanel','',1),('ShipMaintAdvancePanel','',1),('SiteMstrPanel','',1),('TermsMaintPanel','',1),('test','',1),('TrainingReport1','',1),('UserMaintPanel','',1),('VendMaintPanel','',1),('WorkCenterMaintPanel','',1),('POMaintPanel','',1),('RecvMaintPanel','',1),('ClockUpdatePanel','',1),('ClockPanel','',1),('TrainingMaster','',1),('UserPermsMaint','',1),('VendXrefMaintPanel','',1),('VendXrefRpt1','',1),('VouchMaintPanel','',1),('WhereUsedUtility','',1),('ReworkMaintPanel','',1),('PanelMaintPanel','',1),('MenuMaintPanel','',1),('ARPaymentMaint','Panel for AR Payment',1),('BankMaintPanel','bank maint panel',1),('ShipperBrowsePanel','shipper and invoice browse panel',1),('LabelAddrPanel','',1),('CustPriceRpt1','cust price report panel 1',1),('PostGLPanel','Panel for posting GL',1),('LabelPartPanel','LabelPartPanel',1),('PlanMiscMaint','',1),('LabelBrowsePanel','',1),('ForecastMaintPanel','',1),('ForecastBrowsePanel','',1),('PrinterMaintPanel','',1),('LabelContPanel','',1),('JobPostScan','',1),('TransBrowsePanel','',1),('CustEDIMaint','',1),('ChartViewPanel','',1),('EDIControlPanel','',1),('ARAgingView','',1),('APAgingView','',1),('VoucherBrowse','',1),('Browse','',1),('GLControlPanel','',1),('ARMemoMaint','',1),('OrderReport2','',1),('EDITPDocMaintPanel','',1),('FcstToPlanPanel','',1),('ProdEntryByPlanPanel','',1),('LabelMstrPanel','',1),('ARTranRpt1','',1),('GLTranRpt1','',1),('IncomeStatementRpt1','',1),('GLIncStmtDef','',1),('IncomeStatementRptYear','',1),('ProdSchedRpt1','',1),('ShiftMaintenance','',1),('ClockAutoMaint','',1),('ClockCodeMaint','',1),('ClockApprovalMaint','',1),('ClockChartView','',1),('OEEEntry','',1),('DemdToPlanPanel','',1),('ProdRptDetPanel','',1),('KanbanMinToPlanPanel','',1),('ProdChartView','',1),('OrderChartView','',1),('ShipperDetBrowsePanel','',1),('VendMstrBrowse','',1),('ShipChartView','',1),('ShipUnConfirmPanel','',1),('ClockControl','',1),('ShipperControl','',1),('ARControl','',1),('APControl','',1),('SystemControl','',1),('POBrowse','',1),('RecvBrowse','',1),('RecvByPOBrowse','',1),('VendPriceMstr','',1),('VendPriceRpt1','',1),('ProdEntryMaint','',1),('SalesChartView','',1),('ExpenseMaint','',1),('CashTran','',1),('SampleMaint','',0),('SampleBrowse','',0),('SampleChartView','',0),('MenuTreeMaint','',1),('POSMaint','',1),('POSControlMaint','',1),('POSBrowse','',1),('ReqControl','',1),('ECNMaint','',1),('ECNBrowse','',1),('TaskMaint','',1),('TaskBrowse','',1),('InventoryCtrl','',1),('MassLoad','',1),('TaxMaint','',1),('TaxBrowse','',1);
+/*!40000 ALTER TABLE `panel_mstr` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-04-23 12:14:47

@@ -1,0 +1,2455 @@
+-- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (i686)
+--
+-- Host: localhost    Database: vmpdb
+-- ------------------------------------------------------
+-- Server version	5.5.47-0+deb8u1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `ac_mstr`
+--
+
+DROP TABLE IF EXISTS `ac_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ac_mstr` (
+  `ac_id` varchar(10) NOT NULL DEFAULT '',
+  `ac_desc` varchar(50) DEFAULT NULL,
+  `ac_type` varchar(1) DEFAULT NULL,
+  `ac_cur` varchar(10) DEFAULT NULL,
+  KEY `ac_id` (`ac_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `acb_mstr`
+--
+
+DROP TABLE IF EXISTS `acb_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `acb_mstr` (
+  `acb_acct` varchar(10) NOT NULL DEFAULT '',
+  `acb_cc` varchar(4) NOT NULL DEFAULT '',
+  `acb_per` int(2) NOT NULL DEFAULT '0',
+  `acb_year` int(4) NOT NULL DEFAULT '0',
+  `acb_amt` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `acb_site` varchar(10) NOT NULL DEFAULT '',
+  KEY `acb_acct` (`acb_acct`),
+  KEY `acb_year` (`acb_year`),
+  KEY `acb_per` (`acb_per`),
+  KEY `acb_cc` (`acb_cc`),
+  KEY `acb_site` (`acb_site`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ap_ctrl`
+--
+
+DROP TABLE IF EXISTS `ap_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ap_ctrl` (
+  `apc_bank` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ap_mstr`
+--
+
+DROP TABLE IF EXISTS `ap_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ap_mstr` (
+  `ap_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ap_vend` varchar(10) DEFAULT NULL,
+  `ap_nbr` varchar(30) DEFAULT NULL,
+  `ap_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `ap_effdate` date DEFAULT NULL,
+  `ap_entdate` date DEFAULT NULL,
+  `ap_duedate` date DEFAULT NULL,
+  `ap_type` varchar(1) DEFAULT NULL,
+  `ap_rmks` varchar(50) DEFAULT NULL,
+  `ap_ref` varchar(30) DEFAULT NULL,
+  `ap_terms` varchar(30) DEFAULT NULL,
+  `ap_acct` varchar(8) DEFAULT NULL,
+  `ap_cc` varchar(4) DEFAULT NULL,
+  `ap_applied` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `ap_status` varchar(1) DEFAULT '',
+  `ap_bank` varchar(10) DEFAULT NULL,
+  `ap_check` varchar(30) DEFAULT '',
+  `ap_batch` int(11) DEFAULT NULL,
+  `ap_site` varchar(10) DEFAULT '',
+  PRIMARY KEY (`ap_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `apd_mstr`
+--
+
+DROP TABLE IF EXISTS `apd_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `apd_mstr` (
+  `apd_batch` int(11) DEFAULT NULL,
+  `apd_vend` varchar(10) DEFAULT '',
+  `apd_nbr` varchar(30) DEFAULT '',
+  `apd_ref` varchar(30) DEFAULT '',
+  `apd_check` varchar(30) DEFAULT '',
+  `apd_voamt` decimal(8,2) DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ar_ctrl`
+--
+
+DROP TABLE IF EXISTS `ar_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ar_ctrl` (
+  `arc_bank` varchar(10) NOT NULL DEFAULT '',
+  `arc_default_acct` varchar(10) NOT NULL DEFAULT '',
+  `arc_default_cc` varchar(10) NOT NULL DEFAULT '',
+  `arc_sales_acct` varchar(10) NOT NULL DEFAULT '',
+  `arc_sales_cc` varchar(4) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ar_mstr`
+--
+
+DROP TABLE IF EXISTS `ar_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ar_mstr` (
+  `ar_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ar_cust` varchar(10) NOT NULL DEFAULT '',
+  `ar_nbr` varchar(30) NOT NULL DEFAULT '',
+  `ar_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `ar_applied` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `ar_effdate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_type` varchar(1) NOT NULL DEFAULT '',
+  `ar_rmks` varchar(50) NOT NULL DEFAULT '',
+  `ar_ref` varchar(30) NOT NULL DEFAULT '',
+  `ar_acct` varchar(8) NOT NULL DEFAULT '',
+  `ar_status` varchar(1) NOT NULL DEFAULT '',
+  `ar_terms` varchar(30) NOT NULL DEFAULT '',
+  `ar_entdate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_duedate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_cc` varchar(4) NOT NULL DEFAULT '',
+  `ar_open_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `ar_invdate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_paiddate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_discdate` date NOT NULL DEFAULT '0000-00-00',
+  `ar_site` varchar(10) NOT NULL DEFAULT '',
+  `ar_bank` varchar(2) NOT NULL DEFAULT '',
+  `ar_reverse` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ar_id`),
+  KEY `custnbrdate` (`ar_cust`,`ar_nbr`,`ar_duedate`)
+) ENGINE=InnoDB AUTO_INCREMENT=205070 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ard_mstr`
+--
+
+DROP TABLE IF EXISTS `ard_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ard_mstr` (
+  `ard_id` int(11) NOT NULL DEFAULT '0',
+  `ard_cust` varchar(10) NOT NULL DEFAULT '',
+  `ard_ref` varchar(30) NOT NULL DEFAULT '',
+  `ard_line` int(8) NOT NULL DEFAULT '0',
+  `ard_date` date NOT NULL DEFAULT '0000-00-00',
+  `ard_amt` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `ard_acct` varchar(10) NOT NULL DEFAULT '0',
+  `ard_cc` varchar(4) NOT NULL DEFAULT '0',
+  KEY `ard_id` (`ard_id`),
+  KEY `ard_ref` (`ard_ref`),
+  KEY `ard_cust` (`ard_cust`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `bk_mstr`
+--
+
+DROP TABLE IF EXISTS `bk_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bk_mstr` (
+  `bk_id` varchar(30) NOT NULL DEFAULT '',
+  `bk_desc` varchar(50) NOT NULL DEFAULT '',
+  `bk_acct` varchar(10) DEFAULT '',
+  `bk_cur` varchar(10) DEFAULT '',
+  `bk_active` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`bk_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `call_mstr`
+--
+
+DROP TABLE IF EXISTS `call_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `call_mstr` (
+  `call_id` varchar(18) NOT NULL,
+  `call_desc` varchar(500) DEFAULT NULL,
+  `call_outlet` varchar(50) DEFAULT NULL,
+  `call_custtype` varchar(30) DEFAULT NULL,
+  `call_similar` varchar(18) DEFAULT NULL,
+  `call_mfg` varchar(50) DEFAULT NULL,
+  `call_category` varchar(50) DEFAULT NULL,
+  `call_app` varchar(50) DEFAULT NULL,
+  `call_app_mfg` varchar(50) DEFAULT NULL,
+  `call_date` date DEFAULT NULL,
+  `call_time` varchar(6) DEFAULT NULL,
+  `call_name` varchar(50) DEFAULT NULL,
+  `call_phone` varchar(15) DEFAULT NULL,
+  `call_type` varchar(30) DEFAULT NULL,
+  `call_custpart` varchar(30) DEFAULT NULL,
+  `call_intpart` varchar(30) DEFAULT NULL,
+  `call_misc1` varchar(30) DEFAULT NULL,
+  `call_extlen` varchar(30) DEFAULT NULL,
+  `call_comlen` varchar(30) DEFAULT NULL,
+  `call_force` varchar(30) DEFAULT NULL,
+  `call_stroke` varchar(30) DEFAULT NULL,
+  `call_conn` varchar(50) DEFAULT NULL,
+  `call_shconn` varchar(50) DEFAULT NULL,
+  `call_calltype` varchar(20) DEFAULT NULL,
+  `call_userid` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`call_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `car_mstr`
+--
+
+DROP TABLE IF EXISTS `car_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `car_mstr` (
+  `car_code` varchar(30) NOT NULL DEFAULT '',
+  `car_desc` varchar(50) DEFAULT NULL,
+  `car_scac` varchar(10) DEFAULT NULL,
+  `car_phone` varchar(15) DEFAULT NULL,
+  `car_email` varchar(100) DEFAULT NULL,
+  `car_contact` varchar(50) DEFAULT NULL,
+  `car_acct` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`car_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `clock_code`
+--
+
+DROP TABLE IF EXISTS `clock_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clock_code` (
+  `clc_code` varchar(2) NOT NULL DEFAULT '',
+  `clc_desc` varchar(100) NOT NULL DEFAULT '',
+  `clc_payable` tinyint(1) NOT NULL DEFAULT '0',
+  `clc_syscode` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `clock_ctrl`
+--
+
+DROP TABLE IF EXISTS `clock_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clock_ctrl` (
+  `clctrl_scan` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cm_mstr`
+--
+
+DROP TABLE IF EXISTS `cm_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cm_mstr` (
+  `cm_code` varchar(10) NOT NULL DEFAULT '',
+  `cm_name` varchar(30) DEFAULT '',
+  `cm_line1` varchar(30) DEFAULT '',
+  `cm_line2` varchar(30) DEFAULT '',
+  `cm_line3` varchar(30) DEFAULT '',
+  `cm_city` varchar(30) DEFAULT '',
+  `cm_state` varchar(2) DEFAULT '',
+  `cm_zip` varchar(10) DEFAULT '',
+  `cm_country` varchar(50) DEFAULT '',
+  `cm_dateadd` date DEFAULT '0000-00-00',
+  `cm_datemod` date DEFAULT '0000-00-00',
+  `cm_usermod` varchar(10) DEFAULT '',
+  `cm_group` varchar(50) DEFAULT '',
+  `cm_market` varchar(50) DEFAULT '',
+  `cm_creditlimit` int(8) DEFAULT '0',
+  `cm_onhold` tinyint(1) DEFAULT '0',
+  `cm_carrier` varchar(50) DEFAULT '',
+  `cm_terms` varchar(30) DEFAULT '',
+  `cm_freight_type` varchar(30) DEFAULT '',
+  `cm_price_code` varchar(10) DEFAULT '',
+  `cm_disc_code` varchar(10) DEFAULT '',
+  `cm_tax_code` varchar(10) DEFAULT '',
+  `cm_salesperson` varchar(50) DEFAULT '',
+  `cm_ar_acct` varchar(10) DEFAULT '',
+  `cm_ar_cc` varchar(4) DEFAULT '',
+  `cm_remarks` varchar(500) DEFAULT '',
+  `cm_misc1` varchar(100) DEFAULT '',
+  `cm_bank` varchar(10) NOT NULL DEFAULT '',
+  `cm_logo` varchar(100) NOT NULL DEFAULT '',
+  `cm_ps_jasper` varchar(100) NOT NULL DEFAULT '',
+  `cm_iv_jasper` varchar(100) NOT NULL DEFAULT '',
+  `cm_label` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`cm_code`),
+  KEY `cm_code` (`cm_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Customer Master Table';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmc_det`
+--
+
+DROP TABLE IF EXISTS `cmc_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmc_det` (
+  `cmc_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cmc_code` varchar(10) DEFAULT NULL,
+  `cmc_type` varchar(20) DEFAULT NULL,
+  `cmc_name` varchar(50) DEFAULT NULL,
+  `cmc_phone` varchar(15) DEFAULT NULL,
+  `cmc_fax` varchar(15) DEFAULT NULL,
+  `cmc_email` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmedi_mstr`
+--
+
+DROP TABLE IF EXISTS `cmedi_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmedi_mstr` (
+  `cme_code` varchar(10) NOT NULL DEFAULT '',
+  `cme_doc` varchar(30) NOT NULL DEFAULT '',
+  `cme_isa` varchar(30) NOT NULL DEFAULT '',
+  `cme_isaqual` varchar(2) NOT NULL DEFAULT '',
+  `cme_gs` varchar(30) NOT NULL DEFAULT '',
+  `cme_map` varchar(30) NOT NULL DEFAULT '',
+  `cme_eledelim` int(11) NOT NULL DEFAULT '0',
+  `cme_segdelim` int(11) NOT NULL DEFAULT '0',
+  `cme_subdelim` int(11) NOT NULL DEFAULT '0',
+  `cme_fileprefix` varchar(30) NOT NULL DEFAULT '',
+  `cme_filesuffix` varchar(30) NOT NULL DEFAULT '',
+  `cme_filepath` varchar(100) NOT NULL DEFAULT '',
+  `cme_version` varchar(100) NOT NULL DEFAULT '',
+  `cme_ov_isa` varchar(30) NOT NULL DEFAULT '',
+  `cme_ov_gs` varchar(30) NOT NULL DEFAULT '',
+  `cme_ov_isaqual` varchar(2) NOT NULL DEFAULT '',
+  `cme_supplier_code` varchar(30) NOT NULL DEFAULT '',
+  `cme_dir` tinyint(1) NOT NULL DEFAULT '0',
+  UNIQUE KEY `myindex` (`cme_code`,`cme_doc`,`cme_dir`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cms_det`
+--
+
+DROP TABLE IF EXISTS `cms_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cms_det` (
+  `cms_code` varchar(10) NOT NULL DEFAULT '',
+  `cms_shipto` varchar(10) NOT NULL DEFAULT '',
+  `cms_name` varchar(50) DEFAULT '',
+  `cms_line1` varchar(50) DEFAULT '',
+  `cms_line2` varchar(50) DEFAULT '',
+  `cms_line3` varchar(50) DEFAULT '',
+  `cms_city` varchar(50) DEFAULT '',
+  `cms_state` varchar(2) DEFAULT '',
+  `cms_zip` varchar(10) DEFAULT '',
+  `cms_country` varchar(50) DEFAULT '',
+  `cms_plantcode` varchar(30) NOT NULL DEFAULT '',
+  KEY `cmscode` (`cms_code`),
+  KEY `cms_shipto` (`cms_shipto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `code_mstr`
+--
+
+DROP TABLE IF EXISTS `code_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `code_mstr` (
+  `code_code` varchar(30) NOT NULL DEFAULT '',
+  `code_key` varchar(30) NOT NULL DEFAULT '',
+  `code_value` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `counter`
+--
+
+DROP TABLE IF EXISTS `counter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `counter` (
+  `counter_name` varchar(30) NOT NULL,
+  `counter_id` int(8) DEFAULT NULL,
+  PRIMARY KEY (`counter_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cpr_mstr`
+--
+
+DROP TABLE IF EXISTS `cpr_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cpr_mstr` (
+  `cpr_cust` varchar(10) DEFAULT NULL,
+  `cpr_desc` varchar(30) NOT NULL DEFAULT '',
+  `cpr_item` varchar(20) NOT NULL DEFAULT '',
+  `cpr_type` varchar(20) NOT NULL DEFAULT '',
+  `cpr_price` decimal(12,5) NOT NULL DEFAULT '0.00000',
+  `cpr_volqty` int(11) NOT NULL DEFAULT '0',
+  `cpr_volprice` decimal(7,5) NOT NULL DEFAULT '0.00000',
+  `cpr_userid` varchar(10) NOT NULL DEFAULT '',
+  `cpr_mod_date` date NOT NULL DEFAULT '0000-00-00',
+  `cpr_disc` decimal(7,5) NOT NULL DEFAULT '0.00000',
+  UNIQUE KEY `cprkey` (`cpr_cust`,`cpr_item`,`cpr_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cup_mstr`
+--
+
+DROP TABLE IF EXISTS `cup_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cup_mstr` (
+  `cup_cust` varchar(10) DEFAULT NULL,
+  `cup_item` varchar(20) DEFAULT NULL,
+  `cup_citem` varchar(30) DEFAULT NULL,
+  `cup_citem2` varchar(30) DEFAULT NULL,
+  `cup_upc` varchar(30) DEFAULT NULL,
+  `cup_userid` varchar(10) DEFAULT NULL,
+  `cup_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `cup_misc` varchar(30) DEFAULT NULL,
+  `cup_sku` varchar(30) DEFAULT NULL,
+  KEY `cup_cust` (`cup_cust`),
+  KEY `cup_item` (`cup_item`),
+  KEY `cup_citem` (`cup_citem`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cur_mstr`
+--
+
+DROP TABLE IF EXISTS `cur_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cur_mstr` (
+  `cur_id` varchar(10) DEFAULT NULL,
+  `cur_desc` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cust_term`
+--
+
+DROP TABLE IF EXISTS `cust_term`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cust_term` (
+  `cut_code` varchar(10) NOT NULL DEFAULT '',
+  `cut_desc` varchar(100) NOT NULL DEFAULT '',
+  `cut_days` int(11) NOT NULL DEFAULT '0',
+  `cut_discdays` int(11) NOT NULL DEFAULT '0',
+  `cut_discpercent` int(11) NOT NULL DEFAULT '0',
+  `cut_discstart` int(11) NOT NULL DEFAULT '0',
+  `cut_duestart` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cut_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `dept_mstr`
+--
+
+DROP TABLE IF EXISTS `dept_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dept_mstr` (
+  `dept_id` varchar(10) NOT NULL DEFAULT '',
+  `dept_desc` varchar(100) DEFAULT NULL,
+  `dept_cop_acct` varchar(8) DEFAULT NULL,
+  `dept_lbr_acct` varchar(8) DEFAULT NULL,
+  `dept_bdn_acct` varchar(8) DEFAULT NULL,
+  `dept_lbr_usg_acct` varchar(8) DEFAULT NULL,
+  `dept_lbr_rate_acct` varchar(8) DEFAULT NULL,
+  `dept_bdn_rate_acct` varchar(8) DEFAULT NULL,
+  `dept_bdn_usg_acct` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`dept_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ecn_ctrl`
+--
+
+DROP TABLE IF EXISTS `ecn_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ecn_ctrl` (
+  `ecnc_email` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ecn_mstr`
+--
+
+DROP TABLE IF EXISTS `ecn_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ecn_mstr` (
+  `ecn_nbr` int(11) NOT NULL DEFAULT '0',
+  `ecn_poc` varchar(30) NOT NULL DEFAULT '',
+  `ecn_mstrtask` int(11) NOT NULL DEFAULT '0',
+  `ecn_status` varchar(30) NOT NULL DEFAULT '',
+  `ecn_targetdate` date DEFAULT NULL,
+  `ecn_createdate` date DEFAULT NULL,
+  `ecn_closedate` date DEFAULT NULL,
+  `ecn_drawing` varchar(50) NOT NULL DEFAULT '',
+  `ecn_item` varchar(30) NOT NULL DEFAULT '',
+  `ecn_rev` varchar(30) NOT NULL DEFAULT '',
+  `ecn_custrev` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ecn_task`
+--
+
+DROP TABLE IF EXISTS `ecn_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ecn_task` (
+  `ecnt_nbr` int(11) NOT NULL DEFAULT '0',
+  `ecnt_mstrid` int(11) NOT NULL DEFAULT '0',
+  `ecnt_seq` int(11) NOT NULL DEFAULT '0',
+  `ecnt_owner` varchar(30) NOT NULL DEFAULT '',
+  `ecnt_task` varchar(300) NOT NULL DEFAULT '',
+  `ecnt_assigndate` date DEFAULT NULL,
+  `ecnt_closedate` date DEFAULT NULL,
+  `ecnt_status` varchar(30) NOT NULL DEFAULT '',
+  `ecnt_notes` varchar(1000) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `edi_ctrl`
+--
+
+DROP TABLE IF EXISTS `edi_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edi_ctrl` (
+  `edic_indir` varchar(200) NOT NULL DEFAULT '',
+  `edic_outdir` varchar(200) NOT NULL DEFAULT '',
+  `edic_outftp` varchar(50) NOT NULL DEFAULT '',
+  `edic_inarch` varchar(200) NOT NULL DEFAULT '',
+  `edic_outarch` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `edi_log`
+--
+
+DROP TABLE IF EXISTS `edi_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edi_log` (
+  `elg_id` int(11) NOT NULL AUTO_INCREMENT,
+  `elg_dir` int(1) NOT NULL DEFAULT '0',
+  `elg_severity` varchar(8) NOT NULL DEFAULT '',
+  `elg_desc` varchar(100) NOT NULL DEFAULT '',
+  `elg_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `elg_isa` varchar(15) NOT NULL DEFAULT '',
+  `elg_doc` varchar(15) NOT NULL DEFAULT '',
+  `elg_ctrlnum` varchar(9) NOT NULL DEFAULT '',
+  `elg_ref` varchar(30) NOT NULL DEFAULT '',
+  `elg_file` varchar(60) NOT NULL DEFAULT '',
+  `elg_order` varchar(30) NOT NULL DEFAULT '',
+  PRIMARY KEY (`elg_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `edi_mstr`
+--
+
+DROP TABLE IF EXISTS `edi_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edi_mstr` (
+  `edi_id` varchar(15) DEFAULT NULL,
+  `edi_doctype` varchar(10) DEFAULT NULL,
+  `edi_map` varchar(50) DEFAULT NULL,
+  `edi_desc` varchar(50) NOT NULL DEFAULT '',
+  KEY `edi_id` (`edi_id`,`edi_doctype`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `edi_xref`
+--
+
+DROP TABLE IF EXISTS `edi_xref`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edi_xref` (
+  `exr_tpid` varchar(15) NOT NULL DEFAULT '',
+  `exr_tpaddr` varchar(30) NOT NULL DEFAULT '',
+  `exr_ovaddr` varchar(30) NOT NULL DEFAULT '',
+  `exr_gsid` varchar(15) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `edidoc_mstr`
+--
+
+DROP TABLE IF EXISTS `edidoc_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edidoc_mstr` (
+  `edidoc_id` varchar(20) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `editp_mstr`
+--
+
+DROP TABLE IF EXISTS `editp_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `editp_mstr` (
+  `editp_id` varchar(30) DEFAULT NULL,
+  `editp_name` varchar(50) DEFAULT NULL,
+  `editp_contact` varchar(50) DEFAULT NULL,
+  `editp_web` varchar(50) DEFAULT NULL,
+  `editp_helpdesk` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `eeo_det`
+--
+
+DROP TABLE IF EXISTS `eeo_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eeo_det` (
+  `eeod_id` int(11) NOT NULL DEFAULT '0',
+  `eeod_type` varchar(30) NOT NULL DEFAULT '',
+  `eeod_value` varchar(200) NOT NULL DEFAULT '',
+  `eeod_min` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `eeo_mstr`
+--
+
+DROP TABLE IF EXISTS `eeo_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eeo_mstr` (
+  `eeo_id` int(11) NOT NULL DEFAULT '0',
+  `eeo_date` date NOT NULL DEFAULT '0000-00-00',
+  `eeo_cell` varchar(30) NOT NULL DEFAULT '',
+  `eeo_shift` varchar(1) NOT NULL DEFAULT '',
+  `eeo_hour` varchar(2) NOT NULL DEFAULT '',
+  `eeo_qty_prod` int(11) NOT NULL DEFAULT '0',
+  `eeo_qty_scrap` int(11) NOT NULL DEFAULT '0',
+  `eeo_operator` varchar(30) NOT NULL DEFAULT '',
+  `eeo_create_date` date NOT NULL DEFAULT '0000-00-00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `emp_mstr`
+--
+
+DROP TABLE IF EXISTS `emp_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `emp_mstr` (
+  `emp_nbr` int(8) NOT NULL,
+  `emp_lname` varchar(30) DEFAULT NULL,
+  `emp_fname` varchar(30) DEFAULT NULL,
+  `emp_mname` varchar(30) DEFAULT NULL,
+  `emp_dept` varchar(8) DEFAULT NULL,
+  `emp_status` varchar(8) DEFAULT NULL,
+  `emp_startdate` date DEFAULT NULL,
+  `emp_termdate` date DEFAULT NULL,
+  `emp_shift` varchar(1) DEFAULT NULL,
+  `emp_type` varchar(30) DEFAULT NULL,
+  `emp_gender` varchar(1) DEFAULT NULL,
+  `emp_jobtitle` varchar(30) DEFAULT NULL,
+  `emp_ssn` varchar(30) DEFAULT NULL,
+  `emp_rate` decimal(7,2) DEFAULT NULL,
+  `emp_efla_days` decimal(7,2) DEFAULT NULL,
+  `emp_vac_days` decimal(7,2) DEFAULT NULL,
+  `emp_vac_taken` decimal(7,2) DEFAULT NULL,
+  `emp_addrline1` varchar(50) DEFAULT NULL,
+  `emp_addrline2` varchar(50) DEFAULT NULL,
+  `emp_city` varchar(50) DEFAULT NULL,
+  `emp_state` varchar(30) DEFAULT NULL,
+  `emp_country` varchar(50) DEFAULT NULL,
+  `emp_phone` varchar(30) DEFAULT NULL,
+  `emp_emer_contact` varchar(30) DEFAULT NULL,
+  `emp_emer_phone` varchar(30) DEFAULT NULL,
+  `emp_dob` date DEFAULT NULL,
+  `emp_zip` varchar(10) DEFAULT NULL,
+  `emp_clockin` int(1) NOT NULL DEFAULT '0',
+  `emp_clockid` int(11) NOT NULL DEFAULT '0',
+  `emp_supervisor` varchar(30) DEFAULT NULL,
+  `emp_autoclock` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`emp_nbr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `emp_train`
+--
+
+DROP TABLE IF EXISTS `emp_train`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `emp_train` (
+  `empid` int(8) DEFAULT NULL,
+  `coursenum` varchar(20) DEFAULT NULL,
+  `instructor` varchar(30) DEFAULT NULL,
+  `startdate` date DEFAULT NULL,
+  `enddate` date DEFAULT NULL,
+  `location` varchar(30) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hours` decimal(6,2) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `emptrid` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`emptrid`)
+) ENGINE=InnoDB AUTO_INCREMENT=62775 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fct_cal`
+--
+
+DROP TABLE IF EXISTS `fct_cal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fct_cal` (
+  `fctc_year` varchar(4) NOT NULL DEFAULT '',
+  `fctc_start` date NOT NULL DEFAULT '0000-00-00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fct_mstr`
+--
+
+DROP TABLE IF EXISTS `fct_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fct_mstr` (
+  `fct_part` varchar(30) NOT NULL DEFAULT '',
+  `fct_site` varchar(10) NOT NULL DEFAULT '',
+  `fct_year` varchar(4) NOT NULL DEFAULT '',
+  `fct_wkqty1` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty2` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty3` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty4` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty5` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty6` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty7` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty8` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty9` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty10` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty11` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty12` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty13` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty14` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty15` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty16` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty17` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty18` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty19` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty20` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty21` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty22` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty23` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty24` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty25` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty26` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty27` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty28` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty29` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty30` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty31` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty32` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty33` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty34` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty35` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty36` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty37` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty38` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty39` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty40` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty41` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty42` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty43` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty44` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty45` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty46` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty47` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty48` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty49` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty50` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty51` int(8) NOT NULL DEFAULT '0',
+  `fct_wkqty52` int(8) NOT NULL DEFAULT '0',
+  `fct_crt_userid` varchar(30) NOT NULL DEFAULT '',
+  `fct_chg_userid` varchar(30) NOT NULL DEFAULT '',
+  `fct_crt_date` date DEFAULT NULL,
+  `fct_chg_date` date DEFAULT NULL,
+  PRIMARY KEY (`fct_part`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `frt_mstr`
+--
+
+DROP TABLE IF EXISTS `frt_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `frt_mstr` (
+  `frt_code` varchar(20) DEFAULT NULL,
+  `frt_desc` varchar(50) NOT NULL DEFAULT '',
+  `frt_apply` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gl_cal`
+--
+
+DROP TABLE IF EXISTS `gl_cal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gl_cal` (
+  `glc_year` int(4) DEFAULT NULL,
+  `glc_per` int(2) DEFAULT NULL,
+  `glc_start` date DEFAULT NULL,
+  `glc_end` date DEFAULT NULL,
+  `glc_status` varchar(6) DEFAULT NULL,
+  KEY `glc_year` (`glc_year`),
+  KEY `glc_per` (`glc_per`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gl_ctrl`
+--
+
+DROP TABLE IF EXISTS `gl_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gl_ctrl` (
+  `gl_bs_from` varchar(10) DEFAULT NULL,
+  `gl_bs_to` varchar(10) DEFAULT NULL,
+  `gl_is_from` varchar(10) DEFAULT NULL,
+  `gl_is_to` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gl_hist`
+--
+
+DROP TABLE IF EXISTS `gl_hist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gl_hist` (
+  `glh_id` int(11) NOT NULL AUTO_INCREMENT,
+  `glh_ref` varchar(20) DEFAULT NULL,
+  `glh_effdate` date DEFAULT NULL,
+  `glh_entdate` date DEFAULT NULL,
+  `glh_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `glh_acct` varchar(8) DEFAULT NULL,
+  `glh_cc` varchar(4) DEFAULT NULL,
+  `glh_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `glh_site` varchar(10) DEFAULT NULL,
+  `glh_doc` varchar(20) DEFAULT NULL,
+  `glh_line` int(11) DEFAULT NULL,
+  `glh_type` varchar(10) DEFAULT NULL,
+  `glh_desc` varchar(30) DEFAULT NULL,
+  `glh_userid` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`glh_id`),
+  UNIQUE KEY `glh_effdate_2` (`glh_effdate`,`glh_ref`,`glh_line`),
+  KEY `glh_effdate` (`glh_effdate`),
+  KEY `glh_acct` (`glh_acct`),
+  KEY `glh_site` (`glh_site`),
+  KEY `glh_cc` (`glh_cc`)
+) ENGINE=InnoDB AUTO_INCREMENT=17578634 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gl_tran`
+--
+
+DROP TABLE IF EXISTS `gl_tran`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gl_tran` (
+  `glt_id` int(11) NOT NULL AUTO_INCREMENT,
+  `glt_ref` varchar(20) DEFAULT NULL,
+  `glt_effdate` date DEFAULT NULL,
+  `glt_entdate` date DEFAULT NULL,
+  `glt_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `glt_acct` varchar(8) DEFAULT NULL,
+  `glt_cc` varchar(4) DEFAULT NULL,
+  `glt_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `glt_site` varchar(10) DEFAULT NULL,
+  `glt_doc` varchar(20) DEFAULT NULL,
+  `glt_line` int(11) DEFAULT NULL,
+  `glt_type` varchar(10) DEFAULT NULL,
+  `glt_desc` varchar(30) DEFAULT NULL,
+  `glt_userid` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`glt_id`),
+  KEY `date_acct_cc` (`glt_effdate`,`glt_acct`,`glt_cc`),
+  KEY `myindex` (`glt_acct`,`glt_cc`,`glt_effdate`)
+) ENGINE=InnoDB AUTO_INCREMENT=794538 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `glic_accts`
+--
+
+DROP TABLE IF EXISTS `glic_accts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `glic_accts` (
+  `glicd_name` varchar(100) NOT NULL DEFAULT '',
+  `glicd_acct` varchar(10) NOT NULL DEFAULT '',
+  `glicd_seq` int(4) NOT NULL DEFAULT '0',
+  `glicd_type` varchar(10) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `glic_def`
+--
+
+DROP TABLE IF EXISTS `glic_def`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `glic_def` (
+  `glic_name` varchar(100) NOT NULL DEFAULT '',
+  `glic_desc` varchar(300) NOT NULL DEFAULT '',
+  `glic_seq` int(4) NOT NULL DEFAULT '0',
+  `glic_type` varchar(10) NOT NULL DEFAULT '',
+  `glic_start` varchar(10) NOT NULL DEFAULT '',
+  `glic_end` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `in_mstr`
+--
+
+DROP TABLE IF EXISTS `in_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `in_mstr` (
+  `in_part` varchar(18) NOT NULL,
+  `in_qoh` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `in_date` date DEFAULT NULL,
+  `in_loc` varchar(30) DEFAULT NULL,
+  `in_site` varchar(10) DEFAULT NULL,
+  `in_userid` varchar(8) DEFAULT NULL,
+  `in_prog` varchar(30) DEFAULT NULL,
+  UNIQUE KEY `in_part` (`in_part`,`in_site`,`in_loc`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `inv_ctrl`
+--
+
+DROP TABLE IF EXISTS `inv_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inv_ctrl` (
+  `planmultiscan` tinyint(1) NOT NULL DEFAULT '0',
+  `demdtoplan` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `item_cost`
+--
+
+DROP TABLE IF EXISTS `item_cost`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_cost` (
+  `itc_item` varchar(20) NOT NULL DEFAULT '',
+  `itc_site` varchar(10) NOT NULL DEFAULT '',
+  `itc_set` varchar(20) NOT NULL DEFAULT '',
+  `itc_total` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_mtl_top` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_lbr_top` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_bdn_top` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_ovh_top` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_out_top` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_mtl_low` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_lbr_low` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_bdn_low` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_ovh_low` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `itc_out_low` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  KEY `item` (`itc_item`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `item_mstr`
+--
+
+DROP TABLE IF EXISTS `item_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_mstr` (
+  `it_item` varchar(30) NOT NULL DEFAULT '',
+  `it_desc` varchar(50) DEFAULT NULL,
+  `it_uom` varchar(10) DEFAULT NULL,
+  `it_prodline` varchar(4) DEFAULT NULL,
+  `it_type` varchar(20) DEFAULT NULL,
+  `it_status` varchar(20) DEFAULT NULL,
+  `it_group` varchar(30) DEFAULT NULL,
+  `it_drawing` varchar(30) DEFAULT NULL,
+  `it_rev` varchar(30) DEFAULT NULL,
+  `it_site` varchar(10) DEFAULT NULL,
+  `it_loc` varchar(20) DEFAULT NULL,
+  `it_ship_wt` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  `it_buyer` varchar(30) DEFAULT NULL,
+  `it_vendor` varchar(30) DEFAULT NULL,
+  `it_code` varchar(10) DEFAULT NULL,
+  `it_wf` varchar(30) DEFAULT NULL,
+  `it_sell_price` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `it_lotsize` int(11) DEFAULT NULL,
+  `it_comments` varchar(500) DEFAULT NULL,
+  `it_level` int(3) DEFAULT '0',
+  `it_cust` varchar(10) DEFAULT '',
+  `it_custrev` varchar(30) DEFAULT NULL,
+  `it_net_wt` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  `it_mrp` tinyint(1) DEFAULT NULL,
+  `it_plan` tinyint(1) NOT NULL DEFAULT '0',
+  `it_leadtime` int(11) DEFAULT NULL,
+  `it_safestock` int(8) DEFAULT NULL,
+  `it_minordqty` int(8) DEFAULT NULL,
+  `it_pur_price` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `it_ovh_cost` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `it_out_cost` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `it_mtl_cost` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `it_sched` tinyint(1) NOT NULL DEFAULT '0',
+  `it_disc_pct` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`it_item`),
+  KEY `itcode` (`it_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `itemr_cost`
+--
+
+DROP TABLE IF EXISTS `itemr_cost`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemr_cost` (
+  `itr_item` varchar(20) NOT NULL,
+  `itr_site` varchar(10) DEFAULT NULL,
+  `itr_set` varchar(20) DEFAULT NULL,
+  `itr_routing` varchar(20) DEFAULT NULL,
+  `itr_op` int(4) DEFAULT NULL,
+  `itr_total` decimal(8,5) DEFAULT NULL,
+  `itr_mtl_top` decimal(8,5) DEFAULT NULL,
+  `itr_lbr_top` decimal(8,5) DEFAULT NULL,
+  `itr_bdn_top` decimal(8,5) DEFAULT NULL,
+  `itr_ovh_top` decimal(8,5) DEFAULT NULL,
+  `itr_out_top` decimal(8,5) DEFAULT NULL,
+  `itr_mtl_low` decimal(8,5) DEFAULT NULL,
+  `itr_lbr_low` decimal(8,5) DEFAULT NULL,
+  `itr_bdn_low` decimal(8,5) DEFAULT NULL,
+  `itr_ovh_low` decimal(8,5) DEFAULT NULL,
+  `itr_out_low` decimal(8,5) DEFAULT NULL,
+  `itr_date` date DEFAULT NULL,
+  `itr_userid` varchar(20) DEFAULT NULL,
+  KEY `itr_item` (`itr_item`,`itr_op`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `label_mstr`
+--
+
+DROP TABLE IF EXISTS `label_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `label_mstr` (
+  `lbl_id` int(8) NOT NULL DEFAULT '0',
+  `lbl_part` varchar(30) NOT NULL DEFAULT '',
+  `lbl_custpart` varchar(30) NOT NULL DEFAULT '',
+  `lbl_id_str` varchar(30) NOT NULL DEFAULT '',
+  `lbl_conttype` varchar(30) NOT NULL DEFAULT '',
+  `lbl_qty` int(11) NOT NULL DEFAULT '0',
+  `lbl_po` varchar(30) NOT NULL DEFAULT '',
+  `lbl_order` varchar(30) NOT NULL DEFAULT '',
+  `lbl_line` int(11) NOT NULL DEFAULT '0',
+  `lbl_ref` varchar(30) NOT NULL DEFAULT '',
+  `lbl_lot` varchar(30) NOT NULL DEFAULT '',
+  `lbl_parent` int(8) NOT NULL DEFAULT '0',
+  `lbl_parent_str` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addrcode` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addrname` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addr1` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addr2` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addrcity` varchar(30) NOT NULL DEFAULT '',
+  `lbl_addrstate` varchar(2) NOT NULL DEFAULT '',
+  `lbl_addrzip` varchar(10) NOT NULL DEFAULT '',
+  `lbl_addrcountry` varchar(30) NOT NULL DEFAULT '',
+  `lbl_crt_date` date NOT NULL DEFAULT '0000-00-00',
+  `lbl_ship_date` date NOT NULL DEFAULT '0000-00-00',
+  `lbl_scan` tinyint(1) NOT NULL DEFAULT '0',
+  `lbl_void` tinyint(1) NOT NULL DEFAULT '0',
+  `lbl_post` tinyint(1) NOT NULL DEFAULT '0',
+  `lbl_userid` varchar(30) NOT NULL DEFAULT '',
+  `lbl_printer` varchar(30) NOT NULL DEFAULT '',
+  `lbl_prog` varchar(30) NOT NULL DEFAULT '',
+  `lbl_site` varchar(10) NOT NULL DEFAULT '',
+  `lbl_loc` varchar(30) NOT NULL DEFAULT '',
+  `lbl_trantype` varchar(10) NOT NULL DEFAULT '',
+  PRIMARY KEY (`lbl_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `label_zebra`
+--
+
+DROP TABLE IF EXISTS `label_zebra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `label_zebra` (
+  `lblz_code` varchar(10) NOT NULL DEFAULT '',
+  `lblz_desc` varchar(100) NOT NULL DEFAULT '',
+  `lblz_file` varchar(100) NOT NULL DEFAULT '',
+  `lblz_type` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `loc_mstr`
+--
+
+DROP TABLE IF EXISTS `loc_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loc_mstr` (
+  `loc_loc` varchar(10) NOT NULL,
+  `loc_desc` varchar(50) DEFAULT '',
+  `loc_site` varchar(10) DEFAULT '',
+  `loc_active` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`loc_loc`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `menu_mstr`
+--
+
+DROP TABLE IF EXISTS `menu_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu_mstr` (
+  `menu_id` varchar(50) NOT NULL,
+  `menu_desc` varchar(300) DEFAULT NULL,
+  `menu_panel` varchar(50) NOT NULL DEFAULT '',
+  `menu_type` varchar(50) NOT NULL DEFAULT '',
+  KEY `menu_id` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `menu_tree`
+--
+
+DROP TABLE IF EXISTS `menu_tree`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu_tree` (
+  `mt_par` varchar(50) NOT NULL DEFAULT '',
+  `mt_child` varchar(50) NOT NULL DEFAULT '',
+  `mt_index` int(4) NOT NULL DEFAULT '0',
+  `mt_type` varchar(50) NOT NULL DEFAULT '',
+  `mt_label` varchar(100) NOT NULL DEFAULT '',
+  `mt_icon` varchar(100) NOT NULL DEFAULT '',
+  `mt_initvar` varchar(50) NOT NULL DEFAULT '',
+  `mt_func` varchar(60) NOT NULL DEFAULT '',
+  `mt_visible` tinyint(1) NOT NULL DEFAULT '0',
+  `mt_enable` tinyint(1) NOT NULL DEFAULT '0',
+  KEY `mt_par` (`mt_par`),
+  KEY `mt_child` (`mt_child`),
+  KEY `mt_index` (`mt_index`),
+  KEY `mt_visible` (`mt_visible`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mock_mstr`
+--
+
+DROP TABLE IF EXISTS `mock_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mock_mstr` (
+  `mock_nbr` int(6) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mrp_mstr`
+--
+
+DROP TABLE IF EXISTS `mrp_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mrp_mstr` (
+  `mrp_part` varchar(20) NOT NULL DEFAULT '',
+  `mrp_date` date NOT NULL DEFAULT '0000-00-00',
+  `mrp_qty` decimal(9,5) NOT NULL DEFAULT '0.00000',
+  `mrp_ref` varchar(30) NOT NULL DEFAULT '',
+  `mrp_type` varchar(20) NOT NULL DEFAULT '',
+  `mrp_line` int(11) NOT NULL DEFAULT '0',
+  `mrp_site` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ov_ctrl`
+--
+
+DROP TABLE IF EXISTS `ov_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ov_ctrl` (
+  `ov_version` varchar(8) DEFAULT NULL,
+  `ov_dist_dir` varchar(200) DEFAULT NULL,
+  `ov_source_dir` varchar(200) DEFAULT NULL,
+  `ov_login` tinyint(1) NOT NULL DEFAULT '0',
+  `ov_custom` tinyint(1) NOT NULL DEFAULT '0',
+  `ov_bgimage` varchar(200) NOT NULL DEFAULT '',
+  `ov_rcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_gcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_bcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_email_server` varchar(20) NOT NULL DEFAULT '',
+  `ov_email_from` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ov_devd`
+--
+
+DROP TABLE IF EXISTS `ov_devd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ov_devd` (
+  `ovdd_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ovdd_parent` int(11) DEFAULT NULL,
+  `ovdd_note` varchar(300) DEFAULT '',
+  `ovdd_type` varchar(30) DEFAULT '',
+  `ovdd_status` varchar(30) DEFAULT '',
+  `ovdd_user` varchar(30) DEFAULT '',
+  `ovdd_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ovdd_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ov_devm`
+--
+
+DROP TABLE IF EXISTS `ov_devm`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ov_devm` (
+  `ovdm_id` int(11) NOT NULL DEFAULT '0',
+  `ovdm_status` varchar(30) DEFAULT NULL,
+  `ovdm_title` varchar(200) DEFAULT '',
+  `ovdm_category` varchar(30) DEFAULT '',
+  `ovdm_resolution` varchar(300) DEFAULT '',
+  `ovdm_entry_date` date DEFAULT NULL,
+  `ovdm_close_date` date DEFAULT NULL,
+  `ovdm_user` varchar(30) DEFAULT '',
+  PRIMARY KEY (`ovdm_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ov_mstr`
+--
+
+DROP TABLE IF EXISTS `ov_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ov_mstr` (
+  `ov_site` varchar(30) DEFAULT NULL,
+  `ov_misc` varchar(30) DEFAULT NULL,
+  `ov_currency` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `panel_mstr`
+--
+
+DROP TABLE IF EXISTS `panel_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `panel_mstr` (
+  `panel_id` varchar(50) NOT NULL DEFAULT '',
+  `panel_desc` varchar(100) NOT NULL DEFAULT '',
+  `panel_core` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pbm_mstr`
+--
+
+DROP TABLE IF EXISTS `pbm_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pbm_mstr` (
+  `ps_parent` varchar(18) NOT NULL DEFAULT '',
+  `ps_child` varchar(18) NOT NULL DEFAULT '',
+  `ps_type` varchar(1) DEFAULT NULL,
+  `ps_qty_per` decimal(7,5) DEFAULT NULL,
+  `ps_desc` varchar(30) DEFAULT NULL,
+  `ps_op` varchar(3) DEFAULT NULL,
+  `ps_sequence` int(4) DEFAULT NULL,
+  `ps_userid` varchar(8) DEFAULT NULL,
+  `ps_misc1` varchar(30) DEFAULT NULL,
+  `ps_ref` varchar(30) NOT NULL DEFAULT '',
+  KEY `ps_par` (`ps_parent`),
+  KEY `ps_comp` (`ps_child`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `perm_mstr`
+--
+
+DROP TABLE IF EXISTS `perm_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `perm_mstr` (
+  `perm_user` varchar(30) NOT NULL DEFAULT '',
+  `perm_menu` varchar(60) NOT NULL DEFAULT '',
+  KEY `perm_user` (`perm_user`),
+  KEY `perm_menu` (`perm_menu`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pl_mstr`
+--
+
+DROP TABLE IF EXISTS `pl_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pl_mstr` (
+  `pl_line` varchar(4) NOT NULL DEFAULT '',
+  `pl_desc` varchar(50) DEFAULT NULL,
+  `pl_inventory` varchar(10) DEFAULT NULL,
+  `pl_inv_discr` varchar(10) DEFAULT NULL,
+  `pl_scrap` varchar(10) DEFAULT NULL,
+  `pl_wip` varchar(10) DEFAULT NULL,
+  `pl_wip_var` varchar(10) DEFAULT NULL,
+  `pl_inv_change` varchar(10) DEFAULT NULL,
+  `pl_sales` varchar(10) DEFAULT NULL,
+  `pl_sales_disc` varchar(10) DEFAULT NULL,
+  `pl_cogs_mtl` varchar(10) DEFAULT NULL,
+  `pl_cogs_lbr` varchar(10) DEFAULT NULL,
+  `pl_cogs_bdn` varchar(10) DEFAULT NULL,
+  `pl_cogs_ovh` varchar(10) DEFAULT NULL,
+  `pl_cogs_out` varchar(10) DEFAULT NULL,
+  `pl_purchases` varchar(10) DEFAULT NULL,
+  `pl_po_rcpt` varchar(10) DEFAULT NULL,
+  `pl_po_ovh` varchar(10) DEFAULT NULL,
+  `pl_po_pricevar` varchar(10) NOT NULL DEFAULT '',
+  `pl_ap_usage` varchar(10) DEFAULT NULL,
+  `pl_ap_ratevar` varchar(10) DEFAULT NULL,
+  `pl_job_stock` varchar(10) DEFAULT NULL,
+  `pl_mtl_usagevar` varchar(10) DEFAULT NULL,
+  `pl_mtl_ratevar` varchar(10) DEFAULT NULL,
+  `pl_mix_var` varchar(10) DEFAULT NULL,
+  `pl_cop` varchar(10) DEFAULT NULL,
+  `pl_out_usagevar` varchar(10) DEFAULT NULL,
+  `pl_out_ratevar` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`pl_line`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `plan_mstr`
+--
+
+DROP TABLE IF EXISTS `plan_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plan_mstr` (
+  `plan_nbr` int(8) NOT NULL,
+  `plan_part` varchar(18) NOT NULL,
+  `plan_site` varchar(10) NOT NULL DEFAULT '',
+  `plan_qty_req` int(9) DEFAULT NULL,
+  `plan_qty_comp` int(9) DEFAULT NULL,
+  `plan_qty_sched` int(9) NOT NULL DEFAULT '0',
+  `plan_date_create` date DEFAULT NULL,
+  `plan_date_due` date NOT NULL DEFAULT '0000-00-00',
+  `plan_date_sched` date DEFAULT NULL,
+  `plan_status` tinyint(1) NOT NULL DEFAULT '0',
+  `plan_rmks` varchar(50) NOT NULL DEFAULT '',
+  `plan_order` varchar(10) NOT NULL DEFAULT '',
+  `plan_line` int(11) NOT NULL DEFAULT '0',
+  `plan_type` varchar(10) NOT NULL DEFAULT '',
+  `plan_cell` varchar(30) NOT NULL DEFAULT '',
+  `plan_is_sched` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`plan_nbr`),
+  KEY `plan_nbr` (`plan_nbr`,`plan_part`,`plan_date_due`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pland_mstr`
+--
+
+DROP TABLE IF EXISTS `pland_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pland_mstr` (
+  `pland_id` int(8) NOT NULL DEFAULT '0',
+  `pland_parent` int(8) NOT NULL DEFAULT '0',
+  `pland_part` varchar(18) NOT NULL DEFAULT '',
+  `pland_op` varchar(2) NOT NULL DEFAULT '',
+  `pland_qty` int(9) NOT NULL DEFAULT '0',
+  `pland_cell` varchar(30) NOT NULL DEFAULT '',
+  `pland_date` date DEFAULT NULL,
+  `pland_ref` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `po_ctrl`
+--
+
+DROP TABLE IF EXISTS `po_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `po_ctrl` (
+  `po_rcpt_acct` varchar(10) DEFAULT NULL,
+  `po_rcpt_cc` varchar(30) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `po_mstr`
+--
+
+DROP TABLE IF EXISTS `po_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `po_mstr` (
+  `po_nbr` varchar(8) DEFAULT NULL,
+  `po_vend` varchar(30) DEFAULT NULL,
+  `po_ord_date` date DEFAULT NULL,
+  `po_due_date` date DEFAULT NULL,
+  `po_rmks` varchar(30) DEFAULT NULL,
+  `po_shipvia` varchar(30) DEFAULT NULL,
+  `po_status` varchar(30) DEFAULT NULL,
+  `po_userid` varchar(30) DEFAULT NULL,
+  `po_type` varchar(30) DEFAULT NULL,
+  `po_terms` varchar(30) DEFAULT NULL,
+  `po_site` varchar(10) DEFAULT NULL,
+  `po_buyer` varchar(30) DEFAULT NULL,
+  `po_ap_acct` varchar(10) DEFAULT NULL,
+  `po_ap_cc` varchar(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pod_mstr`
+--
+
+DROP TABLE IF EXISTS `pod_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pod_mstr` (
+  `pod_nbr` varchar(8) DEFAULT NULL,
+  `pod_line` int(11) DEFAULT NULL,
+  `pod_part` varchar(100) NOT NULL DEFAULT '',
+  `pod_vendpart` varchar(30) DEFAULT NULL,
+  `pod_ord_qty` int(8) DEFAULT NULL,
+  `pod_rcvd_qty` int(8) DEFAULT NULL,
+  `pod_netprice` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  `pod_disc` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  `pod_listprice` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  `pod_due_date` date DEFAULT NULL,
+  `pod_status` varchar(30) DEFAULT NULL,
+  `pod_site` varchar(10) DEFAULT NULL,
+  `pod_ord_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pos_ctrl`
+--
+
+DROP TABLE IF EXISTS `pos_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pos_ctrl` (
+  `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',
+  `posc_taxacct` varchar(10) NOT NULL DEFAULT '',
+  `posc_bank` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pos_det`
+--
+
+DROP TABLE IF EXISTS `pos_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pos_det` (
+  `posd_nbr` int(11) NOT NULL DEFAULT '0',
+  `posd_line` int(11) NOT NULL DEFAULT '0',
+  `posd_item` varchar(100) NOT NULL DEFAULT '',
+  `posd_qty` int(11) NOT NULL DEFAULT '0',
+  `posd_listprice` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `posd_disc` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `posd_netprice` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `posd_tax` decimal(14,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pos_mstr`
+--
+
+DROP TABLE IF EXISTS `pos_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pos_mstr` (
+  `pos_nbr` int(11) NOT NULL DEFAULT '0',
+  `pos_entrydate` date DEFAULT NULL,
+  `pos_entrytime` time DEFAULT NULL,
+  `pos_aracct` varchar(10) NOT NULL DEFAULT '',
+  `pos_arcc` varchar(4) NOT NULL DEFAULT '',
+  `pos_totqty` int(11) NOT NULL DEFAULT '0',
+  `pos_totlines` int(11) NOT NULL DEFAULT '0',
+  `pos_tottax` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `pos_totamt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `pos_bank` varchar(20) NOT NULL DEFAULT '',
+  `pos_grossamt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `pos_status` varchar(6) NOT NULL DEFAULT 'commit',
+  PRIMARY KEY (`pos_nbr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `prt_mstr`
+--
+
+DROP TABLE IF EXISTS `prt_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prt_mstr` (
+  `prt_id` varchar(10) NOT NULL DEFAULT '',
+  `prt_type` varchar(10) NOT NULL DEFAULT '',
+  `prt_desc` varchar(50) NOT NULL DEFAULT '',
+  `prt_ip` varchar(15) NOT NULL DEFAULT '',
+  `prt_port` varchar(10) NOT NULL DEFAULT '',
+  PRIMARY KEY (`prt_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `qual_mstr`
+--
+
+DROP TABLE IF EXISTS `qual_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `qual_mstr` (
+  `qual_id` int(4) NOT NULL,
+  `qual_userid` varchar(30) DEFAULT NULL,
+  `qual_date_crt` varchar(8) DEFAULT NULL,
+  `qual_date_upd` varchar(8) DEFAULT NULL,
+  `qual_date_cls` varchar(8) DEFAULT NULL,
+  `qual_originator` varchar(30) DEFAULT NULL,
+  `qual_vend` varchar(30) DEFAULT NULL,
+  `qual_vend_name` varchar(30) DEFAULT NULL,
+  `qual_vend_contact` varchar(30) DEFAULT NULL,
+  `qual_qpr` varchar(1) DEFAULT NULL,
+  `qual_infor` varchar(1) DEFAULT NULL,
+  `qual_sendsupp` varchar(1) DEFAULT NULL,
+  `qual_sort` varchar(1) DEFAULT NULL,
+  `qual_rework` varchar(1) DEFAULT NULL,
+  `qual_scrap` varchar(1) DEFAULT NULL,
+  `qual_dev` varchar(1) DEFAULT NULL,
+  `qual_dev_nbr` varchar(30) DEFAULT NULL,
+  `qual_src_line` varchar(1) DEFAULT NULL,
+  `qual_line_dept` varchar(30) DEFAULT NULL,
+  `qual_src_recv` varchar(1) DEFAULT NULL,
+  `qual_src_cust` varchar(1) DEFAULT NULL,
+  `qual_src_eng` varchar(1) DEFAULT NULL,
+  `qual_src_oth` varchar(1) DEFAULT NULL,
+  `qual_src_oth_desc` varchar(30) DEFAULT NULL,
+  `qual_int_sup` varchar(1) DEFAULT NULL,
+  `qual_ext_sup` varchar(1) DEFAULT NULL,
+  `qual_part` varchar(30) DEFAULT NULL,
+  `qual_part_desc` varchar(30) DEFAULT NULL,
+  `qual_qty_rej` int(11) DEFAULT NULL,
+  `qual_qty_susp` varchar(30) DEFAULT NULL,
+  `qual_qty_tot_def` int(11) DEFAULT NULL,
+  `qual_desc_iss` varchar(500) DEFAULT NULL,
+  `qual_desc_fin_hist` varchar(500) DEFAULT NULL,
+  `qual_desc_sqe_comt` varchar(500) DEFAULT NULL,
+  `qual_tot_charge` decimal(8,2) DEFAULT NULL,
+  `qual_dec1` decimal(8,4) DEFAULT NULL,
+  `qual_date1` date DEFAULT NULL,
+  `qual_int1` int(11) DEFAULT NULL,
+  PRIMARY KEY (`qual_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `recv_det`
+--
+
+DROP TABLE IF EXISTS `recv_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `recv_det` (
+  `rvd_id` varchar(8) NOT NULL DEFAULT '',
+  `rvd_po` varchar(30) NOT NULL DEFAULT '',
+  `rvd_poline` int(8) DEFAULT '0',
+  `rvd_packingslip` varchar(30) NOT NULL DEFAULT '',
+  `rvd_part` varchar(100) NOT NULL DEFAULT '',
+  `rvd_qty` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `rvd_date` date DEFAULT NULL,
+  `rvd_listprice` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `rvd_netprice` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `rvd_disc` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  `rvd_lot` varchar(30) NOT NULL DEFAULT '',
+  `rvd_serial` varchar(30) NOT NULL DEFAULT '',
+  `rvd_loc` varchar(30) NOT NULL DEFAULT '',
+  `rvd_jobnbr` varchar(30) NOT NULL DEFAULT '',
+  `rvd_site` varchar(10) NOT NULL DEFAULT '',
+  `rvd_status` tinyint(1) DEFAULT '0',
+  `rvd_rline` int(8) DEFAULT '0',
+  `rvd_voqty` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `rvd_cost` decimal(14,5) NOT NULL DEFAULT '0.00000'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `recv_mstr`
+--
+
+DROP TABLE IF EXISTS `recv_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `recv_mstr` (
+  `rv_id` varchar(8) NOT NULL DEFAULT '',
+  `rv_vend` varchar(10) NOT NULL DEFAULT '',
+  `rv_recvdate` date DEFAULT NULL,
+  `rv_status` tinyint(1) NOT NULL DEFAULT '0',
+  `rv_packingslip` varchar(30) NOT NULL DEFAULT '',
+  `rv_userid` varchar(8) NOT NULL DEFAULT '',
+  `rv_ap_acct` varchar(10) NOT NULL DEFAULT '',
+  `rv_ap_cc` varchar(4) NOT NULL DEFAULT '',
+  `rv_terms` varchar(30) NOT NULL DEFAULT '',
+  `rv_site` varchar(10) NOT NULL DEFAULT '',
+  `rv_confdate` date DEFAULT NULL,
+  `rv_ref` varchar(30) DEFAULT '',
+  `rv_rmks` varchar(30) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `req_auth`
+--
+
+DROP TABLE IF EXISTS `req_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `req_auth` (
+  `reqa_owner` varchar(30) DEFAULT NULL,
+  `reqa_desc` varchar(200) DEFAULT NULL,
+  `reqa_sequence` int(4) DEFAULT NULL,
+  `reqa_enabled` tinyint(1) DEFAULT NULL,
+  `reqa_email` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `req_ctrl`
+--
+
+DROP TABLE IF EXISTS `req_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `req_ctrl` (
+  `req_admins` varchar(1000) DEFAULT NULL,
+  `req_amt_threshold` int(8) DEFAULT NULL,
+  `req_threshold_user` varchar(10) DEFAULT NULL,
+  `req_requestor_email` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `req_det`
+--
+
+DROP TABLE IF EXISTS `req_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `req_det` (
+  `reqd_id` int(5) NOT NULL,
+  `reqd_item` varchar(80) DEFAULT NULL,
+  `reqd_price` decimal(10,2) DEFAULT NULL,
+  `reqd_qty` decimal(12,5) DEFAULT NULL,
+  KEY `reqd_id` (`reqd_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `req_mstr`
+--
+
+DROP TABLE IF EXISTS `req_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `req_mstr` (
+  `req_id` int(5) NOT NULL,
+  `req_name` varchar(30) DEFAULT NULL,
+  `req_date` date DEFAULT NULL,
+  `req_vend` varchar(100) DEFAULT NULL,
+  `req_type` varchar(30) DEFAULT NULL,
+  `req_dept` varchar(30) DEFAULT NULL,
+  `req_amt` decimal(10,2) DEFAULT NULL,
+  `req_qty` decimal(10,5) DEFAULT NULL,
+  `req_desc` varchar(300) DEFAULT NULL,
+  `req_status` varchar(8) DEFAULT NULL,
+  `req_po` varchar(10) DEFAULT NULL,
+  `req_acct` varchar(10) DEFAULT NULL,
+  `req_cc` varchar(10) DEFAULT NULL,
+  `req_proj` varchar(30) DEFAULT NULL,
+  `req_AR` varchar(30) DEFAULT NULL,
+  `req_site` varchar(10) DEFAULT '',
+  `req_vendnbr` varchar(30) DEFAULT '',
+  PRIMARY KEY (`req_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `req_task`
+--
+
+DROP TABLE IF EXISTS `req_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `req_task` (
+  `reqt_id` int(5) DEFAULT NULL,
+  `reqt_class` varchar(30) DEFAULT NULL,
+  `reqt_owner` varchar(30) DEFAULT NULL,
+  `reqt_date_create` date DEFAULT NULL,
+  `reqt_date_approve` date DEFAULT NULL,
+  `reqt_status` varchar(8) DEFAULT NULL,
+  `reqt_dtm_approve` datetime DEFAULT NULL,
+  `reqt_dtm_create` datetime DEFAULT NULL,
+  `reqt_comments` varchar(200) DEFAULT NULL,
+  `reqt_sequence` int(11) DEFAULT NULL,
+  `reqt_email` tinyint(1) NOT NULL DEFAULT '0',
+  KEY `reqt_id` (`reqt_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `samlog`
+--
+
+DROP TABLE IF EXISTS `samlog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `samlog` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `plant` varchar(8) NOT NULL DEFAULT '',
+  `shift` varchar(8) NOT NULL DEFAULT '',
+  `ordernbr` varchar(20) NOT NULL DEFAULT '',
+  `matl` varchar(50) NOT NULL DEFAULT '',
+  `entrydate` date DEFAULT NULL,
+  `packager` varchar(50) NOT NULL DEFAULT '',
+  `batchnbr` varchar(20) NOT NULL DEFAULT '',
+  `bagtype` varchar(10) NOT NULL DEFAULT '',
+  `unitweight` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  `pallets` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  `bags` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  `drums` decimal(10,4) NOT NULL DEFAULT '0.0000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shift_mstr`
+--
+
+DROP TABLE IF EXISTS `shift_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shift_mstr` (
+  `shf_id` int(3) NOT NULL DEFAULT '0',
+  `shf_desc` varchar(100) NOT NULL DEFAULT '',
+  `shf_mon_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_mon_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_tue_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_tue_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_wed_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_wed_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_thu_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_thu_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_fri_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_fri_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_sat_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_sat_outtime` time NOT NULL DEFAULT '00:00:00',
+  `shf_sun_intime` time NOT NULL DEFAULT '00:00:00',
+  `shf_sun_outtime` time NOT NULL DEFAULT '00:00:00',
+  PRIMARY KEY (`shf_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ship_ctrl`
+--
+
+DROP TABLE IF EXISTS `ship_ctrl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ship_ctrl` (
+  `shc_confirm` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ship_det`
+--
+
+DROP TABLE IF EXISTS `ship_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ship_det` (
+  `shd_id` varchar(8) NOT NULL DEFAULT '',
+  `shd_so` varchar(30) NOT NULL DEFAULT '',
+  `shd_line` int(8) NOT NULL DEFAULT '0',
+  `shd_po` varchar(30) NOT NULL DEFAULT '',
+  `shd_part` varchar(100) NOT NULL DEFAULT '',
+  `shd_qty` int(11) NOT NULL DEFAULT '0',
+  `shd_date` date NOT NULL DEFAULT '0000-00-00',
+  `shd_char1` varchar(30) NOT NULL DEFAULT '',
+  `shd_char2` varchar(30) NOT NULL DEFAULT '',
+  `shd_char3` varchar(30) NOT NULL DEFAULT '',
+  `shd_listprice` decimal(8,4) NOT NULL DEFAULT '0.0000',
+  `shd_netprice` decimal(8,4) NOT NULL DEFAULT '0.0000',
+  `shd_disc` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `shd_lot` varchar(30) NOT NULL DEFAULT '',
+  `shd_loc` varchar(30) NOT NULL DEFAULT '',
+  `shd_serial` varchar(30) NOT NULL DEFAULT '',
+  `shd_jobnbr` varchar(30) NOT NULL DEFAULT '',
+  `shd_site` varchar(10) NOT NULL DEFAULT '',
+  `shd_custpart` varchar(30) NOT NULL DEFAULT '',
+  `shd_cumqty` int(11) NOT NULL DEFAULT '0',
+  `shd_ref` varchar(30) NOT NULL DEFAULT '',
+  `shd_sku` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ship_mstr`
+--
+
+DROP TABLE IF EXISTS `ship_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ship_mstr` (
+  `sh_id` varchar(8) NOT NULL DEFAULT '',
+  `sh_cust` varchar(8) NOT NULL DEFAULT '',
+  `sh_ship` varchar(8) NOT NULL DEFAULT '',
+  `sh_shipdate` date DEFAULT NULL,
+  `sh_status` varchar(30) NOT NULL DEFAULT '',
+  `sh_char1` varchar(30) NOT NULL DEFAULT '',
+  `sh_char2` varchar(30) NOT NULL DEFAULT '',
+  `sh_char3` varchar(30) NOT NULL DEFAULT '',
+  `sh_confdate` date DEFAULT NULL,
+  `sh_userid` varchar(8) NOT NULL DEFAULT '',
+  `sh_ref` varchar(30) NOT NULL DEFAULT '',
+  `sh_rmks` varchar(60) NOT NULL DEFAULT '',
+  `sh_ar_acct` varchar(10) NOT NULL DEFAULT '',
+  `sh_ar_cc` varchar(4) NOT NULL DEFAULT '',
+  `sh_cust_terms` varchar(30) NOT NULL DEFAULT '',
+  `sh_site` varchar(10) NOT NULL DEFAULT '',
+  `sh_shipvia` varchar(30) NOT NULL DEFAULT '',
+  `sh_gross_wt` int(8) NOT NULL DEFAULT '0',
+  `sh_net_wt` int(8) NOT NULL DEFAULT '0',
+  `sh_po` varchar(30) NOT NULL DEFAULT '',
+  `sh_so` varchar(30) NOT NULL DEFAULT '',
+  `sh_trailer` varchar(30) NOT NULL DEFAULT '',
+  `sh_po_date` date DEFAULT NULL,
+  PRIMARY KEY (`sh_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ship_tree`
+--
+
+DROP TABLE IF EXISTS `ship_tree`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ship_tree` (
+  `ship_id` varchar(30) DEFAULT NULL,
+  `ship_site` varchar(10) DEFAULT NULL,
+  `ship_billto` varchar(10) DEFAULT NULL,
+  `ship_shipto` varchar(10) DEFAULT NULL,
+  `ship_isroot` tinyint(1) DEFAULT NULL,
+  `ship_so` varchar(10) DEFAULT NULL,
+  `ship_po` varchar(30) DEFAULT NULL,
+  `ship_part` varchar(30) DEFAULT NULL,
+  `ship_type` varchar(10) DEFAULT NULL,
+  `ship_ship_date` date DEFAULT NULL,
+  `ship_create_date` date DEFAULT NULL,
+  `ship_qty` decimal(7,2) DEFAULT NULL,
+  `ship_shipvia` varchar(30) DEFAULT NULL,
+  `ship_reference` varchar(30) DEFAULT NULL,
+  `ship_confirmed` tinyint(1) DEFAULT NULL,
+  `ship_line` int(4) DEFAULT NULL,
+  `ship_pid` varchar(30) DEFAULT NULL,
+  KEY `ship_id` (`ship_id`,`ship_ship_date`,`ship_billto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `site_mstr`
+--
+
+DROP TABLE IF EXISTS `site_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `site_mstr` (
+  `site_site` varchar(10) NOT NULL,
+  `site_desc` varchar(30) DEFAULT '',
+  `site_line1` varchar(30) DEFAULT NULL,
+  `site_line2` varchar(30) DEFAULT NULL,
+  `site_line3` varchar(30) DEFAULT NULL,
+  `site_city` varchar(30) DEFAULT NULL,
+  `site_state` varchar(30) DEFAULT NULL,
+  `site_zip` varchar(30) DEFAULT NULL,
+  `site_country` varchar(30) DEFAULT NULL,
+  `site_phone` varchar(30) DEFAULT NULL,
+  `site_web` varchar(30) DEFAULT NULL,
+  `site_logo` varchar(100) NOT NULL DEFAULT '',
+  `site_iv_jasper` varchar(100) NOT NULL DEFAULT '',
+  `site_sh_jasper` varchar(100) NOT NULL DEFAULT '',
+  `site_sqename` varchar(30) NOT NULL DEFAULT '',
+  `site_sqephone` varchar(30) NOT NULL DEFAULT '',
+  `site_sqefax` varchar(30) NOT NULL DEFAULT '',
+  `site_sqeemail` varchar(60) NOT NULL DEFAULT '',
+  `site_po_jasper` varchar(100) NOT NULL DEFAULT '',
+  `site_pos_jasper` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`site_site`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `siteu_mstr`
+--
+
+DROP TABLE IF EXISTS `siteu_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `siteu_mstr` (
+  `siteu_userid` varchar(10) DEFAULT NULL,
+  `siteu_site` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `so_mstr`
+--
+
+DROP TABLE IF EXISTS `so_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `so_mstr` (
+  `so_nbr` varchar(8) NOT NULL,
+  `so_cust` varchar(30) DEFAULT NULL,
+  `so_ship` varchar(8) NOT NULL DEFAULT '',
+  `so_po` varchar(30) DEFAULT NULL,
+  `so_create_date` date DEFAULT NULL,
+  `so_due_date` date DEFAULT NULL,
+  `so_rmks` varchar(30) DEFAULT NULL,
+  `so_shipvia` varchar(30) DEFAULT NULL,
+  `so_ord_date` date NOT NULL DEFAULT '0000-00-00',
+  `so_status` varchar(30) DEFAULT NULL,
+  `so_userid` varchar(30) DEFAULT NULL,
+  `so_type` varchar(30) DEFAULT NULL,
+  `so_char1` varchar(30) DEFAULT NULL,
+  `so_char2` varchar(30) DEFAULT NULL,
+  `so_char3` varchar(30) DEFAULT NULL,
+  `so_terms` varchar(30) DEFAULT NULL,
+  `so_ar_acct` varchar(10) DEFAULT NULL,
+  `so_ar_cc` varchar(4) DEFAULT NULL,
+  `so_onhold` tinyint(1) NOT NULL DEFAULT '0',
+  `so_site` varchar(10) NOT NULL DEFAULT '',
+  PRIMARY KEY (`so_nbr`),
+  KEY `so_nbr` (`so_nbr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sod_det`
+--
+
+DROP TABLE IF EXISTS `sod_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sod_det` (
+  `sod_nbr` varchar(8) NOT NULL,
+  `sod_line` int(4) DEFAULT NULL,
+  `sod_part` varchar(100) NOT NULL DEFAULT '',
+  `sod_custpart` varchar(30) DEFAULT NULL,
+  `sod_ord_qty` int(8) DEFAULT NULL,
+  `sod_shipped_qty` int(8) DEFAULT NULL,
+  `sod_po` varchar(30) DEFAULT NULL,
+  `sod_ord_date` date DEFAULT NULL,
+  `sod_due_date` date DEFAULT NULL,
+  `sod_create_date` date DEFAULT NULL,
+  `sod_char1` varchar(30) DEFAULT NULL,
+  `sod_char2` varchar(30) DEFAULT NULL,
+  `sod_char3` varchar(30) DEFAULT NULL,
+  `sod_status` varchar(30) DEFAULT NULL,
+  `sod_listprice` decimal(8,4) NOT NULL DEFAULT '0.0000',
+  `sod_netprice` decimal(8,4) NOT NULL DEFAULT '0.0000',
+  `sod_disc` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `sod_site` varchar(10) NOT NULL DEFAULT '',
+  KEY `sod_nbr` (`sod_nbr`),
+  KEY `sod_part` (`sod_part`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `srl_mstr`
+--
+
+DROP TABLE IF EXISTS `srl_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `srl_mstr` (
+  `srl_so` varchar(30) NOT NULL DEFAULT '',
+  `srl_po` varchar(30) NOT NULL DEFAULT '',
+  `srl_line` int(11) NOT NULL DEFAULT '0',
+  `srl_part` varchar(30) NOT NULL DEFAULT '',
+  `srl_ref` varchar(30) NOT NULL DEFAULT '',
+  `srl_qtyord` int(11) NOT NULL DEFAULT '0',
+  `srl_qtyshp` int(11) NOT NULL DEFAULT '0',
+  `srl_duedate` date NOT NULL DEFAULT '0000-00-00',
+  `srl_crtdate` date NOT NULL DEFAULT '0000-00-00',
+  `srl_rlse` varchar(30) NOT NULL DEFAULT '',
+  `srl_shid` varchar(30) NOT NULL DEFAULT '',
+  `srl_type` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `task_det`
+--
+
+DROP TABLE IF EXISTS `task_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task_det` (
+  `taskd_id` int(5) DEFAULT NULL,
+  `taskd_owner` varchar(30) DEFAULT NULL,
+  `taskd_desc` varchar(200) DEFAULT NULL,
+  `taskd_create_date` date DEFAULT NULL,
+  `taskd_mod_date` date DEFAULT NULL,
+  `taskd_mod_user` varchar(30) DEFAULT NULL,
+  `taskd_enabled` tinyint(1) NOT NULL DEFAULT '0',
+  `taskd_sequence` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `task_mstr`
+--
+
+DROP TABLE IF EXISTS `task_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task_mstr` (
+  `task_id` int(8) NOT NULL,
+  `task_desc` varchar(50) DEFAULT NULL,
+  `task_class` varchar(30) DEFAULT NULL,
+  `task_creator` varchar(30) DEFAULT NULL,
+  `task_date_create` date DEFAULT NULL,
+  `task_date_mod` date DEFAULT NULL,
+  `task_status` varchar(8) DEFAULT NULL,
+  `task_comments` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `time_clock`
+--
+
+DROP TABLE IF EXISTS `time_clock`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `time_clock` (
+  `emp_nbr` int(8) DEFAULT NULL,
+  `indate` date DEFAULT NULL,
+  `outdate` date DEFAULT NULL,
+  `intime` time DEFAULT NULL,
+  `outtime` time DEFAULT NULL,
+  `dept` varchar(30) DEFAULT NULL,
+  `code_id` varchar(2) NOT NULL DEFAULT '',
+  `intime_adj` time DEFAULT NULL,
+  `outtime_adj` time DEFAULT NULL,
+  `tothrs` decimal(5,2) DEFAULT NULL,
+  `recid` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(30) DEFAULT NULL,
+  `changed` varchar(40) DEFAULT NULL,
+  `user_fld1` varchar(40) DEFAULT NULL,
+  `user_fld2` varchar(40) DEFAULT NULL,
+  `user_fld3` varchar(40) DEFAULT NULL,
+  `comment` varchar(200) NOT NULL DEFAULT '',
+  `code_orig` varchar(2) NOT NULL DEFAULT '',
+  `who_changed` varchar(30) NOT NULL DEFAULT '',
+  PRIMARY KEY (`recid`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tran_mstr`
+--
+
+DROP TABLE IF EXISTS `tran_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tran_mstr` (
+  `tr_id` int(8) NOT NULL AUTO_INCREMENT,
+  `tr_site` varchar(10) DEFAULT NULL,
+  `tr_part` varchar(100) NOT NULL DEFAULT '',
+  `tr_qty` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `tr_ent_date` date DEFAULT NULL,
+  `tr_eff_date` date DEFAULT NULL,
+  `tr_userid` varchar(20) DEFAULT NULL,
+  `tr_ref` varchar(30) DEFAULT NULL,
+  `tr_addrcode` varchar(30) DEFAULT NULL,
+  `tr_type` varchar(10) DEFAULT NULL,
+  `tr_datetime` datetime DEFAULT NULL,
+  `tr_rmks` varchar(200) DEFAULT NULL,
+  `tr_nbr` varchar(30) DEFAULT NULL,
+  `tr_misc1` varchar(30) DEFAULT NULL,
+  `tr_lot` varchar(30) DEFAULT NULL,
+  `tr_serial` varchar(30) DEFAULT NULL,
+  `tr_program` varchar(50) DEFAULT NULL,
+  `tr_amt` decimal(9,5) DEFAULT NULL,
+  `tr_mtl` decimal(9,5) DEFAULT NULL,
+  `tr_lbr` decimal(9,5) DEFAULT NULL,
+  `tr_bdn` decimal(9,5) DEFAULT NULL,
+  `tr_ovh` decimal(9,5) DEFAULT NULL,
+  `tr_out` decimal(9,5) DEFAULT NULL,
+  `tr_batch` varchar(10) DEFAULT NULL,
+  `tr_op` varchar(10) DEFAULT NULL,
+  `tr_loc` varchar(30) DEFAULT NULL,
+  `tr_cc` varchar(10) DEFAULT NULL,
+  `tr_wc` varchar(10) DEFAULT NULL,
+  `tr_wf` varchar(10) DEFAULT NULL,
+  `tr_prodline` varchar(10) DEFAULT NULL,
+  `tr_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tr_actcell` varchar(10) DEFAULT NULL,
+  `tr_export` tinyint(1) DEFAULT NULL,
+  `tr_order` varchar(30) DEFAULT NULL,
+  `tr_line` int(11) DEFAULT NULL,
+  `tr_po` varchar(30) DEFAULT NULL,
+  `tr_price` decimal(9,5) DEFAULT NULL,
+  `tr_cost` decimal(9,5) DEFAULT NULL,
+  `tr_acct` varchar(10) DEFAULT NULL,
+  `tr_terms` varchar(30) DEFAULT NULL,
+  `tr_pack` varchar(30) DEFAULT '',
+  `tr_pack_date` date DEFAULT NULL,
+  `tr_assy_date` date DEFAULT NULL,
+  PRIMARY KEY (`tr_id`),
+  KEY `name` (`tr_part`,`tr_eff_date`,`tr_type`,`tr_ref`)
+) ENGINE=InnoDB AUTO_INCREMENT=86714 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_mstr`
+--
+
+DROP TABLE IF EXISTS `user_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_mstr` (
+  `user_id` varchar(10) NOT NULL DEFAULT '',
+  `user_lname` varchar(30) DEFAULT '',
+  `user_fname` varchar(30) DEFAULT '',
+  `user_mname` varchar(30) DEFAULT '',
+  `user_passwd` varchar(30) DEFAULT '',
+  `user_status` varchar(1) DEFAULT '',
+  `user_email` varchar(200) DEFAULT '',
+  `user_phone` varchar(15) DEFAULT '',
+  `user_cell` varchar(15) DEFAULT '',
+  `user_root` tinyint(1) NOT NULL DEFAULT '0',
+  `user_rmks` varchar(500) NOT NULL DEFAULT '',
+  `user_role` varchar(30) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vd_mstr`
+--
+
+DROP TABLE IF EXISTS `vd_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vd_mstr` (
+  `vd_addr` varchar(30) NOT NULL DEFAULT '',
+  `vd_name` varchar(30) DEFAULT '',
+  `vd_line1` varchar(30) DEFAULT '',
+  `vd_line2` varchar(30) DEFAULT '',
+  `vd_line3` varchar(30) DEFAULT '',
+  `vd_city` varchar(30) DEFAULT '',
+  `vd_state` varchar(2) DEFAULT '',
+  `vd_zip` varchar(10) DEFAULT '',
+  `vd_country` varchar(30) DEFAULT '',
+  `vd_dateadd` date DEFAULT '0000-00-00',
+  `vd_datemod` date DEFAULT '0000-00-00',
+  `vd_usermod` varchar(30) DEFAULT '',
+  `vd_group` varchar(30) DEFAULT '',
+  `vd_market` varchar(30) DEFAULT '',
+  `vd_buyer` varchar(30) DEFAULT '',
+  `vd_terms` varchar(30) DEFAULT '',
+  `vd_shipvia` varchar(30) DEFAULT '',
+  `vd_price_code` varchar(30) DEFAULT '',
+  `vd_disc_code` varchar(30) DEFAULT '',
+  `vd_tax_code` varchar(30) DEFAULT '',
+  `vd_ap_acct` varchar(10) DEFAULT '',
+  `vd_ap_cc` varchar(4) DEFAULT '',
+  `vd_remarks` varchar(300) DEFAULT '',
+  `vd_freight_type` varchar(30) DEFAULT '',
+  `vd_bank` varchar(30) DEFAULT '',
+  `vd_misc` varchar(50) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`vd_addr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vdc_det`
+--
+
+DROP TABLE IF EXISTS `vdc_det`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vdc_det` (
+  `vdc_id` int(11) NOT NULL AUTO_INCREMENT,
+  `vdc_code` varchar(10) DEFAULT NULL,
+  `vdc_type` varchar(20) DEFAULT NULL,
+  `vdc_name` varchar(50) DEFAULT NULL,
+  `vdc_phone` varchar(15) DEFAULT NULL,
+  `vdc_fax` varchar(15) DEFAULT NULL,
+  `vdc_email` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vdp_mstr`
+--
+
+DROP TABLE IF EXISTS `vdp_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vdp_mstr` (
+  `vdp_vend` varchar(10) DEFAULT NULL,
+  `vdp_item` varchar(30) DEFAULT NULL,
+  `vdp_vitem` varchar(30) DEFAULT NULL,
+  `vdp_upc` varchar(30) DEFAULT NULL,
+  `vdp_userid` varchar(10) DEFAULT NULL,
+  `vdp_misc` varchar(30) DEFAULT NULL,
+  `vdp_sku` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vod_mstr`
+--
+
+DROP TABLE IF EXISTS `vod_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vod_mstr` (
+  `vod_id` int(11) DEFAULT '0',
+  `vod_rvdid` varchar(8) DEFAULT '',
+  `vod_rvdline` int(8) DEFAULT '0',
+  `vod_part` varchar(30) DEFAULT '',
+  `vod_qty` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `vod_voprice` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `vod_date` date DEFAULT '0000-00-00',
+  `vod_vend` varchar(10) DEFAULT '',
+  `vod_invoice` varchar(30) DEFAULT '',
+  `vod_expense_acct` varchar(10) NOT NULL DEFAULT '',
+  `vod_expense_cc` varchar(4) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vpr_mstr`
+--
+
+DROP TABLE IF EXISTS `vpr_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vpr_mstr` (
+  `vpr_desc` varchar(30) DEFAULT NULL,
+  `vpr_vend` varchar(30) DEFAULT NULL,
+  `vpr_item` varchar(30) DEFAULT NULL,
+  `vpr_type` varchar(20) DEFAULT NULL,
+  `vpr_volume` varchar(500) DEFAULT NULL,
+  `vpr_volprice` varchar(500) DEFAULT NULL,
+  `vpr_price` decimal(9,5) DEFAULT NULL,
+  `vpr_userid` varchar(10) DEFAULT NULL,
+  `vpr_mod_date` date DEFAULT NULL,
+  `vpr_disc` decimal(9,5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wc_mstr`
+--
+
+DROP TABLE IF EXISTS `wc_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wc_mstr` (
+  `wc_cell` varchar(20) NOT NULL,
+  `wc_mch` varchar(20) DEFAULT NULL,
+  `wc_desc` varchar(100) DEFAULT NULL,
+  `wc_site` varchar(10) DEFAULT NULL,
+  `wc_cc` varchar(10) DEFAULT NULL,
+  `wc_run_rate` decimal(5,2) DEFAULT NULL,
+  `wc_run_crew` decimal(5,2) DEFAULT NULL,
+  `wc_setup_rate` decimal(5,2) DEFAULT NULL,
+  `wc_setup` decimal(5,2) DEFAULT NULL,
+  `wc_bdn_rate` decimal(5,2) DEFAULT NULL,
+  `wc_remarks` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wf_mstr`
+--
+
+DROP TABLE IF EXISTS `wf_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wf_mstr` (
+  `wf_id` varchar(30) NOT NULL,
+  `wf_desc` varchar(100) DEFAULT NULL,
+  `wf_site` varchar(10) DEFAULT NULL,
+  `wf_op` int(8) NOT NULL,
+  `wf_assert` tinyint(1) DEFAULT NULL,
+  `wf_op_desc` varchar(100) DEFAULT NULL,
+  `wf_cell` varchar(20) DEFAULT NULL,
+  `wf_mch` varchar(20) DEFAULT NULL,
+  `wf_setup_hours` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  `wf_run_hours` decimal(13,5) NOT NULL DEFAULT '0.00000',
+  KEY `wf` (`wf_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-04-23 12:14:47

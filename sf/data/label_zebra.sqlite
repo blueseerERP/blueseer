@@ -1,0 +1,13 @@
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "label_zebra" (
+  "lblz_code" varchar(10) NOT NULL DEFAULT '',
+  "lblz_desc" varchar(100) NOT NULL DEFAULT '',
+  "lblz_file" varchar(100) NOT NULL DEFAULT '',
+  "lblz_type" varchar(10) NOT NULL DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO "label_zebra" VALUES ('generic','A generic 4 x 6 container label','generic.prn','cont');
+INSERT INTO "label_zebra" VALUES ('address','Address Labels for Shiptos','address.prn','addr');
+INSERT INTO "label_zebra" VALUES ('ucc','UCC label generic','ucc.prn','cont');
+INSERT INTO "label_zebra" VALUES ('aiag','AIAG label generic','aiag.prn','cont');

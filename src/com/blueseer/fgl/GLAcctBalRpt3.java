@@ -1,0 +1,564 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.blueseer.fgl;
+
+import com.blueseer.utl.OVData;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FileDialog;
+import java.awt.Font;
+import java.awt.Frame;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
+import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.mydialog;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+/**
+ *
+ * @author vaughnte
+ */
+public class GLAcctBalRpt3 extends javax.swing.JPanel {
+ 
+    
+    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"ChartIt", "Acct", "Desc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"});
+                
+    
+    
+    
+       class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(Color.blue);
+                setBackground(UIManager.getColor("Button.background"));
+            }
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+    
+    /**
+     * Creates new form ScrapReportPanel
+     */
+    public GLAcctBalRpt3() {
+        initComponents();
+    }
+
+    public void chartacct(String acct, ArrayList<String> values) {
+         File f = new File(bsmf.MainFrame.temp + "chart.jpg");
+                if(f.exists()) {
+                    f.delete();
+                }
+              String acctdesc = OVData.getGLAcctDesc(acct);
+              DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
+              int i = 1;
+              double doublevalue = 0.00;
+               for (String value : values) {
+                        doublevalue = Double.valueOf(value);
+                           if (doublevalue < 0) {
+                               doublevalue *= -1;
+                           }
+                        dataset.setValue(doublevalue, acct, String.valueOf(i));
+                        i++;
+                    }  
+               JFreeChart chart = ChartFactory.createBarChart(acctdesc, "Period", "Dollars", dataset, PlotOrientation.VERTICAL, true, true, false);
+                  //  CategoryItemRenderer renderer = new ScrapChartView.CustomRenderer();
+                    
+                    Font font = new Font("Dialog", Font.PLAIN, 30);
+                    CategoryPlot p = chart.getCategoryPlot();
+                    
+                    CategoryAxis axis = p.getDomainAxis();
+                     ValueAxis axisv = p.getRangeAxis();
+                     axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+                     axisv.setVerticalTickLabels(false);
+                     chartpanel.setVisible(true);
+                   //  p.setRenderer(renderer);
+                    try {
+                        ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 800, 400);
+                    } catch (IOException e) {
+                        System.err.println("Problem occurred creating chart.");
+                    }
+                    ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
+                    myicon.getImage().flush();
+                 //   this.chartlabel.setHorizontalAlignment(SwingConstants.LEFT);
+                 //   this.chartlabel.setVerticalAlignment(SwingConstants.CENTER);
+                 //   this.chartlabel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+       
+                    
+                    this.chartlabel.setIcon(myicon);
+                    
+                    this.repaint();
+    }
+    
+    public void initvars(String arg) {
+        chartpanel.setVisible(false);
+        bthidechart.setEnabled(false);
+        java.util.Date now = new java.util.Date();
+        DateFormat dfyear = new SimpleDateFormat("yyyy");
+        DateFormat dfperiod = new SimpleDateFormat("M");
+        
+        mymodel.setNumRows(0);
+        tablereport.setModel(mymodel);
+        
+        
+         tablereport.getColumnModel().getColumn(0).setCellRenderer(new GLAcctBalRpt3.ButtonRenderer());
+         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        
+        ddyear.removeAllItems();
+        for (int i = 1967 ; i < 2222; i++) {
+            ddyear.addItem(String.valueOf(i));
+        }
+        ddyear.setSelectedItem(dfyear.format(now));
+            
+       cbzero.setSelected(false);
+        
+        ArrayList myacct = OVData.getGLAcctList();
+        for (int i = 0; i < myacct.size(); i++) {
+            ddacctfrom.addItem(myacct.get(i));
+            ddacctto.addItem(myacct.get(i));
+        }
+            ddacctfrom.setSelectedIndex(0);
+            ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1);
+        
+        ddsite.removeAllItems();
+        ArrayList sites = OVData.getSiteList();
+        for (Object site : sites) {
+            ddsite.addItem(site);
+        }  
+          
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        btRun = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        labelsum = new javax.swing.JLabel();
+        ddacctfrom = new javax.swing.JComboBox();
+        ddacctto = new javax.swing.JComboBox();
+        cbzero = new javax.swing.JCheckBox();
+        ddyear = new javax.swing.JComboBox();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablereport = new javax.swing.JTable();
+        chartpanel = new javax.swing.JPanel();
+        chartlabel = new javax.swing.JLabel();
+        bthidechart = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        ddsum = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(0, 102, 204));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Activity By Year"));
+
+        jLabel2.setText("Year");
+
+        btRun.setText("Run");
+        btRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRunActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("From Acct");
+
+        jLabel4.setText("To Acct");
+
+        cbzero.setText("Supress Zeros");
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        jPanel3.setLayout(new java.awt.CardLayout());
+
+        tablereport.setAutoCreateRowSorter(true);
+        tablereport.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablereportMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablereport);
+
+        jPanel3.add(jScrollPane1, "card3");
+
+        jPanel2.add(jPanel3);
+
+        chartpanel.add(chartlabel);
+
+        jPanel2.add(chartpanel);
+
+        bthidechart.setText("Hide Chart");
+        bthidechart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bthidechartActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Site");
+
+        ddsum.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        ddsum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsumActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Sum Period");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddyear, 0, 115, Short.MAX_VALUE)
+                    .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(61, 61, 61)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ddacctfrom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddacctto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bthidechart)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addGap(7, 7, 7)
+                        .addComponent(ddsum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbzero)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelsum, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(424, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(ddacctfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(btRun)
+                    .addComponent(bthidechart)
+                    .addComponent(ddsum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddacctto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel4)
+                        .addComponent(cbzero))
+                    .addComponent(labelsum, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
+
+    // chartlabel.setVisible(false);
+try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                int qty = 0;
+                double dol = 0;
+                DecimalFormat df = new DecimalFormat("#0.00");
+                int i = 0;
+               
+               mymodel.setNumRows(0);
+                   
+                
+               
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                 
+                 int year = Integer.valueOf(ddyear.getSelectedItem().toString());
+                 
+                 
+                 String[] str_activity = {"","","","","","","","","","","","",""};
+                 double activity = 0.00;
+                
+                 Date p_datestart = null;
+                 Date p_dateend = null;
+                 
+                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                
+                 
+                 String acctid = "";
+                 String accttype = "";
+                 String acctdesc = "";
+                 String[] ac = null;
+                 
+                 /*
+                 String startacct = ddacctfrom.getSelectedItem().toString();
+                 String endacct = ddacctto.getSelectedItem().toString();
+                 
+                  for (int y = 1; y <= 12; y++) {
+                      
+                      res = st.executeQuery("select acb_acct, ac_desc, sum(acb_amt) as sum from acb_mstr inner join ac_mstr on ac_id = acb_acct where " +
+                    " acb_acct >= " + "'" + startacct + "'" + " AND " +
+                    " acb_acct <= " + "'" + endacct + "'" + " AND " +
+                    " acb_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
+                    " acb_year = " + "'" + ddyear.getSelectedItem().toString() + "'" +
+                    " AND acb_per = " + "'" + y + "'" +
+                    " group by acb_acct order by acb_acct " +
+                    ";");
+
+                    while (res.next()) {
+                        str_activity[y - 1] += res.getDouble("sum");
+                        acctid = res.getString("acb_acct");
+                        acctdesc = res.getString("ac_desc");
+                    }
+                  mymodel.addRow(new Object[] { acctid, acctdesc, str_activity[0], str_activity[1], str_activity[2], str_activity[3], str_activity[4], str_activity[5], str_activity[6], str_activity[7], str_activity[8], str_activity[9], str_activity[10], str_activity[11]});
+     
+                      
+                  }
+                 */
+                 
+                 
+                 ACCTS:    for (String account : accounts) {
+                  ac = account.split(",", -1);
+                  acctid = ac[0];
+                  accttype = ac[1];
+                  acctdesc = ac[2];
+                  str_activity[0] = "";
+                  str_activity[1] = "";
+                  str_activity[2] = "";
+                  str_activity[3] = "";
+                  str_activity[4] = "";
+                  str_activity[5] = "";
+                  str_activity[6] = "";
+                  str_activity[7] = "";
+                  str_activity[8] = "";
+                  str_activity[9] = "";
+                  str_activity[10] = "";
+                  str_activity[11] = "";
+                  
+                  for (int k = 1 ; k<= 12 ; k++) {
+                  
+                  activity = 0.00;
+                   
+                  // calculate period(s) activity defined by date range 
+                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+               
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                        "'" + String.valueOf(year) + "'" + 
+                        " AND acb_per = " +
+                        "'" + String.valueOf(k) + "'" +
+                        " AND acb_acct = " +
+                        "'" + acctid + "'" +
+                        " AND acb_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
+                        ";");
+                
+                       while (res.next()) {
+                          activity += res.getDouble(("sum"));
+                       }
+                 
+                     str_activity[k - 1] = df.format(activity);
+                 
+                 
+                  } // k
+                 
+                 if (cbzero.isSelected() && ( ( Double.valueOf(str_activity[0]) +
+                       Double.valueOf(str_activity[1]) +
+                       Double.valueOf(str_activity[2]) +
+                       Double.valueOf(str_activity[3]) +       
+                       Double.valueOf(str_activity[4]) +
+                       Double.valueOf(str_activity[5]) +       
+                       Double.valueOf(str_activity[6]) +       
+                       Double.valueOf(str_activity[7]) +        
+                       Double.valueOf(str_activity[8]) +       
+                       Double.valueOf(str_activity[9]) +       
+                       Double.valueOf(str_activity[10]) +
+                       Double.valueOf(str_activity[11]) ) == 0) ) {
+                     continue;
+                 }
+                               
+               //      bsmf.MainFrame.show(account);
+                 mymodel.addRow(new Object[]{"ChartIt", acctid,
+                                acctdesc,
+                                str_activity[0],
+                                str_activity[1],
+                                str_activity[2],
+                                str_activity[3],
+                                str_activity[4],
+                                str_activity[5],
+                                str_activity[6],
+                                str_activity[7],
+                                str_activity[8],
+                                str_activity[9],
+                                str_activity[10],
+                                str_activity[11]
+                             });
+                
+              
+                 } // account
+             
+                 ddsum.setSelectedIndex(0);
+               
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("Problem executing Acct Bal Report");
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+    }//GEN-LAST:event_btRunActionPerformed
+
+    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
+        int row = tablereport.rowAtPoint(evt.getPoint());
+        int col = tablereport.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+             
+              //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
+                ArrayList<String> mylist = new ArrayList<String>();
+                for (int i = 3 ; i <= 14; i++) {
+                mylist.add(tablereport.getValueAt(row, i).toString());
+                }
+                chartacct(tablereport.getValueAt(row, 1).toString(), mylist);
+                
+                 bthidechart.setEnabled(true);
+           
+        }
+    }//GEN-LAST:event_tablereportMouseClicked
+
+    private void bthidechartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidechartActionPerformed
+       chartpanel.setVisible(false);
+        bthidechart.setEnabled(false);
+    }//GEN-LAST:event_bthidechartActionPerformed
+
+    private void ddsumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsumActionPerformed
+       DecimalFormat df = new DecimalFormat("#0.00");
+        double amt = 0.00;
+        for (int i = 0 ; i < tablereport.getRowCount() ; i++) {
+               amt += Double.valueOf(tablereport.getValueAt(i, Integer.valueOf(ddsum.getSelectedItem().toString()) + 2).toString());
+       }
+        labelsum.setText(df.format(amt));
+    }//GEN-LAST:event_ddsumActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btRun;
+    private javax.swing.JButton bthidechart;
+    private javax.swing.JCheckBox cbzero;
+    private javax.swing.JLabel chartlabel;
+    private javax.swing.JPanel chartpanel;
+    private javax.swing.JComboBox ddacctfrom;
+    private javax.swing.JComboBox ddacctto;
+    private javax.swing.JComboBox ddsite;
+    private javax.swing.JComboBox ddsum;
+    private javax.swing.JComboBox ddyear;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelsum;
+    private javax.swing.JTable tablereport;
+    // End of variables declaration//GEN-END:variables
+}

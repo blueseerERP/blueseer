@@ -1,0 +1,51 @@
+insert into car_mstr (car_code, car_type) values ('FEDEX','carrier');
+insert into car_mstr (car_code, car_type) values ('ACME','carrier');
+insert into cust_term (cut_code, cut_desc, cut_days) values ('N30', 'NET 30', '30');
+insert into cust_term (cut_code, cut_desc, cut_days) values ('N00', 'Due At
+Sale', '0');
+insert into frt_mstr (frt_code) values ('PICKUP');
+insert into task_mstr (task_id, task_desc) values ('100', 'A Simple Task');
+insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values ('100', 'admin', 'Sample Task action 1', '1');
+insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values ('100', 'admin', 'Sample Task action 2', '2');
+.mode csv
+.import sitemstr.csv site_mstr
+.import menumstr.csv menu_mstr
+.import panelmstr.csv panel_mstr
+.import glcal.csv gl_cal
+.import acctmstr.csv ac_mstr
+.import curmstr.csv cur_mstr
+.import pos_ctrl.csv pos_ctrl
+.import edictrl.csv edi_ctrl
+.import cmmstr.csv cm_mstr
+.import whmstr.csv wh_mstr
+.import locmstr.csv loc_mstr
+.import vdmstr.csv vd_mstr
+.import deptmstr.csv dept_mstr
+.import cmsdet.csv cms_det
+.import cmedimstr.csv cmedi_mstr
+.import plmstr.csv pl_mstr
+.import itemmstr.csv item_mstr
+.import itemcostmstr.csv item_cost
+.import itemcostrmstr.csv itemr_cost
+.import pbmmstr.csv pbm_mstr
+.import cprmstr.csv cpr_mstr
+.import cupmstr.csv cup_mstr
+.import vprmstr.csv vpr_mstr
+.import vdpmstr.csv vdp_mstr
+.import uommstr.csv uom_mstr
+.import wfmstr.csv wf_mstr
+.import wcmstr.csv wc_mstr
+.import bankmstr.csv bk_mstr
+.import arctrl.csv ar_ctrl
+.import apctrl.csv ap_ctrl
+.import shipctrl.csv ship_ctrl
+.import ovmstr.csv ov_mstr
+.import glctrl.csv gl_ctrl
+.import glicdef.csv glic_def
+.import empmstr.csv emp_mstr
+update emp_mstr set emp_termdate = null where emp_termdate = '\N';
+.separator ';'
+.import usrmstr.csv user_mstr
+.import permmstr.csv perm_mstr
+.import permwmstr.csv perm_mstr
+.import mockmstr.csv mock_mstr

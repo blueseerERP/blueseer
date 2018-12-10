@@ -1,0 +1,1130 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.blueseer.fgl;
+
+import com.blueseer.utl.OVData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Date;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.ToolTipManager;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import static com.blueseer.utl.OVData.getDueDateFromTerms;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.border.TitledBorder;
+import org.apache.commons.io.FilenameUtils;
+
+
+/**
+ *
+ * @author vaughnte
+ */
+public class CashTran extends javax.swing.JPanel {
+
+                String terms = "";
+                String apacct = "";
+                String apcc = "";
+                String apbank = "";
+                Double actamt = 0.00;
+                Double rcvamt = 0.00;
+                int voucherline = 0;
+                boolean isLoad = false;
+                String partnumber = "";
+                String newFileName = "";
+                
+                javax.swing.table.DefaultTableModel sellmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+               "Line", "Part", "Qty", "Price", "Desc"
+            });
+                
+                 javax.swing.table.DefaultTableModel buymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Line", "Part", "Qty", "Price", "Desc", "ImageFile"
+            });
+                
+                
+    /**
+     * Creates new form ShipMaintPanel
+     */
+    public CashTran() {
+        initComponents();
+      
+        
+       
+       
+    }
+   
+    
+    public void initvars(String arg) {
+        
+         isLoad = true;
+       clearAll(); 
+       disableAll();
+      
+        if (buttonGroup1.getButtonCount() == 0) {
+        buttonGroup1.add(rbBuy);
+        buttonGroup1.add(rbSell);
+        }
+        buttonGroup1.clearSelection();
+       
+        
+       btnew.setEnabled(true);
+       isLoad = false;
+       
+    }
+    
+    public void disableAll() {
+         rbBuy.setEnabled(false);
+        rbSell.setEnabled(false);
+        tbactualamt.setEnabled(false);
+        ddentity.setEnabled(false);
+        ddsite.setEnabled(false);
+        dcdate.setEnabled(false);
+        tbrmks.setEnabled(false);
+        tbinvoice.setEnabled(false);
+        dditem.setEnabled(false);
+        tbitemservice.setEnabled(false);
+        tbprice.setEnabled(false);
+        btcreateItem.setEnabled(false);
+        btimage.setEnabled(false);
+        btadditem.setEnabled(false);
+        btdeleteitem.setEnabled(false);
+        btadd.setEnabled(false);
+        detailtable.setEnabled(false);
+        expensenbr.setEnabled(false);
+       
+    }
+    
+    public void enableAll() {
+         rbBuy.setEnabled(true);
+        rbSell.setEnabled(true);
+        tbactualamt.setEnabled(true);
+        ddentity.setEnabled(true);
+        ddsite.setEnabled(true);
+        dcdate.setEnabled(true);
+        tbrmks.setEnabled(true);
+        tbinvoice.setEnabled(true);
+        dditem.setEnabled(true);
+        tbitemservice.setEnabled(true);
+        tbprice.setEnabled(true);
+        btcreateItem.setEnabled(true);
+        btimage.setEnabled(true);
+        btadditem.setEnabled(true);
+        btdeleteitem.setEnabled(true);
+        btadd.setEnabled(true);
+        detailtable.setEnabled(true);
+       // expensenbr.setEnabled(true);
+    }
+    
+    public void clearAll() {
+         
+      
+        
+         terms = "";
+         apacct = "";
+         apcc = "";
+         apbank = "";
+         actamt = 0.00;
+         rcvamt = 0.00;
+         expensenbr.setText("");
+         tbinvoice.setText("");
+        tbrmks.setText("");
+        
+        rbBuy.setSelected(false);
+        rbSell.setSelected(false);
+       
+         jPanel3.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        
+        
+        tbactualamt.setText("");
+       
+         lbtitle.setText("");
+       
+        lbname.setText("");
+      
+       
+        buymodel.setRowCount(0);
+        sellmodel.setRowCount(0);
+       
+        detailtable.setModel(buymodel);
+       
+        
+        ddentity.removeAllItems();
+        ArrayList entity = new ArrayList();
+        if (rbSell.isSelected()) {
+        entity = OVData.getcustmstrlist();
+        lblentity.setText("Cust");
+        } else {
+        entity = OVData.getvendmstrlist();   
+        lblentity.setText("Vend");
+        }
+        for (int i = 0; i < entity.size(); i++) {
+            ddentity.addItem(entity.get(i));
+        }
+            ddentity.setSelectedIndex(0);
+        
+          ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        
+        
+        dditem.removeAllItems();
+        ArrayList<String> myitems = OVData.getItemMasterACodeForCashTran();
+        for (String code : myitems) {
+            dditem.addItem(code);
+        }
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
+        
+    }
+  
+   
+     
+      
+      public void setvendorvariables(String vendor) {
+        
+        try {
+     
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            int i = 0;
+            int d = 0;
+            String uniqpo = null;
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+
+                res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
+                while (res.next()) {
+                    i++;
+                   apacct = res.getString("vd_ap_acct");
+                   apcc = res.getString("vd_ap_cc");
+                   terms = res.getString("vd_terms");
+                   apbank = res.getString("vd_bank");
+                }
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("sql code does not execute");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+      
+   
+
+     
+      
+ 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        fc = new javax.swing.JFileChooser();
+        jPanel1 = new javax.swing.JPanel();
+        btadd = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        detailtable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lblpic = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        dcdate = new com.toedter.calendar.JDateChooser();
+        tbactualamt = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        expensenbr = new javax.swing.JTextField();
+        tbitemservice = new javax.swing.JTextField();
+        tbprice = new javax.swing.JTextField();
+        rbBuy = new javax.swing.JRadioButton();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblentity = new javax.swing.JLabel();
+        btdeleteitem = new javax.swing.JButton();
+        tbrmks = new javax.swing.JTextField();
+        btadditem = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        ddentity = new javax.swing.JComboBox();
+        lbname = new javax.swing.JLabel();
+        dditem = new javax.swing.JComboBox<>();
+        tbinvoice = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        btnew = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox();
+        jLabel35 = new javax.swing.JLabel();
+        rbSell = new javax.swing.JRadioButton();
+        lbtitle = new javax.swing.JLabel();
+        btimage = new javax.swing.JButton();
+        btcreateItem = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(0, 102, 204));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cash Transaction"));
+
+        btadd.setText("Save");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddActionPerformed(evt);
+            }
+        });
+
+        detailtable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane7.setViewportView(detailtable);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Image"));
+        jPanel2.setAutoscrolls(true);
+        jPanel2.setMaximumSize(new java.awt.Dimension(417, 328));
+
+        lblpic.setAutoscrolls(true);
+        jScrollPane1.setViewportView(lblpic);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        dcdate.setDateFormatString("yyyy-MM-dd");
+
+        tbactualamt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbactualamtActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Item Nbr");
+
+        rbBuy.setText("buy");
+        rbBuy.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbBuyItemStateChanged(evt);
+            }
+        });
+
+        jLabel27.setText("Total Amt");
+
+        jLabel2.setText("Ref Nbr");
+
+        lblentity.setText("Entity");
+
+        btdeleteitem.setText("Del Item");
+        btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteitemActionPerformed(evt);
+            }
+        });
+
+        btadditem.setText("Add Item");
+        btadditem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btadditemActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Desc");
+
+        ddentity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddentityActionPerformed(evt);
+            }
+        });
+
+        dditem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dditemActionPerformed(evt);
+            }
+        });
+
+        jLabel24.setText("TransNbr");
+
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Rmks");
+
+        jLabel6.setText("Price");
+
+        jLabel10.setText("Site");
+
+        ddsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsiteActionPerformed(evt);
+            }
+        });
+
+        jLabel35.setText("Date");
+
+        rbSell.setText("sell");
+
+        lbtitle.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+
+        btimage.setText("Load Image");
+        btimage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btimageActionPerformed(evt);
+            }
+        });
+
+        btcreateItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btcreateItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcreateItemActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(59, 59, 59)
+                                .addComponent(jLabel6))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel5))))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(46, 46, 46)
+                                        .addComponent(lbtitle, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btcreateItem))))
+                            .addComponent(tbitemservice)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(325, 325, 325)
+                        .addComponent(btimage)
+                        .addGap(7, 7, 7)
+                        .addComponent(btadditem)
+                        .addGap(6, 6, 6)
+                        .addComponent(btdeleteitem))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel2)
+                        .addGap(5, 5, 5)
+                        .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(jLabel10)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(95, 95, 95)
+                        .addComponent(jLabel4)
+                        .addGap(5, 5, 5)
+                        .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel24)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)
+                        .addComponent(btnew)
+                        .addGap(22, 22, 22)
+                        .addComponent(rbBuy)
+                        .addGap(18, 18, 18)
+                        .addComponent(rbSell)
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel27)
+                        .addGap(11, 11, 11)
+                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(lblentity)
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(100, 100, 100)
+                                .addComponent(jLabel35)
+                                .addGap(4, 4, 4)
+                                .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(12, 12, 12))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel24)
+                            .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(btnew))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(rbBuy))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(rbSell))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel27))
+                    .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblentity))
+                    .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel35))
+                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel10))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel4))
+                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel2))
+                    .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btcreateItem)))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(8, 8, 8)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbtitle, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btimage)
+                    .addComponent(btadditem)
+                    .addComponent(btdeleteitem)))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jScrollPane7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btadd)))
+                .addGap(3, 3, 3))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(btadd))
+        );
+
+        add(jPanel1);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        expensenbr.setText(String.valueOf(OVData.getNextNbr("voucher")));
+                java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String clockdate = dfdate.format(now);
+                String clocktime = dftime.format(now);
+               
+                dcdate.setDate(now);
+                
+                enableAll();
+               btnew.setEnabled(false);
+               rbBuy.setSelected(true);  
+        
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
+       
+        if (( dditem.getSelectedItem() == null || dditem.getSelectedItem().toString().isEmpty() ) && rbBuy.isSelected()) {
+            bsmf.MainFrame.show("must create item in dropdown");
+            return;
+        }
+        
+        // cannot duplicate itemnumber in table
+        boolean canproceed = true;
+        for (int j = 0; j < detailtable.getRowCount(); j++) {
+            if (dditem.getSelectedItem().toString().equals(detailtable.getValueAt(j, 1).toString())) {
+                bsmf.MainFrame.show("cannot add duplicate item number");
+                canproceed = false;
+            }
+        }
+        
+        if (! canproceed) {
+            return;
+        }
+        
+       // Pattern p = Pattern.compile("\\d\\.\\d\\d");
+      //  Matcher m = p.matcher(tbprice.getText());
+       // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
+       // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
+       // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
+            DecimalFormat df = new DecimalFormat("#0.00"); 
+            voucherline++;
+            actamt += Double.valueOf("1") * 
+                          Double.valueOf(tbprice.getText());
+           
+            
+            if (rbBuy.isSelected()) {
+            buymodel.addRow(new Object[] { voucherline,
+                                                  partnumber,
+                                                  "1",
+                                                  tbprice.getText(),
+                                                  tbitemservice.getText().replace("'",""),
+                                                  newFileName
+                                                  });
+            }
+            if (rbSell.isSelected()) {
+            sellmodel.addRow(new Object[] { voucherline, 
+                                            dditem.getSelectedItem().toString(),
+                                            "1",
+                                            tbprice.getText(),
+                                            tbitemservice.getText().replace("'","")
+                                          });
+            }
+            
+            
+        if (detailtable.getRowCount() > 0) {
+            rbBuy.setEnabled(false);
+            rbSell.setEnabled(false);
+        }    else {
+            rbBuy.setEnabled(true);
+            rbSell.setEnabled(true);
+        }
+            
+            
+        tbitemservice.setText("");
+        tbprice.setText("");
+        tbactualamt.setText(df.format(actamt));
+        dditem.setSelectedIndex(0);
+        tbitemservice.requestFocus();
+        
+        
+    }//GEN-LAST:event_btadditemActionPerformed
+
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                boolean error = false;
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                DecimalFormat df = new DecimalFormat("#0.00");   
+                setvendorvariables(ddentity.getSelectedItem().toString());
+                    
+                                        
+                   
+                    
+                    
+                    if (proceed && rbSell.isSelected()) {
+                          int shipperid = OVData.getNextNbr("shipper");     
+                             boolean iserror = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+                             String.valueOf(shipperid), 
+                              ddentity.getSelectedItem().toString(),
+                              ddentity.getSelectedItem().toString(),  // shipto
+                              tbinvoice.getText().replace("'", ""), // order
+                              tbinvoice.getText().replace("'", ""),  // po
+                              dfdate.format(now), // duedate
+                              dfdate.format(now),  // orddate
+                              tbrmks.getText().replace("'", ""),
+                              "", "A");  // shipvia, ShipType
+
+                     if (! iserror) {
+                         for (int j = 0; j < detailtable.getRowCount(); j++) {
+                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
+                                     detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
+                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "");
+                         }
+                        
+                     }
+                     
+                   
+
+                     // now confirm shipment
+                     String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
+                     if (message[0].equals("1")) { // if error
+                         bsmf.MainFrame.show(message[1]);
+                         error = true;
+                     } 
+                     
+                                     
+                     // now emulate AR payment
+                     if (! error) {
+                     String batchnbr = String.valueOf(OVData.getNextNbr("ar"));
+                      st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_status, ar_bank, ar_site ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem().toString() + "'" + ","
+                        + "'" + batchnbr + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "P" + "'" + ","
+                        + "'" + "cashtran" + "'" + ","
+                        + "'" + tbrmks.getText() + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + OVData.getDefaultARAcct() + "'" + ","
+                        + "'" + OVData.getDefaultARCC() + "'" + ","
+                        + "'" + "c" + "'"  + ","
+                        + "'" + OVData.getDefaultARBank() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'"
+                        + ")"
+                        + ";");
+               
+                        for (int j = 0; j < detailtable.getRowCount(); j++) {
+                            st.executeUpdate("insert into ard_mstr "
+                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
+                                + " values ( " + "'" + batchnbr + "'" + ","
+                                    + "'" + ddentity.getSelectedItem().toString() + "'" + ","
+                                + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + (j + 1) + "'" + ","
+                                + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
+                                + "'" + "0" + "'" 
+                                + ")"
+                                + ";");
+                        }
+                    
+                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());  
+                     }
+                    // end of emulate AR Payment
+                       
+                     
+                     if (! error) {
+                        bsmf.MainFrame.show("sell complete");
+                        initvars(""); 
+                     }
+                    
+                     
+                     
+                    }
+                    
+                    if (proceed && rbBuy.isSelected()) {
+                        
+                      st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_bank ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
+                              + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + expensenbr.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + tbinvoice.getText() + "'" + ","
+                        + "'" + tbrmks.getText().replace("'", "") + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + apbank + "'"
+                        + ")"
+                        + ";");
+                int amt = 0;
+               // voucherdet:  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
+               //detailtable: "Line", "Part", "Qty", "Price", "Desc", "ImageFile"
+                    for (int j = 0; j < detailtable.getRowCount(); j++) {
+                        
+                        // lets add item to database
+                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString(), detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
+                        if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
+                        OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
+                        }
+                        // lets add each item to inventory
+                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString(),
+                                "", "", Double.valueOf("1"));
+                        // now lets add detail voucher
+                        //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + ddentity.getSelectedItem() + "'" + ","
+                            + "'" + "asset" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + tbinvoice.getText() + "'" + ","        
+                            + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
+                            + "'" + OVData.getDefaultAssetCC() + "'" 
+                            + ")"
+                            + ";");
+                  
+                     }
+                    
+                    /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
+                    
+                    /* emulate cash payment */    
+                        if (! error)
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbinvoice.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        
+                    if (error) {
+                        bsmf.MainFrame.show("An error occurred");
+                    } else {
+                    bsmf.MainFrame.show("buy complete");
+                    initvars(""); 
+                    }
+                    //reinitreceivervariables("");
+                   
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+                    
+               
+                        
+                    
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btaddActionPerformed
+
+    private void ddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentityActionPerformed
+       
+        if (ddentity.getSelectedItem() != null )
+        try {
+            
+        
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                if (rbBuy.isSelected()) {
+                res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");
+                } else {
+                res = st.executeQuery("select cm_name as 'name' from cm_mstr where cm_code = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");   
+                }
+                while (res.next()) {
+                    lbname.setText(res.getString("name"));
+                }
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Cannot get entity name");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_ddentityActionPerformed
+
+    private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
+        int[] rows = detailtable.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show("Removing row " + i);
+             actamt -= Double.valueOf(detailtable.getModel().getValueAt(i,2).toString()) * Double.valueOf(detailtable.getModel().getValueAt(i,3).toString());
+            ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
+           voucherline--;
+        }
+        tbactualamt.setText(actamt.toString());
+    }//GEN-LAST:event_btdeleteitemActionPerformed
+
+    private void dditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dditemActionPerformed
+        if (dditem.getSelectedItem() != null && ! isLoad )
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + dditem.getSelectedItem().toString() + "'" + ";");
+                while (res.next()) {
+                    tbitemservice.setText(res.getString("it_desc"));
+                }
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            bsmf.MainFrame.con.close();
+            
+            // now do image
+            lblpic.setIcon(null);
+            String imagefile = OVData.getDefaultItemImageFile(dditem.getSelectedItem().toString());
+            
+            if (imagefile != null && ! imagefile.isEmpty()) {
+            String ImageDir = OVData.getSystemImageDirectory();
+            ImageIcon imageIcon = new ImageIcon(ImageDir + imagefile);
+            lblpic.setIcon(imageIcon);
+            } 
+            
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_dditemActionPerformed
+
+    private void rbBuyItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbBuyItemStateChanged
+        
+        if (! isLoad) {
+        
+        ddentity.removeAllItems();
+            
+            ArrayList entity = new ArrayList();   
+        if (rbBuy.isSelected()) {
+             entity = OVData.getvendmstrlist();   
+            lblentity.setText("Vend");
+            dditem.setEnabled(false);
+            btcreateItem.setEnabled(true);
+            btimage.setEnabled(true);
+             jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+              detailtable.setModel(buymodel);
+              lbtitle.setText("Buying Asset");
+              lbtitle.setForeground(Color.blue);
+        } else {
+            entity = OVData.getcustmstrlist();
+            lblentity.setText("Cust");
+            dditem.setEnabled(true);
+             btcreateItem.setEnabled(false);
+             btimage.setEnabled(false);
+             jPanel3.setBorder(BorderFactory.createLineBorder(Color.RED));
+              detailtable.setModel(sellmodel);
+              lbtitle.setText("Selling Asset");
+              lbtitle.setForeground(Color.red);
+        }
+        for (int i = 0; i < entity.size(); i++) {
+                    ddentity.addItem(entity.get(i));
+                }
+            ddentity.setSelectedIndex(0);
+     }   
+       
+    }//GEN-LAST:event_rbBuyItemStateChanged
+
+    private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ddsiteActionPerformed
+
+    private void tbactualamtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbactualamtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbactualamtActionPerformed
+
+    private void btimageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimageActionPerformed
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date now = new Date();
+        File file = null;
+        String ImageDir = OVData.getSystemImageDirectory();
+        
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            String SourceDir = file.getAbsolutePath();
+            String suffix = FilenameUtils.getExtension(file.getName()); 
+            newFileName = dditem.getSelectedItem().toString() + "_" + dfdate.format(now) + "." + suffix;
+            // insert image filename into database
+          //  OVData.addItemImage(dditem.getSelectedItem().toString(), newFileName);
+            
+            // now lets copy the file over to the appropriate directory  
+            file = new File(SourceDir);
+            
+       //     java.nio.file.Files.copy(file.toPath(), new File("images/" + newFileName).toPath(), 
+                 java.nio.file.Files.copy(file.toPath(), new File(ImageDir + newFileName).toPath(), 
+                 java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                 java.nio.file.StandardCopyOption.COPY_ATTRIBUTES,
+                 java.nio.file.LinkOption.NOFOLLOW_LINKS);
+                 
+       // now update lblpic with new image
+            ImageIcon imageIcon = new ImageIcon(ImageDir + newFileName);
+            lblpic.setIcon(imageIcon);
+            
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+    }//GEN-LAST:event_btimageActionPerformed
+
+    private void btcreateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcreateItemActionPerformed
+       partnumber = "ASSET-" + String.valueOf(OVData.getNextNbr("asset"));
+       dditem.addItem(partnumber);
+       dditem.setSelectedItem(partnumber);
+    }//GEN-LAST:event_btcreateItemActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btadd;
+    private javax.swing.JButton btadditem;
+    private javax.swing.JButton btcreateItem;
+    private javax.swing.JButton btdeleteitem;
+    private javax.swing.JButton btimage;
+    private javax.swing.JButton btnew;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private com.toedter.calendar.JDateChooser dcdate;
+    private javax.swing.JComboBox ddentity;
+    private javax.swing.JComboBox<String> dditem;
+    private javax.swing.JComboBox ddsite;
+    private javax.swing.JTable detailtable;
+    private javax.swing.JTextField expensenbr;
+    private javax.swing.JFileChooser fc;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lblentity;
+    private javax.swing.JLabel lblpic;
+    private javax.swing.JLabel lbname;
+    private javax.swing.JLabel lbtitle;
+    private javax.swing.JRadioButton rbBuy;
+    private javax.swing.JRadioButton rbSell;
+    private javax.swing.JTextField tbactualamt;
+    private javax.swing.JTextField tbinvoice;
+    private javax.swing.JTextField tbitemservice;
+    private javax.swing.JTextField tbprice;
+    private javax.swing.JTextField tbrmks;
+    // End of variables declaration//GEN-END:variables
+}

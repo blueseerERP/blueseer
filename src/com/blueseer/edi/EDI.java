@@ -1,0 +1,3874 @@
+/*
+ * Copyright 2015 Terry Evans Vaughn ("VCSCode").
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+package com.blueseer.edi;
+
+import com.blueseer.utl.OVData;
+import com.blueseer.utl.BlueSeerUtils;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbException;
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileOutputStream;
+
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author vaughnte
+ */
+public class EDI {
+    
+    // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref, outfile
+    // outfile is an optional parameter passed during cmdline processing
+    
+    public static String[] controlarray = new String[13];
+    
+    public static String[] initEDIControl() {          
+            /*  12 elements consisting of:
+            c[0] = senderid;
+            c[1] = doctype;
+            c[2] = map;
+            c[3] = infile;
+            c[4] = controlnum;
+            c[5] = gsctrlnbr;
+            c[6] = docid;
+            c[7] = ref;
+            c[8] = outfile;
+            c[9] = sd;
+            c[10] = ed;
+            c[11] = ud;
+            c[12] = overideenvelope
+              */
+               for (int i = 0; i < 13; i++) {
+                    controlarray[i] = "";
+                }
+                return controlarray;
+    }
+    
+    public static void processFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+        String[] control = initEDIControl();
+        BufferedReader f = new BufferedReader(new FileReader(file));
+        String filename = file.getName();
+         char[] cbuf = new char[(int) file.length()];
+         f.read(cbuf); 
+         f.close();
+         
+         /* lets check to see if its x12 or edifact or csv or xml */
+         /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
+         String editype = getEDIType(cbuf, filename);
+         
+         if (editype.equals("EDIFACT")) {
+             processEDIFACT(cbuf, filename);
+        //     control = "UNKNOWN" + "," + "EDIFACT" + "," + "UNKNOWN" + "," + "UNKNOWN" + "," + filename; 
+        //    OVData.writeEDILog(control, "0", "ERROR", "EDIFACT Not Ready Yet");
+         }
+         
+         if (editype.equals("X12")) {
+             processX12(cbuf, filename);
+         }
+         
+         if (editype.equals("CSV")) {
+             processCSV(cbuf, filename);
+         }
+         
+         if (editype.equals("XML")) {
+             processXML(file, filename);
+         }
+         
+         if (editype.isEmpty()) {
+            control[0] = "Unknown";
+            control[1] = "Unknown";
+            control[2] = "Unknown";
+            control[3] = filename;
+            control[4] = "Unknown";
+            control[5] = "Unknown";
+            control[6] = "Unknown";
+            control[7] = "Unknown";
+            OVData.writeEDILog(control, "0", "ERROR", "File Type or TP Unknown");
+         }
+         
+         
+    }
+    
+     public static void processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
+        String[] control = initEDIControl();
+        File file = new File(infile);
+        BufferedReader f = new BufferedReader(new FileReader(file));
+         char[] cbuf = new char[(int) file.length()];
+         f.read(cbuf); 
+         f.close();
+         
+         // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         Map<Integer, Integer[]> ISAmap = new HashMap<Integer, Integer[]>();
+         int start = 0;
+         int end = 0;
+         int isacount = 0;
+         int gscount = 0;
+         int stcount = 0;
+         ArrayList<String> isaList = new ArrayList<String>();
+          StringBuilder segment = new StringBuilder();
+          char e = 0;
+          char s = 0;
+          char u = 0;
+            for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
+                    e = cbuf[i+103];
+                    u = cbuf[i+104];
+                    s = cbuf[i+105];
+                    if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
+                        s = cbuf[i+106];
+                    start = i;
+                    isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
+                    gscount++;
+                    isaList.add("GS" + ":" + String.valueOf(i));
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
+                    stcount++;
+                    isaList.add("ST" + ":" + String.valueOf(i));
+                } 
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
+                    isaList.add("SE" + ":" + String.valueOf(i));
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
+                    end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
+                    // now add to ISAmap
+                    ISAmap.put(isacount, new Integer[] {start, end, (int) s, (int) e, (int) u});
+                    isaList.add("IEA" + ":" + String.valueOf(i));
+                } 
+            }
+            
+            for (String out : isaList) {
+                System.out.println(out);
+            }
+         
+         /* lets check to see if its x12 or edifact or csv or xml */
+         /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
+         String editype = getEDIType(cbuf, infile);
+         
+      //   if (editype.equals("EDIFACT")) {
+     //        processEDIFACT(cbuf, filename);
+     //    }
+         
+         if (editype.equals("X12")) {
+             processX12CmdLine(ISAmap, cbuf, infile, map, outfile, isOverride);
+         }
+         
+     //    if (editype.equals("CSV")) {
+    //         processCSV(cbuf, filename);
+    //     }
+         
+   //      if (editype.equals("XML")) {
+    //         processXML(file, filename);
+    //     }
+         
+         if (editype.isEmpty()) {
+           System.out.println("Unknown file type");
+         }
+         
+         
+    }
+    
+    public static String getEDIType(char[] cbuf, String filename) {
+    String type = "";
+    String[] filenamesplit = null;
+        
+     // identification rules for csv and xml are based on filename convention
+     // identification of x12 and EDIFACT are based on first three chars of file content
+    
+    // filename check for csv or xml 
+    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
+    if (filename.toString().toUpperCase().endsWith(".CSV") || filename.toString().toUpperCase().endsWith(".XML") ) {
+        filenamesplit = filename.split("\\.", -1);
+        if (filenamesplit.length >= 3 ) {
+                          type = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
+        } else {
+            type = "";
+        }
+    }
+    
+    // otherwise filename can be anything....so assume EDI x12 or Edifact
+    // look at first three characters of file content
+    StringBuilder sb = new StringBuilder();
+         sb.append(cbuf, 0, 3);
+         if (sb.toString().equals("ISA"))
+             type = "X12";
+         if (sb.toString().equals("UNB"))
+             type = "EDIFACT";
+    return type;
+}
+    
+    public static void processXML(File file, String filename)   {
+    ArrayList<String> doc = new ArrayList<String>();
+    String[] filenamesplit = null;
+        String doctype = "XML";
+        String controlnum = "-1";
+        String docid = "-1";
+        String map = "";
+        String senderid = "";
+        String[] control= initEDIControl();
+        boolean proceed = true;
+    //lets first get the tpid from the filename convention.....
+    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
+    if (filename.toString().toUpperCase().endsWith(".XML") ) {
+        filenamesplit = filename.split("\\.", -1);
+        if (filenamesplit.length >= 3 ) {
+               senderid = filenamesplit[0].toString().toUpperCase();  // tpid will be first element in filename
+        } 
+    }
+   
+            control[0] = senderid;
+            control[1] = "XML";
+            control[2] = "";
+            control[3] = filename;
+            control[4] = "-1";
+            control[5] = "-1";
+            control[6] = "-1";
+            control[7] = "";
+    if (senderid.isEmpty()) {
+        OVData.writeEDILog(control, "0", "ERROR", "XML file with no senderid " + filename);
+        proceed = false;
+    }
+    
+    if (proceed) {
+        
+        
+        // now lets get map
+             map = OVData.getEDIInMap(senderid, doctype);
+               if (! map.isEmpty()) {
+                   control[2] = map;
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("MapXMLdata", File.class, String.class, String.class);
+                    method.invoke(obj, file, control, senderid);
+                    
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+               }   else {
+                   OVData.writeEDILog(control, "0", "ERROR", "no edi_mstr map for " + senderid + " / " + doctype);
+                   return;
+               }
+             }
+    
+    
+    
+    }
+    
+    public static void processCSV(char[] cbuf, String filename)   {
+    ArrayList<String> doc = new ArrayList<String>();
+    String[] filenamesplit = null;
+        String doctype = "CSV";
+        String controlnum = "-1";
+        String docid = "-1";
+        String map = "";
+        String senderid = "";
+        String[] control= initEDIControl();
+        boolean proceed = true;
+    //lets first get the tpid from the filename convention.....
+    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
+    if (filename.toString().toUpperCase().endsWith(".CSV") || filename.toString().toUpperCase().endsWith(".XML") ) {
+        filenamesplit = filename.split("\\.", -1);
+        if (filenamesplit.length >= 3 ) {
+               senderid = filenamesplit[0].toString().toUpperCase();  // tpid will be first element in filename
+        } 
+    }
+            control[0] = senderid;
+            control[1] = "CSV";
+            control[2] = "";
+            control[3] = filename;
+            control[4] = "-1";
+            control[5] = "-1";
+            control[6] = "-1";
+            control[7] = "";
+    
+    if (senderid.isEmpty()) {
+        OVData.writeEDILog(control, "0", "ERROR", "CSV file with no senderid " + filename);
+        proceed = false;
+    }
+    
+    if (proceed) {
+        
+        // build array of character buffers...elements separated by newline
+         StringBuilder segment = new StringBuilder();
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == '\n') {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+        segment.append(cbuf[i]);
+        }
+    }
+        
+        // now lets get map
+             map = OVData.getEDIInMap(senderid, doctype);
+               if (! map.isEmpty()) {
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("MapCSVdata", ArrayList.class, String.class, String.class);
+                    method.invoke(obj, doc, control, senderid);
+                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+               }   else {
+                   OVData.writeEDILog(control, "0", "ERROR", "no edi_mstr map for " + senderid + " / " + doctype);
+                   return;
+               }
+             }
+    
+    
+    
+    }
+    
+    public static void processEDIFACT(char[] cbuf, String filename)   {
+    ArrayList<String> doc = new ArrayList<String>();
+    
+    char flddelim = '+';
+    char subdelim = ':';
+    char segdelim = '\'';
+    
+    String flddelim_str = String.valueOf(flddelim);
+    String subdelim_str = String.valueOf(subdelim);
+    String segdelim_str = String.valueOf(segdelim);
+    
+     if (flddelim_str.equals("+")) {
+            flddelim_str = "\\+";
+        }
+    
+    StringBuilder segment = new StringBuilder();
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+        segment.append(cbuf[i]);
+        }
+    }
+        
+    /* let's get the ISA and GS info and determine the class map to call based on sender ID */
+        int i = 0;
+        int start = 0;
+        int stop = 0;
+        String senderid = "";
+        String doctype = "";
+        String docid = "";
+        String map = "";
+        String ISASTRING = "";
+        String controlnum = "";
+        String GSSTRING = "";
+        String[] control= initEDIControl();
+        boolean proceed = false;
+        for (Object seg : doc) {
+             String[] segarr = seg.toString().split(flddelim_str);
+           if (segarr[0].toString().equals("UNB")) {
+             senderid = segarr[2].split(subdelim_str,-1)[0];
+             controlnum = segarr[5];
+             ISASTRING = (String)seg;
+           }
+          
+           if (segarr[0].toString().equals("UNH")) {
+             proceed = true;
+             start = i;
+             if (segarr.length > 3 && segarr[2].split(subdelim_str,-1)[0].equals("DELJIT") ) {
+             doctype = segarr[2].split(subdelim_str,-1)[0] + segarr[3];  // combine deljit with SH or AS qualifier (862=sh or 850=as).
+             } else if ( segarr.length <= 3 && segarr[2].split(subdelim_str,-1)[0].equals("DELJIT")  ) {
+             doctype = segarr[2].split(subdelim_str,-1)[0] + "SH";    // if no 4th element and Deljit...assume 862=sh
+             } else {
+             doctype = segarr[2].split(subdelim_str,-1)[0];    // any other edifact document
+             }
+             docid = segarr[1];
+             // set control
+            control[0] = senderid;
+            control[1] = doctype;
+            control[2] = "Unknown";
+            control[3] = filename;
+            control[4] = controlnum;
+            control[5] = "Unknown";
+            control[6] = "Unknown";
+            control[7] = "Unknown";
+             
+             
+              // skip if this is an acknowledgement and/or rip n read type doc
+             if ( doctype.equals("APERAK") ) {
+             OVData.writeEDILog(control, "0", "INFO", "read only");
+             proceed = false;
+             }
+             
+             
+           }
+           if (segarr[0].toString().equals("UNT")) {
+             stop = i;
+             ArrayList<String> thisdoc = new ArrayList<String>(doc.subList(start, stop + 1));
+             thisdoc.add(0, GSSTRING);  // add the GS segment back on top
+             thisdoc.add(0, ISASTRING);  // add the ISA segment back on top
+             
+            
+             
+             if (proceed) {
+             map = OVData.getEDIInMap(senderid, doctype);
+               if (! map.isEmpty()) {
+                   control[2] = map;
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String.class, String.class, String.class);
+                    method.invoke(obj, thisdoc, flddelim_str, subdelim_str, control);
+                    OVData.writeEDILog(control, "0", "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+               }   else {
+                   OVData.writeEDILog(control, "0", "ERROR", "no edi_mstr map for " + senderid + " / " + doctype);
+                   return;
+               }
+             }
+             
+           }
+           i++;
+         }
+      
+}
+    
+    public static void processX12(char[] cbuf, String filename)   {
+        
+        
+        
+    ArrayList<String> doc = new ArrayList<String>();
+    
+    char flddelim = 0;
+    char subdelim = 0;
+    char segdelim = 0;
+    
+    String flddelim_str = "";
+    String subdelim_str = "";
+    String segdelim_str = "";
+    
+    /* lets set the delimiters */
+    if (cbuf[0] == 'I' &&
+        cbuf[1] == 'S' &&
+        cbuf[2] == 'A') {
+           flddelim = cbuf[103];
+           subdelim = cbuf[104];
+           segdelim = cbuf[105];
+        flddelim_str = String.valueOf(flddelim);
+        subdelim_str = String.valueOf(subdelim);
+        segdelim_str = String.valueOf(segdelim);
+        
+         // special case for 0d0a ...if so use both characters as segment delimiter
+           if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
+            segdelim_str = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
+           }
+       
+           
+        
+        if (flddelim_str.equals("*")) {
+            flddelim_str = "\\*";
+        }
+        if (flddelim_str.equals("^")) {
+            flddelim_str = "\\^";
+        }
+              
+    } 
+    
+    
+   
+    
+    StringBuilder segment = new StringBuilder();
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+            if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                segment.append(cbuf[i]);
+            } 
+        }
+    }
+       
+    /* let's get the ISA and GS info and determine the class map to call based on sender ID */
+        int i = 0;
+        int start = 0;
+        int stop = 0;
+        String senderid = "";
+        String doctype = "";
+        String docid = "";
+        String gsctrlnbr = "";
+        String gssender = "";
+        String gstype = "";
+        String isaq = "";
+        String bsisaq = "";
+        String bsisa = "";
+        String bsgs = "";
+        String ver = "";
+        ArrayList<String> falist = new ArrayList<String>();
+        String map = "";
+        String ISASTRING = "";
+        String controlnum = "";
+        String GSSTRING = "";
+        String[] c = null;
+        boolean proceed = false;
+        
+        
+        
+        for (Object seg : doc) {
+           String[] segarr = seg.toString().split(flddelim_str);
+           
+           
+           if (segarr[0].toString().equals("ISA")) {
+             isaq = segarr[5];
+             bsisaq = segarr[7];
+             bsisa = segarr[8];
+             senderid = segarr[6].trim();
+             controlnum = segarr[13];
+             ISASTRING = (String)seg;
+           }
+          
+           if (segarr[0].toString().equals("GS")) {
+           GSSTRING = (String)seg;
+           gsctrlnbr = segarr[6];
+           bsgs = segarr[3];
+           ver = segarr[8];
+           gstype = segarr[1];
+           gssender = segarr[2];
+           }
+           
+           if (segarr[0].toString().equals("ST")) {
+             proceed = true;
+             start = i;
+             doctype = segarr[1];
+             docid = segarr[2];
+             falist.add(docid);
+             
+             // set control
+             //control = senderid + "," + doctype + "," + controlnum + "," + docid + "," + filename + "," + gsctrlnbr; 
+             c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+            c[0] = senderid;
+            c[1] = doctype;
+            c[2] = "";
+            c[3] = filename;
+            c[4] = controlnum;
+            c[5] = gsctrlnbr;
+            c[6] = docid;
+            c[7] = "";
+             
+              // skip if this is a rip n read type doc
+             if ( doctype.equals("824") || doctype.equals("820") ) {
+             OVData.writeEDILog(c, "0", "INFO", "read only");
+             proceed = false;
+             }
+             
+             
+           }
+           if (segarr[0].toString().equals("SE")) {
+             stop = i;
+             ArrayList<String> thisdoc = new ArrayList<String>(doc.subList(start, stop + 1));
+             thisdoc.add(0, GSSTRING);  // add the GS segment back on top
+             thisdoc.add(0, ISASTRING);  // add the ISA segment back on top
+             
+            
+             
+             if (proceed) {
+               if (doctype.equals("997")) {
+                  map = "Generic997i"; 
+               }  else {
+                  map = OVData.getEDIInMap(senderid, doctype); 
+               }
+             
+               if (! map.isEmpty()) {
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String.class, String.class, String[].class);
+                    method.invoke(obj, thisdoc, flddelim_str, subdelim_str, c);
+                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+               }   else {
+                   OVData.writeEDILog(c, "0", "ERROR", "no edi_mstr map for " + senderid + " / " + doctype);
+                   return;
+               }
+             }
+             
+           }
+           
+           if (segarr[0].toString().equals("GE")) {  // check for Functional Acknowledgment and create/send as necessary
+               if (BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(senderid, doctype))) {
+                   try {
+                    Class cls = Class.forName("EDIMaps." + "Generic997o");
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class );
+                    method.invoke(obj, falist, c, gstype, gsctrlnbr, doctype, senderid, gssender, isaq, bsisaq, bsisa, bsgs, ver);
+                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(c, "0", "ERROR", "Problem generating 997 for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+               }
+           }
+           
+           i++;
+         }
+      
+}
+    
+    public static void processX12CmdLine(Map<Integer, Integer[]> ISAmap, char[] cbuf, String infile, String map, String outfile, String isOverride)   {
+    ArrayList<String> doc = new ArrayList<String>();
+    
+    /*
+    char flddelim = 0;
+    char subdelim = 0;
+    char segdelim = 0;
+    
+    String flddelim_str = "";
+    String subdelim_str = "";
+    String segdelim_str = "";
+    String ed = "";
+    String ud = "";
+    String sd = "";
+    String ed_escape = "";
+    */
+    
+    /* lets set the delimiters */
+    /*
+    if (cbuf[0] == 'I' &&
+        cbuf[1] == 'S' &&
+        cbuf[2] == 'A') {
+           flddelim = cbuf[103];
+           subdelim = cbuf[104];
+           segdelim = cbuf[105];
+        flddelim_str = ed = String.valueOf(flddelim);
+        subdelim_str = ud = String.valueOf(subdelim);
+        segdelim_str = sd = String.valueOf(segdelim);
+        
+         // special case for 0d0a ...if so use both characters as segment delimiter
+           if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
+            segdelim_str = sd = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
+           }
+       
+           
+        
+        ed_escape = escapeDelimiter(ed);
+           
+              
+    } 
+    */
+    
+    // loop through ISAMap entries
+    for (Map.Entry<Integer, Integer[]> isa : ISAmap.entrySet()) {
+   
+        char segdelim = (char) isa.getValue()[2].intValue(); // get segment delimiter
+        char elmdelim = (char) isa.getValue()[3].intValue(); // get element delimiter
+        char subdelim = (char) isa.getValue()[4].intValue(); // get element delimiter
+        String ed_escape = escapeDelimiter(String.valueOf(elmdelim));
+    // here you are inserting 'segments' into ArrayList doc
+    StringBuilder segment = new StringBuilder();
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+            if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                segment.append(cbuf[i]);
+            } 
+        }
+    }
+       
+    /* let's get the ISA and GS info and determine the class map to call based on sender ID */
+        int i = 0;
+        int start = 0;
+        int stop = 0;
+        String senderid = "";
+        String doctype = "";
+        String docid = "";
+        String gsctrlnbr = "";
+        String gssender = "";
+        String gstype = "";
+        String isaq = "";
+        String bsisaq = "";
+        String bsisa = "";
+        String bsgs = "";
+        String ver = "";
+        ArrayList<String> falist = new ArrayList<String>();
+        String ISASTRING = "";
+        String controlnum = "";
+        String GSSTRING = "";
+        String IEASTRING = "";
+        String GESTRING = "";
+        String[] c = null;
+        boolean proceed = false;
+        
+        
+        // grab last two lines of doc and assign to iea and ge
+        IEASTRING = doc.get(doc.size() - 1);
+        GESTRING = doc.get(doc.size() - 2);
+        
+        for (Object seg : doc) {
+           String[] segarr = seg.toString().split(ed_escape);
+           
+           
+           if (segarr[0].toString().equals("ISA")) {
+             isaq = segarr[5];
+             bsisaq = segarr[7];
+             bsisa = segarr[8];
+             senderid = segarr[6].trim();
+             controlnum = segarr[13];
+             ISASTRING = (String)seg;
+           }
+          
+           if (segarr[0].toString().equals("GS")) {
+           GSSTRING = (String)seg;
+           gsctrlnbr = segarr[6];
+           bsgs = segarr[3];
+           ver = segarr[8];
+           gstype = segarr[1];
+           gssender = segarr[2];
+           }
+           
+           if (segarr[0].toString().equals("ST")) {
+             proceed = true;
+             start = i;
+             doctype = segarr[1];
+             docid = segarr[2];
+             falist.add(docid);
+             
+             // set control
+             
+             c = initEDIControl();   // defined in initEDIControl
+        
+            c[0] = senderid;
+            c[1] = doctype;
+            c[2] = map;
+            c[3] = infile;
+            c[4] = controlnum;
+            c[5] = gsctrlnbr;
+            c[6] = docid;
+            c[7] = ""; // ref
+            c[8] = outfile;
+            c[9] = String.valueOf(segdelim);
+            c[10] = String.valueOf(elmdelim);
+            c[11] = String.valueOf(subdelim);
+            c[12] = isOverride; // isOverrideEnvelope
+            
+           }
+           if (segarr[0].toString().equals("SE")) {
+             stop = i;
+             ArrayList<String> thisdoc = new ArrayList<String>(doc.subList(start, stop + 1));
+             thisdoc.add(0, GSSTRING);  // add the GS segment back on top
+             thisdoc.add(0, ISASTRING);  // add the ISA segment back on top
+             thisdoc.add(GESTRING);
+             thisdoc.add(IEASTRING);
+             
+            
+             
+            
+               if (map.isEmpty()) {
+                  map = OVData.getEDIInMap(senderid, doctype); 
+               } 
+             
+              
+                    try {
+                    Class cls = Class.forName(map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                    method.invoke(obj, thisdoc, c);
+                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        ex.printStackTrace();
+                    }
+              
+           }
+           i++;
+         } // loop through arraylist doc segments
+        
+    } // ISAMap entries
+      
+}
+    // inbound
+     
+   
+    
+    public static ArrayList<String> getEnvFromFileAsArrayListwRegex(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+        
+        ArrayList<String> envelopes = new ArrayList<String>();
+        
+         StringBuilder contents = new StringBuilder();
+         BufferedReader f = new BufferedReader(new FileReader(file));
+         String text = "";
+         while ((text = f.readLine()) != null) {
+         contents.append(text).append("&");
+         //contents.append(text);
+         }
+         f.close();
+       Pattern p = Pattern.compile("(ISA(?:(?!ISA.*GS.*GE.*IEA).).*?GS.*?GE.*?IEA)");
+       Matcher m = p.matcher(contents);
+       int i = 0;
+       
+       while(m.find()) {
+            envelopes.add(m.group(i));
+            i++;
+        }
+      return envelopes;
+    }
+     
+     public static ArrayList<String[]> getSegFromEnvAsArrayList(ArrayList<String> envelopes)  {
+        String[] segments = null;
+        ArrayList<String[]> mylist = new ArrayList<String[]>();  
+         String sd = "";
+         String ed = "";
+         String ud = "";
+         
+         for (String s : envelopes) {
+          // one 's' record per envelope....s = envelope ISA to IEA
+          ed = s.substring(103,104);
+          ud = s.substring(104,105);
+          sd = s.substring(105,106);
+          /*
+          if (sd.toCharArray().length > 1) {
+          if (String.format("%02x", (int) sd.toCharArray()[0]).equals("0d")) {
+              
+          }
+          }
+          */
+          
+          System.out.println(s);
+          System.out.println(sd);
+          
+        
+          
+          if (sd.equals("\\")) {
+            sd = "\\\\";
+          }
+          
+       
+          segments  = s.split(sd);
+          mylist.add(segments);
+         }
+         
+      return mylist;
+    }
+    
+    public static void createOrderFrom830(edi830 e, String[] control) {
+        
+        int sonbr = 0;
+        
+        String orderline = "";
+        String[] orderlinearray  = null;
+        String[] fcsarray = null;
+        String order = "";
+        String line = "";
+        
+            control[7] = e.ov_shipto;
+           OVData.writeEDILog(control, "0", "INFO", "Load");
+            // control = e.isaSenderID + "," + e.doctype + "," + e.isaCtrlNum + "," + e.po ;
+             
+             
+             
+             //OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
+               for (int j = 0; j < e.getDetCount(); j++ ) {
+                  
+               // find the blanket order type with key shipto, part, po ...if not availabe raise error and next loop    
+               orderline = OVData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
+               
+               
+                   if (! orderline.isEmpty()) {
+                       orderlinearray = orderline.split(",", -1);
+                       order = orderlinearray[0].toString();
+                       line = orderlinearray[1].toString();
+
+                     
+                       for (String mystring : e.map.get(j)  ) { 
+                           fcsarray = mystring.split(",", -1);
+                           OVData.CreateSalesOrderSchedDet(
+                                   order,    // sales order
+                                   line,    // order line
+                                   fcsarray[0],
+                                   fcsarray[1],
+                                   fcsarray[2],
+                                   fcsarray[3],
+                                   e.rlse
+                                   );
+                                 
+                       }
+                             
+                   } // if orderline not empty
+               
+               } // for each j
+       
+       
+    
+    }
+    
+    public static void createOrderFrom862(edi862 e, String[] control) {
+        
+        int sonbr = 0;
+       
+        String orderline = "";
+        String[] orderlinearray  = null;
+        String[] fcsarray = null;
+        String order = "";
+        String line = "";
+        
+         control[7] = e.ov_shipto;
+        OVData.writeEDILog(control, "0", "INFO", "Load");
+        //   control = e.isaSenderID + "," + e.doctype + "," + e.isaCtrlNum + "," + e.po ;
+             
+             
+             
+             //OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
+               for (int j = 0; j < e.getDetCount(); j++ ) {
+                  
+               // find the blanket order type with key shipto, part, po ...if not availabe raise error and next loop    
+               orderline = OVData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
+               
+               
+                   if (! orderline.isEmpty()) {
+                       orderlinearray = orderline.split(",");
+                       order = orderlinearray[0].toString();
+                       line = orderlinearray[1].toString();
+
+                     
+                       for (String mystring : e.map.get(j)  ) { 
+                         
+                           fcsarray = mystring.split(",");
+                           OVData.CreateSalesOrderSchedDet(
+                                   order,    // sales order
+                                   line,    // order line
+                                   fcsarray[0],
+                                   fcsarray[1],
+                                   fcsarray[2],
+                                   fcsarray[3],
+                                   e.rlse
+                                   );
+                                 
+                       }
+                             
+                   } // if orderline not empty
+               
+               } // for each j
+       
+       
+   
+    }
+    
+     public static void createOrderFrom850(edi850 e, String[] control) {
+        
+        int sonbr = 0;
+        boolean error = false;
+        
+        String shipto = "";
+        control[7] = String.valueOf(sonbr);
+       
+            error = false;
+             sonbr = OVData.getNextNbr("order");
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+           //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
+             
+             if (e.ov_shipto.isEmpty())
+                 shipto = OVData.CreateShipTo(e.ov_billto, e.st_name, e.st_line1, e.st_line2, e.st_line3, e.st_city, e.st_state, e.st_zip, e.st_country, e.shipto);
+             else
+                 shipto = e.ov_shipto;
+             
+             error = OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks, e.shipmethod); 
+             if (! error) {  
+             for (int j = 0; j < e.getDetCount(); j++ ) {
+                 
+                   // error trigger logic ...missing internal item
+                   if (e.getDetItem(j).isEmpty())
+                      error = true;
+                   
+                   // error trigger logic ...missing netprice = 0
+                   if ( Double.valueOf(e.getDetNetPrice(j)) == 0)
+                      error = true;
+                  
+               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+                       e.ov_billto,
+                       e.getDetItem(j), 
+                       e.getDetCustItem(j), 
+                       e.getDetSku(j), 
+                       e.getDetPO(j), 
+                       e.getDetQty(j),
+                       e.getDetListPrice(j), 
+                       e.getDetDisc(j), 
+                       e.getDetNetPrice(j),
+                       e.getHdrDueDate(), 
+                       e.getDetRef(j),
+                       String.valueOf(j + 1)); 
+               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+               }
+             }
+        if (error)
+            OVData.updateOrderStatusError(String.valueOf(sonbr));
+        
+    
+    }
+    
+      public static void createShipperFrom945(edi945 e, String[] control) {
+        
+        int shipperid = 0;
+        boolean error = false;
+        
+        String shipto = "";
+       
+            error = false;
+             shipperid = OVData.getNextNbr("shipper");
+             control[7] = String.valueOf(shipperid);
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+           //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
+             
+             if (e.ov_shipto.isEmpty())
+                 shipto = OVData.CreateShipTo(e.ov_billto, e.st_name, e.st_line1, e.st_line2, e.st_line3, e.st_city, e.st_state, e.st_zip, e.st_country, e.shipto);
+             else
+                 shipto = e.ov_shipto; 
+             
+             error = OVData.CreateShipperHdrEDI(control, String.valueOf(shipperid), e.shipper, e.ov_billto, shipto, e.so, e.po, e.shipdate, e.podate, e.remarks, e.shipmethod);     
+             if (! error) {  
+             for (int j = 0; j < e.getDetCount(); j++ ) {
+                 
+                   // error trigger logic ...missing internal item
+                   if (e.getDetItem(j).isEmpty())
+                      error = true;
+                   
+                   // error trigger logic ...missing netprice = 0
+                   if ( Double.valueOf(e.getDetNetPrice(j)) == 0)
+                      error = true;
+                  
+               OVData.CreateShipperDet(String.valueOf(shipperid),
+                       e.getDetItem(j), 
+                       e.getDetCustItem(j), 
+                       e.getDetSku(j),
+                       e.so,
+                       e.getDetPO(j), 
+                       e.getDetQtyShp(j),
+                       e.getDetListPrice(j), 
+                       e.getDetDisc(j), 
+                       e.getDetNetPrice(j),
+                       e.getShipDate(), 
+                       e.getDetDesc(j),
+                       e.getDetLine(j),
+                       e.getDetSite(j),
+                       e.getDetWH(j),
+                       e.getDetLoc(j)); 
+               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+               }
+             }
+       
+    
+    }
+      
+      public static void createFOTDETFrom990(edi990 e, String[] control) {
+             control[7] = e.order;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+             OVData.CreateFOTDETFrom990i(control, e.order, e.scac, e.yesno, e.reasoncode);  
+    
+    }
+     
+      public static void createFOTDETFrom220(edi220 e, String[] control) {
+             control[7] = e.order;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+             OVData.CreateFOTDETFrom220i(control, e.order, e.scac, e.yesno, e.remarks, e.amount);   
+    
+    }
+    
+     public static void createFOMSTRFrom204i(edi204i e, String[] control) {
+             control[7] = e.custfo;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+             String fo = OVData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid);  
+             for (int j = 0; j < e.getDetCount(); j++ ) {
+               OVData.CreateFODDETFrom204i(fo,
+                       e.getDetLine(j), 
+                       e.getDetType(j), 
+                       e.getDetShipper(j),
+                       e.getDetDelvDate(j),
+                       e.getDetDelvTime(j),
+                        e.getDetShipDate(j),
+                       e.getDetShipTime(j),
+                       e.getDetAddrCode(j),
+                       e.getDetAddrName(j), 
+                       e.getDetAddrLine1(j), 
+                       e.getDetAddrLine2(j),
+                       e.getDetAddrCity(j), 
+                       e.getDetAddrState(j),
+                       e.getDetAddrZip(j),
+                       e.getDetUnits(j),
+                       e.getDetBoxes(j),
+                       e.getDetWeight(j),
+                       e.getDetWeightUOM(j),
+                       e.getDetRef(j),
+                       e.getDetRemarks(j)); 
+               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+               }
+             
+             
+    
+    } 
+      
+     public static void createFOTDETFrom214(edi214 e, String[] control) {
+             control[7] = e.order;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+             OVData.CreateFOTDETFrom214i(control, e.order, e.scac, e.pronbr, e.status, e.remarks, e.lat, e.lon, e.equipmentnbr, e.equipmenttype, e.apptdate, e.appttime);   
+    
+    }
+      
+     
+     
+     public static void createOrderFromCSV(ArrayList e, String[] control) {
+        
+        int sonbr = 0;
+        boolean error = false;
+        String shipto = "";
+        
+       
+        for (int i = 0; i < e.size(); i++) {
+            error = false;
+             sonbr = OVData.getNextNbr("order");
+             control[7] = ((edi850) e.get(i)).po;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+           //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
+             
+             if (((edi850) e.get(i)).ov_shipto.isEmpty())
+                 shipto = OVData.CreateShipTo(((edi850) e.get(i)).ov_billto, ((edi850) e.get(i)).st_name, ((edi850) e.get(i)).st_line1, ((edi850) e.get(i)).st_line2, ((edi850) e.get(i)).st_line3, ((edi850) e.get(i)).st_city, ((edi850) e.get(i)).st_state, ((edi850) e.get(i)).st_zip, ((edi850) e.get(i)).st_country, ((edi850) e.get(i)).shipto);
+             else
+                 shipto = ((edi850) e.get(i)).ov_shipto;
+             
+             OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
+               for (int j = 0; j < ((edi850) e.get(i)).getDetCount(); j++ ) {
+                 
+                   // error trigger logic ...missing internal item
+                   if (((edi850) e.get(i)).getDetItem(j).isEmpty())
+                      error = true;
+                   
+                   // error trigger logic ...missing netprice = 0
+                   if ( Double.valueOf(((edi850) e.get(i)).getDetNetPrice(j)) == 0)
+                      error = true;
+                  
+               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+                       ((edi850) e.get(i)).ov_billto,
+                       ((edi850) e.get(i)).getDetItem(j), 
+                       ((edi850) e.get(i)).getDetCustItem(j), 
+                       ((edi850) e.get(i)).getDetSku(j), 
+                       ((edi850) e.get(i)).getDetPO(j), 
+                       ((edi850) e.get(i)).getDetQty(j),
+                       ((edi850) e.get(i)).getDetListPrice(j), 
+                       ((edi850) e.get(i)).getDetDisc(j), 
+                       ((edi850) e.get(i)).getDetNetPrice(j),
+                       ((edi850) e.get(i)).duedate, 
+                       ((edi850) e.get(i)).getDetRef(j),
+                       String.valueOf(j + 1)); 
+               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+               }
+       
+        if (error)
+            OVData.updateOrderStatusError(String.valueOf(sonbr));
+        }
+    
+    }
+     
+      public static void createOrderFromXML(ArrayList e, String[] control) {
+        
+        int sonbr = 0;
+        boolean error = false;
+        String shipto = "";
+       
+        for (int i = 0; i < e.size(); i++) {
+            error = false;
+             sonbr = OVData.getNextNbr("order");
+             control[7] = ((edi850) e.get(i)).po;
+             OVData.writeEDILog(control, "0", "INFO", "Load");
+           //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
+             
+             if (((edi850) e.get(i)).ov_shipto.isEmpty())
+                 shipto = OVData.CreateShipTo(((edi850) e.get(i)).ov_billto, ((edi850) e.get(i)).st_name, ((edi850) e.get(i)).st_line1, ((edi850) e.get(i)).st_line2, ((edi850) e.get(i)).st_line3, ((edi850) e.get(i)).st_city, ((edi850) e.get(i)).st_state, ((edi850) e.get(i)).st_zip, ((edi850) e.get(i)).st_country, ((edi850) e.get(i)).shipto);
+             else
+                 shipto = ((edi850) e.get(i)).ov_shipto;
+             
+             OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
+               for (int j = 0; j < ((edi850) e.get(i)).getDetCount(); j++ ) {
+                 
+                   // error trigger logic ...missing internal item
+                   if (((edi850) e.get(i)).getDetItem(j).isEmpty())
+                      error = true;
+                   
+                   // error trigger logic ...missing netprice = 0
+                   if ( Double.valueOf(((edi850) e.get(i)).getDetNetPrice(j)) == 0)
+                      error = true;
+                  
+               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+                       ((edi850) e.get(i)).ov_billto,
+                       ((edi850) e.get(i)).getDetItem(j), 
+                       ((edi850) e.get(i)).getDetCustItem(j), 
+                       ((edi850) e.get(i)).getDetSku(j), 
+                       ((edi850) e.get(i)).getDetPO(j), 
+                       ((edi850) e.get(i)).getDetQty(j),
+                       ((edi850) e.get(i)).getDetListPrice(j), 
+                       ((edi850) e.get(i)).getDetDisc(j), 
+                       ((edi850) e.get(i)).getDetNetPrice(j),
+                       ((edi850) e.get(i)).duedate, 
+                       ((edi850) e.get(i)).getDetRef(j),
+                       String.valueOf(j + 1)); 
+               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+               }
+       
+        if (error)
+            OVData.updateOrderStatusError(String.valueOf(sonbr));
+        }
+    
+    }
+     
+      
+      // outbound
+     public static int Create856(String shipper)  {
+          int errorcode = 0;
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in cmedi_mstr for billto doctype
+        // errorcode = 2 ... unable to retrieve billto from shipper
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+          // errorcode = 4 ... shipper does not exist
+          
+        String billto = "";
+        String doctype = "856";
+        String map = "";
+        String control= "";
+        boolean proceed = true;
+         
+        // lets determine the billto of this shipper
+        billto = OVData.getShipperBillto(shipper);
+        if (billto.isEmpty()) {
+            errorcode = 2;
+            proceed = false;
+            return errorcode;
+        }
+        
+        // lets determine if an ASN map is available for this billto of this shipper
+        map = OVData.getEDIOutMap(billto, doctype, "0");
+        
+         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = billto;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = shipper;
+        
+        
+        if (map.isEmpty()) {
+            proceed = false;
+            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + billto + " / " + doctype);
+            errorcode = 1;
+                   return errorcode;
+        } 
+        
+           if (proceed) {
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                      //  Class cls = Class.forName("blueseer.custom" + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", String.class, String.class);
+                    method.invoke(obj, shipper, billto);
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(c, "1", "ERROR", "unable to find map class for " + billto + " / " + doctype);
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+                  
+           }
+         
+         
+         return errorcode;
+        
+         
+     }
+     
+     public static int Create810(String shipper)  {
+        int errorcode = 0;
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in cmedi_mstr for billto doctype
+        // errorcode = 2 ... unable to retrieve billto from shipper
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 4 ... shipper does not exist
+        
+        
+        String billto = "";
+        String doctype = "810";
+        String map = "";
+        boolean proceed = true;
+        String[] control = null;
+         
+        // lets determine the billto of this shipper
+        billto = OVData.getShipperBillto(shipper);
+        if (billto.isEmpty()) {
+            proceed = false;
+            errorcode = 2;
+            return errorcode;
+        }
+        
+         
+        
+        // lets determine if an ASN map is available for this billto of this shipper
+        map = OVData.getEDIOutMap(billto, doctype, "0");
+        
+        String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = billto;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = shipper;
+        
+        
+        
+        if (map.isEmpty()) {
+            proceed = false;
+            errorcode = 1;
+            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + billto + " / " + doctype); 
+                   return errorcode;
+        } 
+        
+           if (proceed) {
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
+                  // Object filename = method.invoke(obj, shipper, billto);
+                   // control = control + filename.toString();
+                    
+                    Object envelope = method.invoke(obj, c, shipper, billto); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    control = (String[])envelope;
+                    
+                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class for " + billto + " / " + doctype); 
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+                  
+           }
+         
+         
+         
+       return errorcode; 
+         
+     }
+     
+      public static int Create940(String nbr)  {
+        int errorcode = 0;
+       
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in wh_mstr for wh doctype
+        // errorcode = 2 ... unable to retrieve wh from order
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 4 ... shipper does not exist
+        
+        
+        ArrayList<String> wh = new ArrayList();
+        String doctype = "940";
+        String map = "";
+        String[] control = null;
+        
+        // lets determine the warehouse or warehouses for this order
+        wh = OVData.getOrderWHSource(nbr);
+        if (wh.size() == 0) {
+            return 2;
+        }
+        
+         
+        for (String w : wh) {   
+        
+        map = OVData.getEDIOutMap(w, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        
+         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = w;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        
+        
+        if (map.isEmpty()) {
+            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + w + " / " + doctype);
+            errorcode = 1;
+                   continue;
+        } 
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                     Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
+                    Object envelope = method.invoke(obj, c, nbr, w); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    control = (String[])envelope; 
+                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + w + " / " + doctype);
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+           
+        }  // each warehouse to receive 940
+        
+        // now lets set the order issourced flag if errorcode still equals 0
+        if (errorcode == 0) {
+           // OVData.updateOrderSourceFlag(nbr);
+        }
+        
+        return errorcode;
+     }
+     
+      public static int Create219(String nbr, String type)  {
+        int errorcode = 0;
+       
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in wh_mstr for wh doctype
+        // errorcode = 2 ... unable to retrieve carriers from order
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 4 ... shipper does not exist
+        
+        
+        ArrayList<String> cars = new ArrayList();
+        String doctype = "219";
+        String map = "";
+        String[] control= null;
+        
+        // lets determine the list of carriers to quote for this freight order
+        // first we need the proposed carrier or carrier list to send quote to
+        cars = OVData.getFreightOrderCarrierList(nbr);
+        if (cars.size() == 0) {
+            return 2;
+        }
+        
+         
+        for (String ca : cars) {   
+            
+        
+        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = ca;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        
+        if (map.isEmpty()) {
+            OVData.writeEDILog(control, "1", "ERROR", "no edi_mstr map for " + ca + " / " + doctype);
+            errorcode = 1;
+                   continue;
+        } 
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
+                    Object envelope = method.invoke(obj, c, nbr, ca); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    control = (String[])envelope; 
+                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    OVData.CreateFreightEDIRecs(control, nbr);
+                    // lets create fot_det for freight order quote tracking
+                    
+                    
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + c + " / " + doctype);
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+           
+        }  // each warehouse to receive 940
+        
+        // now lets set the order issourced flag if errorcode still equals 0
+        if (errorcode == 0) {
+           // OVData.updateOrderSourceFlag(nbr);
+        }
+        
+        return errorcode;
+     }
+      
+      public static int Create990o(String nbr, String response)  {
+        int errorcode = 0;
+       
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in wh_mstr for wh doctype
+        // errorcode = 2 ... unable to retrieve carriers from order
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 4 ... shipper does not exist
+        
+        
+        
+        String doctype = "990";
+        String map = "";
+        String control[] = null;
+        
+      
+        
+         String ca = OVData.getFreightOrderCarrierAssigned(nbr);
+       
+            
+        
+        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        
+        String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = ca;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        
+        
+        if (map.isEmpty()) {
+            OVData.writeEDILog(control, "1", "ERROR", "no edi_mstr map for " + c + " / " + doctype);
+            errorcode = 1;
+            return errorcode;
+        } 
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class, String.class);
+                    Object envelope = method.invoke(obj, c, nbr, ca, response); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    control = (String[])envelope; 
+                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    OVData.CreateFreightEDIRecs(control, nbr);
+
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + c + " / " + doctype);
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+           
+     
+        
+        // now lets set the order issourced flag if errorcode still equals 0
+        if (errorcode == 0) {
+           // OVData.updateOrderSourceFlag(nbr);
+        }
+        
+        return errorcode;
+     }
+      
+      public static int Create204(String nbr)  {
+        int errorcode = 0;
+       
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in wh_mstr for wh doctype
+        // errorcode = 2 ... unable to retrieve carriers from order
+        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 4 ... shipper does not exist
+        
+        
+        
+        String doctype = "204";
+        String map = "";
+        String[] control = null;
+      
+        
+         String ca = OVData.getFreightOrderCarrierAssigned(nbr);
+       
+            
+        
+        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        
+        
+         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        
+        c[0] = ca;
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        
+        
+        
+        if (map.isEmpty()) {
+            OVData.writeEDILog(control, "1", "ERROR", "no edi_mstr map for " + c + " / " + doctype);
+            errorcode = 1;
+            return errorcode;
+        } 
+                    try {
+                    Class cls = Class.forName("EDIMaps." + map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
+                    Object envelope = method.invoke(obj, c, nbr, ca); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    control = (String[])envelope; 
+                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    OVData.CreateFreightEDIRecs(control, nbr); 
+
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + c + " / " + doctype);
+                        errorcode = 3;
+                        ex.printStackTrace();
+                    }
+           
+     
+        
+        // now lets set the order issourced flag if errorcode still equals 0
+        if (errorcode == 0) {
+           // OVData.updateOrderSourceFlag(nbr);
+        }
+        
+        return errorcode;
+     }
+       
+       
+       
+      public static String[] generateEnvelope(String entity, String doctype, String dir) {
+        
+        String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
+        String[] defaults = OVData.getEDIOutCustDefaults(entity, doctype, dir);
+       
+        
+        // get counter for ediout
+        int filenumber = OVData.getNextNbr("ediout");
+        
+       int sdint = Integer.valueOf(defaults[7]);
+       int edint = Integer.valueOf(defaults[6]);
+       int udint = Integer.valueOf(defaults[8]);
+         String sd = Character.toString((char) sdint );   // "\n"  or "\u001c"
+         String ed = Character.toString((char) edint );
+         String ud = Character.toString((char) udint );
+         
+         
+       //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+         String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+        
+         //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
+         //BufferedWriter output;
+         //output = new BufferedWriter(new FileWriter(f));
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         Date now = new Date();
+        
+         
+         String isa1 = "00";
+         String isa2 = "          ";
+         String isa3 = "00";
+         String isa4 = "          ";
+         String isa5 = String.format("%2s", defaults[4]);
+         String isa6 = String.format("%-15s", defaults[3]);
+         String isa7 = String.format("%2s", defaults[1]);
+         String isa8 = String.format("%-15s", defaults[0]);
+         String isa9 = isadfdate.format(now);
+         String isa10 = isadftime.format(now);
+         String isa11 = "U";
+         String isa12 = defaults[12].substring(0,5);
+         String isa13 = String.format("%09d", filenumber);
+         String isa14 = "0";
+         String isa15 = "P";
+         String isa16 = ud;
+         
+         String gs1 = "";
+         switch(doctype) {
+             case "810" :
+                 gs1 = "IN";
+                 break;
+             case "856" :
+                 gs1 = "SH";
+                 break;
+             case "940" :
+                 gs1 = "OW";
+                 break;
+             case "943" :
+                 gs1 = "AR";
+                 break;
+             case "990" :
+                 gs1 = "GF";
+                 break;
+             default :
+                 gs1 = "XX";
+         }
+        
+         
+         String gs2 = defaults[5];
+         String gs3 = defaults[2];
+         String gs4 = gsdfdate.format(now);
+         String gs5 = gsdftime.format(now);
+         String gs6 = String.valueOf(filenumber);
+         String gs7 = "X";
+         String gs8 = defaults[12];
+          
+        
+        
+       
+          
+           envelope[0] = "ISA" + ed + isa1 + ed + isa2 + ed + isa3 + ed + isa4 + ed + isa5 + ed + isa6 + ed + isa7 + ed + isa8 + ed + isa9 + ed + 
+                 isa10 + ed + isa11 + ed + isa12 + ed + isa13 + ed + isa14 + ed + isa15 + ed + isa16 + sd ;
+           envelope[0] = envelope[0].toUpperCase();
+           envelope[1] = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8 + sd;
+            envelope[1] = envelope[1].toUpperCase();
+           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(filenumber) + sd;
+            envelope[2] = envelope[2].toUpperCase();
+           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", filenumber) + sd;
+            envelope[3] = envelope[3].toUpperCase();
+            
+           envelope[4] = filename;
+           envelope[5] = String.format("%09d", filenumber);
+           envelope[6] = String.valueOf(filenumber);
+           
+            return envelope;
+      }
+      
+     
+      
+       public static String[] generate997Envelope(String isaq, String isaid, String gsid, String bsisaq, String bsisa, String bsgs, String ver) {
+        
+           
+        String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
+        
+        // get counter for ediout
+        int filenumber = OVData.getNextNbr("ediout");
+        
+     
+         String sd = "\n";   // "\n"  or "\u001c"
+         String ed = "*";
+         String ud = ">";
+         
+         
+       //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+         String filename = "997" + "." + isaid + "." + String.valueOf(filenumber) + "." + "txt";
+        
+         //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
+         //BufferedWriter output;
+         //output = new BufferedWriter(new FileWriter(f));
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         Date now = new Date();
+        
+         
+         String isa1 = "00";
+         String isa2 = "          ";
+         String isa3 = "00";
+         String isa4 = "          ";
+         String isa5 = String.format("%2s", bsisaq);
+         String isa6 = String.format("%-15s", bsisa);
+         String isa7 = String.format("%2s", isaq);
+         String isa8 = String.format("%-15s", isaid);
+         String isa9 = isadfdate.format(now);
+         String isa10 = isadftime.format(now);
+         String isa11 = "U";
+         String isa12 = ver.substring(0,5);
+         String isa13 = String.format("%09d", filenumber);
+         String isa14 = "0";
+         String isa15 = "P";
+         String isa16 = ud;
+         
+         String gs1 = "FA";
+         
+        
+         
+         String gs2 = bsgs;
+         String gs3 = gsid;
+         String gs4 = gsdfdate.format(now);
+         String gs5 = gsdftime.format(now);
+         String gs6 = String.valueOf(filenumber);
+         String gs7 = "X";
+         String gs8 = ver;
+          
+        
+        
+       
+          
+           envelope[0] = "ISA" + ed + isa1 + ed + isa2 + ed + isa3 + ed + isa4 + ed + isa5 + ed + isa6 + ed + isa7 + ed + isa8 + ed + isa9 + ed + 
+                 isa10 + ed + isa11 + ed + isa12 + ed + isa13 + ed + isa14 + ed + isa15 + ed + isa16 + sd ;
+           envelope[0] = envelope[0].toUpperCase();
+           envelope[1] = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8 + sd;
+            envelope[1] = envelope[1].toUpperCase();
+           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(filenumber) + sd;
+            envelope[2] = envelope[2].toUpperCase();
+           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", filenumber) + sd;
+            envelope[3] = envelope[3].toUpperCase();
+            
+          
+           
+            envelope[4] = filename;
+            envelope[5] = String.format("%09d", filenumber);
+            envelope[6] = String.valueOf(filenumber);
+           
+            return envelope;
+      }
+          
+      public static String trimSegment(String segment, String delimiter) {
+          String mystring = "";
+          if ( delimiter.charAt(0) == segment.charAt(segment.length()- 1) ) {
+              mystring = segment.substring(0, segment.length() - 1);
+              if ( delimiter.charAt(0) == mystring.charAt(mystring.length()- 1) ) {
+               return trimSegment(mystring, delimiter);
+              }
+          } else {
+              mystring = segment;
+          }
+          return mystring;
+      }
+      
+      public static String escapeDelimiter(String delim) {
+      if (delim.equals("*")) {
+            delim = "\\*";
+        }
+        if (delim.equals("^")) {
+            delim = "\\^";
+        }
+        return delim;
+      }
+      
+      public static Boolean isEnvelopeSegment(String seg) {
+      
+      return (seg.equals("ISA") || seg.equals("GS") || seg.equals("ST") ||
+              seg.equals("SE") || seg.equals("GE") | seg.equals("IEA") ) ? true : false ;
+      }
+      
+     public void writeFile(String filecontent, String dir, String filename) throws MalformedURLException, SmbException, IOException {
+    
+//    File folder = new File("smb://10.17.2.55/edi");
+  // File[] listOfFiles = folder.listFiles();
+
+    
+ //   NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, null, null);
+     
+    NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
+    // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
+    
+   // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
+    
+    if (dir.isEmpty()) {
+        dir = OVData.getEDIOutDir();
+    }
+    
+    Path path = Paths.get(dir + "/" + filename);
+    Path archpath = Paths.get(OVData.getEDIOutArch() + "/" + filename);
+    
+    
+    BufferedWriter output;
+    
+         if (path.startsWith("smb")) {
+         output = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(new SmbFile(path.toString(), auth))));
+         output.write(filecontent);
+         output.close();
+         // now arch
+         output = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(new SmbFile(archpath.toString(), auth))));
+         output.write(filecontent);
+         output.close();
+         } else {
+         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+         output.write(filecontent);
+         output.close();  
+         // now arch
+         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archpath.toFile())));
+         output.write(filecontent);
+         output.close();   
+         }
+   // SmbFile[] listOfFiles = folder.listFiles();
+         
+        
+    }
+      
+      public void writeFileCmdLine(String filecontent, String filename) throws MalformedURLException, SmbException, IOException {
+    
+//    File folder = new File("smb://10.17.2.55/edi");
+  // File[] listOfFiles = folder.listFiles();
+
+    
+ //   NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, null, null);
+     
+    NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
+    // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
+    
+   // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
+    
+   
+    
+    Path path = Paths.get(filename);
+    
+    
+    
+    BufferedWriter output;
+    
+         if (path.startsWith("smb")) {
+         output = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(new SmbFile(path.toString(), auth))));
+         output.write(filecontent);
+         output.close();
+         } else {
+         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+         output.write(filecontent);
+         output.close();  
+         }
+   // SmbFile[] listOfFiles = folder.listFiles();
+         
+        
+    }
+     
+     
+     public static class edi830 {
+    
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String po = "";
+    public String rlse = "";
+    public String billto = "";
+    public String shipto = "";
+    public String ov_billto = "";
+    public String ov_shipto = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String duedate = "";
+    public String podate = "";
+    public String st_name = "";
+    public String st_line1 = "";
+    public String st_line2 = "";
+    public String st_line3 = "";
+    public String st_city = "";
+    public String st_state = "";
+    public String st_zip = "";
+    public String st_country = "";
+    
+       
+    public ArrayList<String> detsku = new ArrayList<String>();
+    public ArrayList<String> detcustitem = new ArrayList<String>();
+    public ArrayList<String> detitem = new ArrayList<String>();
+    public ArrayList<String> detqty = new ArrayList<String>();
+    public ArrayList<String> detref = new ArrayList<String>();
+    public ArrayList<String> detpo = new ArrayList<String>();
+    public ArrayList<String> detline = new ArrayList<String>();
+    public ArrayList<String> detlistprice = new ArrayList<String>();
+    public ArrayList<String> detnetprice = new ArrayList<String>();
+    public ArrayList<String> detdisc = new ArrayList<String>();
+    public ArrayList<String> dettype = new ArrayList<String>();
+    public ArrayList<String> detdate = new ArrayList<String>();
+    
+    
+    public ArrayList<String> FSTloopqty = new ArrayList<String>();
+    public ArrayList<String> FSTloopdate = new ArrayList<String>();
+    public ArrayList<String> FSTlooptype = new ArrayList<String>();
+    public ArrayList<String> FSTloopref = new ArrayList<String>();
+    
+    public Map<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
+    
+    
+    
+        public edi830() {
+            
+        }
+        public edi830(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+       
+        public void setFSTMap(Integer i, ArrayList<String> a) {
+            this.map.put(i, a);
+        }
+        
+        public void setFSTLoopDate(String v) {
+           this.FSTloopdate.add(v);
+        }
+        public void setFSTLoopQty(String v)  {
+           this.FSTloopqty.add(v);
+        }
+        public void setFSTLoopType(String v) {
+           this.FSTlooptype.add(v);
+        }
+        public void setFSTLoopRef(String v) {
+           this.FSTloopref.add(v);
+        }
+        
+        public void setDetDate(String v) {
+           this.detdate.add(v);
+        }
+        public void setDetType(String v) {
+           this.dettype.add(v);
+        }
+        public void setDetItem(String v) {
+           this.detitem.add(v);
+        }
+        public void setDetCustItem(String v) {
+           this.detcustitem.add(v);
+        }
+        public void setDetSku(String v) {
+           this.detsku.add(v);
+        }
+        public void setDetRef(String v) {
+           this.detref.add(v);
+        }
+        public void setDetPO(String v) {
+           this.detpo.add(v);
+        }
+        public void setDetLine(String v) {
+           this.detline.add(v);
+        }
+        public void setDetQty(String v) {
+           this.detqty.add(v);
+        }
+        public void setDetListPrice(String v) {
+           this.detlistprice.add(v);
+        }
+        public void setDetNetPrice(String v) {
+           this.detnetprice.add(v);
+        }
+        public void setDetDisc(String v) {
+           this.detdisc.add(v);
+        }
+       
+        public void setRlse(String v) {
+           this.rlse = v;
+        }  
+        public void setPO(String v) {
+           this.po = v;
+        }
+        public void setPODate(String v) {
+           this.podate = v;
+        }
+        public void setDueDate(String v) {
+           this.duedate = v;
+        }
+        
+        public void setRemarks(String v) {
+           this.remarks = v;
+        }
+         public void setShipVia(String v) {
+           this.shipmethod = v;
+        }
+        
+        
+        public void setShipTo(String v) {
+           this.shipto = v;
+        }
+        public void setShipToName(String v) {
+           this.st_name = v;
+        }
+        public void setShipToLine1(String v) {
+           this.st_line1 = v;
+        }
+        public void setShipToLine2(String v) {
+           this.st_line2 = v;
+        }
+        public void setShipToLine3(String v) {
+           this.st_line3 = v;
+        }
+        public void setShipToCity(String v) {
+           this.st_city = v;
+        }
+        public void setShipToState(String v) {
+           this.st_state = v;
+        }
+        public void setShipToZip(String v) {
+           this.st_zip = v;
+        }
+        public void setShipToCountry(String v) {
+           this.st_country = v;
+        }
+        public void setBillTo(String v) {
+           this.billto = v;
+        }
+        public void setOVShipTo(String v) {
+            this.ov_shipto = v;
+        }
+        public void setOVBillTo(String v) {
+            this.ov_billto = v;
+        }
+        public String getPO() {
+           return this.po;
+        }
+        public Map getFSAMap(int i) {
+           return this.map;
+        }
+        public String getRlse() {
+           return this.rlse;
+        }
+        public String getPODate() {
+           return this.podate;
+        }
+        public String getShipTo() {
+           return this.shipto;
+        }
+        public String getShipToName() {
+           return this.st_name;
+        }
+        public String getShipToLine1() {
+           return this.st_line1;
+        }
+        public String getShipToLine2() {
+           return this.st_line2;
+        }
+        public String getShipToLine3() {
+           return this.st_line3;
+        }
+        public String getShipToCity() {
+           return this.st_city;
+        }
+        public String getShipToState() {
+           return this.st_state;
+        }
+        public String getShipToZip() {
+           return this.st_zip;
+        }
+        public String getShipToCountry() {
+           return this.st_country;
+        }
+        public String getBillTo() {
+           return this.billto;
+        }
+        public String getOVShipTo() {
+           return this.ov_shipto;
+        }
+        public String getOVBillTo() {
+           return this.ov_billto;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+        public String getFSTLoopDate(int i) {
+            return FSTloopdate.get(i);
+        }
+        public String getFSTLoopQty(int i) {
+            return FSTloopqty.get(i);
+        }
+        public String getFSTLoopType(int i) {
+            return FSTlooptype.get(i);
+        }
+         public String getFSTLoopRef(int i) {
+            return FSTloopref.get(i);
+        }
+        
+        public String getDetDate(int i) {
+            return detdate.get(i);
+        }
+        public String getDetType(int i) {
+            return dettype.get(i);
+        }
+        public String getDetItem(int i) {
+            return detitem.get(i);
+        }
+        public String getDetCustItem(int i) {
+           return detcustitem.get(i);
+        }
+        public String getDetSku(int i) {
+          return detsku.get(i);
+        }
+        public String getDetRef(int i) {
+           return detref.get(i);
+        }
+        public String getDetPO(int i) {
+           return detpo.get(i);
+        }
+        public String getDetLine(int i) {
+           return detline.get(i);
+        }
+        public String getDetQty(int i) {
+           return detqty.get(i);
+        }
+        public String getDetListPrice(int i) {
+           return detlistprice.get(i);
+        }
+        public String getDetNetPrice(int i) {
+           return detnetprice.get(i);
+        }
+        public String getDetDisc(int i) {
+           return detdisc.get(i);
+        }
+                
+        public int getDetCount() {
+            return detitem.size();
+        }
+       
+        public int getFCSCount() {
+            return FSTloopdate.size();
+        }
+        
+    }
+     
+    public static class edi850 {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String po = "";
+    public String billto = "";
+    public String shipto = "";
+    public String ov_billto = "";
+    public String ov_shipto = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String duedate = "";
+    public String podate = "";
+    public String st_name = "";
+    public String st_line1 = "";
+    public String st_line2 = "";
+    public String st_line3 = "";
+    public String st_city = "";
+    public String st_state = "";
+    public String st_zip = "";
+    public String st_country = "";
+    
+    // Detail fields      
+    public ArrayList<String> detsku = new ArrayList<String>();
+    public ArrayList<String> detcustitem = new ArrayList<String>();
+    public ArrayList<String> detitem = new ArrayList<String>();
+    public ArrayList<String> detuom = new ArrayList<String>();
+    public ArrayList<String> detqty = new ArrayList<String>();
+    public ArrayList<String> detref = new ArrayList<String>();
+    public ArrayList<String> detpo = new ArrayList<String>();
+    public ArrayList<String> detline = new ArrayList<String>();
+    public ArrayList<String> detlistprice = new ArrayList<String>();
+    public ArrayList<String> detnetprice = new ArrayList<String>();
+    public ArrayList<String> detdisc = new ArrayList<String>();
+        
+        public edi850() {
+            
+        }
+        
+        public edi850(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+        public void setDetItem(String v) {
+           this.detitem.add(v);
+        }
+        public void setDetUOM(String v) {
+           this.detuom.add(v);
+        }
+        public void setDetCustItem(String v) {
+           this.detcustitem.add(v);
+        }
+        public void setDetSku(String v) {
+           this.detsku.add(v);
+        }
+        public void setDetRef(String v) {
+           this.detref.add(v);
+        }
+        public void setDetPO(String v) {
+           this.detpo.add(v);
+        }
+        public void setDetLine(String v) {
+           this.detline.add(v);
+        }
+        public void setDetQty(String v) {
+           this.detqty.add(v);
+        }
+        public void setDetListPrice(String v) {
+           this.detlistprice.add(v);
+        }
+         public void setDetNetPrice(String v) {
+           this.detnetprice.add(v);
+        }
+          public void setDetDisc(String v) {
+           this.detdisc.add(v);
+        }
+        public void setPO(String v) {
+           this.po = v;
+        }
+        public void setPODate(String v) {
+           this.podate = v;
+        }
+         public void setDueDate(String v) {
+           this.duedate = v;
+        }
+        public void setShipTo(String v) {
+           this.shipto = v;
+        }
+         public void setShipVia(String v) {
+           this.shipmethod = v;
+        }
+          public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setShipToName(String v) {
+           this.st_name = v;
+        }
+        public void setShipToLine1(String v) {
+           this.st_line1 = v;
+        }
+        public void setShipToLine2(String v) {
+           this.st_line2 = v;
+        }
+        public void setShipToLine3(String v) {
+           this.st_line3 = v;
+        }
+        public void setShipToCity(String v) {
+           this.st_city = v;
+        }
+        public void setShipToState(String v) {
+           this.st_state = v;
+        }
+        public void setShipToZip(String v) {
+           this.st_zip = v;
+        }
+        public void setShipToCountry(String v) {
+           this.st_country = v;
+        }
+        public void setBillTo(String v) {
+           this.billto = v;
+        }
+        public void setOVShipTo(String v) {
+            this.ov_shipto = v;
+        }
+        public void setOVBillTo(String v) {
+            this.ov_billto = v;
+        }
+        public String getPO() {
+           return this.po;
+        }
+        public String getPODate() {
+           return this.podate;
+        }
+        public String getShipTo() {
+           return this.shipto;
+        }
+          public String getRemarks() {
+           return this.remarks;
+        }
+            public String getShipVia() {
+           return this.shipmethod;
+        }
+        public String getShipToName() {
+           return this.st_name;
+        }
+        public String getShipToLine1() {
+           return this.st_line1;
+        }
+        public String getShipToLine2() {
+           return this.st_line2;
+        }
+        public String getShipToLine3() {
+           return this.st_line3;
+        }
+        public String getShipToCity() {
+           return this.st_city;
+        }
+        public String getShipToState() {
+           return this.st_state;
+        }
+        public String getShipToZip() {
+           return this.st_zip;
+        }
+        public String getShipToCountry() {
+           return this.st_country;
+        }
+        public String getBillTo() {
+           return this.billto;
+        }
+        public String getOVShipTo() {
+           return this.ov_shipto;
+        }
+        public String getOVBillTo() {
+           return this.ov_billto;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+         public String getHdrDueDate() {
+           return this.duedate;
+        }
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+        public String getDetItem(int i) {
+            return detitem.get(i);
+        }
+        public String getDetUOM(int i) {
+            return detuom.get(i);
+        }
+        public String getDetCustItem(int i) {
+           return detcustitem.get(i);
+        }
+        public String getDetSku(int i) {
+          return detsku.get(i);
+        }
+        public String getDetRef(int i) {
+           return detref.get(i);
+        }
+        public String getDetPO(int i) {
+           return detpo.get(i);
+        }
+        public String getDetLine(int i) {
+           return detline.get(i);
+        }
+        public String getDetQty(int i) {
+           return detqty.get(i);
+        }
+        public String getDetListPrice(int i) {
+           return detlistprice.get(i);
+        }
+        public String getDetNetPrice(int i) {
+           return detnetprice.get(i);
+        }
+        public String getDetDisc(int i) {
+           return detdisc.get(i);
+        }
+        
+        
+        public int getDetCount() {
+            return detitem.size();
+        }
+       
+        
+    }
+    
+     public static class edi945 {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String po = "";
+    public String so = "";
+    public String shipper = "";
+    public String billto = "";
+    public String shipto = "";
+    public String ov_billto = "";
+    public String ov_shipto = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String duedate = "";
+    public String shipdate = "";
+    public String podate = "";
+    public String st_name = "";
+    public String st_line1 = "";
+    public String st_line2 = "";
+    public String st_line3 = "";
+    public String st_city = "";
+    public String st_state = "";
+    public String st_zip = "";
+    public String st_country = "";
+    
+    // Detail fields     
+    public ArrayList<String[]> detailArray = new ArrayList<String[]>();
+    public int DetFieldsCount945 = 17;
+    public String[] initDetailArray(String[] a) {
+        for (int i = 0; i < a.length; i++) {
+            a[i] = "";
+        }        
+        return a;
+    }
+   
+        
+        public edi945() {
+            
+        }
+        
+        public edi945(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+        // setters for detail
+        public void setDetLine(int i, String v) {
+          this.detailArray.get(i)[0] = v;
+        }
+        public void setDetItem(int i, String v) {
+         this.detailArray.get(i)[1] = v;
+        }
+        public void setDetCustItem(int i, String v) {
+          this.detailArray.get(i)[2] = v;
+        }
+        public void setDetDesc(int i, String v) {
+           this.detailArray.get(i)[3] = v;
+        }
+        public void setDetSite(int i, String v) {
+           this.detailArray.get(i)[4] = v;
+        }
+        public void setDetQtyOrd(int i, String v) {
+          this.detailArray.get(i)[5] = v;
+        }
+        public void setDetQtyShp(int i, String v) {
+           this.detailArray.get(i)[6] = v;
+        }
+        public void setDetListPrice(int i, String v) {
+           this.detailArray.get(i)[7] = v;
+        }
+         public void setDetNetPrice(int i, String v) {
+           this.detailArray.get(i)[8] = v;
+        }
+          public void setDetNetWt(int i, String v) {
+           this.detailArray.get(i)[9] = v;
+        }
+        public void setDetWH(int i, String v) {
+           this.detailArray.get(i)[10] = v;
+        }
+        public void setDetLoc(int i, String v) {
+          this.detailArray.get(i)[11] = v;
+        }
+        public void setDetUOM(int i, String v) {
+          this.detailArray.get(i)[12] = v;
+        }        
+        public void setDetSku(int i, String v) {
+           this.detailArray.get(i)[13] = v;
+        }
+        public void setDetRef(int i, String v) {
+         this.detailArray.get(i)[14] = v;
+        }
+        public void setDetPO(int i, String v) {
+          this.detailArray.get(i)[15] = v;
+        }
+        public void setDetDisc(int i, String v) {
+           this.detailArray.get(i)[16] = v;
+        }
+        
+        
+       // getters for detail
+         public String getDetLine(int i) {
+            return detailArray.get(i)[0];
+        }
+          public String getDetItem(int i) {
+            return detailArray.get(i)[1];
+        }
+         public String getDetCustItem(int i) {
+           return detailArray.get(i)[2];
+        }
+         public String getDetDesc(int i) {
+            return detailArray.get(i)[3];
+        }
+          public String getDetSite(int i) {
+            return detailArray.get(i)[4];
+        }
+          public String getDetQtyOrd(int i) {
+           return detailArray.get(i)[5];
+        }
+        public String getDetQtyShp(int i) {
+           return detailArray.get(i)[6];
+        }
+        public String getDetListPrice(int i) {
+           return detailArray.get(i)[7];
+        }
+        public String getDetNetPrice(int i) {
+           return detailArray.get(i)[8];
+        }
+        public String getDetNetWt(int i) {
+           return detailArray.get(i)[9];
+        }
+           public String getDetWH(int i) {
+            return detailArray.get(i)[10];
+        }
+            public String getDetLoc(int i) {
+            return detailArray.get(i)[11];
+        }
+        public String getDetUOM(int i) {
+            return detailArray.get(i)[12];
+        }
+        public String getDetSku(int i) {
+          return detailArray.get(i)[13];
+        }
+        public String getDetRef(int i) {
+           return detailArray.get(i)[14];
+        }
+        public String getDetPO(int i) {
+           return detailArray.get(i)[15];
+        }
+        public String getDetDisc(int i) {
+           return detailArray.get(i)[16];
+        } 
+        
+        
+        
+        
+        
+       // header setters 
+        
+        public void setPO(String v) {
+           this.po = v;
+        }
+        public void setSO(String v) {
+           this.so = v;
+        }
+        public void setShipper(String v) {
+           this.shipper = v;
+        }
+        public void setPODate(String v) {
+           this.podate = v;
+        }
+         public void setDueDate(String v) {
+           this.duedate = v;
+        }
+          public void setShipDate(String v) {
+           this.shipdate = v;
+        }
+        public void setShipTo(String v) {
+           this.shipto = v;
+        }
+         public void setShipVia(String v) {
+           this.shipmethod = v;
+        }
+          public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setShipToName(String v) {
+           this.st_name = v;
+        }
+        public void setShipToLine1(String v) {
+           this.st_line1 = v;
+        }
+        public void setShipToLine2(String v) {
+           this.st_line2 = v;
+        }
+        public void setShipToLine3(String v) {
+           this.st_line3 = v;
+        }
+        public void setShipToCity(String v) {
+           this.st_city = v;
+        }
+        public void setShipToState(String v) {
+           this.st_state = v;
+        }
+        public void setShipToZip(String v) {
+           this.st_zip = v;
+        }
+        public void setShipToCountry(String v) {
+           this.st_country = v;
+        }
+        public void setBillTo(String v) {
+           this.billto = v;
+        }
+        public void setOVShipTo(String v) {
+            this.ov_shipto = v;
+        }
+        public void setOVBillTo(String v) {
+            this.ov_billto = v;
+        }
+        
+        // header getters
+        public String getPO() {
+           return this.po;
+        }
+        public String getSO() {
+           return this.so;
+        }
+        public String getShipper() {
+           return this.shipper;
+        }
+        public String getPODate() {
+           return this.podate;
+        }
+        public String getShipTo() {
+           return this.shipto;
+        }
+          public String getRemarks() {
+           return this.remarks;
+        }
+            public String getShipVia() {
+           return this.shipmethod;
+        }
+        public String getShipToName() {
+           return this.st_name;
+        }
+        public String getShipToLine1() {
+           return this.st_line1;
+        }
+        public String getShipToLine2() {
+           return this.st_line2;
+        }
+        public String getShipToLine3() {
+           return this.st_line3;
+        }
+        public String getShipToCity() {
+           return this.st_city;
+        }
+        public String getShipToState() {
+           return this.st_state;
+        }
+        public String getShipToZip() {
+           return this.st_zip;
+        }
+        public String getShipToCountry() {
+           return this.st_country;
+        }
+        public String getBillTo() {
+           return this.billto;
+        }
+        public String getOVShipTo() {
+           return this.ov_shipto;
+        }
+        public String getOVBillTo() {
+           return this.ov_billto;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+         public String getHdrDueDate() {
+           return this.duedate;
+        }
+          public String getShipDate() {
+           return this.shipdate;
+        }
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+      
+        
+        
+        public int getDetCount() {
+            return detailArray.size();
+        }
+       
+        
+    }
+    
+      public static class edi204i {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String custfo = "";
+    public String carrier = "";
+    public String equiptype = "";
+    public String cust = "";
+    public String tpid = "";
+    public String ref = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String fodate = "";
+    public String bol = "";
+    
+    // Detail fields     
+    public ArrayList<String[]> detailArray = new ArrayList<String[]>();
+    public int DetFieldsCount204i = 22;
+    public String[] initDetailArray(String[] a) {
+        for (int i = 0; i < a.length; i++) {
+            a[i] = "";
+        }        
+        return a;
+    }
+   
+        
+        public edi204i() {
+            
+        }
+        
+        public edi204i(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+        // setters for detail
+        public void setDetLine(int i, String v) {
+          this.detailArray.get(i)[0] = v;
+        }
+        public void setDetType(int i, String v) {
+         this.detailArray.get(i)[1] = v;
+        }
+        public void setDetShipper(int i, String v) {
+          this.detailArray.get(i)[2] = v;
+        }
+        public void setDetShipDate(int i, String v) {
+           this.detailArray.get(i)[3] = v;
+        }
+        public void setDetShipTime(int i, String v) {
+           this.detailArray.get(i)[4] = v;
+        }
+        public void setDetDelvDate(int i, String v) {
+          this.detailArray.get(i)[5] = v;
+        }
+        public void setDetDelvTime(int i, String v) {
+           this.detailArray.get(i)[6] = v;
+        }
+        public void setDetRef(int i, String v) {
+           this.detailArray.get(i)[7] = v;
+        }
+         public void setDetAddrCode(int i, String v) {
+           this.detailArray.get(i)[8] = v;
+        }
+          public void setDetAddrName(int i, String v) {
+           this.detailArray.get(i)[9] = v;
+        }
+        public void setDetAddrLine1(int i, String v) {
+           this.detailArray.get(i)[10] = v;
+        }
+        public void setDetAddrLine2(int i, String v) {
+          this.detailArray.get(i)[11] = v;
+        }
+        public void setDetAddrCity(int i, String v) {
+          this.detailArray.get(i)[12] = v;
+        }        
+        public void setDetAddrState(int i, String v) {
+           this.detailArray.get(i)[13] = v;
+        }
+        public void setDetAddrZip(int i, String v) {
+         this.detailArray.get(i)[14] = v;
+        }
+        public void setDetAddrContact(int i, String v) {
+          this.detailArray.get(i)[15] = v;
+        }
+        public void setDetAddrPhone(int i, String v) {
+           this.detailArray.get(i)[16] = v;
+        }
+        public void setDetUnits(int i, String v) {
+           this.detailArray.get(i)[17] = v;
+        }
+        public void setDetBoxes(int i, String v) {
+           this.detailArray.get(i)[18] = v;
+        }
+        public void setDetWeight(int i, String v) {
+           this.detailArray.get(i)[19] = v;
+        }
+        public void setDetWeightUOM(int i, String v) {
+           this.detailArray.get(i)[20] = v;
+        }
+        public void setDetRemarks(int i, String v) {
+           this.detailArray.get(i)[21] = v;
+        }
+        
+        
+       // getters for detail
+         public String getDetLine(int i) {
+            return detailArray.get(i)[0];
+        }
+          public String getDetType(int i) {
+            return detailArray.get(i)[1];
+        }
+         public String getDetShipper(int i) {
+           return detailArray.get(i)[2];
+        }
+         public String getDetShipDate(int i) {
+            return detailArray.get(i)[3];
+        }
+          public String getDetShipTime(int i) {
+            return detailArray.get(i)[4];
+        }
+          public String getDetDelvDate(int i) {
+           return detailArray.get(i)[5];
+        }
+        public String getDetDelvTime(int i) {
+           return detailArray.get(i)[6];
+        }
+        public String getDetRef(int i) {
+           return detailArray.get(i)[7];
+        }
+        public String getDetAddrCode(int i) {
+           return detailArray.get(i)[8];
+        }
+        public String getDetAddrName(int i) {
+           return detailArray.get(i)[9];
+        }
+           public String getDetAddrLine1(int i) {
+            return detailArray.get(i)[10];
+        }
+            public String getDetAddrLine2(int i) {
+            return detailArray.get(i)[11];
+        }
+        public String getDetAddrCity(int i) {
+            return detailArray.get(i)[12];
+        }
+        public String getDetAddrState(int i) {
+          return detailArray.get(i)[13];
+        }
+        public String getDetAddrZip(int i) {
+           return detailArray.get(i)[14];
+        }
+        public String getDetAddrContact(int i) {
+           return detailArray.get(i)[15];
+        }
+        public String getDetAddrPhone(int i) {
+           return detailArray.get(i)[16];
+        } 
+        public String getDetUnits(int i) {
+           return detailArray.get(i)[17];
+        }
+        public String getDetBoxes(int i) {
+           return detailArray.get(i)[18];
+        }
+        public String getDetWeight(int i) {
+           return detailArray.get(i)[19];
+        }
+        public String getDetWeightUOM(int i) {
+           return detailArray.get(i)[20];
+        }
+        public String getDetRemarks(int i) {
+           return detailArray.get(i)[21];
+        }
+       // header setters 
+   
+    
+        public void setCustFO(String v) {
+           this.custfo = v;
+        }
+        public void setCarrier(String v) {
+           this.carrier = v;
+        }
+        public void setEquipType(String v) {
+           this.equiptype = v;
+        }
+        public void setCust(String v) {
+           this.cust = v;
+        }
+        public void setTPID(String v) {
+           this.tpid = v;
+        }
+         public void setRef(String v) {
+           this.ref = v;
+        }
+          public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setShipMethod(String v) {
+           this.shipmethod = v;
+        }
+         public void setFODate(String v) {
+           this.fodate = v;
+        }
+          public void setBOL(String v) {
+           this.bol = v;
+        }
+       
+ 
+        // header getters
+        public String getCustFO() {
+           return this.custfo;
+        }
+        public String getCarrier() {
+           return this.carrier;
+        }
+        public String getEquipType() {
+           return this.equiptype;
+        }
+        public String getCust() {
+           return this.cust;
+        }
+        public String getTPID() {
+           return this.tpid;
+        }
+        public String getRef() {
+           return this.ref;
+        }
+          public String getRemarks() {
+           return this.remarks;
+        }
+            public String getShipMethod() {
+           return this.shipmethod;
+        }
+      
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+         public String getFODate() {
+           return this.fodate;
+        }
+          public String getBOL() {
+           return this.bol;
+        }
+
+        
+
+      
+        
+        
+        public int getDetCount() {
+            return detailArray.size();
+        }
+       
+        
+    }
+     
+     public static class edi990 {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String order = "";
+    public String yesno = "";
+    public String reasoncode = "";
+    public String scac = "";
+    
+  
+   
+        
+        public edi990() {
+            
+        }
+        
+        public edi990(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+     
+        
+        
+        
+       // header setters 
+        
+        public void setOrder(String v) {
+           this.order = v;
+        }
+        public void setYESNO(String v) {
+           this.yesno = v;
+        }
+        public void setReasonCode(String v) {
+           this.reasoncode = v;
+        }
+        public void setSCAC(String v) {
+           this.scac = v;
+        }
+      
+        
+        // header getters
+        public String getOrder() {
+           return this.order;
+        }
+        public String getYESNO() {
+           return this.yesno;
+        }
+        public String getReasonCode() {
+           return this.reasoncode;
+        }
+        public String getSCAC() {
+           return this.scac;
+        }
+       
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+     
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+      
+        
+        
+     
+       
+        
+    }
+     
+     public static class edi997i {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String gsCtrlNum = "";
+    public String stCtrlNum = "";
+    
+  
+    // Detail fields     
+    public ArrayList<String[]> detailArray = new ArrayList<String[]>();
+    public int DetFieldsCount997i = 1;
+    public String[] initDetailArray(String[] a) {
+        for (int i = 0; i < a.length; i++) {
+            a[i] = "";
+        }        
+        return a;
+    }
+        
+        public edi997i() {
+            
+        }
+        
+        public edi997i(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String gsctrlnum, String isadate, 
+                      String doctype) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaCtrlNum = gsctrlnum; 
+            this.isaDate = isadate;
+            this.doctype = doctype;
+        }
+        
+      // detail setters
+          public void setSTCtrlNum(int i, String v) {
+          this.detailArray.get(i)[0] = v;
+        }
+      // detail getters 
+           public String getSTCtrlNum(int i) {
+            return detailArray.get(i)[0];
+        }
+        
+     
+        
+       
+      
+        
+        // header getters
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getGSCtrlNum() {
+           return this.gsCtrlNum;
+        }
+         public String getISACtrlNum() {
+           return this.gsCtrlNum;
+        }
+       
+
+         public int getDetCount() {
+            return detailArray.size();
+        }
+        
+        
+     
+       
+        
+    }
+     
+      public static class edi220 {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String order = "";
+    public String yesno = "";
+    public String remarks = "";
+    public String scac = "";
+    public String amount = "";
+    
+  
+   
+        
+        public edi220() {
+            
+        }
+        
+        public edi220(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+     
+        
+        
+        
+       // header setters 
+        
+        public void setOrder(String v) {
+           this.order = v;
+        }
+        public void setAmount(String v) {
+           this.amount = v;
+        }
+        public void setYESNO(String v) {
+           this.yesno = v;
+        }
+        public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setSCAC(String v) {
+           this.scac = v;
+        }
+      
+        
+        // header getters
+        public String getOrder() {
+           return this.order;
+        }
+        public String getAmount() {
+           return this.amount;
+        }
+        public String getYESNO() {
+           return this.yesno;
+        }
+        public String getRemarks() {
+           return this.remarks;
+        }
+        public String getSCAC() {
+           return this.scac;
+        }
+       
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+     
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+      
+        
+        
+     
+       
+        
+    }
+     
+      public static class edi214 {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String order = "";
+    public String pronbr = "";
+    public String status = "";
+    public String remarks = "";
+    public String scac = "";
+    public String lat = "";
+    public String lon = "";
+    public String apptdate = "";
+    public String appttime = "";
+    public String equipmentnbr = "";
+    public String equipmenttype = "";
+    
+  
+   
+        
+        public edi214() {
+            
+        }
+        
+        public edi214(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+     
+        
+        
+        
+       // header setters 
+        
+        public void setOrder(String v) {
+           this.order = v;
+        }
+        public void setProNbr(String v) {
+           this.pronbr = v;
+        }
+        public void setStatus(String v) {
+           this.status = v;
+        }
+        public void setLat(String v) {
+           this.lat = v;
+        }
+        public void setLon(String v) {
+           this.lon = v;
+        }
+        public void setEquipmentNbr(String v) {
+           this.equipmentnbr = v;
+        }
+        public void setEquipmentType(String v) {
+           this.equipmenttype = v;
+        }
+        public void setApptDate(String v) {
+           this.apptdate = v;
+        }
+        public void setApptTime(String v) {
+           this.appttime = v;
+        }
+        public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setSCAC(String v) {
+           this.scac = v;
+        }
+      
+        
+        // header getters
+        public String getOrder() {
+           return this.order;
+        }
+        public String getProNbr() {
+           return this.pronbr;
+        }
+        public String getStatus() {
+           return this.status;
+        }
+        public String getRemarks() {
+           return this.remarks;
+        }
+        public String getSCAC() {
+           return this.scac;
+        }
+         public String getLat() {
+           return this.lat;
+        }
+        public String getLon() {
+           return this.lon;
+        }
+        public String getEquipmentType() {
+           return this.equipmenttype;
+        }
+        public String getEquipmentNbr() {
+           return this.equipmentnbr;
+        }
+        public String getApptDate() {
+           return this.apptdate;
+        }
+        public String getApptTime() {
+           return this.appttime;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+     
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+      
+        
+        
+     
+       
+        
+    } 
+      
+     public static class edi862 {
+    
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String po = "";
+    public String rlse = "";
+    public String billto = "";
+    public String shipto = "";
+    public String ov_billto = "";
+    public String ov_shipto = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String duedate = "";
+    public String podate = "";
+    public String st_name = "";
+    public String st_line1 = "";
+    public String st_line2 = "";
+    public String st_line3 = "";
+    public String st_city = "";
+    public String st_state = "";
+    public String st_zip = "";
+    public String st_country = "";
+    
+       
+    public ArrayList<String> detsku = new ArrayList<String>();
+    public ArrayList<String> detcustitem = new ArrayList<String>();
+    public ArrayList<String> detitem = new ArrayList<String>();
+    public ArrayList<String> detqty = new ArrayList<String>();
+    public ArrayList<String> detref = new ArrayList<String>();
+    public ArrayList<String> detpo = new ArrayList<String>();
+    public ArrayList<String> detline = new ArrayList<String>();
+    public ArrayList<String> detlistprice = new ArrayList<String>();
+    public ArrayList<String> detnetprice = new ArrayList<String>();
+    public ArrayList<String> detdisc = new ArrayList<String>();
+    public ArrayList<String> dettype = new ArrayList<String>();
+    public ArrayList<String> detdate = new ArrayList<String>();
+    
+    
+    public ArrayList<String> FSTloopqty = new ArrayList<String>();
+    public ArrayList<String> FSTloopdate = new ArrayList<String>();
+    public ArrayList<String> FSTlooptype = new ArrayList<String>();
+    public ArrayList<String> FSTloopref = new ArrayList<String>();
+    
+    public Map<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
+    
+    
+    
+        public edi862() {
+            
+        }
+        public edi862(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+       
+        public void setFSTMap(Integer i, ArrayList<String> a) {
+            this.map.put(i, a);
+        }
+        
+        public void setFSTLoopDate(String v) {
+           this.FSTloopdate.add(v);
+        }
+        public void setFSTLoopQty(String v)  {
+           this.FSTloopqty.add(v);
+        }
+        public void setFSTLoopType(String v) {
+           this.FSTlooptype.add(v);
+        }
+        public void setFSTLoopRef(String v) {
+           this.FSTloopref.add(v);
+        }
+        
+        public void setDetDate(String v) {
+           this.detdate.add(v);
+        }
+        public void setDetType(String v) {
+           this.dettype.add(v);
+        }
+        public void setDetItem(String v) {
+           this.detitem.add(v);
+        }
+        public void setDetCustItem(String v) {
+           this.detcustitem.add(v);
+        }
+        public void setDetSku(String v) {
+           this.detsku.add(v);
+        }
+        public void setDetRef(String v) {
+           this.detref.add(v);
+        }
+        public void setDetPO(String v) {
+           this.detpo.add(v);
+        }
+        public void setDetLine(String v) {
+           this.detline.add(v);
+        }
+        public void setDetQty(String v) {
+           this.detqty.add(v);
+        }
+        public void setDetListPrice(String v) {
+           this.detlistprice.add(v);
+        }
+         public void setDetNetPrice(String v) {
+           this.detnetprice.add(v);
+        }
+          public void setDetDisc(String v) {
+           this.detdisc.add(v);
+        }
+       
+        public void setRlse(String v) {
+           this.rlse = v;
+        }  
+        public void setPO(String v) {
+           this.po = v;
+        }
+        public void setPODate(String v) {
+           this.podate = v;
+        }
+         public void setDueDate(String v) {
+           this.duedate = v;
+        }
+        public void setShipTo(String v) {
+           this.shipto = v;
+        }
+        public void setShipToName(String v) {
+           this.st_name = v;
+        }
+        public void setShipToLine1(String v) {
+           this.st_line1 = v;
+        }
+        public void setShipToLine2(String v) {
+           this.st_line2 = v;
+        }
+        public void setShipToLine3(String v) {
+           this.st_line3 = v;
+        }
+        public void setShipToCity(String v) {
+           this.st_city = v;
+        }
+        public void setShipToState(String v) {
+           this.st_state = v;
+        }
+        public void setShipToZip(String v) {
+           this.st_zip = v;
+        }
+        public void setShipToCountry(String v) {
+           this.st_country = v;
+        }
+        public void setBillTo(String v) {
+           this.billto = v;
+        }
+        public void setOVShipTo(String v) {
+            this.ov_shipto = v;
+        }
+        public void setOVBillTo(String v) {
+            this.ov_billto = v;
+        }
+        public String getPO() {
+           return this.po;
+        }
+        public Map getFSAMap(int i) {
+           return this.map;
+        }
+        public String getRlse() {
+           return this.rlse;
+        }
+        public String getPODate() {
+           return this.podate;
+        }
+        public String getShipTo() {
+           return this.shipto;
+        }
+        public String getShipToName() {
+           return this.st_name;
+        }
+        public String getShipToLine1() {
+           return this.st_line1;
+        }
+        public String getShipToLine2() {
+           return this.st_line2;
+        }
+        public String getShipToLine3() {
+           return this.st_line3;
+        }
+        public String getShipToCity() {
+           return this.st_city;
+        }
+        public String getShipToState() {
+           return this.st_state;
+        }
+        public String getShipToZip() {
+           return this.st_zip;
+        }
+        public String getShipToCountry() {
+           return this.st_country;
+        }
+        public String getBillTo() {
+           return this.billto;
+        }
+        public String getOVShipTo() {
+           return this.ov_shipto;
+        }
+        public String getOVBillTo() {
+           return this.ov_billto;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+
+        public String getIsaSenderID() {
+            return isaSenderID;
+        }
+
+        public String getFSTLoopDate(int i) {
+            return FSTloopdate.get(i);
+        }
+        public String getFSTLoopQty(int i) {
+            return FSTloopqty.get(i);
+        }
+        public String getFSTLoopType(int i) {
+            return FSTlooptype.get(i);
+        }
+         public String getFSTLoopRef(int i) {
+            return FSTloopref.get(i);
+        }
+        
+        public String getDetDate(int i) {
+            return detdate.get(i);
+        }
+        public String getDetType(int i) {
+            return dettype.get(i);
+        }
+        public String getDetItem(int i) {
+            return detitem.get(i);
+        }
+        public String getDetCustItem(int i) {
+           return detcustitem.get(i);
+        }
+        public String getDetSku(int i) {
+          return detsku.get(i);
+        }
+        public String getDetRef(int i) {
+           return detref.get(i);
+        }
+        public String getDetPO(int i) {
+           return detpo.get(i);
+        }
+        public String getDetLine(int i) {
+           return detline.get(i);
+        }
+        public String getDetQty(int i) {
+           return detqty.get(i);
+        }
+        public String getDetListPrice(int i) {
+           return detlistprice.get(i);
+        }
+        public String getDetNetPrice(int i) {
+           return detnetprice.get(i);
+        }
+        public String getDetDisc(int i) {
+           return detdisc.get(i);
+        }
+                
+        public int getDetCount() {
+            return detitem.size();
+        }
+       
+        public int getFCSCount() {
+            return FSTloopdate.size();
+        }
+        
+    }
+    
+}

@@ -1,0 +1,23 @@
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "shift_mstr" (
+  "shf_id" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "shf_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shf_mon_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_mon_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_tue_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_tue_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_wed_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_wed_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_thu_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_thu_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_fri_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_fri_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_sat_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_sat_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_sun_intime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00',
+  "shf_sun_outtime" time NOT NULL COLLATE NOCASE DEFAULT '00:00:00');
+/*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO "shift_mstr" VALUES (1,'1st Shift Example','06:00:00','14:00:00','06:00:00','14:00:00','06:00:00','14:00:00','06:00:00','14:00:00','06:00:00','14:00:00','00:00:00','00:00:00','00:00:00','00:00:00');
+INSERT INTO "shift_mstr" VALUES (2,'2nd Shift Example','14:00:00','22:00:00','14:00:00','22:00:00','14:00:00','22:00:00','14:00:00','22:00:00','14:00:00','22:00:00','00:00:00','00:00:00','00:00:00','00:00:00');
+INSERT INTO "shift_mstr" VALUES (3,'3rd Shift Example','22:00:00','06:00:00','22:00:00','06:00:00','22:00:00','06:00:00','22:00:00','06:00:00','22:00:00','06:00:00','00:00:00','00:00:00','00:00:00','00:00:00');

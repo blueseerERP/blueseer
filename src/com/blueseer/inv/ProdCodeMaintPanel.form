@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="cc" green="66" red="0" type="rgb"/>
+    </Property>
+  </Properties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,-125,0,0,4,40"/>
+  </AuxValues>
+
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Product Code Maintenance"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel70" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbwipacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel69" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbscrapacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel68" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="tbinvacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel71" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbwipvaracct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel72" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbinvchangeacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel73" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbsalesacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel74" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbsalesdiscacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel75" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbinvdescrepancyacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel66" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbnbr" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="jLabel94" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbjobstockacct" min="-2" pref="113" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel76" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel77" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel78" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel79" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel80" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel81" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel82" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel83" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel84" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jLabel67" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbcogslbracct" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbcogsmtlacct" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbcogsbdnacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbcogsovhacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbcogsoutacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbpurchacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbporcptacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbpoovhacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbpopricevaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel93" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel87" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel85" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel86" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel92" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel91" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel90" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel89" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel88" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btdelete" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbapratevaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbapusageacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbmtlusagevaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbmtlratevaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbmixedvaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbcopacct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tboutusgvaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tboutratevaracct" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                      <Component id="tbtbd" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="tbdesc" min="-2" pref="203" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbdesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel67" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbnbr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel66" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbinvacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel68" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcogsmtlacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel76" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbinvdescrepancyacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel75" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcogslbracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel77" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbscrapacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel69" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcogsbdnacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel78" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbwipacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel70" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcogsovhacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel79" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbwipvaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel71" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbcogsoutacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel80" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbinvchangeacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel72" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbpurchacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel81" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbsalesacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel73" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbporcptacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel82" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbsalesdiscacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel74" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbpoovhacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel83" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbpopricevaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel84" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbjobstockacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel94" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbapusageacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel93" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbapratevaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel87" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbmtlusagevaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbmtlratevaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel86" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbmixedvaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel92" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbcopacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel91" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tboutusgvaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel90" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tboutratevaracct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel89" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbtbd" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel88" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="36" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JTextField" name="tbwipacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbsalesacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel75">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Inv Descrepancy"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbinvacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel71">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Wip Variance Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel66">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ProdCode"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btupdate">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Edit"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btadd">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Add"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbdesc">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel69">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Scrap Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel73">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sales Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbwipvaracct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel72">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Inventory Change Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel70">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Wip Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbscrapacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbnbr">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel74">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sales Discount Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel67">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Description"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel68">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Inventory Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbinvchangeacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbsalesdiscacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbinvdescrepancyacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcogsmtlacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel76">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="COGS Mtl Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcogslbracct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcogsbdnacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcogsovhacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcogsoutacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbpurchacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbporcptacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbpoovhacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel77">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="COGS Lbr Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel78">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="COGS Bdn Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel79">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="COGS Ovh Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel80">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="COGS Out Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel81">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Purchases Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel82">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PO Receipt Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel83">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PO Ovh Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbpopricevaracct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel84">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PO Pricevar Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel85">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Matl Usage Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel86">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Matl Rate Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tboutratevaracct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel87">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="AP Rate Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel88">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="TBD"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbtbd">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel89">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Outside Rate Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel90">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Outside Usage Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel91">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cost Of Prod Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel92">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Mixed Var Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbapusageacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbcopacct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbmixedvaracct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tboutusgvaracct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbapratevaracct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel93">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="AP Usage Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbmtlratevaracct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbmtlusagevaracct">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbjobstockacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel94">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Job Stock Acct"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btbrowse">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/lookup.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnew">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="New"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btdelete">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/vaughnte/avm/codedir/java/blueseer/jasper/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pland_id,
+     pland_parent,
+     plan_part,
+     plan_qty_sched,
+     pland_qty,
+     plan_date_due,
+     pland_date,
+     pland_cell,
+     plan_date_sched,
+     plan_date_create,
+     plan_order,
+     plan_line,
+     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell, wf_mch
+FROM
+     plan_mstr
+inner join pland_mstr on pland_parent = plan_nbr
+inner join item_mstr on it_item = plan_part
+inner join wf_mstr on wf_id = it_wf
+where plan_nbr = $P{myid};]]>
+	</queryString>
+	<field name="pland_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pland_parent" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_part" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_qty_sched" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pland_qty" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_due" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pland_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pland_cell" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_sched" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_create" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_order" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_line" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_cell" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="it_item" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="it_wf" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="wf_op" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="wf_desc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="wf_cell" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="wf_mch" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
+	</variable>
+	<variable name="mysumprice" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="4" splitType="Stretch">
+			<staticText>
+				<reportElement x="367" y="-36" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Tub Ticket]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="86" splitType="Stretch">
+			<textField pattern="">
+				<reportElement x="461" y="27" width="81" height="20" uuid="9af12406-6714-4cf5-ae65-6668bf752aa1"/>
+				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="461" y="9" width="81" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
+				<textFieldExpression><![CDATA[$F{pland_parent}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="164" y="9" width="87" height="19" uuid="2ec49248-6ada-439b-9b0c-a51ea5db2b5e"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tub Ticket Nbr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="28" width="87" height="19" uuid="b8276b9a-752e-4fdd-a043-1e20c6524afc"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tub Qty:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="28" y="0" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{shd_id}, false))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="344" y="9" width="100" height="19" uuid="cd94e765-353c-40e1-93fa-215870477d76"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Parent Ticket Nbr:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="261" y="9" width="66" height="19" uuid="a6adeeef-769f-4fc9-80e3-a61e58c31921"/>
+				<textFieldExpression><![CDATA[$F{pland_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="261" y="28" width="66" height="19" uuid="bec025f9-df00-4711-8fa2-86ad42b93444"/>
+				<textFieldExpression><![CDATA[$F{pland_qty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="357" y="28" width="87" height="19" uuid="d64d8893-4286-4176-aefa-3ea6cd8cf37e"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Sched Qty:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="47" width="87" height="19" uuid="3bfed8b1-4eb3-4945-a162-3bfa61067032"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Assy Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="47" width="87" height="19" uuid="20a22f6b-2561-4896-8a34-960ca68f838b"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Date Due:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="67" width="87" height="19" uuid="56c8bd40-47bd-4ac7-b242-bbcb2a18ac50"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Assy Cell:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="66" width="87" height="19" uuid="6f66a8c5-a5a4-4c72-a3fe-9bd2e9e8d238"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Date Sched:]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="461" y="46" width="81" height="20" uuid="64c7483a-d6fa-4704-967d-eb583aaf4ac6"/>
+				<textFieldExpression><![CDATA[$F{plan_date_due}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="461" y="65" width="81" height="20" uuid="b4b7bbe0-9fcf-40dd-9499-87d7ff7f9af9"/>
+				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="261" y="48" width="66" height="19" uuid="b3fc513a-2898-4805-81bf-cd38bdf5a747"/>
+				<textFieldExpression><![CDATA[$F{pland_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="261" y="66" width="66" height="19" uuid="beda7838-24e0-4a61-b293-db89eee92028"/>
+				<textFieldExpression><![CDATA[$F{pland_cell}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="47" width="24" height="18" uuid="1fc23098-545f-4ba1-aa16-d8ed1ea5e2b3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Part:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="28" y="48" width="121" height="19" uuid="a3899a5b-3288-4594-979c-39242c078717"/>
+				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operation]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<staticText>
+				<reportElement x="109" y="0" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<textFieldExpression><![CDATA[$F{wf_op}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="0" width="110" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{wf_desc}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="51" y="16" width="200" height="16" uuid="9d9183d2-0233-44d1-84bc-2b8aee4587c4"/>
+				<subreportParameter name="part"/>
+				<subreportParameter name="op"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

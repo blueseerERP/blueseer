@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="cc" green="66" red="0" type="rgb"/>
+    </Property>
+  </Properties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,-97,0,0,3,-72"/>
+  </AuxValues>
+
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel7">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Forecast Maintenance"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="189" max="-2" attributes="0"/>
+                          <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="173" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="jPanel4">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="ddyear" min="-2" pref="123" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="ddsite" max="32767" attributes="0"/>
+                                  <Component id="tbpart" min="-2" pref="123" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="tbget" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                      <Component id="tbadd" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tbedit" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tbdelete" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbget" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbadd" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbdelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddyear" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JButton" name="tbadd">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Add"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbaddActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="tbedit">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Edit"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbeditActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddsite">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddyear">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Year"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbpart">
+            </Component>
+            <Component class="javax.swing.JButton" name="tbdelete">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delete"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbdeleteActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Site"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="tbget">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Get"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbgetActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Part"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jPanel5">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+          <SubComponents>
+            <Container class="javax.swing.JPanel" name="jPanel1">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl8" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl7" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl9" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl11" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl10" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl12" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl13" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl1" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl2" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl3" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl4" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl5" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl6" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="tbqty8" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty7" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty10" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty9" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty1" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty12" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty11" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty13" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty2" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty3" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty4" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty5" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty6" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty5" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty6" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty8" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty10" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty11" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl11" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty12" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty13" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl13" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JTextField" name="tbqty6">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty5">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl4">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty2">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl9">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty8">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty7">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl8">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl11">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl6">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty10">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl5">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty1">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty3">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl2">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl7">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl10">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl3">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty9">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty11">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl13">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl12">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty4">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty12">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty13">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel6">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl21" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl20" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl22" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl24" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl23" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl25" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl26" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl14" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl15" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl16" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl17" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl18" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="lbl19" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="tbqty21" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty20" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty23" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty22" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty14" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty25" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty24" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty26" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty15" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty16" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty17" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty18" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="tbqty19" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl14" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty15" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl15" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty16" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl16" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty17" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl17" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty18" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl18" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty19" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl19" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty20" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl20" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty21" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl21" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty22" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl22" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty23" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl23" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty24" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl24" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty25" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl25" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty26" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl26" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JTextField" name="tbqty19">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty18">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl17">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty15">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl22">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty21">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty20">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl21">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl24">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl19">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty23">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl18">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty14">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty16">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl15">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl20">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl23">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl16">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty22">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty24">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl26">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl25">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty17">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty25">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty26">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl14">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel2">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lbl27" min="-2" pref="83" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="tbqty27" min="-2" pref="74" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lbl28" min="-2" pref="83" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="tbqty28" min="-2" pref="74" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl29" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty29" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl30" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty30" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl31" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty31" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl32" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty32" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl33" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty33" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl34" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty34" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl35" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty35" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl36" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty36" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl37" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty37" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl38" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty38" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl39" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty39" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lbl27" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbqty27" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty28" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl28" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty29" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl29" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty30" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl30" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty31" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl31" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty32" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl32" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty33" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl33" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty34" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl34" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty35" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl35" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty36" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl36" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty37" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl37" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty38" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl38" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty39" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl39" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="19" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JTextField" name="tbqty32">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl31">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl35">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl32">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty38">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty27">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl28">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl30">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty36">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty29">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl33">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl29">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty39">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty35">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl27">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl34">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty37">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty30">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl38">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl36">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl39">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty33">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty28">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty31">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl37">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty34">
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel3">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl40" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty40" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl41" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty41" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl42" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty42" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl43" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty43" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl44" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty44" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl45" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty45" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl46" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty46" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl47" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty47" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl48" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty48" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl49" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty49" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl50" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty50" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl51" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty51" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl52" min="-2" pref="83" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbqty52" min="-2" pref="74" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty40" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl40" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty41" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl41" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty42" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl42" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty43" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl43" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty44" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl44" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty45" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl45" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty46" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl46" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty47" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl47" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty48" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl48" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty49" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl49" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty50" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl50" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty51" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl51" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbqty52" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl52" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="19" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JTextField" name="tbqty48">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty42">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty44">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl49">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl45">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty41">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl47">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl43">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty43">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty40">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl42">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl48">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl52">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty45">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty46">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty50">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl50">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty49">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty47">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl51">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl40">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl44">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty52">
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbqty51">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl46">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl41">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="06/28/15"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

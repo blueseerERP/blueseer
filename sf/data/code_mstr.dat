@@ -1,0 +1,51 @@
+-- MySQL dump 10.13  Distrib 5.5.37, for Linux (i686)
+--
+-- Host: localhost    Database: vmpdb
+-- ------------------------------------------------------
+-- Server version	5.5.37
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `code_mstr`
+--
+
+DROP TABLE IF EXISTS `code_mstr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `code_mstr` (
+  `code_code` varchar(30) NOT NULL DEFAULT '',
+  `code_key` varchar(30) NOT NULL DEFAULT '',
+  `code_value` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `code_mstr`
+--
+
+LOCK TABLES `code_mstr` WRITE;
+/*!40000 ALTER TABLE `code_mstr` DISABLE KEYS */;
+INSERT INTO `code_mstr` VALUES ('PCC','PCC','DEFAULT SEVERITY CODE'),('Discounts','Freight','Freight'),('Discounts','Volume','Volume'),('Discounts','Other','Other'),('Discounts','Promo','Promo'),('edixref','1000','ACME'),('orderstatus','cancel',''),('orderstatus','error',''),('orderstatus','hold',''),('orderstatus','open',''),('orderstatus','commit',''),('orderstatus','shipped',''),('orderstatus','backorder',''),('ItemType','FG','Finished Goods'),('ItemType','RAW','RAW MATERIAL'),('ItemType','SUB','Sub Assembly'),('trantype','ISS-SALES',''),('trantype','ISS-SCRAP',''),('trantype','WIP-ISFG',''),('trantype','ISS-MISC',''),('trantype','RCT-MISC',''),('trantype','ISS-REWK',''),('trantype','RCT-PURCH',''),('trantype','LOC-TRNF',''),('trantype','WIP-TRAN',''),('trantype','RCT-FG',''),('CELL','CELL1','cell 1'),('SCRAP','AB01','CODE AB'),('labeltype','cont',''),('labeltype','pouch',''),('labeltype','addr',''),('edidoctype','850',''),('edidoctype','810',''),('edidoctype','856',''),('edidoctype','940',''),('edidoctype','943',''),('edidoctype','944',''),('edidoctype','945',''),('edidoctype','219',''),('edidoctype','220',''),('edidoctype','204',''),('edidoctype','990',''),('edidoctype','214','');
+/*!40000 ALTER TABLE `code_mstr` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-11-18 20:29:31
