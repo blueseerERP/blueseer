@@ -409,8 +409,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     custnumber.setText(part);
                     ddpart.setForeground(Color.red);
                     custnumber.setForeground(Color.red);
+                    
                     discount.setText("0.00");
                     listprice.setText("0.00");
+                    listprice.setBackground(Color.white);
+                    
                     netprice.setText("0.00");
                     qtyshipped.setText("0");
                 }
@@ -450,9 +453,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     public void setPrice() {
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
                 DecimalFormat df = new DecimalFormat("#0.00");
+                
+                String[] TypeAndPrice = OVData.getItemPrice(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+                String pricetype = TypeAndPrice[0].toString();
+                Double price = Double.valueOf(TypeAndPrice[1]);
                 dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
-                listprice.setText(df.format(OVData.getPartPriceFromCust(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
-                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString())));
+                listprice.setText(df.format(price));
+                if (pricetype.equals("cust")) {
+                    listprice.setBackground(Color.green);
+                }
+                if (pricetype.equals("item")) {
+                    listprice.setBackground(Color.yellow);
+                }
                 discount.setText(df.format(OVData.getPartDiscFromCust(ddcust.getSelectedItem().toString())));
                 custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
@@ -772,7 +785,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         lbqtyavailable.setBackground(Color.gray);
         lbqtyavailable.setText("");
-        
+        listprice.setBackground(Color.gray); 
        
         isLoad = false;
       

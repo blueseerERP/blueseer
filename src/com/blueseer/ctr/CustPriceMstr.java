@@ -713,6 +713,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
            proceed = bsmf.MainFrame.warn("Are you sure?");
         }
         if (proceed) {
+            String[] z = pricelist.getSelectedValue().toString().split(":");
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -721,14 +722,17 @@ public class CustPriceMstr extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
                    int i = st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" + 
-                                            " and cpr_item = " + "'" + pricelist.getSelectedValue().toString() + "'" +
+                                            " and cpr_item = " + "'" + z[0].toString() + "'" +
+                                            " and cpr_uom = " + "'" + z[1].toString() + "'" +
+                                            " and cpr_curr = " + "'" + z[2].toString() + "'" +
                                             " and cpr_type = 'LIST' " + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + pricelist.getSelectedValue().toString());
                     initvars("");
                     }
                 } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to Delete cpr_mstr Record");
+                    s.printStackTrace();
+                    bsmf.MainFrame.show("Unable to Delete cpr_mstr Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

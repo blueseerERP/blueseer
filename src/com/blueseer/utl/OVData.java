@@ -6395,8 +6395,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
          
-            public static Double getPartPriceFromCust(String cust, String part, String uom, String curr) {
-       Double myreturn = 0.00;
+         
+         
+         public static String[] getItemPrice(String cust, String part, String uom, String curr) {
+       String[] TypeAndPrice = new String[2];   
+       String Type = "none";
+       Double price = 0.00;
        String pricecode = "";
       
         try{
@@ -6421,9 +6425,22 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                                       " AND cpr_curr = " + "'" + curr + "'" +
                                       " AND cpr_type = 'LIST' "+ ";");
                while (res.next()) {
-                   myreturn = res.getDouble("cpr_price");
+                   price = res.getDouble("cpr_price");
+                   Type = "cust";
                     
                 }
+               
+               // if there is no customer specific price...then pull price from item master it_sell_price
+                  if ( price <= 0.00 ) {
+                     res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + part + "'" + ";");
+                     while (res.next()) {
+                     price = res.getDouble("it_sell_price");   
+                     Type = "item";
+                     }
+                  }
+               
+           TypeAndPrice[0] = Type;
+           TypeAndPrice[1] = String.valueOf(price);
                
            }
             catch (SQLException s){
@@ -6434,9 +6451,54 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         catch (Exception e){
             e.printStackTrace();
         }
-        return myreturn;
+        return TypeAndPrice;
         
     }
+         
+          public static Double getPartPriceFromCust(String cust, String part, String uom, String curr) {
+       Double price = 0.00;
+       String pricecode = "";
+      
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+                 while (res.next()) {
+                   pricecode = res.getString("cm_price_code");
+                }     
+                  // if there is no pricecode....it defaults to billto
+                 if (! pricecode.isEmpty()) {
+                     cust = pricecode;
+                 }
+                 
+                res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
+                                      " AND cpr_item = " + "'" + part + "'" +
+                                      " AND cpr_uom = " + "'" + uom + "'" +
+                                      " AND cpr_curr = " + "'" + curr + "'" +
+                                      " AND cpr_type = 'LIST' "+ ";");
+               while (res.next()) {
+                   price = res.getDouble("cpr_price");
+                    
+                }
+               
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return price;
+        
+    }
+         
          
           public static Double getPartPriceFromListCode(String code, String part, String uom, String curr) {
        Double myreturn = 0.00;
