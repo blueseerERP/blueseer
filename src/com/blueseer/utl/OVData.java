@@ -10177,6 +10177,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                
            }
             catch (SQLException s){
+                s.printStackTrace();
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
             }
             con.close();
@@ -10188,6 +10189,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
          
+          public static boolean isCustItemOnly() {
+             
+           boolean custitemonly = false;
+            try{
+               Class.forName(driver).newInstance();
+                con = DriverManager.getConnection(url + db, user, pass);
+                try{
+                    Statement st = con.createStatement();
+                    ResultSet res = null;
+
+                    res = st.executeQuery("select orc_custitem from order_ctrl;");
+                   while (res.next()) {
+                        custitemonly = res.getBoolean("orc_custitem");
+                    }
+
+               }
+                catch (SQLException s){
+                    s.printStackTrace();
+                }
+                con.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return custitemonly;
+        
+    }   
+           
           
          public static boolean isAutoSource() {
              

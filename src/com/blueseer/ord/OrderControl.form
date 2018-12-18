@@ -41,9 +41,12 @@
                   </Group>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cbautoinvoice" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cbautoinvoice" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbcustitem" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -55,7 +58,9 @@
                   <Component id="cbautosource" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cbautoinvoice" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="10" max="32767" attributes="0"/>
+                  <EmptySpace pref="8" max="32767" attributes="0"/>
+                  <Component id="cbcustitem" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
@@ -79,6 +84,11 @@
         <Component class="javax.swing.JCheckBox" name="cbautoinvoice">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Invoice Order?"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbcustitem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cust Item Xref Only?"/>
           </Properties>
         </Component>
       </SubComponents>

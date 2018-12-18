@@ -68,6 +68,7 @@ public class OrderControl extends javax.swing.JPanel {
         cbautosource = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
         cbautoinvoice = new javax.swing.JCheckBox();
+        cbcustitem = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -84,6 +85,8 @@ public class OrderControl extends javax.swing.JPanel {
 
         cbautoinvoice.setText("Auto Invoice Order?");
 
+        cbcustitem.setText("Cust Item Xref Only?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -96,7 +99,9 @@ public class OrderControl extends javax.swing.JPanel {
                 .addGap(25, 25, 25))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbautoinvoice)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbautoinvoice)
+                    .addComponent(cbcustitem))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -106,7 +111,9 @@ public class OrderControl extends javax.swing.JPanel {
                 .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbautoinvoice)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(cbcustitem)
+                .addGap(18, 18, 18)
                 .addComponent(btupdate)
                 .addGap(21, 21, 21))
         );
@@ -126,6 +133,7 @@ public class OrderControl extends javax.swing.JPanel {
                 int i = 0;
                 String autosource = "";
                 String autoinvoice = "";
+                String custitemonly = "";
                 
                 if ( cbautosource.isSelected() ) {
                 autosource = "1";    
@@ -139,6 +147,11 @@ public class OrderControl extends javax.swing.JPanel {
                     autoinvoice = "0";
                 }
                 
+                   if ( cbcustitem.isSelected() ) {
+                custitemonly = "1";    
+                } else {
+                    custitemonly = "0";
+                }
                 
                 
                 res = st.executeQuery("SELECT *  FROM  order_ctrl ;");
@@ -147,12 +160,15 @@ public class OrderControl extends javax.swing.JPanel {
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice ) values (" + "'" + autosource + "'" + "," +
-                            "'" + autoinvoice + "'" + ")" + ";");              
+                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_custitem ) values (" + "'" + autosource + "'" + "," +
+                            "'" + autoinvoice + "'" + "," +
+                            "'" + custitemonly + "'" +   
+                                    ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
                     st.executeUpdate("update order_ctrl set " 
                             + " orc_autosource = " + "'" + autosource + "'" + "," 
+                            + " orc_custitem = " + "'" + custitemonly + "'" + "," 
                             + " orc_autoinvoice = " + "'" + autoinvoice + "'" +         
                             ";");   
                     bsmf.MainFrame.show("Updated Defaults");
@@ -173,6 +189,7 @@ public class OrderControl extends javax.swing.JPanel {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbautoinvoice;
     private javax.swing.JCheckBox cbautosource;
+    private javax.swing.JCheckBox cbcustitem;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

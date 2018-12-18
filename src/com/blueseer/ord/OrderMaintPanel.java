@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
@@ -44,6 +46,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 String status = "";
                 String curr = "";
                 String basecurr = OVData.getDefaultCurrency();
+                boolean custitemonly = true;
     
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
@@ -155,23 +158,20 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     ddcurr.setSelectedItem((res.getString("cm_curr")));
                 }
                 
-                
-                ddpart.removeAllItems();
-                res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + mykey + "'" + ";");
-                while (res.next()) {
-                    ddpart.addItem(res.getString("cup_item"));
+                if (custitemonly) {
+                    ddpart.removeAllItems();
+                    res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + mykey + "'" + ";");
+                    while (res.next()) {
+                        ddpart.addItem(res.getString("cup_item"));
+                    }
+                    res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + mykey + "'" + 
+                                          " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
+                    while (res.next()) {
+                      sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
+                      });
+                    }
                 }
                 
-                
-               
-                res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + mykey + "'" + 
-                                      " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
-                while (res.next()) {
-                  sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
-                  });
-                }
-                        
-            
             } catch (SQLException s) {
                 s.printStackTrace();
                 bsmf.MainFrame.show("SQL Code does not execute");
@@ -389,8 +389,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                // if part is not already in list
                 int k = ddpart.getSelectedIndex();
               
-                // lets first try as cust part
+                // lets first try as cust part...i.e....lets look up the item based on entering a customer part number.
                 if (k < 0) {
+                    
                 res = st.executeQuery("select cup_item, cup_citem from cup_mstr where cup_cust = " + "'" + ddcust.getSelectedItem().toString() + "'" 
                         + " AND cup_citem = " + "'" + part + "'" 
                         + ";");
@@ -400,15 +401,18 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     custnumber.setText(part);
                     ddpart.setForeground(Color.blue);
                     custnumber.setForeground(Color.blue);
+                    custnumber.setEditable(false);
                 }
                 
                 // if i is still 0...then must be a misc item
                 if (i == 0) {
                   //  partnbr.addItem(part);
                   //  partnbr.setSelectedItem(part);
-                    custnumber.setText(part);
+                    custnumber.setText("");
                     ddpart.setForeground(Color.red);
                     custnumber.setForeground(Color.red);
+                   // custnumber.setBorder(BorderFactory.createLineBorder(Color.red));
+                    custnumber.setEditable(true);
                     
                     discount.setText("0.00");
                     listprice.setText("0.00");
@@ -425,7 +429,10 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             listprice.setText("0.00");
             netprice.setText("0.00");
             qtyshipped.setText("0");
-            
+            custnumber.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            ddpart.setForeground(Color.blue);
+            custnumber.setForeground(Color.blue);
+            custnumber.setEditable(false);
             
             if (ddpart.getItemCount() > 0) {
                 String[] arr = OVData.getTopLocationAndWHByQTY(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString());
@@ -467,7 +474,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     listprice.setBackground(Color.yellow);
                 }
                 discount.setText(df.format(OVData.getPartDiscFromCust(ddcust.getSelectedItem().toString())));
-                custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
+                // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
         }
     }
@@ -709,6 +716,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         
         
         
+        // lets check order control for custitemonly versus any item from item master to be filled into ddpart
+        custitemonly = OVData.isCustItemOnly();
+        if (! custitemonly) {
+            lblCustItemAndDesc.setText("Description");
+            ddpart.removeAllItems();
+            ArrayList<String> items = OVData.getItemMasterAlllist();
+            for (String item : items) {
+            ddpart.addItem(item);
+            }  
+        } else {
+            lblCustItemAndDesc.setText("CustNumber");
+        }
+        
          ddwh.removeAllItems();
         ArrayList<String> whs = OVData.getWareHouseList();
         for (String wh : whs) {
@@ -785,7 +805,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         lbqtyavailable.setBackground(Color.gray);
         lbqtyavailable.setText("");
-        listprice.setBackground(Color.gray); 
+        listprice.setBackground(Color.white); 
        
         isLoad = false;
       
@@ -1067,7 +1087,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         btdelitem = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel84 = new javax.swing.JLabel();
-        lblpart2 = new javax.swing.JLabel();
+        lblCustItemAndDesc = new javax.swing.JLabel();
         qtyshipped = new javax.swing.JTextField();
         custnumber = new javax.swing.JTextField();
         ddpart = new javax.swing.JComboBox();
@@ -1117,6 +1137,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         jLabel6.setText("jLabel6");
 
         setBackground(new java.awt.Color(0, 102, 204));
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
         add(jTabbedPane1);
 
         jPanelSched.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Releases"));
@@ -1654,7 +1680,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
 
         jLabel84.setText("Qty Ship");
 
-        lblpart2.setText("CustNumber");
+        lblCustItemAndDesc.setText("CustNumber");
 
         qtyshipped.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1688,27 +1714,32 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(jLabel84)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dduom, 0, 64, Short.MAX_VALUE))
+                            .addComponent(lbqtyavailable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblpart2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblCustItemAndDesc, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblpart1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel84)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dduom, 0, 64, Short.MAX_VALUE))
-                    .addComponent(lbqtyavailable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 102, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(custnumber)
+                                .addContainerGap())))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1719,11 +1750,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     .addComponent(lblpart1)
                     .addComponent(jLabel5)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblpart2))
-                .addGap(7, 7, 7)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCustItemAndDesc)
+                    .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel84)
                     .addComponent(qtyshipped)
@@ -2127,9 +2158,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         
         String part = "";
         String custpart = "";
+        String desc = "";
         
             part = ddpart.getSelectedItem().toString();
-            custpart = custnumber.getText().toString();
+            
+            
+            if (OVData.isValidItem(part)) {
+                desc = OVData.getItemDesc(part);
+                custpart = custnumber.getText().toString();
+            } else {
+                desc = custnumber.getText().toString();  // if non-inventory item custnumber field is the description field
+                custpart = "miscitem";
+            }
+            
        
         orddet.setModel(myorddetmodel);
         
@@ -2178,7 +2219,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 qtyshipped.getText(), listprice.getText(), 
                 discount.getText(), netprice.getText(), 
                 "0", "open",
-                ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), OVData.getItemDesc(part), 
+                ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), desc, 
                 String.valueOf(OVData.getTaxAmtApplicableByItem(part, (Double.valueOf(netprice.getText()) * Double.valueOf(qtyshipped.getText())) ))
             });
             
@@ -2269,7 +2310,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                         
                         st.executeUpdate("insert into sod_det "
                             + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
-                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_taxamt, sod_site) "
+                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
@@ -2286,6 +2327,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                             + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","        
                             + "'" + ddsite.getSelectedItem().toString() + "'" 
                             + ")"
@@ -2602,7 +2644,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ddshipActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-        if (ddpart.getSelectedItem() != null)
+        if (ddpart.getSelectedItem() != null && ! isLoad)
         getparts(ddpart.getSelectedItem().toString());
     }//GEN-LAST:event_ddpartActionPerformed
 
@@ -2700,7 +2742,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_dduomActionPerformed
 
     private void ddlocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddlocActionPerformed
-       if (ddwh.getSelectedItem() != null && ddloc.getSelectedItem() != null && ddpart.getSelectedItem() != null) {
+       if (ddwh.getSelectedItem() != null && ddloc.getSelectedItem() != null && ddpart.getSelectedItem() != null && ! isLoad) {
            String prefix = "Qty Avail=";
            double qty = OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
            String sqty = String.valueOf(qty);
@@ -2830,6 +2872,14 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ddtaxActionPerformed
 
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        if (index == 1 && ddpart != null && ddpart.getItemCount() > 0) {
+            ddpart.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -2917,11 +2967,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblCustItemAndDesc;
     private javax.swing.JLabel lblIsSourced;
     private javax.swing.JLabel lblcurr;
     private javax.swing.JLabel lblcustname;
     private javax.swing.JLabel lblpart1;
-    private javax.swing.JLabel lblpart2;
     private javax.swing.JLabel lblshiptoaddr;
     private javax.swing.JLabel lblshiptoname;
     private javax.swing.JLabel lbqtyavailable;

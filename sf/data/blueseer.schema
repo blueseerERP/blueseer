@@ -1016,7 +1016,8 @@ CREATE TABLE IF NOT EXISTS `samlog` (
   `drums` decimal(10,4) NOT NULL DEFAULT '0.0000') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `order_ctrl` (
   `orc_autosource` tinyint(1) NOT NULL DEFAULT '0',
-  `orc_autoinvoice` tinyint(1) NOT NULL DEFAULT '0'
+  `orc_autoinvoice` tinyint(1) NOT NULL DEFAULT '0',
+  `orc_custitem` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_ctrl` (
   `shc_confirm` tinyint(1) NOT NULL DEFAULT '0'
