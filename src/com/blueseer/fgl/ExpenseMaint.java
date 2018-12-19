@@ -565,7 +565,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                         error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
                          
                         if (! error)
-                        error = OVData.APExpense(duedate, OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbinvoice.getText(), ddvend.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbinvoice.getText(), ddvend.getSelectedItem().toString(), actamt);
                         
                     if (error) {
                         bsmf.MainFrame.show("An error occurred");

@@ -1111,7 +1111,9 @@ public class EDI {
                        e.getDetLine(j),
                        e.getDetSite(j),
                        e.getDetWH(j),
-                       e.getDetLoc(j)); 
+                       e.getDetLoc(j),
+                       "0"   // this is a holder for matltax which is not implemented in EDI yet
+               ); 
                // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
                }
              }

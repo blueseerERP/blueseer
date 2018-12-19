@@ -13718,13 +13718,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     while (res.next()) {
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
                     amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
-                       acct_cr.add(res.getString("ap_acct"));
+                    acct_cr.add(res.getString("ap_acct"));
                     acct_dr.add(res.getString("vod_expense_acct"));
                     cc_cr.add(res.getString("ap_cc"));
                     cc_dr.add(res.getString("vod_expense_cc"));
-                   // cost.add(res.getDouble("ap_amt"));
-                      cost.add(amt);
-                      basecost.add(amt);
+                    cost.add(amt);
+                    basecost.add(amt);
                     curr.add(res.getString("ap_curr"));
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
@@ -13741,6 +13740,9 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     cc_cr.add(res.getString("pl_line"));
                     cc_dr.add(res.getString("pl_line"));
                     cost.add(amt);
+                    basecost.add(amt);
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
                     type.add("RCT-PURCH");
@@ -19473,6 +19475,7 @@ e.printStackTrace();
                 String terms = "";
                 String carrier = "";
                 String onhold = "";
+                String curr = "";
                 String taxcode = "";
                 String site = OVData.getDefaultSite();
                 
@@ -19485,6 +19488,7 @@ e.printStackTrace();
                    terms = res.getString("cm_terms");
                    taxcode = res.getString("cm_tax_code");
                    onhold = res.getString("cm_onhold");
+                   curr = res.getString("cm_curr");
                 }
                 if (i == 0) {
                     proceed = false;
@@ -19505,7 +19509,7 @@ e.printStackTrace();
                 if (proceed) {
                     st.executeUpdate("insert into ship_mstr " 
                         + " (sh_id, sh_cust, sh_ship,"
-                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_rmks, sh_userid, sh_site, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc ) "
+                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_rmks, sh_userid, sh_site, sh_curr, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc ) "
                         + " values ( " + "'" + nbr + "'" + "," 
                         + "'" + billto + "'" + "," 
                         + "'" + shipto + "'" + ","
@@ -19516,6 +19520,7 @@ e.printStackTrace();
                         + "'" + remarks + "'" + "," 
                         + "'" + bsmf.MainFrame.userid + "'" + "," 
                         + "'" + site + "'" + ","
+                        + "'" + curr + "'" + ","
                         + "'" + terms + "'" + ","
                         + "'" + taxcode + "'" + ","
                         + "'" + acct + "'" + ","
@@ -19757,6 +19762,7 @@ e.printStackTrace();
                 String carrier = "";
                 String onhold = "";
                 String taxcode = "";
+                String curr = "";
                 
                 res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + billto + "'" + " ;");
                while (res.next()) {
@@ -19767,6 +19773,7 @@ e.printStackTrace();
                    terms = res.getString("cm_terms");
                    taxcode = res.getString("cm_tax_code");
                    onhold = res.getString("cm_onhold");
+                   curr = res.getString("cm_curr");
                 }
                
 
@@ -19783,7 +19790,7 @@ e.printStackTrace();
                 if (proceed) {
                     st.executeUpdate("insert into ship_mstr " 
                         + " (sh_id, sh_cust, sh_ship,"
-                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_rmks, sh_userid, sh_site, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
+                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
                         + " values ( " + "'" + nbr + "'" + "," 
                         + "'" + billto + "'" + "," 
                         + "'" + shipto + "'" + ","
@@ -19794,6 +19801,7 @@ e.printStackTrace();
                         + "'" + remarks + "'" + "," 
                         + "'" + bsmf.MainFrame.userid + "'" + "," 
                         + "'" + site + "'" + ","
+                        + "'" + curr + "'" + ","
                         + "'" + carrier + "'" + ","        
                         + "'" + terms + "'" + ","
                         + "'" + taxcode + "'" + ","
@@ -19816,7 +19824,7 @@ e.printStackTrace();
           return isError;
       } 
        
-       public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc) {
+       public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
            try {
 
          Class.forName(driver).newInstance();
@@ -19833,7 +19841,7 @@ e.printStackTrace();
                 if (proceed) {
                         st.executeUpdate("insert into ship_det "
                             + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty,"
-                            + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_site ) "
+                            + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + line + "'" + ","
                             + "'" + part + "'" + ","
@@ -19847,6 +19855,7 @@ e.printStackTrace();
                             + "'" + desc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + loc + "'" + ","
+                            + "'" + taxamt + "'" + ","        
                             + "'" + site + "'"
                             + ")"
                             + ";");
@@ -19862,7 +19871,7 @@ e.printStackTrace();
       
         public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
           
-          // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc"
+          // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
             try {
          Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -19876,7 +19885,7 @@ e.printStackTrace();
                     for (int j = 0; j < dettable.getRowCount(); j++) {
                         st.executeUpdate("insert into ship_det "
                             + "(shd_id, shd_line, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty,"
-                            + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_site ) "
+                            + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + shippernbr + "'" + ","
                             + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
@@ -19891,6 +19900,7 @@ e.printStackTrace();
                             + "'" + dettable.getValueAt(j, 11).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 13).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 14).toString() + "'" + ","        
                             + "'" + site + "'"
                             + ")"
                             + ";");

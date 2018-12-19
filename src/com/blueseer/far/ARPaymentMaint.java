@@ -123,7 +123,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         }
         ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
         
-         ddcust.setEnabled(false); 
+        // ddcust.setEnabled(false); 
         
     }
     

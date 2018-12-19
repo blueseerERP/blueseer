@@ -74,6 +74,7 @@ public class CashTran extends javax.swing.JPanel {
                 String apacct = "";
                 String apcc = "";
                 String apbank = "";
+                String curr = "";
                 Double actamt = 0.00;
                 Double rcvamt = 0.00;
                 int voucherline = 0;
@@ -256,7 +257,8 @@ public class CashTran extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                s.printStackTrace();
+                bsmf.MainFrame.show("cannot set vendor variables");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -745,7 +747,7 @@ public class CashTran extends javax.swing.JPanel {
                 DecimalFormat df = new DecimalFormat("#0.00");   
                 setvendorvariables(ddentity.getSelectedItem().toString());
                     
-                                        
+                curr = OVData.getDefaultCurrency();
                    
                     
                     
@@ -766,7 +768,7 @@ public class CashTran extends javax.swing.JPanel {
                          for (int j = 0; j < detailtable.getRowCount(); j++) {
                              OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
                                      detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
-                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "");
+                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "", "0");
                          }
                         
                      }
@@ -787,7 +789,7 @@ public class CashTran extends javax.swing.JPanel {
                       st.executeUpdate("insert into ar_mstr "
                         + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
                         + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_site ) "
+                        + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
                         + " values ( " + "'" + ddentity.getSelectedItem().toString() + "'" + ","
                         + "'" + batchnbr + "'" + ","
                         + "'" + df.format(actamt) + "'" + ","
@@ -801,6 +803,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + OVData.getDefaultARCC() + "'" + ","
                         + "'" + "c" + "'"  + ","
                         + "'" + OVData.getDefaultARBank() + "'" + ","
+                        + "'" + curr + "'" + ","     
+                        + "'" + curr + "'" + ","         
                         + "'" + ddsite.getSelectedItem().toString() + "'"
                         + ")"
                         + ";");
@@ -838,7 +842,7 @@ public class CashTran extends javax.swing.JPanel {
                       st.executeUpdate("insert into ap_mstr "
                         + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
+                        + "ap_terms, ap_status, ap_curr, ap_base_curr, ap_bank ) "
                         + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
                               + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + expensenbr.getText() + "'" + ","
@@ -853,6 +857,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + apcc + "'" + ","
                         + "'" + terms + "'" + ","
                         + "'" + "o" + "'"  + ","
+                        + "'" + curr + "'"  + ","    
+                        + "'" + curr + "'"  + "," 
                         + "'" + apbank + "'"
                         + ")"
                         + ";");

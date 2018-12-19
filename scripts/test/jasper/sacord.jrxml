@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="223" pageHeight="28" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="223" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="306"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="684"/>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select sos_desc, 
+case when sos_amttype = 'percent' and sos_type <> 'tax' then (myamt * -1 * (sos_amt / 100.0)) 
+when sos_amttype = 'percent' and sos_type = 'tax' then (myamt * ( sos_amt / 100.0)) 
+else sos_amt end as amt from sos_det, (select sod_nbr, sum(sod_ord_qty * sod_listprice) as myamt from sod_det group by sod_nbr) sub where sub.sod_nbr = sos_nbr and sos_nbr = $P{myid}]]>
+	</queryString>
+	<field name="sos_desc" class="java.lang.String"/>
+	<field name="amt" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="14" splitType="Immediate">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="14" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sos_desc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="100" y="0" width="123" height="14" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
