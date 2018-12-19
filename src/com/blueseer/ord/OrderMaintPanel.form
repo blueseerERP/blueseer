@@ -65,7 +65,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane3" pref="589" max="32767" attributes="0"/>
+                  <Component id="jScrollPane3" pref="593" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -127,29 +127,34 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="btordcustbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lblcustname" min="-2" pref="154" max="-2" attributes="0"/>
                                       <Component id="lblshiptoaddr" alignment="0" min="-2" pref="314" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="lblshiptoname" min="-2" pref="154" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="btordnbrbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
+                                  <Component id="lblstatus" min="-2" pref="323" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                          <Component id="lblshiptoname" min="-2" pref="154" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jPanel3" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="603" max="-2" attributes="0"/>
+                                  <Component id="btinvoice" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btprint" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="451" max="-2" attributes="0"/>
                                   <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btedit" min="-2" max="-2" attributes="0"/>
@@ -168,7 +173,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="lblstatus" min="-2" pref="27" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                           <Component id="lblshiptoname" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -192,7 +198,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                   <Component id="ddship" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -211,6 +217,8 @@
                       <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btinvoice" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               </Group>
@@ -907,6 +915,24 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="btinvoice">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Invoice"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btinvoiceActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btprint">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblstatus">
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanelLines">
@@ -941,12 +967,11 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jScrollPane8" min="-2" pref="260" max="-2" attributes="0"/>
+                  <Component id="jScrollPane8" min="-2" pref="240" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel5" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1242,25 +1267,17 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace pref="16" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jLabel96" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel94" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="tbmisc" min="-2" pref="94" max="-2" attributes="0"/>
-                                      <Component id="ddloc" min="-2" pref="94" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel95" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="ddwh" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="jLabel96" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel94" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel95" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="ddwh" max="32767" attributes="0"/>
+                              <Component id="tbmisc" alignment="0" pref="94" max="32767" attributes="0"/>
+                              <Component id="ddloc" alignment="0" pref="94" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1301,7 +1318,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel95">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Warehouse"/>
+                    <Property name="text" type="java.lang.String" value="Plant/WH"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel96">

@@ -47,7 +47,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 String curr = "";
                 String basecurr = OVData.getDefaultCurrency();
                 boolean custitemonly = true;
-    
+                DecimalFormat df = new DecimalFormat("#0.0000");
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
                 
@@ -112,7 +112,35 @@ public class OrderMaintPanel extends javax.swing.JPanel {
      
      
     
-    
+    public String[] autoInvoiceOrder() {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         int shipperid = OVData.getNextNbr("shipper");     
+                     boolean error = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+                             String.valueOf(shipperid), 
+                              ddcust.getSelectedItem().toString(),
+                              ddship.getSelectedItem().toString(),
+                              ordernbr.getText(),
+                              ponbr.getText().replace("'", ""),
+                              dfdate.format(duedate.getDate()).toString(),
+                              dfdate.format(orddate.getDate()).toString(),
+                              remarks.getText().replace("'", ""),
+                              ddshipvia.getSelectedItem().toString(),
+                              "S" ); 
+
+                     if (! error) {
+                         OVData.CreateShipperDetFromTable(orddet, String.valueOf(shipperid), dfdate.format(duedate.getDate()).toString(), ddsite.getSelectedItem().toString());
+                     }
+                     
+                     if (! error) {
+                       OVData.updateShipperSAC(String.valueOf(shipperid));
+                     }
+
+                     // now confirm shipment
+                     String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
+                    
+                 return message;
+    }
     
     public void custChangeEvent(String mykey) {
             clearShipAddress();
@@ -319,10 +347,14 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                    bsmf.MainFrame.show("No Order Record found for " + mykey);
                 } else {
                             if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
-                             disableAll();
+                             lblstatus.setText("Order has been invoiced and is now closed.");
+                             lblstatus.setForeground(Color.blue);
+                             enableAllButAction();
                              btnew.setEnabled(true);
                          } else {
                              enableAll();
+                             lblstatus.setText("Order has not been shipped.");
+                             lblstatus.setForeground(Color.red);
                               btadd.setEnabled(false);
                               btnew.setEnabled(false);
                               editmode = true;
@@ -471,7 +503,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     listprice.setBackground(Color.green);
                 }
                 if (pricetype.equals("item")) {
-                    listprice.setBackground(Color.yellow);
+                    listprice.setBackground(Color.white);
                 }
                 discount.setText(df.format(OVData.getPartDiscFromCust(ddcust.getSelectedItem().toString())));
                 // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
@@ -483,7 +515,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00");
+        
         
         if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
             netprice.setText(listprice.getText());
@@ -527,7 +559,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         custnumber.setEnabled(true);
         qtyshipped.setEnabled(true);
         listprice.setEnabled(true);
-        netprice.setEnabled(true);
+     //   netprice.setEnabled(true);  // leave this disabled
         discount.setEnabled(true);
         tbtottax.setEnabled(true);
         tbmisc.setEnabled(true);
@@ -567,11 +599,87 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         
         btnew.setEnabled(true);
         btedit.setEnabled(true);
+        btprint.setEnabled(true);
+        btinvoice.setEnabled(true);
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
         btdelete.setEnabled(true);
     }
+    
+    public void enableAllButAction() {
+        //tbhdrwh.setEnabled(true);
+        //cbissourced.setEnabled(true);
+        lblIsSourced.setEnabled(true);
+        lbqtyavailable.setEnabled(true);
+        lbqtyavailable.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+       // ordernbr.setEnabled(true);
+        ddcust.setEnabled(true);
+        ddship.setEnabled(true);
+        ddshipvia.setEnabled(true);
+        ddtax.setEnabled(true);
+        duedate.setEnabled(true);
+        orddate.setEnabled(true);
+        ponbr.setEnabled(true);
+        ddsite.setEnabled(true);
+        ddwh.setEnabled(true);
+        ddloc.setEnabled(true);
+        ddstatus.setEnabled(true);
+        cbblanket.setEnabled(true);
+        remarks.setEnabled(true);
+        ddpart.setEnabled(true);
+        dduom.setEnabled(true);
+        custnumber.setEnabled(true);
+        qtyshipped.setEnabled(true);
+        listprice.setEnabled(true);
+       // netprice.setEnabled(true);   // leave disabled
+        discount.setEnabled(true);
+        tbtottax.setEnabled(true);
+        tbmisc.setEnabled(true);
+        orddet.setEnabled(true);
+       // ddcurr.setEnabled(true);  leave disabled
+        /*
+        tbshiptocode.setEnabled(true);
+        tbname.setEnabled(true);
+        tbaddr1.setEnabled(true);
+        tbaddr2.setEnabled(true);
+        tbcity.setEnabled(true);
+        tbzip.setEnabled(true);
+        tbphone.setEnabled(true);
+        tbemail.setEnabled(true);
+        tbcontact.setEnabled(true);
+        tbmisc1.setEnabled(true);
+        ddstate.setEnabled(true);
+        */
+        
+        
+         ddsactype.setEnabled(true);
+        tbsacdesc.setEnabled(true);
+        tbsacamt.setEnabled(true);
+        btsacadd.setEnabled(false);
+        btsacdelete.setEnabled(false);
+        
+        
+        totlines.setEnabled(true);
+        tbtotqty.setEnabled(true);
+        tbtotdollars.setEnabled(true);
+        
+        btordnbrbrowse.setEnabled(false);
+        btordduebrowse.setEnabled(false);
+        btordpobrowse.setEnabled(false);
+        btordcustbrowse.setEnabled(false);
+        btorddatebrowse.setEnabled(false);
+        
+        btnew.setEnabled(true);
+        btedit.setEnabled(false);
+        btprint.setEnabled(true);
+        btinvoice.setEnabled(false);
+        btadd.setEnabled(false);
+        btadditem.setEnabled(false);
+        btdelitem.setEnabled(false);
+        btdelete.setEnabled(false);
+    }
+    
     
     public void disableAll() {
         
@@ -605,6 +713,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
          ddcurr.setEnabled(false);
         orddet.setEnabled(false);
         
+        
+        
         tbshiptocode.setEnabled(false);
         tbname.setEnabled(false);
         tbaddr1.setEnabled(false);
@@ -637,6 +747,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         btorddatebrowse.setEnabled(false);
         btnew.setEnabled(false);
         btedit.setEnabled(false);
+        btprint.setEnabled(false);
+        btinvoice.setEnabled(false);
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
         btdelitem.setEnabled(false);
@@ -655,17 +767,22 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(2, false);
         
+        
+        
+        
         ArrayList<String> mylist = new ArrayList<String>();
          jPanelSched.setVisible(false);
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
+        lblstatus.setText("");
+        lblstatus.setForeground(Color.black);
         ordernbr.setText("");
         cbissourced.setSelected(false);
         
         listprice.setText("0.00");
         netprice.setText("0.00");
-        netprice.setEditable(false);
+       // netprice.setEditable(false);
         qtyshipped.setText("0");
         discount.setText("0.00");
         ponbr.setText("");
@@ -1081,6 +1198,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         tbaddr2 = new javax.swing.JTextField();
         tbshiptocode = new javax.swing.JTextField();
         btaddshipto = new javax.swing.JButton();
+        btinvoice = new javax.swing.JButton();
+        btprint = new javax.swing.JButton();
+        lblstatus = new javax.swing.JLabel();
         jPanelLines = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btadditem = new javax.swing.JButton();
@@ -1173,7 +1293,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             jPanelSchedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSchedLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE))
         );
 
         add(jPanelSched);
@@ -1571,6 +1691,20 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        btinvoice.setText("Invoice");
+        btinvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btinvoiceActionPerformed(evt);
+            }
+        });
+
+        btprint.setText("Print");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1598,19 +1732,24 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblshiptoaddr, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(lblshiptoaddr, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(41, 41, 41)
+                                .addComponent(lblshiptoname, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(btordnbrbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnew)))
-                        .addGap(41, 41, 41)
-                        .addComponent(lblshiptoname, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnew)
+                                .addGap(113, 113, 113)
+                                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addGap(603, 603, 603)
+                                .addComponent(btinvoice)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btprint)
+                                .addGap(451, 451, 451)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btedit)
@@ -1623,7 +1762,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(84, 84, 84)
+                        .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(57, 57, 57)
                         .addComponent(lblshiptoname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
@@ -1655,7 +1795,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btedit)
                     .addComponent(btadd)
-                    .addComponent(btdelete))
+                    .addComponent(btdelete)
+                    .addComponent(btinvoice)
+                    .addComponent(btprint))
                 .addGap(13, 13, 13))
         );
 
@@ -1830,7 +1972,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
 
         jLabel94.setText("Misc");
 
-        jLabel95.setText("Warehouse");
+        jLabel95.setText("Plant/WH");
 
         jLabel96.setText("Location");
 
@@ -1857,21 +1999,16 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addGap(0, 11, Short.MAX_VALUE)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel96)
-                            .addComponent(jLabel94))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel95)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddwh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel96, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel94, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel95, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddwh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tbmisc, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                    .addComponent(ddloc, 0, 94, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -2104,12 +2241,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             .addGroup(jPanelLinesLayout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         add(jPanelLines);
@@ -2147,6 +2283,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 btedit.setEnabled(false);
                 btadd.setEnabled(false);
                 btdelete.setEnabled(false);
+                btprint.setEnabled(false);
+                btinvoice.setEnabled(false);
                 editmode = false;
         
        
@@ -2159,6 +2297,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         String part = "";
         String custpart = "";
         String desc = "";
+        
         
             part = ddpart.getSelectedItem().toString();
             
@@ -2182,10 +2321,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(discount.getText());
-        if (!m.find() || discount.getText() == null) {
-            bsmf.MainFrame.show("Invalid Discount format");
-            canproceed = false;
+        if (! discount.getText().isEmpty()) {
+            m = p.matcher(discount.getText());
+            if (!m.find()) {
+                bsmf.MainFrame.show("Invalid Discount format");
+                canproceed = false;
+            }
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
@@ -2390,32 +2531,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                  
             boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
                if (sure) {     
-                     int shipperid = OVData.getNextNbr("shipper");     
-                     boolean error = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
-                             String.valueOf(shipperid), 
-                              ddcust.getSelectedItem().toString(),
-                              ddship.getSelectedItem().toString(),
-                              ordernbr.getText(),
-                              ponbr.getText().replace("'", ""),
-                              dfdate.format(duedate.getDate()).toString(),
-                              dfdate.format(orddate.getDate()).toString(),
-                              remarks.getText().replace("'", ""),
-                              ddshipvia.getSelectedItem().toString(),
-                              "S" ); 
-
-                     if (! error) {
-                         OVData.CreateShipperDetFromTable(orddet, String.valueOf(shipperid), dfdate.format(duedate.getDate()).toString(), ddsite.getSelectedItem().toString());
-                     }
-                     
-                     if (! error) {
-                       OVData.updateShipperSAC(String.valueOf(shipperid));
-                     }
-
-                     // now confirm shipment
-                     String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
-                     if (message[0].equals("1")) { // if error
-                         bsmf.MainFrame.show(message[1]);
-                     }
+                   String[] message = autoInvoiceOrder();
+                   if (message[0].equals("1")) { // if error
+                      bsmf.MainFrame.show(message[1]);
+                   } else {
+                      bsmf.MainFrame.show("Order has been invoiced.");
+                   }
                }
              } // if autoinvoice
                      
@@ -2425,7 +2546,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     
                     bsmf.MainFrame.show("Order has been added");
                   
-                    initvars("");
+                    initvars(ordernbr.getText());
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -2669,11 +2790,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
+        if (listprice.getText().isEmpty()) {
+            listprice.setText("0");
+        }
+        listprice.setText(df.format(Double.valueOf(listprice.getText())));
         setNetPrice();
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-         setNetPrice();
+        if (discount.getText().isEmpty()) {
+            discount.setText("0");
+        }
+        discount.setText(df.format(Double.valueOf(discount.getText()))); 
+        setNetPrice();
     }//GEN-LAST:event_discountFocusLost
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -2880,6 +3009,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
+        String[] message = autoInvoiceOrder();
+         if (message[0].equals("1")) { // if error
+           bsmf.MainFrame.show(message[1]);
+         } else {
+           getOrder(ordernbr.getText());
+         }
+    }//GEN-LAST:event_btinvoiceActionPerformed
+
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        OVData.printCustomerOrder(ordernbr.getText());
+    }//GEN-LAST:event_btprintActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -2887,12 +3029,14 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
+    private javax.swing.JButton btinvoice;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btordcustbrowse;
     private javax.swing.JButton btorddatebrowse;
     private javax.swing.JButton btordduebrowse;
     private javax.swing.JButton btordnbrbrowse;
     private javax.swing.JButton btordpobrowse;
+    private javax.swing.JButton btprint;
     private javax.swing.JButton btsacadd;
     private javax.swing.JButton btsacdelete;
     private javax.swing.JCheckBox cbblanket;
@@ -2974,6 +3118,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblpart1;
     private javax.swing.JLabel lblshiptoaddr;
     private javax.swing.JLabel lblshiptoname;
+    private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lbqtyavailable;
     private javax.swing.JTextField listprice;
     private javax.swing.JTextField netprice;

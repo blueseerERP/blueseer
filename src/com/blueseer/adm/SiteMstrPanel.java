@@ -51,6 +51,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                     tb_iv_generic.setText(res.getString("site_iv_jasper"));
                     tb_sh_generic.setText(res.getString("site_sh_jasper"));
                     tb_po_generic.setText(res.getString("site_po_jasper"));
+                    tb_or_generic.setText(res.getString("site_or_jasper"));
                     tb_pos_generic.setText(res.getString("site_pos_jasper"));
                     tbsite.setText(site);
                 }
@@ -80,6 +81,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         tb_iv_generic.setEnabled(true);
         tb_sh_generic.setEnabled(true);
         tb_po_generic.setEnabled(true);
+        tb_or_generic.setEnabled(true);
         tb_pos_generic.setEnabled(true);
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
@@ -101,6 +103,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         tb_iv_generic.setEnabled(false);
         tb_sh_generic.setEnabled(false);
         tb_po_generic.setEnabled(false);
+        tb_or_generic.setEnabled(false);
         tb_pos_generic.setEnabled(false);
         btnew.setEnabled(false);
         btbrowse.setEnabled(false);
@@ -122,6 +125,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         tb_iv_generic.setText("");
         tb_sh_generic.setText("");
         tb_po_generic.setText("");
+        tb_or_generic.setText("");
         tb_pos_generic.setText(""); 
           if (ddstate.getItemCount() == 0)
            for (int i = 0; i < OVData.states.length; i++) {
@@ -182,6 +186,8 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         tb_pos_generic = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        tb_or_generic = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
@@ -309,6 +315,8 @@ public class SiteMstrPanel extends javax.swing.JPanel {
 
         jLabel13.setText("POS Rcpt:");
 
+        jLabel14.setText("Generic OR:");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -329,12 +337,14 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12)
-                            .addComponent(jLabel13))
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tb_pos_generic)
-                            .addComponent(tb_po_generic, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))))
-                .addContainerGap())
+                            .addComponent(tb_po_generic, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(tb_or_generic, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,6 +369,10 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tb_pos_generic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tb_or_generic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
                 .addContainerGap())
         );
 
@@ -463,6 +477,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                             + "site_iv_jasper = " + "'" + tb_iv_generic.getText() + "'" + ","
                             + "site_sh_jasper = " + "'" + tb_sh_generic.getText() + "'" + ","
                             + "site_po_jasper = " + "'" + tb_po_generic.getText() + "'" + ","
+                            + "site_or_jasper = " + "'" + tb_or_generic.getText() + "'" + ","        
                             + "site_pos_jasper = " + "'" + tb_pos_generic.getText() + "'" + ","
                             + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'"
                             + " where site_site = " + "'" + tbsite.getText() + "'"                             
@@ -505,7 +520,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into site_mstr "
-                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_pos_jasper   ) "
+                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site,or_jasper, site_pos_jasper   ) "
                             + " values ( " + "'" + tbsite.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
                             + "'" + tbline1.getText().toString() + "'" + ","
@@ -518,6 +533,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                                 + "'" + tb_iv_generic.getText().toString() + "'" + ","
                                 + "'" + tb_sh_generic.getText().toString() + "'" + ","
                                 + "'" + tb_po_generic.getText().toString() + "'" + ","
+                                + "'" + tb_or_generic.getText().toString() + "'" + ","
                                  + "'" + tb_pos_generic.getText().toString() + "'"
                             + ")"
                             + ";");
@@ -585,6 +601,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -598,6 +615,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField tb_iv_generic;
+    private javax.swing.JTextField tb_or_generic;
     private javax.swing.JTextField tb_po_generic;
     private javax.swing.JTextField tb_pos_generic;
     private javax.swing.JTextField tb_sh_generic;

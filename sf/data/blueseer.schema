@@ -1232,6 +1232,7 @@ CREATE TABLE IF NOT EXISTS `site_mstr` (
   `site_sqefax` varchar(30) NOT NULL  DEFAULT '',
   `site_sqeemail` varchar(60) NOT NULL  DEFAULT '',
   `site_po_jasper` varchar(100) NOT NULL  DEFAULT '',
+  `site_or_jasper` varchar(100) NOT NULL  DEFAULT '',
   `site_pos_jasper` varchar(100) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `siteu_mstr` (
   `siteu_userid` varchar(10)  NOT NULL DEFAULT '',

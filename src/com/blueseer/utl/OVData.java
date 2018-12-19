@@ -8809,7 +8809,10 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
        
-                       public static String getCustShipperJasper(String cust) {
+          
+       
+             
+             public static String getCustShipperJasper(String cust) {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
@@ -9197,6 +9200,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myitem;
         
     }      
+          
+           public static String getDefaultOrderJasper(String site) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select site_or_jasper from site_mstr where site_site = " + "'" + site + "';" );
+               while (res.next()) {
+                myitem = res.getString("site_or_jasper");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }      
+          
           
              public static String getDefaultPOSJasper(String site) {
            String myitem = "";
@@ -18756,7 +18787,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         }
     } 
     
-     public static void printShipper(String shipper) {
+    public static void printShipper(String shipper) {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -18808,7 +18839,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         }
     }    
       
-      public static void printPurchaseOrder(String po) {
+    public static void printPurchaseOrder(String po) {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -18857,6 +18888,61 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         }
     } 
      
+    public static void printCustomerOrder(String order) {
+        try{
+             Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+                 String cust = ""; 
+                String site = ""; 
+                res = st.executeQuery("select so_cust, so_site from so_mstr where so_nbr = " + "'" + order + "'" + ";");
+                       while (res.next()) {
+                          cust = res.getString(("so_cust"));
+                          site = res.getString(("so_site"));
+                       }
+                
+                
+                String imagepath = "";
+                String logo = "";
+                logo = OVData.getCustLogo(cust);
+                if (logo.isEmpty()) {
+                    logo = OVData.getSiteLogo(site);
+                }
+                
+                String jasperfile = "";
+               jasperfile = OVData.getDefaultOrderJasper(site);
+               
+               imagepath = "images/" + logo;
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "ORDER");
+                hm.put("myid",  order);
+                hm.put("imagepath", imagepath);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
+                con.close();
+                con = DriverManager.getConnection(url + db, user, pass);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/orprt.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
+    
+    
     public static MimeBodyPart attachmentPart;
 
     public static void sendEmail(String to, String subject, String body, String filename) {
