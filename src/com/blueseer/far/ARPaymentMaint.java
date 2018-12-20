@@ -708,51 +708,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                             + ";");
                     }
                     
-                    // lets get original ar_mstr and ar_det info and update with applied amount
-                    res = st.executeQuery("select ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_open_amt, ar_applied, ard_ref, ard_amt, ard_base_amt from ar_mstr inner join ard_mstr on ar_nbr = ard_ref " +
-                                    " where ard_id = " + "'" + batchnbr.getText() + "'"
-                            );
-                    
-                     ArrayList ardref = new ArrayList();
-                    ArrayList newamt = new ArrayList();
-                    ArrayList openamt = new ArrayList();
-                    ArrayList status = new ArrayList();
-                    ArrayList gainloss = new ArrayList();
-                    
-                    while (res.next()) {
-                        ardref.add(res.getString("ard_ref"));
-                        newamt.add(res.getDouble("ard_amt") + res.getDouble("ar_applied"));
-                        openamt.add(res.getDouble("ar_amt") - res.getDouble("ar_applied") - res.getDouble("ard_amt"));
-                        if ( (res.getDouble("ard_amt") + res.getDouble("ar_applied")) >= res.getDouble("ar_amt") ) {
-                         status.add("c");
-                        } else {
-                         status.add("o");
-                        }
-                    }
-                    
-                     for (int j = 0; j < ardref.size(); j++) {
-                    st.executeUpdate("update ar_mstr set ar_applied = " + "'" + Double.valueOf(newamt.get(j).toString()) + "'" + "," +
-                            " ar_open_amt = " + "'" + Double.valueOf(openamt.get(j).toString()) + "'" + "," +
-                            " ar_status = " + "'" + status.get(j) + "'" +
-                            " where ar_nbr = " + "'" + ardref.get(j) + "'" + 
-                            " and ar_type = 'I' "
-                            );
-                     }
-                    
-                    
-                     
-                     
-               /*
-                    st.executeUpdate("update ar_mstr as r1 inner join ard_mstr as r2 "
-                        + " set r1.ar_applied = (r1.ar_applied + r2.ard_amt),"
-                        + " r1.ar_status = case when (r1.ar_amt <= r1.ar_applied + r2.ard_amt) then 'c' else 'o' end, " 
-                        + " r1.ar_open_amt = (r1.ar_amt - r1.ar_applied - r2.ard_amt)"
-                        + " where r1.ar_nbr = r2.ard_ref " 
-                        + " AND r2.ard_id = " + "'" + batchnbr.getText() + "'" 
-                        + " AND r2.ard_cust = r1.ar_cust "                             
-                        );
-               */
-                     
+                  // update AR entry for original invoices with status and open amt  
+                     error = OVData.ARUpdate(batchnbr.getText());
                     
                     /* create gl_tran records */
                         if (! error)
@@ -763,9 +720,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show("AR Payment Complete");
                     initvars("");
                     }
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
+               
                 } // if proceed
             } catch (SQLException s) {
                 s.printStackTrace();

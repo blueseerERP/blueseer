@@ -182,7 +182,7 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                             "'" + tbsite.getText() + "'" + "," +
                             "'" + tbcc.getText() + "'" + "," +
                             "'" + tbwh.getText() + "'" + "," +
-                            "'" + tbcurrency.getText() + "'" + "," +        
+                            "'" + tbcurrency.getText() + "'" +       
                             ") ;");              
                           bsmf.MainFrame.show("Inserting Defaults");
                     } else {

@@ -99,6 +99,7 @@ import java.net.UnknownHostException;
 import java.sql.Savepoint;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import jcifs.smb.SmbFileInputStream;
 
@@ -2997,7 +2998,9 @@ public class OVData {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 6 )       
-                            return Double.class;  
+                            return Double.class; 
+                        else if (col == 0)
+                            return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -3018,7 +3021,7 @@ public class OVData {
      //                   " reqt_status = 'pending' AND reqt_id = req_id " +
              //           " order by req_id desc;");
                 while (res.next()) {
-                     mymodel.addRow(new Object[]{"select", res.getString("req_id"),
+                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
                                 res.getString("req_name"),
                                 res.getString("req_date"),
                                 res.getString("req_type"),
@@ -3052,6 +3055,8 @@ public class OVData {
                       public Class getColumnClass(int col) {  
                         if (col == 6 )       
                             return Double.class;  
+                        else if (col == 0) 
+                            return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -3066,7 +3071,7 @@ public class OVData {
              res = st.executeQuery("SELECT * FROM req_mstr order by req_id desc;");
 
                 while (res.next()) {
-                    mymodel.addRow(new Object[]{"select", res.getString("req_id"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
                                 res.getString("req_name"),
                                 res.getString("req_date"),
                                 res.getString("req_po"),
@@ -3094,7 +3099,15 @@ public class OVData {
         public static DefaultTableModel getGLAcctAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Acct", "Desc", "Type", "Currency"});
+                        new String[]{"select", "Acct", "Desc", "Type", "Currency"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
            
             try{
             Class.forName(driver).newInstance();
@@ -3108,7 +3121,7 @@ public class OVData {
                 while (res.next()) {
                     
 
-                    mymodel.addRow(new Object[]{"select", res.getString("ac_id"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("ac_id"),
                                 res.getString("ac_desc"),
                                 res.getString("ac_type"),
                                 res.getString("ac_cur")
@@ -3217,7 +3230,15 @@ public class OVData {
          public static DefaultTableModel getEmployeeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "EmpID", "LastName", "FirstName", "Dept", "Status", "Shift", "Type", "StartDate", "TermDate"}); 
+                        new String[]{"select", "EmpID", "LastName", "FirstName", "Dept", "Status", "Shift", "Type", "StartDate", "TermDate"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
            
             try{
             Class.forName(driver).newInstance();
@@ -3231,7 +3252,7 @@ public class OVData {
                 while (res.next()) {
                    
 
-                    mymodel.addRow(new Object[]{"select", res.getInt("emp_nbr"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getInt("emp_nbr"),
                                 res.getString("emp_lname"),
                                 res.getString("emp_fname"),
                                 res.getString("emp_dept"),
@@ -3262,7 +3283,15 @@ public class OVData {
          public static DefaultTableModel getGenCodeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{"select", "Code", "Key", "Value/Desc"});
+           new String[]{"select", "Code", "Key", "Value/Desc"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
            
             try{
             Class.forName(driver).newInstance();
@@ -3277,7 +3306,7 @@ public class OVData {
 
                 while (res.next()) {
                     
-                    mymodel.addRow(new Object[]{"select", 
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                         res.getString("code_code"),
                         res.getString("code_key"),
                         res.getString("code_value")
@@ -3303,7 +3332,15 @@ public class OVData {
           public static DefaultTableModel getWorkCellAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{"select","Cell", "Machine", "Desc", "Site", "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"}); 
+           new String[]{"select","Cell", "Machine", "Desc", "Site", "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
            
             try{
             Class.forName(driver).newInstance();
@@ -3316,7 +3353,7 @@ public class OVData {
                   res = st.executeQuery("select * from wc_mstr;");
                     while (res.next()) {
                         
-                        mymodel.addRow(new Object[]{"select",
+                        mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
                             res.getString("wc_cell"),
                                 res.getString("wc_mch"),
                                 res.getString("wc_desc").replace(",", ""),
@@ -3355,6 +3392,8 @@ public class OVData {
                       public Class getColumnClass(int col) {  
                         if (col == 5 )       
                             return Double.class;  
+                        else if (col == 0)
+                            return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -3370,7 +3409,7 @@ public class OVData {
 
                 while (res.next()) {
                  
-                    mymodel.addRow(new Object[]{"select", res.getString("req_id"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
                                 res.getString("req_name"),
                                 res.getString("req_date"),
                                 res.getString("req_vend"),
@@ -3405,6 +3444,8 @@ public class OVData {
                       public Class getColumnClass(int col) {  
                         if (col == 6 )       
                             return Double.class;  
+                        else if (col == 0)
+                            return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -3420,7 +3461,7 @@ public class OVData {
 
                 while (res.next()) {
                    
-                    mymodel.addRow(new Object[]{"select", res.getString("req_id"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
                                 res.getString("req_name"),
                                 res.getString("req_date"),
                                 res.getString("req_po"),
@@ -3491,7 +3532,15 @@ public class OVData {
          public static DefaultTableModel getProdCodeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "ProdCode", "Desc"});
+                        new String[]{"select", "ProdCode", "Desc"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
            
             try{
             Class.forName(driver).newInstance();
@@ -3505,7 +3554,7 @@ public class OVData {
               res = st.executeQuery("SELECT * FROM  pl_mstr order by pl_line;");
 
                 while (res.next()) {
-                    mymodel.addRow(new Object[]{"select", res.getString("pl_line"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("pl_line"),
                                 res.getString("pl_desc")
                             });
                 }
@@ -3529,7 +3578,15 @@ public class OVData {
           public static DefaultTableModel getQPRAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{"select", "Complaint#", "Originator", "PartNbr", "PartDesc", "Supplier", "DateAdded", "DateLastUpdate"});
+                         new String[]{"select", "Complaint#", "Originator", "PartNbr", "PartDesc", "Supplier", "DateAdded", "DateLastUpdate"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
            
             try{
             Class.forName(driver).newInstance();
@@ -3543,7 +3600,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
                 while (res.next()) {
                     
-                    mymodel.addRow(new Object[]{"select", res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_part"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_part"),
                                 res.getString("qual_part_desc"),
                                 res.getString("qual_vend"),
                                 res.getString("qual_date_crt"),
@@ -7557,7 +7614,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           public static DefaultTableModel getRoutingsAll() {
               
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RoutingID", "Operation", "Operation Desc", "Site", "Reportable", "Work Cell", "Machine", "SetupHours", "RunHours"}); 
+                      new String[]{"select", "RoutingID", "Operation", "Operation Desc", "Site", "Reportable", "Work Cell", "Machine", "SetupHours", "RunHours"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7569,7 +7634,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from wf_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("wf_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
                                    res.getString("wf_op"),
                                 res.getString("wf_op_desc").replace(",", ""),
                                 res.getString("wf_site"),
@@ -7597,7 +7662,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           
            public static DefaultTableModel getLocationsAll() {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "LocationID", "Desc", "Site", "Active"}); 
+                      new String[]{"select", "LocationID", "Desc", "Site", "Active"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7609,7 +7682,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from loc_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("loc_loc"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("loc_loc"),
                                    res.getString("loc_desc").replace(",", ""),
                                    res.getString("loc_site"),
                                 res.getString("loc_active") 
@@ -7632,7 +7705,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
            public static DefaultTableModel getWareHousesAll() {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "WH ID", "Site", "Name", "City", "State", "Zip"}); 
+                      new String[]{"select", "WH ID", "Site", "Name", "City", "State", "Zip"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7644,7 +7725,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from wh_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("wh_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wh_id"),
                                    res.getString("wh_site"),
                                    res.getString("wh_name"),
                                    res.getString("wh_city"),
@@ -7669,7 +7750,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
             public static DefaultTableModel getDeptsAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Dept", "Desc", "COPAcct", "LBRAcct", "BDNAcct"}); 
+                      new String[]{"select", "Dept", "Desc", "COPAcct", "LBRAcct", "BDNAcct"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7681,7 +7770,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from dept_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("dept_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("dept_id"),
                                    res.getString("dept_desc").replace(",", ""),
                                    res.getString("dept_cop_acct"),
                                 res.getString("dept_lbr_acct"),
@@ -7705,7 +7794,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
              public static DefaultTableModel getBankAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Bank", "Desc", "Acct", "Currency", "Active"}); 
+                      new String[]{"select", "Bank", "Desc", "Acct", "Currency", "Active"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7717,7 +7814,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from bk_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("bk_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bk_id"),
                                    res.getString("bk_desc").replace(",", ""),
                                    res.getString("bk_acct"),
                                 res.getString("bk_cur"),
@@ -7824,7 +7921,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
             public static DefaultTableModel getMenusAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "MenuID", "Desc", "ClassID"}); 
+                      new String[]{"select", "MenuID", "Desc", "ClassID"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7836,7 +7941,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from menu_mstr order by menu_id;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("menu_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("menu_id"),
                                    res.getString("menu_desc"),
                                    res.getString("menu_panel")
                         });
@@ -7858,7 +7963,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
             public static DefaultTableModel getPanelsAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ClassID", "Desc"}); 
+                      new String[]{"select", "ClassID", "Desc"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7870,7 +7983,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from panel_mstr order by panel_id;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("panel_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("panel_id"),
                                    res.getString("panel_desc")
                         });
                     }
@@ -7891,7 +8004,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
             public static DefaultTableModel getTermsAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc"}); 
+                      new String[]{"select", "Code", "Desc"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7903,7 +8024,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from cust_term;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cut_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cut_code"),
                                    res.getString("cut_desc")
                         });
                     }
@@ -7924,7 +8045,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
              public static DefaultTableModel getFreightAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "Apply?"}); 
+                      new String[]{"select", "Code", "Desc", "Apply?"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7936,7 +8065,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from frt_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("frt_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_code"),
                                    res.getString("frt_desc"),
                                    res.getString("frt_apply")
                         });
@@ -7958,7 +8087,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
              
         public static DefaultTableModel getCarrierAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "SCAC", "Phone", "Email", "Contact", "Acct"}); 
+                      new String[]{"select", "Code", "Desc", "SCAC", "Phone", "Email", "Contact", "Acct"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -7970,7 +8107,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from car_mstr;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("car_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
                                    res.getString("car_desc"),
                                    res.getString("car_scac"),
                                    res.getString("car_phone"),
@@ -7996,7 +8133,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          public static DefaultTableModel getTaxAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "Element", "Percent", "Userid"}); 
+                      new String[]{"select", "Code", "Desc", "Element", "Percent", "Userid"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -8008,7 +8153,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from tax_mstr inner join taxd_mstr on taxd_parentcode = tax_code ;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("tax_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("tax_code"),
                                    res.getString("tax_desc"),
                                    res.getString("taxd_desc"),
                                    res.getString("taxd_percent"),
@@ -8033,7 +8178,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          public static DefaultTableModel getSitesAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Site", "Desc", "Logo", "GenericInvoice", "GenericPackSlip"}); 
+                      new String[]{"select", "Site", "Desc", "Logo", "GenericInvoice", "GenericPackSlip"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -8045,7 +8198,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                   res = st.executeQuery("select * from site_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("site_site"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
                                    res.getString("site_desc"),
                                    res.getString("site_logo"),
                                    res.getString("site_iv_jasper"),
@@ -8110,7 +8263,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
          
              public static DefaultTableModel getGLCalendar() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Year", "Period", "StartDate", "EndDate", "Active"}); 
+                      new String[]{"select", "Year", "Period", "StartDate", "EndDate", "Active"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -8122,7 +8283,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from gl_cal;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("glc_year"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glc_year"),
                                    res.getString("glc_per"),
                                    res.getString("glc_start"),
                                    res.getString("glc_end"),
@@ -8181,7 +8342,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
              
                      public static DefaultTableModel getEDITPAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TP ID", "Name", "Contact", "Web", "HelpDesk"}); 
+                      new String[]{"select", "TP ID", "Name", "Contact", "Web", "HelpDesk"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
         try{
             Class.forName(driver).newInstance();
@@ -8193,7 +8362,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                       res = st.executeQuery("select * from editp_mstr order by editp_id;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("editp_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("editp_id"),
                                    res.getString("editp_name"),
                                    res.getString("editp_contact"),
                                    res.getString("editp_web"),
@@ -8217,7 +8386,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
             public static DefaultTableModel getCustAddrInfoAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "CustCode", "Market", "Name", "Line1", "City", "State", "Zip"}) ; 
+                      new String[]{"select", "CustCode", "Market", "Name", "Line1", "City", "State", "Zip"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
             
         try{
             Class.forName(driver).newInstance();
@@ -8232,7 +8409,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
                 while (res.next()) {
                    
-                    mymodel.addRow(new Object[]{ "select",
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
                         res.getString("cm_code"),
                         res.getString("cm_market"),
                         res.getString("cm_name"),
@@ -10116,8 +10293,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select it_item from item_mstr inner join in_mstr on in_part = it_item and in_site = it_site " +
-                        " where it_code = 'A' and it_status = 'ACTIVE' and in_qoh > '0'  order by it_item;");
+                res = st.executeQuery("select it_item from item_mstr  " +
+                        " where it_code = 'A' and it_status = 'ACTIVE' order by it_item;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
                 }
@@ -11568,7 +11745,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           
            public static DefaultTableModel getFreightOrderQuotesTable(String order) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"}); 
+                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -11589,7 +11774,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                             " AND ( fot_doctype = '219' OR fot_doctype = '220') " +
                             ";");
                     while (res.next()) {
-                         mymodel.addRow(new Object[] {"select", res.getString("fot_nbr"),
+                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
                                    res.getString("fot_uniqueid"),
                                    res.getString("fot_partnerid"),
                                    res.getString("fot_doctype"),
@@ -11616,7 +11801,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
             public static DefaultTableModel getFreightOrderTendersTable(String order) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"}); 
+                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -11637,7 +11830,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                             " AND ( fot_doctype = '204' OR fot_doctype = '990') " +
                             ";");
                     while (res.next()) {
-                         mymodel.addRow(new Object[] {"select", res.getString("fot_nbr"),
+                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
                                    res.getString("fot_uniqueid"),
                                    res.getString("fot_partnerid"),
                                    res.getString("fot_doctype"),
@@ -11663,7 +11856,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
              public static DefaultTableModel getFreightOrderStatusTable(String order) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Status", "Remarks", "Lat", "Lon", "Dir", "Date"}); 
+                      new String[]{"select", "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Status", "Remarks", "Lat", "Lon", "Dir", "Date"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -11684,7 +11885,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                             " AND fot_doctype = '214' " +
                             ";");
                     while (res.next()) {
-                         mymodel.addRow(new Object[] {"select", res.getString("fot_nbr"),
+                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
                                    res.getString("fot_uniqueid"),
                                    res.getString("fot_partnerid"),
                                    res.getString("fot_doctype"),
@@ -17649,6 +17850,66 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            return myerror;
        }
        
+        
+        public static boolean ARUpdate(String batch) {
+            boolean myerror = false;
+            
+              try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+            
+                
+                 // lets get original ar_mstr and ar_det info and update with applied amount
+                    res = st.executeQuery("select ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_open_amt, ar_applied, ard_ref, ard_amt, ard_base_amt from ar_mstr inner join ard_mstr on ar_nbr = ard_ref " +
+                                    " where ard_id = " + "'" + batch + "'"
+                            );
+                    
+                     ArrayList ardref = new ArrayList();
+                    ArrayList newamt = new ArrayList();
+                    ArrayList openamt = new ArrayList();
+                    ArrayList status = new ArrayList();
+                    ArrayList gainloss = new ArrayList();
+                    
+                    while (res.next()) {
+                        ardref.add(res.getString("ard_ref"));
+                        newamt.add(res.getDouble("ard_amt") + res.getDouble("ar_applied"));
+                        openamt.add(res.getDouble("ar_amt") - res.getDouble("ar_applied") - res.getDouble("ard_amt"));
+                        if ( (res.getDouble("ard_amt") + res.getDouble("ar_applied")) >= res.getDouble("ar_amt") ) {
+                         status.add("c");
+                        } else {
+                         status.add("o");
+                        }
+                    }
+                    
+                     for (int j = 0; j < ardref.size(); j++) {
+                    st.executeUpdate("update ar_mstr set ar_applied = " + "'" + Double.valueOf(newamt.get(j).toString()) + "'" + "," +
+                            " ar_open_amt = " + "'" + Double.valueOf(openamt.get(j).toString()) + "'" + "," +
+                            " ar_status = " + "'" + status.get(j) + "'" +
+                            " where ar_nbr = " + "'" + ardref.get(j) + "'" + 
+                            " and ar_type = 'I' "
+                            );
+                     }
+                
+                
+                
+                
+                 } catch (SQLException s) {
+                myerror = true;
+                s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            myerror = true;
+            e.printStackTrace();
+        }
+            return myerror;
+        }
+        
          public static boolean isConfirmInShipMaint() {
          boolean myreturn = false;
          try {
@@ -18745,6 +19006,59 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         }
     }    
     
+    public static void printReceipt(String shipper) {
+        try{
+             Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+                 String cust = ""; 
+                String site = ""; 
+                res = st.executeQuery("select sh_cust, sh_site from ship_mstr where sh_id = " + "'" + shipper + "'" + ";");
+                       while (res.next()) {
+                          cust = res.getString(("sh_cust"));
+                          site = res.getString(("sh_site"));
+                       }
+                
+                
+                String imagepath = "";
+                String logo = "";
+                logo = OVData.getCustLogo(cust);
+                if (logo.isEmpty()) {
+                    logo = OVData.getSiteLogo(site);
+                }
+                
+                String jasperfile = "receipt_generic.jasper";
+               
+               imagepath = "images/" + logo;
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "RECEIPT");
+                hm.put("myid",  shipper);
+                hm.put("imagepath", imagepath);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
+                con.close();
+                con = DriverManager.getConnection(url + db, user, pass);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }   
+    
     public static void printAPCheck(String batch) {
         try{
              Class.forName(driver).newInstance();
@@ -19704,7 +20018,7 @@ e.printStackTrace();
           return messg;
       } 
        
-       public static boolean CreateShipperHdr(String nbr, String site, String bol, String billto, String shipto, String so, String po, String shipdate, String orddate, String remarks, String shipvia, String shiptype ) {
+       public static boolean CreateShipperHdr(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype ) {
           boolean isError = false; 
           
           try {
@@ -19790,7 +20104,7 @@ e.printStackTrace();
                 if (proceed) {
                     st.executeUpdate("insert into ship_mstr " 
                         + " (sh_id, sh_cust, sh_ship,"
-                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
+                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
                         + " values ( " + "'" + nbr + "'" + "," 
                         + "'" + billto + "'" + "," 
                         + "'" + shipto + "'" + ","
@@ -19798,6 +20112,7 @@ e.printStackTrace();
                         + "'" + orddate + "'" + ","
                         + "'" + bol + "'" + "," 
                         + "'" + po + "'" + "," 
+                        + "'" + ref + "'" + ","        
                         + "'" + remarks + "'" + "," 
                         + "'" + bsmf.MainFrame.userid + "'" + "," 
                         + "'" + site + "'" + ","
@@ -22299,7 +22614,15 @@ e.printStackTrace();
         String wk13 = df.format(dates.get(wk + 11));
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 }); 
+                      new String[]{"select", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 })
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22314,7 +22637,7 @@ e.printStackTrace();
                   
                   res = st.executeQuery("select * from fct_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    res.getInt(wk),
@@ -22361,7 +22684,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Part", "Year", "Site", "CrtUser", "CrtDate", "ChgUser", "ChgDate", wk1, wk2, wk3, wk4 }); 
+                      new String[]{"select", "Part", "Year", "Site", "CrtUser", "CrtDate", "ChgUser", "ChgDate", wk1, wk2, wk3, wk4 })
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22376,7 +22707,7 @@ e.printStackTrace();
                   
                   res = st.executeQuery("select * from fct_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    res.getString("fct_crt_userid"),
@@ -22408,7 +22739,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Shift", "Desc"}); 
+                      new String[]{"select", "Shift", "Desc"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22420,7 +22759,7 @@ e.printStackTrace();
                
                   res = st.executeQuery("select * from shift_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("shf_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("shf_id"),
                                    res.getString("shf_desc")                                  
                         });
                     }
@@ -22444,7 +22783,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "Payable", "SystemCode"}); 
+                      new String[]{"select", "Code", "Desc", "Payable", "SystemCode"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22458,7 +22805,7 @@ e.printStackTrace();
                           " case when clc_syscode = '1' then 'yes' else 'no' end as 'syscode' " +
                           " from clock_code order by clc_code;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("clc_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("clc_code"),
                                    res.getString("clc_desc") , res.getString("payable"), res.getString("syscode")                                 
                         });
                     }
@@ -22481,7 +22828,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"}); 
+                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22493,7 +22848,7 @@ e.printStackTrace();
                
                  res = st.executeQuery("SELECT * FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr where t.code_id = '66';"  );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("t.recid"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("t.recid"),
                                             res.getString("t.emp_nbr"),
                                             res.getString("e.emp_lname"),
                                             res.getString("e.emp_fname"),
@@ -22527,7 +22882,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "QtyOnHand", "SafetyStock"}); 
+                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "QtyOnHand", "SafetyStock"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22543,7 +22906,7 @@ e.printStackTrace();
                         " FROM  item_mstr inner join in_mstr on in_part = it_item  " +
                         " group by it_item order by it_item ;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("it_item"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
                                    res.getString("it_desc"),
                                    res.getString("it_uom"),
                                    res.getString("it_type"),
@@ -22574,7 +22937,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine", "Rev", "MFCode", "RoutingCode"}); 
+                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine", "Rev", "MFCode", "RoutingCode"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -22590,7 +22961,7 @@ e.printStackTrace();
                         " FROM  item_mstr  " +
                         " order by it_item ;");
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("it_item"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
                                    res.getString("it_desc"),
                                    res.getString("it_uom"),
                                    res.getString("it_type"),
@@ -22620,7 +22991,15 @@ e.printStackTrace();
          
           public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ID", "REF", "Acct", "CC", "Site", "EffDate", "EntDate", "Desc", "Amount", "UserID"}); 
+                      new String[]{"select", "ID", "REF", "Acct", "CC", "Site", "EffDate", "EntDate", "Desc", "Amount", "UserID"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22645,7 +23024,7 @@ e.printStackTrace();
                         " order by glt_id desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("glt_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glt_id"),
                                    res.getString("glt_ref"),
                                    res.getString("glt_acct"),
                                    res.getString("glt_cc"),
@@ -22674,7 +23053,15 @@ e.printStackTrace();
            
         public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine"}); 
+                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22699,7 +23086,7 @@ e.printStackTrace();
                         " order by it_item ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("it_item"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
                                    res.getString("it_desc"),
                                    res.getString("it_uom"),
                                    res.getString("it_type"),
@@ -22725,7 +23112,15 @@ e.printStackTrace();
       
          public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"}); 
+                      new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22750,7 +23145,7 @@ e.printStackTrace();
                         " order by vd_addr ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("vd_addr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vd_addr"),
                                    res.getString("vd_name"),
                                    res.getString("vd_line1"),
                                    res.getString("vd_city"),
@@ -22776,7 +23171,15 @@ e.printStackTrace();
         
          public static DefaultTableModel getAcctBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "Type", "Currency"}); 
+                      new String[]{"select", "Code", "Desc", "Type", "Currency"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22801,7 +23204,7 @@ e.printStackTrace();
                         " order by ac_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("ac_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ac_id"),
                                    res.getString("ac_desc"),
                                    res.getString("ac_type"),
                                    res.getString("ac_cur")
@@ -22824,7 +23227,15 @@ e.printStackTrace();
          
          public static DefaultTableModel getPanelBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "PanelClass", "Desc", "Core"}); 
+                      new String[]{"select", "PanelClass", "Desc", "Core"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22849,7 +23260,7 @@ e.printStackTrace();
                         " order by panel_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("panel_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("panel_id"),
                                    res.getString("panel_desc"),
                                    res.getString("panel_core")
                         });
@@ -22871,7 +23282,15 @@ e.printStackTrace();
          
          public static DefaultTableModel getSiteBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Site", "Desc", "Line1", "City", "State", "Zip", "Logo"}); 
+                      new String[]{"select", "Site", "Desc", "Line1", "City", "State", "Zip", "Logo"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22896,7 +23315,7 @@ e.printStackTrace();
                         " order by site_site ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("site_site"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
                                    res.getString("site_desc"),
                                    res.getString("site_line1"),
                                    res.getString("site_city"),
@@ -22922,7 +23341,14 @@ e.printStackTrace();
          
         public static DefaultTableModel getCustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"}); 
+                      new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"}){
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22947,7 +23373,7 @@ e.printStackTrace();
                         " order by cm_code ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cm_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cm_code"),
                                    res.getString("cm_name"),
                                    res.getString("cm_line1"),
                                    res.getString("cm_city"),
@@ -22973,7 +23399,15 @@ e.printStackTrace();
         
         public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"}); 
+                      new String[]{"select", "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -22998,7 +23432,7 @@ e.printStackTrace();
                         " order by cms_shipto ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cms_shipto"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cms_shipto"),
                                    res.getString("cms_code"),
                                    res.getString("cms_name"),
                                    res.getString("cms_line1"),
@@ -23025,7 +23459,15 @@ e.printStackTrace();
         
          public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RoutingID", "Operation", "RoutDesc", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"}); 
+                      new String[]{"select", "RoutingID", "Operation", "RoutDesc", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23050,7 +23492,7 @@ e.printStackTrace();
                         " order by wf_id, wf_op ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("wf_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
                                    res.getString("wf_op"),
                                    res.getString("wf_desc"),
                                    res.getString("wf_cell"),
@@ -23077,7 +23519,15 @@ e.printStackTrace();
         
           public static DefaultTableModel getWorkCenterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Cell", "Machine", "Desc", "Dept/CC", "RunRate", "SetupRate", "BurdenRate"}); 
+                      new String[]{"select", "Cell", "Machine", "Desc", "Dept/CC", "RunRate", "SetupRate", "BurdenRate"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23102,7 +23552,7 @@ e.printStackTrace();
                         " order by wc_cell, wc_mch ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("wc_cell"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wc_cell"),
                                    res.getString("wc_mch"),
                                    res.getString("wc_desc"),
                                    res.getString("wc_cc"),
@@ -23128,7 +23578,15 @@ e.printStackTrace();
          
            public static DefaultTableModel getShiftBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ShiftID", "ShiftDesc"}); 
+                      new String[]{"select", "ShiftID", "ShiftDesc"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23153,7 +23611,7 @@ e.printStackTrace();
                         " order by shf_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("shf_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("shf_id"),
                                    res.getString("shf_desc")
                         });
                     }
@@ -23175,7 +23633,15 @@ e.printStackTrace();
            
        public static DefaultTableModel getUOMBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "UOM", "Desc"}); 
+                      new String[]{"select", "UOM", "Desc"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23200,7 +23666,7 @@ e.printStackTrace();
                         " order by uom_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("uom_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("uom_id"),
                                    res.getString("uom_desc")
                         });
                     }
@@ -23221,7 +23687,15 @@ e.printStackTrace();
            
         public static DefaultTableModel getCurrencyBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "CurID", "Desc"}); 
+                      new String[]{"select", "CurID", "Desc"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23246,7 +23720,7 @@ e.printStackTrace();
                         " order by cur_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cur_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cur_id"),
                                    res.getString("cur_desc")
                         });
                     }
@@ -23267,7 +23741,15 @@ e.printStackTrace();
            
         public static DefaultTableModel getECNBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ECN Nbr", "TaskID", "Desc", "POC", "Status"}); 
+                      new String[]{"select", "ECN Nbr", "TaskID", "Desc", "POC", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23292,7 +23774,7 @@ e.printStackTrace();
                         " order by ecn_nbr ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("ecn_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ecn_nbr"),
                                    res.getString("ecn_mstrtask"),
                                    res.getString("task_desc"),
                                    res.getString("ecn_poc"),
@@ -23316,7 +23798,15 @@ e.printStackTrace();
         
          public static DefaultTableModel getTaskBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TaskID", "Desc", "Class", "Creator", "Status"}); 
+                      new String[]{"select", "TaskID", "Desc", "Class", "Creator", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23341,7 +23831,7 @@ e.printStackTrace();
                         " order by task_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("task_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("task_id"),
                                    res.getString("task_desc"),
                                    res.getString("task_class"),
                                    res.getString("task_creator"),
@@ -23365,7 +23855,15 @@ e.printStackTrace();
         
           public static DefaultTableModel getTaxBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TaxCode", "Desc", "UserID"}); 
+                      new String[]{"select", "TaxCode", "Desc", "UserID"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23390,7 +23888,7 @@ e.printStackTrace();
                         " order by tax_code ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("tax_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("tax_code"),
                                    res.getString("tax_desc"),
                                    res.getString("tax_userid")
                         });
@@ -23412,7 +23910,15 @@ e.printStackTrace();
          
           public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TPID", "Desc", "Contact", "Web", "Phone"}); 
+                      new String[]{"select", "TPID", "Desc", "Contact", "Web", "Phone"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23437,7 +23943,7 @@ e.printStackTrace();
                         " order by editp_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("editp_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("editp_id"),
                                    res.getString("editp_name"),
                                    res.getString("editp_contact"),
                                    res.getString("editp_web"),
@@ -23461,7 +23967,15 @@ e.printStackTrace();
         
           public static DefaultTableModel getEDITPDOCBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TPID", "DOC", "Desc", "Map"}); 
+                      new String[]{"select", "TPID", "DOC", "Desc", "Map"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23486,7 +24000,7 @@ e.printStackTrace();
                         " order by edi_id, edi_doctype ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("edi_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doctype"),
                                    res.getString("edi_desc"),
                                    res.getString("edi_map")
@@ -23509,7 +24023,15 @@ e.printStackTrace();
           
            public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "CustCode", "DOC", "Dir", "ISA", "GS", "SiteISA", "SiteGS", "Map"}); 
+                      new String[]{"select", "CustCode", "DOC", "Dir", "ISA", "GS", "SiteISA", "SiteGS", "Map"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23534,7 +24056,7 @@ e.printStackTrace();
                         " order by cme_code, cme_doc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cme_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cme_code"),
                                    res.getString("cme_doc"),
                                    res.getString("cme_dir"),
                                    res.getString("cme_isa"),
@@ -23561,7 +24083,15 @@ e.printStackTrace();
           
           public static DefaultTableModel getTermBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "Days", "DiscDays", "DiscPercent", "DiscStart", "DueStart"}); 
+                      new String[]{"select", "Code", "Desc", "Days", "DiscDays", "DiscPercent", "DiscStart", "DueStart"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23586,7 +24116,7 @@ e.printStackTrace();
                         " order by cut_code ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cut_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cut_code"),
                                    res.getString("cut_desc"),
                                    res.getString("cut_days"),
                                    res.getString("cut_discdays"),
@@ -23612,7 +24142,15 @@ e.printStackTrace();
           
            public static DefaultTableModel getOrderBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "OrderNbr", "Billto", "Shipto", "PONumber", "OrderDate", "DueDate", "Status"}); 
+                      new String[]{"select", "OrderNbr", "Billto", "Shipto", "PONumber", "OrderDate", "DueDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23637,7 +24175,7 @@ e.printStackTrace();
                         " order by so_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("so_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("so_nbr"),
                                    res.getString("so_cust"),
                                    res.getString("so_ship"),
                                    res.getString("so_po"),
@@ -23663,7 +24201,15 @@ e.printStackTrace();
            
            public static DefaultTableModel getPOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "PO Nbr", "Vendor", "Site", "Remarks", "OrderDate", "DueDate", "Status"}); 
+                      new String[]{"select", "PO Nbr", "Vendor", "Site", "Remarks", "OrderDate", "DueDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23688,7 +24234,7 @@ e.printStackTrace();
                         " order by po_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("po_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("po_nbr"),
                                    res.getString("po_vend"),
                                    res.getString("po_site"),
                                    res.getString("po_rmks"),
@@ -23714,7 +24260,15 @@ e.printStackTrace();
            
            public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "DO Nbr", "From WH", "To WH", "Ref", "ShipDate", "RecvDate", "Status"}); 
+                      new String[]{"select", "DO Nbr", "From WH", "To WH", "Ref", "ShipDate", "RecvDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23739,7 +24293,7 @@ e.printStackTrace();
                         " order by do_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("do_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("do_nbr"),
                                    res.getString("do_wh_from"),
                                    res.getString("do_wh_to"),
                                    res.getString("do_ref"),
@@ -23765,7 +24319,15 @@ e.printStackTrace();
            
         public static DefaultTableModel getFOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "FrieghtNbr", "Carrier", "Status"}); 
+                      new String[]{"select", "FrieghtNbr", "Carrier", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23790,7 +24352,7 @@ e.printStackTrace();
                         " order by fo_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("fo_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fo_nbr"),
                                    res.getString("fo_carrier"),
                                    res.getString("fo_status")
                         });
@@ -23812,7 +24374,15 @@ e.printStackTrace();
            
            public static DefaultTableModel getShipperBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ShipperNbr", "Cust", "Ship", "OrderNbr", "PONbr", "ShipDate", "Status"}); 
+                      new String[]{"select", "ShipperNbr", "Cust", "Ship", "OrderNbr", "PONbr", "ShipDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23855,7 +24425,7 @@ e.printStackTrace();
                    }
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("sh_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("sh_id"),
                                    res.getString("sh_cust"),
                                    res.getString("sh_ship"),
                                    res.getString("sh_so"),
@@ -23881,7 +24451,15 @@ e.printStackTrace();
           
           public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "SCAC", "Phone", "Email", "Contact", "Acct"}); 
+                      new String[]{"select", "Code", "Desc", "SCAC", "Phone", "Email", "Contact", "Acct"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23906,7 +24484,7 @@ e.printStackTrace();
                         " order by car_code ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("car_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
                                    res.getString("car_desc"),
                                    res.getString("car_scac"),
                                    res.getString("car_phone"),
@@ -23932,7 +24510,15 @@ e.printStackTrace();
         
            public static DefaultTableModel getProdCodeBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Code", "Desc", "InventoryAcct", "SalesAccount", "POReceiptAccount", "ScrapAccount"}); 
+                      new String[]{"select", "Code", "Desc", "InventoryAcct", "SalesAccount", "POReceiptAccount", "ScrapAccount"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -23957,7 +24543,7 @@ e.printStackTrace();
                         " order by pl_line ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("pl_line"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("pl_line"),
                                    res.getString("pl_desc"),
                                    res.getString("pl_inventory"),
                                    res.getString("pl_sales"),
@@ -23982,7 +24568,15 @@ e.printStackTrace();
           
            public static DefaultTableModel getLocationBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "LocationCode", "Desc", "Site", "Active"}); 
+                      new String[]{"select", "LocationCode", "Desc", "Site", "Active"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24007,7 +24601,7 @@ e.printStackTrace();
                         " order by loc_loc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("loc_loc"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("loc_loc"),
                                    res.getString("loc_desc"),
                                    res.getString("loc_site"),
                                    res.getString("loc_active")
@@ -24030,7 +24624,15 @@ e.printStackTrace();
           
            public static DefaultTableModel getFTPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "FTPID", "Desc", "IP", "Login", "Passwd", "CDDir", "InDir", "OutDir", "Delete?"}); 
+                      new String[]{"select", "FTPID", "Desc", "IP", "Login", "Passwd", "CDDir", "InDir", "OutDir", "Delete?"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24055,7 +24657,7 @@ e.printStackTrace();
                         " order by ftp_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("ftp_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ftp_id"),
                                    res.getString("ftp_desc"),
                                    res.getString("ftp_ip"),
                                    res.getString("ftp_login"),
@@ -24083,7 +24685,15 @@ e.printStackTrace();
            
             public static DefaultTableModel getWareHouseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "WHCode", "Site", "Name", "Addr1", "City", "State", "Zip"}); 
+                      new String[]{"select", "WHCode", "Site", "Name", "Addr1", "City", "State", "Zip"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24108,7 +24718,7 @@ e.printStackTrace();
                         " order by wh_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("wh_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wh_id"),
                                    res.getString("wh_site"),
                                    res.getString("wh_name"),
                                    res.getString("wh_addr1"),
@@ -24136,7 +24746,15 @@ e.printStackTrace();
            
             public static DefaultTableModel getBankBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "BankID", "Desc", "Account", "Currency", "Active"}); 
+                      new String[]{"select", "BankID", "Desc", "Account", "Currency", "Active"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24161,7 +24779,7 @@ e.printStackTrace();
                         " order by bk_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("bk_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bk_id"),
                                    res.getString("bk_desc"),
                                    res.getString("bk_acct"),
                                    res.getString("bk_cur"),
@@ -24186,7 +24804,15 @@ e.printStackTrace();
             
              public static DefaultTableModel getVoucherBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "VouchID", "Vend", "RecvID", "InvoiceNbr", "TotalAmt", "VOPrice", "Qty"}); 
+                      new String[]{"select", "VouchID", "Vend", "RecvID", "InvoiceNbr", "TotalAmt", "VOPrice", "Qty"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24211,7 +24837,7 @@ e.printStackTrace();
                         " and ap_type = 'V' order by ap_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("vod_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vod_id"),
                                    res.getString("ap_vend"),
                                    res.getString("vod_rvdid"),
                                    res.getString("vod_invoice"),
@@ -24237,7 +24863,15 @@ e.printStackTrace();
             
              public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RecvID", "Vend", "PO", "PackingSlip", "Item", "RecvDate", "Qty"}); 
+                      new String[]{"select", "RecvID", "Vend", "PO", "PackingSlip", "Item", "RecvDate", "Qty"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24262,7 +24896,7 @@ e.printStackTrace();
                         " order by rv_id desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("rv_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("rv_id"),
                                    res.getString("rv_vend"),
                                    res.getString("rvd_po"),
                                    res.getString("rvd_packingslip"),
@@ -24288,7 +24922,15 @@ e.printStackTrace();
             
             public static DefaultTableModel getDeptCCBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Dept", "Desc", "LaborAcct", "BurdenAccount", "COPAccount"}); 
+                      new String[]{"select", "Dept", "Desc", "LaborAcct", "BurdenAccount", "COPAccount"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24313,7 +24955,7 @@ e.printStackTrace();
                         " order by dept_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("dept_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("dept_id"),
                                    res.getString("dept_desc"),
                                    res.getString("dept_lbr_acct"),
                                    res.getString("dept_bdn_acct"),
@@ -24337,7 +24979,15 @@ e.printStackTrace();
             
              public static DefaultTableModel getCalendarBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Year", "Period", "StartDate", "EndDate", "Status"}); 
+                      new String[]{"select", "Year", "Period", "StartDate", "EndDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24362,7 +25012,7 @@ e.printStackTrace();
                         " order by glc_year, glc_per ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("glc_year"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glc_year"),
                                    res.getString("glc_per"),
                                    res.getString("glc_start"),
                                    res.getString("glc_end"),
@@ -24386,7 +25036,15 @@ e.printStackTrace();
            
           public static DefaultTableModel getEmpBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "EmpNbr", "LastName", "FirstName", "Status", "StartDate", "Type", "Phone"}); 
+                      new String[]{"select", "EmpNbr", "LastName", "FirstName", "Status", "StartDate", "Type", "Phone"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24411,7 +25069,7 @@ e.printStackTrace();
                         " order by emp_lname ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("emp_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("emp_nbr"),
                                    res.getString("emp_lname"),
                                    res.getString("emp_fname"),
                                    res.getString("emp_status"),
@@ -24437,7 +25095,15 @@ e.printStackTrace();
           
              public static DefaultTableModel getUserBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "UserID", "LastName", "FirstName"}); 
+                      new String[]{"select", "UserID", "LastName", "FirstName"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24462,7 +25128,7 @@ e.printStackTrace();
                         " order by user_lname ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("user_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("user_id"),
                                    res.getString("user_lname"),
                                    res.getString("user_fname")
                         });
@@ -24484,7 +25150,15 @@ e.printStackTrace();
         
             public static DefaultTableModel getMenuBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ID", "Desc", "Panel", "Type"}); 
+                      new String[]{"select", "ID", "Desc", "Panel", "Type"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
               
         try{
             Class.forName(driver).newInstance();
@@ -24509,7 +25183,7 @@ e.printStackTrace();
                         " order by menu_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("menu_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("menu_id"),
                                    res.getString("menu_desc"),
                                    res.getString("menu_panel"),
                                    res.getString("menu_type")
@@ -24534,7 +25208,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Printer", "Desc", "Type", "IP", "Port"}); 
+                      new String[]{"select", "Printer", "Desc", "Type", "IP", "Port"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -24546,7 +25228,7 @@ e.printStackTrace();
                
                   res = st.executeQuery("select * from prt_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("prt_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("prt_id"),
                                    res.getString("prt_desc"),
                                    res.getString("prt_type"),
                                    res.getString("prt_ip"),
@@ -24573,7 +25255,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Cust", "DocType", "Dir", "Map", "FilePath", "Prefix", "Suffix"}); 
+                      new String[]{"select", "Cust", "DocType", "Dir", "Map", "FilePath", "Prefix", "Suffix"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -24585,7 +25275,7 @@ e.printStackTrace();
                
                   res = st.executeQuery("select * from cmedi_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("cme_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cme_code"),
                                    res.getString("cme_doc"),
                                    res.getString("cme_dir"),
                                    res.getString("cme_map"),
@@ -24614,7 +25304,15 @@ e.printStackTrace();
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "LabelCode", "Desc", "File", "Type"}); 
+                      new String[]{"select", "LabelCode", "Desc", "File", "Type"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -24626,7 +25324,7 @@ e.printStackTrace();
                
                   res = st.executeQuery("select * from label_zebra;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {"select", res.getString("lblz_code"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("lblz_code"),
                                    res.getString("lblz_desc"),
                                    res.getString("lblz_file"),
                                    res.getString("lblz_type")
@@ -24672,7 +25370,15 @@ e.printStackTrace();
         String wk13 = df.format(dates.get(wk + 11));
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"PlanOrders", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 }); 
+                      new String[]{"PlanOrders", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 })
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
              
               
         try{
@@ -24689,7 +25395,7 @@ e.printStackTrace();
                           " AND fct_part <= " + "'" + topart + "'" + ";" );
                     while (res.next()) {
                        
-                        mymodel.addRow(new Object[] {"Plan", res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    res.getInt(wk),

@@ -1271,7 +1271,6 @@ CREATE TABLE IF NOT EXISTS `so_tax` (
   `sot_percent` decimal(14,4) NOT NULL DEFAULT '0',
   `sot_amt` decimal(14,2) NOT NULL DEFAULT '0'
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-);
 CREATE TABLE IF NOT EXISTS `shs_det` (
   `shs_nbr` varchar(8) NOT NULL,
   `shs_so` varchar(20)  NOT NULL DEFAULT '',
@@ -1321,7 +1320,6 @@ CREATE TABLE IF NOT EXISTS `sod_tax` (
   `sodt_percent` decimal(14,4) NOT NULL DEFAULT '0',
   `sodt_amt` decimal(14,2) NOT NULL DEFAULT '0'
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-);
 CREATE TABLE IF NOT EXISTS `srl_mstr` (
   `srl_so` varchar(30) NOT NULL  DEFAULT '',
   `srl_po` varchar(30) NOT NULL  DEFAULT '',

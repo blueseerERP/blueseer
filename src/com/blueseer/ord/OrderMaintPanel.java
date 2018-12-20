@@ -121,7 +121,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                               ddcust.getSelectedItem().toString(),
                               ddship.getSelectedItem().toString(),
                               ordernbr.getText(),
-                              ponbr.getText().replace("'", ""),
+                              ponbr.getText().replace("'", ""),  // po
+                              ponbr.getText().replace("'", ""),  // ref
                               dfdate.format(duedate.getDate()).toString(),
                               dfdate.format(orddate.getDate()).toString(),
                               remarks.getText().replace("'", ""),

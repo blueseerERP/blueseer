@@ -196,6 +196,7 @@ piechart_salesbycust,,com.blueseer.utl.ChartView,JMenuItem
 piechart_custAR,,com.blueseer.utl.ChartView,JMenuItem
 ExpenseMaint,,com.blueseer.fgl.ExpenseMaint,JMenuItem
 CashTran,,com.blueseer.fgl.CashTran,JMenuItem
+CashTranBrowse,,com.blueseer.fgl.CashTranBrowse,JMenuItem
 menuscreen,,com.blueseer.adm.BackGroundPanel,JMenuItem
 MenuTreeMaint,,com.blueseer.adm.MenuTreeMaint,JMenuItem
 Help,,,JMenu

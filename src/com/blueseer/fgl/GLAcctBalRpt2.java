@@ -45,6 +45,7 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -58,12 +59,33 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "BegBal", "Activity", "EndBal"});
+                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "BegBal", "Activity", "EndBal"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+    
+    
     javax.swing.table.DefaultTableModel mymodelCC = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "BegBal", "Activity", "EndBal"});
+                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "BegBal", "Activity", "EndBal"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Acct", "CC", "Site", "Ref", "Key", "EffDate", "Desc", "Amt"});
+    
+    
+   
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -236,9 +258,14 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
         
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
          
-         
-       
+        /*
+        BlueSeerUtils.clickheader = new ImageIcon(getClass().getResource("/images/flag.png")); 
+        BlueSeerUtilsclickprint = new ImageIcon(getClass().getResource("/images/print.png")); 
+        clickdetail = new ImageIcon(getClass().getResource("/images/basket.png")); 
+       */
           
          
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
@@ -605,14 +632,14 @@ try {
           tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-          tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
           } else {
               tablereport.setModel(mymodel);
           tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());    
-          tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
           }
           
@@ -732,7 +759,7 @@ try {
                                begbal = begbal - activity;
                                endbal = begbal + activity;
                            
-                            mymodelCC.addRow(new Object[]{"Detail", acctid, accttype, acctcurr,
+                            mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
@@ -783,7 +810,7 @@ try {
                                begbal = begbal - activity;
                                endbal = begbal + activity;
                            
-                            mymodelCC.addRow(new Object[]{"Detail", acctid, accttype, acctcurr,
+                            mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
@@ -914,7 +941,7 @@ try {
                //  if (begbal == 0 && endbal == 0 && activity == 0)
                //      bsmf.MainFrame.show(account);
                
-                    mymodel.addRow(new Object[]{"Detail", acctid, accttype, acctcurr,
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
                                 Double.valueOf(df.format(begbal)),

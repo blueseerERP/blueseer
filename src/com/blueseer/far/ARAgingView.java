@@ -384,6 +384,10 @@ public class ARAgingView extends javax.swing.JPanel {
          tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
          tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
          
+         tablesummary.getTableHeader().setReorderingAllowed(false);
+         tabledetail.getTableHeader().setReorderingAllowed(false);
+         tablepayment.getTableHeader().setReorderingAllowed(false);
+         
          detailpanel.setVisible(false);
          btdetail.setEnabled(false);
          btexport.setEnabled(false);

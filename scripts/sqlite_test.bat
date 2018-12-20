@@ -24,6 +24,9 @@ if exist bsdb.db del bsdb.db
 @echo "creating database schema...."
 sqlite3.exe bsdb.db <blueseer.sqlite
 
+rem moved panel and menu mstr into sq
+rem sqlite3.exe bsdb.db <panel_mstr.sqlite
+rem sqlite3.exe bsdb.db <menu_mstr.sqlite
 
 @echo "loading menu tree and control data..."
 sqlite3.exe bsdb.db <menu_tree.sqlite
@@ -42,14 +45,6 @@ sqlite3.exe bsdb.db <sq.txt
 @echo ""
 @echo ""
 @echo "finished install..."
-@echo "BlueSeer should automatically start now..."
-@echo ""
-@echo ""
-@echo "Login = 'admin' and Password = 'admin'"
-
-ping -n 6 127.0.0.1 > nul
 
 cd ..
-
-call login.bat
 

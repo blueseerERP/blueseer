@@ -41,6 +41,7 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -60,7 +61,15 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ChartIt", "Acct", "Desc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"});
+                        new String[]{"ChartIt", "Acct", "Desc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     
     
@@ -148,8 +157,9 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         mymodel.setNumRows(0);
         tablereport.setModel(mymodel);
         
+        tablereport.getTableHeader().setReorderingAllowed(false);
         
-         tablereport.getColumnModel().getColumn(0).setCellRenderer(new GLAcctBalRpt3.ButtonRenderer());
+       //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new GLAcctBalRpt3.ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
         
         ddyear.removeAllItems();
@@ -475,7 +485,7 @@ try {
                  }
                                
                //      bsmf.MainFrame.show(account);
-                 mymodel.addRow(new Object[]{"ChartIt", acctid,
+                 mymodel.addRow(new Object[]{BlueSeerUtils.clickchart, acctid,
                                 acctdesc,
                                 str_activity[0],
                                 str_activity[1],

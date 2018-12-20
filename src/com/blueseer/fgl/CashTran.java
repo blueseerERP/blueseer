@@ -4,6 +4,7 @@
  */
 package com.blueseer.fgl;
 
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -128,10 +129,10 @@ public class CashTran extends javax.swing.JPanel {
         rbSell.setEnabled(false);
         tbactualamt.setEnabled(false);
         ddentity.setEnabled(false);
-        ddsite.setEnabled(false);
+        
         dcdate.setEnabled(false);
         tbrmks.setEnabled(false);
-        tbinvoice.setEnabled(false);
+        tbref.setEnabled(false);
         dditem.setEnabled(false);
         tbitemservice.setEnabled(false);
         tbprice.setEnabled(false);
@@ -140,6 +141,7 @@ public class CashTran extends javax.swing.JPanel {
         btadditem.setEnabled(false);
         btdeleteitem.setEnabled(false);
         btadd.setEnabled(false);
+        btaddentity.setEnabled(false);
         detailtable.setEnabled(false);
         expensenbr.setEnabled(false);
        
@@ -150,16 +152,17 @@ public class CashTran extends javax.swing.JPanel {
         rbSell.setEnabled(true);
         tbactualamt.setEnabled(true);
         ddentity.setEnabled(true);
-        ddsite.setEnabled(true);
+      
         dcdate.setEnabled(true);
         tbrmks.setEnabled(true);
-        tbinvoice.setEnabled(true);
+        tbref.setEnabled(true);
         dditem.setEnabled(true);
         tbitemservice.setEnabled(true);
         tbprice.setEnabled(true);
         btcreateItem.setEnabled(true);
         btimage.setEnabled(true);
         btadditem.setEnabled(true);
+        btaddentity.setEnabled(true);
         btdeleteitem.setEnabled(true);
         btadd.setEnabled(true);
         detailtable.setEnabled(true);
@@ -177,7 +180,7 @@ public class CashTran extends javax.swing.JPanel {
          actamt = 0.00;
          rcvamt = 0.00;
          expensenbr.setText("");
-         tbinvoice.setText("");
+         tbref.setText("");
         tbrmks.setText("");
         
         rbBuy.setSelected(false);
@@ -187,6 +190,7 @@ public class CashTran extends javax.swing.JPanel {
         
         
         tbactualamt.setText("");
+        tbactualamt.setEditable(false);
        
          lbtitle.setText("");
        
@@ -203,21 +207,17 @@ public class CashTran extends javax.swing.JPanel {
         ArrayList entity = new ArrayList();
         if (rbSell.isSelected()) {
         entity = OVData.getcustmstrlist();
-        lblentity.setText("Cust");
+        lblentity.setText("Sell To");
         } else {
         entity = OVData.getvendmstrlist();   
-        lblentity.setText("Vend");
+        lblentity.setText("Buy From");
         }
         for (int i = 0; i < entity.size(); i++) {
             ddentity.addItem(entity.get(i));
         }
             ddentity.setSelectedIndex(0);
         
-          ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
+         
         
         
         dditem.removeAllItems();
@@ -307,18 +307,17 @@ public class CashTran extends javax.swing.JPanel {
         ddentity = new javax.swing.JComboBox();
         lbname = new javax.swing.JLabel();
         dditem = new javax.swing.JComboBox<>();
-        tbinvoice = new javax.swing.JTextField();
+        tbref = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        ddsite = new javax.swing.JComboBox();
         jLabel35 = new javax.swing.JLabel();
         rbSell = new javax.swing.JRadioButton();
         lbtitle = new javax.swing.JLabel();
         btimage = new javax.swing.JButton();
         btcreateItem = new javax.swing.JButton();
+        btaddentity = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -428,14 +427,6 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel6.setText("Price");
 
-        jLabel10.setText("Site");
-
-        ddsite.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddsiteActionPerformed(evt);
-            }
-        });
-
         jLabel35.setText("Date");
 
         rbSell.setText("sell");
@@ -456,36 +447,47 @@ public class CashTran extends javax.swing.JPanel {
             }
         });
 
+        btaddentity.setText("add new buyer/seller");
+        btaddentity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddentityActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblentity, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbitemservice)
+                            .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(jLabel6))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel5))))
-                        .addGap(5, 5, 5)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(46, 46, 46)
-                                        .addComponent(lbtitle, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btcreateItem))))
-                            .addComponent(tbitemservice)))
+                                .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btcreateItem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbtitle, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btaddentity)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(325, 325, 325)
                         .addComponent(btimage)
@@ -494,25 +496,22 @@ public class CashTran extends javax.swing.JPanel {
                         .addGap(6, 6, 6)
                         .addComponent(btdeleteitem))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel2)
-                        .addGap(5, 5, 5)
-                        .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(374, 374, 374)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel35)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(jLabel10)
-                        .addGap(5, 5, 5)
-                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(95, 95, 95)
-                        .addComponent(jLabel4)
-                        .addGap(5, 5, 5)
-                        .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel5))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel24)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
+                        .addGap(59, 59, 59)
+                        .addComponent(jLabel6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(btnew)
                         .addGap(22, 22, 22)
                         .addComponent(rbBuy)
@@ -521,31 +520,18 @@ public class CashTran extends javax.swing.JPanel {
                         .addGap(39, 39, 39)
                         .addComponent(jLabel27)
                         .addGap(11, 11, 11)
-                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(lblentity)
-                        .addGap(5, 5, 5)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(100, 100, 100)
-                                .addComponent(jLabel35)
-                                .addGap(4, 4, 4)
-                                .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(12, 12, 12))
+                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel24)
-                            .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel24)
+                        .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addComponent(btnew))
@@ -561,43 +547,37 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(lblentity))
-                    .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jLabel35))
-                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel35)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblentity)
+                            .addComponent(btaddentity))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))))
+                .addGap(8, 8, 8)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel10))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel4))
-                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel2))
-                    .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel9))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btcreateItem)))
-                .addGap(5, 5, 5)
+                        .addComponent(jLabel9))
+                    .addComponent(btcreateItem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
@@ -748,27 +728,28 @@ public class CashTran extends javax.swing.JPanel {
                 setvendorvariables(ddentity.getSelectedItem().toString());
                     
                 curr = OVData.getDefaultCurrency();
-                   
+                String site = OVData.getDefaultSite();   
                     
                     
                     if (proceed && rbSell.isSelected()) {
                           int shipperid = OVData.getNextNbr("shipper");     
-                             boolean iserror = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+                             boolean iserror = OVData.CreateShipperHdr(String.valueOf(shipperid), site,
                              String.valueOf(shipperid), 
-                              ddentity.getSelectedItem().toString(),
-                              ddentity.getSelectedItem().toString(),  // shipto
-                              tbinvoice.getText().replace("'", ""), // order
-                              tbinvoice.getText().replace("'", ""),  // po
+                              ddentity.getSelectedItem().toString(), // sh_cust
+                              ddentity.getSelectedItem().toString(),  // sh_ship
+                              expensenbr.getText().replace("'", ""), // sh_so
+                              tbref.getText().replace("'", ""),  // sh_po
+                              tbref.getText().replace("'", ""),  // sh_ref
                               dfdate.format(now), // duedate
                               dfdate.format(now),  // orddate
-                              tbrmks.getText().replace("'", ""),
+                              tbrmks.getText().replace("'", ""), // sh_rmks
                               "", "A");  // shipvia, ShipType
 
                      if (! iserror) {
                          for (int j = 0; j < detailtable.getRowCount(); j++) {
                              OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
                                      detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
-                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "", "0");
+                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), site, "", "", "0");
                          }
                         
                      }
@@ -805,7 +786,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + OVData.getDefaultARBank() + "'" + ","
                         + "'" + curr + "'" + ","     
                         + "'" + curr + "'" + ","         
-                        + "'" + ddsite.getSelectedItem().toString() + "'"
+                        + "'" + site + "'"
                         + ")"
                         + ";");
                
@@ -814,7 +795,7 @@ public class CashTran extends javax.swing.JPanel {
                                 + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
                                 + " values ( " + "'" + batchnbr + "'" + ","
                                     + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                                + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + shipperid + "'" + ","
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                                 + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
@@ -823,10 +804,16 @@ public class CashTran extends javax.swing.JPanel {
                                 + ";");
                         }
                     
-                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());  
+                         // update AR entry for original invoices with status and open amt  
+                        error = OVData.ARUpdate(batchnbr);
+                        if (! error) {
+                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());
+                        }
                      }
                     // end of emulate AR Payment
-                       
+                      
+                    
+                    
                      
                      if (! error) {
                         bsmf.MainFrame.show("sell complete");
@@ -844,11 +831,11 @@ public class CashTran extends javax.swing.JPanel {
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
                         + "ap_terms, ap_status, ap_curr, ap_base_curr, ap_bank ) "
                         + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
-                              + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                              + "'" + site + "'" + ","
                         + "'" + expensenbr.getText() + "'" + ","
                         + "'" + df.format(actamt) + "'" + ","
                         + "'" + "V" + "'" + ","
-                        + "'" + tbinvoice.getText() + "'" + ","
+                        + "'" + tbref.getText() + "'" + ","
                         + "'" + tbrmks.getText().replace("'", "") + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
@@ -868,12 +855,12 @@ public class CashTran extends javax.swing.JPanel {
                     for (int j = 0; j < detailtable.getRowCount(); j++) {
                         
                         // lets add item to database
-                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString(), detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
+                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
                         if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
                         OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
                         }
                         // lets add each item to inventory
-                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString(),
+                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
                                 "", "", Double.valueOf("1"));
                         // now lets add detail voucher
                         //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
@@ -888,7 +875,7 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbinvoice.getText() + "'" + ","        
+                            + "'" + tbref.getText() + "'" + ","        
                             + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
                             + "'" + OVData.getDefaultAssetCC() + "'" 
                             + ")"
@@ -902,7 +889,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     /* emulate cash payment */    
                         if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbinvoice.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbref.getText(), ddentity.getSelectedItem().toString(), actamt);
                         
                     if (error) {
                         bsmf.MainFrame.show("An error occurred");
@@ -1012,20 +999,27 @@ public class CashTran extends javax.swing.JPanel {
             ArrayList entity = new ArrayList();   
         if (rbBuy.isSelected()) {
              entity = OVData.getvendmstrlist();   
-            lblentity.setText("Vend");
+            lblentity.setText("Buy From");
+            btaddentity.setText("New Vendor");
             dditem.setEnabled(false);
             btcreateItem.setEnabled(true);
-            btimage.setEnabled(true);
+            btadditem.setEnabled(false);
+            btdeleteitem.setEnabled(false);
+            btimage.setEnabled(false);
+           
              jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLUE));
               detailtable.setModel(buymodel);
               lbtitle.setText("Buying Asset");
               lbtitle.setForeground(Color.blue);
         } else {
             entity = OVData.getcustmstrlist();
-            lblentity.setText("Cust");
+            lblentity.setText("Sell To");
+            btaddentity.setText("New Customer");
             dditem.setEnabled(true);
              btcreateItem.setEnabled(false);
              btimage.setEnabled(false);
+             btadditem.setEnabled(true);
+              btdeleteitem.setEnabled(true);
              jPanel3.setBorder(BorderFactory.createLineBorder(Color.RED));
               detailtable.setModel(sellmodel);
               lbtitle.setText("Selling Asset");
@@ -1038,10 +1032,6 @@ public class CashTran extends javax.swing.JPanel {
      }   
        
     }//GEN-LAST:event_rbBuyItemStateChanged
-
-    private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ddsiteActionPerformed
 
     private void tbactualamtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbactualamtActionPerformed
         // TODO add your handling code here:
@@ -1087,13 +1077,25 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btimageActionPerformed
 
     private void btcreateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcreateItemActionPerformed
-       partnumber = "ASSET-" + String.valueOf(OVData.getNextNbr("asset"));
+       partnumber = "z" + String.valueOf(OVData.getNextNbr("asset"));
        dditem.addItem(partnumber);
        dditem.setSelectedItem(partnumber);
+       btadditem.setEnabled(true);
+       btdeleteitem.setEnabled(true);
+       btimage.setEnabled(true);
     }//GEN-LAST:event_btcreateItemActionPerformed
+
+    private void btaddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentityActionPerformed
+        if (rbBuy.isSelected()) {
+        reinitpanels("VendMstrMaint", true, "");
+        } else {
+        reinitpanels("MenuCustMstr", true, "");
+        }
+    }//GEN-LAST:event_btaddentityActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddentity;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btcreateItem;
     private javax.swing.JButton btdeleteitem;
@@ -1103,11 +1105,9 @@ public class CashTran extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox ddentity;
     private javax.swing.JComboBox<String> dditem;
-    private javax.swing.JComboBox ddsite;
     private javax.swing.JTable detailtable;
     private javax.swing.JTextField expensenbr;
     private javax.swing.JFileChooser fc;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel27;
@@ -1128,9 +1128,9 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JRadioButton rbBuy;
     private javax.swing.JRadioButton rbSell;
     private javax.swing.JTextField tbactualamt;
-    private javax.swing.JTextField tbinvoice;
     private javax.swing.JTextField tbitemservice;
     private javax.swing.JTextField tbprice;
+    private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbrmks;
     // End of variables declaration//GEN-END:variables
 }

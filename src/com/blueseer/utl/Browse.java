@@ -385,7 +385,7 @@ public class Browse extends javax.swing.JPanel {
                 tablereport.setModel(OVData.getWorkCenterBrowseUtil(tbtext.getText(), state, searchfield));
                 }
                  //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tablereport.getColumn("select").setCellRenderer(new Browse.ButtonRenderer());
+                // tablereport.getColumn("select").setCellRenderer(new Browse.ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                 if (tablereport.getModel().getRowCount() == 0) {
                     lbmessage.setText("No records found.");

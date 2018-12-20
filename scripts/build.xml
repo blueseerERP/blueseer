@@ -3,6 +3,7 @@
     <!-- Sets variables which can later be used. -->
     <!-- The value of a property is accessed via ${} -->
     <property name="src.dir" location="../src" />
+    <property name="sf.dir" location="../sf" />
     <property name="build.dir" location="../build" />
     <property name="dist.dir" location="../dist" />
     <property name="test.dir" location="../scripts/test" />
@@ -50,12 +51,25 @@
 	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}"/>
     </target>
 
+    <!-- refresh test database -->
+<target name="refresh">
+        <delete dir="${test.dir}" />
+        <mkdir dir="${test.dir}" />
+	 <copy todir="${test.dir}">
+         <fileset dir="${sf.dir}"/>
+         </copy>
+	<copy file="sqlite_test.bat" todir="${test.dir}"/>
+	<exec dir="${test.dir}" executable="cmd">
+		<arg line="/c sqlite_test.bat"/>
+	</exec>
+</target>
+
 <target name="run">
     <path id="runtime.path">
 	    <fileset dir="../dist" includes="*.jar"/>
 	    <fileset dir="../mylib" includes="*.jar"/>
     </path>
-    <echo message="${runtime.path}"/>
+    <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="test">
         </java>
 </target>

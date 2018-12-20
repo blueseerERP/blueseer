@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package com.blueseer.shp;
+package com.blueseer.fgl;
 
+import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
@@ -45,19 +46,36 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author vaughnte
  */
-public class ShipperBrowsePanel extends javax.swing.JPanel {
+public class CashTranBrowse extends javax.swing.JPanel {
  
     
+  
+    
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "Shipper", "Cust", "ShipDate", "InvDate", "Status", "TotalQty", "TotalSales"});
+                        new String[]{"Select", "Detail", "Shipper", "Cust", "TransactionDate", "Reference", "TotalQty", "TotalSales", "Print"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1 || col == 8 )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Shipper", "Part", "CustPart", "SO", "SOLine", "PO", "Qty", "NetPrice"});
+    
+   
+    
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -80,14 +98,10 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
     }
     
    
-
-    
-    
-    
     /**
      * Creates new form ScrapReportPanel
      */
-    public ShipperBrowsePanel() {
+    public CashTranBrowse() {
         initComponents();
     }
 
@@ -160,15 +174,19 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
         tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
         
-         tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+        // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-         tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+        // tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+       //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+         tablereport.getColumnModel().getColumn(8).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
         
         
-        
+       
+      
+       
         
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
@@ -196,7 +214,6 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        cbinvoiced = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         datelabel = new javax.swing.JLabel();
@@ -285,8 +302,6 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
 
         jLabel1.setText("From Billto:");
 
-        cbinvoiced.setText("Invoiced Only?");
-
         jLabel3.setText("To Shipper:");
 
         jLabel2.setText("From Shipper:");
@@ -315,9 +330,7 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(114, 114, 114)
                         .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbinvoiced)
-                        .addGap(155, 155, 155))
+                        .addGap(252, 252, 252))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,9 +394,7 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
                         .addComponent(jLabel6))
                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbinvoiced, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -512,7 +523,7 @@ try {
                  String shipperto = tbtoshipper.getText();
                  String custto = tbtocust.getText();
                  String custfrom = tbfromcust.getText();
-                 String status = "";
+              
                 
                  
                  if (shipperfrom.isEmpty()) {
@@ -539,8 +550,8 @@ try {
                  }
                   
                       //must be type balance sheet
-                 if (cbinvoiced.isSelected()) {
-                  res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
+                
+                  res = st.executeQuery("select sh_id, sh_ref, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id where " +
                         " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
                         " sh_id <= " + "'" + shipperto + "'" + " AND " +
@@ -548,36 +559,23 @@ try {
                         " sh_shipdate <= " + "'" + todate + "'" + " AND " +
                         " sh_cust >= " + "'" + custfrom + "'" + " AND " +
                         " sh_cust <= " + "'" + custto + "'" + " AND " +
-                        " sh_status = '1' " +
-                        " group by sh_id;");
-                 } else {
-                   res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
-                        " inner join ship_det on shd_id = sh_id where " +
-                        " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
-                        " sh_id <= " + "'" + shipperto + "'" + " AND " +
-                        " sh_shipdate >= " + "'" + fromdate + "'" + " AND " +
-                        " sh_shipdate <= " + "'" + todate + "'" + " AND " +
-                        " sh_cust >= " + "'" + custfrom + "'" + " AND " +
-                        " sh_cust <= " + "'" + custto + "'"  +
-                        " group by sh_id;");  
-                 }
+                        " sh_type = 'A' " +
+                        " order by sh_id desc;");
+                
                 
                        while (res.next()) {
-                           if (res.getString("sh_status").equals("1"))
-                               status = "Confirmed";
-                           else
-                               status = "Not Confirmed";
+                          
                          totsales = totsales + res.getDouble("price");
                          totqty = totqty + res.getDouble("qty");
                          
-                         mymodel.addRow(new Object[]{"Select", "Detail", 
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
                                res.getString("sh_id"),
                                 res.getString("sh_cust"),
-                                BlueSeerUtils.xNull(res.getString("sh_shipdate")),
                                 BlueSeerUtils.xNull(res.getString("sh_confdate")),
-                                status,
+                                 res.getString("sh_ref"),
                                 res.getString("qty"),
-                                df.format(res.getDouble("price"))
+                                df.format(res.getDouble("price")),
+                                BlueSeerUtils.clickprint 
                             });
                                 
                        }
@@ -586,7 +584,8 @@ try {
                 tbtotsales.setText(df.format(totsales));
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Problem executing Shipper Report");
+                s.printStackTrace();
+                bsmf.MainFrame.show("Problem executing Cash Trans Browse Report");
             }
             con.close();
         } catch (Exception e) {
@@ -617,6 +616,9 @@ try {
                String args = tablereport.getValueAt(row, 2).toString();
                reinitpanels(mypanel, true, args);
         }
+        if ( col == 8) {
+              OVData.printReceipt(tablereport.getValueAt(row, 2).toString());
+        }
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
@@ -630,7 +632,6 @@ try {
     private javax.swing.JLabel EndBal1;
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
-    private javax.swing.JCheckBox cbinvoiced;
     private javax.swing.JLabel datelabel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;

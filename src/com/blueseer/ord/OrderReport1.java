@@ -169,6 +169,8 @@ public class OrderReport1 extends javax.swing.JPanel {
          cbbackorder.setSelected(true);
          cberror.setSelected(true);
          
+         tableorder.getTableHeader().setReorderingAllowed(false);
+         
           Calendar calfrom = Calendar.getInstance();
          calfrom.add(Calendar.DATE, -365);
          dcFrom.setDate(calfrom.getTime());

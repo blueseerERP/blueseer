@@ -121,7 +121,8 @@ INSERT INTO "menu_tree" VALUES ('APMenu','APControl',6,'JMenuItem','AP Control',
 INSERT INTO "menu_tree" VALUES ('ARMenu','ARTranRpt1',6,'JMenuItem','AR Transacation Report','','1','',1,1);
 INSERT INTO "menu_tree" VALUES ('ARMenu','ARControl',7,'JMenuItem','AR Control','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('Finance','APMenu',6,'JMenu','Accounts Payable Menu','','','',1,1);
-INSERT INTO "menu_tree" VALUES ('Finance','CashTran',6,'JMenuItem','Cash Transaction','','','',1,1);
+INSERT INTO "menu_tree" VALUES ('Finance','CashTran',7,'JMenuItem','Cash Transaction','','','',1,1);
+INSERT INTO "menu_tree" VALUES ('Finance','CashTranBrowse',8,'JMenuItem','Cash Transaction Browse','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('APMenu','VouchMaintPanel',1,'JMenuItem','Voucher Maintenance','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('APMenu','VoucherBrowse',2,'JMenuItem','Voucher Browse','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('APMenu','MenuPaymentMaint',3,'JMenuItem','Payment Maintenance','','','',1,1);
