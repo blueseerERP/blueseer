@@ -1908,6 +1908,7 @@ CREATE TABLE "menu_mstr" (
   "menu_id" varchar(50) NOT NULL COLLATE NOCASE,
   "menu_desc" varchar(300) DEFAULT NULL COLLATE NOCASE,
   "menu_panel" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "menu_type" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '');
+  "menu_type" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "menu_navcode" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 End Transaction;

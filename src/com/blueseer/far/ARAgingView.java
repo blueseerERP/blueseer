@@ -39,6 +39,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import java.util.HashMap;
+import javax.swing.ImageIcon;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -54,7 +55,15 @@ public class ARAgingView extends javax.swing.JPanel {
     String selectedCustomer = "";
  
      MyTableModel modelsummary = new ARAgingView.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "Cust", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
+                        new String[]{"Detail", "Cust", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     MyTableModel2 modeldetail = new ARAgingView.MyTableModel2(new Object[][]{},
                         new String[]{"ID", "Desc", "Type", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
@@ -381,7 +390,7 @@ public class ARAgingView extends javax.swing.JPanel {
         tabledetail.setModel(modeldetail);
           tablepayment.setModel(modelpayment);
           
-         tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
+     //    tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
          tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
          
          tablesummary.getTableHeader().setReorderingAllowed(false);
@@ -714,7 +723,7 @@ try {
              //        TableColumn tc = en.nextElement();
              //        tc.setCellRenderer(new LabelBrowsePanel.SomeRenderer());
              //    }
-                  tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
+              //    tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
                   tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
                   tablesummary.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -778,7 +787,7 @@ try {
                     qty = qty + 0;
                     i++;
                         modelsummary.addRow(new Object[]{
-                                "Detail",
+                                BlueSeerUtils.clickbasket,
                                 res.getString("ar_cust"),
                                 Double.valueOf(df.format(res.getDouble("0"))),
                                 Double.valueOf(df.format(res.getDouble("30"))),
@@ -791,7 +800,7 @@ try {
                    if (i == 0) {
                       // create record with zero fields
                        modelsummary.addRow(new Object[]{
-                                "Detail",
+                                BlueSeerUtils.clickbasket,
                                 custs.get(j),
                                 0,0,0,0,0
                             });

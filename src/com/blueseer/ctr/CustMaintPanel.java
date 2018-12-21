@@ -869,6 +869,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
         add(jTabbedPane1);
 
+        mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Master Maintenance"));
+
         jLabel7.setText("State");
 
         jLabel5.setText("Line3");

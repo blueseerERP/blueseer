@@ -1560,7 +1560,9 @@ CREATE TABLE IF NOT EXISTS `menu_mstr` (
   `menu_id` varchar(50) NOT NULL ,
   `menu_desc` varchar(300) NOT NULL DEFAULT '' ,
   `menu_panel` varchar(200) NOT NULL  DEFAULT '',
-  `menu_type` varchar(50) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `menu_type` varchar(50) NOT NULL  DEFAULT '',
+  `menu_navcode` varchar(50) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `menuw_mstr` (
   `menuw_id` varchar(50) NOT NULL ,
   `menuw_desc` varchar(300) NOT NULL DEFAULT '' ,

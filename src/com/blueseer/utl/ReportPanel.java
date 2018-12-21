@@ -227,13 +227,14 @@ public int[] mywidth;
         } 
          if (arg.equals("ARPaymentBrowse")) {
              mymodel = OVData.getARPaymentBrowse();
-        }   
-        TableReport.setModel(mymodel);
-        TableReport.setName(arg);
-        //TableReport.getColumnModel().getColumn(0).setCellRenderer(new BlueRenderer());
-        if (TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
-         TableReport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         TableReport.getColumnModel().getColumn(0).setMaxWidth(100);
+        }  
+         
+        if (mymodel != null) { 
+            TableReport.setModel(mymodel);
+            TableReport.setName(arg);
+            if (TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
+                TableReport.getColumnModel().getColumn(0).setMaxWidth(100);
+            }
         }
          
         

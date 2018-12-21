@@ -60,6 +60,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -72,7 +73,15 @@ public class ProdSchedPanel extends javax.swing.JPanel {
     
        // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        ProdSchedPanel.MyTableModel mymodel = new ProdSchedPanel.MyTableModel(new Object[][]{},
-                        new String[]{"JobNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print", "Update", "Void"});
+                        new String[]{"JobNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print", "Update", "Void"})
+               {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 13 || col == 14 || col == 15  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
       
       
 
@@ -865,7 +874,10 @@ try {
                  while (en.hasMoreElements()) {
                    
                      TableColumn tc = en.nextElement();
-                     if (tc.getIdentifier().toString().equals("isSched")) {
+                     if (tc.getIdentifier().toString().equals("isSched") || 
+                             tc.getIdentifier().toString().equals("Print") ||
+                             tc.getIdentifier().toString().equals("Update") ||
+                             tc.getIdentifier().toString().equals("Void")) {
                          continue;
                      }
                      tc.setCellRenderer(new ProdSchedPanel.SomeRenderer());
@@ -873,9 +885,9 @@ try {
                  
                
                 
-                mytable.getColumn("Update").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
-                mytable.getColumn("Print").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
-                mytable.getColumn("Void").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
+         //       mytable.getColumn("Update").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
+        //        mytable.getColumn("Print").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
+        //        mytable.getColumn("Void").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
                 
                 
                 
@@ -889,12 +901,12 @@ try {
                 
                 
                 
-                mytable.getColumn("Update").setCellEditor(
-                        new ProdSchedPanel.ButtonEditor(new JCheckBox()));
-                mytable.getColumn("Print").setCellEditor(
-                        new ProdSchedPanel.ButtonEditor(new JCheckBox()));
-                mytable.getColumn("Void").setCellEditor(
-                        new ProdSchedPanel.ButtonEditor(new JCheckBox()));
+            //    mytable.getColumn("Update").setCellEditor(
+           //             new ProdSchedPanel.ButtonEditor(new JCheckBox()));
+           //     mytable.getColumn("Print").setCellEditor(
+           //             new ProdSchedPanel.ButtonEditor(new JCheckBox()));
+          //      mytable.getColumn("Void").setCellEditor(
+          //              new ProdSchedPanel.ButtonEditor(new JCheckBox()));
                 mytable.getColumn("Update").setMaxWidth(100);
                 mytable.getColumn("Print").setMaxWidth(100);
                 mytable.getColumn("Void").setMaxWidth(100);
@@ -969,9 +981,9 @@ try {
                                 res.getString("plan_order"),
                                 res.getString("plan_line"),
                                 status,
-                                "Print",
-                                "Update",
-                                "Void"
+                                BlueSeerUtils.clickprint,
+                                BlueSeerUtils.clickrefresh,
+                                BlueSeerUtils.clicktrash
                             });
                 }
                 labelqtysched.setText(String.valueOf(schtot));

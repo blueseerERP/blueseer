@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.setperms;
+import java.awt.Color;
 
 /**
  *
@@ -29,7 +30,6 @@ public class PostGLPanel extends javax.swing.JPanel {
     public void initvars(String args) {
         tbcount.setText("");
         btpost.setEnabled(false);
-        MainProgressBar.setVisible(false);
     }
     
      class Task extends SwingWorker<Void, Void> {
@@ -72,11 +72,13 @@ public class PostGLPanel extends javax.swing.JPanel {
          */
         public void done() {
            // Toolkit.getDefaultToolkit().beep();
-           // MainProgressBar.setVisible(false);
+          
            // setperms(bsmf.MainFrame.userid);
           //  reinitpanels2("BackGroundPanel", "BackGroundPanel", false, "");
-            bsmf.MainFrame.show("Post Complete!");
-            MainProgressBar.setVisible(false);
+           // bsmf.MainFrame.show("Post Complete!");
+            bsmf.MainFrame.messagelabel.setText("Posting is completed");
+            bsmf.MainFrame.messagelabel.setForeground(Color.BLUE);
+            bsmf.MainFrame.MainProgressBar.setVisible(false);
         }
     }  
     
@@ -95,7 +97,6 @@ public class PostGLPanel extends javax.swing.JPanel {
         btpost = new javax.swing.JButton();
         tbcount = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        MainProgressBar = new javax.swing.JProgressBar();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -123,19 +124,15 @@ public class PostGLPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btpost)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btpost)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(1, 1, 1)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tbcount)
-                                    .addComponent(btcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(MainProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(jLabel1)
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbcount)
+                            .addComponent(btcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,17 +145,17 @@ public class PostGLPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btpost)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(MainProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btpostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpostActionPerformed
-        MainProgressBar.setVisible(true);
-        MainProgressBar.setIndeterminate(true);
+     //   MainProgressBar.setVisible(true);
+     //   MainProgressBar.setIndeterminate(true);
+        bsmf.MainFrame.MainProgressBar.setVisible(true);
+        bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
         
         Task task = new Task();
         task.execute();
@@ -171,7 +168,6 @@ public class PostGLPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JProgressBar MainProgressBar;
     private javax.swing.JButton btcount;
     private javax.swing.JButton btpost;
     private javax.swing.JLabel jLabel1;
