@@ -42,7 +42,7 @@
     <!--Creates the deployable jar file  -->
     <target name="jar" depends="compile">
         <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
-		<fileset dir="${src.dir}" includes="images/**/*.png"/>
+		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif" />
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
             <manifest>
                 <attribute name="Main-Class" value="bsmf" />
