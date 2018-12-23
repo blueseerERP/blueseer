@@ -127,6 +127,9 @@ public int[] mywidth;
         if (arg.equals("PlantDirectoryMenu")) {
              mymodel = OVData.getPlantDirectory();
         }
+        if (arg.equals("NavCodeBrowse")) {
+             mymodel = OVData.getNavCodeList();
+        }
         if (arg.equals("MenuCallCenterReport1")) {
              mymodel = OVData.getCallCenterReport1();
         }
@@ -200,9 +203,6 @@ public int[] mywidth;
         }
          if (arg.equals("MenuSiteBrowse")) {
              mymodel = OVData.getSitesAll();
-        }
-         if (arg.equals("MenuNitrideInvRpt")) {
-             mymodel = OVData.getNitrideInv();
         }
          if (arg.equals("ForecastBrowse")) {
              mymodel = OVData.getForecast13weeks(OVData.getForecastWeek(now));

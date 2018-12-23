@@ -148,7 +148,7 @@ myscan = in.nextLine();
        // lets insert tran_mstr record for each serial number
        for (String element : mylist) {
            if (OVData.isLabel(element) &&  OVData.getLabelStatus(element) == 2 ) {
-               OVData.nitrideTransferTT2AVM(element);
+               //OVData.nitrideTransferTT2AVM(element);
            } 
        }
        System.out.println("program complete.");

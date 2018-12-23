@@ -45,6 +45,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -54,7 +55,15 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "Shipper", "Cust", "ShipDate", "InvDate", "Status", "TotalQty", "TotalSales"});
+                        new String[]{"Select", "Detail", "Shipper", "Cust", "ShipDate", "InvDate", "Status", "TotalQty", "TotalSales"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1 )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Shipper", "Part", "CustPart", "SO", "SOLine", "PO", "Qty", "NetPrice"});
@@ -160,9 +169,9 @@ public class ShipperBrowsePanel extends javax.swing.JPanel {
         tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
         
-         tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+      //   tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-         tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+      //   tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
@@ -570,7 +579,7 @@ try {
                          totsales = totsales + res.getDouble("price");
                          totqty = totqty + res.getDouble("qty");
                          
-                         mymodel.addRow(new Object[]{"Select", "Detail", 
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
                                res.getString("sh_id"),
                                 res.getString("sh_cust"),
                                 BlueSeerUtils.xNull(res.getString("sh_shipdate")),

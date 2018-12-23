@@ -114,6 +114,7 @@ MenuCustReport1,,com.blueseer.utl.ReportPanel,JMenuItem,
 MenuMaint,,com.blueseer.adm.MenuMaintPanel,JMenuItem,
 PanelMaint,,com.blueseer.adm.PanelMaintPanel,JMenuItem,
 MenuBrowse,menu for browsing menu list,com.blueseer.utl.ReportPanel,JMenuItem,
+NavCodeBrowse,menu for browsing navcodes,com.blueseer.utl.ReportPanel,JMenuItem,navcodes
 PanelBrowse,used for browsing java jpanels,com.blueseer.utl.ReportPanel,JMenuItem,
 TermsBrowse,Terms Browse,com.blueseer.utl.ReportPanel,JMenuItem,
 FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,

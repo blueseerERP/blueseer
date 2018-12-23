@@ -232,7 +232,7 @@ INSERT INTO "menu_tree" VALUES ('Help','MenuAbout',1,'JMenuItem','About','','','
 INSERT INTO "menu_tree" VALUES ('Help','MenuUpdate',2,'JMenuItem','Update','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('Help','PlantDirectoryMenu',3,'JMenuItem','Plant Directory','','1','',1,1);
 INSERT INTO "menu_tree" VALUES ('Help','menuscreen',4,'JMenuItem','Screen Resolution','','','getScreenSize',1,1);
-INSERT INTO "menu_tree" VALUES ('Help','BrowseUtil',5,'JMenuItem','','','1','',1,1);
+INSERT INTO "menu_tree" VALUES ('Help','NavCodeBrowse',5,'JMenuItem','NAVCode List','','1','',1,1);
 INSERT INTO "menu_tree" VALUES ('root','Address',1,'JMenu','Address','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('root','Purchasing',2,'JMenu','Purchasing','','','',1,1);
 INSERT INTO "menu_tree" VALUES ('root','Order',3,'JMenu','Order','','','',1,1);

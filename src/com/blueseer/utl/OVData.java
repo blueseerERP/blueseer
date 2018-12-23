@@ -2990,6 +2990,47 @@ public class OVData {
            return mymodel;
        }   
          
+          public static DefaultTableModel getNavCodeList() {
+           
+           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                         new String[]{"Menu", "Desc", "NavCode", "Type", "JavaClass"});
+           
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+              res = st.executeQuery("SELECT * from menu_mstr order by menu_id;");
+
+                while (res.next()) {
+                  
+                    mymodel.addRow(new Object[]{
+                        res.getString("menu_id"),
+                        res.getString("menu_desc"),
+                        res.getString("menu_navcode"),
+                        res.getString("menu_type"),
+                        res.getString("menu_panel")
+                            });
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+           
+           
+           
+           return mymodel;
+       }   
+       
+        
        public static DefaultTableModel getReqByApprover(String arg) {
            
            
@@ -8220,47 +8261,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          }
          
-         public static DefaultTableModel getNitrideInv() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"Part", "AVM", "TruTech", "Raw (DeadEnd)"}); 
-             
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
-                  res = st.executeQuery("select in_part, sum(case when in_loc = 'AVMNITRIDE' then in_qoh else 0 end) as 'avm', "
-                          + "sum(case when in_loc = 'trutech' then in_qoh else 0 end) as 'trutech', " 
-                          + "sum(case when in_loc = 'raw' then in_qoh else 0 end) as 'raw' " 
-                          + " from in_mstr where in_part like 'sc11%' and in_site = '1516' group by in_part ;" );
-                    while (res.next()) {
-                        if (res.getString("in_part").toLowerCase().endsWith("v5")) {
-                            continue;
-                        }
-                        mymodel.addRow(new Object[] {res.getString("in_part"),
-                                   res.getInt("avm"),
-                                   res.getInt("trutech"),
-                                   res.getInt("raw")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 s.printStackTrace();
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            
-        }
-        return mymodel;
-        
-         }
-         
+       
              public static DefaultTableModel getGLCalendar() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Year", "Period", "StartDate", "EndDate", "Active"})
@@ -21840,87 +21841,7 @@ e.printStackTrace();
                
       }
       
-      public static void nitrideTransferCR2AVM(String serialno) throws ParseException {
-          String labelinfo = OVData.getLabelInfo(serialno);
-          String[] arr = labelinfo.split("\\+\\-\\+", -1);
-          boolean isbad = false;
-          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-          String op = "";
-          OVData.TRHistIssDiscrete(dfdate.parse(arr[22]), 
-                  arr[1], 
-                  Integer.valueOf(arr[5]),
-                  op,
-                  "LOC-TRNF", 
-                  0.00, 
-                  0.00, 
-                arr[29], 
-                arr[30],  
-                "", // warehouse
-                "", 
-                "", 
-                "", 
-                0, 
-                "", 
-                "", 
-                arr[0], // lot 
-                "CHrome Rod Nitride Tfr to AVM", //rmks
-                "CR2AVM", //ref
-                "", 
-                "", 
-                "", 
-                arr[0],  // serial
-                "ovscan", // program
-                "ov"
-                );
-        
-          
-          OVData.UpdateInventoryDiscrete(arr[1], arr[29], "AVMNITRIDE", "warehouse", Double.valueOf(arr[5])); 
-          
-          OVData.updateLabelStatus(serialno, "1");
-               
-      }
-      
-      public static void nitrideTransferTT2AVM(String serialno) throws ParseException {
-          String labelinfo = OVData.getLabelInfo(serialno);
-          String[] arr = labelinfo.split("\\+\\-\\+", -1);
-          boolean isbad = false;
-          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-          String op = "";
-          OVData.TRHistIssDiscrete(dfdate.parse(arr[22]), 
-                  arr[1], 
-                  Integer.valueOf(arr[5]), 
-                  op,
-                  "LOC-TRNF", 
-                  0.00, 
-                  0.00, 
-                arr[29], 
-                arr[30],  
-                "", //warehouse
-                "", 
-                "", 
-                "", 
-                0, 
-                "", 
-                "", 
-                arr[0], // lot 
-                "CHrome Rod Nitride Tfr to AVM", //rmks
-                "TT2AVM", //ref
-                "", 
-                "", 
-                "", 
-                arr[0],  // serial
-                "ovscan", // program
-                "ov"
-                );
-        
-          
-           OVData.UpdateInventoryDiscrete(arr[1], arr[29], "TRUTECH", "warehouse", (-1 * Double.valueOf(arr[5])));
-          OVData.UpdateInventoryDiscrete(arr[1], arr[29], "RAW", "warehouse", Double.valueOf(arr[5])); 
-          
-          OVData.updateLabelStatus(serialno, "3");
-               
-      }
-      
+     
       public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
           String shiptocode = "";
           try {

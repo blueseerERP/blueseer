@@ -444,17 +444,18 @@ e.printStackTrace();
             return;
         }
         
-        if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) < 1 ) {
+       // if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) < 1 ) {
                
-           try {
-               OVData.nitrideTransferCR2AVM(tbscan.getText());
-               bsmf.MainFrame.show("Scan Complete!");
-               initvars("");
-           } catch (ParseException ex) {
-               Logger.getLogger(LabelPartPanel.class.getName()).log(Level.SEVERE, null, ex);
-           }
+        //   try {
+            //   OVData.nitrideTransferCR2AVM(tbscan.getText());
+         //      bsmf.MainFrame.show("Scan Complete!");
+          //     initvars("");
+          // } 
+         //  catch (ParseException ex) {
+          //     Logger.getLogger(LabelPartPanel.class.getName()).log(Level.SEVERE, null, ex);
+          // }
            
-       } 
+       //} 
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
