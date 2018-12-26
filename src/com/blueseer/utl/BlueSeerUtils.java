@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package com.blueseer.utl;
+import bsmf.MainFrame;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -38,7 +40,36 @@ public class BlueSeerUtils {
     public static  ImageIcon clickrefresh = new ImageIcon(BlueSeerUtils.class.getResource("/images/refresh.png"));
     public static  ImageIcon clickvoid = new ImageIcon(BlueSeerUtils.class.getResource("/images/void.png"));
     public static  ImageIcon clickmail = new ImageIcon(BlueSeerUtils.class.getResource("/images/mail.png"));
+    public static  ImageIcon clicklock = new ImageIcon(BlueSeerUtils.class.getResource("/images/lock.png"));
     
+    
+    
+    public static String bsformat(String type, String invalue, String precision) {
+        String outvalue = "";
+        DecimalFormat df = null;
+        if (invalue.isEmpty()) {
+            outvalue = "0";
+        }
+       
+        if (precision.equals("2")) {
+         df = new DecimalFormat("#0.00"); 
+        } else if (precision.equals("3")) {
+         df = new DecimalFormat("#0.000");  
+        } else if (precision.equals("4")) {
+         df = new DecimalFormat("#0.0000");   
+        } else if (precision.equals("5")) {
+         df = new DecimalFormat("#0.00000");    
+        } else {
+         df = new DecimalFormat("#0.00");    
+        }
+        try {
+        outvalue = df.format(Double.valueOf(invalue));
+        } catch(NumberFormatException e) {
+            MainFrame.show("non-numeric character in field");
+            outvalue = "0";
+        }
+        return outvalue;
+    }
     
     public static String convertDateFormat(String format, String indate) {
        String mydate = "";
@@ -86,6 +117,7 @@ public class BlueSeerUtils {
         return b ? 1 : 0;
     }
 
+    
     public static String xNull(String mystring) {
        String returnstring = "";
        returnstring = (mystring == null) ? "" : mystring;

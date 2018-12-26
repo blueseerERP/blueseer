@@ -872,7 +872,6 @@ try {
                  
                  Enumeration<TableColumn> en = mytable.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
-                   
                      TableColumn tc = en.nextElement();
                      if (tc.getIdentifier().toString().equals("isSched") || 
                              tc.getIdentifier().toString().equals("Print") ||

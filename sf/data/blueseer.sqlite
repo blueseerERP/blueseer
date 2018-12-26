@@ -1061,6 +1061,8 @@ CREATE TABLE "pos_det" (
   "posd_nbr" int(11) NOT NULL DEFAULT '0',
   "posd_line" int(11) NOT NULL DEFAULT '0',
   "posd_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "posd_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "posd_ref" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "posd_qty" int(11) NOT NULL DEFAULT '0',
   "posd_listprice" decimal(14,2) NOT NULL DEFAULT '0.00',
   "posd_disc" decimal(14,2) NOT NULL DEFAULT '0.00',
@@ -1072,6 +1074,10 @@ CREATE TABLE "pos_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pos_mstr" (
   "pos_nbr" int(11) NOT NULL DEFAULT '0',
+  "pos_key" varchar(20) NOT NULL DEFAULT '',
+  "pos_type" varchar(10) NOT NULL DEFAULT '',
+  "pos_entity" varchar(10) NOT NULL DEFAULT '',
+  "pos_entityname" varchar(30) NOT NULL DEFAULT '',
   "pos_entrydate" date COLLATE NOCASE DEFAULT '',
   "pos_entrytime" time COLLATE NOCASE DEFAULT '',
   "pos_aracct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',

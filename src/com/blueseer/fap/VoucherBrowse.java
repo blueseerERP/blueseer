@@ -461,13 +461,14 @@ try {
                  String pofrom = tbfrompo.getText();
                  String poto = tbtopo.getText();
                  
+                 /*
                  if (pofrom.isEmpty()) {
                      pofrom = bsmf.MainFrame.lownbr;
                  }
                   if (poto.isEmpty()) {
                      poto = bsmf.MainFrame.hinbr;
                  }
-                 
+                 */
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
         
