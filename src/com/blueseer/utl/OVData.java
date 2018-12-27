@@ -14722,7 +14722,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
-                        
+                       
                       if (i == 0) {
                           // must be misc...just do sales / AR GL transaction
                         if (shiptype.equals("A")) {  // if from asset transaction

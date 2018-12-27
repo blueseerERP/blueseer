@@ -42,16 +42,22 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -59,7 +65,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  */
 public class GLAcctBalRpt3 extends javax.swing.JPanel {
  
-    
+     String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"ChartIt", "Acct", "Desc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"})
             {
@@ -131,7 +137,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                      chartpanel.setVisible(true);
                    //  p.setRenderer(renderer);
                     try {
-                        ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 800, 400);
+                        ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.5));
                     } catch (IOException e) {
                         System.err.println("Problem occurred creating chart.");
                     }
@@ -144,8 +150,80 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                     
                     this.chartlabel.setIcon(myicon);
                     
+                    
                     this.repaint();
     }
+    
+    
+     public void chartExpAndInc() {
+         try {
+          
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                java.util.Date now = new java.util.Date();
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
+                  Calendar cal = new GregorianCalendar();
+                  cal.set(Calendar.DAY_OF_YEAR, 1);
+                  java.util.Date firstday = cal.getTime();
+                  
+                res = st.executeQuery("select ac_type, sum(glh_amt) as 'sum' from gl_hist inner join ac_mstr on ac_id = glh_acct " +
+                        " where glh_effdate >= " + "'" + dfdate.format(firstday) + "'" +
+                        " AND glh_effdate <= " + "'" + dfdate.format(now) + "'" +
+                        " AND ( ac_type = 'E' or ac_type = 'I' ) " +
+                        " group by ac_type   ;");
+             
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                String acct = "";
+                while (res.next()) {
+                    if (res.getString("ac_type") == null || res.getString("ac_type").isEmpty()) {
+                      acct = "Unassigned";
+                    } else {
+                      acct = res.getString("ac_type");   
+                    }
+                    Double amt = res.getDouble("sum");
+                    if (amt < 0) {amt = amt * -1;}
+                  dataset.setValue(acct, amt);
+                }
+        JFreeChart chart = ChartFactory.createPieChart("Income / Expense Year To Date", dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+        plot.setLabelGenerator(gen);
+
+        try {
+        
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.5));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageIcon myicon = new ImageIcon(chartfilepath);
+        myicon.getImage().flush();   
+        this.pielabel.setIcon(myicon);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              } catch (SQLException s) {
+                  s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+       
+    
+    
     
     public void initvars(String arg) {
         chartpanel.setVisible(false);
@@ -210,6 +288,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         tablereport = new javax.swing.JTable();
         chartpanel = new javax.swing.JPanel();
         chartlabel = new javax.swing.JLabel();
+        pielabel = new javax.swing.JLabel();
         bthidechart = new javax.swing.JButton();
         ddsite = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
@@ -235,9 +314,10 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
 
         cbzero.setText("Supress Zeros");
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel2.setPreferredSize(new java.awt.Dimension(904, 402));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
 
-        jPanel3.setLayout(new java.awt.CardLayout());
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
         tablereport.setAutoCreateRowSorter(true);
         tablereport.setModel(new javax.swing.table.DefaultTableModel(
@@ -258,11 +338,22 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablereport);
 
-        jPanel3.add(jScrollPane1, "card3");
+        jPanel3.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jPanel2.add(jPanel3);
 
-        chartpanel.add(chartlabel);
+        chartpanel.setMinimumSize(new java.awt.Dimension(23, 23));
+        chartpanel.setName(""); // NOI18N
+        chartpanel.setPreferredSize(new java.awt.Dimension(452, 402));
+        chartpanel.setLayout(new java.awt.BorderLayout());
+
+        chartlabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        chartlabel.setMinimumSize(new java.awt.Dimension(50, 50));
+        chartpanel.add(chartlabel, java.awt.BorderLayout.NORTH);
+
+        pielabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pielabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        chartpanel.add(pielabel, java.awt.BorderLayout.SOUTH);
 
         jPanel2.add(chartpanel);
 
@@ -504,6 +595,9 @@ try {
               
                  } // account
              
+                 
+                  chartExpAndInc();
+                 
                  ddsum.setSelectedIndex(0);
                
             } catch (SQLException s) {
@@ -527,6 +621,7 @@ try {
                 mylist.add(tablereport.getValueAt(row, i).toString());
                 }
                 chartacct(tablereport.getValueAt(row, 1).toString(), mylist);
+               
                 
                  bthidechart.setEnabled(true);
            
@@ -569,6 +664,7 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelsum;
+    private javax.swing.JLabel pielabel;
     private javax.swing.JTable tablereport;
     // End of variables declaration//GEN-END:variables
 }

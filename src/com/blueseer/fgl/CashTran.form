@@ -106,7 +106,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder/>
+                <LineBorder roundedCorners="true" thickness="3"/>
               </Border>
             </Property>
           </Properties>
@@ -154,12 +154,15 @@
                                               <Component id="rbSell" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="rbBuy" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                                              <Component id="rbexpense" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="52" max="32767" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="ddentity" min="-2" pref="110" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btaddentity" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace pref="214" max="32767" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
                                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
@@ -200,6 +203,7 @@
                                           <Component id="rbSell" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="rbBuy" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="rbexpense" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="lbname" min="-2" pref="28" max="-2" attributes="0"/>
@@ -295,6 +299,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="sell"/>
               </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSellItemStateChanged"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lbtitle">
               <Properties>
@@ -319,14 +326,14 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbitem" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="tbqty" min="-2" pref="68" max="-2" attributes="0"/>
                               <Component id="tbref" min="-2" pref="110" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
@@ -335,7 +342,11 @@
                                   <Component id="btdeleteitem" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="tbprice" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
-                              <Component id="dditem" alignment="0" min="-2" pref="180" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="dditem" min="-2" pref="180" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="lbacct" max="32767" attributes="0"/>
+                              </Group>
                               <Component id="tbitemservice" alignment="0" min="-2" pref="417" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -353,7 +364,8 @@
                           <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="dditem" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbacct" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -381,7 +393,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel9">
+                <Component class="javax.swing.JLabel" name="lbitem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Item Nbr"/>
                   </Properties>
@@ -449,8 +461,18 @@
                     <Property name="text" type="java.lang.String" value="Qty"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="lbacct">
+                </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JRadioButton" name="rbexpense">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="expense"/>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbexpenseItemStateChanged"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JTextField" name="tbactualamt">

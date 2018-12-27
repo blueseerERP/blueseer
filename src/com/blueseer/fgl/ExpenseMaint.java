@@ -553,8 +553,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
                             + "'" + expensedet.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                             + "'" + tbinvoice.getText().toString() + "'" + ","
-                            + "'" + ddacct.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcc.getSelectedItem().toString() + "'"
+                            + "'" + expensedet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 8).toString() + "'"
                             + ")"
                             + ";");
                   

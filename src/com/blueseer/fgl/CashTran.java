@@ -94,6 +94,10 @@ public class CashTran extends javax.swing.JPanel {
             new String[]{
                 "Line", "Item", "Qty", "Price", "Desc", "Ref"
             });
+                 javax.swing.table.DefaultTableModel expensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Line", "Item", "Qty", "Price", "Ref", "Acct"
+            });
                 
                 
     /**
@@ -117,6 +121,7 @@ public class CashTran extends javax.swing.JPanel {
         if (buttonGroup1.getButtonCount() == 0) {
         buttonGroup1.add(rbBuy);
         buttonGroup1.add(rbSell);
+         buttonGroup1.add(rbexpense);
         }
         buttonGroup1.clearSelection();
        
@@ -129,6 +134,7 @@ public class CashTran extends javax.swing.JPanel {
     public void disableAll() {
          rbBuy.setEnabled(false);
         rbSell.setEnabled(false);
+        rbexpense.setEnabled(false);
         tbactualamt.setEnabled(false);
         ddentity.setEnabled(false);
         
@@ -152,6 +158,7 @@ public class CashTran extends javax.swing.JPanel {
     public void enableAll() {
          rbBuy.setEnabled(true);
         rbSell.setEnabled(true);
+        rbexpense.setEnabled(true);
         tbactualamt.setEnabled(true);
         ddentity.setEnabled(true);
       
@@ -187,6 +194,7 @@ public class CashTran extends javax.swing.JPanel {
         tbref.setText("");
         rbBuy.setSelected(false);
         rbSell.setSelected(false);
+        rbexpense.setSelected(false);
        
          jPanel3.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
@@ -343,7 +351,7 @@ public class CashTran extends javax.swing.JPanel {
         lbtitle = new javax.swing.JLabel();
         btaddentity = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        lbitem = new javax.swing.JLabel();
         tbprice = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -355,6 +363,8 @@ public class CashTran extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         tbqty = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        lbacct = new javax.swing.JLabel();
+        rbexpense = new javax.swing.JRadioButton();
         tbactualamt = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
 
@@ -382,7 +392,7 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane7.setViewportView(detailtable);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
@@ -417,6 +427,11 @@ public class CashTran extends javax.swing.JPanel {
         jLabel35.setText("Date");
 
         rbSell.setText("sell");
+        rbSell.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSellItemStateChanged(evt);
+            }
+        });
 
         lbtitle.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
@@ -427,7 +442,7 @@ public class CashTran extends javax.swing.JPanel {
             }
         });
 
-        jLabel9.setText("Item Nbr");
+        lbitem.setText("Item Nbr");
 
         tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -476,13 +491,13 @@ public class CashTran extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9)
+                    .addComponent(lbitem)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
                     .addComponent(jLabel3)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -490,7 +505,10 @@ public class CashTran extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteitem))
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbacct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -504,7 +522,8 @@ public class CashTran extends javax.swing.JPanel {
                 .addGap(4, 4, 4)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(lbitem)
+                    .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -523,6 +542,13 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(btdeleteitem))
                 .addContainerGap())
         );
+
+        rbexpense.setText("expense");
+        rbexpense.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbexpenseItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -562,12 +588,15 @@ public class CashTran extends javax.swing.JPanel {
                                         .addGap(241, 241, 241)
                                         .addComponent(rbSell)
                                         .addGap(18, 18, 18)
-                                        .addComponent(rbBuy))
+                                        .addComponent(rbBuy)
+                                        .addGap(22, 22, 22)
+                                        .addComponent(rbexpense)
+                                        .addGap(0, 52, Short.MAX_VALUE))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btaddentity)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel4)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,7 +625,8 @@ public class CashTran extends javax.swing.JPanel {
                                     .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(rbSell)
                                     .addComponent(btnew)
-                                    .addComponent(rbBuy))
+                                    .addComponent(rbBuy)
+                                    .addComponent(rbexpense))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbname, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -726,10 +756,20 @@ public class CashTran extends javax.swing.JPanel {
             if (rbSell.isSelected()) {
             sellmodel.addRow(new Object[] { voucherline, 
                                             dditem.getSelectedItem().toString(),
-                                            "1",
+                                            tbqty.getText(),
                                             tbprice.getText(),
                                             tbitemservice.getText().replace("'",""),
                                             tbref.getText()
+                                          });
+            }
+             if (rbexpense.isSelected()) {
+                 //"Line", "Item", "Qty", "Price", "Ref", "Acct"
+            expensemodel.addRow(new Object[] { voucherline, 
+                                            tbitemservice.getText().replace("'",""),
+                                            tbqty.getText(),
+                                            tbprice.getText(),
+                                            tbref.getText(),
+                                            dditem.getSelectedItem().toString()
                                           });
             }
             
@@ -737,9 +777,11 @@ public class CashTran extends javax.swing.JPanel {
         if (detailtable.getRowCount() > 0) {
             rbBuy.setEnabled(false);
             rbSell.setEnabled(false);
+            rbexpense.setEnabled(false);
         }    else {
             rbBuy.setEnabled(true);
             rbSell.setEnabled(true);
+            rbexpense.setEnabled(true);
         }
             
             
@@ -768,9 +810,9 @@ public class CashTran extends javax.swing.JPanel {
                 String key = "";
                 
                 
-                if (rbSell.isSelected()) {
-                    trantype = "sell";
-                }
+                if (rbSell.isSelected()) { trantype = "sell"; }
+                if (rbBuy.isSelected()) { trantype = "buy"; }
+                if (rbexpense.isSelected()) { trantype = "expense"; }
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
@@ -1013,9 +1055,75 @@ public class CashTran extends javax.swing.JPanel {
                     //reinitreceivervariables("");
                    
                     // btQualProbAdd.setEnabled(false);
-                } // if proceed
+                } // if rbbuy
+                   
+                 if (proceed && rbexpense.isSelected()) {
+                     
+                       st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_bank ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
+                              + "'" + site + "'" + ","
+                        + "'" + expensenbr.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + tbpo.getText() + "'" + ","
+                        + "'" + tbrmks.getText() + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + apbank + "'"
+                        + ")"
+                        + ";");
+               
+               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
+                    for (int j = 0; j < detailtable.getRowCount(); j++) {
+                       
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + ddentity.getSelectedItem() + "'" + ","
+                            + "'" + "expense" + "'" + ","
+                            + "'" +detailtable.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + tbpo.getText().toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + apcc + "'"
+                            + ")"
+                            + ";");
+                  
+                     }
                     
-                    if (proceed) {
+                    /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
+                         
+                        if (! error)
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        
+                    if (error) {
+                        bsmf.MainFrame.show("An error in expense module occurred");
+                    } else {
+                    bsmf.MainFrame.show("Expense Complete");
+                    }
+                     
+                     
+                     
+                 }   // if rbexpense
+                    
+                    
+                    
+                    
+                    if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
                         + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + expensenbr.getText() + "'" + ","
@@ -1107,10 +1215,17 @@ public class CashTran extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-
-                res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + dditem.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    tbitemservice.setText(res.getString("it_desc"));
+                 
+                if (rbexpense.isSelected()) {
+                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + dditem.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        lbacct.setText(res.getString("ac_desc"));
+                    }
+                } else {
+                    res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + dditem.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        tbitemservice.setText(res.getString("it_desc"));
+                    }
                 }
             } catch (SQLException s) {
                 s.printStackTrace();
@@ -1144,29 +1259,22 @@ public class CashTran extends javax.swing.JPanel {
             btdeleteitem.setEnabled(false);
           
            
-             jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+             jPanel3.setBorder(BorderFactory.createLineBorder(Color.RED));
               detailtable.setModel(buymodel);
               lbtitle.setText("Buying Asset");
-              lbtitle.setForeground(Color.blue);
-        } else {
-            entity = OVData.getcustmstrlist();
-            lblentity.setText("Sell To");
-            btaddentity.setText("New Customer");
-            dditem.setEnabled(true);
-            tbitemservice.setEnabled(false);
-            tbqty.setText("1");
-             btadditem.setEnabled(true);
-              btdeleteitem.setEnabled(true);
-             jPanel3.setBorder(BorderFactory.createLineBorder(Color.RED));
-              detailtable.setModel(sellmodel);
-              lbtitle.setText("Selling Asset");
               lbtitle.setForeground(Color.red);
-        }
+         
         for (int i = 0; i < entity.size(); i++) {
                     ddentity.addItem(entity.get(i));
                 }
             ddentity.setSelectedIndex(0);
-     }   
+        }
+        
+        lbitem.setText("Item");
+         lbacct.setText("");
+         tbitemservice.setText("");
+        
+      }   
        
     }//GEN-LAST:event_rbBuyItemStateChanged
 
@@ -1190,6 +1298,90 @@ public class CashTran extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tbqtyFocusLost
 
+    private void rbSellItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSellItemStateChanged
+        
+       if (! isLoad) {
+        ArrayList entity = new ArrayList();  
+        if (rbSell.isSelected()) {
+            entity = OVData.getcustmstrlist();
+            lblentity.setText("Sell To");
+            btaddentity.setText("New Customer");
+            dditem.setEnabled(true);
+            tbitemservice.setEnabled(false);
+             tbitemservice.setText("");
+            tbqty.setText("1");
+             btadditem.setEnabled(true);
+              btdeleteitem.setEnabled(true);
+             jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+              detailtable.setModel(sellmodel);
+              lbtitle.setText("Selling Asset");
+              lbtitle.setForeground(Color.blue);
+              
+               for (int i = 0; i < entity.size(); i++) {
+                    ddentity.addItem(entity.get(i));
+                }
+            ddentity.setSelectedIndex(0);
+         
+        lbitem.setText("Item");    
+          lbacct.setText("");   
+        dditem.removeAllItems();
+        ArrayList<String> myitems = OVData.getItemMasterACodeForCashTran();
+        for (String code : myitems) {
+            dditem.addItem(code);
+        }
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
+            
+        
+              
+        }
+        }
+       
+    }//GEN-LAST:event_rbSellItemStateChanged
+
+    private void rbexpenseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbexpenseItemStateChanged
+          if (! isLoad) {
+        
+        ddentity.removeAllItems();
+            
+            ArrayList entity = new ArrayList();   
+        if (rbexpense.isSelected()) {
+             entity = OVData.getvendmstrlist();   
+            lblentity.setText("Buy From");
+            btaddentity.setText("New Vendor");
+            
+            tbitemservice.setEnabled(true);
+            tbitemservice.setText("");
+            tbqty.setText("1");
+            btadditem.setEnabled(true);
+            btdeleteitem.setEnabled(false);
+          
+           
+             jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+              detailtable.setModel(expensemodel);
+              lbtitle.setText("Expense");
+              lbtitle.setForeground(Color.BLACK);
+         
+        for (int i = 0; i < entity.size(); i++) {
+                    ddentity.addItem(entity.get(i));
+                }
+            ddentity.setSelectedIndex(0);
+        
+        lbitem.setText("Account");
+        
+        dditem.setEnabled(true);
+        dditem.removeAllItems();
+        lbacct.setText("");
+        ArrayList<String> myitems = OVData.getGLAcctListByType("E");
+        for (String code : myitems) {
+            dditem.addItem(code);
+        }
+        dditem.setSelectedIndex(0);
+        
+        }
+      }   
+    }//GEN-LAST:event_rbexpenseItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddentity;
@@ -1212,16 +1404,18 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lbacct;
+    private javax.swing.JLabel lbitem;
     private javax.swing.JLabel lblentity;
     private javax.swing.JLabel lbname;
     private javax.swing.JLabel lbtitle;
     private javax.swing.JRadioButton rbBuy;
     private javax.swing.JRadioButton rbSell;
+    private javax.swing.JRadioButton rbexpense;
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbitemservice;
     private javax.swing.JTextField tbpo;
