@@ -5,7 +5,7 @@
 #define MyAppVersion "4.1"
 #define MyAppPublisher "VCSCode"
 #define MyAppURL "http://www.blueseer.com/"
-#define MyAppExeName "login.bat"
+#define MyAppExeName "javaw"
 #define bsconfig "bsconfig"
 
 [Setup]
@@ -20,10 +20,10 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-;DefaultDirName={pf}\{#MyAppName}
-DefaultDirName={#MyAppName}
+UsePreviousAppDir=no
+DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer
+OutputBaseFilename=blueseer.sqlite.win
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -33,7 +33,7 @@ DisableDirPage=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; 
 
 [Files]
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
@@ -48,8 +48,143 @@ Source: "C:\bs\blueseer\sf\images\*"; DestDir: "{app}\images"; Flags: ignorevers
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}" ; WorkingDir: "{app}";
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetJavaWExe}"; WorkingDir: "{app}"; Parameters: " -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon
 
 [Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
+
+[Code]
+function GetJavawExe(Param: string):string;
+var
+   Path: string;
+  begin
+  Result := '';
+  Path := FileSearch('javaw.exe', GetEnv('PATH'));
+  if Path = '' then
+  begin
+    Log('Java not found in PATH');
+  end
+    else
+  begin
+    Path := ExtractFileDir(Path);
+    Log(Format('Java is in "%s"', [Path]));
+    Result := Path + '\javaw.exe';
+  end;
+  end;
+
+function CutJavaVersionPart(var V: string): Integer;
+var
+  S: string;
+  P: Integer;
+begin
+  if Length(V) = 0 then
+  begin
+    Result := 0;
+  end
+    else
+  begin
+    P := Pos('.', V);
+    if P = 0 then P := Pos('_', V);
+
+    if P > 0 then
+    begin
+      S := Copy(V, 1, P - 1);
+      Delete(V, 1, P);
+    end
+      else
+    begin
+      S := V;
+      V := '';
+    end;
+    Result := StrToIntDef(S, 0);
+  end;
+end;
+
+function MaxJavaVersion(V1, V2: string): string;
+var
+  Part1, Part2: Integer;
+  Buf1, Buf2: string;
+begin
+  Buf1 := V1;
+  Buf2 := V2;
+  Result := '';
+  while (Result = '') and
+        ((Buf1 <> '') or (Buf2 <> '')) do
+  begin
+    Part1 := CutJavaVersionPart(Buf1);
+    Part2 := CutJavaVersionPart(Buf2);
+    if Part1 > Part2 then Result := V1
+      else
+    if Part2 > Part1 then Result := V2;
+  end;
+end;
+
+function GetJavaVersion(): string;
+var
+  TempFile: string;
+  ResultCode: Integer;
+  S: AnsiString;
+  P: Integer;
+  Path: string;
+begin
+  TempFile := ExpandConstant('{tmp}\javaversion.txt');
+  if (not ExecAsOriginalUser(
+            ExpandConstant('{cmd}'), '/c java -version 2> "' + TempFile + '"', '',
+            SW_HIDE, ewWaitUntilTerminated, ResultCode)) or
+     (ResultCode <> 0) then
+  begin
+    Log('Failed to execute java -version');
+  end
+    else
+  if not LoadStringFromFile(TempFile, S) then
+  begin
+    Log(Format('Error reading file %s', [TempFile]));
+  end
+    else
+  if Copy(S, 1, 14) <> 'java version "' then
+  begin
+    Log('Output of the java -version not as expected');
+  end
+    else
+  begin
+    Delete(S, 1, 14);
+    P := Pos('"', S);
+    if P = 0 then
+    begin
+      Log('Output of the java -version not as expected');
+    end
+      else
+    begin
+      SetLength(S, P - 1);
+      Result := S;
+    end;
+  end;
+
+  
+
+   
+	
+  DeleteFile(TempFile);
+end;
+
+function HasJava1Dot7OrNewer: Boolean;
+begin
+  Result := (MaxJavaVersion('1.6.9', GetJavaVersion) <> '1.6.9');
+end;
+
+function InitializeSetup(): Boolean;
+var
+  ErrorCode: Integer;
+begin
+  Result := HasJava1Dot7OrNewer;
+  if not Result then
+  begin
+    Result := MsgBox(ExpandConstant('{cm:JavaRequired}'), mbConfirmation, MB_YESNO) = idYes;
+    if Result then
+    begin
+      ShellExec(
+        'open', 'https://www.java.com/getjava/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+    end;
+  end;
+end;
