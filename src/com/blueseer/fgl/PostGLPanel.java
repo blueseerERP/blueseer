@@ -154,11 +154,16 @@ public class PostGLPanel extends javax.swing.JPanel {
     private void btpostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpostActionPerformed
      //   MainProgressBar.setVisible(true);
      //   MainProgressBar.setIndeterminate(true);
+    
+     btpost.setEnabled(false);
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
         
         Task task = new Task();
         task.execute();
+       
+        btpost.setEnabled(true);
+        
     }//GEN-LAST:event_btpostActionPerformed
 
     private void btcountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcountActionPerformed

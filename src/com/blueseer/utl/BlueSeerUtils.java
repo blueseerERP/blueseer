@@ -59,14 +59,15 @@ public class BlueSeerUtils {
          df = new DecimalFormat("#0.0000");   
         } else if (precision.equals("5")) {
          df = new DecimalFormat("#0.00000");    
+         } else if (precision.equals("0")) {
+         df = new DecimalFormat("#0");    
         } else {
          df = new DecimalFormat("#0.00");    
         }
         try {
         outvalue = df.format(Double.valueOf(invalue));
         } catch(NumberFormatException e) {
-            MainFrame.show("non-numeric character in field");
-            outvalue = "0";
+            outvalue = "error";
         }
         return outvalue;
     }

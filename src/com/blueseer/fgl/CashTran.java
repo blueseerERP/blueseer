@@ -181,7 +181,8 @@ public class CashTran extends javax.swing.JPanel {
     public void clearAll() {
          
       
-        
+         tbqty.setText("");
+         tbprice.setText("");
          terms = "";
          apacct = "";
          apcc = "";
@@ -1291,11 +1292,29 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddentityActionPerformed
 
     private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
-       tbprice.setText(BlueSeerUtils.bsformat("", tbprice.getText(), "2"));
+        String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        if (x.equals("error")) {
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbprice.requestFocus();
+        } else {
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
+        }
     }//GEN-LAST:event_tbpriceFocusLost
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-        // TODO add your handling code here:
+       String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
     }//GEN-LAST:event_tbqtyFocusLost
 
     private void rbSellItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSellItemStateChanged
