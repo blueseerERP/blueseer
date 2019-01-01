@@ -49,6 +49,7 @@ public class BlueSeerUtils {
         DecimalFormat df = null;
         if (invalue.isEmpty()) {
             outvalue = "0";
+            return "";
         }
        
         if (precision.equals("2")) {

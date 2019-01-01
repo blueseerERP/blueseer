@@ -210,6 +210,7 @@ public class CashTran extends javax.swing.JPanel {
        
         buymodel.setRowCount(0);
         sellmodel.setRowCount(0);
+        expensemodel.setRowCount(0);
        
         detailtable.setModel(buymodel);
        
@@ -219,9 +220,12 @@ public class CashTran extends javax.swing.JPanel {
         if (rbSell.isSelected()) {
         entity = OVData.getcustmstrlist();
         lblentity.setText("Sell To");
-        } else {
+        } else if (rbBuy.isSelected()) {
         entity = OVData.getvendmstrlist();   
         lblentity.setText("Buy From");
+        } else {
+        entity = OVData.getvendmstrlist();   
+        lblentity.setText("Buy From");    
         }
         for (int i = 0; i < entity.size(); i++) {
             ddentity.addItem(entity.get(i));
@@ -1180,6 +1184,8 @@ public class CashTran extends javax.swing.JPanel {
                 ResultSet res = null;
                 if (rbBuy.isSelected()) {
                 res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");
+                } else if (rbexpense.isSelected()) {
+                res = st.executeQuery("select vd_name as 'name' from vd_mstr where vd_addr = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");
                 } else {
                 res = st.executeQuery("select cm_name as 'name' from cm_mstr where cm_code = " + "'" + ddentity.getSelectedItem().toString() + "'" + ";");   
                 }
@@ -1257,7 +1263,7 @@ public class CashTran extends javax.swing.JPanel {
             tbitemservice.setEnabled(true);
             tbqty.setText("1");
             btadditem.setEnabled(true);
-            btdeleteitem.setEnabled(false);
+            btdeleteitem.setEnabled(true);
           
            
              jPanel3.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -1373,7 +1379,7 @@ public class CashTran extends javax.swing.JPanel {
             tbitemservice.setText("");
             tbqty.setText("1");
             btadditem.setEnabled(true);
-            btdeleteitem.setEnabled(false);
+            btdeleteitem.setEnabled(true);
           
            
              jPanel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
