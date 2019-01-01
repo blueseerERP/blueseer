@@ -53,6 +53,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -61,7 +63,15 @@ import static bsmf.MainFrame.user;
 public class OrderReport1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new OrderReport1.MyTableModel(new Object[][]{},
-                        new String[]{"Select", "Order", "Cust", "PO", "Remarks", "OrdDate", "DueDate", "Qty", "Amount", "Status"});
+                        new String[]{"Select", "Order", "Cust", "PO", "Remarks", "OrdDate", "DueDate", "Qty", "Amount", "Status"})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     
     /**
@@ -487,7 +497,7 @@ try {
                 // TableColumnModel tcm = tablescrap.getColumnModel();
                // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
              
-                    tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.ButtonRenderer());
+                 //   tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.ButtonRenderer());
                 tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
                  
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -520,7 +530,7 @@ try {
                     qty = qty + res.getInt("totqty");
                     i++;
                         mymodel.addRow(new Object[]{
-                            "select",
+                            BlueSeerUtils.clickflag,
                                 res.getString("so_nbr"),
                                 res.getString("so_cust"),
                                 res.getString("so_po"),

@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS `ac_mstr` (
   `ac_id` varchar(10) NOT NULL  DEFAULT '',
   `ac_desc` varchar(50)  NOT NULL DEFAULT '',
   `ac_type` varchar(1)  NOT NULL DEFAULT '',
-  `ac_cur` varchar(10)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `ac_cur` varchar(10)  NOT NULL DEFAULT '',
+  `ac_display` tinyint(1)  NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `acb_mstr` (
   `acb_acct` varchar(10) NOT NULL  DEFAULT '',
   `acb_cc` varchar(4) NOT NULL  DEFAULT '',

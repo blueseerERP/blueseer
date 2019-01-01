@@ -286,7 +286,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 if (ddreport.getSelectedIndex() == 0) {
                 tablereport.setModel(OVData.getItemInfoAll());
                  //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
+            //    tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                 } // if index = 0
                 
@@ -296,7 +296,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 tablereport.setModel(OVData.getQOHvsSSAll());
                 
                  //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
+             //   tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
                 tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);

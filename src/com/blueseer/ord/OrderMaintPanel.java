@@ -1299,7 +1299,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
 
         add(jPanelSched);
 
-        jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Maintenance"));
+        jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Maintenance"));
 
         jLabel76.setText("OrderNbr");
 

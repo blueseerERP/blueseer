@@ -1386,12 +1386,12 @@ public class CashTran extends javax.swing.JPanel {
                 }
             ddentity.setSelectedIndex(0);
         
-        lbitem.setText("Account");
+        lbitem.setText("Expense Account");
         
         dditem.setEnabled(true);
         dditem.removeAllItems();
         lbacct.setText("");
-        ArrayList<String> myitems = OVData.getGLAcctListByType("E");
+        ArrayList<String> myitems = OVData.getGLAcctExpenseDisplayOnly();
         for (String code : myitems) {
             dditem.addItem(code);
         }

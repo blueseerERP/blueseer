@@ -203,12 +203,14 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.5));
+        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
+       // ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, 400, 200);
         } catch (IOException e) {
             e.printStackTrace();
         }
         ImageIcon myicon = new ImageIcon(exoincfilepath);
-        myicon.getImage().flush();   
+        myicon.getImage().flush();  
+      //  myicon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
         this.chartlabel.setIcon(myicon);
         this.repaint();
        
@@ -263,7 +265,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.5));
+        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -341,6 +343,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     public void initvars(String arg) {
         tbtotexpenses.setText("0");
         tbtotsales.setText("0");
+        tbtotpurch.setText("0");
         saleslessexp.setText("0");
         expenses = 0.00;
         cbchart.setSelected(false);
@@ -422,6 +425,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         tbtotexpenses = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        tbtotpurch = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -573,17 +578,21 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jLabel8.setText("Total Net Sales:");
+        jLabel8.setText("Total Sales:");
 
         saleslessexp.setText("0");
 
         tbtotsales.setText("0");
 
-        jLabel9.setText("Profit:");
+        jLabel9.setText("Sales less Expenses:");
 
         tbtotexpenses.setText("0");
 
         jLabel10.setText("Total Expenses:");
+
+        tbtotpurch.setText("0");
+
+        jLabel11.setText("Total Purchases:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -591,28 +600,40 @@ public class CashTranBrowse extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(saleslessexp, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(saleslessexp, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(56, 56, 56)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
@@ -683,6 +704,7 @@ try {
               
                 
                  double totsales = 0.00;
+                 double totpurch = 0.00;
                  
                  String trantype = "";
                  
@@ -736,6 +758,19 @@ try {
                                 df.format(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clickprint 
                             });
+                         } else if (trantype.equals("buy")) {
+                             totpurch = totpurch + res.getDouble("pos_totamt");
+                             mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                               res.getString("pos_nbr"),
+                                res.getString("pos_key"),
+                                res.getString("pos_type"),
+                                res.getString("pos_entity"),
+                                res.getString("pos_entityname"),
+                                res.getString("pos_entrydate"),
+                                res.getString("pos_totqty"),
+                                df.format(res.getDouble("pos_totamt")),
+                                BlueSeerUtils.clicklock 
+                            }); 
                          } else {
                              mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
@@ -757,6 +792,7 @@ try {
                 chartExp();       
                        
                 tbtotsales.setText(df.format(totsales));
+                tbtotpurch.setText(df.format(totpurch));
                 tbtotexpenses.setText(df.format(expenses));
                 saleslessexp.setText(df.format(totsales - expenses));  // expenses depend on math in chartExp();
                 
@@ -829,6 +865,7 @@ try {
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
@@ -846,6 +883,7 @@ try {
     private javax.swing.JTable tablereport;
     private javax.swing.JButton tbcsv;
     private javax.swing.JLabel tbtotexpenses;
+    private javax.swing.JLabel tbtotpurch;
     private javax.swing.JLabel tbtotsales;
     // End of variables declaration//GEN-END:variables
 }

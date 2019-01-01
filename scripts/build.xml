@@ -27,7 +27,7 @@
     <target name="makedir">
         <mkdir dir="${build.dir}" />
         <mkdir dir="${dist.dir}" />
-	 <copy todir="${dist.dir}">
+	 <copy todir="${dist.dir}" overwrite="true">
          <fileset dir="${lib.dir}"/>
          </copy>
     </target>
@@ -48,17 +48,17 @@
                 <attribute name="Main-Class" value="bsmf" />
             </manifest>
         </jar>
-	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}"/>
+	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}" overwrite="true"/>
     </target>
 
     <!-- refresh test database -->
 <target name="refresh">
         <delete dir="${test.dir}" />
         <mkdir dir="${test.dir}" />
-	 <copy todir="${test.dir}">
+	 <copy todir="${test.dir}" overwrite="true">
          <fileset dir="${sf.dir}"/>
          </copy>
-	<copy file="sqlite_test.bat" todir="${test.dir}"/>
+	<copy file="sqlite_test.bat" todir="${test.dir}" overwrite="true"/>
 	<exec dir="${test.dir}" executable="cmd">
 		<arg line="/c sqlite_test.bat"/>
 	</exec>

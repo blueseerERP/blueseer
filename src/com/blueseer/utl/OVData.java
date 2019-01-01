@@ -15143,7 +15143,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          }
        
-          public static ArrayList getGLAcctList() {
+       public static ArrayList getGLAcctList() {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -15198,6 +15198,35 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myarray;
         
     }
+       
+        public static ArrayList getGLAcctExpenseDisplayOnly() {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
+               while (res.next()) {
+                    myarray.add(res.getString("ac_id"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myarray;
+        
+    }
+       
        
        public static boolean isValidTerms(String code) {
        boolean myreturn = false;

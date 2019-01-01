@@ -5,7 +5,8 @@ CREATE TABLE "ac_mstr" (
   "ac_id" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "ac_desc" varchar(50) COLLATE NOCASE DEFAULT '',
   "ac_type" varchar(1) COLLATE NOCASE DEFAULT '',
-  "ac_cur" varchar(10) COLLATE NOCASE DEFAULT '');
+  "ac_cur" varchar(10) COLLATE NOCASE DEFAULT '',
+  "ac_display" tinyint(1) COLLATE NOCASE DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

@@ -22,6 +22,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 
 /**
  *
@@ -53,6 +54,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     tbdesc.setText(res.getString("ac_desc"));
                     tbacct.setText(res.getString("ac_id"));
                     ddcur.setSelectedItem(res.getString("ac_cur"));
+                    cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("ac_display")));
                     ddtype.setSelectedItem(res.getString("ac_type"));
                     
                 }
@@ -79,6 +81,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
     public void clearAll() {
         tbdesc.setText("");
         tbacct.setText("");
+        lbaccountname.setText("");
+        cbdisplay.setSelected(false);
         ddcur.removeAllItems();
         ArrayList mycode = OVData.getCurrlist();
         for (int i = 0; i < mycode.size(); i++) {
@@ -91,6 +95,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         tbacct.setEnabled(true);
         tbdesc.setEnabled(true);
         ddtype.setEnabled(true);
+        cbdisplay.setEnabled(true);
         ddcur.setEnabled(true);
         btacctbrowse.setEnabled(true);
         btdescbrowse.setEnabled(true);
@@ -104,6 +109,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         tbdesc.setEnabled(false);
         ddtype.setEnabled(false);
         ddcur.setEnabled(false);
+        cbdisplay.setEnabled(false);
         btacctbrowse.setEnabled(false);
         btdescbrowse.setEnabled(false);
         btadd.setEnabled(false);
@@ -118,6 +124,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btacctbrowse.setEnabled(true);
         btdescbrowse.setEnabled(true);
+        
+        ddtype.setSelectedItem("E");
         
         if (! arg.isEmpty()) {
             getAcctCode(arg);
@@ -150,6 +158,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         btdescbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
+        lbaccountname = new javax.swing.JLabel();
+        cbdisplay = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -160,6 +170,11 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         jLabel2.setText("Desc");
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "E", "I", "L", "O", "M" }));
+        ddtype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtypeActionPerformed(evt);
+            }
+        });
 
         btedit.setText("Edit");
         btedit.addActionListener(new java.awt.event.ActionListener() {
@@ -207,6 +222,13 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
             }
         });
 
+        cbdisplay.setText("Show this account in Expense DropDowns");
+        cbdisplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbdisplayActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -221,30 +243,32 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btdescbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btacctbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnew)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(ddcur, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbdisplay))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                                .addComponent(btdescbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btacctbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnew)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btedit)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btadd)))
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(ddcur, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(btadd))
+                            .addComponent(lbaccountname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,12 +289,15 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                .addGap(5, 5, 5)
+                .addComponent(cbdisplay)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btedit)
@@ -300,11 +327,12 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur ) "
+                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
                             + " values ( " + "'" + tbacct.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
                             + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcur.getSelectedItem().toString() + "'"
+                            + "'" + ddcur.getSelectedItem().toString() + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"        
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Acct Number");
@@ -342,7 +370,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                         st.executeUpdate("update ac_mstr set "
                             + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
                             + " ac_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + " ac_cur = " + "'" + ddcur.getSelectedItem().toString() + "'" 
+                            + " ac_cur = " + "'" + ddcur.getSelectedItem().toString() + "'" + ","
+                            + " ac_display = " + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"         
                             + " where ac_id = " + "'" + tbacct.getText().toString() + "'" 
                             + ";");
                         bsmf.MainFrame.show("Edited Acct Number");
@@ -352,6 +381,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                s.printStackTrace();
                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "unable to edit ac_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -404,6 +434,28 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
+        if (ddtype.getSelectedItem().toString().equals("E")) {
+            lbaccountname.setText("Expense Account");
+        } else if (ddtype.getSelectedItem().toString().equals("A")) {
+            lbaccountname.setText("Asset Account");
+        } else if (ddtype.getSelectedItem().toString().equals("I")) {
+            lbaccountname.setText("Income Account");
+        } else if (ddtype.getSelectedItem().toString().equals("L")) {
+            lbaccountname.setText("Liability Account");
+        } else if (ddtype.getSelectedItem().toString().equals("O")) {
+            lbaccountname.setText("Owners Equity Account");
+        } else if (ddtype.getSelectedItem().toString().equals("M")) {
+            lbaccountname.setText("Miscellaneous Account");    
+        } else {
+            lbaccountname.setText("Uknown Account Type");
+        }
+    }//GEN-LAST:event_ddtypeActionPerformed
+
+    private void cbdisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbdisplayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbdisplayActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btacctbrowse;
@@ -412,6 +464,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
     private javax.swing.JButton btdescbrowse;
     private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JCheckBox cbdisplay;
     private javax.swing.JComboBox ddcur;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JLabel jLabel1;
@@ -419,6 +472,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lbaccountname;
     private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbdesc;
     // End of variables declaration//GEN-END:variables

@@ -47,6 +47,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -57,7 +58,15 @@ public class POBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "PO", "Vend", "OrdDate", "Type", "Status", "Amt"});
+                        new String[]{"Select", "Detail", "PO", "Vend", "OrdDate", "Type", "Status", "Amt"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"PO", "Part", "Price", "QtyOrd", "QtyRecvd", "Status"});
@@ -454,9 +463,9 @@ try {
         
               tablereport.setModel(mymodel);
               tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+         //     tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+         //      tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
@@ -490,7 +499,7 @@ try {
                           totamt += res.getDouble(("total"));
                           totqty += res.getDouble(("qty"));
                
-                    mymodel.addRow(new Object[]{"Select", "Detail", res.getString("po_nbr"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("po_nbr"),
                                 res.getString("po_vend"),
                                 res.getString("po_ord_date"),
                                 res.getString("po_type"),
