@@ -35,7 +35,7 @@ CREATE TABLE `counter` (
 
 LOCK TABLES `counter` WRITE;
 /*!40000 ALTER TABLE `counter` DISABLE KEYS */;
-INSERT INTO `counter` VALUES ('asset',99000000),('ap',10000030),('ar',10000299),('batch',100027),('call',22006),('checknumber',123485),('ecn',10013),('ediout',100042),('expensenumber',1000007),('gl',100018),('label',10000159),('order',47645),('do',2000000),('fo',50005001),('ovdev',1024),('plan',100250),('pland',125),('po',83282),('pos',10000023),('purchreq',5664),('quality',210),('receiver',100057),('sample',100133),('shipper',2120),('shipto',143546),('task',1005),('tr_hist',100173),('voucher',50090);
+INSERT INTO `counter` VALUES ('asset',99000000),('ap',10000030),('ar',10000299),('batch',100027),('call',22006),('checknumber',123485),('ecn',10013),('ediout',100042),('expensenumber',1000007),('expenseaccount',99000000),('gl',100018),('label',10000159),('order',47645),('do',2000000),('fo',50005001),('ovdev',1024),('plan',100250),('pland',125),('po',83282),('pos',10000023),('purchreq',5664),('quality',210),('receiver',100057),('sample',100133),('shipper',2120),('shipto',143546),('task',1005),('tr_hist',100173),('voucher',50090);
 /*!40000 ALTER TABLE `counter` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

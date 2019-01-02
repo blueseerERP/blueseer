@@ -112,6 +112,59 @@ public class CashTran extends javax.swing.JPanel {
     }
    
     
+    public void addExpenseAccount(String desc) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                int acctnbr = OVData.getNextNbr("expenseaccount");
+                if (acctnbr >= 99000000 && acctnbr <= 99999999) {
+                    proceed = true;
+                } else {
+                    bsmf.MainFrame.show("expense account generated number is beyond limits of 99000000 to 99999999");
+                    return;
+                }
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + String.valueOf(acctnbr) + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into ac_mstr "
+                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
+                            + " values ( " + "'" + String.valueOf(acctnbr) + "'" + ","
+                            + "'" + desc.replace("'", "") + "'" + ","
+                            + "'" + "E" + "'" + ","
+                            + "'" + OVData.getDefaultCurrency() + "'" + ","
+                            + "'" + '1' + "'"        
+                            + ")"
+                            + ";");
+                        bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
+                        dditem.addItem(String.valueOf(acctnbr));
+                    } else {
+                        bsmf.MainFrame.show("Acct Number Already Exists");
+                    }
+
+                    //reinitapmvariables();
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("unable to insert into ac_mstr");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void initvars(String arg) {
         
          isLoad = true;
@@ -149,6 +202,7 @@ public class CashTran extends javax.swing.JPanel {
         btadditem.setEnabled(false);
         btdeleteitem.setEnabled(false);
         btadd.setEnabled(false);
+         btaddaccount.setEnabled(false);
         btaddentity.setEnabled(false);
         detailtable.setEnabled(false);
         expensenbr.setEnabled(false);
@@ -174,13 +228,14 @@ public class CashTran extends javax.swing.JPanel {
         btaddentity.setEnabled(true);
         btdeleteitem.setEnabled(true);
         btadd.setEnabled(true);
+        btaddaccount.setEnabled(true);
         detailtable.setEnabled(true);
        // expensenbr.setEnabled(true);
     }
     
     public void clearAll() {
          
-      
+         btaddaccount.setVisible(false);
          tbqty.setText("");
          tbprice.setText("");
          terms = "";
@@ -197,6 +252,7 @@ public class CashTran extends javax.swing.JPanel {
         rbSell.setSelected(false);
         rbexpense.setSelected(false);
        
+        
          jPanel3.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
         
@@ -369,6 +425,7 @@ public class CashTran extends javax.swing.JPanel {
         tbqty = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         lbacct = new javax.swing.JLabel();
+        btaddaccount = new javax.swing.JButton();
         rbexpense = new javax.swing.JRadioButton();
         tbactualamt = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
@@ -489,6 +546,13 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel7.setText("Qty");
 
+        btaddaccount.setText("Add Account");
+        btaddaccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddaccountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -502,7 +566,7 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -510,12 +574,15 @@ public class CashTran extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteitem))
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbacct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                            .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btaddaccount))
+                        .addComponent(tbitemservice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(473, 473, 473))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,12 +591,14 @@ public class CashTran extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addGap(4, 4, 4)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbitem)
-                    .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(3, 3, 3)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbitem)
+                        .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btaddaccount))
+                .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
@@ -596,7 +665,7 @@ public class CashTran extends javax.swing.JPanel {
                                         .addComponent(rbBuy)
                                         .addGap(22, 22, 22)
                                         .addComponent(rbexpense)
-                                        .addGap(0, 52, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(ddentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1260,6 +1329,8 @@ public class CashTran extends javax.swing.JPanel {
             lblentity.setText("Buy From");
             btaddentity.setText("New Vendor");
             dditem.setEnabled(false);
+             btaddaccount.setVisible(false);
+             btaddaccount.setEnabled(false);
             tbitemservice.setEnabled(true);
             tbqty.setText("1");
             btadditem.setEnabled(true);
@@ -1333,6 +1404,8 @@ public class CashTran extends javax.swing.JPanel {
             btaddentity.setText("New Customer");
             dditem.setEnabled(true);
             tbitemservice.setEnabled(false);
+             btaddaccount.setVisible(false);
+             btaddaccount.setEnabled(false);
              tbitemservice.setText("");
             tbqty.setText("1");
              btadditem.setEnabled(true);
@@ -1376,6 +1449,9 @@ public class CashTran extends javax.swing.JPanel {
             btaddentity.setText("New Vendor");
             
             tbitemservice.setEnabled(true);
+             btaddaccount.setVisible(true);
+             btaddaccount.setEnabled(true);
+             
             tbitemservice.setText("");
             tbqty.setText("1");
             btadditem.setEnabled(true);
@@ -1407,8 +1483,14 @@ public class CashTran extends javax.swing.JPanel {
       }   
     }//GEN-LAST:event_rbexpenseItemStateChanged
 
+    private void btaddaccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddaccountActionPerformed
+       String s = bsmf.MainFrame.input("Please input the account description: ");
+       addExpenseAccount(s);
+    }//GEN-LAST:event_btaddaccountActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddaccount;
     private javax.swing.JButton btaddentity;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btdeleteitem;

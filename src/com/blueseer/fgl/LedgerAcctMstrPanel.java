@@ -319,6 +319,14 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
 
+                
+                if (Integer.valueOf(tbacct.getText().toString()) >= 99000000 && Integer.valueOf(tbacct.getText().toString()) <= 99999999) {
+                    proceed = false;
+                     bsmf.MainFrame.show("Account numbers between 99000000 and 99999999 are system reserved");
+                    return;
+                } 
+                
+                
                 if (proceed) {
 
                     res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + tbacct.getText() + "'" + ";");
