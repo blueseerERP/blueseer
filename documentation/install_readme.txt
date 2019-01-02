@@ -5,7 +5,7 @@ You MUST have the java JRE pre-installed.   Java 8 through 11 should suffice.
 Now...with all that said...here's how to install the sqlite Version.
 
 Install Steps:
-1. Download blueseer.install.sqlite.win.zip to your local PC 
+1. Download blueseer.sqlite.win.zip to your local PC 
 2. Extract installer from zip file 
 3. Run the package installer blueseer.sqlite.win.exe (you may need admin rights)
 4. When finished, you should have a shortcut on your desktop to launch the blueseer application.
