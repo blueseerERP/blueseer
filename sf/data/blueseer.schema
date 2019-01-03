@@ -1635,3 +1635,22 @@ CREATE TABLE IF NOT EXISTS `editp_mstr` (
   `editp_web` varchar(50) NOT NULL DEFAULT '' ,
   `editp_helpdesk` varchar(50) NOT NULL DEFAULT '' 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `ov_ctrl` (
+  `ov_version` varchar(8) DEFAULT NULL,
+  `ov_dist_dir` varchar(200) DEFAULT NULL,
+  `ov_source_dir` varchar(200) DEFAULT NULL,
+  `ov_login` tinyint(1) NOT NULL DEFAULT '0',
+  `ov_custom` tinyint(1) NOT NULL DEFAULT '0',
+  `ov_bgimage` varchar(200) NOT NULL DEFAULT '',
+  `ov_rcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_gcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_bcolor` int(3) NOT NULL DEFAULT '0',
+  `ov_fileservertype` varchar(1) NOT NULL DEFAULT '',
+  `ov_image_directory` varchar(200) NOT NULL DEFAULT '',
+  `ov_temp_directory` varchar(200) NOT NULL DEFAULT '',
+  `ov_label_directory` varchar(200) NOT NULL DEFAULT '',
+  `ov_jasper_directory` varchar(200) NOT NULL DEFAULT '',
+  `ov_edi_directory` varchar(200) NOT NULL DEFAULT '',
+  `ov_email_server` varchar(20) NOT NULL DEFAULT '',
+  `ov_email_from` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

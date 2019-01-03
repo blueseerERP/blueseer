@@ -24,21 +24,6 @@ if exist bsdb.db del bsdb.db
 @echo "creating database schema...."
 sqlite3.exe bsdb.db <blueseer.sqlite
 
-rem moved panel and menu mstr into sq
-rem sqlite3.exe bsdb.db <panel_mstr.sqlite
-rem sqlite3.exe bsdb.db <menu_mstr.sqlite
-
-@echo "loading menu tree and control data..."
-sqlite3.exe bsdb.db <menu_tree.sqlite
-sqlite3.exe bsdb.db <shift_mstr.sqlite
-sqlite3.exe bsdb.db <clock_code.sqlite
-sqlite3.exe bsdb.db <ov_ctrl.sqlite
-sqlite3.exe bsdb.db <counter.sqlite
-sqlite3.exe bsdb.db <code_mstr.sqlite
-sqlite3.exe bsdb.db <label_zebra.sqlite
-sqlite3.exe bsdb.db <edi_mstr.sqlite
-sqlite3.exe bsdb.db <editp_mstr.sqlite
-
 sqlite3.exe bsdb.db <sq.txt
 
 @echo ""

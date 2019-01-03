@@ -1,0 +1,48 @@
+PCC,PCC,DEFAULT SEVERITY CODE
+Discounts,Freight,Freight
+Discounts,Volume,Volume
+Discounts,Other,Other
+Discounts,Promo,Promo
+orderstatus,cancel,
+orderstatus,error,
+orderstatus,hold,
+orderstatus,open,
+orderstatus,commit,
+engineer,frank,
+orderstatus,backorder,
+ItemType,FG,Finished Goods
+ItemType,RAW,RAW MATERIAL
+ItemType,SUB,Sub Assembly
+edidoctype,850,
+edidoctype,810,
+edidoctype,856,
+edidoctype,940,
+edidoctype,943,
+edidoctype,944,
+edidoctype,945,
+edidoctype,219,
+edidoctype,220,
+edidoctype,204,
+edidoctype,990,
+edidoctype,214,
+trantype,ISS-SALES,
+trantype,ISS-SCRAP,
+trantype,WIP-ISFG,
+trantype,ISS-MISC,
+trantype,RCT-MISC,
+trantype,ISS-REWK,
+trantype,RCT-PURCH,
+trantype,LOC-TRNF,
+trantype,WIP-TRAN,
+trantype,RCT-FG,
+labeltype,cont,
+labeltype,pouch,
+labeltype,addr,
+SCRAP,AB1,Scrap Code AB
+SCRAP,VB1,Scrap Code VB
+CELL,CELL1,Cell 1
+CELL,CELL2,Cell 2
+CELL,CELL3,Cell 3
+edixref,1000,DANAHER
+orderstatus,close,
+engineer,Ted,
