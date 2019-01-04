@@ -30,18 +30,18 @@ mysql -e "drop database if exists $DB;" -u $ROOT
 mysql -e "create database if not exists $DB;" -u $ROOT  
 mysql $DB -u $ROOT  <blueseer.schema 
 
-mysql $DB -u $ROOT  <menu_tree.dat
-mysql $DB -u $ROOT  <shift_mstr.dat
-mysql $DB -u $ROOT  <clock_code.dat
-mysql $DB -u $ROOT  <ov_ctrl.dat
-mysql $DB -u $ROOT  <counter.dat
-mysql $DB -u $ROOT  <code_mstr.dat
-mysql $DB -u $ROOT  <label_zebra.dat
-mysql $DB -u $ROOT  <edi_mstr.dat
-mysql $DB -u $ROOT  <editp_mstr.dat
-
+echo "creating additional schema class...."
 mysql --local-infile -e "load data local infile 'panelmstr.csv' replace into table panel_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'menumstr.csv' replace into table menu_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'menutree.csv' replace into table menu_tree fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'shiftmstr.csv' replace into table shift_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'clockcode.csv' replace into table clock_code fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'ovctrl.csv' replace into table ov_ctrl fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'counter.csv' replace into table counter fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'codemstr.csv' replace into table code_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'labelzebra.csv' replace into table label_zebra fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'edimstr.csv' replace into table edi_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'editpmstr.csv' replace into table editp_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 
 echo "loading user account...."
 # the next line is a workaround to stop the error of no user when dropped
