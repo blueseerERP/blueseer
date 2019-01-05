@@ -2777,10 +2777,19 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_qtyshippedFocusGained
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
-       if (qtyshipped.getText().isEmpty() || qtyshipped.getText().equals("0")) {
-           bsmf.MainFrame.show("Qty cannot be 0");
+       
+          String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
+        if (x.equals("error")) {
+            qtyshipped.setText("");
+            qtyshipped.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
             qtyshipped.requestFocus();
+        } else {
+            qtyshipped.setText(x);
+            qtyshipped.setBackground(Color.white);
         }
+        
+       
         if (! qtyshipped.getText().isEmpty()) {
                if (Double.valueOf(qtyshipped.getText()) > OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
                    lbqtyavailable.setBackground(Color.red);

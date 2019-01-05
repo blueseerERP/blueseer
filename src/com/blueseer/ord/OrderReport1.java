@@ -492,6 +492,10 @@ try {
                 Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
+                     if (tc.getIdentifier().toString().equals("Select") || 
+                             tc.getIdentifier().toString().equals("Print") ) {
+                         continue;
+                     }
                      tc.setCellRenderer(new OrderReport1.SomeRenderer());
                  }
                 // TableColumnModel tcm = tablescrap.getColumnModel();

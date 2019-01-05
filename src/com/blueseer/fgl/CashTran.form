@@ -367,10 +367,12 @@
                           </Group>
                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="dditem" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lbacct" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="dditem" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <Component id="btaddaccount" min="-2" max="-2" attributes="0"/>
                           </Group>

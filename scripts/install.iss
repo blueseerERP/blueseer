@@ -49,7 +49,7 @@ Source: "C:\bs\blueseer\sf\images\*"; DestDir: "{app}\images"; Flags: ignorevers
 
 [Icons]
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}" ; WorkingDir: "{app}";
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetJavaWExe}"; WorkingDir: "{app}"; Parameters: " -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetJavaWExe}"; WorkingDir: "{app}"; Parameters: " -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 
 [Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
