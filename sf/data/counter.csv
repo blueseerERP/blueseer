@@ -1,4 +1,4 @@
-asset,99000000
+asset,10000000
 ap,10000030
 ar,10000294
 batch,100027
@@ -27,3 +27,6 @@ shipto,143546
 task,1005
 tr_hist,100173
 voucher,50090
+customer,200000
+vendor,400000
+item,50000000

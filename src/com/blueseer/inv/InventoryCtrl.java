@@ -78,6 +78,7 @@ public class InventoryCtrl extends javax.swing.JPanel {
         cbdemdtoplan = new javax.swing.JCheckBox();
         cbmultiplan = new javax.swing.JCheckBox();
         cbprintsubticket = new javax.swing.JCheckBox();
+        cbautoitem = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -96,6 +97,8 @@ public class InventoryCtrl extends javax.swing.JPanel {
 
         cbprintsubticket.setText("Print Sub Ticket From Scan?");
 
+        cbautoitem.setText("Auto Item Number Assignment?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -107,7 +110,8 @@ public class InventoryCtrl extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbdemdtoplan)
                             .addComponent(cbmultiplan)
-                            .addComponent(cbprintsubticket)))
+                            .addComponent(cbprintsubticket)
+                            .addComponent(cbautoitem)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(189, 189, 189)
                         .addComponent(btupdate)))
@@ -122,7 +126,9 @@ public class InventoryCtrl extends javax.swing.JPanel {
                 .addComponent(cbmultiplan)
                 .addGap(18, 18, 18)
                 .addComponent(cbprintsubticket)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(cbautoitem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addGap(34, 34, 34))
         );
@@ -154,14 +160,16 @@ public class InventoryCtrl extends javax.swing.JPanel {
                     st.executeUpdate("insert into inv_ctrl values (" + 
                             "'" + BlueSeerUtils.boolToInt(cbmultiplan.isSelected()) + "'" +  "," +
                             "'" + BlueSeerUtils.boolToInt(cbdemdtoplan.isSelected()) + "'" + "," +
-                            "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" +
+                            "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" + "," +
+                            "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'" +
                             ")"  + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
                     st.executeUpdate("update inv_ctrl set " +
                             " planmultiscan = " + "'" + BlueSeerUtils.boolToInt(cbmultiplan.isSelected()) + "'" + "," +
                             " printsubticket = " + "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" + "," +
-                            " demdtoplan = " + "'" + BlueSeerUtils.boolToInt(cbdemdtoplan.isSelected()) + "'"  + 
+                            " demdtoplan = " + "'" + BlueSeerUtils.boolToInt(cbdemdtoplan.isSelected()) + "'"  + "," + 
+                            " autoitem = " + "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'"  +
                             ";");   
                    
                     bsmf.MainFrame.show("Updated Defaults");
@@ -181,6 +189,7 @@ public class InventoryCtrl extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbautoitem;
     private javax.swing.JCheckBox cbdemdtoplan;
     private javax.swing.JCheckBox cbmultiplan;
     private javax.swing.JCheckBox cbprintsubticket;

@@ -790,7 +790,7 @@ public class CashTran extends javax.swing.JPanel {
            return;
        }
         
-       partnumber = "z" + String.valueOf(OVData.getNextNbr("asset"));
+       partnumber = String.valueOf(OVData.getNextNbr("item"));
               
         
         
@@ -1214,7 +1214,7 @@ public class CashTran extends javax.swing.JPanel {
                      
                       for (int j = 0; j < detailtable.getRowCount(); j++) {
                       st.executeUpdate("insert into pos_det "
-                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice ) "
+                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
                                 + " values ( " + "'" + expensenbr.getText() + "'" + ","
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + detailtable.getValueAt(j, 1).toString() + "'"  + ","      
@@ -1222,7 +1222,8 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + detailtable.getValueAt(j, 5).toString() + "'"  + ","        
                                 + "'" + detailtable.getValueAt(j, 2).toString() + "'"  + ","   
                                 + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  
+                                + "'" + detailtable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  
                                 + ")"
                                 + ";");
                       }

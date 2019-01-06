@@ -73,6 +73,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
     Double expenses = 0.00;
+    Double inventory = 0.00;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Select", "Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
@@ -166,21 +167,18 @@ public class CashTranBrowse extends javax.swing.JPanel {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
                   
-                res = st.executeQuery("select ac_desc, glh_acct, sum(glh_amt) as 'sum' from gl_hist inner join ac_mstr on ac_id = glh_acct " +
-                        " where glh_effdate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
-                        " AND glh_effdate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
-                        " AND ac_type = 'E' " +
-                        " group by glh_acct   ;");
+                res = st.executeQuery("select posd_acct, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
+                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
+                        " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
+                        " AND pos_type = 'expense' " +
+                        " group by posd_acct order by posd_acct desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
                 String acct = "";
                 while (res.next()) {
-                    if (res.getString("glh_acct") == null || res.getString("glh_acct").isEmpty()) {
-                      acct = "Unassigned";
-                    } else {
-                      acct = res.getString("ac_desc");   
-                    }
+                      acct = res.getString("posd_acct");  
                     Double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                     
@@ -427,6 +425,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         tbtotpurch = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        tbinventory = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -584,7 +584,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         tbtotsales.setText("0");
 
-        jLabel9.setText("Sales less Expenses:");
+        jLabel9.setText("DateRange Profit:");
 
         tbtotexpenses.setText("0");
 
@@ -594,36 +594,32 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         jLabel11.setText("Total Purchases:");
 
+        tbinventory.setText("0");
+
+        jLabel1.setText("Current Inventory:");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(saleslessexp, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel11))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tbtotexpenses, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addComponent(tbtotsales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tbtotpurch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(saleslessexp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -632,7 +628,9 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -733,8 +731,17 @@ try {
                     todate = dfdate.format(dcto.getDate()); 
                  }
                   
-                      //must be type balance sheet
+                      //lets get the total inventory value first
+                      inventory = 0.00;
+                      res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
+                        " inner join item_mstr on it_item = in_part where it_code = 'A' " );
+                      while (res.next()) {
+                          inventory += res.getDouble("sum");
+                      }
+                      tbinventory.setText(df.format(inventory));
                 
+                      
+                  // now lets get the pos_mstr records    
                   res = st.executeQuery("select pos_nbr, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
                         " where pos_entrydate >= " + "'" + fromdate + "'" + 
                         " and pos_entrydate <= " + "'" + todate + "'" +
@@ -794,7 +801,7 @@ try {
                 tbtotsales.setText(df.format(totsales));
                 tbtotpurch.setText(df.format(totpurch));
                 tbtotexpenses.setText(df.format(expenses));
-                saleslessexp.setText(df.format(totsales - expenses));  // expenses depend on math in chartExp();
+                saleslessexp.setText(df.format((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
                 
              
                 
@@ -864,6 +871,7 @@ try {
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel5;
@@ -882,6 +890,7 @@ try {
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JButton tbcsv;
+    private javax.swing.JLabel tbinventory;
     private javax.swing.JLabel tbtotexpenses;
     private javax.swing.JLabel tbtotpurch;
     private javax.swing.JLabel tbtotsales;

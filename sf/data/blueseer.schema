@@ -569,7 +569,8 @@ CREATE TABLE IF NOT EXISTS `in_mstr` (
 CREATE TABLE IF NOT EXISTS `inv_ctrl` (
   `planmultiscan` tinyint(1) NOT NULL DEFAULT '0',
   `demdtoplan` tinyint(1) NOT NULL DEFAULT '0',
-  `printsubticket` tinyint(1) NOT NULL DEFAULT '0'
+  `printsubticket` tinyint(1) NOT NULL DEFAULT '0',
+  `autoitem` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `item_cost` (
   `itc_item` varchar(20) NOT NULL  DEFAULT '',
@@ -858,7 +859,9 @@ CREATE TABLE IF NOT EXISTS `pos_det` (
   `posd_listprice` decimal(14,2) NOT NULL DEFAULT '0.00',
   `posd_disc` decimal(14,2) NOT NULL DEFAULT '0.00',
   `posd_netprice` decimal(14,2) NOT NULL DEFAULT '0.00',
-  `posd_tax` decimal(14,2) NOT NULL DEFAULT '0.00'
+  `posd_tax` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `posd_acct` varchar(10) NOT NULL  DEFAULT '',
+  `posd_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `pos_mstr` (
   `pos_nbr` int(11) NOT NULL DEFAULT '0',

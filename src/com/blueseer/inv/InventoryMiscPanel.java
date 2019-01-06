@@ -39,7 +39,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
 
                 int i = 0;
 
-               res = st.executeQuery("SELECT it_loc, it_site  " +
+               res = st.executeQuery("SELECT it_loc, it_site, it_wh  " +
                         " FROM  item_mstr  " +
                         " where it_item = " + "'" + parentpart.toString() + "'" + 
                         " ;");
@@ -386,7 +386,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         
        
         if (! isError) {
-            if (ddtype.getSelectedItem().toString().equals("receipt")) {
+            if (ddtype.getSelectedItem().toString().equals("issue")) {
                 OVData.glEntry(invacct, prodline, ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(),  
                         dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , ddsite.getSelectedItem().toString(), type, tbrmks.getText());
             } else {

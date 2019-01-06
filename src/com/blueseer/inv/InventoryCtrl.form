@@ -41,6 +41,7 @@
                               <Component id="cbdemdtoplan" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cbmultiplan" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cbprintsubticket" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbautoitem" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -61,7 +62,9 @@
                   <Component id="cbmultiplan" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="cbprintsubticket" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="68" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="cbautoitem" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="27" max="32767" attributes="0"/>
                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               </Group>
@@ -90,6 +93,11 @@
         <Component class="javax.swing.JCheckBox" name="cbprintsubticket">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print Sub Ticket From Scan?"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbautoitem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Auto Item Number Assignment?"/>
           </Properties>
         </Component>
       </SubComponents>

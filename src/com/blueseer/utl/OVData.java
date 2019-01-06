@@ -10454,6 +10454,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return autosource;
         
     }   
+         
+             public static boolean isAutoItem() {
+             
+       boolean autoitem = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select autoitem from inv_ctrl;");
+               while (res.next()) {
+                    autoitem = res.getBoolean("autoitem");
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return autoitem;
+        
+    }   
           
          public static boolean isAutoInvoice() {
              

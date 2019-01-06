@@ -900,7 +900,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
 
         jLabel23.setText("Description");
 
-        ddcode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "P", "M", "A" }));
+        ddcode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "M", "P" }));
         ddcode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddcodeActionPerformed(evt);
@@ -1408,7 +1408,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1993,6 +1993,10 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         btdelete.setEnabled(false);
         btitembrowse.setEnabled(false);
         btdescbrowse.setEnabled(false);
+        if (OVData.isAutoItem()) {
+        partnumber.setText(String.valueOf(OVData.getNextNbr("item")));
+        partnumber.setEnabled(false);
+        }
     }//GEN-LAST:event_btnewActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed

@@ -705,7 +705,8 @@ CREATE TABLE "in_mstr" (
 CREATE TABLE "inv_ctrl" (
   "planmultiscan" tinyint(1) NOT NULL DEFAULT '0',
   "demdtoplan" tinyint(1) NOT NULL DEFAULT '0',
-  "printsubticket" tinyint(1) NOT NULL DEFAULT '0'
+  "printsubticket" tinyint(1) NOT NULL DEFAULT '0',
+  "autoitem" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1068,7 +1069,9 @@ CREATE TABLE "pos_det" (
   "posd_listprice" decimal(14,2) NOT NULL DEFAULT '0.00',
   "posd_disc" decimal(14,2) NOT NULL DEFAULT '0.00',
   "posd_netprice" decimal(14,2) NOT NULL DEFAULT '0.00',
-  "posd_tax" decimal(14,2) NOT NULL DEFAULT '0.00'
+  "posd_tax" decimal(14,2) NOT NULL DEFAULT '0.00',
+  "posd_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "posd_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
