@@ -30,9 +30,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/LedgerAcctMstrPanel.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDIbs.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/CashTran.java</file>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/utl/OVData.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/ord/OrderMaintPanel.java</file>
+            <file>file:/C:/bs/blueseer/src/EDIMaps/Generic990To990.java</file>
         </group>
     </open-files>
 </project-private>
