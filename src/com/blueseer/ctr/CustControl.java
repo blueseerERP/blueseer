@@ -1,6 +1,7 @@
 
-package com.blueseer.ord;
+package com.blueseer.ctr;
 
+import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,12 +14,12 @@ import java.sql.Statement;
  */
 
 
-public class OrderControl extends javax.swing.JPanel {
+public class CustControl extends javax.swing.JPanel {
 
     /**
      * Creates new form ClockControl
      */
-    public OrderControl() {
+    public CustControl() {
         initComponents();
     }
 
@@ -33,17 +34,16 @@ public class OrderControl extends javax.swing.JPanel {
                 ResultSet res = null;
                 
                 int i = 0;
-                    res = st.executeQuery("SELECT * FROM  order_ctrl ;");
+                    res = st.executeQuery("SELECT * FROM  cm_ctrl ;");
                     while (res.next()) {
                         i++;
-                        cbautosource.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autosource")));
-                        cbautoinvoice.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoinvoice")));
+                        cbautocust.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("cmc_autocust")));
                     }
            
             }
             catch (SQLException s) {
                 s.printStackTrace();
-                bsmf.MainFrame.show("Unable to retrieve order_ctrl");
+                bsmf.MainFrame.show("Unable to retrieve cm_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -65,16 +65,19 @@ public class OrderControl extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        cbautosource = new javax.swing.JCheckBox();
+        cbautocust = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
-        cbautoinvoice = new javax.swing.JCheckBox();
-        cbcustitem = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Control"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Control"));
 
-        cbautosource.setText("Auto Source Order?");
+        cbautocust.setText("Auto Customer ID?");
+        cbautocust.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbautocustActionPerformed(evt);
+            }
+        });
 
         btupdate.setText("Update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
@@ -82,10 +85,6 @@ public class OrderControl extends javax.swing.JPanel {
                 btupdateActionPerformed(evt);
             }
         });
-
-        cbautoinvoice.setText("Auto Invoice Order?");
-
-        cbcustitem.setText("Cust Item Xref Only?");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -95,27 +94,17 @@ public class OrderControl extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btupdate)
-                    .addComponent(cbautosource))
+                    .addComponent(cbautocust))
                 .addGap(25, 25, 25))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbautoinvoice)
-                    .addComponent(cbcustitem))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbautoinvoice)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(cbcustitem)
+                .addComponent(cbautocust, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btupdate)
-                .addGap(21, 21, 21))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -131,52 +120,36 @@ public class OrderControl extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                String autosource = "";
-                String autoinvoice = "";
-                String custitemonly = "";
+                String autocust = "";
+             
                 
-                if ( cbautosource.isSelected() ) {
-                autosource = "1";    
+                if ( cbautocust.isSelected() ) {
+                autocust = "1";    
                 } else {
-                    autosource = "0";
+                    autocust = "0";
                 }
                 
-                 if ( cbautoinvoice.isSelected() ) {
-                autoinvoice = "1";    
-                } else {
-                    autoinvoice = "0";
-                }
+               
                 
-                   if ( cbcustitem.isSelected() ) {
-                custitemonly = "1";    
-                } else {
-                    custitemonly = "0";
-                }
-                
-                
-                res = st.executeQuery("SELECT *  FROM  order_ctrl ;");
+                res = st.executeQuery("SELECT *  FROM  cm_ctrl ;");
                     while (res.next()) {
                         i++;
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_custitem ) values (" + "'" + autosource + "'" + "," +
-                            "'" + autoinvoice + "'" + "," +
-                            "'" + custitemonly + "'" +   
+                    st.executeUpdate("insert into cm_ctrl (cmc_autocust ) values (" + "'" + autocust + "'" + 
                                     ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
-                    st.executeUpdate("update order_ctrl set " 
-                            + " orc_autosource = " + "'" + autosource + "'" + "," 
-                            + " orc_custitem = " + "'" + custitemonly + "'" + "," 
-                            + " orc_autoinvoice = " + "'" + autoinvoice + "'" +         
+                    st.executeUpdate("update cm_ctrl set " 
+                            + " cmc_autocust = " + "'" + autocust + "'" +        
                             ";");   
                     bsmf.MainFrame.show("Updated Defaults");
                 }
               
             } catch (SQLException s) {
                 s.printStackTrace();
-                bsmf.MainFrame.show("Problem updating order_ctrl");
+                bsmf.MainFrame.show("Problem updating cm_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -184,12 +157,14 @@ public class OrderControl extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btupdateActionPerformed
 
+    private void cbautocustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbautocustActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbautocustActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbautoinvoice;
-    private javax.swing.JCheckBox cbautosource;
-    private javax.swing.JCheckBox cbcustitem;
+    private javax.swing.JCheckBox cbautocust;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

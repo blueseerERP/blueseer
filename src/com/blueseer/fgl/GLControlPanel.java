@@ -15,6 +15,7 @@
  */
 package com.blueseer.fgl;
 
+import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,6 +54,7 @@ public class GLControlPanel extends javax.swing.JPanel {
                     tbisto.setText(res.getString("gl_is_to"));
                     tbearnings.setText(res.getString("gl_earnings"));
                     tbforeignreal.setText(res.getString("gl_foreignreal"));
+                    cbautopost.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("gl_autopost")));
                 }
                
                 if (i == 0)
@@ -96,6 +98,7 @@ public class GLControlPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         tbforeignreal = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        cbautopost = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -120,34 +123,38 @@ public class GLControlPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Foreign Currency G/L Acct");
 
+        cbautopost.setText("Auto Post?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbisfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbbsto, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbbsfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbisto, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-                            .addComponent(btupdate, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbearnings)
-                            .addComponent(tbforeignreal, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbautopost)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tbisfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbbsto, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbbsfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel6))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tbisto, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                                .addComponent(btupdate, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(tbearnings)
+                                .addComponent(tbforeignreal, javax.swing.GroupLayout.Alignment.TRAILING)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -177,9 +184,10 @@ public class GLControlPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbforeignreal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btupdate)
-                .addGap(32, 32, 32))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbautopost)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(btupdate))
         );
 
         add(jPanel1);
@@ -195,6 +203,13 @@ public class GLControlPanel extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
+                String autopost = "";
+                  if ( cbautopost.isSelected() ) {
+                autopost = "1";    
+                } else {
+                    autopost = "0";
+                }
+                
                 
                 res = st.executeQuery("SELECT *  FROM  gl_ctrl ;");
                     while (res.next()) {
@@ -207,7 +222,8 @@ public class GLControlPanel extends javax.swing.JPanel {
                             + "'" + tbisfrom.getText() + "'" + ","
                             + "'" + tbisto.getText() + "'" + ","
                             + "'" + tbearnings.getText() + "'" + ","
-                            + "'" + tbforeignreal.getText() + "'"         
+                            + "'" + tbforeignreal.getText() + "'"  + ","
+                            + "'" + autopost + "'"        
                             + " )" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
@@ -217,7 +233,8 @@ public class GLControlPanel extends javax.swing.JPanel {
                             + " gl_is_from = " + "'" + tbisfrom.getText() + "'" + "," 
                             + " gl_earnings = " + "'" + tbearnings.getText() + "'" + "," 
                             + " gl_foreignreal = " + "'" + tbforeignreal.getText() + "'" + ","         
-                            + " gl_is_to = " + "'" + tbisto.getText() + "'" +
+                            + " gl_is_to = " + "'" + tbisto.getText() + "'" + ","
+                            + " gl_autopost = " + "'" + autopost + "'" +
                             ";");   
                     bsmf.MainFrame.show("Updated Defaults");
                 }
@@ -235,6 +252,7 @@ public class GLControlPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbautopost;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

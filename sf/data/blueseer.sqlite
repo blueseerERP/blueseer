@@ -623,7 +623,8 @@ CREATE TABLE "gl_ctrl" (
   "gl_is_from" varchar(10) COLLATE NOCASE DEFAULT '',
   "gl_is_to" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "gl_earnings" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "gl_foreignreal" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "gl_foreignreal" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "gl_autopost" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1274,6 +1275,12 @@ CREATE TABLE "order_ctrl" (
   "orc_autosource" tinyint(1) NOT NULL DEFAULT '0',
   "orc_autoinvoice" tinyint(1) NOT NULL DEFAULT '0',
   "orc_custitem" tinyint(1) NOT NULL DEFAULT '0'
+);
+CREATE TABLE "cm_ctrl" (
+  "cmc_autocust" tinyint(1) NOT NULL DEFAULT '0'
+);
+CREATE TABLE "vd_ctrl" (
+  "vdc_autovend" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

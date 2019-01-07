@@ -1804,7 +1804,14 @@ public class CustMaintPanel extends javax.swing.JPanel {
         btcustnamebrowse.setEnabled(false);
        btcustzipbrowse.setEnabled(false);
         cbshipto.setEnabled(true);
-        tbcustcode.requestFocus();
+       
+        
+         if (OVData.isAutoCust()) {
+        tbcustcode.setText(String.valueOf(OVData.getNextNbr("customer")));
+        tbcustcode.setEnabled(false);
+        } else {
+              tbcustcode.requestFocus();
+         }
         
     }//GEN-LAST:event_btnewActionPerformed
 
@@ -1815,7 +1822,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
     private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
        enableShipTo();
         clearShipTo();
-       // disableCust();
+         if (OVData.isAutoCust()) {
+        tbshipcode.setText(String.valueOf(OVData.getNextNbr("shipto")));
+        tbshipcode.setEnabled(false);
+        } else {
+              tbshipcode.requestFocus();
+         }
+      
     }//GEN-LAST:event_btshipnewActionPerformed
 
     private void bteditcontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditcontactActionPerformed

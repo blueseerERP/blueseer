@@ -505,7 +505,8 @@ CREATE TABLE IF NOT EXISTS `gl_ctrl` (
   `gl_is_from` varchar(10)  NOT NULL DEFAULT '',
   `gl_is_to` varchar(10) NOT NULL  DEFAULT '',
   `gl_earnings` varchar(10) NOT NULL  DEFAULT '',
-  `gl_foreignreal` varchar(10) NOT NULL  DEFAULT ''
+  `gl_foreignreal` varchar(10) NOT NULL  DEFAULT '',
+  `gl_autopost` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `gl_hist` (
   `glh_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1028,6 +1029,12 @@ CREATE TABLE IF NOT EXISTS `order_ctrl` (
   `orc_autosource` tinyint(1) NOT NULL DEFAULT '0',
   `orc_autoinvoice` tinyint(1) NOT NULL DEFAULT '0',
   `orc_custitem` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `cm_ctrl` (
+  `cmc_autocust` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `vd_ctrl` (
+  `vdc_autovend` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_ctrl` (
   `shc_confirm` tinyint(1) NOT NULL DEFAULT '0'

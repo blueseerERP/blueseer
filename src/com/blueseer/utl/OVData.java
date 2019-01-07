@@ -10511,6 +10511,91 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }  
          
+       public static boolean isAutoCust() {
+             
+       boolean autocust = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cmc_autocust from cm_ctrl;");
+               while (res.next()) {
+                    autocust = res.getBoolean("cmc_autocust");
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return autocust;
+        
+    }  
+       
+       public static boolean isAutoVend() {
+             
+       boolean autovend = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select vdc_autovend from vd_ctrl;");
+               while (res.next()) {
+                    autovend = res.getBoolean("vdc_autovend");
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return autovend;
+        
+    }  
+       
+        public static boolean isAutoPost() {
+             
+       boolean autopost = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select gl_autopost from gl_ctrl;");
+               while (res.next()) {
+                    autopost = res.getBoolean("gl_autopost");
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return autopost;
+        
+    }  
+       
+         
          
          public static boolean isAutoVoucher() {
              

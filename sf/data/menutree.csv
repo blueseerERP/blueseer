@@ -14,6 +14,7 @@ Address,TermsBrowse,10,JMenuItem,Terms Browse,,1,,1,1
 Address,TaxMaint,11,JMenuItem,Tax Maintenance,,,,1,1
 Address,TaxBrowse,12,JMenuItem,Tax Browse,,1,,1,1
 CustomerMenu,CustomerReports,7,JMenu,Customer Reports,,,,1,1
+CustomerMenu,CustControl,8,JMenuItem,Customer Control,,,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Sales By Customer (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Receivables By Customer (PieChart),,1,,1,1
 Address,VendorMenu,1,JMenu,Vendor Menu,,,,1,1
@@ -23,6 +24,7 @@ VendorMenu,VendXrefMaint,3,JMenuItem,Vendor Xref Maintenance,,,,1,1
 VendorMenu,VendXrefRpt1,4,JMenuItem,Vendor Xref Browse,,,,1,1
 VendorMenu,VendPriceMstr,5,JMenuItem,Vendor Price Maintenance,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
+VendorMenu,VendControl,7,JMenuItem,Vendor Control,,,,1,1
 Address,EDIMenu,1,JMenu,EDI Menu,,,,1,1
 EDIMenu,MenuEDILog,2,JMenuItem,EDI Log,,,,1,1
 EDIMenu,EDITPMaint,3,JMenuItem,TP Maintenance,,,,1,1

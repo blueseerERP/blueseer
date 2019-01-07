@@ -1231,6 +1231,10 @@ public class CashTran extends javax.swing.JPanel {
                      
                     }
                
+                    if (OVData.isAutoPost()) {
+                        OVData.PostGL2();
+                    }
+                    
                      initvars(""); 
                         
                     
@@ -1366,6 +1370,8 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btaddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentityActionPerformed
         if (rbBuy.isSelected()) {
+        reinitpanels("VendMstrMaint", true, "");
+        } else if (rbexpense.isSelected()) {
         reinitpanels("VendMstrMaint", true, "");
         } else {
         reinitpanels("MenuCustMstr", true, "");

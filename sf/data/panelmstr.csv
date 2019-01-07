@@ -15,6 +15,7 @@ com.blueseer.adm.SystemControl,,1
 com.blueseer.adm.UserMaintPanel,,1
 com.blueseer.adm.UserPermsMaint,,1
 com.blueseer.ctr.CarrierMaintPanel,,1
+com.blueseer.ctr.CustControl,,1
 com.blueseer.ctr.CustEDIMaint,,1
 com.blueseer.ctr.CustMaintPanel,,1
 com.blueseer.ctr.CustPriceMstr,,1
@@ -167,6 +168,7 @@ com.blueseer.utl.OVData,,1
 com.blueseer.utl.ReportPanel,,1
 com.blueseer.utl.test,,1
 com.blueseer.vdr.VendMaintPanel,,1
+com.blueseer.vdr.VendControl,,1
 com.blueseer.vdr.VendMstrBrowse,,1
 com.blueseer.vdr.VendPriceMstr,,1
 com.blueseer.vdr.VendPriceRpt1,,1

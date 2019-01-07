@@ -73,6 +73,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
        tbcode.setEnabled(true);
        tbdesc.setEnabled(true);
        tbpanel.setEnabled(true);
+       tbnavcode.setEnabled(true);
        cbparent.setEnabled(true);
        btnew.setEnabled(true);
        btadd.setEnabled(true);
@@ -84,6 +85,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
         tbcode.setEnabled(false);
        tbdesc.setEnabled(false);
        tbpanel.setEnabled(false);
+       tbnavcode.setEnabled(false);
        cbparent.setEnabled(false);
         btnew.setEnabled(false);
        btadd.setEnabled(false);
@@ -95,6 +97,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
        tbcode.setText("");
        tbdesc.setText("");
        tbpanel.setText("");
+       tbnavcode.setText("");
        cbparent.setSelected(false);
     }
     

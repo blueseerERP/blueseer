@@ -1255,7 +1255,13 @@ public class VendMaintPanel extends javax.swing.JPanel {
         btvendcodebrowse.setEnabled(false);
         btvendnamebrowse.setEnabled(false);
         btvendzipbrowse.setEnabled(false);
-        tbcode.requestFocus();
+        
+          if (OVData.isAutoVend()) {
+        tbcode.setText(String.valueOf(OVData.getNextNbr("vendor")));
+        tbcode.setEnabled(false);
+        } else {
+              tbcode.requestFocus();
+         }
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btEditContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditContactActionPerformed

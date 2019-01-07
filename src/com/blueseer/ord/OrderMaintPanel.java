@@ -848,6 +848,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         }
         
          ddwh.removeAllItems();
+         ddwh.insertItemAt("", 0);
+         ddwh.setSelectedIndex(0);
         ArrayList<String> whs = OVData.getWareHouseList();
         for (String wh : whs) {
             ddwh.addItem(wh);
@@ -855,6 +857,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         
         
          ddloc.removeAllItems();
+         ddloc.insertItemAt("", 0);
+         ddloc.setSelectedIndex(0);
         ArrayList<String> loc = OVData.getLocationList();
         for (String lc : loc) {
             ddloc.addItem(lc);
@@ -862,12 +866,16 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         
         
         ddcurr.removeAllItems();
+         ddcurr.insertItemAt("", 0);
+         ddcurr.setSelectedIndex(0);
         mylist = OVData.getCurrlist();
         for (String code : mylist) {
             ddcurr.addItem(code);
         }
         
         dduom.removeAllItems();
+        dduom.insertItemAt("", 0);
+         dduom.setSelectedIndex(0);
         mylist = OVData.getUOMList();
         for (String code : mylist) {
             dduom.addItem(code);
@@ -898,6 +906,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         } else {
            ddstate.setSelectedIndex(0);
        }
+       
         
         ddshipvia.removeAllItems();
         mylist = OVData.getScacCarrierOnly();  
@@ -2869,6 +2878,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
         if (ddwh.getSelectedItem() != null) {
              ddloc.removeAllItems();
+             ddloc.insertItemAt("", 0);
+             ddloc.setSelectedIndex(0);
              ArrayList<String> loc = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
              for (String lc : loc) {
                 ddloc.addItem(lc);
