@@ -107,8 +107,9 @@ APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
 ARMenu,ARTranRpt1,6,JMenuItem,AR Transacation Report,,1,,1,1
 ARMenu,ARControl,7,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
-Finance,CashTran,7,JMenuItem,Cash Transaction,,,,1,1
-Finance,CashTranBrowse,8,JMenuItem,Cash Transaction Browse,,,,1,1
+Finance,CashTransactionMenu,7,JMenu,Cash Transaction Menu,,,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,Cash Transaction,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,Cash Transaction Browse,,,,1,1
 APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1
 APMenu,VoucherBrowse,2,JMenuItem,Voucher Browse,,,,1,1
 APMenu,MenuPaymentMaint,3,JMenuItem,Payment Maintenance,,,,1,1

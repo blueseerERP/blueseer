@@ -41,7 +41,7 @@ MenuEDITPBrowse,,com.blueseer.edi.EDITPBrowse,JMenuItem,
 MenuFileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,
 MenuFreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,
 MenuGenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
-MenuInventoryAdjustment,,com.blueseer.inv.InventoryMiscPanel,JMenuItem,
+MenuInventoryAdjustment,,com.blueseer.inv.InventoryMiscPanel,JMenuItem,inva
 MenuItemMastMaint,,com.blueseer.inv.ItemMastMaintPanel,JMenuItem,item
 MenuItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt1,JMenuItem,
 MenuLocationBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,locb
@@ -49,27 +49,27 @@ MenuLocationMaint,,com.blueseer.inv.LocationMaintPanel,JMenuItem,locm
 UOMMaint,,com.blueseer.inv.UOMMaint,JMenuItem,uomm
 CurrencyMaint,,com.blueseer.fgl.CurrencyMaint,JMenuItem,curm
 ExchangeMaint,,com.blueseer.fgl.ExchangeMaint,JMenuItem,excm
-OrderControl,,com.blueseer.ord.OrderControl,JMenuItem,
-OrderSource,,com.blueseer.ord.OrderSource,JMenuItem,
-OrderSourceBrowse,,com.blueseer.ord.OrderSourceBrowse,JMenuItem,
-DOMaint,,com.blueseer.dst.DOMaint,JMenuItem,
-DOBrowse,,com.blueseer.dst.DOBrowse,JMenuItem,
+OrderControl,,com.blueseer.ord.OrderControl,JMenuItem,ordc
+OrderSource,,com.blueseer.ord.OrderSource,JMenuItem,orsc
+OrderSourceBrowse,,com.blueseer.ord.OrderSourceBrowse,JMenuItem,orsb
+DOMaint,,com.blueseer.dst.DOMaint,JMenuItem,domm
+DOBrowse,,com.blueseer.dst.DOBrowse,JMenuItem,domb
 FOMaint,,com.blueseer.frt.FOMaint,JMenuItem,form
 FOBrowse,,com.blueseer.frt.FOBrowse,JMenuItem,forb
 WareHouseMaint,,com.blueseer.dst.WareHouseMaint,JMenuItem,wahm
 WareHouseBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wahb
-MenuLocationTransfer,,com.blueseer.inv.LocationTransferPanel,JMenuItem,
+MenuLocationTransfer,,com.blueseer.inv.LocationTransferPanel,JMenuItem,loaj
 MenuMRPBrowse,,com.blueseer.sch.MRPBrowse1,JMenuItem,mrpb
-MenuOrderBrowse,,com.blueseer.ord.OrderReport1,JMenuItem,
+MenuOrderBrowse,,com.blueseer.ord.OrderReport1,JMenuItem,ordb
 MenuOrderMaint,,com.blueseer.ord.OrderMaintPanel,JMenuItem,ordm
-MenuPaymentMaint,,com.blueseer.fap.PaymentMaintPanel,JMenuItem,
+MenuPaymentMaint,,com.blueseer.fap.PaymentMaintPanel,JMenuItem,appm
 MenuPendReqRpt1,,com.blueseer.utl.ReportPanel,JMenuItem,
 MenuPostGLTrans,,com.blueseer.fgl.PostGLPanel,JMenuItem,post
-MenuProdCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prcm
-MenuProdCodeMaint,,com.blueseer.inv.ProdCodeMaintPanel,JMenuItem,prcb
+MenuProdCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prcb
+MenuProdCodeMaint,,com.blueseer.inv.ProdCodeMaintPanel,JMenuItem,prcm
 MenuProdSchedMaint,,com.blueseer.prd.ProdSchedPanel,JMenuItem,schm
-MenuQPRBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
-MenuQPRMaint,,com.blueseer.inv.QPRMaintPanel,JMenuItem,
+MenuQPRBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,qprb
+MenuQPRMaint,,com.blueseer.inv.QPRMaintPanel,JMenuItem,qprm
 MenuReqMaint,,com.blueseer.pur.ReqMaintPanel,JMenuItem,
 MenuRoutingBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,roub
 MenuRoutingMaint,,com.blueseer.inv.RoutingMaintPanel,JMenuItem,roum
@@ -77,15 +77,15 @@ MenuSchedOrdBrowse,,com.blueseer.ord.OrderReportSched,JMenuItem,
 MenuScrapEntry,,com.blueseer.prd.ScrapMaintPanel,JMenuItem,
 MenuScrapRpt1,,com.blueseer.prd.ScrapReportPanel,JMenuItem,
 MenuShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,
-MenuShipMaint,,com.blueseer.shp.ShipMaintPanel,JMenuItem,ship
+MenuShipMaint,,com.blueseer.shp.ShipMaintPanel,JMenuItem,shpm
 MenuSiteMstr,,com.blueseer.adm.SiteMstrPanel,JMenuItem,site
 MenuTermsMaint,,com.blueseer.ctr.TermsMaintPanel,JMenuItem,term
 MenuTrainingRpt1,,com.blueseer.hrm.TrainingReport1,JMenuItem,
-MenuUnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,
-MenuUserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
-MenuUserMaint,,com.blueseer.adm.UserMaintPanel,JMenuItem,
-MenuWorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
-MenuWorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,
+MenuUnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl
+MenuUserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb
+MenuUserMaint,,com.blueseer.adm.UserMaintPanel,JMenuItem,usrm
+MenuWorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcm
+MenuWorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,wkcb
 Order,,,JMenu,
 POMaintMenu,,com.blueseer.pur.POMaintPanel,JMenuItem,purm
 PlantDirectoryMenu,,com.blueseer.utl.ReportPanel,JMenuItem,
@@ -121,7 +121,7 @@ FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,
 CarrierBrowse,Carrier Browse,com.blueseer.utl.ReportPanel,JMenuItem,
 ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,
 MenuBankMaint,,com.blueseer.fgl.BankMaintPanel,JMenuItem,
-ShipperInvoiceBrowse,Shipper and Invoice Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,
+ShipperInvoiceBrowse,Shipper and Invoice Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
 EDITPMstrBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
 MenuAddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,
 CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,
@@ -238,6 +238,7 @@ TCReportsMenu,,,JMenu,
 POSMenu,,,JMenu,
 DOMenu,,,JMenu,
 TransportationMenu,,,JMenu,
+CashTransactionMenu,,,JMenu,
 ShipperBrowseDet,,com.blueseer.shp.ShipperDetBrowsePanel,JMenuItem,
 FTPMaint,,com.blueseer.adm.FTPMaint,JMenuItem,
 ECNMaint,,com.blueseer.eng.ECNMaint,JMenuItem,

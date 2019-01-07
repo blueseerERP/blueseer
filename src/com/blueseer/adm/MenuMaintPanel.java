@@ -43,6 +43,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     tbcode.setText(res.getString("menu_id"));
                     tbdesc.setText(res.getString("menu_desc"));
                     tbpanel.setText(res.getString("menu_panel"));
+                    tbnavcode.setText(res.getString("menu_navcode"));
                     if (res.getString("menu_type").compareTo("JMenu") == 0) {
                        cbparent.setSelected(true);
                     } else {
@@ -131,6 +132,8 @@ public class MenuMaintPanel extends javax.swing.JPanel {
         cbparent = new javax.swing.JCheckBox();
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
+        tbnavcode = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -179,6 +182,8 @@ public class MenuMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setText("NavCode:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,24 +193,27 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbparent)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btadd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew))
-                    .addComponent(tbpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
-                    .addComponent(tbdesc))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cbparent)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btadd)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btdelete)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btupdate))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnew))
+                        .addComponent(tbpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                        .addComponent(tbdesc))
+                    .addComponent(tbnavcode, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -227,13 +235,17 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     .addComponent(tbpanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbnavcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbparent)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addGap(36, 36, 36))
+                .addContainerGap())
         );
 
         add(jPanel1);
@@ -275,11 +287,12 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into menu_mstr "
-                            + "(menu_id, menu_desc, menu_type, menu_panel ) "
+                            + "(menu_id, menu_desc, menu_type, menu_panel, menu_navcode ) "
                             + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
                             + "'" + menutype + "'" + ","
-                            + "'" + tbpanel.getText().toString() + "'"
+                            + "'" + tbpanel.getText().toString() + "'" + "," 
+                            + "'" + tbnavcode.getText().toString() + "'"
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Menu Record");
@@ -295,6 +308,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                    menumap = bsmf.MainFrame.getmenulistmap();
                 } // if proceed
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("Unable to Add to menu_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -326,7 +340,8 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     st.executeUpdate("update menu_mstr " 
                             + "set menu_desc = " + "'" + tbdesc.getText() + "'" + ","
                             + " menu_type = " + "'" + menutype + "'" + ","
-                            + "menu_panel = " + "'" + tbpanel.getText() + "'"
+                            + "menu_panel = " + "'" + tbpanel.getText() + "'" + ","
+                            + "menu_navcode = " + "'" + tbnavcode.getText() + "'"
                             + " where menu_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Menu");
@@ -394,9 +409,11 @@ public class MenuMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbnavcode;
     private javax.swing.JTextField tbpanel;
     // End of variables declaration//GEN-END:variables
 }

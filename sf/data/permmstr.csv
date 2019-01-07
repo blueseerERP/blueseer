@@ -93,6 +93,7 @@ admin;IncomeStatementYear
 admin;MenuPostGLTrans
 admin;GLTranMaint
 admin;ARMenu
+admin;CashTransactionMenu
 admin;ARPaymentMaint
 admin;ARPaymentBrowse
 admin;ARUnAppMaint

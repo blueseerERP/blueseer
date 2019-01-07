@@ -286,6 +286,7 @@ public class CashTran extends javax.swing.JPanel {
         for (int i = 0; i < entity.size(); i++) {
             ddentity.addItem(entity.get(i));
         }
+            if (ddentity.getItemCount() > 0)
             ddentity.setSelectedIndex(0);
         
          
@@ -1347,6 +1348,7 @@ public class CashTran extends javax.swing.JPanel {
         for (int i = 0; i < entity.size(); i++) {
                     ddentity.addItem(entity.get(i));
                 }
+            if (ddentity.getItemCount() > 0)
             ddentity.setSelectedIndex(0);
         }
         
@@ -1420,6 +1422,7 @@ public class CashTran extends javax.swing.JPanel {
                for (int i = 0; i < entity.size(); i++) {
                     ddentity.addItem(entity.get(i));
                 }
+            if (ddentity.getItemCount() > 0)
             ddentity.setSelectedIndex(0);
          
         lbitem.setText("Item");    
@@ -1468,7 +1471,8 @@ public class CashTran extends javax.swing.JPanel {
         for (int i = 0; i < entity.size(); i++) {
                     ddentity.addItem(entity.get(i));
                 }
-            ddentity.setSelectedIndex(0);
+        if (ddentity.getItemCount() > 0)    
+        ddentity.setSelectedIndex(0);
         
         lbitem.setText("Expense Account");
         
@@ -1479,6 +1483,7 @@ public class CashTran extends javax.swing.JPanel {
         for (String code : myitems) {
             dditem.addItem(code);
         }
+        if (ddentity.getItemCount() > 0)  
         dditem.setSelectedIndex(0);
         
         }
