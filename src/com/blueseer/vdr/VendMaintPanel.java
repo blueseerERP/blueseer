@@ -354,6 +354,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
         for (int i = 0; i < accounts.size(); i++) {
             ddaccount.addItem(accounts.get(i).toString());
         }
+        ddaccount.setSelectedItem(OVData.getDefaultAPAcct());
         
         ddcc.removeAllItems();
         ArrayList ccs = OVData.getGLCCList();

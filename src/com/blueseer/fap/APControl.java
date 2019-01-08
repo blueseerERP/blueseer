@@ -51,6 +51,7 @@ public class APControl extends javax.swing.JPanel {
                     tbbank.setText(res.getString("apc_bank"));
                     cbautovoucher.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("apc_autovoucher")));
                     tbdefaultpurchacct.setText(res.getString("apc_assetacct"));
+                    tbapacct.setText(res.getString("apc_apacct"));
                     
                 }
                
@@ -88,6 +89,8 @@ public class APControl extends javax.swing.JPanel {
         cbautovoucher = new javax.swing.JCheckBox();
         tbdefaultpurchacct = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        tbapacct = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -106,6 +109,8 @@ public class APControl extends javax.swing.JPanel {
 
         jLabel2.setText("Asset Purchase Acct");
 
+        jLabel3.setText("AP Default Acct");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -114,13 +119,15 @@ public class APControl extends javax.swing.JPanel {
                 .addGap(53, 53, 53)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(tbbank, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btupdate)
                     .addComponent(cbautovoucher)
-                    .addComponent(tbdefaultpurchacct, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdefaultpurchacct, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(tbapacct))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -136,6 +143,10 @@ public class APControl extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdefaultpurchacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbapacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btupdate)
                 .addContainerGap(59, Short.MAX_VALUE))
@@ -163,13 +174,15 @@ public class APControl extends javax.swing.JPanel {
 
                     st.executeUpdate("insert into ap_ctrl values (" + "'" + tbbank.getText() + "'" + ","
                         + "'" + tbdefaultpurchacct.getText() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbautovoucher.isSelected()) + "'"
+                        + "'" + BlueSeerUtils.boolToInt(cbautovoucher.isSelected()) + "'" + ","
+                        + "'" + tbapacct.getText() + "'"        
                         + ")" + ";");
                     bsmf.MainFrame.show("Inserting Defaults");
                 } else {
                     st.executeUpdate("update ap_ctrl set "
                         + " apc_bank = " + "'" + tbbank.getText() + "'" + ","
-                        + " apc_assetacct = " + "'" + tbdefaultpurchacct.getText() + "'" + ","        
+                        + " apc_assetacct = " + "'" + tbdefaultpurchacct.getText() + "'" + ","       
+                        + " apc_apacct = " + "'" + tbapacct.getText() + "'" + ","               
                         + " apc_autovoucher = " + "'" + BlueSeerUtils.boolToInt(cbautovoucher.isSelected()) + "'" +
                         ";");
                     bsmf.MainFrame.show("Updated Defaults");
@@ -191,7 +204,9 @@ public class APControl extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbautovoucher;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tbapacct;
     private javax.swing.JTextField tbbank;
     private javax.swing.JTextField tbdefaultpurchacct;
     // End of variables declaration//GEN-END:variables

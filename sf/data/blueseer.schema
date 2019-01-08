@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS `acb_mstr` (
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
   `apc_assetacct` varchar(10)  NOT NULL DEFAULT '',
-  `apc_autovoucher` tinyint(1)  NOT NULL DEFAULT '0'
+  `apc_autovoucher` tinyint(1)  NOT NULL DEFAULT '0',
+  `apc_apacct` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ap_mstr` (
   `ap_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,

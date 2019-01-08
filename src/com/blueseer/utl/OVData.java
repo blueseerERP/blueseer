@@ -7378,7 +7378,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }
            
          public static String getCustSalesAcct(String cust) {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7405,7 +7405,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }
                 
          public static String getCustSalesCC(String cust) {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7432,7 +7432,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }
                 
          public static String getDefaultARCC() {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7459,7 +7459,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }
          
           public static String getDefaultSalesCC() {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7486,7 +7486,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }
          
            public static String getVendCurrency(String vend) {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7513,7 +7513,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     } 
           
          public static String getDefaultAPBank() {
-           String myitem = null;
+           String myitem = "";
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -7524,6 +7524,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 res = st.executeQuery("select apc_bank from ap_ctrl;" );
                while (res.next()) {
                 myitem = res.getString("apc_bank");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+         
+         
+                 public static String getDefaultAPAcct() {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select apc_apacct from ap_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("apc_apacct");                    
                 }
                
            }
