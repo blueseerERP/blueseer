@@ -5,6 +5,7 @@
  */
 package com.blueseer.utl;
 import bsmf.MainFrame;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.text.DateFormat;
@@ -297,6 +298,35 @@ public class BlueSeerUtils {
 	}
 }
   
+     public static void startTask(String[] message) {
+        bsmf.MainFrame.MainProgressBar.setVisible(true);
+        bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
+        bsmf.MainFrame.MainProgressBar.setBackground(Color.BLUE);
+        message(message);
+     }
      
+     public static void endTask(String[] message) {
+        bsmf.MainFrame.MainProgressBar.setVisible(false);
+        bsmf.MainFrame.MainProgressBar.setIndeterminate(false);
+        message(message);
+     }
+     
+     public static void message(String[] message) {
+         bsmf.MainFrame.messagelabel.setText(message[1]);
+         if (message[0].equals("1")) {
+            bsmf.MainFrame.messagelabel.setForeground(Color.RED); 
+         } else if (message[0].equals("2")) {
+            bsmf.MainFrame.messagelabel.setForeground(Color.YELLOW);  
+         } else if (message[0].equals("0")) {
+            bsmf.MainFrame.messagelabel.setForeground(Color.BLUE);  
+         } else {
+            bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);   
+         }
+     }
+     
+     public static void messagereset() {
+         bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);
+         bsmf.MainFrame.messagelabel.setText("");
+     }
     
 }

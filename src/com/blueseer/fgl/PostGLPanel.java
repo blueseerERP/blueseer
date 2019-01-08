@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.setperms;
+import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
 
 /**
@@ -26,9 +27,21 @@ public class PostGLPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    public void enableAll() {
+        btpost.setEnabled(true);
+        btcount.setEnabled(true);
+        tbcount.setEnabled(true);
+    }
+    
+     public void disableAll() {
+        btpost.setEnabled(false);
+        btcount.setEnabled(false);
+        tbcount.setEnabled(false);
+    }
     
     public void initvars(String args) {
         tbcount.setText("");
+        enableAll();
         btpost.setEnabled(false);
     }
     
@@ -37,48 +50,17 @@ public class PostGLPanel extends javax.swing.JPanel {
          * Main task. Executed in background thread.
          */
         @Override
-        public Void doInBackground() {
-            
-       
-       OVData.PostGL2();
-
-           /* 
-            Random random = new Random();
-            int progress = 0;
-            //Initialize progress property.
-            setProgress(0);
-            //Sleep for at least one second to simulate "startup".
-            try {
-                Thread.sleep(1000 + random.nextInt(2000));
-            } catch (InterruptedException ignore) {}
-            while (progress < 100) {
-                //Sleep for up to one second.
-                try {
-                    Thread.sleep(random.nextInt(1000));
-                } catch (InterruptedException ignore) {}
-                //Make random progress.
-                progress += random.nextInt(10);
-                setProgress(Math.min(progress, 100));
-            }
-            
-            */
-            
+        public Void doInBackground() throws Exception {
+            OVData.PostGL2();
             return null;
-           
         }
  
         /*
          * Executed in event dispatch thread
          */
         public void done() {
-           // Toolkit.getDefaultToolkit().beep();
-          
-           // setperms(bsmf.MainFrame.userid);
-          //  reinitpanels2("BackGroundPanel", "BackGroundPanel", false, "");
-           // bsmf.MainFrame.show("Post Complete!");
-            bsmf.MainFrame.messagelabel.setText("Posting is completed");
-            bsmf.MainFrame.messagelabel.setForeground(Color.BLUE);
-            bsmf.MainFrame.MainProgressBar.setVisible(false);
+            BlueSeerUtils.endTask(new String[]{"0","Posting is complete"});
+            initvars("");
         }
     }  
     
@@ -155,15 +137,10 @@ public class PostGLPanel extends javax.swing.JPanel {
      //   MainProgressBar.setVisible(true);
      //   MainProgressBar.setIndeterminate(true);
     
-     btpost.setEnabled(false);
-        bsmf.MainFrame.MainProgressBar.setVisible(true);
-        bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
-        
+        BlueSeerUtils.startTask(new String[]{"","Posting..."});
+        disableAll();
         Task task = new Task();
-        task.execute();
-       
-        btpost.setEnabled(true);
-        
+        task.execute();        
     }//GEN-LAST:event_btpostActionPerformed
 
     private void btcountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcountActionPerformed

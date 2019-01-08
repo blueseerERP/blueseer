@@ -62,6 +62,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import org.apache.commons.io.FilenameUtils;
 
@@ -98,7 +99,35 @@ public class CashTran extends javax.swing.JPanel {
             new String[]{
                 "Line", "Item", "Qty", "Price", "Ref", "Acct"
             });
-                
+    
+                 
+       class Task extends SwingWorker<String[], Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = addTransaction();
+            return message;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            try {
+            String[] message = get();
+             BlueSeerUtils.endTask(message);
+            initvars("");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } 
+           
+        }
+    }  
+                 
+                 
+                 
                 
     /**
      * Creates new form ShipMaintPanel
@@ -111,6 +140,386 @@ public class CashTran extends javax.swing.JPanel {
        
     }
    
+    public String[] addTransaction() {
+        
+        String[] message = new String[2];
+         
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                boolean error = false;
+                String trantype = "buy";
+                String key = "";
+                
+                
+                if (rbSell.isSelected()) { trantype = "sell"; }
+                if (rbBuy.isSelected()) { trantype = "buy"; }
+                if (rbexpense.isSelected()) { trantype = "expense"; }
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                DecimalFormat df = new DecimalFormat("#0.00");   
+                setvendorvariables(ddentity.getSelectedItem().toString());
+                    
+                curr = OVData.getDefaultCurrency();
+                String site = OVData.getDefaultSite();   
+                String po = tbpo.getText();
+                if (po.isEmpty()) {
+                    po = "cashtran";
+                }
+                    
+                    
+                    if (proceed && rbSell.isSelected()) {
+                          int shipperid = OVData.getNextNbr("shipper");   
+                          key = String.valueOf(shipperid);
+                             boolean iserror = OVData.CreateShipperHdr(key, site,
+                             String.valueOf(key), 
+                              ddentity.getSelectedItem().toString(), // sh_cust
+                              ddentity.getSelectedItem().toString(),  // sh_ship
+                              expensenbr.getText().replace("'", ""), // sh_so
+                              tbpo.getText().replace("'", ""),  // sh_po
+                              tbpo.getText().replace("'", ""),  // sh_ref
+                              dfdate.format(now), // duedate
+                              dfdate.format(now),  // orddate
+                              tbrmks.getText().replace("'", ""), // sh_rmks
+                              "", "A");  // shipvia, ShipType
+
+                     if (iserror) {
+                         return message = new String[]{"1", "Error creating shipper header"};
+                     }        
+                             
+                    
+                         for (int j = 0; j < detailtable.getRowCount(); j++) {
+                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
+                                     detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
+                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), site, "", "", "0");
+                         }
+                    
+
+                     // now confirm shipment
+                     message = OVData.confirmShipment(String.valueOf(shipperid), now);
+                     if (message[0].equals("1")) { // if error
+                       error = true;
+                       return message;
+                     } 
+                     
+                                     
+                     // now emulate AR payment
+                     if (! error) {
+                     String batchnbr = String.valueOf(OVData.getNextNbr("ar"));
+                      st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem().toString() + "'" + ","
+                        + "'" + batchnbr + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "P" + "'" + ","
+                        + "'" + shipperid + "'" + ","
+                        + "'" + tbrmks.getText() + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + OVData.getDefaultARAcct() + "'" + ","
+                        + "'" + OVData.getDefaultARCC() + "'" + ","
+                        + "'" + "c" + "'"  + ","
+                        + "'" + OVData.getDefaultARBank() + "'" + ","
+                        + "'" + curr + "'" + ","     
+                        + "'" + curr + "'" + ","         
+                        + "'" + site + "'"
+                        + ")"
+                        + ";");
+                      
+                      
+                     
+                      
+               
+                        for (int j = 0; j < detailtable.getRowCount(); j++) {
+                            st.executeUpdate("insert into ard_mstr "
+                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
+                                + " values ( " + "'" + batchnbr + "'" + ","
+                                    + "'" + ddentity.getSelectedItem().toString() + "'" + ","
+                                + "'" + shipperid + "'" + ","
+                                + "'" + (j + 1) + "'" + ","
+                                + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
+                                + "'" + "0" + "'" 
+                                + ")"
+                                + ";");
+                            
+                           
+                            
+                        }
+                    
+                         // update AR entry for original invoices with status and open amt  
+                        error = OVData.ARUpdate(batchnbr);
+                        if (! error) {
+                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());
+                        }
+                     }
+                    // end of emulate AR Payment
+                      
+                    
+                    
+                     
+                     if (! error) {
+                        message = new String[]{"0", "sell complete"};
+                     }
+                    
+                     
+                     
+                    }
+                    
+                    if (proceed && rbBuy.isSelected()) {
+                        
+                      st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_curr, ap_base_curr, ap_bank ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
+                              + "'" + site + "'" + ","
+                        + "'" + expensenbr.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + tbpo.getText() + "'" + ","
+                        + "'" + tbrmks.getText().replace("'", "") + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + curr + "'"  + ","    
+                        + "'" + curr + "'"  + "," 
+                        + "'" + apbank + "'"
+                        + ")"
+                        + ";");
+                      
+                      
+                       // lets create receiver
+                        int receiverNbr = OVData.getNextNbr("receiver");
+                        key = String.valueOf(receiverNbr);
+                         st.executeUpdate("insert into recv_mstr "
+                        + "(rv_id, rv_vend, "
+                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
+                        + " values ( " + "'" + key + "'" + ","
+                        + "'" + ddentity.getSelectedItem() + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + "asset" + "'" + ","
+                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'"
+                        + ")"
+                        + ";");
+                      
+                      
+                      
+                int amt = 0;
+               // voucherdet:  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
+               //detailtable: "Line", "Part", "Qty", "Price", "Desc", "ImageFile"
+                    for (int j = 0; j < detailtable.getRowCount(); j++) {
+                        
+                        // lets add item to database
+                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
+                      //  if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
+                       // OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
+                       // }
+                        // lets add each item to inventory
+                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
+                                "", "", Double.valueOf("1"));
+                        // now lets add detail voucher
+                        //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
+                        
+                       
+                         
+                         // now create recevier detail
+                          st.executeUpdate("insert into recv_det "
+                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_voqty, "
+                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
+                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
+                            + " values ( " + "'" + key + "'" + ","
+                            + "'" + String.valueOf(j + 1) + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + tbpo.getText() + "'" + ","
+                            + "'" + String.valueOf(j + 1) + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","  // go ahead and set receiver voucher qty         
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + site + "'" + ","        
+                            + "'" + "asset" + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
+                            + ")"
+                            + ";");
+                         
+                         
+                        
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + ddentity.getSelectedItem() + "'" + ","
+                            + "'" + String.valueOf(receiverNbr) + "'" + ","
+                            + "'" + String.valueOf(j + 1) + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + tbref.getText() + "'" + ","        
+                            + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
+                            + "'" + OVData.getDefaultAssetCC() + "'" 
+                            + ")"
+                            + ";");
+                  
+                     }
+                    
+                    /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
+                    
+                    /* emulate cash payment */    
+                        if (! error)
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        
+                    if (error) {
+                        message = new String[]{"1", "Error Occurred in Buy"};
+                    } else {
+                    message = new String[]{"0", "buy complete"};
+                    }
+                    //reinitreceivervariables("");
+                   
+                    // btQualProbAdd.setEnabled(false);
+                } // if rbbuy
+                   
+                 if (proceed && rbexpense.isSelected()) {
+                     
+                       st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_bank ) "
+                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
+                              + "'" + site + "'" + ","
+                        + "'" + expensenbr.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + tbpo.getText() + "'" + ","
+                        + "'" + tbrmks.getText() + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + apbank + "'"
+                        + ")"
+                        + ";");
+               
+               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
+                    for (int j = 0; j < detailtable.getRowCount(); j++) {
+                       
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + ddentity.getSelectedItem() + "'" + ","
+                            + "'" + "expense" + "'" + ","
+                            + "'" +detailtable.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + tbpo.getText().toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + apcc + "'"
+                            + ")"
+                            + ";");
+                  
+                     }
+                    
+                    /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
+                         
+                        if (! error)
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        
+                    if (error) {
+                        message = new String[]{"1", "An Error Occurred in Expense"};
+                    } else {
+                    message = new String[]{"0", "expense complete"};
+                    }
+                     
+                     
+                     
+                 }   // if rbexpense
+                    
+                    
+                    
+                    
+                    if (proceed ) {
+                     st.executeUpdate("insert into pos_mstr "
+                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
+                        + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + "," 
+                        + "'" + ddentity.getSelectedItem().toString() + "'" + ","
+                        + "'" + lbname.getText() + "'" + ","
+                        + "'" + trantype + "'" + ","       
+                        + "'" + key + "'" + ","         
+                        + "'" + df.format(actqty) + "'" + ","
+                        + "'" + df.format(actamt) + "'" 
+                        + ")"
+                        + ";");
+                     
+                      for (int j = 0; j < detailtable.getRowCount(); j++) {
+                      st.executeUpdate("insert into pos_det "
+                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
+                                + " values ( " + "'" + expensenbr.getText() + "'" + ","
+                                + "'" + (j + 1) + "'" + ","
+                                + "'" + detailtable.getValueAt(j, 1).toString() + "'"  + ","      
+                                + "'" + detailtable.getValueAt(j, 4).toString() + "'"  + "," 
+                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  + ","        
+                                + "'" + detailtable.getValueAt(j, 2).toString() + "'"  + ","   
+                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
+                                + "'" + detailtable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  
+                                + ")"
+                                + ";");
+                      }
+                     
+                    }
+               
+                    if (OVData.isAutoPost()) {
+                        OVData.PostGL2();
+                    }
+                    
+                     initvars(""); 
+                        
+                    
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return message;
+    }
     
     public void addExpenseAccount(String desc) {
         try {
@@ -773,7 +1182,9 @@ public class CashTran extends javax.swing.JPanel {
                 
                 enableAll();
                btnew.setEnabled(false);
-               rbBuy.setSelected(true);  
+               rbBuy.setSelected(true); 
+               
+               BlueSeerUtils.messagereset();
         
     }//GEN-LAST:event_btnewActionPerformed
 
@@ -871,380 +1282,11 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                boolean error = false;
-                String trantype = "buy";
-                String key = "";
-                
-                
-                if (rbSell.isSelected()) { trantype = "sell"; }
-                if (rbBuy.isSelected()) { trantype = "buy"; }
-                if (rbexpense.isSelected()) { trantype = "expense"; }
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
-                setvendorvariables(ddentity.getSelectedItem().toString());
-                    
-                curr = OVData.getDefaultCurrency();
-                String site = OVData.getDefaultSite();   
-                String po = tbpo.getText();
-                if (po.isEmpty()) {
-                    po = "cashtran";
-                }
-                    
-                    
-                    if (proceed && rbSell.isSelected()) {
-                          int shipperid = OVData.getNextNbr("shipper");   
-                          key = String.valueOf(shipperid);
-                             boolean iserror = OVData.CreateShipperHdr(key, site,
-                             String.valueOf(key), 
-                              ddentity.getSelectedItem().toString(), // sh_cust
-                              ddentity.getSelectedItem().toString(),  // sh_ship
-                              expensenbr.getText().replace("'", ""), // sh_so
-                              tbpo.getText().replace("'", ""),  // sh_po
-                              tbpo.getText().replace("'", ""),  // sh_ref
-                              dfdate.format(now), // duedate
-                              dfdate.format(now),  // orddate
-                              tbrmks.getText().replace("'", ""), // sh_rmks
-                              "", "A");  // shipvia, ShipType
-
-                     if (! iserror) {
-                         for (int j = 0; j < detailtable.getRowCount(); j++) {
-                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
-                                     detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
-                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), site, "", "", "0");
-                         }
-                        
-                     }
-                     
-                   
-
-                     // now confirm shipment
-                     String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
-                     if (message[0].equals("1")) { // if error
-                         bsmf.MainFrame.show(message[1]);
-                         error = true;
-                     } 
-                     
-                                     
-                     // now emulate AR payment
-                     if (! error) {
-                     String batchnbr = String.valueOf(OVData.getNextNbr("ar"));
-                      st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
-                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                        + "'" + batchnbr + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "P" + "'" + ","
-                        + "'" + shipperid + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + OVData.getDefaultARAcct() + "'" + ","
-                        + "'" + OVData.getDefaultARCC() + "'" + ","
-                        + "'" + "c" + "'"  + ","
-                        + "'" + OVData.getDefaultARBank() + "'" + ","
-                        + "'" + curr + "'" + ","     
-                        + "'" + curr + "'" + ","         
-                        + "'" + site + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                     
-                      
-               
-                        for (int j = 0; j < detailtable.getRowCount(); j++) {
-                            st.executeUpdate("insert into ard_mstr "
-                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
-                                + " values ( " + "'" + batchnbr + "'" + ","
-                                    + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                                + "'" + shipperid + "'" + ","
-                                + "'" + (j + 1) + "'" + ","
-                                + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + "0" + "'" 
-                                + ")"
-                                + ";");
-                            
-                           
-                            
-                        }
-                    
-                         // update AR entry for original invoices with status and open amt  
-                        error = OVData.ARUpdate(batchnbr);
-                        if (! error) {
-                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());
-                        }
-                     }
-                    // end of emulate AR Payment
-                      
-                    
-                    
-                     
-                     if (! error) {
-                        bsmf.MainFrame.show("sell complete");
-                     }
-                    
-                     
-                     
-                    }
-                    
-                    if (proceed && rbBuy.isSelected()) {
-                        
-                      st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_curr, ap_base_curr, ap_bank ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbpo.getText() + "'" + ","
-                        + "'" + tbrmks.getText().replace("'", "") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + curr + "'"  + ","    
-                        + "'" + curr + "'"  + "," 
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                       // lets create receiver
-                        int receiverNbr = OVData.getNextNbr("receiver");
-                        key = String.valueOf(receiverNbr);
-                         st.executeUpdate("insert into recv_mstr "
-                        + "(rv_id, rv_vend, "
-                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
-                        + " values ( " + "'" + key + "'" + ","
-                        + "'" + ddentity.getSelectedItem() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + "asset" + "'" + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
-                        + "'" + site + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                      
-                int amt = 0;
-               // voucherdet:  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
-               //detailtable: "Line", "Part", "Qty", "Price", "Desc", "ImageFile"
-                    for (int j = 0; j < detailtable.getRowCount(); j++) {
-                        
-                        // lets add item to database
-                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
-                      //  if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
-                       // OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
-                       // }
-                        // lets add each item to inventory
-                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
-                                "", "", Double.valueOf("1"));
-                        // now lets add detail voucher
-                        //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
-                        
-                       
-                         
-                         // now create recevier detail
-                          st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_voqty, "
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + key + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + tbpo.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","  // go ahead and set receiver voucher qty         
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + "0" + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + "" + "'" + ","
-                            + "'" + "" + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + site + "'" + ","        
-                            + "'" + "asset" + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                         
-                         
-                        
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + ddentity.getSelectedItem() + "'" + ","
-                            + "'" + String.valueOf(receiverNbr) + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbref.getText() + "'" + ","        
-                            + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
-                            + "'" + OVData.getDefaultAssetCC() + "'" 
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
-                    
-                    /* emulate cash payment */    
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
-                        
-                    if (error) {
-                        bsmf.MainFrame.show("An error occurred");
-                    } else {
-                    bsmf.MainFrame.show("buy complete");
-                    }
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
-                } // if rbbuy
-                   
-                 if (proceed && rbexpense.isSelected()) {
-                     
-                       st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbpo.getText() + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-               
-               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
-                    for (int j = 0; j < detailtable.getRowCount(); j++) {
-                       
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + ddentity.getSelectedItem() + "'" + ","
-                            + "'" + "expense" + "'" + ","
-                            + "'" +detailtable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbpo.getText().toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + apcc + "'"
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
-                         
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
-                        
-                    if (error) {
-                        bsmf.MainFrame.show("An error in expense module occurred");
-                    } else {
-                    bsmf.MainFrame.show("Expense Complete");
-                    }
-                     
-                     
-                     
-                 }   // if rbexpense
-                    
-                    
-                    
-                    
-                    if (proceed ) {
-                     st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
-                        + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + "," 
-                        + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                        + "'" + lbname.getText() + "'" + ","
-                        + "'" + trantype + "'" + ","       
-                        + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(actamt) + "'" 
-                        + ")"
-                        + ";");
-                     
-                      for (int j = 0; j < detailtable.getRowCount(); j++) {
-                      st.executeUpdate("insert into pos_det "
-                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
-                                + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + (j + 1) + "'" + ","
-                                + "'" + detailtable.getValueAt(j, 1).toString() + "'"  + ","      
-                                + "'" + detailtable.getValueAt(j, 4).toString() + "'"  + "," 
-                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + detailtable.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'" + "," 
-                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  
-                                + ")"
-                                + ";");
-                      }
-                     
-                    }
-               
-                    if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
-                    }
-                    
-                     initvars(""); 
-                        
-                    
-            } catch (SQLException s) {
-                s.printStackTrace();
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task();
+        task.execute();   
+       
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentityActionPerformed
