@@ -2009,4 +2009,19 @@ CREATE TABLE "editp_mstr" (
   "editp_web" varchar(50) DEFAULT NULL COLLATE NOCASE,
   "editp_helpdesk" varchar(50) DEFAULT NULL COLLATE NOCASE
 );
+CREATE TABLE "exp_mstr" (
+"exp_id" varchar(10) DEFAULT '' COLLATE NOCASE,
+"exp_site" varchar(10) DEFAULT '' COLLATE NOCASE,
+"exp_entity" varchar(20) DEFAULT '' COLLATE NOCASE,
+"exp_name" varchar(50) DEFAULT '' COLLATE NOCASE,
+"exp_acct" varchar(10) DEFAULT '' COLLATE NOCASE,
+"exp_cc" varchar(4) DEFAULT '' COLLATE NOCASE,
+"exp_createdate" date DEFAULT '' COLLATE NOCASE,
+"exp_changedate" date DEFAULT '' COLLATE NOCASE,
+"exp_userid" varchar(20) DEFAULT '' COLLATE NOCASE,
+"exp_desc" varchar(50) DEFAULT '' COLLATE NOCASE,
+"exp_ref" varchar(80) DEFAULT '' COLLATE NOCASE,
+"exp_amt" decimal(14,2) DEFAULT '0.00' COLLATE NOCASE,
+"exp_active" tinyint(1) DEFAULT '0' COLLATE NOCASE
+);
 End Transaction;

@@ -10,7 +10,23 @@ CREATE TABLE IF NOT EXISTS `acb_mstr` (
   `acb_per` int(2) NOT NULL DEFAULT '0',
   `acb_year` int(4) NOT NULL DEFAULT '0',
   `acb_amt` decimal(15,2) NOT NULL DEFAULT '0.00',
-  `acb_site` varchar(10) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `acb_site` varchar(10) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `exp_mstr` (
+  `exp_id` varchar(10)  NOT NULL DEFAULT '',
+  `exp_site` varchar(10)  NOT NULL DEFAULT '',
+  `exp_entity` varchar(20)  NOT NULL DEFAULT '',
+  `exp_name` varchar(50)  NOT NULL DEFAULT '',
+  `exp_acct` varchar(10)  NOT NULL DEFAULT '',
+  `exp_cc` varchar(8)  NOT NULL DEFAULT '',
+  `exp_createdate` date  NOT NULL,
+  `exp_changedate` date  NOT NULL,
+  `exp_userid` varchar(20)  NOT NULL DEFAULT '',
+  `exp_desc` varchar(50)  NOT NULL DEFAULT '',
+  `exp_ref` varchar(80)  NOT NULL DEFAULT '',
+  `exp_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
+  `exp_active` tinyint(1)  NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
   `apc_assetacct` varchar(10)  NOT NULL DEFAULT '',
