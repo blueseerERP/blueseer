@@ -4,7 +4,9 @@
  */
 package com.blueseer.fgl;
 
+import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.prd.ProdSchedPanel;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -59,12 +61,18 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import org.apache.commons.io.FilenameUtils;
 
 
@@ -100,16 +108,105 @@ public class CashTran extends javax.swing.JPanel {
             new String[]{
                 "Line", "Item", "Qty", "Price", "Ref", "Acct"
             });
-                 javax.swing.table.DefaultTableModel rexpensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                 CashTran.MyTableModel rexpensemodel = new CashTran.MyTableModel(new Object[][]{},
             new String[]{
-                "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt"
-            }); 
+                "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?"
+            })
+                         {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 8)       
+                            return ImageIcon.class;  
+                        else if (col == 10)
+                            return Boolean.class;
+                        else if (col == 7 || col == 9)
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
                   javax.swing.table.DefaultTableModel rexpenseHistoryModel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Line", "Item", "Qty", "Price", "Ref", "Acct"
+                "ID", "TranNbr", "Vendor", "Name", "EffDate", "Acct", "Amount"
             });     
     
-                 
+     
+         class MyTableModel extends DefaultTableModel {  
+      
+        public MyTableModel(Object rowData[][], Object columnNames[]) {  
+             super(rowData, columnNames);  
+          }  
+         
+       boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false, false, true, true
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit[columnIndex];
+        }
+    
+        
+        public Class getColumnClass(int column) {
+            
+            
+         //      if (column == 7 || column == 9)       
+        //        return Double.class; 
+        //       else if (column == 9) 
+       //            return Boolean.class;
+       //     else return String.class;  //other columns accept String values 
+            return String.class;
+       /*     
+      if (column >= 0 && column < getColumnCount()) {
+          
+          
+           if (getRowCount() > 0) {
+             // you need to check 
+             Object value = getValueAt(0, column);
+             // a line for robustness (in real code you probably would loop all rows until
+             // finding a not-null value 
+             if (value != null) {
+                return value.getClass();
+             }
+
+        }
+          
+          
+          
+      }  
+              
+        return Object.class;
+*/
+               }
+       
+        
+        
+   }    
+    
+     
+     
+                  
+        public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
+
+          CheckBoxRenderer() {
+            setHorizontalAlignment(JLabel.CENTER);
+            
+          }
+
+          public Component getTableCellRendererComponent(JTable table, Object value,
+              boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+              setForeground(table.getSelectionForeground());
+              //super.setBackground(table.getSelectionBackground());
+              setBackground(table.getSelectionBackground());
+            } else {
+              setForeground(table.getForeground());
+              setBackground(table.getBackground());
+            }
+            setSelected((value != null && ((Boolean) value).booleanValue()));
+            return this;
+          }
+} 
+      
+                  
        class Task extends SwingWorker<String[], Void> {
         /*
          * Main task. Executed in background thread.
@@ -189,8 +286,11 @@ public class CashTran extends javax.swing.JPanel {
     public void getRecurringExpense() {
          
         rexpensemodel.setRowCount(0);
-        
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date now = new java.util.Date();
          double totexpense = 0.00;
+         ImageIcon haspaid = null;
+         double paidamt = 0.00;
         try {
 
            
@@ -202,14 +302,21 @@ public class CashTran extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select * from exp_mstr ;");
+                res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
+                                  " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" + ";");
                 while (res.next()) {
                     i++;
                     totexpense += Double.valueOf(res.getString("exp_amt"));
+                    paidamt = res.getDouble("pos_totamt");
+                    if (paidamt > 0) {
+                        haspaid = BlueSeerUtils.clickcheck;
+                    } else {
+                        haspaid = BlueSeerUtils.clicknocheck;
+                    }
                     // "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt"
-                    rexpensemodel.addRow(new Object[]{res.getString("exp_id"), res.getString("exp_site"),
+                    rexpensemodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("exp_id"), res.getString("exp_site"),
                       res.getString("exp_entity"), res.getString("exp_name"), 
-                      res.getString("exp_desc"), res.getString("exp_acct"), res.getString("exp_amt")
+                      res.getString("exp_desc"), res.getString("exp_acct"), res.getDouble("exp_amt"), haspaid, paidamt, false
                   });
                 }
             
@@ -225,384 +332,42 @@ public class CashTran extends javax.swing.JPanel {
 
     }
     
-    public String[] addTransaction(String trantype) {
-        
-        String[] message = new String[2];
+    
+      public void getHistory(String key) {
          
+        rexpenseHistoryModel.setRowCount(0);
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date now = new java.util.Date();
+        
         try {
-
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                boolean proceed = true;
-                boolean error = false;
-                String key = "";
-                
-                
               
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
-                setvendorvariables(ddentity.getSelectedItem().toString());
-                    
-                curr = OVData.getDefaultCurrency();
-                String site = OVData.getDefaultSite();   
-                String po = tbpo.getText();
-                if (po.isEmpty()) {
-                    po = "cashtran";
+                res = st.executeQuery("select * from pos_mstr where pos_key = " + "'" + key + "'" + " order by pos_entrydate desc;");
+                while (res.next()) {
+                   //"ID", "Desc", "Vendor", "EffDate", "Acct", "Amount"
+                    rexpenseHistoryModel.addRow(new Object[]{res.getString("pos_key"), res.getString("pos_nbr"),
+                      res.getString("pos_entity"), res.getString("pos_entityname"), 
+                      res.getString("pos_entrydate"), res.getString("pos_aracct"), res.getDouble("pos_totamt")
+                  });
                 }
-                    
-                    
-                    if (proceed && trantype.equals("sell")) {
-                          int shipperid = OVData.getNextNbr("shipper");   
-                          key = String.valueOf(shipperid);
-                             boolean iserror = OVData.CreateShipperHdr(key, site,
-                             String.valueOf(key), 
-                              ddentity.getSelectedItem().toString(), // sh_cust
-                              ddentity.getSelectedItem().toString(),  // sh_ship
-                              expensenbr.getText().replace("'", ""), // sh_so
-                              tbpo.getText().replace("'", ""),  // sh_po
-                              tbpo.getText().replace("'", ""),  // sh_ref
-                              dfdate.format(now), // duedate
-                              dfdate.format(now),  // orddate
-                              tbrmks.getText().replace("'", ""), // sh_rmks
-                              "", "A");  // shipvia, ShipType
-
-                     if (iserror) {
-                         return message = new String[]{"1", "Error creating shipper header"};
-                     }        
-                             
-                    
-                         for (int j = 0; j < detailtable.getRowCount(); j++) {
-                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable.getValueAt(j, 1).toString(), "", "", "", "", "1", 
-                                     detailtable.getValueAt(j, 3).toString(), "0", detailtable.getValueAt(j, 3).toString(), dfdate.format(now), 
-                                     detailtable.getValueAt(j, 4).toString(), detailtable.getValueAt(j, 0).toString(), site, "", "", "0");
-                         }
-                    
-
-                     // now confirm shipment
-                     message = OVData.confirmShipment(String.valueOf(shipperid), now);
-                     if (message[0].equals("1")) { // if error
-                       error = true;
-                       return message;
-                     } 
-                     
-                                     
-                     // now emulate AR payment
-                     if (! error) {
-                     String batchnbr = String.valueOf(OVData.getNextNbr("ar"));
-                      st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
-                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                        + "'" + batchnbr + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "P" + "'" + ","
-                        + "'" + shipperid + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + OVData.getDefaultARAcct() + "'" + ","
-                        + "'" + OVData.getDefaultARCC() + "'" + ","
-                        + "'" + "c" + "'"  + ","
-                        + "'" + OVData.getDefaultARBank() + "'" + ","
-                        + "'" + curr + "'" + ","     
-                        + "'" + curr + "'" + ","         
-                        + "'" + site + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                     
-                      
-               
-                        for (int j = 0; j < detailtable.getRowCount(); j++) {
-                            st.executeUpdate("insert into ard_mstr "
-                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
-                                + " values ( " + "'" + batchnbr + "'" + ","
-                                    + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                                + "'" + shipperid + "'" + ","
-                                + "'" + (j + 1) + "'" + ","
-                                + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + "0" + "'" 
-                                + ")"
-                                + ";");
-                            
-                           
-                            
-                        }
-                    
-                         // update AR entry for original invoices with status and open amt  
-                        error = OVData.ARUpdate(batchnbr);
-                        if (! error) {
-                        error = OVData.glEntryFromARPayment(batchnbr, dcdate.getDate());
-                        }
-                     }
-                    // end of emulate AR Payment
-                      
-                    
-                    
-                     
-                     if (! error) {
-                        message = new String[]{"0", "sell complete"};
-                     }
-                    
-                     
-                     
-                    }
-                    
-                    if (proceed && trantype.equals("buy")) {
-                        
-                      st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_curr, ap_base_curr, ap_bank ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbpo.getText() + "'" + ","
-                        + "'" + tbrmks.getText().replace("'", "") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + curr + "'"  + ","    
-                        + "'" + curr + "'"  + "," 
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                       // lets create receiver
-                        int receiverNbr = OVData.getNextNbr("receiver");
-                        key = String.valueOf(receiverNbr);
-                         st.executeUpdate("insert into recv_mstr "
-                        + "(rv_id, rv_vend, "
-                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
-                        + " values ( " + "'" + key + "'" + ","
-                        + "'" + ddentity.getSelectedItem() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + "asset" + "'" + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
-                        + "'" + site + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'"
-                        + ")"
-                        + ";");
-                      
-                      
-                      
-                int amt = 0;
-               // voucherdet:  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
-               //detailtable: "Line", "Part", "Qty", "Price", "Desc", "ImageFile"
-                    for (int j = 0; j < detailtable.getRowCount(); j++) {
-                        
-                        // lets add item to database
-                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
-                      //  if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
-                       // OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
-                       // }
-                        // lets add each item to inventory
-                        OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
-                                "", "", Double.valueOf("1"));
-                        // now lets add detail voucher
-                        //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
-                        
-                       
-                         
-                         // now create recevier detail
-                          st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_voqty, "
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + key + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + tbpo.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","  // go ahead and set receiver voucher qty         
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + "0" + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + "" + "'" + ","
-                            + "'" + "" + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + site + "'" + ","        
-                            + "'" + "asset" + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                         
-                         
-                        
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + ddentity.getSelectedItem() + "'" + ","
-                            + "'" + String.valueOf(receiverNbr) + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbref.getText() + "'" + ","        
-                            + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
-                            + "'" + OVData.getDefaultAssetCC() + "'" 
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
-                    
-                    /* emulate cash payment */    
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
-                        
-                    if (error) {
-                        message = new String[]{"1", "Error Occurred in Buy"};
-                    } else {
-                    message = new String[]{"0", "buy complete"};
-                    }
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
-                } // if rbbuy
-                   
-                 if (proceed && trantype.equals("expense")) {
-                     
-                       st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
-                        + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbpo.getText() + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-               
-               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
-                    for (int j = 0; j < detailtable.getRowCount(); j++) {
-                       
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + ddentity.getSelectedItem() + "'" + ","
-                            + "'" + "expense" + "'" + ","
-                            + "'" +detailtable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbpo.getText().toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + apcc + "'"
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
-                         
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
-                        
-                    if (error) {
-                        message = new String[]{"1", "An Error Occurred in Expense"};
-                    } else {
-                    message = new String[]{"0", "expense complete"};
-                    }
-                     
-                     
-                     
-                 }   // if rbexpense
-                    
-                    
-                    
-                    
-                    if (proceed ) {
-                     st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
-                        + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + "," 
-                        + "'" + ddentity.getSelectedItem().toString() + "'" + ","
-                        + "'" + lbname.getText() + "'" + ","
-                        + "'" + trantype + "'" + ","       
-                        + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(actamt) + "'" 
-                        + ")"
-                        + ";");
-                     
-                      for (int j = 0; j < detailtable.getRowCount(); j++) {
-                      st.executeUpdate("insert into pos_det "
-                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
-                                + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + (j + 1) + "'" + ","
-                                + "'" + detailtable.getValueAt(j, 1).toString() + "'"  + ","      
-                                + "'" + detailtable.getValueAt(j, 4).toString() + "'"  + "," 
-                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + detailtable.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'" + "," 
-                                + "'" + detailtable.getValueAt(j, 5).toString() + "'"  
-                                + ")"
-                                + ";");
-                      }
-                     
-                    }
-               
-                    if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
-                    }
-                    
-                     initvars(""); 
-                        
-                    
+            
             } catch (SQLException s) {
                 s.printStackTrace();
             }
+            
+            
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return message;
+
     }
     
+  
     public String[] addBuy() {
         
         String[] message = new String[2];
@@ -825,12 +590,20 @@ public class CashTran extends javax.swing.JPanel {
                 String key = "";
                 
                 
+                String entity = "";
+                
+                if (ddentity1.getItemCount() > 0) {
+                    entity = ddentity1.getSelectedItem().toString();
+                } else {
+                    bsmf.MainFrame.show("Entity cannot be blank");
+                    proceed = false;
+                }
               
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
                 DecimalFormat df = new DecimalFormat("#0.00");   
-                setvendorvariables(ddentity1.getSelectedItem().toString());
+                setvendorvariables(entity);
                     
                 curr = OVData.getDefaultCurrency();
                 String site = OVData.getDefaultSite();   
@@ -840,13 +613,15 @@ public class CashTran extends javax.swing.JPanel {
                 }
                     
                     
+                 if (proceed) {
+                     
                  
                           int shipperid = OVData.getNextNbr("shipper");   
                           key = String.valueOf(shipperid);
                              boolean iserror = OVData.CreateShipperHdr(key, site,
                              String.valueOf(key), 
-                              ddentity1.getSelectedItem().toString(), // sh_cust
-                              ddentity1.getSelectedItem().toString(),  // sh_ship
+                              entity, // sh_cust
+                              entity,  // sh_ship
                               expensenbr1.getText().replace("'", ""), // sh_so
                               tbpo1.getText().replace("'", ""),  // sh_po
                               tbpo1.getText().replace("'", ""),  // sh_ref
@@ -882,7 +657,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "(ar_cust, ar_nbr, ar_amt, ar_type, ar_ref, ar_rmks, "
                         + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
                         + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
-                        + " values ( " + "'" + ddentity1.getSelectedItem().toString() + "'" + ","
+                        + " values ( " + "'" + entity + "'" + ","
                         + "'" + batchnbr + "'" + ","
                         + "'" + df.format(actamt) + "'" + ","
                         + "'" + "P" + "'" + ","
@@ -909,7 +684,7 @@ public class CashTran extends javax.swing.JPanel {
                             st.executeUpdate("insert into ard_mstr "
                                 + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
                                 + " values ( " + "'" + batchnbr + "'" + ","
-                                    + "'" + ddentity1.getSelectedItem().toString() + "'" + ","
+                                    + "'" + entity + "'" + ","
                                 + "'" + shipperid + "'" + ","
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + dfdate.format(dcdate1.getDate()) + "'" + ","
@@ -939,7 +714,7 @@ public class CashTran extends javax.swing.JPanel {
                          message = new String[]{"1", "Unable to complete sell transaction"};
                      }
                     
-                    
+                 }  // proceed
                     
                   
                     
@@ -950,7 +725,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + expensenbr1.getText() + "'" + ","
                         + "'" + dfdate.format(dcdate1.getDate()) + "'" + "," 
-                        + "'" + ddentity1.getSelectedItem().toString() + "'" + ","
+                        + "'" + entity + "'" + ","
                         + "'" + lbname1.getText() + "'" + ","
                         + "'" + "sell" + "'" + ","       
                         + "'" + key + "'" + ","         
@@ -975,14 +750,14 @@ public class CashTran extends javax.swing.JPanel {
                                 + ";");
                       }
                      
-                    }
+                   
                
                     if (OVData.isAutoPost()) {
                         OVData.PostGL2();
                     }
                     
                      initvars(""); 
-                        
+                  } // 2nd proceed     
                     
             } catch (SQLException s) {
                 s.printStackTrace();
@@ -1153,6 +928,7 @@ public class CashTran extends javax.swing.JPanel {
               
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dfdate2 = new SimpleDateFormat("yyyyMMdd");
                 java.util.Date now = new java.util.Date();
                 DecimalFormat df = new DecimalFormat("#0.00");   
                 setvendorvariables(ddentity2.getSelectedItem().toString());
@@ -1163,21 +939,32 @@ public class CashTran extends javax.swing.JPanel {
                 if (po.isEmpty()) {
                     po = "cashtran";
                 }
+                     // loop from here through end of selected items to be paid
+                     for (int z = 0; z < recurexpensetable.getRowCount(); z++) {
                      
+                         if (! Boolean.valueOf(recurexpensetable.getValueAt(z, 10).toString())) {  // if not selected in checkbox
+                             continue;
+                         }
+                     
+                         
+                         int exp = OVData.getNextNbr("expensenumber");
+                         key = String.valueOf(exp);
+                         
+                       //  "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?"
                        st.executeUpdate("insert into ap_mstr "
                         + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
                         + "ap_terms, ap_status, ap_bank ) "
-                        + " values ( " + "'" + ddentity2.getSelectedItem() + "'" + ","
+                        + " values ( " + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
                               + "'" + site + "'" + ","
-                        + "'" + expensenbr2.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + key + "'" + ","
+                        + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + ","
                         + "'" + "V" + "'" + ","
-                        + "'" + tbpo2.getText() + "'" + ","
-                        + "'" + tbrmks2.getText() + "'" + ","
+                        + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
+                        + "'" + "" + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate2.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdate2.getDate()) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
                         + "'" + apacct + "'" + ","
                         + "'" + apcc + "'" + ","
                         + "'" + terms + "'" + ","
@@ -1186,37 +973,34 @@ public class CashTran extends javax.swing.JPanel {
                         + ")"
                         + ";");
                
-               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
-                    for (int j = 0; j < detailtable2.getRowCount(); j++) {
-                       
+                        //  "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?"               
                         st.executeUpdate("insert into vod_mstr "
                             + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
                             + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr2.getText() + "'" + ","
-                                + "'" + ddentity2.getSelectedItem() + "'" + ","
+                            + " values ( " + "'" + key + "'" + ","
+                                + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
                             + "'" + "expense" + "'" + ","
-                            + "'" +detailtable2.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + detailtable2.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable2.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable2.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate2.getDate()) + "'" + ","
-                            + "'" + tbpo2.getText().toString() + "'" + ","
-                            + "'" + detailtable2.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + recurexpensetable.getValueAt(z, 5).toString() + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + ","
+                            + "'" + dfdate.format(now) + "'" + ","
+                            + "'" + recurexpensetable.getValueAt(z, 1).toString() + "'" + ","
+                            + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'" + ","
                             + "'" + apcc + "'"
                             + ")"
                             + ";");
                   
-                     }
+                 
                     
-                     int exp = OVData.getNextNbr("expensenumber");
-                     key = String.valueOf(exp);
+                     
                     
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromVoucherExpense(expensenbr2.getText(), dcdate2.getDate());
+                        error = OVData.glEntryFromVoucherExpense(key, now);
                          
                         if (! error)
-                        error = OVData.APExpense(dcdate2.getDate(), exp, expensenbr2.getText(), tbpo2.getText(), ddentity2.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), Double.valueOf(recurexpensetable.getValueAt(z, 9).toString()));
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};
@@ -1226,41 +1010,47 @@ public class CashTran extends javax.swing.JPanel {
                     
                     if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
-                        + " values ( " + "'" + expensenbr2.getText() + "'" + ","
-                        + "'" + dfdate.format(dcdate2.getDate()) + "'" + "," 
-                        + "'" + ddentity2.getSelectedItem().toString() + "'" + ","
-                        + "'" + lbname2.getText() + "'" + ","
-                        + "'" + "sell" + "'" + ","       
-                        + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(actamt) + "'" 
+                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_aracct, pos_totamt ) "
+                        + " values ( " + "'" + key + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + "," 
+                        + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
+                        + "'" + recurexpensetable.getValueAt(z, 4).toString() + "'" + ","
+                        + "'" + "expense" + "'" + ","       
+                        + "'" + recurexpensetable.getValueAt(z, 1).toString() + "'" + ","      // key for recurring is the ID of the recurring exp   
+                        + "'" + "1" + "'" + ","
+                        + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'" + ","         
+                        + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" 
                         + ")"
                         + ";");
                      
-                      for (int j = 0; j < detailtable2.getRowCount(); j++) {
+                      
                       st.executeUpdate("insert into pos_det "
                                 + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
-                                + " values ( " + "'" + expensenbr2.getText() + "'" + ","
-                                + "'" + (j + 1) + "'" + ","
-                                + "'" + detailtable2.getValueAt(j, 1).toString() + "'"  + ","      
-                                + "'" + detailtable2.getValueAt(j, 4).toString() + "'"  + "," 
-                                + "'" + detailtable2.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + detailtable2.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + detailtable2.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable2.getValueAt(j, 3).toString() + "'" + "," 
-                                + "'" + detailtable2.getValueAt(j, 5).toString() + "'"  
+                                + " values ( " + "'" + key + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + recurexpensetable.getValueAt(z, 1).toString() + "'"  + ","      
+                                + "'" + recurexpensetable.getValueAt(z, 5).toString() + "'"  + "," 
+                                + "'" + "" + "'"  + ","        
+                                + "'" + "1" + "'"  + ","   
+                                + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'"  + ","
+                                + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + "," 
+                                + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'"  
                                 + ")"
                                 + ";");
-                      }
+                      
                      
                     }
                
+                  }   
+                 // loop end   
+                    
+                    
                     if (OVData.isAutoPost()) {
                         OVData.PostGL2();
                     }
                     
-                     initvars(""); 
+                     clearRecurExpense();
+                     enableRecurExpense();
                         
                     
             } catch (SQLException s) {
@@ -1334,10 +1124,10 @@ public class CashTran extends javax.swing.JPanel {
     public void initvars(String arg) {
         isLoad = true;
         if (jTabbedPane1.getTabCount() == 0) {
-        jTabbedPane1.add("buy", buyPanel);
-        jTabbedPane1.add("sell", sellPanel);
-        jTabbedPane1.add("expense", expensePanel);
-        jTabbedPane1.add("recurexpense", expenseRecurPanel);
+        jTabbedPane1.add("buy asset", buyPanel);
+        jTabbedPane1.add("sell asset", sellPanel);
+        jTabbedPane1.add("misc expense", expensePanel);
+        jTabbedPane1.add("recurring expense", expenseRecurPanel);
         }
        // jTabbedPane1.setEnabledAt(1, false);
        // jTabbedPane1.setEnabledAt(2, false);
@@ -1423,7 +1213,7 @@ public class CashTran extends javax.swing.JPanel {
         tbrexprice.setEnabled(false);
         btrexpadditem.setEnabled(false);
         btrexpdelitem.setEnabled(false);
-        btadd3.setEnabled(false);        
+        btpayselected.setEnabled(false);        
         btaddentity3.setEnabled(false);
         recurhisttable.setEnabled(false);
         btexpaddacct.setEnabled(false);
@@ -1503,7 +1293,7 @@ public class CashTran extends javax.swing.JPanel {
         btrexpadditem.setEnabled(true);
         btaddentity3.setEnabled(true);
         btrexpdelitem.setEnabled(true);
-        btadd3.setEnabled(true);
+        btpayselected.setEnabled(true);
         btexpaddacct.setEnabled(true);
         
         recurhisttable.setEnabled(true);
@@ -1529,7 +1319,7 @@ public class CashTran extends javax.swing.JPanel {
          tbpo.setText("");
         tbrmks.setText("");
         tbref.setText("");
-        jPanel3.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+      
         tbactualamt.setText("");
         tbactualamt.setEditable(false);
         lbtitle.setText("");
@@ -1561,7 +1351,7 @@ public class CashTran extends javax.swing.JPanel {
          tbpo2.setText("");
         tbrmks2.setText("");
         tbref2.setText("");
-        jPanel6.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        
         tbactualamt2.setText("");
         tbactualamt2.setEditable(false);
         lbtitle2.setText("");
@@ -1606,7 +1396,7 @@ public class CashTran extends javax.swing.JPanel {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          dcdate3.setDate(now);
         
-        jPanel8.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+       
         tbrexptotamt.setText("");
         tbrexptotamt.setEditable(false);
         lbname3.setText("");
@@ -1615,6 +1405,9 @@ public class CashTran extends javax.swing.JPanel {
         expensemodel.setRowCount(0);
         recurhisttable.setModel(rexpenseHistoryModel);
         recurexpensetable.setModel(rexpensemodel);
+        CashTran.CheckBoxRenderer checkBoxRenderer = new CashTran.CheckBoxRenderer();
+        recurexpensetable.getColumnModel().getColumn(10).setCellRenderer(checkBoxRenderer); 
+        
         ddrexpentity.removeAllItems();
          ArrayList entity = new ArrayList();
         entity = OVData.getvendmstrlist(); 
@@ -1654,7 +1447,7 @@ public class CashTran extends javax.swing.JPanel {
          tbpo1.setText("");
         tbrmks1.setText("");
         tbref1.setText("");
-        jPanel4.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+       
         tbactualamt1.setText("");
         tbactualamt1.setEditable(false);
         lbtitle1.setText("");
@@ -1787,7 +1580,6 @@ public class CashTran extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         dcdate1 = new com.toedter.calendar.JDateChooser();
         expensenbr1 = new javax.swing.JTextField();
-        rbBuy1 = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
         lblentity1 = new javax.swing.JLabel();
         tbrmks1 = new javax.swing.JTextField();
@@ -1798,7 +1590,6 @@ public class CashTran extends javax.swing.JPanel {
         btnewsell = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        rbSell1 = new javax.swing.JRadioButton();
         lbtitle1 = new javax.swing.JLabel();
         btaddentity1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
@@ -1813,7 +1604,6 @@ public class CashTran extends javax.swing.JPanel {
         tbqty1 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         lbacct1 = new javax.swing.JLabel();
-        rbexpense1 = new javax.swing.JRadioButton();
         tbactualamt1 = new javax.swing.JTextField();
         jLabel28 = new javax.swing.JLabel();
         buyPanel = new javax.swing.JPanel();
@@ -1886,7 +1676,7 @@ public class CashTran extends javax.swing.JPanel {
         tbactualamt2 = new javax.swing.JTextField();
         jLabel29 = new javax.swing.JLabel();
         expenseRecurPanel = new javax.swing.JPanel();
-        btadd3 = new javax.swing.JButton();
+        btpayselected = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         recurhisttable = new javax.swing.JTable();
         tbrexptotamt = new javax.swing.JTextField();
@@ -1957,16 +1747,9 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane8.setViewportView(detailtable1);
 
-        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Sell Asset Maintenance"));
 
         dcdate1.setDateFormatString("yyyy-MM-dd");
-
-        rbBuy1.setText("buy");
-        rbBuy1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbBuy1ItemStateChanged(evt);
-            }
-        });
 
         jLabel8.setText("PO#");
 
@@ -1991,16 +1774,9 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel36.setText("Date");
 
-        rbSell1.setText("sell");
-        rbSell1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbSell1ItemStateChanged(evt);
-            }
-        });
-
         lbtitle1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
-        btaddentity1.setText("add new buyer/seller");
+        btaddentity1.setText("add new customer");
         btaddentity1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddentity1ActionPerformed(evt);
@@ -2101,13 +1877,6 @@ public class CashTran extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        rbexpense1.setText("expense");
-        rbexpense1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbexpense1ItemStateChanged(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -2141,21 +1910,11 @@ public class CashTran extends javax.swing.JPanel {
                                 .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(285, 285, 285))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(241, 241, 241)
-                                        .addComponent(rbSell1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(rbBuy1)
-                                        .addGap(22, 22, 22)
-                                        .addComponent(rbexpense1)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(ddentity1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btaddentity1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel9)))
+                                .addComponent(ddentity1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaddentity1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbrmks1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(177, 177, 177)))))
@@ -2181,10 +1940,7 @@ public class CashTran extends javax.swing.JPanel {
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel25)
                                     .addComponent(expensenbr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(rbSell1)
-                                    .addComponent(btnewsell)
-                                    .addComponent(rbBuy1)
-                                    .addComponent(rbexpense1))
+                                    .addComponent(btnewsell))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbname1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2264,7 +2020,7 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane7.setViewportView(detailtable);
 
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Buy Asset Maintenance"));
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
@@ -2536,7 +2292,7 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane9.setViewportView(detailtable2);
 
-        jPanel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc Expense Maintenance"));
 
         dcdate2.setDateFormatString("yyyy-MM-dd");
 
@@ -2565,7 +2321,7 @@ public class CashTran extends javax.swing.JPanel {
 
         lbtitle2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
-        btaddentity2.setText("add new buyer/seller");
+        btaddentity2.setText("add new vendor");
         btaddentity2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddentity2ActionPerformed(evt);
@@ -2809,13 +2565,16 @@ public class CashTran extends javax.swing.JPanel {
 
         expenseRecurPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Expense Recurring"));
 
-        btadd3.setText("Commit");
-        btadd3.addActionListener(new java.awt.event.ActionListener() {
+        btpayselected.setText("Pay Selected Items");
+        btpayselected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btadd3ActionPerformed(evt);
+                btpayselectedActionPerformed(evt);
             }
         });
 
+        jScrollPane10.setBorder(javax.swing.BorderFactory.createTitledBorder("History Of Payment"));
+
+        recurhisttable.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         recurhisttable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -2839,6 +2598,8 @@ public class CashTran extends javax.swing.JPanel {
 
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.LINE_AXIS));
 
+        jScrollPane11.setBorder(javax.swing.BorderFactory.createTitledBorder("Recurring Expenses"));
+
         recurexpensetable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -2850,9 +2611,14 @@ public class CashTran extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        recurexpensetable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recurexpensetableMouseClicked(evt);
+            }
+        });
         jScrollPane11.setViewportView(recurexpensetable);
 
-        jPanel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Recurring Expense Maintenance"));
 
         dcdate3.setDateFormatString("yyyy-MM-dd");
 
@@ -2868,7 +2634,7 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel38.setText("Date");
 
-        btaddentity3.setText("add new Vendor");
+        btaddentity3.setText("add new vendor");
         btaddentity3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddentity3ActionPerformed(evt);
@@ -3024,7 +2790,7 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(dcdate3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -3035,8 +2801,7 @@ public class CashTran extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3058,7 +2823,7 @@ public class CashTran extends javax.swing.JPanel {
             }
         });
 
-        jLabel21.setText("Net Income");
+        jLabel21.setText("Enter Monthly Net Income:");
 
         javax.swing.GroupLayout expenseRecurPanelLayout = new javax.swing.GroupLayout(expenseRecurPanel);
         expenseRecurPanel.setLayout(expenseRecurPanelLayout);
@@ -3071,30 +2836,33 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, expenseRecurPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11)
-                            .addGroup(expenseRecurPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel21)
+                        .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, expenseRecurPanelLayout.createSequentialGroup()
+                                .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addGroup(expenseRecurPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel21)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbrexpincome, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(61, 61, 61)
+                                        .addComponent(jLabel33)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbrexpincome, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(61, 61, 61)
-                                .addComponent(jLabel33)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbrexpdiff)
-                            .addComponent(tbrexptotamt, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btadd3))))
+                                .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbrexpdiff)
+                                    .addComponent(tbrexptotamt, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
+                                .addGap(73, 73, 73))
+                            .addComponent(btpayselected, javax.swing.GroupLayout.Alignment.TRAILING)))))
         );
         expenseRecurPanelLayout.setVerticalGroup(
             expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(expenseRecurPanelLayout.createSequentialGroup()
                 .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(15, 15, 15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btpayselected)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
+                .addGap(7, 7, 7)
                 .addGroup(expenseRecurPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btadd3)
                     .addComponent(tbrexptotamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel33)
                     .addComponent(tbrexpincome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3255,10 +3023,6 @@ public class CashTran extends javax.swing.JPanel {
         task.execute();   
     }//GEN-LAST:event_btadd1ActionPerformed
 
-    private void rbBuy1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbBuy1ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbBuy1ItemStateChanged
-
     private void ddentity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddentity1ActionPerformed
            if (ddentity.getSelectedItem() != null )
         try {
@@ -3301,10 +3065,6 @@ public class CashTran extends javax.swing.JPanel {
                BlueSeerUtils.messagereset();
         
     }//GEN-LAST:event_btnewsellActionPerformed
-
-    private void rbSell1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSell1ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbSell1ItemStateChanged
 
     private void btaddentity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentity1ActionPerformed
         reinitpanels("MenuCustMstr", true, "");
@@ -3403,10 +3163,6 @@ public class CashTran extends javax.swing.JPanel {
             tbqty1.setBackground(Color.white);
         }
     }//GEN-LAST:event_tbqty1FocusLost
-
-    private void rbexpense1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbexpense1ItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbexpense1ItemStateChanged
 
     private void tbactualamt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbactualamt1ActionPerformed
         // TODO add your handling code here:
@@ -3560,9 +3316,12 @@ public class CashTran extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tbactualamt2ActionPerformed
 
-    private void btadd3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadd3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btadd3ActionPerformed
+    private void btpayselectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpayselectedActionPerformed
+         BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableRecurExpense();
+        Task task = new Task("recurexpense");
+        task.execute(); 
+    }//GEN-LAST:event_btpayselectedActionPerformed
 
     private void ddrexpentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpentityActionPerformed
             if (ddentity.getSelectedItem() != null )
@@ -3637,9 +3396,9 @@ public class CashTran extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                int i = st.executeUpdate("delete from exp_mstr where exp_id = " + "'" + recurexpensetable.getValueAt(row, 0).toString()  + "'" + ";");   
+                int i = st.executeUpdate("delete from exp_mstr where exp_id = " + "'" + recurexpensetable.getValueAt(row, 1).toString()  + "'" + ";");   
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted order number " + recurexpensetable.getValueAt(row, 0).toString());
+                    bsmf.MainFrame.show("deleted order number " + recurexpensetable.getValueAt(row, 1).toString());
                     }
                 } catch (SQLException s) {
                     s.printStackTrace();
@@ -3736,25 +3495,25 @@ public class CashTran extends javax.swing.JPanel {
     //   }
       
        switch(tab) {
-                case "buy":
+                case "buy asset":
                     clearBuy();
                     disableBuy();
                     btnewbuy.setEnabled(true);
                     break;
                     
-                case "sell":
+                case "sell asset":
                     clearSell();
                     disableSell();
                     btnewsell.setEnabled(true);
                     break;
                     
-                case "expense":
+                case "misc expense":
                     clearExpense();
                     disableExpense();
                     btnewexpense.setEnabled(true);
                     break;
                     
-                case "recurexpense":
+                case "recurring expense":
                     clearRecurExpense();
                    // disableRecurExpense();
                     break;
@@ -3784,10 +3543,17 @@ public class CashTran extends javax.swing.JPanel {
         calcdiff();
     }//GEN-LAST:event_tbrexpincomeFocusLost
 
+    private void recurexpensetableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recurexpensetableMouseClicked
+         int row = recurexpensetable.rowAtPoint(evt.getPoint());
+        int col = recurexpensetable.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+              getHistory(recurexpensetable.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_recurexpensetableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadd1;
-    private javax.swing.JButton btadd3;
     private javax.swing.JButton btaddaccount2;
     private javax.swing.JButton btaddentity;
     private javax.swing.JButton btaddentity1;
@@ -3804,6 +3570,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JButton btnewbuy;
     private javax.swing.JButton btnewexpense;
     private javax.swing.JButton btnewsell;
+    private javax.swing.JButton btpayselected;
     private javax.swing.JButton btrexpadditem;
     private javax.swing.JButton btrexpdelitem;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -3896,9 +3663,6 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel lbtitle;
     private javax.swing.JLabel lbtitle1;
     private javax.swing.JLabel lbtitle2;
-    private javax.swing.JRadioButton rbBuy1;
-    private javax.swing.JRadioButton rbSell1;
-    private javax.swing.JRadioButton rbexpense1;
     private javax.swing.JTable recurexpensetable;
     private javax.swing.JTable recurhisttable;
     private javax.swing.JPanel sellPanel;

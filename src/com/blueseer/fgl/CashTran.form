@@ -113,8 +113,8 @@
         <Container class="javax.swing.JPanel" name="jPanel4">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder roundedCorners="true" thickness="3"/>
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Sell Asset Maintenance"/>
               </Border>
             </Property>
           </Properties>
@@ -156,24 +156,11 @@
                                       <EmptySpace min="-2" pref="285" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="241" max="-2" attributes="0"/>
-                                              <Component id="rbSell1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="rbBuy1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                                              <Component id="rbexpense1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="ddentity1" min="-2" pref="110" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btaddentity1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <Component id="ddentity1" min="-2" pref="110" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btaddentity1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbrmks1" min="-2" pref="269" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
@@ -208,10 +195,7 @@
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="expensenbr1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="rbSell1" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btnewsell" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="rbBuy1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="rbexpense1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="lbname1" min="-2" pref="28" max="-2" attributes="0"/>
@@ -245,14 +229,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="expensenbr1">
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="rbBuy1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="buy"/>
-              </Properties>
-              <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbBuy1ItemStateChanged"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
@@ -303,14 +279,6 @@
                 <Property name="text" type="java.lang.String" value="Date"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JRadioButton" name="rbSell1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="sell"/>
-              </Properties>
-              <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSell1ItemStateChanged"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="lbtitle1">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -320,7 +288,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btaddentity1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="add new buyer/seller"/>
+                <Property name="text" type="java.lang.String" value="add new customer"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddentity1ActionPerformed"/>
@@ -461,14 +429,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JRadioButton" name="rbexpense1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="expense"/>
-              </Properties>
-              <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbexpense1ItemStateChanged"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JTextField" name="tbactualamt1">
@@ -561,8 +521,8 @@
         <Container class="javax.swing.JPanel" name="jPanel3">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder roundedCorners="true" thickness="3"/>
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Buy Asset Maintenance"/>
               </Border>
             </Property>
           </Properties>
@@ -966,8 +926,8 @@
         <Container class="javax.swing.JPanel" name="jPanel6">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder roundedCorners="true" thickness="3"/>
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Misc Expense Maintenance"/>
               </Border>
             </Property>
           </Properties>
@@ -1141,7 +1101,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btaddentity2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="add new buyer/seller"/>
+                <Property name="text" type="java.lang.String" value="add new vendor"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddentity2ActionPerformed"/>
@@ -1344,23 +1304,27 @@
                       <Component id="jScrollPane10" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="tbrexpincome" min="-2" pref="112" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                                          <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tbrexpincome" min="-2" pref="112" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-                                  <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="tbrexpdiff" max="32767" attributes="0"/>
+                                      <Component id="tbrexptotamt" pref="111" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="btpayselected" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="tbrexpdiff" max="32767" attributes="0"/>
-                              <Component id="tbrexptotamt" pref="111" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btadd3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -1370,11 +1334,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel10" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btpayselected" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane10" min="-2" pref="141" max="-2" attributes="0"/>
-                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                  <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btadd3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tbrexptotamt" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tbrexpincome" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1390,15 +1355,22 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btadd3">
+        <Component class="javax.swing.JButton" name="btpayselected">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="text" type="java.lang.String" value="Pay Selected Items"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btadd3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpayselectedActionPerformed"/>
           </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane10">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="History Of Payment"/>
+              </Border>
+            </Property>
+          </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -1407,6 +1379,11 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="recurhisttable">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder/>
+                  </Border>
+                </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
                     <Column editable="true" title="Title 1" type="java.lang.Object"/>
@@ -1442,8 +1419,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane11" min="-2" pref="558" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jScrollPane11" pref="562" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1462,6 +1438,13 @@
               </Layout>
               <SubComponents>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane11">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Recurring Expenses"/>
+                      </Border>
+                    </Property>
+                  </Properties>
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                   </AuxValues>
@@ -1479,14 +1462,17 @@
                           </Table>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="recurexpensetableMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel8">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true" thickness="3"/>
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Recurring Expense Maintenance"/>
                       </Border>
                     </Property>
                   </Properties>
@@ -1560,7 +1546,7 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="26" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1602,7 +1588,7 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="btaddentity3">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="add new Vendor"/>
+                        <Property name="text" type="java.lang.String" value="add new vendor"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddentity3ActionPerformed"/>
@@ -1774,7 +1760,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel21">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Net Income"/>
+            <Property name="text" type="java.lang.String" value="Enter Monthly Net Income:"/>
           </Properties>
         </Component>
       </SubComponents>

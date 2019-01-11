@@ -566,9 +566,6 @@ try {
               if (! checkperms("MenuOrderMaint")) { return; }
               //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
               reinitpanels("MenuOrderMaint",  true, tableorder.getValueAt(row, 1).toString());
-               
-               
-           
         }
     }//GEN-LAST:event_tableorderMouseClicked
 
