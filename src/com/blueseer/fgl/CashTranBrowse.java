@@ -167,8 +167,9 @@ public class CashTranBrowse extends javax.swing.JPanel {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
                   
-                res = st.executeQuery("select posd_acct, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
+                res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
                         " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " inner join ac_mstr on ac_id = posd_acct  " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type = 'expense' " +
@@ -178,7 +179,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                
                 String acct = "";
                 while (res.next()) {
-                      acct = res.getString("posd_acct");  
+                      acct = res.getString("ac_desc");  
                     Double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                     

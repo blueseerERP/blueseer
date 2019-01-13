@@ -1068,6 +1068,8 @@ public class CashTran extends javax.swing.JPanel {
     
     
     public void addExpenseAccount(String desc) {
+        ddrexpacct.removeAllItems();
+        ddaccountexpense.removeAllItems();
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1103,7 +1105,7 @@ public class CashTran extends javax.swing.JPanel {
                             + ";");
                         bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
                         ddaccountexpense.addItem(String.valueOf(acctnbr));
-                        ddexpacct.addItem(String.valueOf(acctnbr));
+                        ddrexpacct.addItem(String.valueOf(acctnbr));
                     } else {
                         bsmf.MainFrame.show("Acct Number Already Exists");
                     }
@@ -1208,7 +1210,7 @@ public class CashTran extends javax.swing.JPanel {
         ddrexpentity.setEnabled(false);
         dcdate3.setEnabled(false);
         tbID.setEnabled(false);
-        ddexpacct.setEnabled(false);
+        ddrexpacct.setEnabled(false);
         tbexpensedesc.setEnabled(false);
         tbrexprice.setEnabled(false);
         btrexpadditem.setEnabled(false);
@@ -1287,7 +1289,7 @@ public class CashTran extends javax.swing.JPanel {
         ddrexpentity.setEnabled(true);
         dcdate3.setEnabled(true);
         tbID.setEnabled(true);
-        ddexpacct.setEnabled(true);
+        ddrexpacct.setEnabled(true);
         tbexpensedesc.setEnabled(true);
         tbrexprice.setEnabled(true);
         btrexpadditem.setEnabled(true);
@@ -1351,7 +1353,7 @@ public class CashTran extends javax.swing.JPanel {
          tbpo2.setText("");
         tbrmks2.setText("");
         tbref2.setText("");
-        
+        lbacct2.setText("");
         tbactualamt2.setText("");
         tbactualamt2.setEditable(false);
         lbtitle2.setText("");
@@ -1396,7 +1398,7 @@ public class CashTran extends javax.swing.JPanel {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          dcdate3.setDate(now);
         
-       
+        lbrexpacctname.setText("");
         tbrexptotamt.setText("");
         tbrexptotamt.setEditable(false);
         lbname3.setText("");
@@ -1417,17 +1419,18 @@ public class CashTran extends javax.swing.JPanel {
             if (ddrexpentity.getItemCount() > 0)
             ddrexpentity.setSelectedIndex(0);
             
-            
+        ddrexpsite.removeAllItems();
         ddrexpsite.addItem(OVData.getDefaultSite());
         
             
          ArrayList accts = new ArrayList();
         accts = OVData.getGLAcctExpenseDisplayOnly(); 
+        ddrexpacct.removeAllItems();
         for (int i = 0; i < accts.size(); i++) {
-            ddexpacct.addItem(accts.get(i).toString());
+            ddrexpacct.addItem(accts.get(i).toString());
         }
-            if (ddexpacct.getItemCount() > 0)
-            ddexpacct.setSelectedIndex(0);   
+            if (ddrexpacct.getItemCount() > 0)
+            ddrexpacct.setSelectedIndex(0);   
             
         getRecurringExpense();   
         calcdiff();
@@ -1700,12 +1703,13 @@ public class CashTran extends javax.swing.JPanel {
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         tbexpensedesc = new javax.swing.JTextField();
-        ddexpacct = new javax.swing.JComboBox<>();
+        ddrexpacct = new javax.swing.JComboBox<>();
         btrexpdelitem = new javax.swing.JButton();
         btrexpadditem = new javax.swing.JButton();
         btexpaddacct = new javax.swing.JButton();
         ddrexpsite = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        lbrexpacctname = new javax.swing.JLabel();
         tbrexpdiff = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         tbrexpincome = new javax.swing.JTextField();
@@ -2653,9 +2657,9 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel23.setText("Desc");
 
-        ddexpacct.addActionListener(new java.awt.event.ActionListener() {
+        ddrexpacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddexpacctActionPerformed(evt);
+                ddrexpacctActionPerformed(evt);
             }
         });
 
@@ -2700,12 +2704,16 @@ public class CashTran extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btrexpdelitem))
                     .addComponent(tbrexprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(ddexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btexpaddacct))
                     .addComponent(tbexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btexpaddacct)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
@@ -2719,10 +2727,12 @@ public class CashTran extends javax.swing.JPanel {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel23))
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbitem3))
                     .addComponent(btexpaddacct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
@@ -2789,8 +2799,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addComponent(jLabel38))
                     .addComponent(dcdate3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -3362,17 +3371,17 @@ public class CashTran extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbrexpriceFocusLost
 
-    private void ddexpacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddexpacctActionPerformed
-       if (ddexpacct.getSelectedItem() != null && ! isLoad )
+    private void ddrexpacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpacctActionPerformed
+       if (ddrexpacct.getSelectedItem() != null && ! isLoad )
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddexpacct.getSelectedItem().toString() + "'" + ";");
+                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddrexpacct.getSelectedItem().toString() + "'" + ";");
                     while (res.next()) {
-                        tbexpensedesc.setText(res.getString("ac_desc"));
+                        lbrexpacctname.setText(res.getString("ac_desc"));
                     }
             } catch (SQLException s) {
                 s.printStackTrace();
@@ -3381,7 +3390,7 @@ public class CashTran extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_ddexpacctActionPerformed
+    }//GEN-LAST:event_ddrexpacctActionPerformed
 
     private void btrexpdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrexpdelitemActionPerformed
           boolean proceed = bsmf.MainFrame.warn("Are you sure?");
@@ -3425,6 +3434,13 @@ public class CashTran extends javax.swing.JPanel {
            tbexpensedesc.requestFocus();
            return;
        }
+       
+       if (ddrexpentity.getSelectedItem() == null) {
+          bsmf.MainFrame.show("Entity value must be selected");
+           ddrexpentity.requestFocus();
+           return; 
+       }
+       
             DecimalFormat df = new DecimalFormat("#0.00"); 
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
@@ -3445,7 +3461,7 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + ddrexpsite.getSelectedItem().toString() + "'" + "," 
                             + "'" + ddrexpentity.getSelectedItem().toString() + "'" + ","
                             + "'" + lbname3.getText() + "'" + ","
-                            + "'" + ddexpacct.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddrexpacct.getSelectedItem().toString() + "'" + ","
                             + "'" + "9999" + "'"  + ","
                             + "'" + dfdate.format(dcdate3.getDate()) + "'"  + ","     
                             + "'" + dfdate.format(dcdate3.getDate()) + "'"  + ","
@@ -3473,7 +3489,7 @@ public class CashTran extends javax.swing.JPanel {
         
         tbexpensedesc.setText("");
         tbrexprice.setText("");
-        ddexpacct.setSelectedIndex(0);
+        ddrexpacct.setSelectedIndex(0);
         tbexpensedesc.requestFocus();
     }//GEN-LAST:event_btrexpadditemActionPerformed
 
@@ -3583,8 +3599,8 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JComboBox ddentity;
     private javax.swing.JComboBox ddentity1;
     private javax.swing.JComboBox ddentity2;
-    private javax.swing.JComboBox<String> ddexpacct;
     private javax.swing.JComboBox<String> dditem1;
+    private javax.swing.JComboBox<String> ddrexpacct;
     private javax.swing.JComboBox ddrexpentity;
     private javax.swing.JComboBox<String> ddrexpsite;
     private javax.swing.JTable detailtable;
@@ -3660,6 +3676,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel lbname1;
     private javax.swing.JLabel lbname2;
     private javax.swing.JLabel lbname3;
+    private javax.swing.JLabel lbrexpacctname;
     private javax.swing.JLabel lbtitle;
     private javax.swing.JLabel lbtitle1;
     private javax.swing.JLabel lbtitle2;

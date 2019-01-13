@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-echo -n "Enter the IP addr of database server: ex:  '11.23.44.23' or 'localhost': "
+echo -n "Enter the IP addr of database server: ex:  '12.23.44.23' or 'localhost': "
 read IP
 
 

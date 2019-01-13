@@ -1545,8 +1545,7 @@
                                   <Component id="dcdate3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jPanel9" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1599,7 +1598,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="lbitem3" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -1615,13 +1614,19 @@
                                           <Component id="btrexpdelitem" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="tbrexprice" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
+                                      <Component id="tbexpensedesc" alignment="0" min="-2" pref="313" max="-2" attributes="0"/>
+                                      <Component id="ddrexpsite" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="ddexpacct" min="-2" pref="180" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="ddrexpacct" min="-2" pref="180" max="-2" attributes="0"/>
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                                  <Component id="lbrexpacctname" min="-2" pref="178" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btexpaddacct" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="tbexpensedesc" alignment="0" min="-2" pref="313" max="-2" attributes="0"/>
-                                      <Component id="ddrexpsite" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="28" max="32767" attributes="0"/>
                               </Group>
@@ -1640,10 +1645,12 @@
                                       <Component id="tbexpensedesc" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbrexpacctname" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                          <Component id="ddexpacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ddrexpacct" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="lbitem3" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="btexpaddacct" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
@@ -1686,14 +1693,14 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="tbexpensedesc">
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="ddexpacct">
+                        <Component class="javax.swing.JComboBox" name="ddrexpacct">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="0"/>
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddexpacctActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddrexpacctActionPerformed"/>
                           </Events>
                           <AuxValues>
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -1737,6 +1744,8 @@
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Site"/>
                           </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="lbrexpacctname">
                         </Component>
                       </SubComponents>
                     </Container>
