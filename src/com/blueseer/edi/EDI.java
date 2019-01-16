@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -36,6 +37,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,10 +64,11 @@ public class EDI {
     // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref, outfile
     // outfile is an optional parameter passed during cmdline processing
     
-    public static String[] controlarray = new String[13];
+  //  public static String[] controlarray = new String[21];
     
-    public static String[] initEDIControl() {          
-            /*  12 elements consisting of:
+    public static String[] initEDIControl() {   
+        String[] controlarray = new String[21];
+            /*  
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -79,8 +82,16 @@ public class EDI {
             c[10] = ed;
             c[11] = ud;
             c[12] = overideenvelope
+            c[13] = isastring
+            c[14] = gsstring
+            c[15] = dir
+            c[16] = idxnbr
+            c[17] = isastart
+            c[18] = isaend
+            c[19] = docstart
+            cp20] = docend
               */
-               for (int i = 0; i < 13; i++) {
+               for (int i = 0; i < 21; i++) {
                     controlarray[i] = "";
                 }
                 return controlarray;
@@ -132,7 +143,7 @@ public class EDI {
     }
     
      public static void processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
-        String[] control = initEDIControl();
+        String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
          char[] cbuf = new char[(int) file.length()];
@@ -140,49 +151,90 @@ public class EDI {
          f.close();
          
          // now lets see how many ISAs and STs within those ISAs and write character positions of each
-         Map<Integer, Integer[]> ISAmap = new HashMap<Integer, Integer[]>();
+         Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
          int start = 0;
          int end = 0;
          int isacount = 0;
          int gscount = 0;
          int stcount = 0;
+         int ststart = 0;
+         int sestart = 0;
+         String ed_escape = "";
+         int gsstart = 0;
          ArrayList<String> isaList = new ArrayList<String>();
-          StringBuilder segment = new StringBuilder();
+          
           char e = 0;
           char s = 0;
           char u = 0;
+          
+           ArrayList<Integer[]> stse = new ArrayList<Integer[]>();
+           
             for (int i = 0; i < cbuf.length; i++) {
+                
                 if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
                     e = cbuf[i+103];
                     u = cbuf[i+104];
                     s = cbuf[i+105];
+                    ed_escape = escapeDelimiter(String.valueOf(e));
                     if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
                         s = cbuf[i+106];
                     start = i;
                     isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
+                    isacount++;
+                    String[] isa = new String(cbuf, i, 105).split(ed_escape);
+                     // set control
+                    c = initEDIControl();
+                    c[0] = isa[6].trim(); // senderid
+                    c[2] = map;
+                    c[3] = infile;
+                    c[4] = isa[13]; //isactrlnbr
+                    c[8] = outfile;
+                    c[9] = String.valueOf(s);
+                    c[10] = String.valueOf(e);
+                    c[11] = String.valueOf(u);
+                    c[12] = isOverride;
+                    c[13] = new String(cbuf,i,105);
+                    c[15] = "0"; // inbound
+                    
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
                     gscount++;
                     isaList.add("GS" + ":" + String.valueOf(i));
+                    gsstart = i;
+                    String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
+                    c[5] = gs[6]; // gsctrlnbr
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
+                    
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
                     stcount++;
                     isaList.add("ST" + ":" + String.valueOf(i));
+                    ststart = i;
+                    
+                    String[] st = new String(cbuf, i, 16).split(ed_escape);
+                    c[1] = st[1]; // doctype
+                   // c[6] = st[2]; //docID
+                   c[6] = "boo";
+                   // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
                     isaList.add("SE" + ":" + String.valueOf(i));
+                    sestart = i;
+                    stse.add(new Integer[] {ststart, sestart});
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
                     end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
                     // now add to ISAmap
-                    ISAmap.put(isacount, new Integer[] {start, end, (int) s, (int) e, (int) u});
+                    ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, stse.clone(), c});
                     isaList.add("IEA" + ":" + String.valueOf(i));
+                    stse.clear();
                 } 
             }
             
-            for (String out : isaList) {
-                System.out.println(out);
-            }
+            
+         //   for (String out : isaList) {
+        //        System.out.println(out);
+        //    }
          
          /* lets check to see if its x12 or edifact or csv or xml */
          /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
@@ -193,7 +245,7 @@ public class EDI {
      //    }
          
          if (editype.equals("X12")) {
-             processX12CmdLine(ISAmap, cbuf, infile, map, outfile, isOverride);
+             processX12CmdLine(ISAmap, cbuf);
          }
          
      //    if (editype.equals("CSV")) {
@@ -672,58 +724,54 @@ public class EDI {
       
 }
     
-    public static void processX12CmdLine(Map<Integer, Integer[]> ISAmap, char[] cbuf, String infile, String map, String outfile, String isOverride)   {
-    ArrayList<String> doc = new ArrayList<String>();
+    public static void processX12CmdLine(Map<Integer, Object[]> ISAmap, char[] cbuf)   {
     
-    /*
-    char flddelim = 0;
-    char subdelim = 0;
-    char segdelim = 0;
+     /*  17 elements consisting of:
+            c[0] = senderid;
+            c[1] = doctype;
+            c[2] = map;
+            c[3] = infile;
+            c[4] = controlnum;
+            c[5] = gsctrlnbr;
+            c[6] = docid;
+            c[7] = ref;
+            c[8] = outfile;
+            c[9] = sd;
+            c[10] = ed;
+            c[11] = ud;
+            c[12] = overideenvelope
+            c[13] = isastring
+            c[14] = gsstring
+            c[15] = dir
+            c[16] = idxnbr
+            c[17] = isastart
+            c[18] = isaend
+            c[19] = docstart
+            cp20] = docend
+              */
     
-    String flddelim_str = "";
-    String subdelim_str = "";
-    String segdelim_str = "";
-    String ed = "";
-    String ud = "";
-    String sd = "";
-    String ed_escape = "";
-    */
-    
-    /* lets set the delimiters */
-    /*
-    if (cbuf[0] == 'I' &&
-        cbuf[1] == 'S' &&
-        cbuf[2] == 'A') {
-           flddelim = cbuf[103];
-           subdelim = cbuf[104];
-           segdelim = cbuf[105];
-        flddelim_str = ed = String.valueOf(flddelim);
-        subdelim_str = ud = String.valueOf(subdelim);
-        segdelim_str = sd = String.valueOf(segdelim);
-        
-         // special case for 0d0a ...if so use both characters as segment delimiter
-           if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
-            segdelim_str = sd = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
-           }
-       
-           
-        
-        ed_escape = escapeDelimiter(ed);
-           
-              
-    } 
-    */
+    // ISAmap is defined as new Integer[] {start, end, (int) s, (int) e, (int) u});
     
     // loop through ISAMap entries
-    for (Map.Entry<Integer, Integer[]> isa : ISAmap.entrySet()) {
-   
-        char segdelim = (char) isa.getValue()[2].intValue(); // get segment delimiter
-        char elmdelim = (char) isa.getValue()[3].intValue(); // get element delimiter
-        char subdelim = (char) isa.getValue()[4].intValue(); // get element delimiter
-        String ed_escape = escapeDelimiter(String.valueOf(elmdelim));
+    
+    for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+        int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
+        int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
+        char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
+        
+        String[] c = (String[]) isa.getValue()[6];
+        ArrayList d = (ArrayList) isa.getValue()[5];
+        
+     for (Object z : d) {
+            Integer[] k = (Integer[]) z;
+           // System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+        
+        String ed_escape = escapeDelimiter(String.valueOf(c[10]));
     // here you are inserting 'segments' into ArrayList doc
     StringBuilder segment = new StringBuilder();
-    for (int i = 0; i < cbuf.length; i++) {
+   // for (int i = 0; i < cbuf.length; i++) {
+   ArrayList<String> doc = new ArrayList<String>();
+   for (int i = k[0]; i < k[1]; i++) {
         if (cbuf[i] == segdelim) {
             doc.add(segment.toString());
             segment.delete(0, segment.length());
@@ -733,116 +781,48 @@ public class EDI {
             } 
         }
     }
-       
-    /* let's get the ISA and GS info and determine the class map to call based on sender ID */
-        int i = 0;
-        int start = 0;
-        int stop = 0;
-        String senderid = "";
-        String doctype = "";
-        String docid = "";
-        String gsctrlnbr = "";
-        String gssender = "";
-        String gstype = "";
-        String isaq = "";
-        String bsisaq = "";
-        String bsisa = "";
-        String bsgs = "";
-        String ver = "";
-        ArrayList<String> falist = new ArrayList<String>();
-        String ISASTRING = "";
-        String controlnum = "";
-        String GSSTRING = "";
-        String IEASTRING = "";
-        String GESTRING = "";
-        String[] c = null;
-        boolean proceed = false;
+        // insert isa and st start and stop integer points within the file
         
-        
-        // grab last two lines of doc and assign to iea and ge
-        IEASTRING = doc.get(doc.size() - 1);
-        GESTRING = doc.get(doc.size() - 2);
-        
-        for (Object seg : doc) {
-           String[] segarr = seg.toString().split(ed_escape);
-           
-           
-           if (segarr[0].toString().equals("ISA")) {
-             isaq = segarr[5];
-             bsisaq = segarr[7];
-             bsisa = segarr[8];
-             senderid = segarr[6].trim();
-             controlnum = segarr[13];
-             ISASTRING = (String)seg;
-           }
+          c[17] = String.valueOf(start);
+          c[18] = String.valueOf(end);
+          c[19] = String.valueOf(k[0]);
+          c[20] = String.valueOf(k[1]);
           
-           if (segarr[0].toString().equals("GS")) {
-           GSSTRING = (String)seg;
-           gsctrlnbr = segarr[6];
-           bsgs = segarr[3];
-           ver = segarr[8];
-           gstype = segarr[1];
-           gssender = segarr[2];
-           }
-           
-           if (segarr[0].toString().equals("ST")) {
-             proceed = true;
-             start = i;
-             doctype = segarr[1];
-             docid = segarr[2];
-             falist.add(docid);
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+          int idxnbr = OVData.writeEDIIDX(c);
+          c[16] = String.valueOf(idxnbr);
+          
+             String map = c[2];
              
-             // set control
-             
-             c = initEDIControl();   // defined in initEDIControl
-        
-            c[0] = senderid;
-            c[1] = doctype;
-            c[2] = map;
-            c[3] = infile;
-            c[4] = controlnum;
-            c[5] = gsctrlnbr;
-            c[6] = docid;
-            c[7] = ""; // ref
-            c[8] = outfile;
-            c[9] = String.valueOf(segdelim);
-            c[10] = String.valueOf(elmdelim);
-            c[11] = String.valueOf(subdelim);
-            c[12] = isOverride; // isOverrideEnvelope
-            
-           }
-           if (segarr[0].toString().equals("SE")) {
-             stop = i;
-             ArrayList<String> thisdoc = new ArrayList<String>(doc.subList(start, stop + 1));
-             thisdoc.add(0, GSSTRING);  // add the GS segment back on top
-             thisdoc.add(0, ISASTRING);  // add the ISA segment back on top
-             thisdoc.add(GESTRING);
-             thisdoc.add(IEASTRING);
-             
-            
-             
-            
                if (map.isEmpty()) {
-                  map = OVData.getEDIInMap(senderid, doctype); 
+                  map = OVData.getEDIInMap(c[0], c[1]); 
                } 
-             
-              
+            
+               // if no map then bail
+               if (map.isEmpty()) {
+                  OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + c[0] + " / " + c[1]); 
+               } else {
+                   
+                   // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                     try {
                     Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    method.invoke(obj, thisdoc, c);
-                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    method.invoke(obj, doc, c);
+                  
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + senderid + " / " + doctype);
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to load map class for " + c[0] + " / " + c[1]);
                         ex.printStackTrace();
                     }
+                   
+               }
+               
               
-           }
-           i++;
-         } // loop through arraylist doc segments
+           
+            
+    } // object k
         
     } // ISAMap entries
       

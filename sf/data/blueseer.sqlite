@@ -431,6 +431,7 @@ CREATE TABLE "edi_ctrl" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_log" (
   "elg_id" INTEGER PRIMARY KEY,
+  "elg_idxnbr" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_dir" int(1) NOT NULL DEFAULT '0',
   "elg_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -446,6 +447,24 @@ CREATE TABLE "edi_log" (
   "elg_map" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ackfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ack" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+CREATE TABLE "edi_idx" (
+  "edx_id" INTEGER PRIMARY KEY,
+  "edx_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "edx_sender" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_dir" int(1) NOT NULL DEFAULT '0',
+  "edx_ctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_gsctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_stctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_isastart" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edx_isaend" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edx_docstart" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edx_docend" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edx_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_ackfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_ack" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

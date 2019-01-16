@@ -359,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `elg_idxnbr` varchar(9) NOT NULL  DEFAULT '',
   `elg_dir` int(1) NOT NULL DEFAULT '0',
   `elg_severity` varchar(8) NOT NULL  DEFAULT '',
   `elg_desc` varchar(100) NOT NULL  DEFAULT '',
@@ -374,6 +375,24 @@ CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_map` varchar(50) NOT NULL  DEFAULT '',
   `elg_ackfile` varchar(60) NOT NULL  DEFAULT '',
   `elg_ack` tinyint(1) NOT NULL  DEFAULT '0') 
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `edi_idx` (
+  `edx_id` NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `edx_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `edx_sender` varchar(15) NOT NULL DEFAULT '',
+  `edx_doc` varchar(15) NOT NULL DEFAULT '',
+  `edx_dir` int(1) NOT NULL DEFAULT '0',
+  `edx_ctrlnum` varchar(9) NOT NULL DEFAULT '',
+  `edx_gsctrlnum` varchar(9) NOT NULL DEFAULT '',
+  `edx_stctrlnum` varchar(9) NOT NULL DEFAULT '',
+  `edx_isastart` int(9) NOT NULL DEFAULT '0',
+  `edx_isaend` int(9) NOT NULL DEFAULT '0',
+  `edx_docstart` int(9) NOT NULL DEFAULT '0',
+  `edx_docend` int(9) NOT NULL DEFAULT '0',
+  `edx_ref` varchar(30) NOT NULL DEFAULT '',
+  `edx_file` varchar(60) NOT NULL DEFAULT '',
+  `edx_ackfile` varchar(60) NOT NULL DEFAULT '',
+  `edx_ack` tinyint(1) NOT NULL DEFAULT '0')
 ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_tpid` varchar(15) NOT NULL  DEFAULT '',

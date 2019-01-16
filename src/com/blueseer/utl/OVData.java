@@ -19876,8 +19876,9 @@ e.printStackTrace();
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 
-                        st.executeUpdate("insert into edi_log ( elg_dir, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                        st.executeUpdate("insert into edi_log ( elg_idxnbr, elg_dir, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
                             + " values ( " 
+                            + "'" + c[16] + "'" + ","
                             + "'" + dir + "'" + ","
                             + "'" + severity + "'" + ","
                             + "'" + message + "'" + ","
@@ -19900,7 +19901,91 @@ e.printStackTrace();
         }
       }
        
-      
+        public static int writeEDIIDX(String[] c) {
+            int returnkey = 0;
+          try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                
+          /*  17 elements consisting of:
+            c[0] = senderid;
+            c[1] = doctype;
+            c[2] = map;
+            c[3] = infile;
+            c[4] = controlnum;
+            c[5] = gsctrlnbr;
+            c[6] = docid;
+            c[7] = ref;
+            c[8] = outfile;
+            c[9] = sd;
+            c[10] = ed;
+            c[11] = ud;
+            c[12] = overideenvelope
+            c[13] = isastring
+            c[14] = gsstring
+            c[15] = dir
+            c[16] = idxnbr
+            c[17] = isastart
+            c[18] = isaend
+            c[19] = docstart
+            cp20] = docend    
+              */
+                      if (dbtype.equals("sqlite")) {
+                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","
+                            + "'" + c[1] + "'" + ","
+                            + "'" + c[15] + "'" + ","
+                            + "'" + c[4] + "'" + ","
+                            + "'" + c[5] + "'" + ","
+                            + "'" + c[6] + "'" + ","
+                            + "'" + c[17] + "'" + ","
+                            + "'" + c[18] + "'" + ","
+                            + "'" + c[19] + "'" + ","
+                            + "'" + c[20] + "'" + ","
+                            + "'" + c[7] + "'" + "," 
+                            + "'" + c[3] + "'" + ","
+                            + "'" + "" + "'" + ","  // ack file   ...need to do
+                            + "'" + "0" + "'"   // ack yes or no 1 or 0        ....need to do
+                            + ")"
+                            + ";");
+                      } else {
+                          st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","
+                            + "'" + c[1] + "'" + ","
+                            + "'" + c[15] + "'" + ","
+                            + "'" + c[4] + "'" + ","
+                            + "'" + c[5] + "'" + ","
+                            + "'" + c[6] + "'" + ","
+                            + "'" + c[17] + "'" + ","
+                            + "'" + c[18] + "'" + ","
+                            + "'" + c[19] + "'" + ","
+                            + "'" + c[20] + "'" + ","
+                            + "'" + c[7] + "'" + "," 
+                            + "'" + c[3] + "'" + ","
+                            + "'" + "" + "'" + ","  // ack file   ...need to do
+                            + "'" + "0" + "'"   // ack yes or no 1 or 0        ....need to do
+                            + ")"
+                            + ";", Statement.RETURN_GENERATED_KEYS);
+                      }
+                        ResultSet rs = st.getGeneratedKeys();
+                        while (rs.next()) {
+                         returnkey = rs.getInt(1);
+                        }
+                        
+            } catch (SQLException s) {
+                 s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+          return returnkey;
+      }
+       
        
       
        public static boolean CreateShipperHdrEDI(String[] control, String nbr, String bol, String billto, String shipto, String so, String po, String shipdate, String orddate, String remarks, String shipvia ) {

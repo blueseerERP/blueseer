@@ -62,7 +62,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
 
     
      javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"TP ID", "Name", "Dir", "DOCTYPE", "File", "ISAID", "GSID", "STID", "Desc", "Ref", "TimeStamp"});
+                    new String[]{"IdxNbr", "TradeID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr"});
     
     
     class MyTableModel extends DefaultTableModel {  
@@ -120,24 +120,10 @@ public class EDILogBrowse extends javax.swing.JPanel {
         java.util.Date now = new java.util.Date();
          dcfrom.setDate(now);
          dcto.setDate(now);
-         ArrayList mylist = OVData.getEDIUniqueTPID();
-        ddtpid.removeAllItems();
-         for (int i = 0; i < mylist.size(); i++) {
-            ddtpid.addItem(mylist.get(i));
-        }
-         ddtpid.insertItemAt("ALL", 0);
-         ddtpid.setSelectedIndex(0);
          
-         ddtpdoc.removeAllItems();
-         ArrayList mydoc = OVData.getCodeMstrKeyList("edidoctype");
-          for (int i = 0; i < mydoc.size(); i++) {
-           ddtpdoc.addItem(mydoc.get(i));
-        }
-         ddtpdoc.insertItemAt("ALL", 0);
-         ddtpdoc.setSelectedIndex(0); 
-        
-         cberror.setSelected(true);
-         cbinfo.setSelected(true);
+         tbtradeid.setText("");
+         tbdoc.setText("");
+       
          
          tafile.setText("");
          mymodel.setNumRows(0);
@@ -181,7 +167,95 @@ public class EDILogBrowse extends javax.swing.JPanel {
         return xmlString;
     }
     
-  
+   public void getEDIIDX() {
+     
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+             
+        mymodel.setNumRows(0);
+        tafile.setText("");
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+                int i = 0;
+
+                String dir = "0";
+               
+                tablereport.setModel(mymodel);
+                 tablereport.getColumnModel().getColumn(4).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
+                 tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
+                
+                 
+              
+                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
+                    res = st.executeQuery("SELECT * FROM edi_idx  " +
+                    " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    }
+                    
+                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_idx  " +
+                    " where " +
+                    " edx_doc >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    }
+                    
+                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_idx  " +
+                     " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
+                    " edx_doc >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    }
+                    
+                    
+                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_idx  " +
+                    " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    }
+                    
+              
+
+                while (res.next()) {
+                    i++;
+                    if (res.getInt("edx_dir") == 0) {
+                     dir = "In";   
+                    } else {
+                     dir = "Out";
+                    }
+                     // "IdxNbr", "TradeID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr"
+                    mymodel.addRow(new Object[]{
+                        res.getString("edx_id"),
+                        res.getString("edx_sender"),
+                        dir,
+                        res.getString("edx_doc"),
+                        res.getString("edx_ts"),
+                        res.getString("edx_file"),
+                        res.getString("edx_ctrlnum"),
+                        res.getString("edx_gsctrlnum"),
+                        res.getString("edx_stctrlnum")
+                    });
+                }
+
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Sql code does not execute");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+   }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,24 +266,28 @@ public class EDILogBrowse extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         dcto = new com.toedter.calendar.JDateChooser();
         dcfrom = new com.toedter.calendar.JDateChooser();
         btview = new javax.swing.JButton();
-        cbinfo = new javax.swing.JCheckBox();
-        cberror = new javax.swing.JCheckBox();
-        ddtpid = new javax.swing.JComboBox();
-        ddtpdoc = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        tbtradeid = new javax.swing.JTextField();
+        tbdoc = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         tafile = new javax.swing.JTextArea();
+
+        jTextField1.setText("jTextField1");
+
+        jTextField2.setText("jTextField2");
 
         setBackground(new java.awt.Color(0, 102, 204));
         setLayout(new java.awt.BorderLayout());
@@ -224,10 +302,6 @@ public class EDILogBrowse extends javax.swing.JPanel {
                 btviewActionPerformed(evt);
             }
         });
-
-        cbinfo.setText("Info");
-
-        cberror.setText("Error");
 
         jLabel1.setText("TP ID:");
 
@@ -247,15 +321,15 @@ public class EDILogBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddtpid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cberror)
-                    .addComponent(ddtpdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                     .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btview)
-                    .addComponent(cbinfo))
+                    .addComponent(tbtradeid)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btview)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(tbdoc))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -271,19 +345,15 @@ public class EDILogBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddtpid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddtpdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cberror)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbinfo)
+                    .addComponent(jLabel2)
+                    .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btview)
-                .addGap(16, 16, 16))
+                .addGap(7, 7, 7))
         );
 
         tablereport.setAutoCreateRowSorter(true);
@@ -315,9 +385,9 @@ public class EDILogBrowse extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,13 +410,16 @@ public class EDILogBrowse extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(505, Short.MAX_VALUE))
+                .addContainerGap(611, Short.MAX_VALUE))
         );
 
         add(jPanel4, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
+      
+        getEDIIDX();
+        /*
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        // if (rberror.isSelected() && rbinfo.isSelected()) {
       //     bsmf.MainFrame.show("Select either active OR inactive...not both");
@@ -459,6 +532,8 @@ public class EDILogBrowse extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        */
     }//GEN-LAST:event_btviewActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
@@ -496,12 +571,8 @@ public class EDILogBrowse extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btview;
-    private javax.swing.JCheckBox cberror;
-    private javax.swing.JCheckBox cbinfo;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
-    private javax.swing.JComboBox ddtpdoc;
-    private javax.swing.JComboBox ddtpid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -511,7 +582,11 @@ public class EDILogBrowse extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextArea tafile;
+    private javax.swing.JTextField tbdoc;
+    private javax.swing.JTextField tbtradeid;
     // End of variables declaration//GEN-END:variables
 }
