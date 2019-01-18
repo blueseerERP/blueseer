@@ -355,6 +355,7 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_outftp` varchar(50) NOT NULL  DEFAULT '',
   `edic_inarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_outarch` varchar(200) NOT NULL  DEFAULT '',
+  `edic_batch` varchar(200) NOT NULL  DEFAULT '',
   `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_log` (
@@ -377,7 +378,7 @@ CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_ack` tinyint(1) NOT NULL  DEFAULT '0') 
 ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_idx` (
-  `edx_id` NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `edx_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `edx_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edx_sender` varchar(15) NOT NULL DEFAULT '',
   `edx_doc` varchar(15) NOT NULL DEFAULT '',
@@ -392,7 +393,11 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_ref` varchar(30) NOT NULL DEFAULT '',
   `edx_file` varchar(60) NOT NULL DEFAULT '',
   `edx_ackfile` varchar(60) NOT NULL DEFAULT '',
-  `edx_ack` tinyint(1) NOT NULL DEFAULT '0')
+  `edx_ack` tinyint(1) NOT NULL DEFAULT '0',
+  `edx_segdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_elmdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_subdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_status` varchar(10) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_tpid` varchar(15) NOT NULL  DEFAULT '',

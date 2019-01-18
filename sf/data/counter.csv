@@ -6,6 +6,7 @@ call,22006
 checknumber,123485
 ecn,10013
 ediout,100042
+edifile,1
 expensenumber,1000007
 expenseaccount,99000000
 gl,100018

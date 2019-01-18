@@ -142,7 +142,7 @@ LabelBrowse,,com.blueseer.lbl.LabelBrowsePanel,JMenuItem,
 TransBrowse,,com.blueseer.prd.TransBrowsePanel,JMenuItem,
 CustEDIMaint,,com.blueseer.ctr.CustEDIMaint,JMenuItem,
 CustEDIBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
-EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,
+EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControlPanel,JMenuItem,
@@ -250,4 +250,4 @@ TaskBrowse,,com.blueseer.eng.TaskBrowse,JMenuItem,
 TaxMaint,,com.blueseer.fgl.TaxMaint,JMenuItem,
 TaxBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,
 InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,
-MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,
+MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,load

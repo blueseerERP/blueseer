@@ -96,7 +96,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                 value, isSelected, hasFocus, row, column);
 
        
-            if (column == 4)
+            if (column == 5)
             c.setForeground(Color.BLUE);
             else
                 c.setBackground(table.getBackground());
@@ -185,7 +185,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                 String dir = "0";
                
                 tablereport.setModel(mymodel);
-                 tablereport.getColumnModel().getColumn(4).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
+                 tablereport.getColumnModel().getColumn(5).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
                  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
                 
                  
@@ -195,7 +195,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                     " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
@@ -204,7 +204,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                     " edx_doc >= " + "'" + tbdoc.getText() + "'" +
                     " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
@@ -214,14 +214,14 @@ public class EDILogBrowse extends javax.swing.JPanel {
                     " edx_doc >= " + "'" + tbdoc.getText() + "'" +
                     " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     
                     if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_ts desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
               
@@ -547,7 +547,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
               reinitpanels("MenuOrderMaint",  true, args);
         }
        */
-        if ( col == 4) {
+        if ( col == 5) {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {

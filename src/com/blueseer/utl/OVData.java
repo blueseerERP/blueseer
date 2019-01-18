@@ -19728,6 +19728,34 @@ e.printStackTrace();
         
     }
      
+       public static String getEDIBatchDir() {
+       String mystring = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edic_batch from edi_ctrl ;");
+               while (res.next()) {
+                   mystring = res.getString("edic_batch");
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return mystring;
+        
+    }
+     
+     
       public static String getEDIInDir() {
        String mystring = "";
         try{
@@ -19933,7 +19961,8 @@ e.printStackTrace();
             cp20] = docend    
               */
                       if (dbtype.equals("sqlite")) {
-                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
+                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
+                                " edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
                             + " values ( " 
                             + "'" + c[0] + "'" + ","
                             + "'" + c[1] + "'" + ","
@@ -19948,7 +19977,11 @@ e.printStackTrace();
                             + "'" + c[7] + "'" + "," 
                             + "'" + c[3] + "'" + ","
                             + "'" + "" + "'" + ","  // ack file   ...need to do
-                            + "'" + "0" + "'"   // ack yes or no 1 or 0        ....need to do
+                            + "'" + "0" + "'" + ","  // ack yes or no 1 or 0        ....need to do
+                            + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
+                            + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
+                            + "'" + "" + "'"  // status         
                             + ")"
                             + ";");
                       } else {
@@ -26251,17 +26284,15 @@ e.printStackTrace();
        public static ArrayList readEDIRawFileIntoArrayList(String filename, String dir) throws MalformedURLException, SmbException, UnknownHostException, IOException {
        ArrayList<String> segments = new ArrayList<String>();
        String path = "";
-       if (dir.equals("In")) {
-         path =  OVData.getEDIInArch() + "/" + filename; 
-       } else {
-         path =  OVData.getEDIOutArch() + "/" + filename;   
-       }
+       
+         path =  OVData.getEDIBatchDir() + "/" + filename; 
+      
        
        if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type
            NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
            SmbFile smbfile = new SmbFile(path, auth);
                if (! smbfile.exists()) {
-                 bsmf.MainFrame.show("File is unavailable");
+                 bsmf.MainFrame.show("File is unavailable (samba)");
                  return segments;
                }
            BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new SmbFileInputStream(smbfile))));

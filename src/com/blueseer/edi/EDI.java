@@ -189,9 +189,9 @@ public class EDI {
                     c[3] = infile;
                     c[4] = isa[13]; //isactrlnbr
                     c[8] = outfile;
-                    c[9] = String.valueOf(s);
-                    c[10] = String.valueOf(e);
-                    c[11] = String.valueOf(u);
+                    c[9] = String.valueOf((int) s);
+                    c[10] = String.valueOf((int) e);
+                    c[11] = String.valueOf((int) u);
                     c[12] = isOverride;
                     c[13] = new String(cbuf,i,105);
                     c[15] = "0"; // inbound
@@ -239,13 +239,13 @@ public class EDI {
          /* lets check to see if its x12 or edifact or csv or xml */
          /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
          String editype = getEDIType(cbuf, infile);
-         
+         String batchfile = "";
       //   if (editype.equals("EDIFACT")) {
      //        processEDIFACT(cbuf, filename);
      //    }
          
          if (editype.equals("X12")) {
-             processX12CmdLine(ISAmap, cbuf);
+            batchfile =  processX12CmdLine(ISAmap, cbuf);
          }
          
      //    if (editype.equals("CSV")) {
@@ -256,8 +256,11 @@ public class EDI {
     //         processXML(file, filename);
     //     }
          
+        // if type is unknown then bail....otherwise create batch file of infile
          if (editype.isEmpty()) {
            System.out.println("Unknown file type");
+         } else {
+             Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath());
          }
          
          
@@ -724,8 +727,9 @@ public class EDI {
       
 }
     
-    public static void processX12CmdLine(Map<Integer, Object[]> ISAmap, char[] cbuf)   {
-    
+    public static String processX12CmdLine(Map<Integer, Object[]> ISAmap, char[] cbuf)   {
+    // returns batch filename
+    String batchfile = "";
      /*  17 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
@@ -754,6 +758,8 @@ public class EDI {
     
     // loop through ISAMap entries
     
+             
+             
     for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
         int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
@@ -781,6 +787,12 @@ public class EDI {
             } 
         }
     }
+          // create batch file and assign to control replacing infile name
+             int filenumber = OVData.getNextNbr("edifile");
+             batchfile = "R" + String.format("%07d", filenumber);
+             c[3] = batchfile;
+             
+             
         // insert isa and st start and stop integer points within the file
         
           c[17] = String.valueOf(start);
@@ -825,7 +837,8 @@ public class EDI {
     } // object k
         
     } // ISAMap entries
-      
+   
+   return batchfile; 
 }
     // inbound
      
