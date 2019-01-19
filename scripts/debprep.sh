@@ -26,6 +26,8 @@ rm -f $bs/usr/bin/blueseer
 echo "cd /usr/share/blueseer; java -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
 
 chmod -R 0755 $bs
+chmod -R 0777 $bsshare/data
+chmod -R 0777 $bsshare/data/bsdb.db
 
 
 #echo -n "Enter the administrator password for the MySQL Database: "
