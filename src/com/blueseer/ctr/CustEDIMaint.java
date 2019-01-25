@@ -576,16 +576,16 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Must enter a map name for outbound type");
                     return;
                 }
-                if (! isFile("EDIMaps." + tbmap.getText()) && rbout.isSelected()) {
+                if (! isFile(tbmap.getText()) && rbout.isSelected()) {
                     proceed = false;
                     bsmf.MainFrame.show("Map does not exist");
                     return;
                 }
                 
                 if (rbin.isSelected()) {
-                    dir = true;
-                } else {
                     dir = false;
+                } else {
+                    dir = true;
                 }
                 
                 if (proceed) {
@@ -660,16 +660,16 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Must enter a map name");
                     return;
                 }
-                if (! isFile("EDIMaps." + tbmap.getText())) {
+                if (! isFile(tbmap.getText())) {
                     proceed = false;
                     bsmf.MainFrame.show("Map does not exist");
                     return;
                 }
                 
                  if (rbin.isSelected()) {
-                    dir = true;
-                } else {
                     dir = false;
+                } else {
+                    dir = true;
                 }
                 
                 

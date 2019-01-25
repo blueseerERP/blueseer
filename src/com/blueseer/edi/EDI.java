@@ -1,22 +1,8 @@
-/*
- * Copyright 2015 Terry Evans Vaughn ("VCSCode").
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 
 package com.blueseer.edi;
 
+import static com.blueseer.edi.EDIMap.ed;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.io.BufferedReader;
@@ -214,7 +200,7 @@ public class EDI {
                     String[] st = new String(cbuf, i, 16).split(ed_escape);
                     c[1] = st[1]; // doctype
                    // c[6] = st[2]; //docID
-                   c[6] = "boo";
+                   c[6] = "boohoo";
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
@@ -1897,10 +1883,18 @@ public class EDI {
         return delim;
       }
       
+      public static String delimConvertIntToStr(String intdelim) {
+        String delim = "";
+        int x = Integer.valueOf(intdelim);
+        delim = String.valueOf(Character.toString((char) x));
+        return delim;
+      }
+      
+      
       public static Boolean isEnvelopeSegment(String seg) {
       
-      return (seg.equals("ISA") || seg.equals("GS") || seg.equals("ST") ||
-              seg.equals("SE") || seg.equals("GE") | seg.equals("IEA") ) ? true : false ;
+      return (seg.equals("ISA") || seg.equals("GS") || 
+               seg.equals("GE") | seg.equals("IEA") ) ? true : false ;
       }
       
      public void writeFile(String filecontent, String dir, String filename) throws MalformedURLException, SmbException, IOException {
@@ -2349,38 +2343,53 @@ public class EDI {
             this.doctype = doctype;
         }
         
-        public void setDetItem(String v) {
-           this.detitem.add(v);
+        
+        public void addDetail() {
+            this.detitem.add("");
+            this.detuom.add("");
+            this.detcustitem.add("");
+            this.detsku.add("");
+            this.detref.add("");
+            this.detpo.add("");
+            this.detline.add("");
+            this.detqty.add("0");
+            this.detlistprice.add("0");
+            this.detnetprice.add("0");
+            this.detdisc.add("0");
         }
-        public void setDetUOM(String v) {
-           this.detuom.add(v);
+        
+        public void setDetItem(int i, String v) {
+           this.detitem.set(i,v);
         }
-        public void setDetCustItem(String v) {
-           this.detcustitem.add(v);
+        public void setDetUOM(int i, String v) {
+           this.detuom.set(i,v);
         }
-        public void setDetSku(String v) {
-           this.detsku.add(v);
+        public void setDetCustItem(int i, String v) {
+           this.detcustitem.set(i,v);
         }
-        public void setDetRef(String v) {
-           this.detref.add(v);
+        public void setDetSku(int i, String v) {
+           this.detsku.set(i,v);
         }
-        public void setDetPO(String v) {
-           this.detpo.add(v);
+        public void setDetRef(int i, String v) {
+           this.detref.set(i,v);
         }
-        public void setDetLine(String v) {
-           this.detline.add(v);
+        public void setDetPO(int i, String v) {
+           this.detpo.set(i,v);
         }
-        public void setDetQty(String v) {
-           this.detqty.add(v);
+        public void setDetLine(int i, String v) {
+           this.detline.set(i,v);
         }
-        public void setDetListPrice(String v) {
-           this.detlistprice.add(v);
+        public void setDetQty(int i, String v) {
+           this.detqty.set(i,v);
         }
-         public void setDetNetPrice(String v) {
-           this.detnetprice.add(v);
+        public void setDetListPrice(int i, String v) {
+           this.detlistprice.set(i,v);
         }
-          public void setDetDisc(String v) {
-           this.detdisc.add(v);
+         public void setDetNetPrice(int i, String v) {
+           this.detnetprice.set(i,v);
+        }
+          public void setDetDisc(int i, String v) {
+           this.detdisc.set(i,v);
         }
         public void setPO(String v) {
            this.po = v;

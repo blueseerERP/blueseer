@@ -36,6 +36,7 @@ com.blueseer.edi.EDIControlPanel,,1
 com.blueseer.edi.EDILoad,,1
 com.blueseer.edi.EDILoadPanel,,1
 com.blueseer.edi.EDILogBrowse,,1
+com.blueseer.edi.EDITransactionBrowse,,1
 com.blueseer.edi.EDIMap,,1
 com.blueseer.edi.EDIMapi,,1
 com.blueseer.edi.EDITPBrowse,,1

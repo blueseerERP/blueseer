@@ -41,7 +41,8 @@ public static void main(String args[]) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                  EDI.processFile(listOfFiles[i]);
+                //  EDI.processFile(listOfFiles[i].getName(),"","","");
+                  EDI.processFileCmdLine(listOfFiles[i].getName(),"","","");
                   listOfFiles[i].renameTo(new File(archpath + listOfFiles[i].getName()));
                   }
                 }

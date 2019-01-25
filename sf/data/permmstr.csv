@@ -23,6 +23,7 @@ admin;VendPriceMstr
 admin;VendPriceRpt1
 admin;EDIMenu
 admin;MenuEDILog
+admin;EDITransactionLog
 admin;EDITPMaint
 admin;EDITPMstrBrowse
 admin;EDITPDocMaint

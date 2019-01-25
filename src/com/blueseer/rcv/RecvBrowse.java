@@ -185,8 +185,13 @@ public class RecvBrowse extends javax.swing.JPanel {
             ddvendto.addItem(vend);
         }
         
-            ddvendfrom.setSelectedIndex(0);
-            ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
+        
+         if (ddvendfrom.getItemCount() > 0)
+        ddvendfrom.setSelectedIndex(0);
+        
+        if (ddvendto.getItemCount() > 0)
+        ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
+        
         
           
           
@@ -434,13 +439,22 @@ try {
                   if (poto.isEmpty()) {
                      poto = bsmf.MainFrame.hinbr;
                  }
+                  
+                 String vendfrom = "";
+                 String vendto = "";
+                 if (ddvendfrom.getSelectedItem() != null)
+                     vendfrom = ddvendfrom.getSelectedItem().toString();
                  
+                 if (ddvendto.getSelectedItem() != null)
+                     vendto = ddvendto.getSelectedItem().toString();
+                      
+                  
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
              res = st.executeQuery("select rv_id, rv_vend, rv_packingslip, rv_recvdate, rv_status, rv_ref, rv_rmks " +
                          " from recv_mstr where " +
-                        " rv_vend >= " + "'" + ddvendfrom.getSelectedItem().toString() + "'" + " AND " +
-                        " rv_vend <= " + "'" + ddvendto.getSelectedItem().toString() + "'" + " AND " +
+                        " rv_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " rv_vend <= " + "'" + vendto + "'" + " AND " +
                      " rv_id >= " + "'" + pofrom + "'" + " AND " +
                         " rv_id <= " + "'" + poto + "'" + 
                         " order by rv_id ;");

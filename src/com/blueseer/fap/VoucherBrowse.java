@@ -220,8 +220,11 @@ public class VoucherBrowse extends javax.swing.JPanel {
             ddvendto.addItem(vend);
         }
         
-            ddvendfrom.setSelectedIndex(0);
-            ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
+         if (ddvendfrom.getItemCount() > 0)
+        ddvendfrom.setSelectedIndex(0);
+        
+        if (ddvendto.getItemCount() > 0)
+        ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
         
           
           
@@ -470,6 +473,15 @@ try {
                  }
                  */
                  
+                 String vendfrom = "";
+                 String vendto = "";
+                 if (ddvendfrom.getSelectedItem() != null)
+                     vendfrom = ddvendfrom.getSelectedItem().toString();
+                 
+                 if (ddvendto.getSelectedItem() != null)
+                     vendto = ddvendto.getSelectedItem().toString();
+                 
+                 
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
         
            res = st.executeQuery("select case when vod_id is null then '' else vod_id end as vod_id, " +
@@ -477,8 +489,8 @@ try {
                       " rvd_qty, rvd_voqty " +
                          " from recv_det inner join recv_mstr on rvd_id = rv_id " +
                          " left outer join vod_mstr on vod_rvdid = rvd_id and vod_rvdline = rvd_rline where " +
-                        " rv_vend >= " + "'" + ddvendfrom.getSelectedItem().toString() + "'" + " AND " +
-                        " rv_vend <= " + "'" + ddvendto.getSelectedItem().toString() + "'" + " AND " +
+                        " rv_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " rv_vend <= " + "'" + vendto + "'" + " AND " +
                      " rvd_po >= " + "'" + pofrom + "'" + " AND " +
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");

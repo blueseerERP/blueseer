@@ -129,23 +129,23 @@ public class GenericXMLi {
           Node nNode = nList.item(temp);
           if (nNode.getNodeType() == Node.ELEMENT_NODE) { 
               Element eElement = (Element) nNode;
-              e.get(i).setDetLine(eElement.getElementsByTagName("linenumber").item(0).getTextContent());
-              e.get(i).setDetCustItem(eElement.getElementsByTagName("partnumber").item(0).getTextContent());
-              e.get(i).setDetSku(eElement.getElementsByTagName("partnumber").item(0).getTextContent());
-              e.get(i).setDetRef("");
-              e.get(i).setDetPO(po);
-              e.get(i).setDetQty(eElement.getElementsByTagName("qtyordered").item(0).getTextContent());
+              e.get(i).setDetLine(i,eElement.getElementsByTagName("linenumber").item(0).getTextContent());
+              e.get(i).setDetCustItem(i,eElement.getElementsByTagName("partnumber").item(0).getTextContent());
+              e.get(i).setDetSku(i,eElement.getElementsByTagName("partnumber").item(0).getTextContent());
+              e.get(i).setDetRef(i,"");
+              e.get(i).setDetPO(i,po);
+              e.get(i).setDetQty(i,eElement.getElementsByTagName("qtyordered").item(0).getTextContent());
               
               part = OVData.getPartFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
-                  e.get(i).setDetItem(part);
+                  e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
-                  e.get(i).setDetUOM(uom); 
+                  e.get(i).setDetUOM(i,uom); 
                 listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
-                  e.get(i).setDetListPrice(df.format(listprice));
+                  e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = OVData.getPartDiscFromCust(billto);
-                  e.get(i).setDetDisc(df.format(discount));
+                  e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
-                  e.get(i).setDetNetPrice(df.format(netprice));
+                  e.get(i).setDetNetPrice(i,df.format(netprice));
           }
          }
            

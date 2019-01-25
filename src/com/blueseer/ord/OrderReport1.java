@@ -466,12 +466,12 @@ try {
                 String fromcode = "";
                 String tocode = "";
                 
-                if (ddfromcust.getSelectedItem().toString().isEmpty()) {
+                if (ddfromcust.getSelectedItem() == null || ddfromcust.getSelectedItem().toString().isEmpty()) {
                     fromcust = bsmf.MainFrame.lowchar;
                 } else {
                     fromcust = ddfromcust.getSelectedItem().toString();
                 }
-                 if (ddtocust.getSelectedItem().toString().isEmpty()) {
+                 if (ddtocust.getSelectedItem() == null || ddtocust.getSelectedItem().toString().isEmpty()) {
                     tocust = bsmf.MainFrame.hichar;
                 } else {
                     tocust = ddtocust.getSelectedItem().toString();

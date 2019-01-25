@@ -494,18 +494,21 @@ public class EDILoadPanel extends javax.swing.JPanel {
            
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 1) ) {
-                     File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                     EDI.processFile(edifile);
+                     String infile = inDir + "/" + mymodel.getValueAt(i,0).toString();
                      
+                    // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                    // EDI.processFile(edifile);
+                     EDI.processFileCmdLine(infile,"","","");
+                    
                          // now archive file
                          if (! inArch.isEmpty() && OVData.getEDIArchFlag()) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
                          Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
                           // now remove from list
-                          mymodel.removeRow(i);
-                     
                          }
+                         
+                       mymodel.removeRow(i);   
                          
                      j++;
                  }
@@ -514,10 +517,11 @@ public class EDILoadPanel extends javax.swing.JPanel {
             bsmf.MainFrame.show("Processed " + String.valueOf(j) + " files");
             
        } catch (IOException ex) {
-          bsmf.MainFrame.show("boo");
+           ex.printStackTrace();
+          bsmf.MainFrame.show("ioexception");
          
        }  catch (ClassNotFoundException ex) {
-          bsmf.MainFrame.show("boo");
+          bsmf.MainFrame.show("classexception");
        }
          
     }//GEN-LAST:event_btProcessActionPerformed

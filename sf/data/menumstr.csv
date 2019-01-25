@@ -35,8 +35,9 @@ MenuCustXrefRptA,,com.blueseer.ctr.CustXrefRpt1,JMenuItem,
 MenuDefaultMstr,,com.blueseer.adm.DefaultMstrPanel,JMenuItem,
 MenuDeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 MenuDeptMaint,,com.blueseer.fgl.DeptMaintPanel,JMenuItem,depm
-MenuEDILoad,,com.blueseer.edi.EDILoadPanel,JMenuItem,edig
-MenuEDILog,,com.blueseer.edi.EDILogBrowse,JMenuItem,edil
+MenuEDILoad,,com.blueseer.edi.EDILoadPanel,JMenuItem,edip
+MenuEDILog,,com.blueseer.edi.EDILogBrowse,JMenuItem,ediz
+EDITransactionLog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 MenuEDITPBrowse,,com.blueseer.edi.EDITPBrowse,JMenuItem,
 MenuFileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,
 MenuFreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,

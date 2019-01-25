@@ -26,15 +26,16 @@ VendorMenu,VendPriceMstr,5,JMenuItem,Vendor Price Maintenance,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
 VendorMenu,VendControl,7,JMenuItem,Vendor Control,,,,1,1
 Address,EDIMenu,1,JMenu,EDI Menu,,,,1,1
-EDIMenu,MenuEDILog,2,JMenuItem,EDI Log,,,,1,1
-EDIMenu,EDITPMaint,3,JMenuItem,TP Maintenance,,,,1,1
-EDIMenu,EDITPMstrBrowse,4,JMenuItem,TP Browse,,1,,1,1
-EDIMenu,EDITPDocMaint,5,JMenuItem,TP/DOC Maintenance,,,,1,1
-EDIMenu,MenuEDITPBrowse,6,JMenuItem,TP/DOC Browse,,1,,1,1
-EDIMenu,CustEDIMaint,7,JMenuItem,Customer/TPDOC Maintenance,,,,1,1
-EDIMenu,CustEDIBrowse,8,JMenuItem,Customer/TPDOC Browse,,1,,1,1
 EDIMenu,MenuEDILoad,1,JMenuItem,EDI Inbound Load,,,,1,1
-EDIMenu,EDIControl,9,JMenuItem,EDI Control,,,,1,1
+EDIMenu,MenuEDILog,2,JMenuItem,EDI Log,,,,1,1
+EDIMenu,EDITransactionLog,3,JMenuItem,EDI Trans Log,,,,1,1
+EDIMenu,EDITPMaint,4,JMenuItem,TP Maintenance,,,,1,1
+EDIMenu,EDITPMstrBrowse,5,JMenuItem,TP Browse,,1,,1,1
+EDIMenu,EDITPDocMaint,6,JMenuItem,TP/DOC Maintenance,,,,1,1
+EDIMenu,MenuEDITPBrowse,7,JMenuItem,TP/DOC Browse,,1,,1,1
+EDIMenu,CustEDIMaint,8,JMenuItem,Customer/TPDOC Maintenance,,,,1,1
+EDIMenu,CustEDIBrowse,9,JMenuItem,Customer/TPDOC Browse,,1,,1,1
+EDIMenu,EDIControl,10,JMenuItem,EDI Control,,,,1,1
 Address,LabelMenu,1,JMenu,Label Menu,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
 LabelMenu,MenuAddrLabel,2,JMenuItem,Address Labels,,,,1,1

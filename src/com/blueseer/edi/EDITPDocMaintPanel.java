@@ -313,7 +313,8 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Must enter a map name");
                     return;
                 }
-                 if (! isFile("EDIMaps." + tbmap.getText())) {
+                 // if (! isFile("EDIMaps." + tbmap.getText())) {
+                 if (! isFile(tbmap.getText())) {
                     proceed = false;
                     bsmf.MainFrame.show("Map does not exist");
                     return;
@@ -368,7 +369,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Must enter a TP ID");
                 }
                 
-                if (! isFile("EDIMaps." + tbmap.getText())) {
+                if (! isFile(tbmap.getText())) {
                     proceed = false;
                     bsmf.MainFrame.show("Map does not exist");
                     return;

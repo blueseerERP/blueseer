@@ -106,44 +106,44 @@ public class GenericCSVi {
                 e.get(i).setShipToCountry(segarr[12]);
                 
                 // line level from first instance of key
-                e.get(i).setDetLine(segarr[13]);
-                e.get(i).setDetCustItem(segarr[14]);
-                e.get(i).setDetQty(segarr[15]);
+                e.get(i).setDetLine(i,segarr[13]);
+                e.get(i).setDetCustItem(i,segarr[14]);
+                e.get(i).setDetQty(i,segarr[15]);
                  part = OVData.getPartFromCustCItem("", segarr[14]);  // SAI J5R00001...does not have xref tied to billto...tied to blank billto
-                  e.get(i).setDetItem(part);
+                  e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
-                  e.get(i).setDetUOM(uom); 
+                  e.get(i).setDetUOM(i,uom); 
                 listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
-                  e.get(i).setDetListPrice(df.format(listprice));
+                  e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = OVData.getPartDiscFromCust(billto);
-                  e.get(i).setDetDisc(df.format(discount));
+                  e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
-                  e.get(i).setDetNetPrice(df.format(netprice));
+                  e.get(i).setDetNetPrice(i,df.format(netprice));
                 // have to set additional line items even if blank
-                e.get(i).setDetSku("");
-                e.get(i).setDetRef("");
-                e.get(i).setDetPO(segarr[0]);
+                e.get(i).setDetSku(i,"");
+                e.get(i).setDetRef(i,"");
+                e.get(i).setDetPO(i,segarr[0]);
                
              } else {
                  
                 // line level from first instance of key
-                e.get(i).setDetLine(segarr[13]);
-                e.get(i).setDetCustItem(segarr[14]);
-                e.get(i).setDetQty(segarr[15]);
+                e.get(i).setDetLine(i,segarr[13]);
+                e.get(i).setDetCustItem(i,segarr[14]);
+                e.get(i).setDetQty(i,segarr[15]);
                  part = OVData.getPartFromCustCItem(billto, segarr[14]);
-                  e.get(i).setDetItem(part);
+                  e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
-                  e.get(i).setDetUOM(uom); 
+                  e.get(i).setDetUOM(i,uom); 
                 listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
-                  e.get(i).setDetListPrice(df.format(listprice));
+                  e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = OVData.getPartDiscFromCust(billto);
-                  e.get(i).setDetDisc(df.format(discount));
+                  e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
-                  e.get(i).setDetNetPrice(df.format(netprice));
+                  e.get(i).setDetNetPrice(i,df.format(netprice));
                 // have to set additional line items even if blank
-                e.get(i).setDetSku("");
-                e.get(i).setDetRef("");
-                e.get(i).setDetPO(segarr[0]);
+                e.get(i).setDetSku(i,"");
+                e.get(i).setDetRef(i,"");
+                e.get(i).setDetPO(i,segarr[0]);
                 
              }
            

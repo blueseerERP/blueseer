@@ -58,6 +58,7 @@ public abstract class EDIMap implements EDIMapi {
          public static String map = "";
          public static boolean isOverride = false;
          public static String doctype = "";
+         
          public static String infile = "";
          public static String outfile = "";
          public static String filename = "";
@@ -70,6 +71,14 @@ public abstract class EDIMap implements EDIMapi {
          public static String detail = "";
          public static String trailer = "";
          
+         public static String isa06 = "";
+         public static String isa08 = "";
+         public static String isa13 = "";
+         public static String isa09 = "";
+         
+         public static String gs02 = "";
+         public static String gs03 = "";
+         
          public static ArrayList<String> H = new ArrayList();
          public static ArrayList<String> D = new ArrayList();
          public static ArrayList<String> T = new ArrayList();
@@ -79,6 +88,18 @@ public abstract class EDIMap implements EDIMapi {
          public static String ud = "";
          
          public static String content = "";
+         
+         public void setISA (String[] isa) {
+             isa06 = isa[6].trim();
+             isa08 = isa[8].trim();
+             isa09 = isa[9].trim();
+             isa13 = isa[13].trim();
+         }
+         
+         public void setGS (String[] gs) {
+             gs02 = gs[2].trim();
+             gs03 = gs[3].trim();
+         }
          
          public void setControl(String[] c) {
             sender = c[0];
@@ -90,11 +111,19 @@ public abstract class EDIMap implements EDIMapi {
             stctrl = c[6];
             ref = c[7];
             outfile = c[8];
-            sd = c[9];
-            ed = c[10];
-            ud = c[11];
+            sd = delimConvertIntToStr(c[9]);
+            ed = delimConvertIntToStr(c[10]);
+            ud = delimConvertIntToStr(c[11]);
             isOverride = Boolean.valueOf(c[12].toString()); // isOverrideEnvelope
          }
+         
+        public String delimConvertIntToStr(String intdelim) {
+        String delim = "";
+        int x = Integer.valueOf(intdelim);
+        delim = String.valueOf(Character.toString((char) x));
+        return delim;
+      }
+      
          
         
          

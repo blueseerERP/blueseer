@@ -30,8 +30,11 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/GLAcctBalRpt2.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDILogBrowse.java</file>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/utl/BlueSeerUtils.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDITransactionBrowse.java</file>
+            <file>file:/C:/bs/blueseer/src/EDIMaps/Generic850i.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDILoadPanel.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/utl/OVData.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDI.java</file>
         </group>

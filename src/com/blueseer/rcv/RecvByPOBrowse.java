@@ -186,8 +186,13 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
             ddvendto.addItem(vend);
         }
         
-            ddvendfrom.setSelectedIndex(0);
-            ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
+        
+         if (ddvendfrom.getItemCount() > 0)
+        ddvendfrom.setSelectedIndex(0);
+        
+        if (ddvendto.getItemCount() > 0)
+        ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
+            
         
           
           
@@ -436,13 +441,21 @@ try {
                      poto = bsmf.MainFrame.hinbr;
                  }
                  
+                 String vendfrom = "";
+                 String vendto = "";
+                 if (ddvendfrom.getSelectedItem() != null)
+                     vendfrom = ddvendfrom.getSelectedItem().toString();
+                 
+                 if (ddvendto.getSelectedItem() != null)
+                     vendto = ddvendto.getSelectedItem().toString(); 
+                  
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
              res = st.executeQuery("select po_nbr, po_vend, pod_line, po_type, po_status, pod_part, " +
                       " pod_ord_qty, pod_rcvd_qty, pod_netprice " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr where " +
-                        " po_vend >= " + "'" + ddvendfrom.getSelectedItem().toString() + "'" + " AND " +
-                        " po_vend <= " + "'" + ddvendto.getSelectedItem().toString() + "'" + " AND " +
+                        " po_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " po_vend <= " + "'" + vendto + "'" + " AND " +
                      " po_nbr >= " + "'" + pofrom + "'" + " AND " +
                         " po_nbr <= " + "'" + poto + "'" + 
                         " order by po_nbr ;");
