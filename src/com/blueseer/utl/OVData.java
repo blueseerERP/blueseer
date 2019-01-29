@@ -93,6 +93,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import static java.lang.Math.abs;
 import java.math.RoundingMode;
 import java.net.UnknownHostException;
@@ -8369,7 +8370,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
          }
         
              
-                     public static DefaultTableModel getEDITPAll() {
+        public static DefaultTableModel getEDITPAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "TP ID", "Name", "Contact", "Web", "HelpDesk"})
                       {
@@ -19937,7 +19938,7 @@ e.printStackTrace();
             try {
                 Statement st = con.createStatement();
                 
-          /*  17 elements consisting of:
+              /*  22 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -19958,13 +19959,15 @@ e.printStackTrace();
             c[17] = isastart
             c[18] = isaend
             c[19] = docstart
-            cp20] = docend    
+            c[20] = docend
+            c[21] = receiverid;
               */
                       if (dbtype.equals("sqlite")) {
-                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
+                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_receiver, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
                                 " edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
                             + " values ( " 
                             + "'" + c[0] + "'" + ","
+                            + "'" + c[21] + "'" + ","        
                             + "'" + c[1] + "'" + ","
                             + "'" + c[15] + "'" + ","
                             + "'" + c[4] + "'" + ","
@@ -19985,9 +19988,10 @@ e.printStackTrace();
                             + ")"
                             + ";");
                       } else {
-                          st.executeUpdate("insert into edi_idx ( edx_sender, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
+                          st.executeUpdate("insert into edi_idx ( edx_sender, edx_receiver, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
                             + " values ( " 
                             + "'" + c[0] + "'" + ","
+                            + "'" + c[21] + "'" + ","        
                             + "'" + c[1] + "'" + ","
                             + "'" + c[15] + "'" + ","
                             + "'" + c[4] + "'" + ","
@@ -26285,6 +26289,7 @@ e.printStackTrace();
        ArrayList<String> segments = new ArrayList<String>();
        String path = "";
        
+        
          path =  OVData.getEDIBatchDir() + "/" + filename; 
       
        
@@ -26301,11 +26306,13 @@ e.printStackTrace();
            reader.close();
            segments = OVData.parseFile(cbuf, smbfile.getName());
        } else {
+           
            File file = new File(path);
                if (! file.exists()) {
                  bsmf.MainFrame.show("File is unavailable");
                  return segments;
                }
+               
            BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
            char[] cbuf = new char[(int) file.length()];
            reader.read(cbuf,0,cbuf.length); 
@@ -26314,6 +26321,69 @@ e.printStackTrace();
        }
        return segments;
     }
+       
+        public static ArrayList readEDIRawFileByDoc(String filename, String dir, boolean wholefile, String beg, String end, String seg) throws MalformedURLException, SmbException, UnknownHostException, IOException {
+       ArrayList<String> segments = new ArrayList<String>();
+       String path = "";
+        
+        
+         path =  OVData.getEDIBatchDir() + "/" + filename; 
+      
+       
+       if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type
+           NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
+           SmbFile smbfile = new SmbFile(path, auth);
+               if (! smbfile.exists()) {
+                 bsmf.MainFrame.show("File is unavailable (samba)");
+                 return segments;
+               }
+           BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new SmbFileInputStream(smbfile))));
+           char[] cbuf = new char[(int) smbfile.length()];
+           reader.read(cbuf,0,cbuf.length); 
+           reader.close();
+           segments = OVData.parseFile(cbuf, smbfile.getName());
+       } else {
+           
+          
+           
+           File file = new File(path);
+           long max = file.length();
+               if (! file.exists()) {
+                 bsmf.MainFrame.show("File is unavailable");
+                 return segments;
+               }
+             
+           int diff = (Integer.valueOf(end) - Integer.valueOf(beg));
+           if (wholefile) {
+               beg = "0";
+               diff = (int) max;
+           }
+           byte[] bytesRead = new byte[diff]; 
+           RandomAccessFile rf = new RandomAccessFile(path, "r");
+           rf.seek(Integer.valueOf(beg));
+           rf.read(bytesRead);
+	   String DOC = new String(bytesRead); 
+           rf.close();
+           String delim = "";
+           int x = Integer.valueOf(seg);
+           delim = String.valueOf(Character.toString((char) x));
+           String[] sarr = DOC.split(delim, -1);
+           
+           for (int i = 0; i < sarr.length; i++) {
+           segments.add(sarr[i]);
+           }
+      
+               
+               
+        //   BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
+      //     char[] cbuf = new char[(int) file.length()];
+       //    reader.read(cbuf,0,cbuf.length); 
+       //    reader.close();
+       //    segments = OVData.parseFile(cbuf, file.getName());
+       }
+       return segments;
+    }
+       
        
        public static ArrayList readEDIRawFileLiveDirIntoArrayList(String filename, String dir) throws MalformedURLException, SmbException, UnknownHostException, IOException {
        ArrayList<String> segments = new ArrayList<String>();

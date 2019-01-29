@@ -381,6 +381,7 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `edx_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edx_sender` varchar(15) NOT NULL DEFAULT '',
+  `edx_receiver` varchar(15) NOT NULL DEFAULT '',
   `edx_doc` varchar(15) NOT NULL DEFAULT '',
   `edx_dir` int(1) NOT NULL DEFAULT '0',
   `edx_ctrlnum` varchar(9) NOT NULL DEFAULT '',

@@ -152,7 +152,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
       public void setData() {
          DecimalFormat df = new DecimalFormat("#0.00");
          
-        if (ddpart.getItemCount() > 0 && ddvendcode.getItemCount() > 0 && dduom.getItemCount() > 0) {
+        if (ddpart.getItemCount() > 0 && ddvendcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = OVData.getPartPriceFromVend(ddvendcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
         if (myprice == 0.00) {
@@ -404,12 +404,12 @@ public class VendPriceMstr extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 DecimalFormat df = new DecimalFormat("#0.00");
-                res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, cpr_curr from vpr_mstr where vpr_vend = " + "'" +
+                res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
                     ddvendcode.getSelectedItem().toString() + "'" +
                     " and vpr_type = " + "'LIST'" +
                     " and vpr_item = " + "'" + str[0] + "'" +
                     " and vpr_uom = " + "'" + str[1] + "'" +
-                    " and vpr_cpr = " + "'" + str[2] + "'" +        
+                    " and vpr_curr = " + "'" + str[2] + "'" +        
                     ";");
                 while (res.next()) {
                     dduom.setSelectedItem(res.getString("vpr_uom"));
@@ -482,6 +482,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             proceed = bsmf.MainFrame.warn("Are you sure?");
         }
         if (proceed) {
+            String[] z = pricelist.getSelectedValue().toString().split(":");
             try {
 
                 Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -489,14 +490,17 @@ public class VendPriceMstr extends javax.swing.JPanel {
                 try {
                     Statement st = bsmf.MainFrame.con.createStatement();
 
-                    int i = st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + ddvendcode.getSelectedItem().toString() + "'" +
-                        " and vpr_item = " + "'" + pricelist.getSelectedValue().toString() + "'" +
-                        " and vpr_type = 'LIST' " + ";");
+                     int i = st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + ddvendcode.getSelectedItem().toString() + "'" + 
+                                            " and vpr_item = " + "'" + z[0].toString() + "'" +
+                                            " and vpr_uom = " + "'" + z[1].toString() + "'" +
+                                            " and vpr_curr = " + "'" + z[2].toString() + "'" +
+                                            " and vpr_type = 'LIST' " + ";");
                     if (i > 0) {
                         bsmf.MainFrame.show("deleted code " + pricelist.getSelectedValue().toString());
                         initvars("");
                     }
                 } catch (SQLException s) {
+                    s.printStackTrace();
                     bsmf.MainFrame.show("Unable to Delete vpr_mstr Record");
                 }
                 bsmf.MainFrame.con.close();
@@ -566,7 +570,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
 
                 if (proceed) {
                     st.executeUpdate("insert into vpr_mstr "
-                        + "(vpr_vend, vpr_item, vpr_type, vpr_desc, vpr_uom, vpr_curr "
+                        + "(vpr_vend, vpr_item, vpr_type, vpr_desc, vpr_uom, vpr_curr, "
                         + "vpr_price "
                         + " ) "
                         + " values ( " + "'" + ddvendcode.getSelectedItem() + "'" + ","

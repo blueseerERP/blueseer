@@ -53,8 +53,8 @@ public class EDI {
   //  public static String[] controlarray = new String[21];
     
     public static String[] initEDIControl() {   
-        String[] controlarray = new String[21];
-            /*  
+        String[] controlarray = new String[22];
+             /*  22 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -75,9 +75,10 @@ public class EDI {
             c[17] = isastart
             c[18] = isaend
             c[19] = docstart
-            cp20] = docend
+            c[20] = docend
+            c[21] = receiverid;
               */
-               for (int i = 0; i < 21; i++) {
+               for (int i = 0; i < 22; i++) {
                     controlarray[i] = "";
                 }
                 return controlarray;
@@ -171,6 +172,7 @@ public class EDI {
                      // set control
                     c = initEDIControl();
                     c[0] = isa[6].trim(); // senderid
+                    c[21] = isa[8].trim(); // receiverid
                     c[2] = map;
                     c[3] = infile;
                     c[4] = isa[13]; //isactrlnbr
@@ -231,7 +233,10 @@ public class EDI {
      //    }
          
          if (editype.equals("X12")) {
-            batchfile =  processX12CmdLine(ISAmap, cbuf);
+            // create batch file and assign to control replacing infile name
+             int filenumber = OVData.getNextNbr("edifile");
+             batchfile = "R" + String.format("%07d", filenumber); 
+             processX12CmdLine(ISAmap, cbuf, batchfile);
          }
          
      //    if (editype.equals("CSV")) {
@@ -713,10 +718,9 @@ public class EDI {
       
 }
     
-    public static String processX12CmdLine(Map<Integer, Object[]> ISAmap, char[] cbuf)   {
-    // returns batch filename
-    String batchfile = "";
-     /*  17 elements consisting of:
+    public static void processX12CmdLine(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile)   {
+    
+         /*  22 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -737,7 +741,8 @@ public class EDI {
             c[17] = isastart
             c[18] = isaend
             c[19] = docstart
-            cp20] = docend
+            c[20] = docend
+            c[21] = receiverid;
               */
     
     // ISAmap is defined as new Integer[] {start, end, (int) s, (int) e, (int) u});
@@ -773,9 +778,7 @@ public class EDI {
             } 
         }
     }
-          // create batch file and assign to control replacing infile name
-             int filenumber = OVData.getNextNbr("edifile");
-             batchfile = "R" + String.format("%07d", filenumber);
+          
              c[3] = batchfile;
              
              
@@ -824,7 +827,7 @@ public class EDI {
         
     } // ISAMap entries
    
-   return batchfile; 
+  
 }
     // inbound
      

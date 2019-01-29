@@ -453,6 +453,7 @@ CREATE TABLE "edi_idx" (
   "edx_id" INTEGER PRIMARY KEY,
   "edx_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "edx_sender" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_receiver" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_dir" int(1) NOT NULL DEFAULT '0',
   "edx_ctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',

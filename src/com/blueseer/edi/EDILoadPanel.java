@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -365,6 +366,23 @@ public class EDILoadPanel extends javax.swing.JPanel {
     return doc;
     }
      
+      public String getFileName() {
+        String filename = "";
+        
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                filename = fc.getSelectedFile().getAbsolutePath();
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return filename;
+    }
     
     public void initvars(String arg) throws MalformedURLException, SmbException {
     tafile.setText("");
@@ -407,6 +425,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fc = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         btProcess = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -414,6 +433,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tafile = new javax.swing.JTextArea();
         cbtoggle = new javax.swing.JCheckBox();
+        btmanual = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -455,14 +475,24 @@ public class EDILoadPanel extends javax.swing.JPanel {
             }
         });
 
+        btmanual.setText("Manual Search");
+        btmanual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btmanualActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbtoggle)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btmanual)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbtoggle))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btProcess)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -480,7 +510,9 @@ public class EDILoadPanel extends javax.swing.JPanel {
                     .addComponent(btProcess, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbtoggle)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbtoggle)
+                    .addComponent(btmanual))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -556,10 +588,22 @@ public class EDILoadPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cbtoggleActionPerformed
 
+    private void btmanualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmanualActionPerformed
+          try {
+              EDI.processFileCmdLine(getFileName(),"","","");
+          } catch (IOException ex) {
+              Logger.getLogger(EDILoadPanel.class.getName()).log(Level.SEVERE, null, ex);
+          } catch (ClassNotFoundException ex) {
+              Logger.getLogger(EDILoadPanel.class.getName()).log(Level.SEVERE, null, ex);
+          }
+    }//GEN-LAST:event_btmanualActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btProcess;
+    private javax.swing.JButton btmanual;
     private javax.swing.JCheckBox cbtoggle;
+    private javax.swing.JFileChooser fc;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -32,6 +33,7 @@ public class POMaintPanel extends javax.swing.JPanel {
      boolean isLoad = false;
      String curr = "";
      String basecurr = OVData.getDefaultCurrency();
+     DecimalFormat df = new DecimalFormat("#0.0000");
      
    // OVData avmdata = new OVData();
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -149,33 +151,41 @@ public class POMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-               // partnbr.removeAllItems();
-               int i = 0;
-               DecimalFormat df = new DecimalFormat("#0.00");
+              
                // if part is not already in list
                 int k = ddpart.getSelectedIndex();
               
-                // lets first try as cust part
+                
+                // lets first try as cust part...i.e....lets look up the item based on entering a customer part number.
                 if (k < 0) {
-                res = st.executeQuery("select vdp_item, vdp_vitem from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'"
-                        + " AND vdp_vitem = " + "'" + part + "'" + ";");
+                    
+                res = st.executeQuery("select vdp_item, vdp_vitem from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" 
+                        + " AND vdp_vitem = " + "'" + part + "'" 
+                        + ";");
+                int i = 0;
                 while (res.next()) {
                     i++;
                     ddpart.setSelectedItem(res.getString("vdp_item"));
                     vendnumber.setText(part);
                     ddpart.setForeground(Color.blue);
                     vendnumber.setForeground(Color.blue);
+                    vendnumber.setEditable(false);
                 }
                 
                 // if i is still 0...then must be a misc item
                 if (i == 0) {
                   //  partnbr.addItem(part);
                   //  partnbr.setSelectedItem(part);
-                    vendnumber.setText(part);
+                    vendnumber.setText("");
                     ddpart.setForeground(Color.red);
                     vendnumber.setForeground(Color.red);
+                   // custnumber.setBorder(BorderFactory.createLineBorder(Color.red));
+                    vendnumber.setEditable(true);
+                    
                     discount.setText("0.00");
                     listprice.setText("0.00");
+                    listprice.setBackground(Color.white);
+                    
                     netprice.setText("0.00");
                     qtyshipped.setText("0");
                 }
@@ -187,15 +197,19 @@ public class POMaintPanel extends javax.swing.JPanel {
             listprice.setText("0.00");
             netprice.setText("0.00");
             qtyshipped.setText("0");
+            vendnumber.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            ddpart.setForeground(Color.blue);
+            vendnumber.setForeground(Color.blue);
+            vendnumber.setEditable(false);
             
             if (ddpart.getItemCount() > 0) {
-                vendnumber.setText(OVData.getVendPartFromPart(ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));
                 ddpart.setForeground(Color.blue);
                 vendnumber.setForeground(Color.blue);
                 setPrice();
-             
+                
             } // if part selected
              }  
+                
                 
                 
                
@@ -322,14 +336,24 @@ public class POMaintPanel extends javax.swing.JPanel {
         vendnumber.setEnabled(true);
         qtyshipped.setEnabled(true);
         listprice.setEnabled(true);
-        netprice.setEnabled(true);
-        discount.setEnabled(true);
+      
+      
+      netprice.setEnabled(true);
+      totlines.setEnabled(true);
+      tbtotqty.setEnabled(true);
+      tbtotdollars.setEnabled(true);
+      
+      netprice.setEditable(false);
+      totlines.setEditable(false);
+      tbtotqty.setEditable(false);
+      tbtotdollars.setEditable(false);
+      
+      
+      discount.setEnabled(true);
         
         orddet.setEnabled(true);
         
-        totlines.setEnabled(true);
-        tbtotqty.setEnabled(true);
-        tbtotdollars.setEnabled(true);
+       
         
           btbrowse.setEnabled(true);
           btpovendbrowse.setEnabled(true);
@@ -388,7 +412,8 @@ public class POMaintPanel extends javax.swing.JPanel {
         
         
         jTabbedPane1.setEnabledAt(2, false);
-       
+        jTabbedPane1.setEnabledAt(1, false);
+        
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
@@ -561,6 +586,12 @@ public class POMaintPanel extends javax.swing.JPanel {
         jLabel4.setText("jLabel4");
 
         setBackground(new java.awt.Color(0, 102, 204));
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
         add(jTabbedPane1);
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Purchase Order Maintenance"));
@@ -819,6 +850,15 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         panelDetail.setPreferredSize(new java.awt.Dimension(640, 550));
 
+        qtyshipped.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                qtyshippedFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                qtyshippedFocusLost(evt);
+            }
+        });
+
         jLabel79.setText("PartNumber");
 
         ddpart.setEditable(true);
@@ -830,7 +870,7 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         jLabel87.setText("VendNumber");
 
-        jLabel84.setText("Qty Ship");
+        jLabel84.setText("Order Qty");
 
         jLabel5.setText("uom");
 
@@ -879,11 +919,11 @@ public class POMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel84))
-                .addContainerGap())
+                .addContainerGap(109, Short.MAX_VALUE))
         );
 
         netprice.setEditable(false);
@@ -1259,9 +1299,10 @@ public class POMaintPanel extends javax.swing.JPanel {
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
 
-        if (ddvend.getItemCount() > 0 && ! isLoad) {
+        if (ddvend.getItemCount() > 0 && ! isLoad && ! ddvend.getSelectedItem().toString().isEmpty()) {
            vendChangeEvent(ddvend.getSelectedItem().toString());
-        } // if ddcust has a list
+           jTabbedPane1.setEnabledAt(1, true);
+        } // if ddvend has a list
     }//GEN-LAST:event_ddvendActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
@@ -1290,11 +1331,19 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_netpriceActionPerformed
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
-       setnetprice();
+      if (listprice.getText().isEmpty()) {
+            listprice.setText("0");
+        }
+        listprice.setText(df.format(Double.valueOf(listprice.getText())));
+        setnetprice();
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-       setnetprice();
+        if (discount.getText().isEmpty()) {
+            discount.setText("0");
+        }
+        discount.setText(df.format(Double.valueOf(discount.getText()))); 
+        setnetprice();
     }//GEN-LAST:event_discountFocusLost
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
@@ -1312,6 +1361,34 @@ public class POMaintPanel extends javax.swing.JPanel {
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
        setPrice();
     }//GEN-LAST:event_dduomActionPerformed
+
+    private void qtyshippedFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusGained
+        if (qtyshipped.getText().equals("0")) {
+            qtyshipped.setText("");
+        }
+    }//GEN-LAST:event_qtyshippedFocusGained
+
+    private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
+              String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
+        if (x.equals("error")) {
+            qtyshipped.setText("");
+            qtyshipped.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            qtyshipped.requestFocus();
+        } else {
+            qtyshipped.setText(x);
+            qtyshipped.setBackground(Color.white);
+        }
+        
+    }//GEN-LAST:event_qtyshippedFocusLost
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+         JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        if (index == 1 && ddpart != null && ddpart.getItemCount() > 0) {
+            ddpart.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

@@ -141,6 +141,13 @@ public class CashTran extends javax.swing.JPanel {
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
+            
+            if ((Double)recurexpensetable.getModel().getValueAt(rowIndex, 9) > 0) {
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false};
+            } else {
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, true, true}; 
+            }
+            
             return canEdit[columnIndex];
         }
     
@@ -220,6 +227,9 @@ public class CashTran extends javax.swing.JPanel {
         @Override
         public String[] doInBackground() throws Exception {
             String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
             switch(this.type) {
                 case "buy":
                     message = addBuy();
@@ -245,8 +255,11 @@ public class CashTran extends javax.swing.JPanel {
         public void done() {
             try {
             String[] message = get();
-             BlueSeerUtils.endTask(message);
-             switch(this.type) {
+            
+           
+            BlueSeerUtils.endTask(message);
+             
+            switch(this.type) {
                 case "buy":
                     initvars("0");
                     break;
@@ -328,7 +341,7 @@ public class CashTran extends javax.swing.JPanel {
                 while (res.next()) {
                 totincome += Double.valueOf(res.getString("exp_amt"));
                 }
-                
+                                
                 res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
                                   " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
                                   " where exp_entity <> '' " +
@@ -401,6 +414,8 @@ public class CashTran extends javax.swing.JPanel {
     public String[] addBuy() {
         
         String[] message = new String[2];
+        message[0] = "";
+        message[1] = "";
          
         try {
 
@@ -607,7 +622,8 @@ public class CashTran extends javax.swing.JPanel {
     public String[] addSell() {
           
         String[] message = new String[2];
-         
+        message[0] = "";
+        message[1] = ""; 
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -803,7 +819,8 @@ public class CashTran extends javax.swing.JPanel {
     public String[] addExpense() {
           
         String[] message = new String[2];
-         
+        message[0] = "";
+        message[1] = ""; 
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -942,7 +959,8 @@ public class CashTran extends javax.swing.JPanel {
      public String[] addRecurExpense() {
           
         String[] message = new String[2];
-         
+        message[0] = "";
+        message[1] = ""; 
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1442,7 +1460,7 @@ public class CashTran extends javax.swing.JPanel {
         lbname3.setText("");
         buymodel.setRowCount(0);
         sellmodel.setRowCount(0);
-        expensemodel.setRowCount(0);
+        rexpensemodel.setRowCount(0);
         recurhisttable.setModel(rexpenseHistoryModel);
         recurexpensetable.setModel(rexpensemodel);
         CashTran.CheckBoxRenderer checkBoxRenderer = new CashTran.CheckBoxRenderer();
@@ -3644,9 +3662,9 @@ public class CashTran extends javax.swing.JPanel {
         if ( col == 0) {
               getHistory(recurexpensetable.getValueAt(row, 1).toString());
         }
-        if ( col == 9) {
-              recurexpensetable.setValueAt("", row, 9);
-        }
+    //    if ( col == 9) {
+    //          recurexpensetable.setValueAt(null, row, 9);
+    //    }
     }//GEN-LAST:event_recurexpensetableMouseClicked
 
     private void btupdateincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateincomeActionPerformed

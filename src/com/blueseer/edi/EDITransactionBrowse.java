@@ -75,7 +75,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "IdxNbr", "TradeID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr"})
+                        new String[]{"Select", "IdxNbr", "SenderID", "ReceiverID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr", "DocBeg", "DocEnd", "Seg"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -122,7 +122,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 value, isSelected, hasFocus, row, column);
 
        
-            if (column == 6)
+            if (column == 7)
             c.setForeground(Color.BLUE);
             else
                 c.setBackground(table.getBackground());
@@ -149,7 +149,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 String dir = "0";
                
                 tablereport.setModel(mymodel);
-                 tablereport.getColumnModel().getColumn(6).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
+                 tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
                  
@@ -197,17 +197,21 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     } else {
                      dir = "Out";
                     }
-                     // "IdxNbr", "TradeID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr"
+                     
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getString("edx_id"),
                         res.getString("edx_sender"),
+                        res.getString("edx_receiver"),
                         dir,
                         res.getString("edx_doc"),
                         res.getString("edx_ts"),
                         res.getString("edx_file"),
                         res.getString("edx_ctrlnum"),
                         res.getString("edx_gsctrlnum"),
-                        res.getString("edx_stctrlnum")
+                        res.getString("edx_stctrlnum"),
+                        res.getString("edx_docstart"),
+                        res.getString("edx_docend"),
+                        res.getString("edx_segdelim")
                     });
                 }
                 
@@ -302,6 +306,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         bthidetext.setEnabled(false);
+        cbshowall.setEnabled(false);
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
           
@@ -339,6 +344,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         tbdoc = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
+        cbshowall = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -443,6 +449,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             }
         });
 
+        cbshowall.setText("Show Entire File");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -468,9 +476,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdetail)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bthidetext))
+                        .addComponent(bthidetext)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbshowall))
                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(333, Short.MAX_VALUE))
+                .addContainerGap(246, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -482,7 +492,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(btdetail)
-                        .addComponent(bthidetext)))
+                        .addComponent(bthidetext)
+                        .addComponent(cbshowall)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -589,11 +600,17 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 detailpanel.setVisible(true);
         }
         
-          if ( col == 6) {
+          if ( col == 7) {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileIntoArrayList(tablereport.getValueAt(row, col).toString(), tablereport.getValueAt(row, 2).toString());  
+                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, col).toString(), 
+                         tablereport.getValueAt(row, 2).toString(),
+                         cbshowall.isSelected(),
+                         tablereport.getValueAt(row, 11).toString(),
+                         tablereport.getValueAt(row, 12).toString(),
+                         tablereport.getValueAt(row, 13).toString()
+                         );  
                     for (String segment : segments ) {
                         tafile.append(segment);
                         tafile.append("\n");
@@ -609,6 +626,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
            
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
+             cbshowall.setEnabled(true);
              
         }
       
@@ -617,6 +635,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed
         textpanel.setVisible(false);
        bthidetext.setEnabled(false);
+       cbshowall.setSelected(false);
+       cbshowall.setEnabled(false);
     }//GEN-LAST:event_bthidetextActionPerformed
 
 
@@ -624,6 +644,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton bthidetext;
+    private javax.swing.JCheckBox cbshowall;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JPanel detailpanel;
