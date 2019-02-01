@@ -6,6 +6,7 @@
 
 package com.blueseer.edi;
 
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,6 +14,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -28,6 +30,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -148,7 +151,26 @@ public class EDILoadPanel extends javax.swing.JPanel {
     }
     }
     
+     class myTask extends SwingWorker<Void, Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public Void doInBackground() throws IOException, FileNotFoundException, ClassNotFoundException {
+            EDI.processFileCmdLine(getFileName(),"","","");
+            return null;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+              BlueSeerUtils.endTask(new String[]{"","Done"});          
+        }
+    } 
     
+     
+     
     /**
      * Creates new form EDILoadPanel
      */
@@ -376,6 +398,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 filename = fc.getSelectedFile().getAbsolutePath();
+                BlueSeerUtils.startTask(new String[]{"","Processing..."});
             }
             catch (Exception ex) {
             ex.printStackTrace();
@@ -589,13 +612,8 @@ public class EDILoadPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cbtoggleActionPerformed
 
     private void btmanualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmanualActionPerformed
-          try {
-              EDI.processFileCmdLine(getFileName(),"","","");
-          } catch (IOException ex) {
-              Logger.getLogger(EDILoadPanel.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (ClassNotFoundException ex) {
-              Logger.getLogger(EDILoadPanel.class.getName()).log(Level.SEVERE, null, ex);
-          }
+        myTask task = new myTask();
+        task.execute();  
     }//GEN-LAST:event_btmanualActionPerformed
 
 

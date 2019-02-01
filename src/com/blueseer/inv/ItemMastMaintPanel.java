@@ -10,6 +10,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -66,6 +67,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        
        
         partnumber.setText("");
+        partnumber.setEditable(true);
+        partnumber.setForeground(Color.black);
        revlevel.setText("");
        custrevlevel.setText("");
        tbminordqty.setText("");
@@ -111,11 +114,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         for (String code : mylist) {
             ddprodcode.addItem(code);
         }
-        
-        
-        
-        
-        
         
         ddwh.removeAllItems();
         mylist = OVData.getWareHouseList();
@@ -293,7 +291,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     
    public void initvars(String mypart) {
       
-       jTabbedPane1.removeAll();
+        jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", MainPanel);
         jTabbedPane1.add("Cost/BOM", CostBOMPanel);
         jTabbedPane1.add("Images", ImagePanel);
@@ -307,9 +305,14 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
           btitembrowse.setEnabled(true);
           btdescbrowse.setEnabled(true);
           btnew.setEnabled(true);
+          partnumber.setEnabled(true);
          
          if (! mypart.isEmpty()) {
-             getitemmasterinfo(mypart);
+            boolean hasItem =  getitemmasterinfo(mypart);
+             if (hasItem) {
+              partnumber.setEditable(false);
+              partnumber.setForeground(Color.blue);
+             } 
          }
   
         
@@ -317,7 +320,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
    }
     
    
-      public void getitemmasterinfo(String myid) {
+      public boolean getitemmasterinfo(String myid) {
+            boolean hasItem = false;
             try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -388,6 +392,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                       
                   }
                     if (i > 0) {
+                    hasItem = true;
                     enableAll();
                     btadd.setEnabled(false);
                     bind_tree_op(myid.toString());
@@ -412,6 +417,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
            } catch (Exception e) {
             e.printStackTrace();
         }
+    return hasItem;
     }
       
       
@@ -874,6 +880,12 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Master Data"));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+
+        partnumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                partnumberActionPerformed(evt);
+            }
+        });
 
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ACTIVE", "INACTIVE", "OBSOLETE" }));
 
@@ -1995,7 +2007,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         btdescbrowse.setEnabled(false);
         if (OVData.isAutoItem()) {
         partnumber.setText(String.valueOf(OVData.getNextNbr("item")));
-        partnumber.setEnabled(false);
+        partnumber.setEditable(false);
         }
     }//GEN-LAST:event_btnewActionPerformed
 
@@ -2168,6 +2180,14 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void partnumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partnumberActionPerformed
+        boolean hasItem = getitemmasterinfo(partnumber.getText());
+        if (hasItem) {
+          partnumber.setEditable(false);
+          partnumber.setForeground(Color.blue);
+        } 
+    }//GEN-LAST:event_partnumberActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

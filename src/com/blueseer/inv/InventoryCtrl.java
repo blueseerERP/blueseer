@@ -45,7 +45,8 @@ public class InventoryCtrl extends javax.swing.JPanel {
                         i++;
                         cbmultiplan.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("planmultiscan")));
                         cbdemdtoplan.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("demdtoplan")));   
-                        cbprintsubticket.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("printsubticket")));      
+                        cbprintsubticket.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("printsubticket"))); 
+                        cbautoitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("autoitem")));
                     }
            
             }

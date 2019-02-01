@@ -26366,7 +26366,11 @@ e.printStackTrace();
            rf.close();
            String delim = "";
            int x = Integer.valueOf(seg);
-           delim = String.valueOf(Character.toString((char) x));
+           delim = String.valueOf((char) x);
+           if (x == 92) {  // if backslash is seg terminator
+	    	delim = "\\" + delim;
+	    }
+	   
            String[] sarr = DOC.split(delim, -1);
            
            for (int i = 0; i < sarr.length; i++) {

@@ -163,8 +163,14 @@ public class CustPriceMstr extends javax.swing.JPanel {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
       
+        
+         if (ddcustcode.getItemCount() > 0) {        
          setPriceList();
+         }
+         
+         if (ddcustcode_disc.getItemCount() > 0) {
          updateDiscList();
+         }
         
         
            String[] args = null;

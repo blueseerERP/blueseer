@@ -904,6 +904,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        tbcustcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbcustcodeActionPerformed(evt);
+            }
+        });
+
         tbremarks.setColumns(20);
         tbremarks.setRows(5);
         jScrollPane2.setViewportView(tbremarks);
@@ -1890,6 +1896,10 @@ public class CustMaintPanel extends javax.swing.JPanel {
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void tbcustcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcustcodeActionPerformed
+       // getbillto(tbcustcode.getText());  will attempt to provide a method later to get part without lookup
+    }//GEN-LAST:event_tbcustcodeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
