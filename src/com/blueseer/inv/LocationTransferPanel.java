@@ -115,10 +115,12 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         ArrayList<String> mylist = new ArrayList();
         ddlocfrom.removeAllItems();
         ddlocto.removeAllItems();
-        mylist = OVData.getLocationListByWarehouse(ddwhfrom.getSelectedItem().toString());
-        for (String code : mylist) {
-            ddlocfrom.addItem(code);
-            ddlocto.addItem(code);
+        if (ddwhfrom.getSelectedItem() != null) {
+            mylist = OVData.getLocationListByWarehouse(ddwhfrom.getSelectedItem().toString());
+            for (String code : mylist) {
+                ddlocfrom.addItem(code);
+                ddlocto.addItem(code);
+            }
         }
         
         
@@ -399,6 +401,32 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         Double qty = 0.00;
         String op = "";
         
+        String sitefrom = "";
+        String siteto = "";
+        String whfrom = "";
+        String whto = "";
+        String locfrom = "";
+        String locto = "";
+        
+        if (ddlocfrom.getSelectedItem() != null)
+        locfrom = ddlocfrom.getSelectedItem().toString();
+        
+        if (ddlocto.getSelectedItem() != null)
+        locto = ddlocto.getSelectedItem().toString();
+        
+        if (ddwhfrom.getSelectedItem() != null)
+        whfrom = ddwhfrom.getSelectedItem().toString();
+        
+        if (ddwhto.getSelectedItem() != null)
+        whto = ddwhto.getSelectedItem().toString();
+        
+        if (ddsitefrom.getSelectedItem() != null)
+        sitefrom = ddsitefrom.getSelectedItem().toString();
+        
+        if (ddsiteto.getSelectedItem() != null)
+        siteto = ddsiteto.getSelectedItem().toString();
+        
+        
         qty = Double.valueOf(tbqty.getText());
         
         if (qty == 0) {
@@ -415,7 +443,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
             return;
         }
         
-        if (qty > OVData.getItemQtyByWarehouseAndLocation(tbpart.getText(), ddsitefrom.getSelectedItem().toString(), ddwhfrom.getSelectedItem().toString(), ddlocfrom.getSelectedItem().toString()) ) {
+        if (qty > OVData.getItemQtyByWarehouseAndLocation(tbpart.getText(), sitefrom, whfrom, locfrom) ) {
             proceed = false;
             bsmf.MainFrame.show("Insufficient Qty at WH/LOC to transfer");
             tbqty.requestFocus();
@@ -435,9 +463,9 @@ public class LocationTransferPanel extends javax.swing.JPanel {
                   "LOC-TRNF", 
                   0.00, 
                   0.00, 
-                ddsiteto.getSelectedItem().toString(), 
-                ddlocto.getSelectedItem().toString(),  
-                ddwhto.getSelectedItem().toString(),
+                siteto, 
+                locto,  
+                whto,
                 "", 
                 "", 
                 "", 
@@ -456,12 +484,12 @@ public class LocationTransferPanel extends javax.swing.JPanel {
                 );
             
         // do the 'to' side
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), ddsiteto.getSelectedItem().toString(), ddlocto.getSelectedItem().toString(), ddwhto.getSelectedItem().toString(), qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, qty);
       
        // now do the 'from' side
        if (! rtn) {
        qty = -1 * qty;
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), ddsitefrom.getSelectedItem().toString(), ddlocfrom.getSelectedItem().toString(), ddwhfrom.getSelectedItem().toString(), qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, qty);
        }
        
       

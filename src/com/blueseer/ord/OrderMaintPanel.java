@@ -26,6 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
@@ -110,7 +111,63 @@ public class OrderMaintPanel extends javax.swing.JPanel {
    }    
     
      
-     
+     class Task extends SwingWorker<String[], Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+          String type = "";
+          
+          public Task(String type) {
+              this.type = type;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addOrder();
+                    break;
+                case "edit":
+                    message = editOrder();
+                    break;
+                case "delete":
+                    message = deleteOrder();    
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars("");  
+           }  else {
+             initvars(ordernbr.getText());  
+           }
+           
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            } 
+           
+        }
+    }  
+                 
+        
     
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
@@ -1117,6 +1174,320 @@ public class OrderMaintPanel extends javax.swing.JPanel {
          }
                 
          
+    }
+    
+    public String[] addOrder() {
+        String[] message = new String[2];
+        
+          try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput();
+                
+               
+                    
+                    
+                     // lets collect single or multiple Warehouse status
+                        int d = 0;
+                        String uniqwh = "";
+                       for (int j = 0; j < orddet.getRowCount(); j++) {
+                         if (d > 0) {
+                           if ( uniqwh.compareTo(orddet.getValueAt(j, 11).toString()) != 0) {
+                           uniqwh = "multi-WH";
+                           break;
+                           }
+                         }
+                         d++;
+                         uniqwh = orddet.getValueAt(j, 11).toString();
+                       }
+                    
+                    
+                    
+                if (proceed) {
+                    st.executeUpdate("insert into so_mstr "
+                        + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
+                        + " so_create_date, so_userid, so_status,"
+                        + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
+                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
+                        + "'" + ddcust.getSelectedItem() + "'" + ","
+                        + "'" + ddship.getSelectedItem() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
+                        + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","
+                        + "'" + uniqwh + "'" + ","
+                        + "'" + ponbr.getText().replace("'", "") + "'" + ","
+                        + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                        + "'" + status + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + aracct + "'" + ","
+                        + "'" + arcc + "'" + ","
+                        + "'" + remarks.getText().replace("'", "") + "'" + "," 
+                        + "'" + blanket + "'" + ","
+                        + "'" + ddtax.getSelectedItem().toString() + "'"
+                        + ")"
+                        + ";");
+
+                  //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice"
+                   
+                    
+                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                        
+                        st.executeUpdate("insert into sod_det "
+                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
+                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
+                            + " values ( " 
+                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + "'" + orddet.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
+                            + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
+                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","        
+                            + "'" + ddsite.getSelectedItem().toString() + "'" 
+                            + ")"
+                            + ";");
+                       
+                          if (linetax.containsKey(orddet.getValueAt(j,0))) {
+                              for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
+                                      st.executeUpdate("insert into sod_tax "
+                                + "(sodt_nbr, sodt_line, sodt_desc, sodt_percent, sodt_type ) "
+                                + " values ( " 
+                                + "'" + ordernbr.getText().toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                                + "'" + s[0].toString() + "'" + ","
+                                + "'" + s[1].toString() + "'" + ","
+                                + "'" + s[2].toString() + "'"  
+                                + ")"
+                                + ";");
+                              }
+                          }
+                        
+                    }
+                    
+                    // now add applied discounts and summary charges
+                     for (int j = 0; j < sactable.getRowCount(); j++) {
+                        st.executeUpdate("insert into sos_det "
+                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
+                            + " values ( " 
+                            + "'" + ordernbr.getText().toString() + "'" + ","
+                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
+                            + ")"
+                            + ";");
+                    }
+                     
+                     // now add headertax if any
+                     if (! headertax.isEmpty()) {
+                              for (String[] s : headertax) {
+                                      st.executeUpdate("insert into so_tax "
+                                + "(sot_nbr, sot_desc, sot_percent, sot_type ) "
+                                + " values ( " 
+                                + "'" + ordernbr.getText().toString() + "'" + ","
+                                + "'" + s[0].toString() + "'" + ","
+                                + "'" + s[1].toString() + "'" + ","
+                                + "'" + s[2].toString() + "'"  
+                                + ")"
+                                + ";");
+                                      
+                              }
+                          }
+                    
+                        
+                    
+             message = new String[]{"0", "Order has been added"};         
+                     
+                     
+             // if autoinvoice
+             if (OVData.isAutoInvoice()) {
+                 
+            boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
+               if (sure) {     
+                   message = autoInvoiceOrder();
+               }
+             } // if autoinvoice
+                     
+             
+             
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                s.printStackTrace();
+                message = new String[]{"1", "Cannot add Order"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+        return message;
+    }
+    
+    public String[] editOrder() {
+     String[] message = new String[2];
+       try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput();
+               
+                if (proceed) {
+                    st.executeUpdate("update so_mstr "
+                        + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
+                        + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
+                        + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
+                        + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
+                        + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
+                        + " so_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + " so_ord_date = " + "'" + dfdate.format(orddate.getDate()).toString() + "'" 
+                        + " where so_nbr = " + "'" + ordernbr.getText().toString() + "'"
+                        + ";");
+
+                  //  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", shippedqty, status
+                   
+                    
+                    // if available sod_det line item...then update....else insert
+                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                         i = 0;
+                        // skip closed lines
+                        if (orddet.getValueAt(j, 10).toString().equals("close"))
+                            continue;
+                        res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + ordernbr.getText() + "'" +
+                                " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
+                            while (res.next()) {
+                            i++;
+                            }
+                            if (i > 0) {
+                              st.executeUpdate("update sod_det set "
+                            + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + " sod_po = " + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
+                            + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " sod_listprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + " sod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + " sod_wh = " + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
+                            + " sod_loc = " + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
+                            + " sod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                            + " sod_ord_date = " + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","        
+                            + " sod_netprice = " + "'" + orddet.getValueAt(j, 8).toString() + "'"
+                            + " where sod_nbr = " + "'" + ordernbr.getText() + "'" 
+                            + " AND sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
+                            + ";");
+                            } else {
+                             st.executeUpdate("insert into sod_det "
+                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
+                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_site) "
+                            + " values ( " 
+                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
+                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","        
+                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","                
+                            + "'" + ddsite.getSelectedItem().toString() + "'"
+                            + ")"
+                            + ";");   
+                            }
+
+                    }
+                    
+                     // now delete all applicable sos_det and re-add applied discounts and summary charges
+                     st.executeUpdate("delete from sos_det where sos_nbr = " + "'" + ordernbr.getText().toString() + "'" + ";");
+                     for (int j = 0; j < sactable.getRowCount(); j++) {
+                        st.executeUpdate("insert into sos_det "
+                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
+                            + " values ( " 
+                            + "'" + ordernbr.getText().toString() + "'" + ","
+                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
+                            + ")"
+                            + ";");
+
+                    }
+                    
+                    
+                    message = new String[]{"0", "Order has been edited"};     
+                    
+                    
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                s.printStackTrace();
+                message = new String[]{"1", "Order cannot be edited"};     
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     return message;
+    }
+    
+    public String[] deleteOrder() {
+        String[] message = new String[2];
+           try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                st.executeUpdate("delete from sod_det where sod_nbr = " + "'" + ordernbr.getText() + "'" + ";");   
+                int i = st.executeUpdate("delete from so_mstr where so_nbr = " + "'" + ordernbr.getText() + "'" + ";");
+                    if (i > 0) {
+                        message = new String[]{"0", "deleted order number " + ordernbr.getText()};
+                    }
+                } catch (SQLException s) {
+                    s.printStackTrace();
+                message = new String[]{"1", "unabled to delete order"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           return message;
     }
     
     /**
@@ -2394,179 +2765,10 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput();
-                
-               
-                    
-                    
-                     // lets collect single or multiple Warehouse status
-                        int d = 0;
-                        String uniqwh = "";
-                       for (int j = 0; j < orddet.getRowCount(); j++) {
-                         if (d > 0) {
-                           if ( uniqwh.compareTo(orddet.getValueAt(j, 11).toString()) != 0) {
-                           uniqwh = "multi-WH";
-                           break;
-                           }
-                         }
-                         d++;
-                         uniqwh = orddet.getValueAt(j, 11).toString();
-                       }
-                    
-                    
-                    
-                if (proceed) {
-                    st.executeUpdate("insert into so_mstr "
-                        + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
-                        + " so_create_date, so_userid, so_status,"
-                        + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
-                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
-                        + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + ddship.getSelectedItem() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","
-                        + "'" + uniqwh + "'" + ","
-                        + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + bsmf.MainFrame.userid + "'" + ","
-                        + "'" + status + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + remarks.getText().replace("'", "") + "'" + "," 
-                        + "'" + blanket + "'" + ","
-                        + "'" + ddtax.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-
-                  //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice"
-                   
-                    
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                        
-                        st.executeUpdate("insert into sod_det "
-                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
-                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","        
-                            + "'" + ddsite.getSelectedItem().toString() + "'" 
-                            + ")"
-                            + ";");
-                       
-                          if (linetax.containsKey(orddet.getValueAt(j,0))) {
-                              for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
-                                      st.executeUpdate("insert into sod_tax "
-                                + "(sodt_nbr, sodt_line, sodt_desc, sodt_percent, sodt_type ) "
-                                + " values ( " 
-                                + "'" + ordernbr.getText().toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                                + "'" + s[0].toString() + "'" + ","
-                                + "'" + s[1].toString() + "'" + ","
-                                + "'" + s[2].toString() + "'"  
-                                + ")"
-                                + ";");
-                              }
-                          }
-                        
-                    }
-                    
-                    // now add applied discounts and summary charges
-                     for (int j = 0; j < sactable.getRowCount(); j++) {
-                        st.executeUpdate("insert into sos_det "
-                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
-                            + " values ( " 
-                            + "'" + ordernbr.getText().toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
-                            + ")"
-                            + ";");
-                    }
-                     
-                     // now add headertax if any
-                     if (! headertax.isEmpty()) {
-                              for (String[] s : headertax) {
-                                      st.executeUpdate("insert into so_tax "
-                                + "(sot_nbr, sot_desc, sot_percent, sot_type ) "
-                                + " values ( " 
-                                + "'" + ordernbr.getText().toString() + "'" + ","
-                                + "'" + s[0].toString() + "'" + ","
-                                + "'" + s[1].toString() + "'" + ","
-                                + "'" + s[2].toString() + "'"  
-                                + ")"
-                                + ";");
-                                      
-                              }
-                          }
-                    
-                        
-                    
-                     
-                     
-                     
-             // if autoinvoice
-             if (OVData.isAutoInvoice()) {
-                 
-            boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
-               if (sure) {     
-                   String[] message = autoInvoiceOrder();
-                   if (message[0].equals("1")) { // if error
-                      bsmf.MainFrame.show(message[1]);
-                   } else {
-                      bsmf.MainFrame.show("Order has been invoiced.");
-                   }
-               }
-             } // if autoinvoice
-                     
-                     
-                     
-                     
-                    
-                    bsmf.MainFrame.show("Order has been added");
-                  
-                    initvars(ordernbr.getText());
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                s.printStackTrace();
-                bsmf.MainFrame.show("Cannot add order");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+       BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("add");
+        task.execute();   
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -2602,119 +2804,10 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-         try {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput();
-               
-                if (proceed) {
-                    st.executeUpdate("update so_mstr "
-                        + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
-                        + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
-                        + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
-                        + " so_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + " so_ord_date = " + "'" + dfdate.format(orddate.getDate()).toString() + "'" 
-                        + " where so_nbr = " + "'" + ordernbr.getText().toString() + "'"
-                        + ";");
-
-                  //  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", shippedqty, status
-                   
-                    
-                    // if available sod_det line item...then update....else insert
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                         i = 0;
-                        // skip closed lines
-                        if (orddet.getValueAt(j, 10).toString().equals("close"))
-                            continue;
-                        res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + ordernbr.getText() + "'" +
-                                " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
-                            while (res.next()) {
-                            i++;
-                            }
-                            if (i > 0) {
-                              st.executeUpdate("update sod_det set "
-                            + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + " sod_po = " + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
-                            + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + " sod_listprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + " sod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + " sod_wh = " + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + " sod_loc = " + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + " sod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                            + " sod_ord_date = " + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","        
-                            + " sod_netprice = " + "'" + orddet.getValueAt(j, 8).toString() + "'"
-                            + " where sod_nbr = " + "'" + ordernbr.getText() + "'" 
-                            + " AND sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
-                            + ";");
-                            } else {
-                             st.executeUpdate("insert into sod_det "
-                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
-                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","                
-                            + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");   
-                            }
-
-                    }
-                    
-                     // now delete all applicable sos_det and re-add applied discounts and summary charges
-                     st.executeUpdate("delete from sos_det where sos_nbr = " + "'" + ordernbr.getText().toString() + "'" + ";");
-                     for (int j = 0; j < sactable.getRowCount(); j++) {
-                        st.executeUpdate("insert into sos_det "
-                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
-                            + " values ( " 
-                            + "'" + ordernbr.getText().toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
-                            + ")"
-                            + ";");
-
-                    }
-                    
-                    
-                    bsmf.MainFrame.show("Order has been edited");
-                    
-                    initvars("");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                s.printStackTrace();
-                bsmf.MainFrame.show("Cannot edit order");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("edit");
+        task.execute();  
     }//GEN-LAST:event_bteditActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -2827,27 +2920,10 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                st.executeUpdate("delete from sod_det where sod_nbr = " + "'" + ordernbr.getText() + "'" + ";");   
-                int i = st.executeUpdate("delete from so_mstr where so_nbr = " + "'" + ordernbr.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted order number " + ordernbr.getText());
-                    initvars("");
-                    }
-                } catch (SQLException s) {
-                    s.printStackTrace();
-                bsmf.MainFrame.show("Unable to Delete Sales Order");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+             BlueSeerUtils.startTask(new String[]{"","Committing..."});
+             disableAll();
+             Task task = new Task("delete");
+             task.execute(); 
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 

@@ -163,7 +163,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Part:"/>
+            <Property name="text" type="java.lang.String" value="Item:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
@@ -176,6 +176,9 @@
         <Component class="javax.swing.JTextField" name="tbref">
         </Component>
         <Component class="javax.swing.JTextField" name="tbqty">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbqtyFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>

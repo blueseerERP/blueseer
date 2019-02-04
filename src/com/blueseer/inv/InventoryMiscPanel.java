@@ -5,7 +5,9 @@
  */
 package com.blueseer.inv;
 
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,7 +65,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
              
          }
     
-      public void initvars(String arg) {
+    public void initvars(String arg) {
         
         ddtype.requestFocus();
        
@@ -78,8 +80,8 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         tbrmks.setText("");
         tblotserial.setText("");
         
-        
-       
+        tbpart.setBackground(Color.white);
+        tbqty.setBackground(Color.white);
         
         ArrayList<String> wh = new ArrayList();
         ddwh.removeAllItems();
@@ -91,9 +93,11 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
        
          ArrayList<String> mylist = new ArrayList();
         ddloc.removeAllItems();
-        mylist = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
-        for (String code : mylist) {
+        if (ddwh.getSelectedItem() != null) {        
+         mylist = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
+         for (String code : mylist) {
             ddloc.addItem(code);
+         }
         }
         
         
@@ -169,9 +173,15 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
 
         lblcc.setText("cc:");
 
-        jLabel2.setText("Part:");
+        jLabel2.setText("Item:");
 
         jLabel6.setText("EffDate");
+
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
 
         jLabel7.setText("Serial/Lot:");
 
@@ -317,15 +327,52 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         double totalcost = 0.00;
          DecimalFormat df = new DecimalFormat("#0.00");
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String loc = "";
+        String wh = "";
+        String acct = "";
+        String cc = "";
+        String site = "";
+        
+        if (ddloc.getSelectedItem() != null)
+        loc = ddloc.getSelectedItem().toString();
+        
+        if (ddwh.getSelectedItem() != null)
+        wh = ddwh.getSelectedItem().toString();
+        
+        if (ddacct.getSelectedItem() != null)
+        acct = ddacct.getSelectedItem().toString();
+        
+        if (ddcc.getSelectedItem() != null)
+        cc = ddcc.getSelectedItem().toString();
+        
+        if (ddsite.getSelectedItem() != null)
+        site = ddsite.getSelectedItem().toString();
         
         
+        if (tbpart.getText().isEmpty()) {
+            tbpart.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Item cannot be blank");
+            tbpart.requestFocus();
+            return;
+        }
+        
+        if (! tbqty.getText().isEmpty()) {
+            qty = Double.valueOf(tbqty.getText());
+        } else {
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Qty can not be blank");
+            tbqty.requestFocus();
+            return;
+        }
+        
+         
         
         if (ddtype.getSelectedItem().toString().equals("issue")) {
             type = "ISS-MISC";
-            qty = (-1 * Double.valueOf(tbqty.getText()));
+            qty = (-1 * qty);
         } else {
             type = "RCT-MISC";
-            qty = Double.valueOf(tbqty.getText());
+            qty = qty;
         }
         
         
@@ -341,7 +388,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         }
         
         // get cost
-        double cost = OVData.getItemCost(tbpart.getText(), "standard", ddsite.getSelectedItem().toString());
+        double cost = OVData.getItemCost(tbpart.getText(), "standard", site);
         
         // lets get the productline of the part being adjusted
         String prodline = OVData.getProdLineFromItem(tbpart.getText());
@@ -374,12 +421,12 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         if (proceed) {
         // now lets do the tran_hist write
            isError = OVData.TRHistIssDiscrete(dcdate.getDate(), tbpart.getText(), qty, op, type, 0.00, cost, 
-                ddsite.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(),
+                site, loc, wh,
                 "", "", "", 0, "", "", tblotserial.getText(), tbrmks.getText(), tbref.getText(), 
-                ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), "", "", "InventoryMiscPanel", bsmf.MainFrame.userid);
+                acct, cc, "", "", "InventoryMiscPanel", bsmf.MainFrame.userid);
         
         if (! isError) {
-            isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), ddsite.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), Double.valueOf(qty)); 
+            isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, Double.valueOf(qty)); 
         } else {
             bsmf.MainFrame.show("Error during TRHistIssDiscrete");
         }
@@ -387,11 +434,11 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
        
         if (! isError) {
             if (ddtype.getSelectedItem().toString().equals("issue")) {
-                OVData.glEntry(invacct, prodline, ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(),  
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , ddsite.getSelectedItem().toString(), type, tbrmks.getText());
+                OVData.glEntry(invacct, prodline, acct, cc,  
+                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             } else {
                 OVData.glEntry(ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), invacct, prodline, 
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , ddsite.getSelectedItem().toString(), type, tbrmks.getText());
+                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             }
         } else {
           bsmf.MainFrame.show("Error during UpdateInventoryDiscrete");  
@@ -409,7 +456,16 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
-       getiteminfo(tbpart.getText());
+        if (! tbpart.getText().isEmpty()) {
+            if (! OVData.isValidItem(tbpart.getText())) {
+                bsmf.MainFrame.show("Invalid Item " + tbpart.getText());
+                tbpart.setBackground(Color.yellow);
+                tbpart.requestFocus();
+            } else {
+              tbpart.setBackground(Color.white);
+              getiteminfo(tbpart.getText());   
+             }
+        }
     }//GEN-LAST:event_tbpartFocusLost
 
     private void ddtypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddtypeItemStateChanged
@@ -431,6 +487,19 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
              }
         }
     }//GEN-LAST:event_ddwhActionPerformed
+
+    private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
+        String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbqtyFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
