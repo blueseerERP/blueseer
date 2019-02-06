@@ -8760,7 +8760,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
        
-     public static ArrayList getWareHouseList() {
+    public static ArrayList getWareHouseList() {
            ArrayList myarray = new ArrayList();
          try{
             Class.forName(driver).newInstance();
@@ -8788,7 +8788,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }   
        
-      public static String[] getWareHouseAddressElements(String wh) {
+    public static String[] getWareHouseAddressElements(String wh) {
            
                     
              String[] mystring = new String[9];
@@ -8825,8 +8825,80 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return mystring;
         
          }    
+    
+    public static ArrayList getItemMaintInit() {
+           ArrayList myarray = new ArrayList();
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                
+                res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"prodline",res.getString("pl_line")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select site_site from site_mstr order by site_site ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"site",res.getString("site_site")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select uom_id from uom_mstr order by uom_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"uom",res.getString("uom_id")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select tax_code from tax_mstr order by tax_code ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"tax",res.getString("tax_code")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"loc",res.getString("loc_loc")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select wh_id from wh_mstr order by wh_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"wh",res.getString("wh_id")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select wh_id from wh_mstr order by wh_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"wh",res.getString("wh_id")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select code_key from code_mstr  where code_code = 'ItemType' order by code_key ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"type",res.getString("code_key")};
+                myarray.add(arr); 
+                }
+                
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myarray;
         
-       public static ArrayList getProdCodeList() {
+    }
+    
+    
+    public static ArrayList getProdCodeList() {
            ArrayList myarray = new ArrayList();
          try{
             Class.forName(driver).newInstance();

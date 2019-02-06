@@ -11,6 +11,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Image;
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -108,57 +109,47 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbovhcost.setText("");
        tbmtlcost.setText("");
        
-        ArrayList<String> mylist = new ArrayList();
-        ddprodcode.removeAllItems();
-        mylist = OVData.getProdCodeList();
-        for (String code : mylist) {
-            ddprodcode.addItem(code);
+       
+       
+       ddprodcode.removeAllItems();
+       ddsite.removeAllItems();
+       dduom.removeAllItems();
+       ddtax.removeAllItems();
+       ddloc.removeAllItems();
+       ddwh.removeAllItems();
+       ddtype.removeAllItems();
+       ArrayList<String[]> mylist = OVData.getItemMaintInit();
+       for (String[] code : mylist) {
+            if (code[0].equals("prodline"))
+            ddprodcode.addItem(code[1]);
+            if (code[0].equals("site"))
+            ddsite.addItem(code[1]);
+            if (code[0].equals("uom"))
+            dduom.addItem(code[1]);
+            if (code[0].equals("tax"))
+            ddtax.addItem(code[1]);
+            if (code[0].equals("loc"))
+            ddloc.addItem(code[1]);
+            if (code[0].equals("wh"))
+            ddwh.addItem(code[1]);
+            if (code[0].equals("type"))
+            ddtype.addItem(code[1]);
+            
         }
-        
-        ddwh.removeAllItems();
-        mylist = OVData.getWareHouseList();
-        for (String code : mylist) {
-            ddwh.addItem(code);
-        }
+       
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
         
-        ddloc.removeAllItems();
-        mylist = OVData.getLocationList();
-        for (String code : mylist) {
-            ddloc.addItem(code);
-        }
+       
         ddloc.insertItemAt("", 0);
         ddloc.setSelectedIndex(0);
         
-        
-        ddtype.removeAllItems();
-        mylist = OVData.getCodeMstr("ItemType");
-        for (String code : mylist) {
-            ddtype.addItem(code);
-        }
-        
-        ddtax.removeAllItems();
-        ArrayList<String> tax = OVData.gettaxcodelist();
-        for (int i = 0; i < tax.size(); i++) {
-            ddtax.addItem(tax.get(i));
-        }
+       
         ddtax.insertItemAt("", 0);
         ddtax.setSelectedIndex(0);
         
-        dduom.removeAllItems();
-        mylist = OVData.getUOMList();
-        for (String code : mylist) {
-            dduom.addItem(code);
-        }
-        
-        ddsite.removeAllItems();
-        mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
+       
         ddsite.setSelectedItem(OVData.getDefaultSite());
-        
         ddcode.setSelectedIndex(0);
         
        
@@ -2035,6 +2026,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         .getImage().getScaledInstance(600, 600,
         java.awt.Image.SCALE_SMOOTH));
           */
+        Image newimage = imageIcon.getImage().getScaledInstance(jPanel5.getWidth() - 5, jPanel5.getHeight() - 5, Image.SCALE_DEFAULT);
+        imageIcon.setImage(newimage);
         imagelabel.setIcon(imageIcon);
         } else {
          btdeleteimage.setEnabled(false);  

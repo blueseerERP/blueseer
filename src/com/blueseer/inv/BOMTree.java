@@ -68,6 +68,9 @@ DefaultTreeModel levelmodel = null;
         jTree1.setVisible(false);
     }
 
+    public void initvars(String arg) {
+        
+    }
     
     public void leveltest() {
     
