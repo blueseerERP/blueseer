@@ -258,3 +258,4 @@ admin;InventoryCtrl
 admin;MassLoad
 admin;CashTran
 admin;CashTranBrowse
+admin;SchemaBrowse

@@ -3748,6 +3748,58 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            return mymodel;
        } 
           
+             public static DefaultTableModel getDBSchema() {
+           
+           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                       new String[]{"TableName", "ColumnName", "ColumnType"});
+           
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+            
+               if (dbtype.equals("sqlite")) {
+                  res = st.executeQuery("select m.name as tablename, p.name as columnname, p.type as columntype from sqlite_master m left outer join pragma_table_info((m.name)) p on m.name <> p.name order by tablename, columnname;"); 
+                   while (res.next()) {
+                    // String[] sql = res.getString("sql").split(",", -1);
+                    mymodel.addRow(new Object[]{
+                        res.getString("tablename"),
+                        res.getString("columnname"),
+                        res.getString("columntype")});
+                  }
+               } else {
+                 res = st.executeQuery("SELECT table_name, column_name, column_type from information_schema.columns where table_schema = 'bsdb' ;");  
+                  while (res.next()) {
+                    mymodel.addRow(new Object[]{
+                        res.getString("table_name"),
+                        res.getString("column_name"),
+                        res.getString("column_type")
+                            });
+                }
+               }
+               
+
+               
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+           
+           
+           
+           return mymodel;
+       } 
+        
+            
           public static ArrayList getpsmstrlist(String mypart) {
        ArrayList myarray = new ArrayList();
        String mystring = "";

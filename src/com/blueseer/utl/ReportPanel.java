@@ -94,32 +94,35 @@ public int[] mywidth;
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("MenuAllReqBrowse")) {
+        if (arg.equals("ReqBrowseAll")) {
              mymodel = OVData.getReqAll();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("MenuPendReqRpt1")) {
+        if (arg.equals("ReqPendRpt1")) {
              mymodel = OVData.getReqPending();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("MenuUserBrowse")) {
+        if (arg.equals("SchemaBrowse")) {
+             mymodel = OVData.getDBSchema();
+        }
+        if (arg.equals("UserBrowse")) {
              mymodel = OVData.getUserAll();
         }
-        if (arg.equals("MenuProdCodeBrowse")) {
+        if (arg.equals("ProdCodeBrowse")) {
              mymodel = OVData.getProdCodeAll();
         }
-        if (arg.equals("MenuQPRBrowse")) {
+        if (arg.equals("QPRBrowse")) {
              mymodel = OVData.getQPRAll();
         }
-        if (arg.equals("MenuShipperBrowse")) {
+        if (arg.equals("ShipperBrowse")) {
              mymodel = OVData.getShipperAll();
         }
-        if (arg.equals("MenuOpenOrdReport")) {
+        if (arg.equals("OpenOrdReport")) {
              mymodel = OVData.getOrderOpen();
         }
-        if (arg.equals("ApprovedReqBrowse")) {
+        if (arg.equals("ReqApprovedBrowse")) {
              mymodel = OVData.getReqApproved();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -130,40 +133,36 @@ public int[] mywidth;
         if (arg.equals("NavCodeBrowse")) {
              mymodel = OVData.getNavCodeList();
         }
-        if (arg.equals("MenuCallCenterReport1")) {
-             mymodel = OVData.getCallCenterReport1();
-        }
-        if (arg.equals("MenuAcctBrowse")) {
+        
+        if (arg.equals("AcctBrowse")) {
              mymodel = OVData.getGLAcctAll();
         }
-        if (arg.equals("MenuItemRoutingRpt")) {
+        if (arg.equals("ItemRoutingRpt")) {
              mymodel = OVData.getItemRoutingAll();
         }
-        if (arg.equals("MenuAPDPartMstrRpt1")) {
-             mymodel = OVData.getAPDPartMstrRpt();
-        }
+       
         if (arg.equals("EmpBrowse")) {
              mymodel = OVData.getEmployeeAll();
         }
-        if (arg.equals("MenuGenCodeBrowse")) {
+        if (arg.equals("GenCodeBrowse")) {
              mymodel = OVData.getGenCodeAll();
         }
-        if (arg.equals("MenuWorkCellBrowse")) {
+        if (arg.equals("WorkCellBrowse")) {
              mymodel = OVData.getWorkCellAll();
         }
-        if (arg.equals("MenuRoutingBrowse")) {
+        if (arg.equals("RoutingBrowse")) {
              mymodel = OVData.getRoutingsAll();
         }
-        if (arg.equals("MenuLocationBrowse")) {
+        if (arg.equals("LocationBrowse")) {
              mymodel = OVData.getLocationsAll();
         }
         if (arg.equals("WareHouseBrowse")) {
              mymodel = OVData.getWareHousesAll();
         }
-        if (arg.equals("MenuDeptBrowse")) {
+        if (arg.equals("DeptBrowse")) {
              mymodel = OVData.getDeptsAll();
         }
-        if (arg.equals("MenuCustReport1")) {
+        if (arg.equals("CustReport1")) {
              mymodel = OVData.getCustAddrInfoAll();
         }
          if (arg.equals("MenuBrowse")) {
@@ -184,24 +183,24 @@ public int[] mywidth;
         if (arg.equals("TaxBrowse")) {
              mymodel = OVData.getTaxAll();
         }
-        if (arg.equals("EDITPMstrBrowse")) {
+        if (arg.equals("EDITPMaintBrowse")) {
              mymodel = OVData.getEDITPAll();
         }
         if (arg.equals("noStdCostBrowse")) {
              mymodel = OVData.getNoStdCostItems();
         }
-        if (arg.equals("MenuBankBrowse")) {
+        if (arg.equals("BankBrowse")) {
              mymodel = OVData.getBankAll();
         }
-        if (arg.equals("MenuUnPostedTransRpt")) {
+        if (arg.equals("UnPostedTransRpt")) {
              mymodel = OVData.getUnPostedGLTrans();
               TableReport.setModel(mymodel);
               TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("MenuCalendarBrowse")) {
+        if (arg.equals("CalendarBrowse")) {
              mymodel = OVData.getGLCalendar();
         }
-         if (arg.equals("MenuSiteBrowse")) {
+         if (arg.equals("SiteBrowse")) {
              mymodel = OVData.getSitesAll();
         }
          if (arg.equals("ForecastBrowse")) {
@@ -291,32 +290,32 @@ public int[] mywidth;
         if (col == 0 && TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
              // if (! checkperms("MenuReqMaint")) { return; }
             
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuAllReqBrowse") == 0) {
-                mypanel = "MenuReqMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("ReqBrowseAll") == 0) {
+                mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqPendingApproval") == 0) {
-                mypanel = "MenuReqMaint";
+                mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuPendReqRpt1") == 0) {
-                mypanel = "MenuReqMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("ReqPendRpt1") == 0) {
+                mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }   
-            if (TableReport.getName() != null && TableReport.getName().compareTo("ApprovedReqBrowse") == 0) {
-                mypanel = "MenuReqMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("ReqApproveBrowse") == 0) {
+                mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }  
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuAcctBrowse") == 0) {
-                mypanel = "MenuAcctMstr";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("AcctBrowse") == 0) {
+                mypanel = "AcctMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
@@ -327,29 +326,29 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }  
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuWorkCellBrowse") == 0) {
-                mypanel = "MenuWorkCellMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("WorkCellBrowse") == 0) {
+                mypanel = "WorkCellMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
                reinitpanels(mypanel, true, args);
             }  
             
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuRoutingBrowse") == 0) {
-                mypanel = "MenuRoutingMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("RoutingBrowse") == 0) {
+                mypanel = "RoutingMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
                reinitpanels(mypanel, true, args);
             }  
             
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuCalendarBrowse") == 0) {
+            if (TableReport.getName() != null && TableReport.getName().compareTo("CalendarBrowse") == 0) {
                  mypanel = "GLCalMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
                reinitpanels(mypanel, true, args);
             }
             
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuLocationBrowse") == 0) {
-                mypanel = "MenuLocationMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("LocationBrowse") == 0) {
+                mypanel = "LocationMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
@@ -360,14 +359,14 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuProdCodeBrowse") == 0) {
-                mypanel = "MenuProdCodeMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("ProdCodeBrowse") == 0) {
+                mypanel = "ProdCodeMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuDeptBrowse") == 0) {
-                 mypanel = "MenuDeptMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("DeptBrowse") == 0) {
+                 mypanel = "DeptMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
@@ -384,26 +383,26 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuCustReport1") == 0) {
-                 mypanel = "MenuCustMstr";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("CustReport1") == 0) {
+                 mypanel = "CustMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("TermsBrowse") == 0) {
-                mypanel = "MenuTermsMaint";
+                mypanel = "TermsMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("FreightBrowse") == 0) {
-               mypanel = "MenuFreightMaint";
+               mypanel = "FreightMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("CarrierBrowse") == 0) {
-               mypanel = "MenuCarrierMaint";
+               mypanel = "CarrierMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
@@ -414,20 +413,20 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuQPRBrowse") == 0) {
-               mypanel = "MenuQPRMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("QPRBrowse") == 0) {
+               mypanel = "QPRMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuBankBrowse") == 0) {
-                 mypanel = "MenuBankMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("BankBrowse") == 0) {
+                 mypanel = "BankMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("MenuSiteBrowse") == 0) {
-               mypanel = "MenuSiteMstr";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("SiteBrowse") == 0) {
+               mypanel = "SiteMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
@@ -438,7 +437,7 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPMstrBrowse") == 0) {
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPMaintBrowse") == 0) {
                  mypanel = "EDITPMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
@@ -450,7 +449,7 @@ public int[] mywidth;
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);
             }
-             if (TableReport.getName() != null && TableReport.getName().compareTo("MenuGenCodeBrowse") == 0) {
+             if (TableReport.getName() != null && TableReport.getName().compareTo("GenCodeBrowse") == 0) {
                  mypanel = "GenericCodeMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString() ;

@@ -408,14 +408,14 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("GLTranMaint", true, myparameter);
             }
             if (callingpanel.equals("costmaint")) {
-              if (! checkperms("MenuCostRoll")) { return; }
+              if (! checkperms("CostRoll")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuCostRoll", true, myparameter);
+              reinitpanels("CostRoll", true, myparameter);
             }
             if (callingpanel.equals("bommaint")) {
-              if (! checkperms("MenuBOMMaint")) { return; }
+              if (! checkperms("BOMMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuBOMMaint", true, myparameter);
+              reinitpanels("BOMMaint", true, myparameter);
             }
             if (callingpanel.equals("editpmaint")) {
               if (! checkperms("EDITPMaint")) { return; }
@@ -468,14 +468,14 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("ECNMaint", true, myparameter);
             }
             if (callingpanel.equals("sitemaint")) {
-              if (! checkperms("MenuSiteMstr")) { return; }
+              if (! checkperms("SiteMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuSiteMstr", true, myparameter);
+              reinitpanels("SiteMaint", true, myparameter);
             }
             if (callingpanel.equals("prodcodemaint")) {
-              if (! checkperms("MenuProdCodeMaint")) { return; }
+              if (! checkperms("ProdCodeMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuProdCodeMaint", true, myparameter);
+              reinitpanels("ProdCodeMaint", true, myparameter);
             }
             if (callingpanel.equals("recvmaint")) {
               if (! checkperms("ReceiverMaintMenu")) { return; }
@@ -488,9 +488,9 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("VouchMaintPanel", true, myparameter);
             }
             if (callingpanel.equals("bankmaint")) {
-              if (! checkperms("MenuBankMaint")) { return; }
+              if (! checkperms("BankMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuBankMaint", true, myparameter);
+              reinitpanels("BankMaint", true, myparameter);
             }
             if (callingpanel.equals("calendarmaint")) {
               if (! checkperms("GLCalMaint")) { return; }
@@ -498,9 +498,9 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("GLCalMaint", true, myparameter);
             }
             if (callingpanel.equals("deptccmaint")) {
-              if (! checkperms("MenuDeptMaint")) { return; }
+              if (! checkperms("DeptMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuDeptMaint", true, myparameter);
+              reinitpanels("DeptMaint", true, myparameter);
             }
             if (callingpanel.equals("shiftmaint")) {
               if (! checkperms("ShiftMaintenance")) { return; }
@@ -508,9 +508,9 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("ShiftMaintenance", true, myparameter);
             }
             if (callingpanel.equals("locationmaint")) {
-              if (! checkperms("MenuLocationMaint")) { return; }
+              if (! checkperms("LocationMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuLocationMaint", true, myparameter);
+              reinitpanels("LocationMaint", true, myparameter);
             }
             if (callingpanel.equals("ftpmaint")) {
               if (! checkperms("FTPMaint")) { return; }
@@ -523,9 +523,9 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("WareHouseMaint", true, myparameter);
             }
             if (callingpanel.equals("itemmaint")) {
-              if (! checkperms("MenuItemMastMaint")) { return; }
+              if (! checkperms("ItemMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("MenuItemMastMaint", true, myparameter);
+              reinitpanels("ItemMaint", true, myparameter);
             }
              if (callingpanel.equals("panelmaint")) {
               if (! checkperms("PanelMaint")) { return; }
@@ -533,14 +533,14 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("PanelMaint", true, myparameter);
             }
             if (callingpanel.equals("termmaint")) {
-              if (! checkperms("MenuTermsMaint")) { return; }
+              if (! checkperms("TermsMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuTermsMaint", true, myparameter);
+              reinitpanels("TermsMaint", true, myparameter);
             }
             if (callingpanel.equals("carriermaint")) {
-              if (! checkperms("MenuCarrierMaint")) { return; }
+              if (! checkperms("CarrierMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuCarrierMaint", true, myparameter);
+              reinitpanels("CarrierMaint", true, myparameter);
             }
             if (callingpanel.equals("empmaint")) {
               if (! checkperms("EmployeeMaster")) { return; }
@@ -548,14 +548,14 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("EmployeeMaster", true, myparameter);
             }
              if (callingpanel.equals("acctmaint")) {
-              if (! checkperms("MenuAcctMstr")) { return; }
+              if (! checkperms("AcctMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuAcctMstr", true, myparameter);
+              reinitpanels("AcctMaint", true, myparameter);
             }
             if (callingpanel.equals("usermaint")) {
-              if (! checkperms("MenuUserMaint")) { return; }
+              if (! checkperms("UserMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuUserMaint", true, myparameter);
+              reinitpanels("UserMaint", true, myparameter);
             }
              if (callingpanel.equals("menumaint")) {
               if (! checkperms("MenuMaint")) { return; }
@@ -563,19 +563,19 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("MenuMaint", true, myparameter);
             }
                if (callingpanel.equals("vendmaint")) {
-              if (! checkperms("VendMstrMaint")) { return; }
+              if (! checkperms("VendMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("VendMstrMaint", true, myparameter);
+              reinitpanels("VendMaint", true, myparameter);
             }
               if (callingpanel.equals("custmaint")) {
-              if (! checkperms("MenuCustMstr")) { return; }
+              if (! checkperms("CustMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuCustMstr", true, myparameter);
+              reinitpanels("CustMaint", true, myparameter);
             }
                 if (callingpanel.equals("ordermaint")) {
-              if (! checkperms("MenuOrderMaint")) { return; }
+              if (! checkperms("OrderMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuOrderMaint", true, myparameter);
+              reinitpanels("OrderMaint", true, myparameter);
             }
                      if (callingpanel.equals("pomaint")) {
               if (! checkperms("POMaintMenu")) { return; }
@@ -583,24 +583,24 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("POMaintMenu", true, myparameter);
             }
                     if (callingpanel.equals("shipmaint")) {
-              if (! checkperms("MenuShipMaint")) { return; }
+              if (! checkperms("ShipMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuShipMaint", true, myparameter);
+              reinitpanels("ShipMaint", true, myparameter);
             }
                if (callingpanel.equals("shiptomaint")) {
-              if (! checkperms("MenuCustMstr")) { return; }
+              if (! checkperms("CustMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 2).toString() + "," + tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuCustMstr", true, myparameter);
+              reinitpanels("CustMaint", true, myparameter);
             }
                   if (callingpanel.equals("routingmaint")) {
-              if (! checkperms("MenuRoutingMaint")) { return; }
+              if (! checkperms("RoutingMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString() ;
-              reinitpanels("MenuRoutingMaint", true, myparameter);
+              reinitpanels("RoutingMaint", true, myparameter);
             }
                         if (callingpanel.equals("wcmaint")) {
-              if (! checkperms("MenuWorkCellMaint")) { return; }
+              if (! checkperms("WorkCellMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString() ;
-              reinitpanels("MenuWorkCellMaint", true, myparameter);
+              reinitpanels("WorkCellMaint", true, myparameter);
             }
         }
     }//GEN-LAST:event_tablereportMouseClicked

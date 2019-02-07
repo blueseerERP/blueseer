@@ -223,7 +223,8 @@ Help,Update,2,JMenuItem,Update,,,,1,1
 Help,PlantDirectoryMenu,3,JMenuItem,Plant Directory,,1,,1,1
 Help,menuscreen,4,JMenuItem,Screen Resolution,,,getScreenSize,1,1
 Help,NavCodeBrowse,5,JMenuItem,NAVCode List,,1,,1,1
-Help,BrowseUtil,6,JMenuItem,,,1,,1,1
+Help,SchemaBrowse,6,JMenuItem,Schema Browse,,1,,1,1
+Help,BrowseUtil,7,JMenuItem,,,1,,1,1
 root,Address,1,JMenu,Address,,,,1,1
 root,Purchasing,2,JMenu,Purchasing,,,,1,1
 root,Order,3,JMenu,Order,,,,1,1
