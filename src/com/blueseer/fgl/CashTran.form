@@ -39,7 +39,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Sell Transaction"/>
+            <TitledBorder title="Quick Cash"/>
           </Border>
         </Property>
       </Properties>
@@ -458,7 +458,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Buy Transaction"/>
+            <TitledBorder title="Quick Cash"/>
           </Border>
         </Property>
       </Properties>
@@ -863,7 +863,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Expense Transaction"/>
+            <TitledBorder title="Quick Cash"/>
           </Border>
         </Property>
       </Properties>
@@ -1309,7 +1309,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Expense Recurring"/>
+            <TitledBorder title="Quick Cash"/>
           </Border>
         </Property>
       </Properties>

@@ -6,6 +6,7 @@
 
 package com.blueseer.pur;
 
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -427,6 +428,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         override.setEnabled(false);
         override.setSelected(false);
         tbsite.setEnabled(false);
+        tbprice.setBackground(Color.white);
+        tbqty.setBackground(Color.white);
         
         
         
@@ -1008,6 +1011,18 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
+
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpriceFocusLost(evt);
+            }
+        });
+
         btAddItem.setText("AddItem");
         btAddItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1161,40 +1176,40 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                                             .addComponent(btdelitem))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addGap(66, 66, 66)
-                                                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                        .addGap(35, 35, 35)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel7)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel6)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(tbvendnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                            .addComponent(ddvend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(caldate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel16)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel17))
-                                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel1)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel2)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel3)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                    .addGap(35, 35, 35)
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                            .addComponent(jLabel7)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                            .addComponent(jLabel6)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(tbvendnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(ddvend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(caldate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                            .addComponent(jLabel1)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                            .addComponent(jLabel2)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                            .addComponent(jLabel3)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addGap(66, 66, 66)
+                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                            .addComponent(jLabel16)
+                                                            .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel17))
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                                         .addGap(241, 241, 241)
                                                         .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -1521,30 +1536,28 @@ public class ReqMaintPanel extends javax.swing.JPanel {
     private void btAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddItemActionPerformed
        boolean canproceed = true;
         itemtable.setModel(itemmodel);
-        Pattern p = Pattern.compile("\\d\\.\\d\\d");
-        Matcher m = p.matcher(tbprice.getText());
-      
+       
         if (tbitem.getText().length() > 80) {
             bsmf.MainFrame.show("item length cannot exceed 80 chars");
             canproceed = false;
             return;
         }
         
-        if (!m.find() || tbprice.getText() == null) {
-           bsmf.MainFrame.show("Invalid Price need x.xx format");
-            canproceed = false;
-            return;
+        if (tbprice.getText().isEmpty()) {
+           bsmf.MainFrame.show("Invalid Price");
+           canproceed = false;
+           tbprice.setBackground(Color.yellow);
+           tbprice.requestFocus();
+           return;
         }
-         if ( ! tbqty.getText().toString().matches("\\d+") ) {
-        canproceed = false;
-         bsmf.MainFrame.show("Invalid Qty...must be integer");
-         return;
-       }
-       if ( Double.valueOf(tbqty.getText().toString()) > 1000000 ) {
-        canproceed = false;
-         bsmf.MainFrame.show("Cannot have a qty over 1M");
-         return;
-       }
+        if (tbqty.getText().isEmpty()) {
+           bsmf.MainFrame.show("Invalid Qty");
+           canproceed = false;
+           tbqty.setBackground(Color.yellow);
+           tbqty.requestFocus();
+           return;
+        }
+       
          
         if (canproceed) {
                itemmodel.addRow(new Object[]{tbitem.getText(), tbqty.getText(), tbprice.getText()}); 
@@ -1713,89 +1726,34 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
         
-        
-        /*
-        try {
-
-            
-            final PrinterJob pjob = PrinterJob.getPrinterJob();
-            pjob.setJobName("Graphics Demo Printout");
-            pjob.setCopies(1);
-            pjob.setPrintable(new Printable() {
-                private boolean rootPaneCheckingEnabled;
-                public int print(Graphics pg, PageFormat pf, int pageNum) {
-                    if (pageNum > 0) // we only print one page
-                    {
-                        return Printable.NO_SUCH_PAGE; // ie., end of job
-                    }
-                    pg.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-
-                    pg.drawString("AVM Industries", 50, 50);
-                    pg.drawString("Hwy 76 East-Box 729", 50, 60);
-                    pg.drawString("Marion, SC 29571", 50, 70);
-
-                    pg.drawString("Complaint #: ", 500, 50);
-                    pg.drawString(tbnbr.getText(), 505, 70);
-                   
-
-                    pg.setFont(new Font("TimesRoman", Font.BOLD, 18));
-                    pg.drawString("Requisition Print", 200, 90);
-
-                    pg.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-                   
-                    pg.drawString("Requestor:", 140, 120);
-                    pg.drawString(tbrequestor.getText(), 240, 120);
-                    pg.drawString("Vendor:", 140, 150);
-                    pg.drawString(ddvend.getSelectedItem().toString(), 240, 150);
-                    pg.drawString("Vendor Nbr:", 140, 180);
-                    pg.drawString(tbvendnbr.getText(), 240, 180);
-                    pg.drawString("Dept#:", 140, 210);
-                    pg.drawString(dddept.getSelectedItem().toString(), 240, 210);
-                    pg.drawString("PO:", 140, 240);
-                    pg.drawString(tbpo.getText().toString(), 240, 240);
-                    pg.drawString("Acct:", 140, 270);
-                    pg.drawString(tbacct.getText().toString(), 240, 270);
-                    pg.drawString("CC:", 140, 300);
-                    pg.drawString(tbcc.getText().toString(), 240, 300);
-                  
-                    pg.setFont(new Font("TimesRoman", Font.BOLD, 12));
-                    pg.drawString("ITEM", 100, 330);
-                    pg.drawString("QTY", 400, 330);
-                    pg.drawString("PRICE", 500, 330);
-                    
-                    pg.setFont(new Font("TimesRoman", Font.PLAIN, 10));
-                     for (int i = 0; i < itemtable.getRowCount(); i++) {
-                          int newline = 345 + ((i + 1) * 10);
-                    pg.drawString(itemtable.getValueAt(i,0).toString(), 100, newline);
-                    pg.drawString(itemtable.getValueAt(i,1).toString(), 400, newline);
-                    pg.drawString(itemtable.getValueAt(i,2).toString(), 500, newline);
-                    }
-
-                    pg.setFont(new Font("TimesRoman", Font.PLAIN, 10));
-                    pg.drawString("Remarks:", 100, 630);
-                    pg.drawString(tbdesc.getText(), 100, 650);
-
-                   
-
-                  
-
-                  
-
-                    return Printable.PAGE_EXISTS;
-                }
-            });
-
-            if (pjob.printDialog() == false) // choose printer
-            {
-                return;
-            }
-            pjob.print();
-        } catch (PrinterException pe) {
-            pe.printStackTrace();
-        }
-        */
-   
+      
     }//GEN-LAST:event_btprintActionPerformed
+
+    private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
+        String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        if (x.equals("error")) {
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbprice.requestFocus();
+        } else {
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbpriceFocusLost
+
+    private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
+            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbqtyFocusLost
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

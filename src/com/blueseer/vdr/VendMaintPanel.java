@@ -188,11 +188,11 @@ public class VendMaintPanel extends javax.swing.JPanel {
        
       String[] args = null; 
       if (! arg.isEmpty()) {
-              getVend(arg);  
-            enableVend();
-            enableContact();
-            btadd.setEnabled(false);
-            tbcode.setEnabled(false);
+            boolean gotIt = getVend(arg);  
+            if (gotIt) {
+              tbcode.setEditable(false);
+              tbcode.setForeground(Color.blue);
+             } 
         } else {
               disableVend();
               btnew.setEnabled(true);
@@ -206,8 +206,9 @@ public class VendMaintPanel extends javax.swing.JPanel {
     }
     
     
-     public void getVend(String vend) {
-          try {
+     public boolean getVend(String vend) {
+         boolean gotIt = false; 
+         try {
            
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -220,6 +221,8 @@ public class VendMaintPanel extends javax.swing.JPanel {
                 
                 res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + vend + "'"  + ";");
                 while (res.next()) {
+                gotIt = true;
+                
                 tbcode.setText(res.getString("vd_addr"));
                 tbname.setText(res.getString("vd_name"));
                 tbline1.setText(res.getString("vd_line1"));
@@ -264,8 +267,15 @@ public class VendMaintPanel extends javax.swing.JPanel {
            //     contacttable.setModel(contactmodel);
                                     
                 }
-               refreshContactTable(tbcode.getText());    
+               
+               if (gotIt) {
+               refreshContactTable(tbcode.getText()); 
+               enableVend();
+               enableContact();
+               btadd.setEnabled(false);
+               }
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("Unable to get selected vendor");
             }
             bsmf.MainFrame.con.close();
@@ -273,7 +283,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
          
-         
+         return gotIt;
      }
     
      public void clearAllContacts() {
@@ -291,6 +301,8 @@ public class VendMaintPanel extends javax.swing.JPanel {
         tbdateadded.setText(df.format(now));
         tbdatemod.setText(df.format(now));
         tbcode.setText("");
+        tbcode.setForeground(Color.black);
+        tbcode.setEditable(true);
         tbname.setText("");
         tbline1.setText("");
         tbline2.setText("");
@@ -445,7 +457,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
         tbmisc.setEnabled(false);
         tbdateadded.setEnabled(false);
         tbdatemod.setEnabled(false);
-        tbcode.setEnabled(false);
+       // tbcode.setEnabled(false);
         ddstate.setEnabled(false);
         ddcountry.setEnabled(false);
         btadd.setEnabled(false);
@@ -605,6 +617,12 @@ public class VendMaintPanel extends javax.swing.JPanel {
         jLabel2.setText("Name");
 
         jLabel6.setText("City");
+
+        tbcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbcodeActionPerformed(evt);
+            }
+        });
 
         btvendcodebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btvendcodebrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -1259,7 +1277,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
         
           if (OVData.isAutoVend()) {
         tbcode.setText(String.valueOf(OVData.getNextNbr("vendor")));
-        tbcode.setEnabled(false);
+        tbcode.setEditable(false);
         } else {
               tbcode.requestFocus();
          }
@@ -1320,6 +1338,16 @@ public class VendMaintPanel extends javax.swing.JPanel {
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void tbcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcodeActionPerformed
+         boolean gotIt = getVend(tbcode.getText());
+        if (gotIt) {
+          tbcode.setEditable(false);
+          tbcode.setForeground(Color.blue);
+        } else {
+           tbcode.setForeground(Color.red); 
+        }
+    }//GEN-LAST:event_tbcodeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddContact;

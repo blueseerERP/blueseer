@@ -2175,11 +2175,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void partnumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partnumberActionPerformed
-        boolean hasItem = getitemmasterinfo(partnumber.getText());
-        if (hasItem) {
+        boolean gotIt = getitemmasterinfo(partnumber.getText());
+        if (gotIt) {
           partnumber.setEditable(false);
           partnumber.setForeground(Color.blue);
-        } 
+        } else {
+           partnumber.setForeground(Color.red); 
+        }
     }//GEN-LAST:event_partnumberActionPerformed
 
 

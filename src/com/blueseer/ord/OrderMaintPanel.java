@@ -332,9 +332,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         btaddshipto.setEnabled(false);
     }
     
-    public void getOrder(String mykey) {
-        
-        initvars("");
+    public boolean getOrder(String mykey) {
+        boolean gotIt = false;
+       // initvars("");
         
         
         
@@ -351,8 +351,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                     i++;
+                    gotIt = true;
                     ordernbr.setText(mykey);
-                    ordernbr.setEnabled(false);
+                    ordernbr.setEditable(false);
                     ddcust.setSelectedItem(res.getString("so_cust"));
                     ddcust.setEnabled(false);
                     cbissourced.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("so_issourced")));
@@ -402,7 +403,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                  
                  
                 if (i == 0) {
-                   bsmf.MainFrame.show("No Order Record found for " + mykey);
+                   return false;
                 } else {
                             if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
                              lblstatus.setText("Order has been invoiced and is now closed.");
@@ -428,6 +429,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
 
+        return gotIt;
     }
     
     public void getSchedRecords(String order, String po, String part, String line) {
@@ -598,7 +600,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         lblIsSourced.setEnabled(true);
         lbqtyavailable.setEnabled(true);
         lbqtyavailable.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-       // ordernbr.setEnabled(true);
+        ordernbr.setEnabled(true);
         ddcust.setEnabled(true);
         ddship.setEnabled(true);
         ddshipvia.setEnabled(true);
@@ -671,7 +673,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         lblIsSourced.setEnabled(true);
         lbqtyavailable.setEnabled(true);
         lbqtyavailable.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-       // ordernbr.setEnabled(true);
+        ordernbr.setEnabled(true);
         ddcust.setEnabled(true);
         ddship.setEnabled(true);
         ddshipvia.setEnabled(true);
@@ -835,7 +837,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
        
         lblstatus.setText("");
         lblstatus.setForeground(Color.black);
-        ordernbr.setText("");
+       
         cbissourced.setSelected(false);
         
         listprice.setText("0.00");
@@ -890,6 +892,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         //custnumber.setEnabled(false);
         
         
+        ordernbr.setText("");
+        ordernbr.setEditable(true);
+        ordernbr.setForeground(Color.black);
         
         // lets check order control for custitemonly versus any item from item master to be filled into ddpart
         custitemonly = OVData.isCustItemOnly();
@@ -994,7 +999,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         isLoad = false;
       
           if (! arg.isEmpty()) {
-            getOrder(arg);
+            boolean gotIt = getOrder(arg);
+            if (gotIt) {
+              ordernbr.setEditable(false);
+              ordernbr.setForeground(Color.blue);
+             } 
         } else {
               disableAll();
               btnew.setEnabled(true);
@@ -1003,6 +1012,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
               btorddatebrowse.setEnabled(true);
               btordduebrowse.setEnabled(true);
               btordcustbrowse.setEnabled(true);
+              ordernbr.setEnabled(true);
+              ordernbr.setEditable(true);
               
           }
 
@@ -1191,7 +1202,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 
-                proceed = validateInput();
+               
                 
                
                     
@@ -1361,7 +1372,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 
-                proceed = validateInput();
+              
                
                 if (proceed) {
                     st.executeUpdate("update so_mstr "
@@ -1682,6 +1693,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Maintenance"));
 
         jLabel76.setText("OrderNbr");
+
+        ordernbr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ordernbrActionPerformed(evt);
+            }
+        });
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -2305,6 +2322,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         });
 
         listprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                listpriceFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 listpriceFocusLost(evt);
             }
@@ -2641,6 +2661,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         } 
         
          ordernbr.setText(String.valueOf(OVData.getNextNbr("order")));
+         ordernbr.setEditable(false);
+         ordernbr.setForeground(Color.blue);
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -2765,7 +2787,10 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       BlueSeerUtils.startTask(new String[]{"","Committing..."});
+         if (!validateInput()) {
+             return;
+         }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
         disableAll();
         Task task = new Task("add");
         task.execute();   
@@ -2804,6 +2829,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
+         if (!validateInput()) {
+             return;
+         }
         BlueSeerUtils.startTask(new String[]{"","Committing..."});
         disableAll();
         Task task = new Task("edit");
@@ -2902,18 +2930,32 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
-        if (listprice.getText().isEmpty()) {
-            listprice.setText("0");
+           String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
+        if (x.equals("error")) {
+            listprice.setText("");
+            listprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            listprice.requestFocus();
+        } else {
+            listprice.setText(x);
+            listprice.setBackground(Color.white);
         }
-        listprice.setText(df.format(Double.valueOf(listprice.getText())));
         setNetPrice();
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-        if (discount.getText().isEmpty()) {
-            discount.setText("0");
+           String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
+        if (x.equals("error")) {
+            discount.setText("");
+            discount.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            discount.requestFocus();
+        } else {
+            discount.setText(x);
+            discount.setBackground(Color.white);
         }
-        discount.setText(df.format(Double.valueOf(discount.getText()))); 
+        if (discount.getText().isEmpty())
+            discount.setText("0.00");
         setNetPrice();
     }//GEN-LAST:event_discountFocusLost
 
@@ -3118,6 +3160,22 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
         OVData.printCustomerOrder(ordernbr.getText());
     }//GEN-LAST:event_btprintActionPerformed
+
+    private void ordernbrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordernbrActionPerformed
+         boolean gotIt = getOrder(ordernbr.getText());
+        if (gotIt) {
+          ordernbr.setEditable(false);
+          ordernbr.setForeground(Color.blue);
+        } else {
+            ordernbr.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_ordernbrActionPerformed
+
+    private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained
+        if (listprice.getText().equals("0")) {
+            listprice.setText("");
+        }
+    }//GEN-LAST:event_listpriceFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

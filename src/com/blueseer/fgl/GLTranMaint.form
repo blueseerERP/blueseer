@@ -381,6 +381,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbdesc">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbdescFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel51">
           <Properties>
@@ -388,6 +391,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbamt">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbamtFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel52">
           <Properties>
@@ -471,6 +477,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tbcontrolamt">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcontrolamtFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>

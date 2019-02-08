@@ -276,12 +276,6 @@ public class CustMaintPanel extends javax.swing.JPanel {
               btshipnew.setEnabled(true);
               btshiptobrowse.setEnabled(true);
             }
-            
-            enableCust();
-            enableContact();
-           
-            btadd.setEnabled(false);
-            tbcustcode.setEnabled(false);
         } else {
               disableCust();
               disableShipTo();
@@ -291,8 +285,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
        
     }
     
-    public void getbillto(String arg) {
-        
+    public boolean getbillto(String arg) {
+        boolean gotIt = false;
         try {
             
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -303,6 +297,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
               
                 res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + arg + "'"  + ";");
                 while (res.next()) {
+                 gotIt = true;
+                 tbcustcode.setForeground(Color.blue);
+                 tbcustcode.setEditable(false);
                 tbcustcode.setText(res.getString("cm_code"));
                 tbname.setText(res.getString("cm_name"));
                 tbline1.setText(res.getString("cm_line1"));
@@ -350,10 +347,17 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 
                                     
                 }
+            
                 
-            refreshContactTable(tbcustcode.getText());    
-            btedit.setEnabled(true);
-            btdelete.setEnabled(true);
+            if (gotIt) {
+                enableCust();
+                enableContact();
+                refreshContactTable(tbcustcode.getText());    
+                btedit.setEnabled(true);
+                btdelete.setEnabled(true);
+                btadd.setEnabled(false);
+            }    
+            
             } catch (SQLException s) {
                 s.printStackTrace();
                 bsmf.MainFrame.show("Problem retrieving customer list");
@@ -362,7 +366,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+       return gotIt; 
     }
     
      public void getshipto(String cust, String ship) {
@@ -481,7 +485,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         if (ddtax.getItemCount() > 0)
         ddtax.setSelectedIndex(0);
         
-        tbcustcode.setText("");
+       
         tbname.setText("");
         tbline1.setText("");
         tbline2.setText("");
@@ -500,7 +504,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
         tbremarks.setText("");
         tbsalesrep.setText("");
         
-       
+        tbcustcode.setText("");
+        tbcustcode.setEditable(true);
+        tbcustcode.setForeground(Color.black);
         
         /* cant add shipcode until billcode has been committed */
         btshipadd.setEnabled(false);
@@ -599,7 +605,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }
     
     public void disableCust() {
-        tbcustcode.setEnabled(false);
+        // tbcustcode.setEnabled(false);
         tbdateadded.setEnabled(false);
         tbdatemod.setEnabled(false);
         ddcountry.setEnabled(false);
@@ -1815,7 +1821,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
         
          if (OVData.isAutoCust()) {
         tbcustcode.setText(String.valueOf(OVData.getNextNbr("customer")));
-        tbcustcode.setEnabled(false);
+        tbcustcode.setEditable(false);
+        tbcustcode.setForeground(Color.blue);
         } else {
               tbcustcode.requestFocus();
          }
@@ -1898,7 +1905,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbcustcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcustcodeActionPerformed
-       // getbillto(tbcustcode.getText());  will attempt to provide a method later to get part without lookup
+        boolean gotIt = getbillto(tbcustcode.getText());
+        if (gotIt) {
+          tbcustcode.setEditable(false);
+          tbcustcode.setForeground(Color.blue);
+        } else {
+           tbcustcode.setForeground(Color.red); 
+        }
     }//GEN-LAST:event_tbcustcodeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

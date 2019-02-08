@@ -110,9 +110,9 @@ APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
 ARMenu,ARTranRpt1,6,JMenuItem,AR Transacation Report,,1,,1,1
 ARMenu,ARControl,7,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
-Finance,CashTransactionMenu,7,JMenu,Cash Transaction Menu,,,,1,1
-CashTransactionMenu,CashTran,1,JMenuItem,Cash Transaction,,,,1,1
-CashTransactionMenu,CashTranBrowse,2,JMenuItem,Cash Transaction Browse,,,,1,1
+Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,Quick Cash Transaction,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,Quick Cash Browse,,,,1,1
 APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1
 APMenu,VoucherBrowse,2,JMenuItem,Voucher Browse,,,,1,1
 APMenu,PaymentMaint,3,JMenuItem,Payment Maintenance,,,,1,1
@@ -223,7 +223,7 @@ Help,Update,2,JMenuItem,Update,,,,1,1
 Help,PlantDirectoryMenu,3,JMenuItem,Plant Directory,,1,,1,1
 Help,menuscreen,4,JMenuItem,Screen Resolution,,,getScreenSize,1,1
 Help,NavCodeBrowse,5,JMenuItem,NAVCode List,,1,,1,1
-Help,SchemaBrowse,6,JMenuItem,Schema Browse,,1,,1,1
+Help,SchemaBrowse,6,JMenuItem,Schema,,1,,1,1
 Help,BrowseUtil,7,JMenuItem,,,1,,1,1
 root,Address,1,JMenu,Address,,,,1,1
 root,Purchasing,2,JMenu,Purchasing,,,,1,1

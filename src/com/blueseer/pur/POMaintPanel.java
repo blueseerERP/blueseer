@@ -20,6 +20,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -33,10 +35,16 @@ public class POMaintPanel extends javax.swing.JPanel {
      boolean isLoad = false;
      String curr = "";
      String basecurr = OVData.getDefaultCurrency();
+     String terms = "";
+     String acct = "";
+     String cc = "";
+     String blanket = "";
+     String status = "";
+      
      DecimalFormat df = new DecimalFormat("#0.0000");
      
    // OVData avmdata = new OVData();
-    javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    javax.swing.table.DefaultTableModel myorddetmodel = new POMaintPanel.MyTableModel(new Object[][]{},
             new String[]{
                 "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
             });
@@ -45,18 +53,344 @@ public class POMaintPanel extends javax.swing.JPanel {
                 "Date", "Ref", "Qty", "Type"
             });
     
+      
+     class MyTableModel extends DefaultTableModel {  
+      
+        public MyTableModel(Object rowData[][], Object columnNames[]) {  
+             super(rowData, columnNames);  
+          }  
+         
+       boolean[] canEdit = new boolean[]{
+                false, false, false, false, true, true, false, false, false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+               canEdit = new boolean[]{false, false, false, false, true, true, false, false, false, false}; 
+            return canEdit[columnIndex];
+        }
+   
+        /*
+        public Class getColumnClass(int column) {
+               if (column == 6 || column == 7)       
+                return Double.class; 
+            else return String.class;  //other columns accept String values 
+        }
+       
+        */
+        
+   }    
     
-     public void getOrder(String mykey) {
+      class Task extends SwingWorker<String[], Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+          String type = "";
+          
+          public Task(String type) {
+              this.type = type;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addOrder();
+                    break;
+                case "edit":
+                    message = editOrder();
+                    break;
+                case "delete":
+                    message = deleteOrder();    
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars("");  
+           }  else {
+             initvars(ordernbr.getText());  
+           }
+           
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            } 
+           
+        }
+    }  
+    
+       public boolean validateInput() {
+        boolean proceed = true;
+            
+            
+         if (ddstatus.getSelectedItem().toString().isEmpty()) {
+                    status = "open";
+                } else {
+                    status = ddstatus.getSelectedItem().toString();
+                }
+                
+                if (cbblanket.isSelected())
+                    blanket = "BLANKET";
+                else
+                    blanket = "DISCRETE";
+                
+                if ( ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty() ) {
+                   bsmf.MainFrame.show("must choose a vendor");
+                   proceed = false;
+                    ddvend.requestFocus();
+                }
+               
+                
+                terms = OVData.getVendTerms(ddvend.getSelectedItem().toString()); 
+                cc = OVData.getVendAPCC(ddvend.getSelectedItem().toString());
+                acct = OVData.getVendAPAcct(ddvend.getSelectedItem().toString());
+                curr = ddcurr.getSelectedItem().toString();
+                
+                if (terms == null   || acct == null   || cc == null || curr == null ||
+                        terms.isEmpty() || acct.isEmpty() || cc.isEmpty() || curr.isEmpty()
+                         ) {
+                        bsmf.MainFrame.show("Terms|ARacct|ARcc|Currency is not defined for this customer");
+                        proceed = false;
+                    }   
+                
+                if (orddet.getRowCount() == 0) {
+                    bsmf.MainFrame.show("No Line Items");
+                }
+                
+                
+                 // lets check for foreign currency with no exchange rate
+            if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
+            if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
+                bsmf.MainFrame.show("Foreign currency has no exchange rate " + curr + "/" + basecurr);
+                proceed = false;
+            }
+            }
+                
+                    
+        return proceed;
+    }
+    
+      
+     public String[] addOrder() {
+         
+         String[] message = new String[2];
+         try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+               
+                
+               
+                    st.executeUpdate("insert into po_mstr "
+                        + "(po_nbr, po_vend, po_site, po_type, po_curr, po_buyer, po_due_date, "
+                        + " po_ord_date, po_userid, po_status,"
+                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
+                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
+                        + "'" + ddvend.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbblanket.isSelected()) + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + tbbuyer.getText() + "'" + ","        
+                        + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
+                        + "'" + userid.getText() + "'" + ","
+                        + "'" + ddstatus.getSelectedItem() + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + remarks.getText() + "'"
+                        + ")"
+                        + ";");
+
+                  
+                 
+                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                        st.executeUpdate("insert into pod_mstr "
+                            + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_listprice, pod_disc, pod_netprice, pod_due_date, "
+                            + "pod_rcvd_qty, pod_status, pod_site) "
+                            + " values ( " 
+                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                            + '0' + "," 
+                            + "''" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'"
+                            + ")"
+                            + ";");
+
+                    }
+                    message = new String[]{"0", "Order has been added"}; 
+                    // btQualProbAdd.setEnabled(false);
+               
+            } catch (SQLException s) {
+                s.printStackTrace();
+                 message = new String[]{"1", "Cannot add Order"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+         
+         return message;
+     } 
+      
+     public String[] deleteOrder() {
+        String[] message = new String[2];
+           try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + ordernbr.getText() + "'" + ";");   
+                int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + ordernbr.getText() + "'" + ";");
+                    if (i > 0) {
+                        message = new String[]{"0", "deleted order number " + ordernbr.getText()};
+                    }
+                } catch (SQLException s) {
+                    s.printStackTrace();
+                message = new String[]{"1", "unabled to delete order"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           return message;
+    }
+    
+      public String[] editOrder() {
+     String[] message = new String[2];
+       try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+               
+               
+               
+                    st.executeUpdate("update po_mstr "
+                       + " set po_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
+                        + " po_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + "," 
+                        + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "") + "'" + "," 
+                        + " po_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + "," 
+                       + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","          
+                       + " where po_nbr = " + "'" + ordernbr.getText().toString() + "'"
+                        + ";");
+
+                 
+                   
+                    
+                    // if available pod_mstr line item...then update....else insert
+                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                         i = 0;
+                        // skip closed lines
+                        if (orddet.getValueAt(j, 10).toString().equals("close"))
+                            continue;
+                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + ordernbr.getText() + "'" +
+                                " and pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
+                            while (res.next()) {
+                            i++;
+                            }
+                            
+                             //   "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+                            if (i > 0) {
+                              st.executeUpdate("update pod_mstr set "
+                            + " pod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + " pod_ord_qty = " + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + " pod_listprice = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " pod_disc = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + " pod_netprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
+                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
+                            + " where pod_nbr = " + "'" + ordernbr.getText() + "'" 
+                            + " AND pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
+                            + ";");
+                            } else {
+                             st.executeUpdate("insert into pod_mstr "
+                            + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_listprice, pod_disc, pod_netprice, pod_ord_date, pod_due_date, "
+                            + "pod_rcvd_qty, pod_status, pod_site) "
+                            + " values ( " 
+                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
+                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","        
+                            + "'" + "0" + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'"
+                            + ")"
+                            + ";");   
+                            }
+
+                    }
+                    
+                    
+                    message = new String[]{"0", "Order has been edited"};     
+                    
+                    
+                    // btQualProbAdd.setEnabled(false);
+               
+            } catch (SQLException s) {
+                s.printStackTrace();
+                message = new String[]{"1", "Order cannot be edited"};     
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     return message;
+    }
+    
+     
+     public boolean getOrder(String mykey) {
+        boolean gotIt = false;
+        //initvars("");
         
-        initvars("");
-        
-        btbrowse.setEnabled(false);
-        btpovendbrowse.setEnabled(false);
-        btnew.setEnabled(true);
-        btedit.setEnabled(true);
-        btadd.setEnabled(false);
-        btadditem.setEnabled(true);
-        btdelitem.setEnabled(true);
+      
         
         
         try {
@@ -71,12 +405,13 @@ public class POMaintPanel extends javax.swing.JPanel {
                 res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                     i++;
+                    gotIt = true;
                     ordernbr.setText(mykey);
                    
                     ddvend.setSelectedItem(res.getString("po_vend"));
                     ddvend.setEnabled(false);
                     ddstatus.setSelectedItem(res.getString("po_status"));
-                    tbcurr.setText("po_curr");
+                    ddcurr.setSelectedItem(res.getString("po_curr"));
                     ddshipvia.setSelectedItem(res.getString("po_shipvia"));
                     duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("po_due_date")));
                     blanket = res.getString("po_type");
@@ -86,7 +421,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                     cbblanket.setSelected(false);
                     cbblanket.setEnabled(false);
                 }
-               
+                 myorddetmodel.setRowCount(0);
                  // myorddetmodel  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
                 res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
@@ -108,10 +443,8 @@ public class POMaintPanel extends javax.swing.JPanel {
                  sumdollars();
                  sumlinecount();
                
-                if (i == 0) {
-                   bsmf.MainFrame.show("No Order Record found for " + mykey);
-                } else {
-                            if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
+                if (gotIt) {
+                         if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
                              disableAll();
                              btnew.setEnabled(true);
                          } else {
@@ -119,7 +452,8 @@ public class POMaintPanel extends javax.swing.JPanel {
                               btadd.setEnabled(false);
                               btnew.setEnabled(false);
                          }
-                    
+                } else {
+                     return false;   
                 }
 
             } catch (SQLException s) {
@@ -129,15 +463,15 @@ public class POMaintPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+     return gotIt;
     }
     
     
      public void setPrice() {
          DecimalFormat df = new DecimalFormat("#0.00");
-         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! tbcurr.getText().isEmpty()) {
+         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 listprice.setText(df.format(OVData.getPartPriceFromVend(ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
-                        dduom.getSelectedItem().toString(), tbcurr.getText())));
+                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString())));
                 setnetprice();
          }
      }
@@ -275,7 +609,7 @@ public class POMaintPanel extends javax.swing.JPanel {
              dol = dol + ( Double.valueOf(orddet.getValueAt(j, 4).toString()) * Double.valueOf(orddet.getValueAt(j, 7).toString()) ); 
          }
          tbtotdollars.setText(df.format(dol));
-         lblcurr.setText(tbcurr.getText());
+         lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
    
      public void vendChangeEvent(String mykey) {
@@ -298,8 +632,8 @@ public class POMaintPanel extends javax.swing.JPanel {
                 res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
                     ddshipvia.setSelectedItem(res.getString("vd_shipvia"));
-                    tbcurr.setText(res.getString("vd_curr"));
-                    curr = tbcurr.getText();
+                    ddcurr.setSelectedItem(res.getString("vd_curr"));
+                    curr = ddcurr.getSelectedItem().toString();
                 }
                 
               
@@ -322,10 +656,11 @@ public class POMaintPanel extends javax.swing.JPanel {
     }
 
      public void enableAll() {
-     //   ordernbr.setEnabled(true);
+        ordernbr.setEnabled(true);
         ddvend.setEnabled(true);
         ddshipvia.setEnabled(true);
         duedate.setEnabled(true);
+        ddcurr.setEnabled(true);
         
         ddsite.setEnabled(true);
         ddstatus.setEnabled(true);
@@ -360,6 +695,7 @@ public class POMaintPanel extends javax.swing.JPanel {
           btpoprint.setEnabled(true);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
+        btdelete.setEnabled(true);
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
@@ -368,7 +704,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     }
     
      public void disableAll() {
-        ordernbr.setEnabled(false);
+     //   ordernbr.setEnabled(false);
         ddvend.setEnabled(false);
         ddshipvia.setEnabled(false);
         duedate.setEnabled(false);
@@ -386,7 +722,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         tbbuyer.setEnabled(false);
         vendnumber.setEnabled(false);
         userid.setEnabled(false);
-        tbcurr.setEnabled(false);
+        ddcurr.setEnabled(false);
         orddet.setEnabled(false);
         
         totlines.setEnabled(false);
@@ -398,6 +734,7 @@ public class POMaintPanel extends javax.swing.JPanel {
           btpoprint.setEnabled(false);
         btnew.setEnabled(false);
         btedit.setEnabled(false);
+        btdelete.setEnabled(false);
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
         btdelitem.setEnabled(false);
@@ -418,6 +755,8 @@ public class POMaintPanel extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
         ordernbr.setText("");
+        ordernbr.setEditable(true);
+        ordernbr.setForeground(Color.black);
         
         listprice.setText("0.00");
         netprice.setText("0.00");
@@ -442,6 +781,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         btpovendbrowse.setEnabled(true);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
+        btdelete.setEnabled(true);
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
@@ -471,6 +811,14 @@ public class POMaintPanel extends javax.swing.JPanel {
         ddshipvia.insertItemAt("", 0);
         ddshipvia.setSelectedIndex(0);
         
+        
+        ddcurr.removeAllItems();
+         ddcurr.insertItemAt("", 0);
+         ddcurr.setSelectedIndex(0);
+        mylist = OVData.getCurrlist();
+        for (String code : mylist) {
+            ddcurr.addItem(code);
+        }
         
         
         dduom.removeAllItems();
@@ -550,7 +898,8 @@ public class POMaintPanel extends javax.swing.JPanel {
         jLabel92 = new javax.swing.JLabel();
         btpovendbrowse = new javax.swing.JButton();
         jLabel83 = new javax.swing.JLabel();
-        tbcurr = new javax.swing.JTextField();
+        btdelete = new javax.swing.JButton();
+        ddcurr = new javax.swing.JComboBox<>();
         panelSchedule = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablesched = new javax.swing.JTable();
@@ -600,6 +949,12 @@ public class POMaintPanel extends javax.swing.JPanel {
         jLabel76.setText("OrderNbr");
 
         jLabel86.setText("Remarks");
+
+        ordernbr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ordernbrActionPerformed(evt);
+            }
+        });
 
         duedate.setDateFormatString("yyyy-MM-dd");
 
@@ -675,6 +1030,13 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         jLabel83.setText("Currency");
 
+        btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -717,23 +1079,11 @@ public class POMaintPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel78)
                                 .addGap(9, 9, 9)
                                 .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelMainLayout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                                 .addGap(133, 133, 133)
                                 .addComponent(jLabel83)
-                                .addGap(9, 9, 9)
-                                .addComponent(tbcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(422, 422, 422)
-                        .addComponent(btpoprint)
-                        .addGap(6, 6, 6)
-                        .addComponent(btedit)
-                        .addGap(10, 10, 10)
-                        .addComponent(btadd))
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jLabel86)
-                        .addGap(4, 4, 4)
-                        .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(jLabel76)
@@ -748,7 +1098,22 @@ public class POMaintPanel extends javax.swing.JPanel {
                         .addGap(9, 9, 9)
                         .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addComponent(btpoprint)
+                                .addGap(289, 289, 289)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btedit)
+                                .addGap(10, 10, 10)
+                                .addComponent(btadd))
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addComponent(jLabel86)
+                                .addGap(4, 4, 4)
+                                .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(20, 20, 20))
         );
         panelMainLayout.setVerticalGroup(
@@ -791,12 +1156,13 @@ public class POMaintPanel extends javax.swing.JPanel {
                 .addGap(6, 6, 6)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel90)
-                            .addComponent(jLabel83))))
+                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel83)
+                                .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(6, 6, 6)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -819,10 +1185,12 @@ public class POMaintPanel extends javax.swing.JPanel {
                     .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(179, 179, 179)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btpoprint)
-                    .addComponent(btedit)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btedit)
+                        .addComponent(btpoprint)
+                        .addComponent(btdelete))
                     .addComponent(btadd))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(109, Short.MAX_VALUE))
         );
 
         add(panelMain);
@@ -936,6 +1304,9 @@ public class POMaintPanel extends javax.swing.JPanel {
         jLabel80.setText("ListPrice");
 
         listprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                listpriceFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 listpriceFocusLost(evt);
             }
@@ -1091,6 +1462,8 @@ public class POMaintPanel extends javax.swing.JPanel {
         } 
         
          ordernbr.setText(String.valueOf(OVData.getNextNbr("order")));
+         ordernbr.setEditable(false);
+         ordernbr.setForeground(Color.blue);
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -1114,6 +1487,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 btnew.setEnabled(false);
                 btbrowse.setEnabled(false);
                 btedit.setEnabled(false);
+                btdelete.setEnabled(false);
                 btadd.setEnabled(false);
                 btpoprint.setEnabled(false);
                 btpovendbrowse.setEnabled(false);
@@ -1187,109 +1561,13 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                String terms = "";
-                String acct = "";
-                String cc = "";
-                
-                  res = st.executeQuery("Select * from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem() + "';" );
-                    while (res.next()) {
-                        i++;
-                        terms = res.getString("vd_terms");
-                        acct = res.getString("vd_ap_acct");
-                        cc = res.getString("vd_ap_cc");
-                    }
-                    
-                    if (i == 0) {
-                        proceed = false;
-                        bsmf.MainFrame.show("No Vendor Master found");
-                    }
-                    if (terms == null   || acct == null   || cc == null ||
-                        terms.isEmpty() || acct.isEmpty() || cc.isEmpty() 
-                         ) {
-                        proceed = false;
-                        bsmf.MainFrame.show("Terms or acct or cc is not defined for this vendor");
-                    }   
-                
-                
-                
-                          // lets check for foreign currency with no exchange rate
-                if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
-                if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Foreign currency has no exchange rate " + curr + "/" + basecurr);
-                }
-                }
-                    
-                
-                
-                if (proceed) {
-                    st.executeUpdate("insert into po_mstr "
-                        + "(po_nbr, po_vend, po_site, po_type, po_curr, po_buyer, po_due_date, "
-                        + " po_ord_date, po_userid, po_status,"
-                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
-                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbblanket.isSelected()) + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + tbbuyer.getText() + "'" + ","        
-                        + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                        + "'" + userid.getText() + "'" + ","
-                        + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + acct + "'" + ","
-                        + "'" + cc + "'" + ","
-                        + "'" + remarks.getText() + "'"
-                        + ")"
-                        + ";");
-
-                  
-                 
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                        st.executeUpdate("insert into pod_mstr "
-                            + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_listprice, pod_disc, pod_netprice, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                            + '0' + "," 
-                            + "''" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");
-
-                    }
-                    bsmf.MainFrame.show("PO has been added");
-                   initvars("");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                s.printStackTrace();
-                bsmf.MainFrame.show("Cannot add PO");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (!validateInput()) {
+            return;
+        } 
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("add");
+        task.execute();   
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1323,7 +1601,13 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        // TODO add your handling code here:
+        if (!validateInput()) {
+            return;
+        }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("edit");
+        task.execute();  
     }//GEN-LAST:event_bteditActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -1331,18 +1615,32 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_netpriceActionPerformed
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
-      if (listprice.getText().isEmpty()) {
-            listprice.setText("0");
+         String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
+        if (x.equals("error")) {
+            listprice.setText("");
+            listprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            listprice.requestFocus();
+        } else {
+            listprice.setText(x);
+            listprice.setBackground(Color.white);
         }
-        listprice.setText(df.format(Double.valueOf(listprice.getText())));
         setnetprice();
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-        if (discount.getText().isEmpty()) {
-            discount.setText("0");
+            String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
+        if (x.equals("error")) {
+            discount.setText("");
+            discount.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            discount.requestFocus();
+        } else {
+            discount.setText(x);
+            discount.setBackground(Color.white);
         }
-        discount.setText(df.format(Double.valueOf(discount.getText()))); 
+        if (discount.getText().isEmpty())
+            discount.setText("0.00");
         setnetprice();
     }//GEN-LAST:event_discountFocusLost
 
@@ -1390,16 +1688,44 @@ public class POMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void ordernbrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordernbrActionPerformed
+         boolean gotIt = getOrder(ordernbr.getText());
+        if (gotIt) {
+          ordernbr.setEditable(false);
+          ordernbr.setForeground(Color.blue);
+        } else {
+            ordernbr.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_ordernbrActionPerformed
+
+    private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained
+         if (listprice.getText().equals("0")) {
+            listprice.setText("");
+        }
+    }//GEN-LAST:event_listpriceFocusGained
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+       boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+             BlueSeerUtils.startTask(new String[]{"","Committing..."});
+             disableAll();
+             Task task = new Task("delete");
+             task.execute(); 
+        }
+    }//GEN-LAST:event_btdeleteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
     private javax.swing.JButton btpovendbrowse;
     private javax.swing.JCheckBox cbblanket;
+    private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox ddshipvia;
     private javax.swing.JComboBox ddsite;
@@ -1448,7 +1774,6 @@ public class POMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField remarks;
     private javax.swing.JTable tablesched;
     private javax.swing.JTextField tbbuyer;
-    private javax.swing.JTextField tbcurr;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField totlines;

@@ -232,6 +232,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="ordernbr">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ordernbrActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnew">
           <Properties>
@@ -1256,6 +1259,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="listprice">
                   <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="listpriceFocusGained"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="listpriceFocusLost"/>
                   </Events>
                 </Component>

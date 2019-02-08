@@ -563,9 +563,9 @@ try {
         int row = tableorder.rowAtPoint(evt.getPoint());
         int col = tableorder.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-              if (! checkperms("MenuOrderMaint")) { return; }
+              if (! checkperms("OrderMaint")) { return; }
               //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-              reinitpanels("MenuOrderMaint",  true, tableorder.getValueAt(row, 1).toString());
+              reinitpanels("OrderMaint",  true, tableorder.getValueAt(row, 1).toString());
         }
     }//GEN-LAST:event_tableorderMouseClicked
 

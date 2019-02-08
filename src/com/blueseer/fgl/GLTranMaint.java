@@ -111,6 +111,10 @@ public class GLTranMaint extends javax.swing.JPanel {
        tbuserid.setText("");
        tbref.setText("");
        tbcontrolamt.setText("");
+       tbamt.setText("");
+       tbcontrolamt.setBackground(Color.white);
+       tbamt.setBackground(Color.white);
+       tbdesc.setBackground(Color.white);
        labeltotal.setText("0.00");
         type = ""; 
        transtable.setModel(transmodel);
@@ -392,7 +396,19 @@ public class GLTranMaint extends javax.swing.JPanel {
 
         jLabel49.setText("Acct");
 
+        tbdesc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbdescFocusLost(evt);
+            }
+        });
+
         jLabel51.setText("Amt");
+
+        tbamt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbamtFocusLost(evt);
+            }
+        });
 
         jLabel52.setText("Desc");
 
@@ -422,6 +438,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btbrowseActionPerformed(evt);
+            }
+        });
+
+        tbcontrolamt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbcontrolamtFocusLost(evt);
             }
         });
 
@@ -782,47 +804,43 @@ public class GLTranMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteALLActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        boolean canproceed = true;
+        
         String prodline = "";
         String status = "";
         String op = "";
         DecimalFormat df = new DecimalFormat("#0.00");
         transtable.setModel(transmodel);
         
-      
-        if (! BlueSeerUtils.isMoneyFormat(tbamt.getText())) {
-             bsmf.MainFrame.show("Amt Field must be two decimals only");
-            canproceed = false;
-            tbamt.requestFocus();
-        }
-        
-        if (! BlueSeerUtils.isParsableToDouble(tbamt.getText()) ) {
-            bsmf.MainFrame.show("Amt Field must be a number");
-            canproceed = false;
-            tbamt.requestFocus();
-        }
-
-        if (tbdesc.getText().isEmpty()) {
+         if (tbdesc.getText().isEmpty()) {
              bsmf.MainFrame.show("Desc cannot be blank");
+             tbdesc.setBackground(Color.yellow);
             tbdesc.requestFocus();
-            canproceed = false;
+            return;
+         }
+       
+        if (tbamt.getText().isEmpty()) {
+             bsmf.MainFrame.show("Amount cannot be blank");
+            tbamt.setBackground(Color.yellow);
+            tbamt.requestFocus();
+            return;
         }
+       
         if (! OVData.isAcctNumberValid(ddacct.getSelectedItem().toString()) ) {
             bsmf.MainFrame.show("Acct is not valid");
-            canproceed = false;
+            return;
         }
         if (! OVData.isCostCenterValid(ddcc.getSelectedItem().toString()) ) {
             bsmf.MainFrame.show("CostCenter is not valid");
-            canproceed = false;
+            return;
         }
         
         if (effdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(effdate.getDate())) ) {
             bsmf.MainFrame.show("Date not properly formatted");
-            canproceed = false;
+            return;
         }
         
         
-        if (canproceed) {
+       
             transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
                 ddacct.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
@@ -831,7 +849,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             });
             tallyamount();
             clearinput();
-        }
+       
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -920,6 +938,40 @@ public class GLTranMaint extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_ddccActionPerformed
+
+    private void tbamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbamtFocusLost
+        String x = BlueSeerUtils.bsformat("", tbamt.getText(), "2");
+        if (x.equals("error")) {
+            tbamt.setText("");
+            tbamt.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbamt.requestFocus();
+        } else {
+            tbamt.setText(x);
+            tbamt.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbamtFocusLost
+
+    private void tbcontrolamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusLost
+        String x = BlueSeerUtils.bsformat("", tbcontrolamt.getText(), "2");
+        if (x.equals("error")) {
+            tbcontrolamt.setText("");
+            tbcontrolamt.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbcontrolamt.requestFocus();
+        } else {
+            tbcontrolamt.setText(x);
+            tbcontrolamt.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbcontrolamtFocusLost
+
+    private void tbdescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdescFocusLost
+       if (tbdesc.getText().isEmpty()) {
+           tbdesc.setBackground(Color.yellow);
+       } else {
+           tbdesc.setBackground(Color.white);
+       }
+    }//GEN-LAST:event_tbdescFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

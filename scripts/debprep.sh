@@ -5,6 +5,11 @@
 bs="blueseer-4.1.5"
 bsshare="$bs/usr/share/blueseer"
 
+mkdir $bs/usr
+mkdir $bs/usr/share
+mkdir $bs/usr/share/blueseer
+mkdir $bs/usr/bin
+
 echo "creating blueseer config file...."
 echo "DBTYPE=sqlite" >$bsshare/bsconfig
 echo "DB=data/bsdb.db" >>$bsshare/bsconfig
@@ -37,4 +42,3 @@ chmod -R 0777 $bsshare/data/bsdb.db
 dpkg -b $bs
 
 echo "you're done"
-

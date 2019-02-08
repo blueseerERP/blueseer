@@ -1801,7 +1801,7 @@ public class CashTran extends javax.swing.JPanel {
         });
         add(jTabbedPane1);
 
-        sellPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Sell Transaction"));
+        sellPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
 
         btadd1.setText("Commit");
         btadd1.addActionListener(new java.awt.event.ActionListener() {
@@ -2080,7 +2080,7 @@ public class CashTran extends javax.swing.JPanel {
 
         add(sellPanel);
 
-        buyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Buy Transaction"));
+        buyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
 
         btadd.setText("Commit");
         btadd.addActionListener(new java.awt.event.ActionListener() {
@@ -2352,7 +2352,7 @@ public class CashTran extends javax.swing.JPanel {
 
         add(buyPanel);
 
-        expensePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Expense Transaction"));
+        expensePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
 
         btaddexpense.setText("Commit");
         btaddexpense.addActionListener(new java.awt.event.ActionListener() {
@@ -2650,7 +2650,7 @@ public class CashTran extends javax.swing.JPanel {
 
         add(expensePanel);
 
-        expenseRecurPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Expense Recurring"));
+        expenseRecurPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
 
         btpayselected.setText("Pay Selected Items");
         btpayselected.addActionListener(new java.awt.event.ActionListener() {
