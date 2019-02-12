@@ -674,7 +674,9 @@ CREATE TABLE IF NOT EXISTS `item_mstr` (
   `it_mtl_cost` decimal(9,5) NOT NULL DEFAULT '0.00000',
   `it_sched` tinyint(1) NOT NULL DEFAULT '0',
   `it_disc_pct` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `it_taxcode` varchar(10) NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `it_taxcode` varchar(10) NOT NULL DEFAULT '',
+  `it_createdate` date DEFAULT NULL ) 
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `itemr_cost` (
   `itr_item` varchar(20) NOT NULL,
   `itr_site` varchar(10)  NOT NULL DEFAULT '',

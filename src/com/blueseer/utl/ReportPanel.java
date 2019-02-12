@@ -137,6 +137,12 @@ public int[] mywidth;
         if (arg.equals("AcctBrowse")) {
              mymodel = OVData.getGLAcctAll();
         }
+        if (arg.equals("ItemBrowse")) {
+             mymodel = OVData.getItemBrowse(); 
+             TableReport.setModel(mymodel);
+             TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        }
         if (arg.equals("ItemRoutingRpt")) {
              mymodel = OVData.getItemRoutingAll();
         }
@@ -316,6 +322,12 @@ public int[] mywidth;
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("AcctBrowse") == 0) {
                 mypanel = "AcctMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = TableReport.getValueAt(row, 1).toString();
+               reinitpanels(mypanel, true, args);
+            }  
+            if (TableReport.getName() != null && TableReport.getName().compareTo("ItemBrowse") == 0) {
+                mypanel = "ItemMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);

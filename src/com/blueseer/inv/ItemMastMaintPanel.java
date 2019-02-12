@@ -79,6 +79,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbshipwt.setText("");
        tbdesc.setText("");
        tbgroup.setText("");
+       tbcreatedate.setText("");
+       tbcreatedate.setEditable(false);
        tbroutingcode.setText("");
        tbsellprice.setText("");
        cbplan.setSelected(false);
@@ -86,6 +88,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        cbschedule.setSelected(false);
        cbaltbom.setSelected(false);
        tbqtyoh.setText("");
+       tbqtyoh.setEditable(false);
        comments.setText("");
        tbpurchprice.setText("");
        tbdrawing.setText("");
@@ -170,6 +173,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         
         comments.setEnabled(true);
        tbdrawing.setEnabled(true);
+       tbcreatedate.setEnabled(true);
        tbpurchprice.setEnabled(true);
          partnumber.setEnabled(true);
        revlevel.setEnabled(true);
@@ -228,6 +232,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbshipwt.setEnabled(false);
        tbdesc.setEnabled(false);
        tbgroup.setEnabled(false);
+       tbcreatedate.setEnabled(false);
        tbroutingcode.setEnabled(false);
        tbsellprice.setEnabled(false);
        cbplan.setEnabled(false);
@@ -351,6 +356,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                       ddtype.setSelectedItem(res.getString("it_type"));
                       comments.setText(res.getString("it_comments"));
                       tbdrawing.setText(res.getString("it_drawing"));
+                       tbcreatedate.setText(res.getString("it_createdate"));
                       ddwh.setSelectedItem(res.getString("it_wh"));
                       ddloc.setSelectedItem(res.getString("it_loc"));
                       tbroutingcode.setText(res.getString("it_wf"));
@@ -824,6 +830,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jLabel77 = new javax.swing.JLabel();
         ddtax = new javax.swing.JComboBox<>();
         jLabel79 = new javax.swing.JLabel();
+        tbcreatedate = new javax.swing.JTextField();
+        jLabel80 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablelocqty = new javax.swing.JTable();
@@ -1100,7 +1108,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     .addComponent(btadd)
                     .addComponent(btedit)
                     .addComponent(btdelete))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel2);
@@ -1112,9 +1120,42 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        tbsafestock.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsafestockFocusLost(evt);
+            }
+        });
+
         jLabel61.setText("Drawing");
 
+        tbshipwt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbshipwtFocusLost(evt);
+            }
+        });
+
+        tbsellprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbsellpriceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsellpriceFocusLost(evt);
+            }
+        });
+
+        tbminordqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbminordqtyFocusLost(evt);
+            }
+        });
+
         jLabel33.setText("Sell Price");
+
+        tbleadtime.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbleadtimeFocusLost(evt);
+            }
+        });
 
         jLabel62.setText("ShipWt");
 
@@ -1123,6 +1164,12 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jLabel68.setText("SafetyStock");
 
         jLabel69.setText("MinOrdQty");
+
+        tbnetwt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbnetwtFocusLost(evt);
+            }
+        });
 
         jLabel70.setText("NetWt");
 
@@ -1134,11 +1181,38 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
 
         cbplan.setText("Plan Orders");
 
+        tbpurchprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbpurchpriceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpurchpriceFocusLost(evt);
+            }
+        });
+
         jLabel64.setText("Purch Price");
+
+        tbovhcost.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbovhcostFocusLost(evt);
+            }
+        });
+
+        tboutcost.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tboutcostFocusLost(evt);
+            }
+        });
 
         jLabel73.setText("Overhead Cost");
 
         jLabel74.setText("Outside Cost");
+
+        tbmtlcost.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbmtlcostFocusLost(evt);
+            }
+        });
 
         jLabel75.setText("Material Cost");
 
@@ -1149,6 +1223,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jLabel77.setText("QtyOnHand");
 
         jLabel79.setText("TaxCode");
+
+        jLabel80.setText("CreateDate");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1166,7 +1242,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel74)
                     .addComponent(jLabel75)
                     .addComponent(jLabel71)
-                    .addComponent(jLabel79))
+                    .addComponent(jLabel79)
+                    .addComponent(jLabel80))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -1219,40 +1296,43 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                             .addComponent(cbaltbom)
                             .addComponent(cbplan)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbcreatedate, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbsafestock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel68)
-                            .addComponent(revlevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel65)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbnetwt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbsellprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel33)
-                            .addComponent(jLabel70))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbshipwt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpurchprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel64)
-                            .addComponent(jLabel62))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbleadtime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbdrawing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel61)
-                            .addComponent(jLabel67))))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbnetwt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbsellprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel33)
+                    .addComponent(jLabel70))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipwt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbpurchprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel64)
+                    .addComponent(jLabel62))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbleadtime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbdrawing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel61)
+                    .addComponent(jLabel67))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbcreatedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel80))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbsafestock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel68)
+                    .addComponent(revlevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel65))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -1689,6 +1769,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
         try {
             DecimalFormat df = new DecimalFormat("0.00000");
+            java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -1792,8 +1874,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                             + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
                             + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
                             + "it_status, it_uom, it_net_wt, it_ship_wt, "
-                            + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode ) "
-                                
+                            + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate ) "
                             + " values ( " + "'" + partnumber.getText().toString().replace("'", "") + "'" + ","
                             + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
                             + "'" + lotsize + "'" + ","
@@ -1824,9 +1905,10 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                             + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
                             + "'" + tbroutingcode.getText().replace("'", "") + "'" + ","
-                            + "'" + ddtax.getSelectedItem().toString() + "'"
+                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
+                            + "'" + dfdate.format(now) + "'"
                             + ")"
-                            + ";");
+                            + ";"); 
                         
                         // now add item cost record for later use
                         OVData.addItemCostRec(partnumber.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
@@ -1992,6 +2074,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
          clearAll();
         enableAll();
+        btnew.setEnabled(false);
         btedit.setEnabled(false);
         btdelete.setEnabled(false);
         btitembrowse.setEnabled(false);
@@ -2184,6 +2267,148 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_partnumberActionPerformed
 
+    private void tbsellpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusLost
+            String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
+        if (x.equals("error")) {
+            tbsellprice.setText("");
+            tbsellprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsellprice.requestFocus();
+        } else {
+            tbsellprice.setText(x);
+            tbsellprice.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbsellpriceFocusLost
+
+    private void tbsellpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusGained
+        if (tbsellprice.getText().equals("0")) {
+            tbsellprice.setText("");
+        }
+    }//GEN-LAST:event_tbsellpriceFocusGained
+
+    private void tbpurchpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusLost
+              String x = BlueSeerUtils.bsformat("", tbpurchprice.getText(), "5");
+        if (x.equals("error")) {
+            tbpurchprice.setText("");
+            tbpurchprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbpurchprice.requestFocus();
+        } else {
+            tbpurchprice.setText(x);
+            tbpurchprice.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbpurchpriceFocusLost
+
+    private void tbpurchpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusGained
+        if (tbpurchprice.getText().equals("0")) {
+            tbpurchprice.setText("");
+        }
+    }//GEN-LAST:event_tbpurchpriceFocusGained
+
+    private void tbmtlcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmtlcostFocusLost
+               String x = BlueSeerUtils.bsformat("", tbmtlcost.getText(), "5");
+        if (x.equals("error")) {
+            tbmtlcost.setText("");
+            tbmtlcost.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbmtlcost.requestFocus();
+        } else {
+            tbmtlcost.setText(x);
+            tbmtlcost.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbmtlcostFocusLost
+
+    private void tboutcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboutcostFocusLost
+                  String x = BlueSeerUtils.bsformat("", tboutcost.getText(), "5");
+        if (x.equals("error")) {
+            tboutcost.setText("");
+            tboutcost.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tboutcost.requestFocus();
+        } else {
+            tboutcost.setText(x);
+            tboutcost.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tboutcostFocusLost
+
+    private void tbovhcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbovhcostFocusLost
+                  String x = BlueSeerUtils.bsformat("", tbovhcost.getText(), "5");
+        if (x.equals("error")) {
+            tbovhcost.setText("");
+            tbovhcost.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbovhcost.requestFocus();
+        } else {
+            tbovhcost.setText(x);
+            tbovhcost.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbovhcostFocusLost
+
+    private void tbnetwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbnetwtFocusLost
+          String x = BlueSeerUtils.bsformat("", tbnetwt.getText(), "3");
+        if (x.equals("error")) {
+            tbnetwt.setText("");
+            tbnetwt.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbnetwt.requestFocus();
+        } else {
+            tbnetwt.setText(x);
+            tbnetwt.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbnetwtFocusLost
+
+    private void tbshipwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbshipwtFocusLost
+        String x = BlueSeerUtils.bsformat("", tbshipwt.getText(), "3");
+        if (x.equals("error")) {
+            tbshipwt.setText("");
+            tbshipwt.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbshipwt.requestFocus();
+        } else {
+            tbshipwt.setText(x);
+            tbshipwt.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbshipwtFocusLost
+
+    private void tbleadtimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbleadtimeFocusLost
+        String x = BlueSeerUtils.bsformat("", tbleadtime.getText(), "0");
+        if (x.equals("error")) {
+            tbleadtime.setText("");
+            tbleadtime.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbleadtime.requestFocus();
+        } else {
+            tbleadtime.setText(x);
+            tbleadtime.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbleadtimeFocusLost
+
+    private void tbsafestockFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsafestockFocusLost
+       String x = BlueSeerUtils.bsformat("", tbsafestock.getText(), "0");
+        if (x.equals("error")) {
+            tbsafestock.setText("");
+            tbsafestock.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsafestock.requestFocus();
+        } else {
+            tbsafestock.setText(x);
+            tbsafestock.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbsafestockFocusLost
+
+    private void tbminordqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbminordqtyFocusLost
+        String x = BlueSeerUtils.bsformat("", tbminordqty.getText(), "0");
+        if (x.equals("error")) {
+            tbminordqty.setText("");
+            tbminordqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbminordqty.requestFocus();
+        } else {
+            tbminordqty.setText(x);
+            tbminordqty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbminordqtyFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CostBOMPanel;
@@ -2253,6 +2478,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel78;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel88;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -2277,6 +2503,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTable tabletrans;
     private javax.swing.JTextField tbbdncur;
     private javax.swing.JTextField tbbdnstd;
+    private javax.swing.JTextField tbcreatedate;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdrawing;
     private javax.swing.JTextField tbgroup;

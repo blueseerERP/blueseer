@@ -3227,10 +3227,21 @@ public class OVData {
            return mymodel;
        } 
         
-         public static DefaultTableModel getAPDPartMstrRpt() {
+         public static DefaultTableModel getItemBrowse() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Part", "Status", "Shaft", "Body", "Force", "Stroke", "ExtLength", "ComLength"});
+                        new String[]{"select", "Item", "Desc", "Code", "ProdLine", "Group", "Loc", "WH", "CreateDate", "SellPrice", "PurchPrice", "Revision"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else if (col == 9 || col == 10) {
+                            return Double.class;
+                        }
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
            
             try{
             Class.forName(driver).newInstance();
@@ -3239,17 +3250,20 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-               while (res.next()) {
-                   
-
-                    mymodel.addRow(new Object[]{res.getString("pm_part"),
-                                res.getString("pm_status"),
-                                res.getString("pm_shaftconn"),
-                                res.getString("pm_bodyconn"),
-                            res.getString("pm_force"),
-                                    res.getString("pm_stroke"),
-                                    res.getString("pm_extlength"),
-                                    res.getString("pm_complength")
+              res = st.executeQuery("SELECT it_item, it_desc, it_code, it_prodline, it_group, it_loc, it_wh, " +
+                        " it_createdate, it_sell_price, it_pur_price, it_rev from item_mstr order by it_item; ") ;
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
+                                res.getString("it_desc"),
+                                res.getString("it_code"),
+                                res.getString("it_prodline"),
+                                res.getString("it_group"),
+                                res.getString("it_loc"),
+                                res.getString("it_wh"),
+                                res.getString("it_createdate"),
+                                res.getDouble("it_sell_price"),
+                                res.getDouble("it_pur_price"),
+                                res.getString("it_rev")
                                 });
                 }
 
@@ -3268,7 +3282,8 @@ public class OVData {
            
            return mymodel;
        } 
-         
+        
+        
          public static DefaultTableModel getEmployeeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

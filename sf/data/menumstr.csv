@@ -44,6 +44,7 @@ FreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMiscPanel,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMastMaintPanel,JMenuItem,item
+ItemBrowse,Item Browse primary,com.blueseer.utl.ReportPanel,JMenuItem,itemb
 ItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt1,JMenuItem,itrr
 LocationBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,locb
 LocationMaint,,com.blueseer.inv.LocationMaintPanel,JMenuItem,locm
