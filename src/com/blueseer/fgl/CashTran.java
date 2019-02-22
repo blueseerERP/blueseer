@@ -1119,8 +1119,8 @@ public class CashTran extends javax.swing.JPanel {
     
     
     public void addExpenseAccount(String desc) {
-        ddrexpacct.removeAllItems();
-        ddaccountexpense.removeAllItems();
+      //  ddrexpacct.removeAllItems();
+      //  ddaccountexpense.removeAllItems();
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1156,7 +1156,9 @@ public class CashTran extends javax.swing.JPanel {
                             + ";");
                         bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
                         ddaccountexpense.addItem(String.valueOf(acctnbr));
+                        ddaccountexpense.setSelectedItem(String.valueOf(acctnbr));
                         ddrexpacct.addItem(String.valueOf(acctnbr));
+                        ddrexpacct.setSelectedItem(String.valueOf(acctnbr));
                     } else {
                         bsmf.MainFrame.show("Acct Number Already Exists");
                     }
@@ -3050,6 +3052,7 @@ public class CashTran extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
         BlueSeerUtils.startTask(new String[]{"","Committing..."});
         disableBuy();
+        btnewbuy.setEnabled(true);
         Task task = new Task("buy");
         task.execute();   
        
@@ -3127,6 +3130,7 @@ public class CashTran extends javax.swing.JPanel {
     private void btadd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadd1ActionPerformed
         BlueSeerUtils.startTask(new String[]{"","Committing..."});
         disableSell();
+        btnewsell.setEnabled(true);
         Task task = new Task("sell");
         task.execute();   
     }//GEN-LAST:event_btadd1ActionPerformed
@@ -3284,6 +3288,7 @@ public class CashTran extends javax.swing.JPanel {
     private void btaddexpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddexpenseActionPerformed
         BlueSeerUtils.startTask(new String[]{"","Committing..."});
         disableExpense();
+        btnewexpense.setEnabled(true);
         Task task = new Task("expense");
         task.execute();  
     }//GEN-LAST:event_btaddexpenseActionPerformed
