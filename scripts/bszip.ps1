@@ -1,3 +1,5 @@
+rm patch.ver.4.2.zip
+compress-archive -path ..\dist\blueseer.jar -destinationpath patch.ver.4.2.zip
 rm blueseer.sqlite.win.zip
 compress-archive -path ..\sf\zebra -destinationpath blueseer.sqlite.win.zip
 compress-archive -update -path ..\sf\temp,..\sf\jasper,..\sf\data,..\sf\edi,..\sf\images -destinationpath blueseer.sqlite.win.zip
