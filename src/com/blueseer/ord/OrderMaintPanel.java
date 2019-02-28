@@ -962,12 +962,14 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         ddtax.setSelectedIndex(0);
         
         
-       if (ddstate.getItemCount() == 0)
-       for (int i = 0; i < OVData.states.length; i++) {
-            ddstate.addItem(OVData.states[i]);
-        } else {
-           ddstate.setSelectedIndex(0);
-       }
+        ddstate.removeAllItems();
+        ArrayList states = OVData.getCodeMstrKeyList("state");
+        for (int i = 0; i < states.size(); i++) {
+            ddstate.addItem(states.get(i).toString());
+        }
+        if (ddstate.getItemCount() > 0) {
+           ddstate.setSelectedIndex(0); 
+        }
        
         
         ddshipvia.removeAllItems();

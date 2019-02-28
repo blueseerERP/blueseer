@@ -451,12 +451,14 @@ public class CustMaintPanel extends javax.swing.JPanel {
        tbshipzip.setText("");
        tbshipcode.setText("");
        
-       if (ddshipstate.getItemCount() == 0)
-       for (int i = 0; i < OVData.states.length; i++) {
-            ddshipstate.addItem(OVData.states[i]);
-        } else {
-           ddshipstate.setSelectedIndex(0);
-       }
+    ddshipstate.removeAllItems();
+        ArrayList states = OVData.getCodeMstrKeyList("state");
+        for (int i = 0; i < states.size(); i++) {
+            ddshipstate.addItem(states.get(i).toString());
+        }
+        if (ddshipstate.getItemCount() > 0) {
+           ddshipstate.setSelectedIndex(0); 
+        }
        
        if (ddshipcountry.getItemCount() == 0)
        for (int i = 0; i < OVData.countries.length; i++) {
@@ -575,13 +577,24 @@ public class CustMaintPanel extends javax.swing.JPanel {
             ddcc.addItem(ccs.get(i).toString());
         }
         
+        ddstate.removeAllItems();
+        ArrayList states = OVData.getCodeMstrKeyList("state");
+        for (int i = 0; i < states.size(); i++) {
+            ddstate.addItem(states.get(i).toString());
+        }
+        if (ddstate.getItemCount() > 0) {
+           ddstate.setSelectedIndex(0); 
+        }
         
+       /*
        if (ddstate.getItemCount() == 0)
        for (int i = 0; i < OVData.states.length; i++) {
             ddstate.addItem(OVData.states[i]);
         } else {
            ddstate.setSelectedIndex(0);
        }
+        */
+        
        if (ddcountry.getItemCount() == 0)
        for (int i = 0; i < OVData.countries.length; i++) {
             ddcountry.addItem(OVData.countries[i]);
@@ -882,7 +895,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Line3");
 
-        jLabel8.setText("Zip");
+        jLabel8.setText("Zip/PostCode");
 
         jLabel3.setText("Line1");
 
@@ -941,23 +954,18 @@ public class CustMaintPanel extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jLabel7))
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel29))))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()

@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -127,10 +128,16 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         tb_po_generic.setText("");
         tb_or_generic.setText("");
         tb_pos_generic.setText(""); 
-          if (ddstate.getItemCount() == 0)
-           for (int i = 0; i < OVData.states.length; i++) {
-                ddstate.addItem(OVData.states[i]);
-           }
+         
+        ddstate.removeAllItems();
+        ArrayList states = OVData.getCodeMstrKeyList("state");
+        for (int i = 0; i < states.size(); i++) {
+            ddstate.addItem(states.get(i).toString());
+        }
+        if (ddstate.getItemCount() > 0) {
+           ddstate.setSelectedIndex(0); 
+        }
+        
     }
     
     public void initvars(String arg) {

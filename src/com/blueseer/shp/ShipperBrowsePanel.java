@@ -621,7 +621,7 @@ try {
                 detailpanel.setVisible(true);
         }
         if ( col == 0) {
-                String mypanel = "MenuShipMaint";
+                String mypanel = "ShipMaint";
                if (! checkperms(mypanel)) { return; }
                String args = tablereport.getValueAt(row, 2).toString();
                reinitpanels(mypanel, true, args);

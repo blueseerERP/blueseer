@@ -4380,6 +4380,54 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                   return myreturn;
              }
              
+              public static boolean addGenericCode(ArrayList<String> list) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+              
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select code_code from code_mstr where " +
+                                    " code_code = " + "'" + ld[0] + "'" +
+                                    " and code_key = " + "'" + ld[1] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into code_mstr " 
+                      + "(code_code, code_key, code_value ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" +  ");"
+                           );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+                  return myreturn;
+             } 
+             
              
              public static boolean addCustXref(ArrayList<String> list) {
                  boolean myreturn = true;

@@ -325,12 +325,17 @@ public class VendMaintPanel extends javax.swing.JPanel {
         tbdisccode.setText("");
         tbtaxcode.setText("");
        
-         if (ddstate.getItemCount() == 0)
-       for (int i = 0; i < OVData.states.length; i++) {
-            ddstate.addItem(OVData.states[i]);
-        } else {
-           ddstate.setSelectedIndex(0);
-       }
+        
+        ddstate.removeAllItems();
+        ArrayList states = OVData.getCodeMstrKeyList("state");
+        for (int i = 0; i < states.size(); i++) {
+            ddstate.addItem(states.get(i).toString());
+        }
+        if (ddstate.getItemCount() > 0) {
+           ddstate.setSelectedIndex(0); 
+        }
+        
+    
        if (ddcountry.getItemCount() == 0)
        for (int i = 0; i < OVData.countries.length; i++) {
             ddcountry.addItem(OVData.countries[i]);
@@ -604,7 +609,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Line3");
 
-        jLabel8.setText("Zip");
+        jLabel8.setText("Zip/Post Code");
 
         jLabel3.setText("Line1");
 
@@ -692,7 +697,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                         .addComponent(btvendcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

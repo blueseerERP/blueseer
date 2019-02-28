@@ -250,6 +250,82 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     
+      // Generic Code stuff
+    public ArrayList<String> defineGenericCode() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("code_code,s,30,mandatory,unvalidated");
+        list.add("code_key,s,30,mandatory,unvalidated(field dependent)");
+        list.add("code_value,s,50,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkGenericCode(String[] rs, int i) {
+        boolean proceed = true;
+        
+        // first check for correct number of fields
+        if (rs.length != 3) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == 3) {
+            // now check individual fields
+            ArrayList<String> list = defineGenericCode();
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+               
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processGenericCode (File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               if (ddtable.getSelectedItem().toString().compareTo("Generic Code") == 0) {
+                   temp = checkGenericCode(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+            }
+            
+             if (proceed) {
+                   if(OVData.addGenericCode(list))
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+    
+    
     // cust xref stuff
     public ArrayList<String> defineCustXref() {
         ArrayList<String> list = new ArrayList<String>();
@@ -1250,6 +1326,12 @@ public class MassLoad extends javax.swing.JPanel {
         if (key.compareTo("Item Master") == 0) { 
              list = defineItemMaster();
          }
+        if (key.compareTo("Generic Code") == 0) { 
+             list = defineGenericCode();
+         }
+        if (key.compareTo("Inventory Adjustment") == 0) { 
+             list = defineInvAdjustment();
+         }
         if (key.compareTo("Customer Xref") == 0) { 
              list = defineCustXref();
          }
@@ -1309,7 +1391,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
