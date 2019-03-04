@@ -333,6 +333,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("empmaint")) {
                 tablereport.setModel(OVData.getEmpBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("clockrecupdate")) {
+                tablereport.setModel(OVData.getClockRecBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("acctmaint")) {
                 tablereport.setModel(OVData.getAcctBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -546,6 +549,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("EmployeeMaster")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString() ;
               reinitpanels("EmployeeMaster", true, myparameter);
+            }
+             if (callingpanel.equals("clockrecupdate")) {
+              if (! checkperms("TimeClockAdjust")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString() ;
+              reinitpanels("TimeClockAdjust", true, myparameter);
             }
              if (callingpanel.equals("acctmaint")) {
               if (! checkperms("AcctMaint")) { return; }

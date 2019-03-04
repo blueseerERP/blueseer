@@ -76,11 +76,11 @@ public class CashTranBrowse extends javax.swing.JPanel {
     Double inventory = 0.00;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
+                        new String[]{"Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 1 || col == 10 )       
+                        if (col == 0  || col == 9 )       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -240,6 +240,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 res = st.executeQuery("select pos_type, sum(pos_totamt) as 'sum' from pos_mstr  " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
+                        " AND pos_type <> 'expense' " +
                         " group by pos_type order by pos_type desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -367,10 +368,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
         
         // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        // tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
        //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(8).setMaxWidth(100);
+         tablereport.getColumnModel().getColumn(7).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
         
@@ -712,8 +711,7 @@ try {
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
                      if (    tc.getModelIndex() == 0 ||
-                             tc.getModelIndex() == 1 ||
-                             tc.getModelIndex() == 10 ) {
+                             tc.getModelIndex() == 9 ) {
                          continue;
                      }
                      tc.setCellRenderer(new CashTranBrowse.SomeRenderer());
@@ -755,7 +753,7 @@ try {
                          trantype = res.getString("pos_type");
                          if (trantype.equals("sell")) {
                              totsales = totsales + res.getDouble("pos_totamt");
-                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
                                 res.getString("pos_key"),
                                 res.getString("pos_type"),
@@ -768,7 +766,7 @@ try {
                             });
                          } else if (trantype.equals("buy")) {
                              totpurch = totpurch + res.getDouble("pos_totamt");
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
                                 res.getString("pos_key"),
                                 res.getString("pos_type"),
@@ -780,7 +778,7 @@ try {
                                 BlueSeerUtils.clicklock 
                             }); 
                          } else {
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
                                 res.getString("pos_key"),
                                 res.getString("pos_type"),
@@ -826,11 +824,12 @@ try {
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+        if ( col == 0) {
+                getdetail(tablereport.getValueAt(row, 1).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
+        /*
         if ( col == 0 && tablereport.getValueAt(row, 4).toString().equals("sell") ) {
                 String mypanel = "MenuShipMaint";
                if (! checkperms(mypanel)) { return; }
@@ -843,8 +842,9 @@ try {
                String args = tablereport.getValueAt(row, 3).toString();
                reinitpanels(mypanel, true, args);
         }
-        if ( col == 10 && tablereport.getValueAt(row, 4).toString().equals("sell")) {
-              OVData.printReceipt(tablereport.getValueAt(row, 3).toString());
+*/
+        if ( col == 9 && tablereport.getValueAt(row, 3).toString().equals("sell")) {
+              OVData.printReceipt(tablereport.getValueAt(row, 2).toString());
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

@@ -6,6 +6,9 @@
 
 package com.blueseer.tca;
 
+import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +25,9 @@ import javax.swing.JOptionPane;
  */
 public class ClockUpdatePanel extends javax.swing.JPanel {
 
+    
+    boolean isLoad = false;
+    
     /**
      * Creates new form ClockUpdatePanel
      */
@@ -29,17 +35,110 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
-        java.util.Date now = new java.util.Date();
-                 
+    
+    
+    public void enableAll() {
+        
+    }
+    
+    public void disableAll() {
+        
+    }
+    
+    public void clearAll() {
+         java.util.Date now = new java.util.Date();
         tbrecid.setText("");
+        tbrecid.setEditable(true);
+        tbrecid.setForeground(Color.black);
         dcindate.setDate(now);
         dcoutdate.setDate(now);
         tbintime.setText("");
         tbintimeadj.setText("");
         tbouttime.setText("");
         tbouttimeadj.setText("");
-        tbtothrs.setText("");
+        tbtothrs.setText("0.00");
+        
+        isLoad = true;
+        for (int i = 0; i < 24 ; i++) {
+            ddInTimeHr.addItem(String.format("%02d", i));
+            ddOutTimeHr.addItem(String.format("%02d", i));
+        }
+        for (int i = 0; i < 60 ; i++) {
+            ddInTimeMin.addItem(String.format("%02d", i));
+            ddOutTimeMin.addItem(String.format("%02d", i));
+        }
+        isLoad = false;
+        
+    }
+    
+    public boolean getTimeClockRecord(String recid) {
+        boolean hasRec = false;
+        
+        try{
+         Class.forName(bsmf.MainFrame.driver).newInstance();
+         bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+        try{
+         Statement st = bsmf.MainFrame.con.createStatement();
+        ResultSet res = null;
+
+        int i = 0;
+
+        res = st.executeQuery("SELECT code_id, t.emp_nbr as t_emp_nbr, emp_fname, emp_lname, indate, outdate, intime, intime_adj, outtime, outtime_adj, tothrs FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where recid = " + "'" + recid + "'" +
+                              ";" );
+        while (res.next()) {
+            i++;
+            hasRec = true;
+            
+            if (res.getString("code_id").equals("01") ) {
+                bsmf.MainFrame.show("Must close record first...must clock out");
+            } else {
+            lblemployee.setText(res.getString("t_emp_nbr") + "  " + res.getString("emp_fname") + 
+                               "  " + res.getString("emp_lname"));
+            dcindate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("indate")));
+            dcoutdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("outdate")));
+            tbintime.setText(res.getString("intime"));
+            tbintimeadj.setText(res.getString("intime_adj"));
+            tbouttime.setText(res.getString("outtime"));
+            tbouttimeadj.setText(res.getString("outtime_adj"));
+            tbtothrs.setText(res.getString("tothrs"));
+            }
+        }
+
+        if (hasRec) {
+            tbrecid.setText(recid);
+            tbrecid.setEditable(false);
+            tbrecid.setForeground(Color.blue);
+        }
+
+        }
+      catch (SQLException s){
+          s.printStackTrace();
+       bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
+      }
+      bsmf.MainFrame.con.close();
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+        return hasRec;
+    }
+    
+    public void adjustInTime() {
+        
+    }
+    
+    public void adjustOutTime() {
+        
+    }
+    
+    public void initvars(String arg) {
+          clearAll();
+          disableAll();
+          btbrowse.setEnabled(true);
+        if (! arg.isEmpty()) {
+            getTimeClockRecord(arg);
+        }
         
     }
     
@@ -55,7 +154,6 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        btget = new javax.swing.JButton();
         tbtothrs = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -73,6 +171,21 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
         dcoutdate = new com.toedter.calendar.JDateChooser();
         tbouttime = new javax.swing.JTextField();
         lblemployee = new javax.swing.JLabel();
+        btbrowse = new javax.swing.JButton();
+        ddInTimeHr = new javax.swing.JComboBox<>();
+        ddInTimeMin = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        ddOutTimeHr = new javax.swing.JComboBox<>();
+        ddOutTimeMin = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        tbnewintime = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        tbnewouttime = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        tbnewtothours = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -80,16 +193,21 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
 
         jLabel1.setText("RecordID");
 
-        btget.setText("Get");
-        btget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
+        tbtothrs.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbtothrsFocusLost(evt);
             }
         });
 
         jLabel2.setText("InDate");
 
         jLabel4.setText("Adj InTime");
+
+        tbrecid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbrecidActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("InTime");
 
@@ -112,20 +230,68 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
 
         dcoutdate.setDateFormatString("yyyy-MM-dd");
 
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
+        ddInTimeHr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddInTimeHrActionPerformed(evt);
+            }
+        });
+
+        ddInTimeMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddInTimeMinActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Hour");
+
+        jLabel10.setText("Minute");
+
+        ddOutTimeHr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddOutTimeHrActionPerformed(evt);
+            }
+        });
+
+        ddOutTimeMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddOutTimeMinActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Hour");
+
+        jLabel12.setText("Minute");
+
+        jLabel13.setText("NewInTime");
+
+        jLabel14.setText("NewOutTime");
+
+        jLabel15.setText("New Tot Hours");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btupdate))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbrecid, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(btget))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
@@ -135,17 +301,47 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcindate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dcoutdate, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                            .addComponent(tbouttime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbintimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbouttimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbtothrs, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btupdate)
-                            .addComponent(lblemployee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbouttime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ddOutTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(dcindate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dcoutdate, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                                    .addComponent(tbintimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbouttimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbtothrs, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblemployee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(13, 13, 13)
+                                    .addComponent(jLabel9)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ddInTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ddOutTimeMin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(tbnewintime, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(ddInTimeMin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 80, Short.MAX_VALUE))
+                                    .addComponent(tbnewouttime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbnewtothours, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(47, 47, 47))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,10 +351,11 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btget)
-                                    .addComponent(tbrecid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tbrecid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1))
+                                    .addComponent(btbrowse))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblemployee, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -167,79 +364,47 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel3)
+                            .addComponent(ddInTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddInTimeMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
+                        .addGap(9, 9, 9)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbintimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(tbnewintime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
                         .addGap(11, 11, 11)
                         .addComponent(dcoutdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbouttime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(ddOutTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddOutTimeMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbouttimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(tbnewouttime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtothrs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel8)
+                    .addComponent(tbnewtothours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btupdate)
                 .addContainerGap())
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-       try{
-
-         Class.forName(bsmf.MainFrame.driver).newInstance();
-         bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-        try{
-         Statement st = bsmf.MainFrame.con.createStatement();
-        ResultSet res = null;
-
-        int i = 0;
-
-        res = st.executeQuery("SELECT * FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
-                              " where recid = " + "'" + tbrecid.getText() + "'" +
-                              ";" );
-        while (res.next()) {
-            i++;
-            if (res.getString("t.code_id").equals("01") ) {
-                bsmf.MainFrame.show("Must close record first...must clock out");
-            } else {
-            lblemployee.setText(res.getString("t.emp_nbr") + "  " + res.getString("e.emp_fname") + 
-                               "  " + res.getString("e.emp_lname"));
-            dcindate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("t.indate")));
-            dcoutdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("t.outdate")));
-            tbintime.setText(res.getString("t.intime"));
-            tbintimeadj.setText(res.getString("t.intime_adj"));
-            tbouttime.setText(res.getString("t.outtime"));
-            tbouttimeadj.setText(res.getString("t.outtime_adj"));
-            tbtothrs.setText(res.getString("t.tothrs"));
-            }
-        }
-
-        if (i == 0) {
-            bsmf.MainFrame.show("RecID not found");
-        }
-
-        }
-      catch (SQLException s){
-       bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
-      }
-      bsmf.MainFrame.con.close();
-    }
-    catch (Exception e){
-      e.printStackTrace();
-    }
-    }//GEN-LAST:event_btgetActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try{
@@ -296,22 +461,23 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
 
 
          if (proceed) {
-        st.executeUpdate("update time_clock t set " +
-                              "t.indate = " + "'" + dfdate.format(dcindate.getDate()) + "'" + "," +
-                              "t.outdate = " + "'" +  dfdate.format(dcindate.getDate()) + "'"  + "," +
-                              "t.intime = " + "'" +  tbintime.getText() + "'"  + "," +
-                              "t.outtime = " + "'" +  tbouttime.getText() + "'"  + "," +
-                              "t.intime_adj = " + "'" +  tbintimeadj.getText() + "'"  + "," +
-                              "t.outtime_adj = " + "'" +  tbouttimeadj.getText() + "'"  + "," +
-                              "t.tothrs = " + "'" + tbtothrs.getText() + "'" + "," +
-                              "t.changed = " + "'" + clockdate + "'" +
-                              " where t.recid = " + "'" + tbrecid.getText().toString() + "'" +
+        st.executeUpdate("update time_clock set " +
+                              "indate = " + "'" + dfdate.format(dcindate.getDate()) + "'" + "," +
+                              "outdate = " + "'" +  dfdate.format(dcindate.getDate()) + "'"  + "," +
+                              "intime = " + "'" +  tbintime.getText() + "'"  + "," +
+                              "outtime = " + "'" +  tbouttime.getText() + "'"  + "," +
+                              "intime_adj = " + "'" +  tbintimeadj.getText() + "'"  + "," +
+                              "outtime_adj = " + "'" +  tbouttimeadj.getText() + "'"  + "," +
+                              "tothrs = " + "'" + tbtothrs.getText() + "'" + "," +
+                              "changed = " + "'" + clockdate + "'" +
+                              " where recid = " + "'" + tbrecid.getText().toString() + "'" +
                               ";" );
 
         bsmf.MainFrame.show("Updated RecID");
             } // if proceed
         }
       catch (SQLException s){
+          s.printStackTrace();
         bsmf.MainFrame.show("SQL code does not execute.");
       }
       bsmf.MainFrame.con.close();
@@ -321,13 +487,74 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_btupdateActionPerformed
 
+    private void tbtothrsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbtothrsFocusLost
+           String x = BlueSeerUtils.bsformat("", tbtothrs.getText(), "2");
+        if (x.equals("error")) {
+            tbtothrs.setText("");
+            tbtothrs.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbtothrs.requestFocus();
+        } else {
+            tbtothrs.setText(x);
+            tbtothrs.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbtothrsFocusLost
+
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, "clockrecupdate,recid");
+    }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void tbrecidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbrecidActionPerformed
+        boolean gotIt = getTimeClockRecord(tbrecid.getText());
+        if (gotIt) {
+          tbrecid.setEditable(false);
+          tbrecid.setForeground(Color.blue);
+        } else {
+           tbrecid.setForeground(Color.red); 
+        }
+    }//GEN-LAST:event_tbrecidActionPerformed
+
+    private void ddInTimeHrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddInTimeHrActionPerformed
+        if (! isLoad) {
+            adjustInTime();
+        }
+    }//GEN-LAST:event_ddInTimeHrActionPerformed
+
+    private void ddInTimeMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddInTimeMinActionPerformed
+         if (! isLoad) {
+            adjustInTime();
+        }
+    }//GEN-LAST:event_ddInTimeMinActionPerformed
+
+    private void ddOutTimeHrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddOutTimeHrActionPerformed
+         if (! isLoad) {
+            adjustOutTime();
+        }
+    }//GEN-LAST:event_ddOutTimeHrActionPerformed
+
+    private void ddOutTimeMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddOutTimeMinActionPerformed
+         if (! isLoad) {
+            adjustOutTime();
+        }
+    }//GEN-LAST:event_ddOutTimeMinActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btget;
+    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcindate;
     private com.toedter.calendar.JDateChooser dcoutdate;
+    private javax.swing.JComboBox<String> ddInTimeHr;
+    private javax.swing.JComboBox<String> ddInTimeMin;
+    private javax.swing.JComboBox<String> ddOutTimeHr;
+    private javax.swing.JComboBox<String> ddOutTimeMin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -335,10 +562,14 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblemployee;
     private javax.swing.JTextField tbintime;
     private javax.swing.JTextField tbintimeadj;
+    private javax.swing.JTextField tbnewintime;
+    private javax.swing.JTextField tbnewouttime;
+    private javax.swing.JTextField tbnewtothours;
     private javax.swing.JTextField tbouttime;
     private javax.swing.JTextField tbouttimeadj;
     private javax.swing.JTextField tbrecid;

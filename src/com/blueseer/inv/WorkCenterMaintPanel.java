@@ -7,6 +7,8 @@ package com.blueseer.inv;
 
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,11 +71,11 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
         tbdesc.setText("");
        
         tarmks.setText("");
-        tbrunrate.setText("");
-        tbsetuprate.setText("");
-        tbbdnrate.setText("");
-        tbruncrewsize.setText("");
-        tbsetupcrewsize.setText("");
+        tbrunrate.setText("0.00");
+        tbsetuprate.setText("0.00");
+        tbbdnrate.setText("0.00");
+        tbruncrewsize.setText("1");
+        tbsetupcrewsize.setText("1");
         
          ArrayList cc = OVData.getGLCCList();
         for (int i = 0; i < cc.size(); i++) {
@@ -195,7 +197,19 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Work Cell Maintenance"));
 
+        tbrunrate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbrunrateFocusLost(evt);
+            }
+        });
+
         jLabel6.setText("Labor Rate");
+
+        tbbdnrate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbbdnrateFocusLost(evt);
+            }
+        });
 
         jLabel9.setText("Burden Rate");
 
@@ -214,6 +228,18 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
         tarmks.setColumns(20);
         tarmks.setRows(5);
         jScrollPane1.setViewportView(tarmks);
+
+        tbsetuprate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsetuprateFocusLost(evt);
+            }
+        });
+
+        tbruncrewsize.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbruncrewsizeFocusLost(evt);
+            }
+        });
 
         jLabel2.setText("Site");
 
@@ -237,6 +263,12 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
+            }
+        });
+
+        tbsetupcrewsize.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsetupcrewsizeFocusLost(evt);
             }
         });
 
@@ -526,6 +558,86 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
         btbrowse.setEnabled(false);
         tbwc.requestFocus();
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbrunrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunrateFocusLost
+         String x = BlueSeerUtils.bsformat("", tbrunrate.getText(), "2");
+        if (x.equals("error")) {
+            tbrunrate.setText("");
+            tbrunrate.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbrunrate.requestFocus();
+        } else {
+            tbrunrate.setText(x);
+            tbrunrate.setBackground(Color.white);
+        }
+        if (tbrunrate.getText().isEmpty()) {
+            tbrunrate.setText("0.00");
+        }
+    }//GEN-LAST:event_tbrunrateFocusLost
+
+    private void tbsetuprateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetuprateFocusLost
+          String x = BlueSeerUtils.bsformat("", tbsetuprate.getText(), "2");
+        if (x.equals("error")) {
+            tbsetuprate.setText("");
+            tbsetuprate.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsetuprate.requestFocus();
+        } else {
+            tbsetuprate.setText(x);
+            tbsetuprate.setBackground(Color.white);
+        }
+        if (tbsetuprate.getText().isEmpty()) {
+            tbsetuprate.setText("0.00");
+        }
+    }//GEN-LAST:event_tbsetuprateFocusLost
+
+    private void tbbdnrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbbdnrateFocusLost
+          String x = BlueSeerUtils.bsformat("", tbbdnrate.getText(), "2");
+        if (x.equals("error")) {
+            tbbdnrate.setText("");
+            tbbdnrate.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbbdnrate.requestFocus();
+        } else {
+            tbbdnrate.setText(x);
+            tbbdnrate.setBackground(Color.white);
+        }
+        if (tbbdnrate.getText().isEmpty()) {
+            tbbdnrate.setText("0.00");
+        }
+    }//GEN-LAST:event_tbbdnrateFocusLost
+
+    private void tbruncrewsizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbruncrewsizeFocusLost
+        String x = BlueSeerUtils.bsformat("", tbruncrewsize.getText(), "0");
+        if (x.equals("error")) {
+            tbruncrewsize.setText("");
+            tbruncrewsize.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbruncrewsize.requestFocus();
+        } else {
+            tbruncrewsize.setText(x);
+            tbruncrewsize.setBackground(Color.white);
+        }
+        if (tbruncrewsize.getText().isEmpty()) {
+            tbruncrewsize.setText("1");
+        }
+    }//GEN-LAST:event_tbruncrewsizeFocusLost
+
+    private void tbsetupcrewsizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetupcrewsizeFocusLost
+        String x = BlueSeerUtils.bsformat("", tbsetupcrewsize.getText(), "0");
+        if (x.equals("error")) {
+            tbsetupcrewsize.setText("");
+            tbsetupcrewsize.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsetupcrewsize.requestFocus();
+        } else {
+            tbsetupcrewsize.setText(x);
+            tbsetupcrewsize.setBackground(Color.white);
+        }
+        if (tbsetupcrewsize.getText().isEmpty()) {
+            tbsetupcrewsize.setText("1");
+        }
+    }//GEN-LAST:event_tbsetupcrewsizeFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

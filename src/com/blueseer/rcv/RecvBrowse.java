@@ -47,6 +47,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -57,7 +58,15 @@ public class RecvBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});
+                        new String[]{"Select", "Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1 )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"ReceiverID", "Line", "Part", "PackingSlip", "RecvDate", "NetPrice", "QtyRecvd", "QtyVouchered"});
@@ -155,7 +164,8 @@ public class RecvBrowse extends javax.swing.JPanel {
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
         
-         
+           tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+           tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
          
        
           
@@ -422,12 +432,7 @@ try {
                
                mymodel.setNumRows(0);
         
-              tablereport.setModel(mymodel);
-              tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-              tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+            
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
                  String pofrom = tbfrompo.getText();
@@ -462,7 +467,7 @@ try {
                   
                 
                        while (res.next()) {
-                    mymodel.addRow(new Object[]{"Select", "Detail", res.getString("rv_id"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("rv_id"),
                                 res.getString("rv_vend"),
                                 res.getString("rv_packingslip"),
                                 res.getString("rv_recvdate"),

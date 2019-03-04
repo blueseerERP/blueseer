@@ -187,6 +187,9 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="tbrunrate">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbrunrateFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
@@ -194,6 +197,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbdnrate">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbbdnrateFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
@@ -259,8 +265,14 @@
         <Component class="javax.swing.JTextField" name="tbmachine">
         </Component>
         <Component class="javax.swing.JTextField" name="tbsetuprate">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbsetuprateFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tbruncrewsize">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbruncrewsizeFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
@@ -297,6 +309,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tbsetupcrewsize">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbsetupcrewsizeFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>

@@ -8,6 +8,7 @@ package com.blueseer.inv;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -296,6 +297,12 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         tbrunhours.setEditable(false);
 
         jLabel12.setText("Run Hours");
+
+        tbsetuphours.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsetuphoursFocusLost(evt);
+            }
+        });
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -639,7 +646,23 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         if (Double.valueOf(tbrunhoursinverted.getText()) > 0)
         tbrunhours.setText(df.format(1 / Double.valueOf(tbrunhoursinverted.getText())));
         else
-            tbrunhours.setText("0");
+            tbrunhours.setText("0.00");
+        
+          String x = BlueSeerUtils.bsformat("", tbrunhoursinverted.getText(), "2");
+        if (x.equals("error")) {
+            tbrunhoursinverted.setText("");
+            tbrunhoursinverted.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbrunhoursinverted.requestFocus();
+        } else {
+            tbrunhoursinverted.setText(x);
+            tbrunhoursinverted.setBackground(Color.white);
+        }
+        if (tbrunhoursinverted.getText().isEmpty()) {
+            tbrunhoursinverted.setText("0.00");
+        }
+        
+        
     }//GEN-LAST:event_tbrunhoursinvertedFocusLost
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -654,6 +677,22 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         btbrowse.setEnabled(false);
         tbwc.requestFocus();
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbsetuphoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetuphoursFocusLost
+          String x = BlueSeerUtils.bsformat("", tbsetuphours.getText(), "2");
+        if (x.equals("error")) {
+            tbsetuphours.setText("");
+            tbsetuphours.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsetuphours.requestFocus();
+        } else {
+            tbsetuphours.setText(x);
+            tbsetuphours.setBackground(Color.white);
+        }
+        if (tbsetuphours.getText().isEmpty()) {
+            tbsetuphours.setText("0.00");
+        }
+    }//GEN-LAST:event_tbsetuphoursFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

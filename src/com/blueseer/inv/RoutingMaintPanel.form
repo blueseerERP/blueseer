@@ -265,6 +265,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbsetuphours">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbsetuphoursFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddsite">
           <Properties>

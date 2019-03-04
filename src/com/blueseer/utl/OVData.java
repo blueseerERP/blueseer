@@ -25577,6 +25577,79 @@ e.printStackTrace();
         
          } 
           
+           public static DefaultTableModel getClockRecBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              //  "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
+                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                     res = st.executeQuery("SELECT tothrs, recid, t.emp_nbr as 't_emp_nbr', emp_lname, emp_fname, emp_dept, code_id, indate, intime, " +
+                           " intime_adj, outdate, outtime, outtime_adj FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where  " + myfield + " like " + "'" + str + "%'" +
+                               " order by recid limit 300 " +
+                               ";" );
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT tothrs, recid, t.emp_nbr as 't_emp_nbr', emp_lname, emp_fname, emp_dept, code_id, indate, intime, " +
+                           " intime_adj, outdate, outtime, outtime_adj FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where  " + myfield + " like " + "'%" + str + "'" +
+                               " order by recid limit 300 " +
+                               ";" );
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT tothrs, recid, t.emp_nbr as 't_emp_nbr', emp_lname, emp_fname, emp_dept, code_id, indate, intime, " +
+                           " intime_adj, outdate, outtime, outtime_adj FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where  " + myfield + " like " + "'%" + str + "%'" +
+                               " order by recid limit 300 " +
+                               ";" );
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("recid"),
+                                            res.getString("t_emp_nbr"),
+                                            res.getString("emp_lname"),
+                                            res.getString("emp_fname"),
+                                            res.getString("emp_dept"),
+                                            res.getString("code_id"),
+                                             res.getString("indate"),
+                                            res.getString("intime"),
+                                            res.getString("intime_adj"),
+                                            res.getString("outdate"),
+                                            res.getString("outtime"),
+                                            res.getString("outtime_adj"),
+                                            res.getString("tothrs")
+                                            } );
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         } 
+         
+          
              public static DefaultTableModel getUserBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "UserID", "LastName", "FirstName"})

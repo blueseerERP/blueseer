@@ -260,7 +260,7 @@ try {
                               "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
                               "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                "and t.indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                               "and e.emp_termdate is " + null + " order by e.emp_nbr, t.indate" +
+                               "and e.emp_termdate = '' order by e.emp_nbr, t.indate" +
                                ";" );
            
 
