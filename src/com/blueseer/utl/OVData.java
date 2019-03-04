@@ -4302,7 +4302,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
              }
              
              
-              public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost) {
+              public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost, String date) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -4326,7 +4326,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into item_mstr " 
-                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_lotsize, "
+                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_lotsize, it_createdate, "
                             + "it_sell_price, it_pur_price, it_mtl_cost, it_ovh_cost, it_out_cost, it_type, it_group, "
                             + "it_drawing, it_rev, it_custrev, it_comments, "
                             + "it_uom, it_net_wt, it_ship_wt, "
@@ -4339,6 +4339,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                             "'" +  "9999" + "'" + "," +  
                             "'" +  "" + "'" + "," +  
                             "'" +  "1" + "'" + "," +  
+                            "'" +  date + "'" + "," +          
                             "'" +  df.format(Double.valueOf(cost)) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(cost)) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(cost)) + "'" + "," +  

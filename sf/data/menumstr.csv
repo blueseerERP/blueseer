@@ -88,8 +88,8 @@ TrainingRpt1,,com.blueseer.hrm.TrainingReport1,JMenuItem,trnr
 UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl
 UserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb
 UserMaint,,com.blueseer.adm.UserMaintPanel,JMenuItem,usrm
-WorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcm
-WorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,wkcb
+WorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcb
+WorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,wkcm
 Order,,,JMenu,
 POMaintMenu,,com.blueseer.pur.POMaintPanel,JMenuItem,purm
 PlantDirectoryMenu,,com.blueseer.utl.ReportPanel,JMenuItem,pdir

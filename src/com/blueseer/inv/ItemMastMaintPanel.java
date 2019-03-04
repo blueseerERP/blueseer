@@ -1813,6 +1813,14 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     return;
                 }
                 
+                if (! tbroutingcode.getText().isEmpty()) {
+                    if (! OVData.isValidRouting(tbroutingcode.getText())) {
+                         proceed = false;
+                         bsmf.MainFrame.show("Must enter a routing number or leave blank");
+                         tbroutingcode.requestFocus();
+                         return;
+                    }
+                }
                
                 
                 double lotsize = 0.00;
@@ -1999,6 +2007,17 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 if (! tbminordqty.getText().isEmpty()) {
                     minordqty = Integer.valueOf(tbminordqty.getText());
                 }
+                
+                
+                 if (! tbroutingcode.getText().isEmpty()) {
+                    if (! OVData.isValidRouting(tbroutingcode.getText())) {
+                         proceed = false;
+                         bsmf.MainFrame.show("Must enter a routing number or leave blank");
+                         tbroutingcode.requestFocus();
+                         return;
+                    }
+                }
+                
                 
                 if (proceed) {
                     st.executeUpdate("update item_mstr "

@@ -24,6 +24,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.awt.Color;
 import java.math.RoundingMode;
 import javax.swing.tree.TreeNode;
 
@@ -59,12 +60,12 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     
     public void settoplowmodeltable() {
         ArrayList<Double> costs = new ArrayList<Double>();
-        costs = OVData.getItemCostStdElements(topart.getText(), "standard", thissite);
+        costs = OVData.getItemCostStdElements(tbitem.getText(), "standard", thissite);
        
         calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("#.0000"); 
         ArrayList<Double> costcur = new ArrayList<Double>();
-        costcur = cur.getTotalCostElements(topart.getText());
+        costcur = cur.getTotalCostElements(tbitem.getText());
         
         double stdmtllow = costs.get(0);
         double stdlbrlow = costs.get(1);
@@ -119,7 +120,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     
     public void setcostmodeltable() {
          ArrayList<String> costs = new ArrayList<String>();
-        costs = OVData.rollCost(topart.getText());
+        costs = OVData.rollCost(tbitem.getText());
         double total = 0.0;
         double totmtl = 0.0;
         double totlbr = 0.0;
@@ -286,14 +287,44 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         
     }
      
+     public void establishParent(String item) {
+          boolean validItem =  OVData.isValidItem(item);
+          String desc = OVData.getItemDesc(item);
+          String type = OVData.getItemCode(item);
+             if (validItem) {
+              tbitem.setEditable(false);
+              tbitem.setForeground(Color.blue);
+                   settoplowmodeltable();
+                   setcostmodeltable();
+                   bind_tree(item);
+             lblitem.setText("type: " + type + " / " + desc);
+             enableAll();
+             } else {
+               tbitem.setEditable(true);
+               tbitem.setForeground(Color.black); 
+               lblitem.setText("invalid item");
+               disableAll();
+             }
+    }
     
-    
-    public void initvars(String arg) {
-       
+     
+    public void disableAll() {
+        btroll.setEnabled(false);
+        btclear.setEnabled(false);
         
-       DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
+    } 
+    
+    public void enableAll() {
+         btroll.setEnabled(true);
+        btclear.setEnabled(true);
+    }
+     
+    public void clearAll() {
+         DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
        jTree1.setModel(new DefaultTreeModel(root));
-       topart.setText("");
+       tbitem.setText("");
+       tbitem.setEditable(true);
+       tbitem.setForeground(Color.black); 
         costmodel.setNumRows(0);
         subcostmodel.setNumRows(0);
         toplowmodel.setNumRows(0);
@@ -304,13 +335,19 @@ public class CostRollUpPanel extends javax.swing.JPanel {
          tbstdcost.setText("");
          tbcomp.setText("");
          thissite = OVData.getDefaultSite();
+    }
+     
+    public void initvars(String arg) {
+       
+        clearAll();
+        disableAll();
+      
          
          
          if (! arg.isEmpty()) {
-           topart.setText(arg);
-           settoplowmodeltable();
-           setcostmodeltable();
-           bind_tree(arg);
+           tbitem.setText(arg);
+           establishParent(arg);
+          
        }
          
          
@@ -327,7 +364,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
 
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        topart = new javax.swing.JTextField();
+        tbitem = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         labelcost = new javax.swing.JLabel();
         labelstandard = new javax.swing.JLabel();
@@ -358,10 +395,18 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         jTree1 = new javax.swing.JTree();
         btroll = new javax.swing.JButton();
         btbrowse = new javax.swing.JButton();
+        lblitem = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jLabel1.setText("Part");
+
+        tbitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbitemActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Roll Cost:");
 
@@ -605,6 +650,13 @@ public class CostRollUpPanel extends javax.swing.JPanel {
             }
         });
 
+        btclear.setText("clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -613,9 +665,13 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btroll)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -638,13 +694,15 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
-                        .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(labelstandard, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(labelcost, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btroll)
                     .addComponent(jLabel5)
-                    .addComponent(btbrowse))
+                    .addComponent(btbrowse)
+                    .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btclear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -697,10 +755,10 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                 int i = 0;
                 String perms = "";
                 double itrcost = 0.00;
-                String routing = OVData.getItemRouting(topart.getText());
-                ArrayList<String> ops = OVData.getOperationsByPart(topart.getText());
+                String routing = OVData.getItemRouting(tbitem.getText());
+                ArrayList<String> ops = OVData.getOperationsByPart(tbitem.getText());
                 // lets do item_cost first 
-                res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + topart.getText() + "'" + ";");
+                res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + tbitem.getText() + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
@@ -718,7 +776,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                                 + "itc_out_low = " + "'" + toplowtable.getValueAt(4, 1) + "'" + ","
                                 + "itc_out_top = " + "'" + toplowtable.getValueAt(4, 3) + "'" + ","
                                 + "itc_total = " + "'" + toplowtable.getValueAt(5, 5) + "'" 
-                                + " where itc_item = " + "'" + topart.getText() + "'"
+                                + " where itc_item = " + "'" + tbitem.getText() + "'"
                                 + " AND itc_set = 'standard' "
                                 + " AND itc_site = " + "'" + thissite + "'"
                                 + ";");
@@ -736,7 +794,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                     // bsmf.MainFrame.show(op);
                     i++;
                     // delete original itemr_cost records for this item, op, routing, standard
-                    st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + topart.getText() + "'" 
+                    st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + tbitem.getText() + "'" 
                                          +  " AND itr_op = " + "'" + op + "'"
                                          + " AND itr_set = 'standard' "
                                          + " AND itr_site = " + "'" + thissite + "'"
@@ -753,7 +811,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                             st.executeUpdate("insert into itemr_cost (itr_item, itr_site, itr_set, itr_routing, itr_op, " +
                                  " itr_total, itr_mtl_top, itr_lbr_top, itr_bdn_top, itr_ovh_top, itr_out_top, " +
                                  " itr_mtl_low, itr_lbr_low, itr_bdn_low, itr_ovh_low, itr_out_low ) values ( "
-                                + "'" + topart.getText() + "'" + ","
+                                + "'" + tbitem.getText() + "'" + ","
                                 + "'" + thissite + "'" + ","
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
@@ -774,6 +832,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                   
                     } // for ops
                     bsmf.MainFrame.show("Cost Roll Complete");
+                    initvars(tbitem.getText());
                    }
             } // if proceed
             catch (SQLException s) {
@@ -789,9 +848,18 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         reinitpanels("BrowseUtil", true, "costmaint,it_item");
     }//GEN-LAST:event_btbrowseActionPerformed
 
+    private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed
+       establishParent(tbitem.getText());
+    }//GEN-LAST:event_tbitemActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        initvars("");
+    }//GEN-LAST:event_btclearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btroll;
     private javax.swing.JTable costtable;
     private javax.swing.JLabel jLabel1;
@@ -816,13 +884,14 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     private javax.swing.JTree jTree1;
     private javax.swing.JLabel labelcost;
     private javax.swing.JLabel labelstandard;
+    private javax.swing.JLabel lblitem;
     private javax.swing.JTable subcosttable;
     private javax.swing.JTextField tbcomp;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbop;
     private javax.swing.JTextField tbqtyper;
     private javax.swing.JTextField tbstdcost;
-    private javax.swing.JTextField topart;
     private javax.swing.JTable toplowtable;
     // End of variables declaration//GEN-END:variables
 }

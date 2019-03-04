@@ -1825,6 +1825,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         btcustnamebrowse.setEnabled(false);
        btcustzipbrowse.setEnabled(false);
         cbshipto.setEnabled(true);
+        cbshipto.setSelected(true);
        
         
          if (OVData.isAutoCust()) {

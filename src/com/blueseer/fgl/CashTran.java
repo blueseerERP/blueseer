@@ -497,7 +497,7 @@ public class CashTran extends javax.swing.JPanel {
                     for (int j = 0; j < detailtable.getRowCount(); j++) {
                         
                         // lets add item to database
-                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString());
+                        OVData.addItemMasterMinimum(detailtable.getValueAt(j, 1).toString(), site, detailtable.getValueAt(j, 4).toString(), "A", detailtable.getValueAt(j, 3).toString(), dfdate.format(dcdate.getDate()));
                       //  if (! detailtable.getValueAt(j, 5).toString().isEmpty()) {
                        // OVData.addItemImage(detailtable.getValueAt(j, 1).toString(), detailtable.getValueAt(j, 5).toString());  
                        // }
@@ -2992,7 +2992,8 @@ public class CashTran extends javax.swing.JPanel {
                 lbtitle.setText("Buy");
                 enableBuy();
                btnewbuy.setEnabled(false);
-               tbqty.setText("1");               
+               tbqty.setText("1");         
+               voucherline = 0;
                
                BlueSeerUtils.messagereset();
         
@@ -3169,7 +3170,7 @@ public class CashTran extends javax.swing.JPanel {
                 dcdate1.setDate(now);
                 
                 enableSell();
-              
+               voucherline = 0;
                btnewsell.setEnabled(false);
                tbqty1.setText("1");               
                lbtitle1.setText("Sell");
@@ -3328,6 +3329,7 @@ public class CashTran extends javax.swing.JPanel {
                 enableExpense();
                btnewexpense.setEnabled(false);
                tbqty2.setText("1");               
+               voucherline = 0;
                
                BlueSeerUtils.messagereset();
     }//GEN-LAST:event_btnewexpenseActionPerformed
