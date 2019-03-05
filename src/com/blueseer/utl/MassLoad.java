@@ -186,25 +186,25 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("it_site") == 0 && ! OVData.isValidSite(rs[j])) {
+                if (ld[0].compareTo("it_site") == 0 && ! OVData.isValidSite(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid site" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("it_loc") == 0 && ! OVData.isValidLocation(rs[j])) {
+                if (ld[0].compareTo("it_loc") == 0 && ! OVData.isValidLocation(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid location" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("it_prodline") == 0 && ! OVData.isValidProdLine(rs[j])) {
+                if (ld[0].compareTo("it_prodline") == 0 && ! OVData.isValidProdLine(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid prodline" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("it_wf") == 0 && ! rs[j].isEmpty() && ! OVData.isValidRouting(rs[j])) {
+                if (ld[0].compareTo("it_wf") == 0 && ! rs[j].isEmpty() && ! OVData.isValidRouting(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid routing code" + "\n" );
                        proceed = false;
                 }
                 if (ld[0].compareTo("it_code") == 0) {
-                    if (rs[j].toUpperCase().compareTo("M") != 0 && rs[j].toUpperCase().compareTo("P") != 0) {
-                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " it_code must be either M or P " + "\n" );
+                    if (rs[j].toUpperCase().compareTo("M") != 0 && rs[j].toUpperCase().compareTo("P") != 0 && rs[j].toUpperCase().compareTo("A") != 0) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " it_code must be either M or P or A " + "\n" );
                        proceed = false;
                     }
                 }
@@ -1379,6 +1379,7 @@ public class MassLoad extends javax.swing.JPanel {
         tacomments = new javax.swing.JTextArea();
         btaudit = new javax.swing.JButton();
         btdescribe = new javax.swing.JButton();
+        cboverride = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1416,6 +1417,8 @@ public class MassLoad extends javax.swing.JPanel {
             }
         });
 
+        cboverride.setText("Menu Integrity Override");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1423,20 +1426,22 @@ public class MassLoad extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btdescribe)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btaudit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupload))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 106, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(cboverride)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btdescribe)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaudit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupload))
+                            .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1452,7 +1457,8 @@ public class MassLoad extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupload)
                     .addComponent(btaudit)
-                    .addComponent(btdescribe))
+                    .addComponent(btdescribe)
+                    .addComponent(cboverride))
                 .addGap(30, 30, 30))
         );
 
@@ -1489,6 +1495,7 @@ public class MassLoad extends javax.swing.JPanel {
     private javax.swing.JButton btaudit;
     private javax.swing.JButton btdescribe;
     private javax.swing.JButton btupload;
+    private javax.swing.JCheckBox cboverride;
     private javax.swing.JComboBox ddtable;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;

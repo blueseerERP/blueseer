@@ -4221,6 +4221,10 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
              
              public static boolean addItemMaster(ArrayList<String> list) {
                  boolean myreturn = true;
+                 
+                 java.util.Date now = new java.util.Date();
+              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                 
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4247,7 +4251,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into item_mstr " 
-                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_lotsize, "
+                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_lotsize, it_createdate, "
                             + "it_sell_price, it_pur_price, it_mtl_cost, it_ovh_cost, it_out_cost, it_type, it_group, "
                             + "it_drawing, it_rev, it_custrev, it_comments, "
                             + "it_uom, it_net_wt, it_ship_wt, "
@@ -4260,6 +4264,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                             "'" +  ld[4] + "'" + "," +  
                             "'" +  ld[5] + "'" + "," +  
                             "'" +  ld[6] + "'" + "," +  
+                            "'" +  dfdate.format(now) + "'" + "," + 
                             "'" +  df.format(Double.valueOf(ld[7])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[8])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[9])) + "'" + "," +  
