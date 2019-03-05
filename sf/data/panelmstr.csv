@@ -90,6 +90,7 @@ com.blueseer.hrm.TrainingMaster,,1
 com.blueseer.hrm.TrainingReport1,,1
 com.blueseer.inv.BOMMaintPanel,,1
 com.blueseer.inv.BOMTree,,1
+com.blueseer.inv.BOMBrowse,,1
 com.blueseer.inv.calcCost,,1
 com.blueseer.inv.CostRollUpPanel,,1
 com.blueseer.inv.ImportItemMstr,,1

@@ -127,6 +127,7 @@ admin;ItemRoutingRpt
 admin;BOMMenu
 admin;BOMMaint
 admin;BOMTree
+admin;BOMBrowse
 admin;WhereUsedUtility
 admin;ProductionMenu
 admin;ProdEntryMaint

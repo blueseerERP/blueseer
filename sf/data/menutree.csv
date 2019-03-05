@@ -138,8 +138,9 @@ RoutingMenu,RoutingBrowse,4,JMenuItem,Routing Browse,,1,,1,1
 RoutingMenu,ItemRoutingRpt,5,JMenuItem,Item Routing Report,,,,1,1
 Inventory,BOMMenu,9,JMenu,BOM Menu,,,,1,1
 BOMMenu,BOMMaint,1,JMenuItem,BOM Maintenance,,,,1,1
-BOMMenu,BOMTree,2,JMenuItem,BOM Tree,,,,1,1
-BOMMenu,WhereUsedUtility,3,JMenuItem,Where Used Utility,,,,1,1
+BOMMenu,BOMBrowse,2,JMenuItem,BOM Browse,,1,,1,1
+BOMMenu,BOMTree,3,JMenuItem,BOM Tree,,,,1,1
+BOMMenu,WhereUsedUtility,4,JMenuItem,Where Used Utility,,,,1,1
 Inventory,ProductionMenu,10,JMenu,Production Menu,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1

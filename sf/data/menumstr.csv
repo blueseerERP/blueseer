@@ -28,6 +28,7 @@ AcctMaint,,com.blueseer.fgl.LedgerAcctMstrPanel,JMenuItem,accm
 ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
 BOMMaint,,com.blueseer.inv.BOMMaintPanel,JMenuItem,bomm
 BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt
+BOMBrowse,,com.blueseer.inv.BOMBrowse,JMenuItem,bomb
 CarrierMaint,,com.blueseer.ctr.CarrierMaintPanel,JMenuItem,carm
 CostRoll,,com.blueseer.inv.CostRollUpPanel,JMenuItem,roll
 CustMaint,,com.blueseer.ctr.CustMaintPanel,JMenuItem,cusm
