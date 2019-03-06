@@ -5,7 +5,7 @@ lbrvar,Labor Variance,4,,,
 bdnvar,Burden Variance,5,,,
 prodeng,Production Engineering Costs,6,,, 
 mktsales,Marketing and Sales Costs,7,,, 
-g&a,General Administration Costs,8,90000000,99999998, 
+g&a,General Administration Costs,8,,90000000,99999998 
 interest,Interest,9,,, 
 alloc,Allocations,10,,, 
 mgtfee,Management Fees,11,,, 
