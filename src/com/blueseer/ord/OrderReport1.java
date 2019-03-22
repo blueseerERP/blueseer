@@ -459,7 +459,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("#0.00");
                 int i = 0;
                 String fromcust = "";
                 String tocust = "";
@@ -503,6 +503,7 @@ try {
              
                  //   tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.ButtonRenderer());
                 tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
+                tableorder.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -542,7 +543,7 @@ try {
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
                                 res.getInt("totqty"),
-                                res.getDouble("totdol"),
+                                Double.valueOf(df.format(res.getDouble("totdol"))),
                                 res.getString("so_status")
                             });
                 }

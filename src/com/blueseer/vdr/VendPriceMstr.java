@@ -6,6 +6,7 @@
 
 package com.blueseer.vdr;
 
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.sql.DriverManager;
@@ -42,7 +43,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
         initvars("");
         try {
 
-            DecimalFormat df = new DecimalFormat("#0.00");
+            DecimalFormat df = new DecimalFormat("#0.0000");
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -150,11 +151,12 @@ public class VendPriceMstr extends javax.swing.JPanel {
     
   
       public void setData() {
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.0000");
          
         if (ddpart.getItemCount() > 0 && ddvendcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = OVData.getPartPriceFromVend(ddvendcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+         lbitem.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {
             price.setText("0.00");
             btAdd.setEnabled(true);
@@ -244,12 +246,23 @@ public class VendPriceMstr extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         ddcurr = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        lbitem = new javax.swing.JLabel();
+        lbvend = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vendor Price Maintenance"));
 
         jLabel5.setText("Price");
+
+        price.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                priceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                priceFocusLost(evt);
+            }
+        });
 
         jLabel3.setText("Vend / GroupCode");
 
@@ -328,7 +341,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
@@ -350,22 +363,27 @@ public class VendPriceMstr extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btDelete)
                     .addComponent(btUpdate)
-                    .addComponent(btAdd))
-                .addGap(33, 33, 33))
+                    .addComponent(btAdd)
+                    .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(ddvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(ddvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblpricecode, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -403,7 +421,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.0000");
                 res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
                     ddvendcode.getSelectedItem().toString() + "'" +
                     " and vpr_type = " + "'LIST'" +
@@ -522,6 +540,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
         if (ddvendcode.getItemCount() != 0) {
             setPriceList();
             String code = OVData.getPriceGroupCodeFromVend(ddvendcode.getSelectedItem().toString());
+            lbvend.setText(OVData.getVendName(ddvendcode.getSelectedItem().toString())); 
             if (! code.isEmpty()) {
                 lblpricecode.setText("Vendor belongs to Price Code " + code);
                 lblpricecode.setVisible(true);
@@ -609,6 +628,25 @@ public class VendPriceMstr extends javax.swing.JPanel {
          setData();
     }//GEN-LAST:event_ddcurrActionPerformed
 
+    private void priceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusLost
+            String x = BlueSeerUtils.bsformat("", price.getText(), "4");
+        if (x.equals("error")) {
+            price.setText("");
+            price.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            price.requestFocus();
+        } else {
+            price.setText(x);
+            price.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_priceFocusLost
+
+    private void priceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusGained
+        if (price.getText().equals("0.0000")) {
+            price.setText("");
+        }
+    }//GEN-LAST:event_priceFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
@@ -626,7 +664,9 @@ public class VendPriceMstr extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbitem;
     private javax.swing.JLabel lblpricecode;
+    private javax.swing.JLabel lbvend;
     private javax.swing.JTextField price;
     private javax.swing.JList pricelist;
     // End of variables declaration//GEN-END:variables

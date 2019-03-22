@@ -288,6 +288,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("taxmaint")) {
                 tablereport.setModel(OVData.getTaxBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("payprofilemaint")) {
+                tablereport.setModel(OVData.getPayProfileBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
                 if (callingpanel.equals("ecnmaint")) {
                 tablereport.setModel(OVData.getECNBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -464,6 +467,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("TaxMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
               reinitpanels("TaxMaint", true, myparameter);
+            }
+            if (callingpanel.equals("payprofilemaint")) {
+              if (! checkperms("PayProfileMaint")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString();
+              reinitpanels("PayProfileMaint", true, myparameter);
             }
             if (callingpanel.equals("ecnmaint")) {
               if (! checkperms("ECNMaint")) { return; }

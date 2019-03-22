@@ -128,7 +128,7 @@ ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
 BankMaint,,com.blueseer.fgl.BankMaintPanel,JMenuItem,bank
 ShipperInvoiceBrowse,Shipper and Invoice Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
 AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,addl
-CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,cus3
+CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,cprb
 noStdCostBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cosn
 BankBrowse,Browse Bank Menu,com.blueseer.utl.ReportPanel,JMenuItem,bankb
 CalendarBrowse,Calendar browse,com.blueseer.utl.ReportPanel,JMenuItem,calb
@@ -200,6 +200,7 @@ ProdEntryMaint,,com.blueseer.prd.ProdEntryMaint,JMenuItem,prod
 piechart_salesbycust,,com.blueseer.utl.ChartView,JMenuItem,sales1
 piechart_custAR,,com.blueseer.utl.ChartView,JMenuItem,sales2
 ExpenseMaint,,com.blueseer.fgl.ExpenseMaint,JMenuItem,expm
+PayRollMaint,,com.blueseer.fgl.PayRollMaint,JMenuItem,pay
 CashTran,,com.blueseer.fgl.CashTran,JMenuItem,cash
 CashTranBrowse,,com.blueseer.fgl.CashTranBrowse,JMenuItem,cashb
 menuscreen,,com.blueseer.adm.BackGroundPanel,JMenuItem,blank
@@ -249,6 +250,8 @@ ECNMaint,,com.blueseer.eng.ECNMaint,JMenuItem,ecnm
 ECNBrowse,,com.blueseer.eng.ECNBrowse,JMenuItem,ecnb
 TaskMaint,,com.blueseer.eng.TaskMaint,JMenuItem,tasm
 TaskBrowse,,com.blueseer.eng.TaskBrowse,JMenuItem,tasb
+PayProfileMaint,,com.blueseer.fgl.PayProfileMaint,JMenuItem,ppfm
+PayProfileBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,ppfb
 TaxMaint,,com.blueseer.fgl.TaxMaint,JMenuItem,taxm
 TaxBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,taxb
 InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,inve

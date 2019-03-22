@@ -107,7 +107,7 @@ public class POBrowse extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.0000");
         
         
         try {
@@ -125,7 +125,7 @@ public class POBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("pod_nbr"), 
                        res.getString("pod_part"),
-                       df.format(res.getDouble("pod_netprice")),
+                       Double.valueOf(df.format(res.getDouble("pod_netprice"))),
                       res.getInt("pod_ord_qty"), 
                       res.getInt("pod_rcvd_qty"), 
                       res.getString("pod_status")});
@@ -516,7 +516,7 @@ try {
                                 res.getString("po_ord_date"),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
-                                df.format(res.getDouble("total"))
+                                Double.valueOf(df.format(res.getDouble("total")))
                             });
                
              

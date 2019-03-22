@@ -264,7 +264,7 @@ public class BlueSeerUtils {
                 
 		super(formatter);
                 formatter.setMinimumFractionDigits(2);
-                formatter.setMaximumFractionDigits(2);
+                formatter.setMaximumFractionDigits(4);
 		setHorizontalAlignment( SwingConstants.RIGHT );
                 
 	}
@@ -272,14 +272,14 @@ public class BlueSeerUtils {
         
         public static NumberRenderer getNumberRenderer()
 	{
-		return new NumberRenderer( NumberFormat.getNumberInstance() );
+		return new NumberRenderer( NumberFormat.getNumberInstance());
 	}
 	/*
 	 *  Use the default currency formatter for the default locale
 	 */
 	public static NumberRenderer getCurrencyRenderer()
 	{
-		return new NumberRenderer( NumberFormat.getCurrencyInstance() );
+		return new NumberRenderer( NumberFormat.getCurrencyInstance());
                
 	}
 

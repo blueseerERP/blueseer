@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -30,6 +31,17 @@ import javax.swing.table.TableCellRenderer;
  */
 public class VendPriceRpt1 extends javax.swing.JPanel {
 
+       javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{"Select", "VendCode", "VendName", "Item", "ItemDesc", "UOM", "Currency", "Price"})
+                  {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+    
     /**
      * Creates new form CustXrefRpt1
      */
@@ -64,6 +76,13 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
        rbcode.setSelected(false);
        buttonGroup1.add(rbpart);
        buttonGroup1.add(rbcode);
+       
+       
+        mymodel.setRowCount(0);
+        tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+
       
     }
     /**
@@ -210,39 +229,34 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.0000");
                 int i = 0;
 
-                javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Select", "VendCode", "VendName", "Item", "ItemDesc", "UOM", "Price"});
-               
-                tablereport.setModel(mymodel);
-               tablereport.getColumn("Select").setCellRenderer(new VendPriceRpt1.ButtonRenderer());
-                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-
+              
+             
                 if (rbpart.isSelected()) {
-                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
+                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
                     " vpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
                 } else {
-                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
+                res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
                     " vpr_vend like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
                 }
 
                 while (res.next()) {
                     i++;
                        
-                    mymodel.addRow(new Object[]{"select", res.getString("vpr_vend"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("vpr_vend"),
                         res.getString("vd_name"),
                         res.getString("vpr_item"),
                         res.getString("it_desc"),
                         res.getString("vpr_uom"),
-                        df.format(res.getDouble("vpr_price"))
+                        res.getString("vpr_curr"),
+                        Double.valueOf(df.format(res.getDouble("vpr_price")))
                     });
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                s.printStackTrace();
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -257,10 +271,10 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
            int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 3).toString() + "," + tablereport.getValueAt(row, 5).toString() ;
+        String myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 3).toString() + "," + tablereport.getValueAt(row, 5).toString() + "," + tablereport.getValueAt(row, 6).toString() ;
         if ( col == 0) {
-              if (! checkperms("VendPriceMstr")) { return; }
-           reinitpanels("VendPriceMstr", true, myparameter);
+              if (! checkperms("VendPriceMaint")) { return; }
+           reinitpanels("VendPriceMaint", true, myparameter);
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

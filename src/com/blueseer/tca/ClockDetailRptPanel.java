@@ -283,7 +283,6 @@ try {
                                             res.getString("t.outtime"),
                                             res.getString("t.outtime_adj"),
                                             res.getString("t.tothrs")
-
                                             } );
             
        

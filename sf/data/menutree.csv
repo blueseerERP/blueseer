@@ -111,6 +111,10 @@ ARMenu,ARTranRpt1,6,JMenuItem,AR Transacation Report,,1,,1,1
 ARMenu,ARControl,7,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
 Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
+Finance,PayRollMenu,7,JMenu,Payroll Menu,,,,1,1
+PayRollMenu,PayRollMaint,1,JMenuItem,Payroll Maintenance,,,,1,1
+PayRollMenu,PayProfileMaint,2,JMenuItem,Pay Profile Maintenance,,,,1,1
+PayRollMenu,PayProfileBrowse,3,JMenuItem,Pay Profile Browse,,1,,1,1
 CashTransactionMenu,CashTran,1,JMenuItem,Quick Cash Transaction,,,,1,1
 CashTransactionMenu,CashTranBrowse,2,JMenuItem,Quick Cash Browse,,,,1,1
 APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1

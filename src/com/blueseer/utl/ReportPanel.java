@@ -189,6 +189,9 @@ public int[] mywidth;
         if (arg.equals("TaxBrowse")) {
              mymodel = OVData.getTaxAll();
         }
+         if (arg.equals("PayProfileBrowse")) {
+             mymodel = OVData.getPayProfileAll(); 
+        }
         if (arg.equals("EDITPMaintBrowse")) {
              mymodel = OVData.getEDITPAll();
         }
@@ -421,6 +424,12 @@ public int[] mywidth;
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("TaxBrowse") == 0) {
                mypanel = "TaxMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = TableReport.getValueAt(row, 1).toString();
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("PayProfileBrowse") == 0) {
+               mypanel = "PayProfileMaint";
                 if (! checkperms(mypanel)) { return; }
                args = TableReport.getValueAt(row, 1).toString();
                reinitpanels(mypanel, true, args);

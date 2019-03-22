@@ -60,6 +60,8 @@ com.blueseer.far.ARMemoMaint,,1
 com.blueseer.far.ARPaymentMaint,,1
 com.blueseer.far.ARTranRpt1,,1
 com.blueseer.fgl.BankMaintPanel,,1
+com.blueseer.fgl.PayRollMaint,,1
+com.blueseer.fgl.PayProfileMaint,,1
 com.blueseer.fgl.CashTran,,1
 com.blueseer.fgl.CashTranBrowse,,1
 com.blueseer.fgl.CurrencyMaint,,1

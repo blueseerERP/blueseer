@@ -538,7 +538,9 @@ CREATE TABLE "emp_mstr" (
   "emp_clockin" int(1) NOT NULL DEFAULT '0',
   "emp_clockid" int(11) NOT NULL DEFAULT '0',
   "emp_supervisor" varchar(30) COLLATE NOCASE DEFAULT '',
-  "emp_autoclock" tinyint(1) NOT NULL DEFAULT '0');
+  "emp_autoclock" tinyint(1) NOT NULL DEFAULT '0',
+  "emp_profile" varchar(20) COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1722,6 +1724,31 @@ CREATE TABLE "taxd_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_profile" (
+  "payp_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payp_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payp_crtdate" date COLLATE NOCASE DEFAULT '',
+  "payp_moddate" date COLLATE NOCASE DEFAULT '',
+  "payp_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_profdet" (
+  "paypd_id" INTEGER PRIMARY KEY,
+  "paypd_parentcode" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_amt" decimal(11,2) NOT NULL DEFAULT '0',
+  "paypd_amttype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_crtdate" date COLLATE NOCASE DEFAULT '',
+  "paypd_moddate" date COLLATE NOCASE DEFAULT '',
+  "paypd_enabled" tinyint(1) NOT NULL DEFAULT '0',
+  "paypd_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "task_mstr" (
   "task_id" int(8) NOT NULL,
   "task_desc" varchar(50) COLLATE NOCASE DEFAULT '',
@@ -1731,6 +1758,53 @@ CREATE TABLE "task_mstr" (
   "task_date_mod" date COLLATE NOCASE DEFAULT '',
   "task_status" varchar(8) COLLATE NOCASE DEFAULT '',
   "task_comments" varchar(200) COLLATE NOCASE DEFAULT '');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_mstr" (
+  "py_id" int(8) NOT NULL,
+  "py_site" varchar(10) NOT NULL,
+  "py_desc" varchar(50) COLLATE NOCASE DEFAULT '',
+  "py_userid" varchar(30) COLLATE NOCASE DEFAULT '',
+  "py_startdate" date COLLATE NOCASE DEFAULT '',
+  "py_enddate" date COLLATE NOCASE DEFAULT '',
+  "py_paydate" date COLLATE NOCASE DEFAULT '',
+  "py_status" varchar(8) COLLATE NOCASE DEFAULT '',
+  "py_comments" varchar(200) COLLATE NOCASE DEFAULT '');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_det" (
+  "pyd_id" int(8) NOT NULL,
+  "pyd_empnbr" int(8) NOT NULL,
+  "pyd_emplname" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_empfname" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_empmname" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_empdept" varchar(8) COLLATE NOCASE DEFAULT '',
+  "pyd_empshift" varchar(1) COLLATE NOCASE DEFAULT '',
+  "pyd_emptype" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_payprofile" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_empjobtitle" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_emprate" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyd_empsupervisor" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pyd_status" varchar(8) COLLATE NOCASE DEFAULT '',
+  "pyd_checknbr" varchar(8) COLLATE NOCASE DEFAULT '',
+  "pyd_tothours" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyd_payamt" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyd_paydate" date COLLATE NOCASE DEFAULT '');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_line" (
+  "pyl_id" int(8) NOT NULL,
+  "pyl_empnbr" int(8) NOT NULL,
+  "pyl_type" varchar(10) COLLATE NOCASE DEFAULT '',
+  "pyl_code" varchar(10) COLLATE NOCASE DEFAULT '',
+  "pyl_desc" varchar(70) COLLATE NOCASE DEFAULT '',
+  "pyl_percent" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyl_rate" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyl_hours" decimal(7,2) COLLATE NOCASE DEFAULT '',
+  "pyl_amt" decimal(7,2) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

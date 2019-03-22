@@ -468,7 +468,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     
     
      public void setPrice() {
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.0000");
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 listprice.setText(df.format(OVData.getPartPriceFromVend(ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString())));
@@ -560,7 +560,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.0000");
         
         if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
             netprice.setText(listprice.getText());
@@ -631,6 +631,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 
                 res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
+                    lbvend.setText(res.getString("vd_name"));
                     ddshipvia.setSelectedItem(res.getString("vd_shipvia"));
                     ddcurr.setSelectedItem(res.getString("vd_curr"));
                     curr = ddcurr.getSelectedItem().toString();
@@ -764,7 +765,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         qtyshipped.setText("0");
         discount.setText("0.00");
         
-        
+        lbvend.setText("");
        
         userid.setText(bsmf.MainFrame.userid);
         duedate.setDate(now);
@@ -900,6 +901,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         jLabel83 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         ddcurr = new javax.swing.JComboBox<>();
+        lbvend = new javax.swing.JLabel();
         panelSchedule = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablesched = new javax.swing.JTable();
@@ -944,7 +946,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         add(jTabbedPane1);
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Purchase Order Maintenance"));
-        panelMain.setPreferredSize(new java.awt.Dimension(627, 550));
+        panelMain.setPreferredSize(new java.awt.Dimension(715, 550));
 
         jLabel76.setText("OrderNbr");
 
@@ -1044,47 +1046,6 @@ public class POMaintPanel extends javax.swing.JPanel {
             .addGroup(panelMainLayout.createSequentialGroup()
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(54, 54, 54)
-                                .addComponent(jLabel91))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jLabel82))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jLabel90))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jLabel92))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel85)))
-                        .addGap(5, 5, 5)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbblanket)
-                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(115, 115, 115)
-                                .addComponent(jLabel77)
-                                .addGap(9, 9, 9)
-                                .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(144, 144, 144)
-                                .addComponent(jLabel78)
-                                .addGap(9, 9, 9)
-                                .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
-                                .addGap(133, 133, 133)
-                                .addComponent(jLabel83)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(jLabel76)
                         .addGap(5, 5, 5)
@@ -1093,28 +1054,69 @@ public class POMaintPanel extends javax.swing.JPanel {
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(btnew)
-                        .addGap(99, 99, 99)
+                        .addGap(188, 188, 188)
                         .addComponent(jLabel81)
                         .addGap(9, 9, 9)
                         .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel91)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(207, 207, 207)
+                        .addComponent(jLabel77)
+                        .addGap(9, 9, 9)
+                        .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel82)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel78)
+                        .addGap(9, 9, 9)
+                        .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel90)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(225, 225, 225)
+                        .addComponent(jLabel83)
+                        .addGap(10, 10, 10)
+                        .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel92)
+                        .addGap(5, 5, 5)
+                        .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(jLabel85)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(cbblanket))
+                    .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(btpoprint)
-                                .addGap(289, 289, 289)
-                                .addComponent(btdelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btedit)
-                                .addGap(10, 10, 10)
-                                .addComponent(btadd))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(jLabel86)
-                                .addGap(4, 4, 4)
-                                .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(20, 20, 20))
+                        .addComponent(jLabel86)
+                        .addGap(4, 4, 4)
+                        .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addComponent(btpoprint)
+                        .addGap(289, 289, 289)
+                        .addComponent(btdelete)
+                        .addGap(6, 6, 6)
+                        .addComponent(btedit)
+                        .addGap(10, 10, 10)
+                        .addComponent(btadd)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1132,38 +1134,50 @@ public class POMaintPanel extends javax.swing.JPanel {
                         .addGap(2, 2, 2)
                         .addComponent(btnew))
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addGap(8, 8, 8)
                         .addComponent(jLabel81))
-                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btpovendbrowse))
-                .addGap(6, 6, 6)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(btpovendbrowse)))
+                .addGap(4, 4, 4)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel91)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addGap(8, 8, 8)
                         .addComponent(jLabel77))
-                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel82)
-                            .addComponent(jLabel78))))
-                .addGap(6, 6, 6)
+                        .addComponent(jLabel82))
+                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel78))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel90))
                     .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel90)
-                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel83)
-                                .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(6, 6, 6)
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel83))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
@@ -1185,17 +1199,16 @@ public class POMaintPanel extends javax.swing.JPanel {
                     .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(179, 179, 179)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btedit)
-                        .addComponent(btpoprint)
-                        .addComponent(btdelete))
-                    .addComponent(btadd))
-                .addContainerGap(109, Short.MAX_VALUE))
+                    .addComponent(btpoprint)
+                    .addComponent(btdelete)
+                    .addComponent(btedit)
+                    .addComponent(btadd)))
         );
 
         add(panelMain);
 
         panelSchedule.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Releases"));
+        panelSchedule.setMinimumSize(new java.awt.Dimension(715, 550));
         panelSchedule.setPreferredSize(new java.awt.Dimension(640, 550));
         panelSchedule.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1216,7 +1229,7 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         add(panelSchedule);
 
-        panelDetail.setPreferredSize(new java.awt.Dimension(640, 550));
+        panelDetail.setPreferredSize(new java.awt.Dimension(715, 550));
 
         qtyshipped.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1340,7 +1353,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel80, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1348,15 +1361,15 @@ public class POMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel89, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(netprice)
-                    .addComponent(listprice)
-                    .addComponent(discount))
-                .addGap(99, 99, 99))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btadditem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdelitem))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btadditem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelitem))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(discount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                        .addComponent(listprice, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(netprice)))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1373,10 +1386,11 @@ public class POMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(netprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel89))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btdelitem)
-                    .addComponent(btadditem)))
+                    .addComponent(btadditem))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         orddet.setModel(new javax.swing.table.DefaultTableModel(
@@ -1762,6 +1776,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblcurr;
+    private javax.swing.JLabel lbvend;
     private javax.swing.JTextField listprice;
     private javax.swing.JTextField netprice;
     private com.toedter.calendar.JDateChooser orddate;

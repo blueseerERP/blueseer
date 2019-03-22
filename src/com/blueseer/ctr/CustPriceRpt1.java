@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -32,6 +33,20 @@ import javax.swing.table.TableCellRenderer;
  */
 public class CustPriceRpt1 extends javax.swing.JPanel {
 
+    
+     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{"Select", "Code", "Description", "Type", "Part", "UOM", "Currency", "Price", "Disc"})
+                        {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+               
+    
+    
     /**
      * Creates new form CustXrefRpt1
      */
@@ -68,6 +83,13 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
        buttonGroup1.add(rbcode);
        cbpricelist.setSelected(true);
        cbdiscounts.setSelected(true);
+       
+       
+         mymodel.setRowCount(0);
+         tablereport.setModel(mymodel);
+         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+         tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+         
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -222,6 +244,7 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
             return;
         }
         
+        mymodel.setRowCount(0);
         
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -229,23 +252,18 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.0000");
                 int i = 0;
 
-                javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Select", "Code", "Description", "Type", "Part", "UOM", "Price", "Disc"});
                
-                tablereport.setModel(mymodel);
-               tablereport.getColumn("Select").setCellRenderer(new CustPriceRpt1.ButtonRenderer());
-                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              
 
                 if (rbpart.isSelected()) {
                 res = st.executeQuery("SELECT * FROM  cpr_mstr where " +
-                    " cpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
+                    " cpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' order by cpr_cust, cpr_item;") ;
                 } else {
                     res = st.executeQuery("SELECT * FROM  cpr_mstr where " +
-                    " cpr_cust like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
+                    " cpr_cust like " + "'" + "%" + tbtext.getText().toString() + "%' order by cpr_cust, cpr_item ;") ;
                 }
 
                 while (res.next()) {
@@ -256,13 +274,13 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
                         if (! cbpricelist.isSelected() && res.getString("cpr_type").equals("LIST") )
                             continue;
                         
-                    mymodel.addRow(new Object[]{"select", res.getString("cpr_cust"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("cpr_cust"),
                         res.getString("cpr_desc"),
                         res.getString("cpr_type"),
                         res.getString("cpr_item"),
                         res.getString("cpr_uom"),
                         res.getString("cpr_curr"),
-                        df.format(res.getDouble("cpr_price")),
+                        Double.valueOf(df.format(res.getDouble("cpr_price"))),
                         res.getString("cpr_disc")
                     });
                 }
@@ -287,8 +305,8 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
         String myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 4).toString() + "," + 
                 tablereport.getValueAt(row, 3).toString() + "," + tablereport.getValueAt(row, 5).toString() + "," + tablereport.getValueAt(row, 6).toString();
         if ( col == 0) {
-              if (! checkperms("CustPriceMstr")) { return; }
-           reinitpanels("CustPriceMstr", true, myparameter);
+              if (! checkperms("CustPriceMaint")) { return; }
+           reinitpanels("CustPriceMaint", true, myparameter);
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

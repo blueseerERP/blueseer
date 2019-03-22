@@ -7438,6 +7438,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myitem;
         
     }
+           
+    public static String getVendName(String vend) {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_name");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }       
+           
          
            public static String getVendAPAcct(String vend) {
            String myitem = null;
@@ -8066,7 +8094,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          }
             
-             public static DefaultTableModel getBankAll() {
+            public static DefaultTableModel getBankAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Bank", "Desc", "Acct", "Currency", "Active"})
                       {
@@ -8153,7 +8181,78 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return mymodel;
         
          }
-             
+            
+            
+             public static DefaultTableModel getPayRollHours(String fromdate, String todate) {
+              javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Rate", "tothrs", "Amount"})
+                       {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+           
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               /*
+                 res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
+                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
+                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
+                              " where t.emp_nbr >= " + "'" + ddempfrom.getSelectedItem().toString() + "'" +
+                              "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
+                              "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                               "and t.indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
+                               "and e.emp_termdate = '' order by e.emp_nbr, t.indate" +
+                               ";" );
+                */
+                   double amount = 0.00;
+                   
+                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
+                           "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where t.indate >= " + "'" + fromdate + "'" +
+                               " and t.indate <= " + "'" + todate + "'" + 
+                                " group by t.emp_nbr " +       
+                                " order by t.emp_nbr " +      
+                               ";" );
+                               
+                    while (res.next()) {
+                        amount = res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"); 
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("t.recid"),
+                                            res.getString("t.emp_nbr"),
+                                            res.getString("e.emp_lname"),
+                                            res.getString("e.emp_fname"),
+                                            res.getString("e.emp_dept"),
+                                            res.getString("e.emp_rate"),
+                                            res.getString("t.tothrs"),
+                                            String.valueOf(amount)
+                                            } );
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         }
+            
             
               public static DefaultTableModel getARPaymentBrowse() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -8432,6 +8531,52 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                                    res.getString("taxd_desc"),
                                    res.getString("taxd_percent"),
                                    res.getString("tax_userid")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         }
+        
+           public static DefaultTableModel getPayProfileAll() {
+              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Code", "Desc", "Element", "type", "Amt", "AmtType", "Userid"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+             
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+                   
+                      res = st.executeQuery("select * from pay_profile inner join pay_profdet on paypd_parentcode = payp_code ;");
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("payp_code"),
+                                   res.getString("payp_desc"),
+                                   res.getString("paypd_desc"),
+                                   res.getString("paypd_type"),
+                                   res.getString("paypd_amt"),
+                                   res.getString("paypd_amttype"),
+                                   res.getString("payp_userid")
                         });
                     }
            }
@@ -15671,6 +15816,33 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myreturn;
         
     }
+       
+       
+        public static boolean isValidProfile(String code) {
+       boolean myreturn = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+ 
+                res = st.executeQuery("select payp_code from pay_profile where payp_code = " + "'" + code + "'" + ";");
+               while (res.next()) {
+                   myreturn = true;
+               }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myreturn;
+        
+    }   
        
          public static boolean isCurrSameAsDefault(String curr) {
        boolean myreturn = false;
@@ -24397,6 +24569,63 @@ e.printStackTrace();
         
          } 
          
+          
+            public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "ProfileCode", "Desc", "UserID"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select payp_code, payp_desc, payp_userid " +
+                        " FROM  pay_profile where " + myfield + " like " + "'" + str + "%'" +
+                        " order by payp_code ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select payp_code, payp_desc, payp_userid " +
+                        " FROM  pay_profile where " + myfield + " like " + "'%" + str + "'" +
+                        " order by payp_code ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select payp_code, payp_desc, payp_userid   " +
+                        " FROM  pay_profile where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by payp_code ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("payp_code"),
+                                   res.getString("payp_desc"),
+                                   res.getString("payp_userid")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         } 
+         
+          
           public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "TPID", "Desc", "Contact", "Web", "Phone"})

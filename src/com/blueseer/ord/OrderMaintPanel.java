@@ -506,20 +506,20 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                    // custnumber.setBorder(BorderFactory.createLineBorder(Color.red));
                     custnumber.setEditable(true);
                     
-                    discount.setText("0.00");
-                    listprice.setText("0.00");
+                    discount.setText("0.0000");
+                    listprice.setText("0.0000");
                     listprice.setBackground(Color.white);
                     
-                    netprice.setText("0.00");
+                    netprice.setText("0.0000");
                     qtyshipped.setText("0");
                 }
                 
                 }
                 
              if (k >= 0) {   
-            discount.setText("0.00");
-            listprice.setText("0.00");
-            netprice.setText("0.00");
+            discount.setText("0.0000");
+            listprice.setText("0.0000");
+            netprice.setText("0.0000");
             qtyshipped.setText("0");
             custnumber.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);
@@ -551,7 +551,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     
     public void setPrice() {
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.0000");
                 
                 String[] TypeAndPrice = OVData.getItemPrice(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());

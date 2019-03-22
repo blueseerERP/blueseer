@@ -257,6 +257,9 @@ admin;WareHouseMaint
 admin;WareHouseBrowse
 admin;InventoryCtrl
 admin;MassLoad
+admin;PayRollMaint
+admin;PayProfileMaint
+admin;PayProfileBrowse
 admin;CashTran
 admin;CashTranBrowse
 admin;SchemaBrowse

@@ -17,6 +17,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -25,7 +27,15 @@ import static bsmf.MainFrame.reinitpanels;
 public class VendMstrBrowse extends javax.swing.JPanel {
 
      javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Detail", "Code", "Name", "Line1", "City", "State", "Zip"});
+                    new String[]{"Select", "Code", "Name", "Line1", "City", "State", "Zip"})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     /**
      * Creates new form CustXrefRpt1
@@ -66,7 +76,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
        buttonGroup1.add(rbcity);
        buttonGroup1.add(rbcode);
        tablereport.setModel(mymodel);
-       tablereport.getColumnModel().getColumn(0).setCellRenderer(new VendMstrBrowse.ButtonRenderer());
+      // tablereport.getColumnModel().getColumn(0).setCellRenderer(new VendMstrBrowse.ButtonRenderer());
        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
     }
     /**
@@ -220,18 +230,18 @@ public class VendMstrBrowse extends javax.swing.JPanel {
 
                 if (rbname.isSelected()) {
                 res = st.executeQuery("SELECT * FROM  vd_mstr where " +
-                    " vd_name like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
+                    " vd_name like " + "'" + "%" + tbtext.getText().toString() + "%' order by vd_name ;") ;
                 } else if (rbcode.isSelected() ) {
                 res = st.executeQuery("SELECT * FROM  vd_mstr where " +
-                    " vd_addr like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
+                    " vd_addr like " + "'" + "%" + tbtext.getText().toString() + "%' order by vd_name ;") ;
                 } else {
                 res = st.executeQuery("SELECT * FROM  vd_mstr where " +
-                    " vd_city like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;    
+                    " vd_city like " + "'" + "%" + tbtext.getText().toString() + "%' order by vd_name ;") ;    
                 }
 
                 while (res.next()) {
                     i++;
-                    mymodel.addRow(new Object[]{"Detail", res.getString("vd_addr"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("vd_addr"),
                         res.getString("vd_name"),
                         res.getString("vd_line1"),
                         res.getString("vd_city"),
@@ -241,7 +251,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Cannot retrieve vd_mstr records");
+                s.printStackTrace();
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -257,9 +267,9 @@ public class VendMstrBrowse extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            if (! bsmf.MainFrame.checkperms("VendMstrMaint")) { return; }
-            bsmf.MainFrame.loadPanel("VendMstrMaint", bsmf.MainFrame.main);
-           reinitpanels("VendMstrMaint", true, tablereport.getValueAt(row, 1).toString());
+            if (! bsmf.MainFrame.checkperms("VendMaint")) { return; }
+            bsmf.MainFrame.loadPanel("VendMaint", bsmf.MainFrame.main);
+           reinitpanels("VendMaint", true, tablereport.getValueAt(row, 1).toString());
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
