@@ -544,6 +544,16 @@ CREATE TABLE "emp_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "emp_exception" (
+  "empx_nbr" int(8) NOT NULL,
+  "empx_desc" varchar(20) COLLATE NOCASE DEFAULT '',
+  "empx_type" varchar(20) COLLATE NOCASE DEFAULT '',
+  "empx_amttype" varchar(20) COLLATE NOCASE DEFAULT '',
+  "empx_amt" decimal(14,2) NOT NULL DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "emp_train" (
   "empid" int(8) COLLATE NOCASE DEFAULT '',
   "coursenum" varchar(20) COLLATE NOCASE DEFAULT '',

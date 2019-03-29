@@ -457,6 +457,13 @@ CREATE TABLE IF NOT EXISTS `emp_mstr` (
   `emp_autoclock` tinyint(1) NOT NULL DEFAULT '0',
   `emp_profile` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `emp_exception` (
+  `empx_nbr` int(8) NOT NULL,
+  `empx_desc` varchar(20) NOT NULL DEFAULT '',
+  `empx_type` varchar(20) NOT NULL DEFAULT '',
+  `empx_amttype` varchar(20) NOT NULL DEFAULT '',
+  `empx_amt` decimal(14,2) NOT NULL DEFAULT '0'
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `emp_train` (
   `empid` int(8)  NOT NULL DEFAULT '0',
   `coursenum` varchar(20)  NOT NULL DEFAULT '',
