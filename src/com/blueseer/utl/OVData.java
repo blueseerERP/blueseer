@@ -8202,34 +8202,23 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-               /*
-                 res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
-                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
-                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
-                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
-                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
-                              " where t.emp_nbr >= " + "'" + ddempfrom.getSelectedItem().toString() + "'" +
-                              "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
-                              "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                               "and t.indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                               "and e.emp_termdate = '' order by e.emp_nbr, t.indate" +
-                               ";" );
-                */
+             
                    double amount = 0.00;
                    
                        res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
-                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle, " +
-                           " e.emp_supervisor as 'e.emp_supervisor', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
+                           " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
                               " where t.indate >= " + "'" + fromdate + "'" +
                                " and t.indate <= " + "'" + todate + "'" + 
+                                " and t.ispaid = '0' " +          
                                 " group by t.emp_nbr " +       
                                 " order by t.emp_nbr " +      
                                ";" );
                      
                     while (res.next()) {
                         amount = res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"); 
-                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("t.recid"),
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, "",
                                             res.getString("t.emp_nbr"),
                                             res.getString("e.emp_lname"),
                                             res.getString("e.emp_fname"),
@@ -24632,6 +24621,65 @@ e.printStackTrace();
         
          } 
          
+             public static DefaultTableModel getPayRollBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "BatchID", "Site", "Desc", "StartDate", "EndDate", "PayDate", "UserID"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select * " +
+                        " FROM  pay_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by py_id ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select * " +
+                        " FROM  pay_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by py_id ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select *  " +
+                        " FROM  pay_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by py_id ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("py_id"),
+                                   res.getString("py_site"),
+                                   res.getString("py_desc"),
+                                   res.getString("py_startdate"),
+                                   res.getString("py_enddate"),
+                                   res.getString("py_paydate"),
+                                   res.getString("py_userid")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         } 
+           
           
           public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

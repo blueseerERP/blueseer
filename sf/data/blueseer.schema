@@ -1460,7 +1460,10 @@ CREATE TABLE IF NOT EXISTS `time_clock` (
   `user_fld3` varchar(40)  NOT NULL DEFAULT '',
   `comment` varchar(200) NOT NULL  DEFAULT '',
   `code_orig` varchar(2) NOT NULL  DEFAULT '',
-  `who_changed` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `who_changed` varchar(30) NOT NULL  DEFAULT '',
+  `ispaid` tinyint(1) NOT NULL DEFAULT '0',
+  `checknbr` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `tr_site` varchar(10)  NOT NULL DEFAULT '',

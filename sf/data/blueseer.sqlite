@@ -1837,7 +1837,10 @@ CREATE TABLE "time_clock" (
   "user_fld3" varchar(40) COLLATE NOCASE DEFAULT '',
   "comment" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "code_orig" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "who_changed" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "who_changed" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ispaid" tinyint(1) COLLATE NOCASE DEFAULT '0',
+  "checknbr" varchar(30) COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

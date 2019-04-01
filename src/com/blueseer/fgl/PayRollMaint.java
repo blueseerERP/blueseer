@@ -78,17 +78,20 @@ public class PayRollMaint extends javax.swing.JPanel {
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
     Double expenses = 0.00;
     Double inventory = 0.00;
+    boolean isnew = false;
     
-    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
-            {
+     javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount"})
+                       {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0  || col == 9 )       
+                        if (col == 0)       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
-                        };
+                        }; 
+    
+    
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"});
@@ -245,7 +248,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     for (int j = 0; j < tablereport.getRowCount(); j++) {
                         
                         st.executeUpdate("insert into pay_det "
-                            + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_supervisor, pyd_emptype, "
+                            + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_empsupervisor, pyd_emptype, "
                             + "pyd_payprofile, pyd_empjobtitle, pyd_emprate,  pyd_status, pyd_checknbr, pyd_tothours, pyd_payamt, pyd_paydate ) "
                             + " values ( " 
                             + "'" + tbid.getText() + "'" + ","
@@ -268,10 +271,10 @@ public class PayRollMaint extends javax.swing.JPanel {
                             + ")"
                             + ";");
                         
-                         checknbr++;
-                       
+                         
                          
                          // now do earnings detail
+                         getEarnings(tablereport.getValueAt(j, 2).toString(), dfdate.format(dcpay.getDate()).toString(), dfdate.format(dcpay.getDate()).toString());
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modelearnings.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
@@ -289,23 +292,28 @@ public class PayRollMaint extends javax.swing.JPanel {
                               }
                               
                          // now do deductions detail
+                         getDeductions(tablereport.getValueAt(j, 2).toString(), Double.valueOf(tablereport.getValueAt(j, 14).toString()));
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modeldeduct.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
                                 + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_desc, pyl_rate, pyl_amt ) "
                                 + " values ( " 
                                 + "'" + tbid.getText().toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 0).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 1).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 2).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 3).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 4).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" 
+                                + "'" + modeldeduct.getValueAt(e, 0).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 1).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 2).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 3).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" 
                                 + ")"
                                 + ";");
                               }     
-                         
                         
+                              // now update timeclock records for employee and date range
+                              updateClockRecords(tablereport.getValueAt(j, 2).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString(), String.valueOf(checknbr));
+                        
+                              checknbr++;
+                       
                     }
                     
              message = new String[]{"0", "PayRoll has been committed"};         
@@ -330,9 +338,36 @@ public class PayRollMaint extends javax.swing.JPanel {
     }
     
     
-     
+     public void updateClockRecords(String empnbr, String fromdate, String todate, String checknbr) {
+          try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String blanket = "";
+                st.executeUpdate("update time_clock set " +
+                        " ispaid = '1', " +
+                        " checknbr = " + "'" +  checknbr  + "'" + 
+                              " where emp_nbr = " + "'" + empnbr + "'" +
+                              "and indate >= " + "'" + fromdate + "'" +
+                               "and indate <= " + "'" + todate + "'" + 
+                               ";" );
+              
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to update timeclock");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     }
+      
      public void getEarnings(String empnbr, String fromdate, String todate) {
-         
+          modelearnings.setNumRows(0);
           jtpEarnings.setText("");
           jtpEarnings.setContentType("text/html");
          DecimalFormat df = new DecimalFormat("#0.00");
@@ -392,7 +427,7 @@ public class PayRollMaint extends javax.swing.JPanel {
   
      public void getDeductions(String empnbr, double amount) {
          
-         modeldeduct.setNumRows(0);
+          modeldeduct.setNumRows(0);
           jtpDeductions.setText("");
           jtpDeductions.setContentType("text/html");
           StyledDocument doc = jtpDeductions.getStyledDocument();
@@ -492,15 +527,18 @@ public class PayRollMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                String blanket = "";
+                String ispaid = isnew ? "0" : "1";
+                
+                 
                 res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
                            " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
                            " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
                            " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
                               " where t.emp_nbr = " + "'" + empnbr + "'" +
-                              "and t.indate >= " + "'" + fromdate + "'" +
-                               "and t.indate <= " + "'" + todate + "'" + 
+                              " and t.indate >= " + "'" + fromdate + "'" +
+                               " and t.indate <= " + "'" + todate + "'" + 
+                               " and t.ispaid =  " + "'" + ispaid + "'" +       
                                " order by e.emp_nbr, t.indate" +
                                ";" );
                 while (res.next()) {
@@ -539,36 +577,111 @@ public class PayRollMaint extends javax.swing.JPanel {
 
     }
     
+    public boolean getPaymentBatch(String batch) {
+        boolean myreturn = true;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                DecimalFormat df = new DecimalFormat("#0.00");
+                int i = 0;
+                   double amount = 0.00;
+                   tbid.setText(batch);
+                       res = st.executeQuery(" select * from pay_mstr p inner join pay_det d on d.pyd_id = p.py_id " +
+                              " where p.py_id = " + "'" + tbid.getText() + "'" + ";");
+                             
+                     
+                    while (res.next()) {
+                        i++;
+                        amount += res.getDouble("pyd_payamt"); 
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("pyd_id"),
+                                            res.getString("pyd_empnbr"),
+                                            res.getString("pyd_emplname"),
+                                            res.getString("pyd_empfname"),
+                                            res.getString("pyd_empmname"),
+                                            res.getString("pyd_empdept"),
+                                            res.getString("pyd_empshift"),
+                                            res.getString("pyd_empsupervisor"),
+                                            res.getString("pyd_emptype"),
+                                            res.getString("pyd_payprofile"),
+                                            res.getString("pyd_empjobtitle"),
+                                            res.getString("pyd_emprate"),
+                                            res.getString("pyd_tothours"),
+                                            res.getString("pyd_payamt")
+                                            } );
+                    }
+                    
+                    tbtotpayroll.setText(String.valueOf(df.format(amount)));
+                    
+                    if (i > 0) {
+                        btcommit.setEnabled(false);
+                        btrun.setEnabled(false);
+                    } else {
+                        myreturn = false;
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return myreturn;
+    }
+    
+    
     public void disableAll() {
-        
+         btnew.setEnabled(false);
+         btbrowse.setEnabled(false);
+        btcommit.setEnabled(false);
+         btrun.setEnabled(false);
+        btcsv.setEnabled(false);
+        btdetail.setEnabled(false);
+        ddsite.setEnabled(false);
+        dcfrom.setEnabled(false);
+        dcto.setEnabled(false);
+        dcpay.setEnabled(false);
+        tbcomments.setEnabled(false);
+        tbchecknbr.setEnabled(false);
     }
     
     public void enableAll() {
+        btbrowse.setEnabled(true);
+        btnew.setEnabled(true);
+        btcommit.setEnabled(true);
+        btrun.setEnabled(true);
+        btcsv.setEnabled(true);
+        btdetail.setEnabled(true);
+        ddsite.setEnabled(true);
+        dcfrom.setEnabled(true);
+        dcto.setEnabled(true);
+        dcpay.setEnabled(true);
+        tbcomments.setEnabled(true);
+        tbchecknbr.setEnabled(true);
         
     }
     
     public void clearAll() {
         
-    }
-    
-    public boolean validateInput() {
-        boolean myreturn = true;
+        isnew = false;
         
-        return myreturn;
-    }
-    public void initvars(String arg) {
+        tbid.setText("");
+        tbcomments.setText("");
+        tbchecknbr.setText("");
         tbtotpayroll.setText("0");
-       
-        
         java.util.Date now = new java.util.Date();
-       
-        
         Calendar cal = new GregorianCalendar();
         cal.set(Calendar.DAY_OF_YEAR, 1);
         java.util.Date firstday = cal.getTime();
         
         dcfrom.setDate(firstday);
         dcto.setDate(now);
+        dcpay.setDate(now);
                
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
@@ -586,17 +699,55 @@ public class PayRollMaint extends javax.swing.JPanel {
                     //       new ButtonEditor(new JCheckBox()));
         
         
-       
-      
-                    
-                    
-                    
-       
         
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
-          
+        
+        
+        
+        ArrayList<String> mylist = new ArrayList<String>();
+        ddsite.removeAllItems();
+        mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+    }
+    
+    public boolean validateInput() {
+        boolean myreturn = true;
+        
+        if (tbchecknbr.getText().isEmpty()) {
+            bsmf.MainFrame.show("starting check number must be entered");
+            tbchecknbr.requestFocus();
+            myreturn = false;
+        }
+        
+        return myreturn;
+    }
+    
+    public void initvars(String arg) {
+       
+         clearAll(); 
+         disableAll();
+         
+         
+          if (! arg.isEmpty()) {
+            boolean gotIt = getPaymentBatch(arg);
+            if (gotIt) {
+              tbid.setEditable(false);
+              tbid.setForeground(Color.blue);
+             } 
+        } else {
+              disableAll();
+              tbid.setEnabled(true);
+              tbid.setEditable(true);
+              
+          }
+         
+           btnew.setEnabled(true);
+           btbrowse.setEnabled(true);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -627,7 +778,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
-        tbcsv = new javax.swing.JButton();
+        btcsv = new javax.swing.JButton();
         tbid = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
@@ -641,6 +792,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         tbchecknbr = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbtotpayroll = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -732,16 +884,27 @@ public class PayRollMaint extends javax.swing.JPanel {
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
-        tbcsv.setText("CSV");
-        tbcsv.addActionListener(new java.awt.event.ActionListener() {
+        btcsv.setText("CSV");
+        btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbcsvActionPerformed(evt);
+                btcsvActionPerformed(evt);
+            }
+        });
+
+        tbid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbidActionPerformed(evt);
             }
         });
 
         jLabel7.setText("ID:");
 
         btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -767,6 +930,13 @@ public class PayRollMaint extends javax.swing.JPanel {
 
         jLabel4.setText("CheckNbr:");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -782,42 +952,41 @@ public class PayRollMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbid, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdetail)
+                                .addGap(63, 63, 63))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tbid, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
-                                    .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnew)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btdetail)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbcsv))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(94, 94, 94)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel4))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(tbchecknbr, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(dcpay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))))
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(186, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btrun))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btcommit)
-                        .addGap(19, 19, 19))))
+                                    .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(tbchecknbr, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(dcpay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(btcsv)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                                .addComponent(btcommit))))
+                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btrun)))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -831,7 +1000,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel7)
                                 .addComponent(btnew)
                                 .addComponent(btdetail)
-                                .addComponent(tbcsv))
+                                .addComponent(btcsv)
+                                .addComponent(btcommit)
+                                .addComponent(btclear))
                             .addComponent(btbrowse))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -858,9 +1029,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                     .addComponent(jLabel4))))
                         .addGap(40, 40, 40))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btcommit)
-                            .addComponent(btrun))
+                        .addComponent(btrun)
                         .addContainerGap())))
         );
 
@@ -929,12 +1098,69 @@ public class PayRollMaint extends javax.swing.JPanel {
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");   
         DecimalFormat df = new DecimalFormat("#0.00");
-        tablereport.setModel(OVData.getPayRollHours(dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate())));
+        
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+             
+                   double amount = 0.00;
+                   String ispaid = isnew ? "0" : "1";
+                   
+                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
+                           " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
+                           "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
+                              " where t.indate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
+                               " and t.indate <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
+                                " and t.ispaid =  " + "'" + ispaid + "'" +      
+                                " group by t.emp_nbr " +       
+                                " order by t.emp_nbr " +      
+                               ";" );
+                     
+                    while (res.next()) {
+                        amount = res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"); 
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, "",
+                                            res.getString("t.emp_nbr"),
+                                            res.getString("e.emp_lname"),
+                                            res.getString("e.emp_fname"),
+                                            res.getString("e.emp_mname"),
+                                            res.getString("e.emp_dept"),
+                                            res.getString("e.emp_shift"),
+                                            res.getString("e.emp_supervisor"),
+                                            res.getString("e.emp_type"),
+                                            res.getString("e.emp_profile"),
+                                            res.getString("e.emp_jobtitle"),
+                                            res.getString("e.emp_rate"),
+                                            res.getString("t.tothrs"),
+                                            String.valueOf(amount)
+                                            } );
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        
+       
         double totamt = 0.00; 
                  for (int j = 0; j < tablereport.getRowCount(); j++) {
-                  totamt += Double.valueOf(tablereport.getValueAt(j, 8).toString()); 
+                  totamt += Double.valueOf(tablereport.getValueAt(j, 14).toString()); 
                  }
                  tbtotpayroll.setText(String.valueOf(df.format(totamt)));
+          if (totamt > 0) {
+              btcommit.setEnabled(true);
+          } else {
+              btcommit.setEnabled(false);
+          }      
     }//GEN-LAST:event_btrunActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
@@ -952,18 +1178,18 @@ public class PayRollMaint extends javax.swing.JPanel {
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
                  chartpanel.setVisible(true);
-                getDeductions(tablereport.getValueAt(row, 2).toString(), Double.valueOf(tablereport.getValueAt(row, 8).toString()));
+                getDeductions(tablereport.getValueAt(row, 2).toString(), Double.valueOf(tablereport.getValueAt(row, 14).toString()));
                 getEarnings(tablereport.getValueAt(row, 2).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()) );
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
-    private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
+    private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
       if (tablereport != null)
         OVData.exportCSV(tablereport);
-    }//GEN-LAST:event_tbcsvActionPerformed
+    }//GEN-LAST:event_btcsvActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ecnmaint,ecn_nbr");
+        reinitpanels("BrowseUtil", true, "payrollmaint,py_id");
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
@@ -976,10 +1202,44 @@ public class PayRollMaint extends javax.swing.JPanel {
         task.execute();   
     }//GEN-LAST:event_btcommitActionPerformed
 
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+       
+        initvars("");
+        
+         isnew = true;
+         tbid.setText(String.valueOf(OVData.getNextNbr("payroll")));
+         tbid.setEditable(false);
+         tbid.setForeground(Color.blue);
+                
+              
+                enableAll();
+               
+                btnew.setEnabled(false);
+                btcommit.setEnabled(false);
+               
+        
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbidActionPerformed
+          boolean gotIt = getPaymentBatch(tbid.getText());
+        if (gotIt) {
+          tbid.setEditable(false);
+          tbid.setForeground(Color.blue);
+        } else {
+            tbid.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_tbidActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+       initvars("");
+    }//GEN-LAST:event_btclearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btcommit;
+    private javax.swing.JButton btcsv;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
@@ -1012,7 +1272,6 @@ public class PayRollMaint extends javax.swing.JPanel {
     private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbchecknbr;
     private javax.swing.JTextField tbcomments;
-    private javax.swing.JButton tbcsv;
     private javax.swing.JTextField tbid;
     private javax.swing.JLabel tbtotpayroll;
     // End of variables declaration//GEN-END:variables
