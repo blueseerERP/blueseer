@@ -53,6 +53,7 @@ UOMMaint,,com.blueseer.inv.UOMMaint,JMenuItem,uomm
 CurrencyMaint,,com.blueseer.fgl.CurrencyMaint,JMenuItem,curm
 ExchangeMaint,,com.blueseer.fgl.ExchangeMaint,JMenuItem,excm
 OrderControl,,com.blueseer.ord.OrderControl,JMenuItem,ordc
+POControl,,com.blueseer.pur.POControl,JMenuItem,purc
 VendControl,,com.blueseer.vdr.VendControl,JMenuItem,venc
 CustControl,,com.blueseer.ctr.CustControl,JMenuItem,cusc
 OrderSource,,com.blueseer.ord.OrderSource,JMenuItem,orsc

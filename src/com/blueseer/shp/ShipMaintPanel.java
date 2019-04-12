@@ -78,6 +78,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 int ordercount = 0;
                 String status = "";
                 String curr = "";
+                boolean itemlock = false;
                 
     
     /**
@@ -252,7 +253,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tbqty.setText("");
         tbdesc.setText("");
-        tbpo.setText("");
         tbprice.setText("");
         if (ddpart.getItemCount() > 0)
         ddpart.setSelectedIndex(0);
@@ -305,7 +305,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tbqty.setEnabled(true);
         tbdesc.setEnabled(true);
-        tbpo.setEnabled(true);
+        ddpo.setEnabled(true);
         ddpart.setEnabled(true);
         tbprice.setEnabled(true);
         btadditem.setEnabled(true);
@@ -339,7 +339,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tbqty.setEnabled(false);
         tbdesc.setEnabled(false);
-        tbpo.setEnabled(false);
+        ddpo.setEnabled(false);
         ddpart.setEnabled(false);
         tbprice.setEnabled(false);
         btadditem.setEnabled(false);
@@ -380,7 +380,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tbqty.setText("");
         tbdesc.setText("");
-        tbpo.setText("");
+       
         tbprice.setText("");
         if (ddpart.getItemCount() > 0)
         ddpart.setSelectedIndex(0);
@@ -451,7 +451,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         tbqty.setText("");
         tbdesc.setText("");
         tbref.setText("");
-        tbpo.setText("");
+        
         
         tabledetail.setModel(myshipdetmodel);
         myshipdetmodel.setRowCount(0);
@@ -490,7 +490,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     ddshipto.setSelectedItem(res.getString("sh_ship"));
                     tbref.setText(res.getString("sh_ref"));
                     tbremarks.setText(res.getString("sh_rmks"));
-                    tbpo.setText(res.getString("sh_po"));
+                   // ddpo.setSelectedItem(res.getString("sh_po"));
                     dcshipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
                     ddshipvia.setSelectedItem(res.getString("sh_shipvia"));
                     ddsite.setSelectedItem(res.getString("sh_site"));
@@ -577,14 +577,16 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                
+                itemlock = true;
                 ddpart.removeAllItems();
                 res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + ";");
                 while (res.next()) {
                     ddpart.addItem(res.getString("cup_item"));
                 }
+                itemlock = false;
             
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("Cannot retrieve cup_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -592,7 +594,64 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
+      
+      public void getItemOrderInfo(String cust, String item) {
+        try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                
+                ddpo.removeAllItems();
+                res = st.executeQuery("select sod_po from sod_det inner join so_mstr on so_nbr = sod_nbr where so_cust = " + "'" + cust + "'" +
+                        " and sod_part = " + "'" + item + "'" + " order by sod_po ;");
+                while (res.next()) {
+                    ddpo.addItem(res.getString("sod_po"));
+                }
+            
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Cannot retrieve sod_det");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
+      public void getOrderInfoByPO(String cust, String po, String item) {
+        try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                
+                
+                res = st.executeQuery("select sod_netprice, sod_shipped_qty, (sod_ord_qty - sod_shipped_qty) as qty from sod_det inner join so_mstr on so_nbr = sod_nbr where so_cust = " + "'" + cust + "'" +
+                        " and sod_part = " + "'" + item + "'" + 
+                        " and sod_po = " + "'" + po + "'" +         
+                        " order by sod_part ;");
+                while (res.next()) {
+                    tbprice.setText(res.getString("sod_netprice"));
+                    tbqty.setText(res.getString("qty"));
+                    lbqtyshipped.setText(res.getString("sod_shipped_qty"));
+                }
+            
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Cannot retrieve sod_det");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+      
       public void setLabelByShipTo(String shipto) {
         try {
 
@@ -677,6 +736,18 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     arcc = res.getString("cm_ar_cc");
                     getParts(ddbillto.getSelectedItem().toString());
                 }
+                
+                
+                if (! OVData.isCustItemOnlySHIP()) {
+                    itemlock = true;
+                    ddpart.removeAllItems();
+                    ArrayList<String> items = OVData.getItemMasterAlllist();
+                    for (String item : items) {
+                    ddpart.addItem(item);
+                    }  
+                    itemlock = false;
+                }
+                
                 if (i == 0) {
                     bsmf.MainFrame.show("shipto code does not exist");
                 } 
@@ -948,12 +1019,12 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         lblwhqty = new javax.swing.JLabel();
         lbllocqty = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        tbpo = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
         ddpart = new javax.swing.JComboBox();
         jLabel30 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
+        ddpo = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jLabel47 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
@@ -961,6 +1032,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         dduom = new javax.swing.JComboBox<>();
         tbqty = new javax.swing.JTextField();
         jLabel43 = new javax.swing.JLabel();
+        lbqtyshipped = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel46 = new javax.swing.JLabel();
         ddwh = new javax.swing.JComboBox<>();
@@ -1358,10 +1430,22 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         jLabel42.setText("PONbr");
 
         ddpart.setEditable(true);
+        ddpart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddpartActionPerformed(evt);
+            }
+        });
 
         jLabel30.setText("Part");
 
         jLabel38.setText("Desc");
+
+        ddpo.setEditable(true);
+        ddpo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddpoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1375,9 +1459,9 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tbpo)
                     .addComponent(ddpart, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                    .addComponent(ddpo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1393,8 +1477,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel38))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel42))
+                    .addComponent(jLabel42)
+                    .addComponent(ddpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1408,7 +1492,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel43.setText("Qty Ship");
+        jLabel43.setText("Qty");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1422,18 +1506,24 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel47, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbprice)
-                    .addComponent(dduom, 0, 70, Short.MAX_VALUE)
-                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbprice)
+                            .addComponent(dduom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbqtyshipped, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbqty, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbqtyshipped, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1466,26 +1556,22 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel46, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ddwh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(ddwh, 0, 76, Short.MAX_VALUE)
+                    .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(jLabel46))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel45))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)))
-                .addContainerGap())
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel45))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel46))
+                .addGap(48, 48, 48))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -1496,14 +1582,14 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(27, 27, 27)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(5, 5, 5)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblwhqty, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbllocqty, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(lblwhqty, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbllocqty, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1515,13 +1601,14 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(lblwhqty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbllocqty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(29, 29, 29))))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(lblwhqty, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbllocqty, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1687,14 +1774,15 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         if (canproceed) {
             myshipdetmodel.addRow(new Object[]{line, part, 
                 ddorder.getSelectedItem().toString(), 
-                tbpo.getText(), 
+                ddpo.getSelectedItem().toString() , 
                 tbqty.getText(), 
                 tbprice.getText(),
                 tbdesc.getText(),
                 ddwh.getSelectedItem().toString(),
                 ddloc.getSelectedItem().toString(),
                 0,
-                tbprice.getText()
+                tbprice.getText(), 
+                ""  // matltax 
             });
         }
         
@@ -2011,6 +2099,19 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_dduomActionPerformed
 
+    private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
+        if (ddbillto.getSelectedItem() != null && ddpart.getSelectedItem() != null && ! itemlock ) {
+        getItemOrderInfo(ddbillto.getSelectedItem().toString(), ddpart.getSelectedItem().toString());
+        tbdesc.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+        }
+    }//GEN-LAST:event_ddpartActionPerformed
+
+    private void ddpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpoActionPerformed
+       if (ddbillto.getSelectedItem() != null && ddpart.getSelectedItem() != null && ddpo.getSelectedItem() != null ) {
+        getOrderInfoByPO(ddbillto.getSelectedItem().toString(), ddpo.getSelectedItem().toString(), ddpart.getSelectedItem().toString());
+       }
+    }//GEN-LAST:event_ddpoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btPrintInv;
     private javax.swing.JButton btPrintShp;
@@ -2031,6 +2132,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddloc;
     private javax.swing.JComboBox<String> ddorder;
     private javax.swing.JComboBox ddpart;
+    private javax.swing.JComboBox<String> ddpo;
     private javax.swing.JComboBox<String> ddshipto;
     private javax.swing.JComboBox ddshipvia;
     private javax.swing.JComboBox ddsite;
@@ -2074,6 +2176,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbllocqty;
     private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lblwhqty;
+    private javax.swing.JLabel lbqtyshipped;
     private javax.swing.JPanel panelDetail;
     private javax.swing.JPanel panelMain;
     private javax.swing.JRadioButton rbnonorder;
@@ -2083,7 +2186,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbmisc;
     private javax.swing.JTextField tbmisc2;
-    private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbref;

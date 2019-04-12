@@ -6617,7 +6617,10 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
          
          
          
-         public static String[] getItemPrice(String cust, String part, String uom, String curr) {
+         public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
+       
+       // type is either 'c' for customer price or 'v' for vendor price      
+             
        String[] TypeAndPrice = new String[2];   
        String Type = "none";
        Double price = 0.00;
@@ -6630,31 +6633,62 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+                // customer based pricing
+                if (type.equals("c")) {
+                    res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
+                     while (res.next()) {
+                       pricecode = res.getString("cm_price_code");
+                    }     
+                      // if there is no pricecode....it defaults to billto
+                     if (! pricecode.isEmpty()) {
+                         entity = pricecode;
+                     }
+
+                    res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
+                                          " AND cpr_item = " + "'" + part + "'" +
+                                          " AND cpr_uom = " + "'" + uom + "'" +
+                                          " AND cpr_curr = " + "'" + curr + "'" +
+                                          " AND cpr_type = 'LIST' "+ ";");
+                   while (res.next()) {
+                       price = res.getDouble("cpr_price");
+                       Type = "cust";
+
+                    }
+                }
+                
+                // vendor based pricing
+                if (type.equals("v")) {
+                   res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + entity + "'" + ";");
                  while (res.next()) {
-                   pricecode = res.getString("cm_price_code");
+                   pricecode = res.getString("vd_price_code");
                 }     
                   // if there is no pricecode....it defaults to billto
                  if (! pricecode.isEmpty()) {
-                     cust = pricecode;
+                     entity = pricecode;
                  }
                  
-                res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
-                                      " AND cpr_item = " + "'" + part + "'" +
-                                      " AND cpr_uom = " + "'" + uom + "'" +
-                                      " AND cpr_curr = " + "'" + curr + "'" +
-                                      " AND cpr_type = 'LIST' "+ ";");
+                res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
+                                      " AND vpr_item = " + "'" + part + "'" +
+                                      " AND vpr_uom = " + "'" + uom + "'" +
+                                      " AND vpr_curr = " + "'" + curr + "'" +        
+                                      " AND vpr_type = 'LIST' "+ ";");
                while (res.next()) {
-                   price = res.getDouble("cpr_price");
-                   Type = "cust";
+                   price = res.getDouble("vpr_price");
+                   Type = "vend";
                     
                 }
-               
+                }
+                
+                
                // if there is no customer specific price...then pull price from item master it_sell_price
                   if ( price <= 0.00 ) {
-                     res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + part + "'" + ";");
+                     if (type.equals("c")) { 
+                     res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");
+                     } else {
+                     res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");    
+                     }
                      while (res.next()) {
-                     price = res.getDouble("it_sell_price");   
+                     price = res.getDouble("itemprice");   
                      Type = "item";
                      }
                   }
@@ -10844,6 +10878,36 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
          
+            public static boolean isVendItemOnly() {
+             
+           boolean venditemonly = false;
+            try{
+               Class.forName(driver).newInstance();
+                con = DriverManager.getConnection(url + db, user, pass);
+                try{
+                    Statement st = con.createStatement();
+                    ResultSet res = null;
+
+                    res = st.executeQuery("select poc_venditem from po_ctrl;");
+                   while (res.next()) {
+                        venditemonly = res.getBoolean("poc_venditem");
+                    }
+
+               }
+                catch (SQLException s){
+                    s.printStackTrace();
+                }
+                con.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return venditemonly;
+        
+    }   
+          
+          
+          
           public static boolean isCustItemOnly() {
              
            boolean custitemonly = false;
@@ -10871,7 +10935,35 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             return custitemonly;
         
     }   
-           
+          
+           public static boolean isCustItemOnlySHIP() {
+             
+           boolean custitemonly = false;
+            try{
+               Class.forName(driver).newInstance();
+                con = DriverManager.getConnection(url + db, user, pass);
+                try{
+                    Statement st = con.createStatement();
+                    ResultSet res = null;
+
+                    res = st.executeQuery("select shc_custitemonly from ship_ctrl;");
+                   while (res.next()) {
+                        custitemonly = res.getBoolean("shc_custitemonly");
+                    }
+
+               }
+                catch (SQLException s){
+                    s.printStackTrace();
+                }
+                con.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return custitemonly;
+        
+    }   
+          
           
          public static boolean isAutoSource() {
              
@@ -14321,15 +14413,15 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 
                     
                    
-                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, po_rcpt_cc, po_rcpt_acct from ap_mstr " +
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, poc_rcpt_cc, poc_rcpt_acct from ap_mstr " +
                                " inner join po_ctrl where ap_type = 'V' and ap_nbr = " + "'" + voucher + "'" +";");
                    
                     while (res.next()) {
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
                         acct_cr.add(res.getString("ap_acct"));
-                    acct_dr.add(res.getString("po_rcpt_acct"));
+                    acct_dr.add(res.getString("poc_rcpt_acct"));
                     cc_cr.add(res.getString("ap_cc"));
-                    cc_dr.add(res.getString("po_rcpt_cc"));
+                    cc_dr.add(res.getString("poc_rcpt_cc"));
                     cost.add(res.getDouble("ap_amt"));
                     basecost.add(res.getDouble("ap_base_amt"));
                     curr.add(res.getDouble("ap_curr"));

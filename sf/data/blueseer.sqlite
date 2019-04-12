@@ -1047,8 +1047,9 @@ CREATE TABLE "pland_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "po_ctrl" (
-  "po_rcpt_acct" varchar(10) COLLATE NOCASE DEFAULT '',
-  "po_rcpt_cc" varchar(30) COLLATE NOCASE DEFAULT ''
+  "poc_rcpt_acct" varchar(10) COLLATE NOCASE DEFAULT '',
+  "poc_rcpt_cc" varchar(30) COLLATE NOCASE DEFAULT '',
+  "poc_venditem" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1325,7 +1326,8 @@ CREATE TABLE "vd_ctrl" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ship_ctrl" (
-  "shc_confirm" tinyint(1) NOT NULL DEFAULT '0'
+  "shc_confirm" tinyint(1) NOT NULL DEFAULT '0',
+  "shc_custitemonly" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

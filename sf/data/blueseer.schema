@@ -863,8 +863,9 @@ CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_ref` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `po_ctrl` (
-  `po_rcpt_acct` varchar(10)  NOT NULL DEFAULT '',
-  `po_rcpt_cc` varchar(30)  DEFAULT ''
+  `poc_rcpt_acct` varchar(10)  NOT NULL DEFAULT '',
+  `poc_rcpt_cc` varchar(30)  DEFAULT '',
+  `poc_venditem` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_nbr` varchar(8)  NOT NULL DEFAULT '',
@@ -1090,7 +1091,8 @@ CREATE TABLE IF NOT EXISTS `vd_ctrl` (
   `vdc_autovend` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_ctrl` (
-  `shc_confirm` tinyint(1) NOT NULL DEFAULT '0'
+  `shc_confirm` tinyint(1) NOT NULL DEFAULT '0',
+  `shc_custitemonly` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_id` varchar(8) NOT NULL  DEFAULT '',

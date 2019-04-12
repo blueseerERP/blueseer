@@ -553,7 +553,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
                 DecimalFormat df = new DecimalFormat("#0.0000");
                 
-                String[] TypeAndPrice = OVData.getItemPrice(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                String[] TypeAndPrice = OVData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
                 Double price = Double.valueOf(TypeAndPrice[1]);

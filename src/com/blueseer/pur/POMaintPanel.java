@@ -40,7 +40,7 @@ public class POMaintPanel extends javax.swing.JPanel {
      String cc = "";
      String blanket = "";
      String status = "";
-      
+      boolean venditemonly = true;  
      DecimalFormat df = new DecimalFormat("#0.0000");
      
    // OVData avmdata = new OVData();
@@ -470,8 +470,19 @@ public class POMaintPanel extends javax.swing.JPanel {
      public void setPrice() {
          DecimalFormat df = new DecimalFormat("#0.0000");
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
-                listprice.setText(df.format(OVData.getPartPriceFromVend(ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
-                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString())));
+                String[] TypeAndPrice = OVData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+                String pricetype = TypeAndPrice[0].toString();
+                Double price = Double.valueOf(TypeAndPrice[1]);
+                dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
+                listprice.setText(df.format(price));
+                if (pricetype.equals("vend")) {
+                    listprice.setBackground(Color.green);
+                }
+                if (pricetype.equals("item")) {
+                    listprice.setBackground(Color.white);
+                }
+               // discount.setText(df.format(OVData.getPartDiscFromVend(ddvend.getSelectedItem().toString())));
                 setnetprice();
          }
      }
@@ -623,12 +634,14 @@ public class POMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                ddpart.removeAllItems();
-                res = st.executeQuery("select vdp_item from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    ddpart.addItem(res.getString("vdp_item"));
+               
+                if (venditemonly) {
+                    ddpart.removeAllItems();
+                    res = st.executeQuery("select vdp_item from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        ddpart.addItem(res.getString("vdp_item"));
+                    }
                 }
-                
                 res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
                     lbvend.setText(res.getString("vd_name"));
@@ -820,6 +833,17 @@ public class POMaintPanel extends javax.swing.JPanel {
         for (String code : mylist) {
             ddcurr.addItem(code);
         }
+        
+        
+         venditemonly = OVData.isCustItemOnly();
+        if (! venditemonly) {
+            ddpart.removeAllItems();
+            ArrayList<String> items = OVData.getItemMasterAlllist();
+            for (String item : items) {
+            ddpart.addItem(item);
+            }  
+        }
+        
         
         
         dduom.removeAllItems();

@@ -1,6 +1,7 @@
 
-package com.blueseer.shp;
+package com.blueseer.pur;
 
+import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,12 +14,12 @@ import java.sql.Statement;
  */
 
 
-public class ShipperControl extends javax.swing.JPanel {
+public class POControl extends javax.swing.JPanel {
 
     /**
      * Creates new form ClockControl
      */
-    public ShipperControl() {
+    public POControl() {
         initComponents();
     }
 
@@ -33,16 +34,16 @@ public class ShipperControl extends javax.swing.JPanel {
                 ResultSet res = null;
                 
                 int i = 0;
-                    res = st.executeQuery("SELECT * FROM  ship_ctrl ;");
+                    res = st.executeQuery("SELECT * FROM  po_ctrl ;");
                     while (res.next()) {
                         i++;
-                        cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("shc_confirm")));
-                        cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("shc_custitemonly")));
+                        cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("poc_venditem")));
                     }
            
             }
             catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to retrieve ship_ctrl");
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to retrieve po_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -64,15 +65,12 @@ public class ShipperControl extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        cbconfirm = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
-        cbcustitem = new javax.swing.JCheckBox();
+        cbvenditem = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Shipper Control"));
-
-        cbconfirm.setText("Confirm In ShipMaint");
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("PO Control"));
 
         btupdate.setText("Update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
@@ -81,31 +79,27 @@ public class ShipperControl extends javax.swing.JPanel {
             }
         });
 
-        cbcustitem.setText("Customer Item Only?");
+        cbvenditem.setText("Vend Item Xref Only?");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btupdate)
-                    .addComponent(cbconfirm))
+                .addContainerGap(60, Short.MAX_VALUE)
+                .addComponent(btupdate)
                 .addGap(25, 25, 25))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbcustitem)
+                .addComponent(cbvenditem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(cbconfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbcustitem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
+                .addComponent(cbvenditem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addGap(21, 21, 21))
         );
@@ -123,42 +117,38 @@ public class ShipperControl extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                String confirm = "";
-                String custitemonly = "";
+                String venditemonly = "";
                 
                 
-                if ( cbconfirm.isSelected() ) {
-                confirm = "1";    
+                
+               
+                
+                   if ( cbvenditem.isSelected() ) {
+                venditemonly = "1";    
                 } else {
-                    confirm = "0";
-                }
-                
-                 if ( cbcustitem.isSelected() ) {
-                custitemonly = "1";    
-                } else {
-                    custitemonly = "0";
+                    venditemonly = "0";
                 }
                 
                 
-                
-                res = st.executeQuery("SELECT *  FROM  ship_ctrl ;");
+                res = st.executeQuery("SELECT *  FROM  po_ctrl ;");
                     while (res.next()) {
                         i++;
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into ship_ctrl values (" + "'" + confirm + "'" + "," + "'" + custitemonly + "'" + ")" + ";");              
+                    st.executeUpdate("insert into po_ctrl (poc_venditem ) values (" + "'" + venditemonly + "'" + 
+                                    ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
-                    st.executeUpdate("update ship_ctrl set " 
-                            + " shc_confirm = " + "'" + confirm + "'" + "," 
-                            + " shc_custitemonly = " + "'" + custitemonly + "'" + 
+                    st.executeUpdate("update po_ctrl set " 
+                            + " poc_venditem = " + "'" + venditemonly + "'" +         
                             ";");   
                     bsmf.MainFrame.show("Updated Defaults");
                 }
               
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Problem updating ship_ctrl");
+                s.printStackTrace();
+                bsmf.MainFrame.show("Problem updating po_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -169,8 +159,7 @@ public class ShipperControl extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbconfirm;
-    private javax.swing.JCheckBox cbcustitem;
+    private javax.swing.JCheckBox cbvenditem;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

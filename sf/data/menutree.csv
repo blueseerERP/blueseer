@@ -48,6 +48,7 @@ Purchasing,ReceiverMaintMenu,3,JMenuItem,Receiver Maintenance,,,,1,1
 Purchasing,RecvBrowse,4,JMenuItem,Receiver Browse,,1,,1,1
 Purchasing,RecvByPOBrowse,5,JMenuItem,Receiver By PO Browse,,1,,1,1
 Purchasing,RequisitionMenu,6,JMenu,Requisition Menu,,,,1,1
+Purchasing,POControl,7,JMenuItem,PO Control,,1,,1,1
 RequisitionMenu,ReqMaint,1,JMenuItem,Requisition Maintenance,,,,1,1
 RequisitionMenu,ReqBrowseAll,2,JMenuItem,Requisition Browse,,1,,1,1
 RequisitionMenu,PendReqRpt1,5,JMenuItem,Pending Requisitions,,1,,1,1
