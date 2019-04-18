@@ -141,7 +141,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     }
      
       public void retotal() {
-        
          sumqty();
          sumdollars();
          sumlinecount();

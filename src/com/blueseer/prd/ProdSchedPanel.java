@@ -131,13 +131,6 @@ public class ProdSchedPanel extends javax.swing.JPanel {
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            
-            if ((String)mytable.getModel().getValueAt(rowIndex, 9) == null || mytable.getModel().getValueAt(rowIndex, 9).toString().isEmpty() ) {
-               canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true};
-            } else {
-               canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, true}; 
-            }
-            
             // plan is closed
             if (mytable.getModel().getValueAt(rowIndex, 12).equals("closed")) {   // 1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
@@ -331,49 +324,11 @@ public class ProdSchedPanel extends javax.swing.JPanel {
            
             return button;
         }
-
+/*
         public Object getCellEditorValue() {
-            boolean isGood = false;
-            String butitle = "Work Order";
-            
-            if (isPushed) {
-                
-                myrow = mytable.getSelectedRow();
-                mycol = mytable.getSelectedColumn();
-               
-                
-                 if (mycol == 15)   {
-                    if ( mytable.getValueAt(myrow, 12).equals("open")) {
-                        OVData.updatePlanStatus(mytable.getValueAt(myrow, 0).toString(), "-1");
-                        bsmf.MainFrame.show("JobNbr Voided");
-                        mytable.setValueAt("voided", myrow, 12);
-                   } 
-                   
-                }
-               
-                if (mycol == 14)   {
-                    if ( mytable.getValueAt(myrow, 12).equals("open")) {
-                        isGood = OVData.updatePlanOrder(mytable.getValueAt(myrow, 0).toString(), 
-                        mytable.getValueAt(myrow, 6).toString(),
-                        mytable.getValueAt(myrow, 5).toString(),
-                        mytable.getValueAt(myrow,12).toString() 
-                         );
-                           if (! isGood) {
-                               bsmf.MainFrame.show("Unable to update");
-                           } else {
-                               bsmf.MainFrame.show("Record Updated");
-                           }
-                   } 
-                   
-                }
-                if (mycol == 13)  { 
-                printticket(mytable.getValueAt(myrow, 0).toString(), butitle);
-                }
-            }
-            isPushed = false;
-            return new String(label);
+           
         }
-
+*/
         public boolean stopCellEditing() {
             isPushed = false;
             return super.stopCellEditing();
@@ -774,6 +729,9 @@ public class ProdSchedPanel extends javax.swing.JPanel {
             }
         ));
         mytable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mytableMouseClicked(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 mytableMouseReleased(evt);
             }
@@ -1136,6 +1094,39 @@ try {
     private void mytableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mytableMouseReleased
       
     }//GEN-LAST:event_mytableMouseReleased
+
+    private void mytableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mytableMouseClicked
+         int row = mytable.rowAtPoint(evt.getPoint());
+        int col = mytable.columnAtPoint(evt.getPoint());
+        if ( col == 13) {
+              printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
+        }
+        
+        if (col == 14)   {
+                    if ( mytable.getValueAt(row, 12).equals("open")) {
+                        boolean isGood = OVData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
+                        mytable.getValueAt(row, 6).toString(),
+                        mytable.getValueAt(row, 5).toString(),
+                        mytable.getValueAt(row,12).toString() 
+                         );
+                           if (! isGood) {
+                               bsmf.MainFrame.show("Unable to update");
+                           } else {
+                               bsmf.MainFrame.show("Record Updated");
+                           }
+                   } 
+        }
+        if (col == 15)   {
+                    if ( mytable.getValueAt(row, 12).equals("open")) {
+                        OVData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
+                        bsmf.MainFrame.show("JobNbr Voided");
+                        mytable.setValueAt("voided", row, 12);
+                   } 
+        }
+        
+         
+         
+    }//GEN-LAST:event_mytableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1727,9 +1727,9 @@ CREATE TABLE `pay_mstr` (
   `py_site` varchar(10) NOT NULL DEFAULT '',
   `py_desc` varchar(50) NOT NULL DEFAULT '',
   `py_userid` varchar(30) NOT NULL DEFAULT '',
-  `py_startdate` date NOT NULL DEFAULT '',
-  `py_enddate` date NOT NULL DEFAULT '',
-  `py_paydate` date NOT NULL DEFAULT '',
+  `py_startdate` date DEFAULT NULL,
+  `py_enddate` date  DEFAULT NULL,
+  `py_paydate` date  DEFAULT NULL,
   `py_status` varchar(8) NOT NULL DEFAULT '',
   `py_comments` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1744,13 +1744,13 @@ CREATE TABLE `pay_det` (
   `pyd_emptype` varchar(30) NOT NULL DEFAULT '',
   `pyd_payprofile` varchar(30) NOT NULL DEFAULT '',
   `pyd_empjobtitle` varchar(30) NOT NULL DEFAULT '',
-  `pyd_emprate` decimal(7,2) NOT NULL DEFAULT '',
+  `pyd_emprate` decimal(7,2) NOT NULL DEFAULT '0.00',
   `pyd_empsupervisor` varchar(30) NOT NULL DEFAULT '',
   `pyd_status` varchar(8) NOT NULL DEFAULT '',
   `pyd_checknbr` varchar(8) NOT NULL DEFAULT '',
-  `pyd_tothours` decimal(7,2) NOT NULL DEFAULT '',
-  `pyd_payamt` decimal(7,2) NOT NULL DEFAULT '',
-  `pyd_paydate` date NOT NULL DEFAULT ''
+  `pyd_tothours` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `pyd_payamt` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `pyd_paydate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_line` (
   `pyl_id` int(8) NOT NULL,
@@ -1758,16 +1758,16 @@ CREATE TABLE `pay_line` (
   `pyl_type` varchar(10) NOT NULL DEFAULT '',
   `pyl_code` varchar(10) NOT NULL DEFAULT '',
   `pyl_desc` varchar(70) NOT NULL DEFAULT '',
-  `pyl_percent` decimal(7,2) NOT NULL DEFAULT '',
-  `pyl_rate` decimal(7,2) NOT NULL DEFAULT '',
-  `pyl_hours` decimal(7,2) NOT NULL DEFAULT '',
-  `pyl_amt` decimal(7,2) NOT NULL DEFAULT ''
+  `pyl_percent` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `pyl_rate` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `pyl_hours` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `pyl_amt` decimal(7,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_profile` (
   `payp_code` varchar(10) NOT NULL DEFAULT '',
   `payp_desc` varchar(30) NOT NULL DEFAULT '',
-  `payp_crtdate` date  DEFAULT '',
-  `payp_moddate` date  DEFAULT '',
+  `payp_crtdate` date  DEFAULT NULL,
+  `payp_moddate` date  DEFAULT NULL,
   `payp_userid` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_profdet` (
@@ -1775,10 +1775,10 @@ CREATE TABLE `pay_profdet` (
   `paypd_parentcode` varchar(10) NOT NULL DEFAULT '',
   `paypd_desc` varchar(30) NOT NULL DEFAULT '',
   `paypd_type` varchar(10) NOT NULL DEFAULT '',
-  `paypd_amt` decimal(11,2) NOT NULL DEFAULT '0',
+  `paypd_amt` decimal(11,2) NOT NULL DEFAULT '0.00',
   `paypd_amttype` varchar(10) NOT NULL DEFAULT '',
-  `paypd_crtdate` date  DEFAULT '',
-  `paypd_moddate` date  DEFAULT '',
+  `paypd_crtdate` date  DEFAULT NULL,
+  `paypd_moddate` date  DEFAULT NULL,
   `paypd_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `paypd_userid` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

@@ -1406,7 +1406,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                               st.executeUpdate("update sod_det set "
                             + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + " sod_po = " + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
+                            + " sod_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
                             + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
                             + " sod_listprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                             + " sod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","

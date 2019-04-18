@@ -30,12 +30,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/CashTranBrowse.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/PayRollMaint.java</file>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/shp/ShipperControl.java</file>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/shp/ShipMaintPanel.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/utl/OVData.java</file>
             <file>file:/C:/bs/blueseer/src/com/blueseer/edi/EDI.java</file>
-            <file>file:/C:/bs/blueseer/src/com/blueseer/ord/OrderMaintPanel.java</file>
         </group>
     </open-files>
 </project-private>
