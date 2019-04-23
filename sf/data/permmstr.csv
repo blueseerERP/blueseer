@@ -242,6 +242,7 @@ admin;CurrencyMaint
 admin;ExchangeMaint
 admin;OrderControl
 admin;POControl
+admin;PayControl
 admin;CustControl
 admin;VendControl
 admin;OrderSource

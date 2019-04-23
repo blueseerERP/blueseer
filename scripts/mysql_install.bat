@@ -85,6 +85,7 @@ mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'd
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'plmstr.csv' replace into table pl_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'apctrl.csv' replace into table ap_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'arctrl.csv' replace into table ar_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'payctrl.csv' replace into table pay_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'shipctrl.csv' replace into table ship_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'ordctrl.csv' replace into table order_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'cmctrl.csv' replace into table cm_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 

@@ -87,6 +87,19 @@ CREATE TABLE "ar_ctrl" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "pay_ctrl" (
+  "payc_bank" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_labor_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_labor_cc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_salaried_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_salaried_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_payrolltax_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_payrolltax_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_withhold_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ar_mstr" (
   "ar_id" INTEGER PRIMARY KEY,
   "ar_cust" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',

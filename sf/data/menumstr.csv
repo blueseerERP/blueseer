@@ -190,6 +190,7 @@ ShipUnconfirm,,com.blueseer.shp.ShipUnConfirmPanel,JMenuItem,uncf
 ClockControl,,com.blueseer.tca.ClockControl,JMenuItem,cloc
 ShipperControl,,com.blueseer.shp.ShipperControl,JMenuItem,shpc
 ARControl,,com.blueseer.far.ARControl,JMenuItem,arcc
+PayControl,,com.blueseer.fgl.PayControl,JMenuItem,payc
 APControl,,com.blueseer.fap.APControl,JMenuItem,apcc
 SystemControl,,com.blueseer.adm.SystemControl,JMenuItem,sysc
 POBrowse,,com.blueseer.pur.POBrowse,JMenuItem,purb

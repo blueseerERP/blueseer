@@ -81,6 +81,16 @@ CREATE TABLE IF NOT EXISTS `ar_ctrl` (
   `arc_othertax_acct` varchar(10) NOT NULL  DEFAULT '',
   `arc_othertax_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `pay_ctrl` (
+  `payc_bank` varchar(10) NOT NULL  DEFAULT '',
+  `payc_labor_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_labor_cc` varchar(10) NOT NULL  DEFAULT '',
+  `payc_salaried_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_salaried_cc` varchar(4) NOT NULL  DEFAULT '',
+  `payc_payrolltax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_payrolltax_cc` varchar(4) NOT NULL  DEFAULT '',
+  `payc_withhold_acct` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ar_mstr` (
   `ar_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `ar_cust` varchar(10) NOT NULL  DEFAULT '',

@@ -226,6 +226,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
+                double netcash = 0.00;
+                double netdeduction = 0.00;
                 
                 if (proceed) {
                     st.executeUpdate("insert into pay_mstr "
@@ -246,7 +248,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                    
                     int checknbr = Integer.valueOf(tbchecknbr.getText());
                     for (int j = 0; j < tablereport.getRowCount(); j++) {
-                        
+                        netcash += Double.valueOf(tablereport.getValueAt(j, 14).toString());
                         st.executeUpdate("insert into pay_det "
                             + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_empsupervisor, pyd_emptype, "
                             + "pyd_payprofile, pyd_empjobtitle, pyd_emprate,  pyd_status, pyd_checknbr, pyd_tothours, pyd_payamt, pyd_paydate ) "
@@ -307,6 +309,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" 
                                 + ")"
                                 + ";");
+                                      netdeduction += Double.valueOf(modeldeduct.getValueAt(e, 5).toString());
                               }     
                         
                               // now update timeclock records for employee and date range
@@ -315,6 +318,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                               checknbr++;
                        
                     }
+                    
+                    // now lets do journal entries
+                    OVData.glEntryFromPayRoll(tbid.getText(), dcpay.getDate());
                     
              message = new String[]{"0", "PayRoll has been committed"};         
                      
@@ -1098,7 +1104,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");   
         DecimalFormat df = new DecimalFormat("#0.00");
-        
+        mymodel.setRowCount(0);
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);

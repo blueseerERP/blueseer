@@ -118,6 +118,7 @@ com.blueseer.lbl.LabelMstrPanel,,1
 com.blueseer.lbl.LabelPartPanel,,1
 com.blueseer.ord.OrderControl,,1
 com.blueseer.pur.POControl,,1
+com.blueseer.fgl.PayControl,,1
 com.blueseer.ord.OrderMaintPanel,,1
 com.blueseer.ord.OrderReport1,,1
 com.blueseer.ord.OrderReport2,,1

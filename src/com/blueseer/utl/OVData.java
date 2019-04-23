@@ -7311,6 +7311,196 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
          
+    public static String getDefaultPayWithHoldAcct() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_withhold_acct from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_withhold_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+    
+    
+      public static String getDefaultPayLaborAcct() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_labor_acct from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_labor_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+    
+     public static String getDefaultPayLaborCC() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_labor_cc from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_labor_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+    
+     public static String getDefaultPaySalariedAcct() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_salaried_acct from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_salaried_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+      
+   public static String getDefaultPaySalariedCC() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_salaried_cc from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_salaried_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }  
+         
+      public static String getDefaultPayTaxAcct() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_payrolltax_acct from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_payrolltax_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+      
+       public static String getDefaultPayTaxCC() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_payrolltax_cc from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_payrolltax_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+         
          public static String getDefaultSalesAcct() {
            String myitem = null;
          try{
@@ -7805,7 +7995,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myitem;
         
     }
+        
          
+        public static String getDefaultBankAcct(String bank) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select bk_acct from bk_mstr where bk_id = " + "'" + bank + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("bk_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }     
          
                  public static String getDefaultAPAcct() {
            String myitem = "";
@@ -14512,6 +14729,125 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                      for (int j = 0; j < acct_cr.size(); j++) {
                       glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), Double.valueOf(cost.get(j).toString()), Double.valueOf(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 myerror = true;
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            myerror = true;
+        }
+        return myerror;
+        
+        }
+        
+        public static boolean glEntryFromPayRoll(String batch, Date effdate) {
+                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+               
+                
+               java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                   // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList cost =  new ArrayList();   
+                    ArrayList basecost =  new ArrayList();
+                    ArrayList curr =  new ArrayList();
+                    ArrayList basecurr =  new ArrayList();
+                   
+                    String thistype = "PayRoll";
+                    String laboracct = OVData.getDefaultPayLaborAcct();
+                    String withhold = OVData.getDefaultPayWithHoldAcct();
+                    String salariedacct = OVData.getDefaultPaySalariedAcct();
+                    String taxacct = OVData.getDefaultPayTaxAcct();
+                    String cc = OVData.getDefaultCC();
+                    String defaultcurr = OVData.getDefaultCurrency();
+                    String bank = OVData.getDefaultAPBank();
+                    String bankacct = OVData.getDefaultBankAcct(bank);
+                    
+                    
+                    // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
+                    
+                       res = st.executeQuery("select py_site, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
+                               " where pyd_id = " + "'" + batch + "'" +";");
+                   
+                    Double amt = 0.00;   
+                    while (res.next()) {
+                     // credit Cash account and debit labor expense
+                    amt = res.getDouble("pyd_payamt");
+                       acct_cr.add(bankacct);
+                    acct_dr.add(laboracct);
+                    cc_cr.add(res.getString("pyd_empdept"));
+                    cc_dr.add(res.getString("pyd_empdept"));
+                   // cost.add(res.getDouble("ap_amt"));
+                      cost.add(amt);
+                      basecost.add(amt);
+                    curr.add(defaultcurr);
+                    basecurr.add(defaultcurr);
+                    site.add(res.getString("py_site"));
+                    ref.add(res.getString("py_id"));
+                    type.add(thistype);
+                    desc.add("CheckNbr:" + res.getString("pyd_checknbr"));  
+                    }
+                    
+                    
+                    
+                    // NOW LETS DO WITHHOLDINGS...
+                    // NOTE!!! THis needs to be broken into individual withholding accounts...currently lumped into one withholding account...with 'descriptions'
+                      res = st.executeQuery("select py_site, pyd_checknbr, pyl_amt, pyl_type, pyl_code, pyl_empnbr, pyd_empdept from pay_line " +
+                              " inner join pay_det on pyd_id = pyl_id " +
+                              " inner join pay_mstr on py_id = pyd_id  " +
+                               " where pyd_id = " + "'" + batch + "'" +";");
+                   
+                    amt = 0.00;   
+                    while (res.next()) {
+                     // credit withholding account and debit payroll tax expense
+                    amt = res.getDouble("pyl_amt");
+                       acct_cr.add(withhold);
+                    acct_dr.add(taxacct);
+                    cc_cr.add(res.getString("pyd_empdept"));
+                    cc_dr.add(res.getString("pyd_empdept"));
+                   // cost.add(res.getDouble("ap_amt"));
+                      cost.add(amt);
+                      basecost.add(amt);
+                    curr.add(defaultcurr);
+                    basecurr.add(defaultcurr);
+                    site.add(res.getString("py_site"));
+                    ref.add(res.getString("py_id"));
+                    type.add(thistype);
+                    desc.add("WithholdType:" + res.getString("pyl_type"));  
+                    }
+                    
+                    
+                    
+                     for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), Double.valueOf(cost.get(j).toString()), Double.valueOf(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                    }
+                     
+                     
+                     
+                     
+                     
+                     
            }
             catch (SQLException s){
                  s.printStackTrace();
