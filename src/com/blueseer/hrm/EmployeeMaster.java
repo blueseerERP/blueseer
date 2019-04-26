@@ -114,6 +114,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         tbtitle.setText(res.getString("emp_jobtitle"));
                         tbefladays.setText(res.getString("emp_efla_days"));
                         tbprofile.setText(res.getString("emp_profile"));
+                        tbaccount.setText(res.getString("emp_acct"));
+                        tbroute.setText(res.getString("emp_routing"));
                         tbsupervisor.setText(res.getString("emp_supervisor"));
                         cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_autoclock")));
                         if (res.getString("emp_clockin").equals("1")) {
@@ -481,18 +483,12 @@ public class EmployeeMaster extends javax.swing.JPanel {
         jLabel53 = new javax.swing.JLabel();
         tbssn = new javax.swing.JTextField();
         ddshift = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
         ddgender = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel48 = new javax.swing.JLabel();
         ddstatus = new javax.swing.JComboBox();
         jLabel52 = new javax.swing.JLabel();
-        tbrate = new javax.swing.JTextField();
-        ddtype = new javax.swing.JComboBox();
         tbefladays = new javax.swing.JTextField();
-        tbprofile = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         btempbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
@@ -510,6 +506,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
         ddexctype = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        ddpaytype = new javax.swing.JComboBox<>();
+        jLabel24 = new javax.swing.JLabel();
+        tbroute = new javax.swing.JTextField();
+        tbaccount = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        tbrate = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        ddtype = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        tbprofile = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -820,13 +829,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
 
         jLabel53.setText("Shift");
 
-        jLabel4.setText("Type");
-
         ddgender.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "M", "F" }));
 
         jLabel1.setText("SSN");
-
-        jLabel3.setText("Rate");
 
         jLabel48.setText("Dept");
 
@@ -834,56 +839,37 @@ public class EmployeeMaster extends javax.swing.JPanel {
 
         jLabel52.setText("Status");
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Temp" }));
-
-        jLabel20.setText("Profile");
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap(41, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel54)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddgender, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel53)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddshift, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel52)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbssn, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel48)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel20)
-                                .addGap(3, 3, 3)))
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbprofile)
-                            .addComponent(tbefladays, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbrate, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbefladays, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -910,18 +896,6 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     .addComponent(tbssn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbprofile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbefladays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
@@ -1113,21 +1087,92 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        ddpaytype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "check", "direct deposit" }));
+
+        jLabel24.setText("PayType");
+
+        jLabel25.setText("Bank Routing");
+
+        jLabel26.setText("Bank Account");
+
+        jLabel3.setText("Rate");
+
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Temp" }));
+
+        jLabel4.setText("Type");
+
+        jLabel20.setText("Profile");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(tbprofile, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbrate)))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddpaytype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbroute)
+                    .addComponent(tbaccount, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(343, 343, 343))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddpaytype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbroute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25)
+                    .addComponent(tbrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbaccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26)
+                    .addComponent(tbprofile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanelPayLayout = new javax.swing.GroupLayout(jPanelPay);
         jPanelPay.setLayout(jPanelPayLayout);
         jPanelPayLayout.setHorizontalGroup(
             jPanelPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelPayLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(100, 100, 100))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPayLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(jPanelPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(95, 95, 95))
         );
         jPanelPayLayout.setVerticalGroup(
             jPanelPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPayLayout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(443, 443, 443))
+                .addGap(343, 343, 343))
         );
 
         add(jPanelPay);
@@ -1191,7 +1236,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     st.executeUpdate("insert into emp_mstr "
                         + "(emp_nbr, emp_lname, emp_fname, "
                         + "emp_mname, emp_dept, emp_status, emp_startdate, emp_shift, emp_type, "
-                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_rate, emp_profile, emp_efla_days, "
+                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_rate, emp_profile, emp_acct, emp_routing, emp_efla_days, "
                             + "emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
                        + "emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob ) "
                             + "values ( " + "'" + empid.getText().toString() + "'" + ","
@@ -1208,7 +1253,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
                              + "'" + tbssn.getText().toString() + "'" + ","
                              + "'" + autoclock + "'" + ","
                              + "'" + tbrate.getText().toString() + "'" + ","
-                              + "'" + tbprofile.getText().toString() + "'" + ","        
+                             + "'" + tbprofile.getText().toString() + "'" + ","  
+                             + "'" + tbaccount.getText().toString() + "'" + ","  
+                             + "'" + tbroute.getText().toString() + "'" + ","          
                              + "'" + tbefladays.getText().toString() + "'" + ","
                              + "'" + tbvacdays.getText().toString() + "'" + ","
                              + "'" + tbvactaken.getText().toString() + "'" + ","
@@ -1336,7 +1383,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
                                 + "emp_emer_contact = " + "'" + tbemercontact.getText().toString() + "'" + ","
                                 + "emp_emer_phone = " + "'" + tbemernumber.getText().toString() + "'" + ","
                                 + "emp_efla_days = " + "'" + tbefladays.getText().toString() + "'" + ","
-                                + "emp_profile = " + "'" + tbprofile.getText().toString() + "'" + ","        
+                                + "emp_profile = " + "'" + tbprofile.getText().toString() + "'" + ","   
+                                + "emp_acct = " + "'" + tbaccount.getText().toString() + "'" + ","   
+                                + "emp_routing = " + "'" + tbroute.getText().toString() + "'" + ","           
                                 + "emp_vac_days = " + "'" + tbvacdays.getText().toString() + "'" + ","
                                 + "emp_vac_taken = " + "'" + tbvactaken.getText().toString() + "'" + ","
                                 + "emp_jobtitle = " + "'" + tbtitle.getText().toString() + "'" + ","
@@ -1501,6 +1550,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddexcamttype;
     private javax.swing.JComboBox<String> ddexctype;
     private javax.swing.JComboBox ddgender;
+    private javax.swing.JComboBox<String> ddpaytype;
     private javax.swing.JComboBox ddshift;
     private javax.swing.JComboBox ddstate;
     private javax.swing.JComboBox ddstatus;
@@ -1525,6 +1575,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel46;
@@ -1543,6 +1596,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1557,6 +1611,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JTextField middlename;
     private javax.swing.JLabel percentlabel;
     private javax.swing.JTextArea taUMperms1;
+    private javax.swing.JTextField tbaccount;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbclockin;
     private javax.swing.JTextField tbefladays;
@@ -1569,6 +1624,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JTextField tbphone;
     private javax.swing.JTextField tbprofile;
     private javax.swing.JTextField tbrate;
+    private javax.swing.JTextField tbroute;
     private javax.swing.JTextField tbssn;
     private javax.swing.JTextField tbsupervisor;
     private javax.swing.JTextField tbtitle;

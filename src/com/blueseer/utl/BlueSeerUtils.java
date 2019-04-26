@@ -90,6 +90,8 @@ public class BlueSeerUtils {
        return mydate;
     }
     
+  
+    
     public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
      }

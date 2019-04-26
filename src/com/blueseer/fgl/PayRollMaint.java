@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -49,6 +50,11 @@ import static bsmf.MainFrame.user;
 import com.blueseer.prd.ProdSchedPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -60,6 +66,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbException;
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileOutputStream;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -231,7 +241,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                 
                 if (proceed) {
                     st.executeUpdate("insert into pay_mstr "
-                        + "(py_id, py_site, py_desc, py_userid, py_startdate, py_enddate, py_paydate, py_status, py_comments ) "
+                        + "(py_id, py_site, py_desc, py_userid, py_startdate, py_enddate, py_paydate, py_status, py_comments, py_bank, py_nachasent ) "
                         + " values ( " + "'" + tbid.getText() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + tbcomments.getText().replace("'", "") + "'" + ","
@@ -240,7 +250,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                         + "'" + dfdate.format(dcto.getDate()).toString() + "'" + ","
                         + "'" + dfdate.format(dcpay.getDate()).toString() + "'" + ","  
                         + "'" + "" + "'" + ","
-                        + "'" + tbcomments.getText().replace("'", "") + "'" 
+                        + "'" + tbcomments.getText().replace("'", "") + "'" + ","
+                        + "'" + ddbank.getSelectedItem().toString() + "'" + ","    
+                        + "'" + "0" + "'"        
                         + ")"
                         + ";");
 
@@ -398,6 +410,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 " group by t.code_id " +       
                                 " order by t.code_id " +      
                                ";" );
+                 html += "<table>";
                 while (res.next()) {
                     codedesc = res.getString("t.code_id");
                     if (codedesc.equals("00") || codedesc.equals("77")) {
@@ -405,7 +418,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     } else {
                         codedesc = res.getString("clc_desc");
                     }
-                    html += "<table><tr><td align='right'>" + codedesc + ":" + "</td><td>" + df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
+                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
                 
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
@@ -458,8 +471,10 @@ public class PayRollMaint extends javax.swing.JPanel {
                               " where emp_nbr = " + "'" + empnbr + "'" +
                               " order by paypd_desc " +        
                                ";" );
+                
+                html += "<table>";
                 while (res.next()) {
-                    html += "<table><tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + df.format(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
+                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + df.format(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
                 // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null );
                 // "EmpID", "type", "code", "desc", "rate", "amt"
@@ -640,6 +655,184 @@ public class PayRollMaint extends javax.swing.JPanel {
         return myreturn;
     }
     
+     public boolean processNACHAFile(String batch) throws MalformedURLException, SmbException, IOException {
+        boolean myreturn = true;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                DecimalFormat df = new DecimalFormat("#0.00");
+                java.util.Date now = new java.util.Date();
+                DateFormat dfdatetm = new SimpleDateFormat("yyMMddhhmm");
+                DateFormat dfdate = new SimpleDateFormat("yyMMdd");
+                DateFormat dfd = new SimpleDateFormat("yyyy-MM-dd");
+                
+                int i = 0;
+                   double amount = 0.00;
+                   String hrec = "";
+                   String brec = "";
+                   String drec = "";
+                   ArrayList<String> drecs = new ArrayList<String>();
+                   String btrl = "";
+                   String htrl = "";
+                   String bankname = "";
+                   String bankroute = "";
+                   String bankacct = "";
+                   String bankassignedID = "";
+                   String companyname = "";
+                   String paydate = "";
+                   
+                   
+                   // get header info from payroll batch
+                       res = st.executeQuery(" select * from pay_mstr p inner join bk_mstr on bk_id = py_bank inner join site_mstr on site_site = py_site " +
+                              " where p.py_id = " + "'" + tbid.getText() + "'" + ";");
+                        while (res.next()) {
+                            bankroute = res.getString("bk_route");
+                            bankacct = res.getString("bk_acct");
+                            bankassignedID = res.getString("bk_assignedID");
+                            bankname = res.getString("bk_desc");
+                            companyname = res.getString("site_desc");
+                            java.util.Date pd = dfd.parse(res.getString("py_paydate"));
+                            paydate = dfdate.format(pd);
+                        }
+                       
+                        
+                        hrec = "1" +  // rec type code
+                               "01" +  // priority code
+                               String.format("%10s", bankroute) +   // bank ABA routing...typically 9 digit routing with space in front
+                               String.format("%10s", bankassignedID) + // bank assigned ID...typically 9 digit tax id with '1' in front
+                                dfdatetm.format(now) +  // YYMMDDHHMM format  ...date and time fields combined here
+                                "0" +  // File ID modifier
+                                "094" + // Record Size
+                                "10" +  // Blocking Factor
+                                "1" +  // format code
+                                String.format("%-23s", bankname) +   // bank name
+                                String.format("%-23s", companyname) +  // company name
+                                String.format("%-8s", "");  // unused
+                       
+                   
+                        brec = "5" +  // rec type code
+                               "225" +  // service class code   200 mixed CR/DR, 220 CR only, 225 DR only
+                               String.format("%-16s", companyname) +  // company name
+                               String.format("%20s", "") +   // company discretionary data
+                               String.format("%10s", bankassignedID) + // bank assigned ID...typically 9 digit tax id with '1' in front
+                               "PPD" + // Standard Entry Code  PPD, CCD, CTX
+                               String.format("%10s", "PAYROLL") +   // transaction description 
+                               String.format("%6s", "") + //  company descriptive date (empty)
+                               paydate +  // YYMMDD  format  ...effective post date
+                               String.format("%3s", "") + //  Settlement Date...done by ACH 
+                                "1" +  // originator status code
+                                String.format("%-8s", bankroute.substring(0, 8)) +   // bank ABA routing...first 8 digits of routing
+                                String.format("%-7s", tbid.getText());  // our batch ID
+                        
+                        
+                        
+                        
+                       res = st.executeQuery(" select * from pay_mstr p inner join pay_det d on d.pyd_id = p.py_id " +
+                              " inner join emp_mstr on emp_nbr = pyd_empnbr " +
+                              " where p.py_id = " + "'" + tbid.getText() + "'" + ";");
+                             
+                    int abasum = 0; 
+                    while (res.next()) {
+                        i++;
+                        amount += res.getDouble("pyd_payamt");
+                           String tracenumber = res.getString("emp_routing").substring(0, 8) + String.format("%09d", i);
+                           String aba = res.getString("emp_routing").substring(0, 8);
+                           String checkdigit = res.getString("emp_routing").substring(8);
+                           abasum += Integer.valueOf(res.getString("emp_routing").substring(0, 8));
+                           
+                           drec = "6" +  // rec type code
+                               "CC" +  // transaction code
+                               aba + // routing...first 8 digits
+                               checkdigit + // 9th char of routing
+                               String.format("%-17s", res.getString("emp_acct")) +   // receiver's bank account
+                               String.format("%10s", res.getString("pyd_payamt")) + // payment amount
+                               String.format("%-15s", res.getString("pyd_checknbr")) +   // originator ID number 
+                               String.format("%-22s", res.getString("pyd_empfname") + " " + res.getString("pyd_emplname")) +   // originator ID number     
+                               "  " + // Discretionary two digit....two blank spaces
+                               "0" + // Addenda Record Indicator....0 = no addenda...1 = addenda added  
+                               tracenumber ;
+                           drecs.add(drec);
+                    }
+                    
+                    
+                    btrl = "8" +  // rec type code
+                               "225" +  // service class code   200 mixed CR/DR, 220 CR only, 225 DR only
+                               String.format("%06d", i) + // total number of detail records
+                               String.valueOf(String.format("%010d", abasum)) + //  sum of 8 digit ABA numbers of all details 
+                               String.format("%012d", 0) + // total dollars of debit....leave 0
+                               String.format("%012d", 0) + // total dollars of credit .... leave 0 
+                               String.format("%10s", bankassignedID) + // bank assigned ID...typically 9 digit tax id with '1' in front
+                               String.format("%19s", "") + //  message auth code leave blank 
+                               String.format("%6s", "") + //  reserved....leave blank
+                               String.format("%8s", bankroute.substring(0, 8)) +   // bank ABA routing...typically 9 digit routing with space in front 
+                               String.format("%-7s", tbid.getText());  // our batch ID
+                               
+                    htrl = "9" +  // rec type code
+                               String.format("%6s", "1") +  // batch  count .... only 1
+                               String.format("%-6s", "") +  // block  count .... blank
+                               String.format("%08d", i) + // total number of detail records 
+                               String.valueOf(String.format("%010d", abasum)) + //  sum of 8 digit ABA numbers of all details 
+                               String.format("%012d", 0) + // total dollars of debit....leave 0
+                               String.format("%012d", 0) + // total dollars of credit .... leave 0 
+                               String.format("%-39s", "");  // reserved 
+                               
+                
+                     // now create file
+                    String filecontent = hrec + "\n";
+                    filecontent +=  brec + "\n";
+                    for (String d : drecs) {
+                        filecontent += d + "\n";
+                    }
+                    filecontent += btrl + "\n";
+                    filecontent += htrl + "\n";
+                    
+                    
+                   
+                    
+ 
+    NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
+    // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
+   // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
+       String dir = OVData.getEDIOutDir();
+       String filename = "nacha" + "_" + dfdatetm.format(now) + ".txt";
+    
+    
+    Path path = Paths.get(dir + "/" + filename);
+    
+    
+    BufferedWriter output;
+    
+         if (path.startsWith("smb")) {
+         output = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(new SmbFile(path.toString(), auth))));
+         output.write(filecontent);
+         output.close();
+         } else {
+         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+         output.write(filecontent);
+         output.close();  
+         }
+   // SmbFile[] listOfFiles = folder.listFiles();
+                    
+                    
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 myreturn = false;
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            myreturn = false;
+            
+        }
+       
+        return myreturn;
+    }
+    
     
     public void disableAll() {
          btnew.setEnabled(false);
@@ -709,6 +902,13 @@ public class PayRollMaint extends javax.swing.JPanel {
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
+        
+         ddbank.removeAllItems();
+        ArrayList<String> bank = OVData.getbanklist();
+        for (String code : bank) {
+            ddbank.addItem(code);
+        }
+        ddbank.setSelectedItem(OVData.getDefaultAPBank());
         
         
         
@@ -799,6 +999,9 @@ public class PayRollMaint extends javax.swing.JPanel {
         tbchecknbr = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btnacha = new javax.swing.JButton();
+        ddbank = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         tbtotpayroll = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -934,7 +1137,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
         jLabel3.setText("PayDate:");
 
-        jLabel4.setText("CheckNbr:");
+        jLabel4.setText("Start CheckNbr:");
 
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
@@ -942,6 +1145,15 @@ public class PayRollMaint extends javax.swing.JPanel {
                 btclearActionPerformed(evt);
             }
         });
+
+        btnacha.setText("NACHA");
+        btnacha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnachaActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Bank:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -957,42 +1169,50 @@ public class PayRollMaint extends javax.swing.JPanel {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btrun))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tbid, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                             .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdetail)
-                                .addGap(63, 63, 63))
+                                .addComponent(btdetail))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(167, 167, 167)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(66, 66, 66)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addComponent(btcommit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnacha)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(tbchecknbr, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(dcpay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(btcsv)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
-                                .addComponent(btcommit))))
-                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btrun)))
-                .addContainerGap(186, Short.MAX_VALUE))
+                            .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(tbchecknbr, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(dcpay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 68, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1008,31 +1228,40 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 .addComponent(btdetail)
                                 .addComponent(btcsv)
                                 .addComponent(btcommit)
-                                .addComponent(btclear))
+                                .addComponent(btclear)
+                                .addComponent(btnacha))
                             .addComponent(btbrowse))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
-                                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
+                                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(9, 9, 9)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(dcpay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tbcomments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2))
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel8)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbchecknbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(dcpay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(tbchecknbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4))))))
                         .addGap(40, 40, 40))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(btrun)
@@ -1240,6 +1469,21 @@ public class PayRollMaint extends javax.swing.JPanel {
        initvars("");
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btnachaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnachaActionPerformed
+        try {
+           boolean r = processNACHAFile(tbid.getText());
+           if (r) {
+               bsmf.MainFrame.show("Nacha file created in EDI outbound directory");
+           }
+        } catch (SmbException ex) {
+            ex.printStackTrace();
+            bsmf.MainFrame.show("SMB file write exception nacha");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            bsmf.MainFrame.show("IO file write exception nacha");
+        }
+    }//GEN-LAST:event_btnachaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btbrowse;
@@ -1247,12 +1491,14 @@ public class PayRollMaint extends javax.swing.JPanel {
     private javax.swing.JButton btcommit;
     private javax.swing.JButton btcsv;
     private javax.swing.JButton btdetail;
+    private javax.swing.JButton btnacha;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
     private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcpay;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> ddbank;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
@@ -1263,6 +1509,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

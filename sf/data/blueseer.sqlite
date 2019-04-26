@@ -165,7 +165,10 @@ CREATE TABLE "bk_mstr" (
   "bk_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "bk_acct" varchar(10) COLLATE NOCASE DEFAULT '',
   "bk_cur" varchar(10) COLLATE NOCASE DEFAULT '',
-  "bk_active" tinyint(1) NOT NULL DEFAULT '0');
+  "bk_active" tinyint(1) NOT NULL DEFAULT '0',
+  "bk_route" varchar(10) COLLATE NOCASE DEFAULT '',
+  "bk_assignedID" varchar(10) COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -552,7 +555,9 @@ CREATE TABLE "emp_mstr" (
   "emp_clockid" int(11) NOT NULL DEFAULT '0',
   "emp_supervisor" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_autoclock" tinyint(1) NOT NULL DEFAULT '0',
-  "emp_profile" varchar(20) COLLATE NOCASE DEFAULT ''
+  "emp_profile" varchar(20) COLLATE NOCASE DEFAULT '',
+  "emp_routing" varchar(9) COLLATE NOCASE DEFAULT '',
+  "emp_acct" varchar(20) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1795,7 +1800,9 @@ CREATE TABLE "pay_mstr" (
   "py_enddate" date COLLATE NOCASE DEFAULT '',
   "py_paydate" date COLLATE NOCASE DEFAULT '',
   "py_status" varchar(8) COLLATE NOCASE DEFAULT '',
-  "py_comments" varchar(200) COLLATE NOCASE DEFAULT '');
+  "py_comments" varchar(200) COLLATE NOCASE DEFAULT '',
+  "py_bank" varchar(10) COLLATE NOCASE DEFAULT '',
+  "py_nachasent" tinyint(1) COLLATE NOCASE DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

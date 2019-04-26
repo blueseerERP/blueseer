@@ -1902,7 +1902,7 @@ public class EDI {
       
      public void writeFile(String filecontent, String dir, String filename) throws MalformedURLException, SmbException, IOException {
     
-//    File folder = new File("smb://10.17.2.55/edi");
+  // File folder = new File("smb://10.17.2.55/edi");
   // File[] listOfFiles = folder.listFiles();
 
     

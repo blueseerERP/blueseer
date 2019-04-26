@@ -14787,7 +14787,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
                     
-                       res = st.executeQuery("select py_site, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
+                       res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
                                " where pyd_id = " + "'" + batch + "'" +";");
                    
                     Double amt = 0.00;   
@@ -14813,10 +14813,10 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     // NOW LETS DO WITHHOLDINGS...
                     // NOTE!!! THis needs to be broken into individual withholding accounts...currently lumped into one withholding account...with 'descriptions'
-                      res = st.executeQuery("select py_site, pyd_checknbr, pyl_amt, pyl_type, pyl_code, pyl_empnbr, pyd_empdept from pay_line " +
+                      res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept from pay_line " +
                               " inner join pay_det on pyd_id = pyl_id " +
                               " inner join pay_mstr on py_id = pyd_id  " +
-                               " where pyd_id = " + "'" + batch + "'" +";");
+                               " where pyl_type = 'deduction' and pyd_id = " + "'" + batch + "'" +";");
                    
                     amt = 0.00;   
                     while (res.next()) {
@@ -14834,7 +14834,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     site.add(res.getString("py_site"));
                     ref.add(res.getString("py_id"));
                     type.add(thistype);
-                    desc.add("WithholdType:" + res.getString("pyl_type"));  
+                    desc.add("WithholdType:" + res.getString("pyl_desc"));  
                     }
                     
                     

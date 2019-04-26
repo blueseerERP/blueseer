@@ -44,6 +44,8 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     tbcode.setText(res.getString("bk_id"));
                     tbdesc.setText(res.getString("bk_desc"));
                     tbacct.setText(res.getString("bk_acct"));
+                    tbroute.setText(res.getString("bk_route"));
+                    tbassignedID.setText(res.getString("bk_assignedID"));
                     ddcurr.setSelectedItem(res.getString("bk_cur"));
                     cbactive.setSelected(res.getBoolean("bk_active"));
                 }
@@ -88,6 +90,7 @@ public class BankMaintPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -102,6 +105,12 @@ public class BankMaintPanel extends javax.swing.JPanel {
         ddcurr = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
         btbrowse = new javax.swing.JButton();
+        tbroute = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        tbassignedID = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+
+        jTextField1.setText("jTextField1");
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -145,6 +154,10 @@ public class BankMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setText("Routing:");
+
+        jLabel6.setText("assignedID:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -155,24 +168,27 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(btadd)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btdelete)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btupdate))
-                        .addComponent(cbactive)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                        .addComponent(tbacct))
-                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbassignedID)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btadd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate))
+                    .addComponent(cbactive)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                    .addComponent(tbacct)
+                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbroute))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -192,6 +208,14 @@ public class BankMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbroute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbassignedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -234,12 +258,14 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into bk_mstr "
-                            + "(bk_id, bk_desc, bk_acct, bk_cur, bk_active ) "
+                            + "(bk_id, bk_desc, bk_acct, bk_cur, bk_active, bk_route, bk_assignedID ) "
                             + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
                             + "'" + tbacct.getText().toString() + "'" + ","
                             + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'" + ","
+                            + "'" + tbroute.getText().toString() + "'" + ","
+                            + "'" + tbassignedID.getText().toString() + "'"      
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Bank Record");
@@ -276,6 +302,8 @@ public class BankMaintPanel extends javax.swing.JPanel {
                 if (proceed) {
                     st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
                             + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
+                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
+                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
                             + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'"
                             + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
                             + " where bk_id = " + "'" + tbcode.getText() + "'"                             
@@ -335,9 +363,14 @@ public class BankMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField tbacct;
+    private javax.swing.JTextField tbassignedID;
     private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbroute;
     // End of variables declaration//GEN-END:variables
 }

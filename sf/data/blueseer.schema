@@ -147,7 +147,10 @@ CREATE TABLE IF NOT EXISTS `bk_mstr` (
   `bk_desc` varchar(50) NOT NULL  DEFAULT '',
   `bk_acct` varchar(10)  DEFAULT '',
   `bk_cur` varchar(10)  DEFAULT '',
-  `bk_active` tinyint(1) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `bk_active` tinyint(1) NOT NULL DEFAULT '0',
+  `bk_route` varchar(10)  DEFAULT '',
+  `bk_assignedID` varchar(10)  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `call_mstr` (
   `call_id` varchar(18) NOT NULL,
   `call_desc` varchar(500)  NOT NULL DEFAULT '',
@@ -465,7 +468,9 @@ CREATE TABLE IF NOT EXISTS `emp_mstr` (
   `emp_clockid` int(11) NOT NULL DEFAULT '0',
   `emp_supervisor` varchar(30)  NOT NULL DEFAULT '',
   `emp_autoclock` tinyint(1) NOT NULL DEFAULT '0',
-  `emp_profile` varchar(20)  NOT NULL DEFAULT ''
+  `emp_profile` varchar(20)  NOT NULL DEFAULT '',
+  `emp_routing` varchar(9)  NOT NULL DEFAULT '',
+  `emp_acct` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `emp_exception` (
   `empx_nbr` int(8) NOT NULL,
@@ -1741,7 +1746,9 @@ CREATE TABLE `pay_mstr` (
   `py_enddate` date  DEFAULT NULL,
   `py_paydate` date  DEFAULT NULL,
   `py_status` varchar(8) NOT NULL DEFAULT '',
-  `py_comments` varchar(200) NOT NULL DEFAULT ''
+  `py_comments` varchar(200) NOT NULL DEFAULT '',
+  `py_bank` varchar(10) NOT NULL DEFAULT '',
+  `py_nachasent` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_det` (
   `pyd_id` int(8) NOT NULL,
