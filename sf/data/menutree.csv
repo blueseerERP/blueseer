@@ -248,8 +248,9 @@ root,Help,12,JMenu,Help,,,,1,1
 Admin,TreeMaint,18,JMenuItem,Menu Tree Maintenance,,,,1,1
 Order,POSMenu,8,JMenu,POS Menu,,,,1,1
 Order,DOMenu,9,JMenu,Distribution Menu,,,,1,1
-Order,OrderSource,10,JMenuItem,Order Source,,,,1,1
-Order,OrderControl,11,JMenuItem,Order Control,,,,1,1
+Order,ServiceOrderMaint,10,JMenuItem,Service Order / Quote,,,,1,1
+Order,OrderSource,11,JMenuItem,Order Source,,,,1,1
+Order,OrderControl,12,JMenuItem,Order Control,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,POS Entry,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,POS Control,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS Browse,,1,,1,1

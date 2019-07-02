@@ -68,6 +68,7 @@ LocationTransfer,,com.blueseer.inv.LocationTransferPanel,JMenuItem,loaj
 MRPBrowse,,com.blueseer.sch.MRPBrowse1,JMenuItem,mrpb
 OrderBrowse,,com.blueseer.ord.OrderReport1,JMenuItem,ordb
 OrderMaint,,com.blueseer.ord.OrderMaintPanel,JMenuItem,ordm
+ServiceOrderMaint,,com.blueseer.ord.ServiceOrderMaint,JMenuItem,srvm
 PaymentMaint,,com.blueseer.fap.PaymentMaintPanel,JMenuItem,appm
 ReqPendRpt1,,com.blueseer.utl.ReportPanel,JMenuItem,rqpr
 PostGLTrans,,com.blueseer.fgl.PostGLPanel,JMenuItem,post
