@@ -55,6 +55,7 @@ admin;ReqFreqByUserChart
 admin;ReqAmtByAcctChart
 admin;OrderMaint
 admin;ServiceOrderMaint
+admin;ServiceOrderBrowse
 admin;OrderBrowse
 admin;OrdLineBrowse
 admin;SchedOrdBrowse

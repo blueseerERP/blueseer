@@ -20303,6 +20303,67 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     }    
     
     
+    public static void printServiceOrder(String order) {
+        try{
+             Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+                 String cust = ""; 
+                String site = ""; 
+                String type = "";
+                res = st.executeQuery("select sv_cust, sv_site, sv_type from sv_mstr where sv_nbr = " + "'" + order + "'" + ";");
+                       while (res.next()) {
+                          cust = res.getString("sv_cust");
+                          site = res.getString("sv_site");
+                          type = res.getString("sv_type");
+                       }
+                
+                
+                String imagepath = "";
+                String logo = "";
+                logo = OVData.getCustLogo(cust);
+                if (logo.isEmpty()) {
+                    logo = OVData.getSiteLogo(site);
+                }
+                
+               String jasperfile = "serviceorder.jasper";
+               //jasperfile = OVData.getDefaultOrderJasper(site);
+               
+               imagepath = "images/" + logo;
+                HashMap hm = new HashMap();
+                if (type.equals("order")) {
+                hm.put("REPORT_TITLE", "SERVICE ORDER");
+                } else {
+                hm.put("REPORT_TITLE", "QUOTE");    
+                }
+                hm.put("myid",  order);
+                hm.put("imagepath", imagepath);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
+                con.close();
+                con = DriverManager.getConnection(url + db, user, pass);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/svprt.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
+    
+    
     public static MimeBodyPart attachmentPart;
 
     public static void sendEmail(String to, String subject, String body, String filename) {
@@ -25459,7 +25520,7 @@ e.printStackTrace();
         
          } 
            
-           public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "DO Nbr", "From WH", "To WH", "Ref", "ShipDate", "RecvDate", "Status"})
                 {
@@ -25518,6 +25579,65 @@ e.printStackTrace();
         
          } 
            
+        public static DefaultTableModel getSVBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "SV Nbr", "Cust", "PO", "ShedDate", "Type", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select sv_nbr, sv_cust, sv_po, sv_due_date, sv_type, sv_status " +
+                        " FROM  sv_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by sv_nbr desc ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select sv_nbr, sv_cust, sv_po, sv_due_date, sv_type, sv_status  " +
+                        " FROM  sv_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by sv_nbr desc ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select sv_nbr, sv_cust, sv_po, sv_due_date, sv_type, sv_status   " +
+                        " FROM  sv_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by sv_nbr desc ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("sv_nbr"),
+                                   res.getString("sv_cust"),
+                                   res.getString("sv_po"),
+                                   res.getString("sv_due_date"),
+                                   res.getString("sv_type"),
+                                   res.getString("sv_status")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         } 
+           
+        
         public static DefaultTableModel getFOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "FrieghtNbr", "Carrier", "Status"})

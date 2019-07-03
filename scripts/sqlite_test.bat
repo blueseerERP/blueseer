@@ -22,9 +22,9 @@ cd data
 if exist bsdb.db del bsdb.db
 
 @echo "creating database schema...."
-sqlite3.exe bsdb.db <blueseer.sqlite
+c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <blueseer.sqlite
 
-sqlite3.exe bsdb.db <sq.txt
+c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <sq.txt
 
 @echo ""
 @echo ""

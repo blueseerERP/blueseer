@@ -369,6 +369,10 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("domaint")) {
                 tablereport.setModel(OVData.getDOBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
+                 if (callingpanel.equals("svmaint")) {
+                tablereport.setModel(OVData.getSVBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
+                
                 if (callingpanel.equals("fomaint")) {
                 tablereport.setModel(OVData.getFOBrowseUtil(tbtext.getText(), state, searchfield));  
                 }
@@ -455,6 +459,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("DOMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
               reinitpanels("DOMaint", true, myparameter);
+            }
+             if (callingpanel.equals("svmaint")) {
+              if (! checkperms("ServiceOrderMaint")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString();
+              reinitpanels("ServiceOrderMaint", true, myparameter);
             }
               if (callingpanel.equals("fomaint")) {
               if (! checkperms("FOMaint")) { return; }

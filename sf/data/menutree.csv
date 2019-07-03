@@ -61,11 +61,13 @@ ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Requisitions by User,,1,,1,1
 ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dollars By Acct,,1,,1,1
 Order,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
 Order,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
-Order,OrderSourceBrowse,3,JMenuItem,Order Source Browse,,1,,1,1
-Order,OrdLineBrowse,4,JMenuItem,Order Line Browse,,1,,1,1
-Order,SchedOrdBrowse,5,JMenuItem,Sched Order Browse,,1,,1,1
-Order,FileOrderLoad,6,JMenuItem,Order Load By CSV File,,,,1,1
-Order,OrderReports,7,JMenu,Reports,,,,1,1
+Order,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
+Order,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
+Order,OrderSourceBrowse,5,JMenuItem,Order Source Browse,,1,,1,1
+Order,OrdLineBrowse,6,JMenuItem,Order Line Browse,,1,,1,1
+Order,SchedOrdBrowse,7,JMenuItem,Sched Order Browse,,1,,1,1
+Order,FileOrderLoad,8,JMenuItem,Order Load By CSV File,,,,1,1
+Order,OrderReports,9,JMenu,Reports,,,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,1,JMenuItem,Order Units By Week (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,2,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
@@ -246,11 +248,11 @@ root,HR,10,JMenu,HR,,,,1,1
 root,Admin,11,JMenu,Admin,,,,1,1
 root,Help,12,JMenu,Help,,,,1,1
 Admin,TreeMaint,18,JMenuItem,Menu Tree Maintenance,,,,1,1
-Order,POSMenu,8,JMenu,POS Menu,,,,1,1
-Order,DOMenu,9,JMenu,Distribution Menu,,,,1,1
-Order,ServiceOrderMaint,10,JMenuItem,Service Order / Quote,,,,1,1
-Order,OrderSource,11,JMenuItem,Order Source,,,,1,1
-Order,OrderControl,12,JMenuItem,Order Control,,,,1,1
+Order,POSMenu,10,JMenu,POS Menu,,,,1,1
+Order,DOMenu,11,JMenu,Distribution Menu,,,,1,1
+Order,ServiceOrderMaint,12,JMenuItem,Service Order / Quote,,,,1,1
+Order,OrderSource,13,JMenuItem,Order Source,,,,1,1
+Order,OrderControl,14,JMenuItem,Order Control,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,POS Entry,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,POS Control,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS Browse,,1,,1,1

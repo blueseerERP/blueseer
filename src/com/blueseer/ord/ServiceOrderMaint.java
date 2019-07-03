@@ -7,6 +7,7 @@ package com.blueseer.ord;
 import com.blueseer.dst.*;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -45,6 +46,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         btadd.setEnabled(false);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
+       
+        
         
         
         try {
@@ -55,38 +58,42 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("select * from do_mstr where do_nbr = " + "'" + mykey + "'" + ";");
+                res = st.executeQuery("select * from sv_mstr where sv_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                     i++;
                     ordernbr.setText(mykey);
                     ordernbr.setEnabled(false);
-                    ddcust.setSelectedItem(res.getString("do_wh_from"));
-                    ddship.setSelectedItem(res.getString("do_wh_to"));
-                    ddstatus.setSelectedItem(res.getString("do_status"));
-                    duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("do_shipdate")));
+                    remarks.setText("sv_rmks");
+                    ddcust.setSelectedItem(res.getString("sv_cust"));
+                    ddship.setSelectedItem(res.getString("sv_ship"));
+                    ddtype.setSelectedItem(res.getString("sv_type"));
+                    ddstatus.setSelectedItem(res.getString("sv_status"));
+                    ddcrew.setSelectedItem(res.getString("sv_crew"));
+                    duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sv_due_date")));
+                    createdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sv_create_date")));
                    
                    
                 }
                
                  
-                res = st.executeQuery("select * from dod_mstr where dod_nbr = " + "'" + mykey + "'" + ";");
+                res = st.executeQuery("select * from svd_det where svd_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
-                  myorddetmodel.addRow(new Object[]{res.getString("dod_line"), res.getString("dod_part"),
-                      res.getString("dod_nbr"), 
-                      res.getString("dod_qty"), res.getString("dod_ref")});
+                  myorddetmodel.addRow(new Object[]{res.getString("svd_line"), res.getString("svd_item"),
+                      res.getString("svd_nbr"), 
+                      res.getString("svd_hrs"), res.getString("svd_netprice")});
                 }
                 orddet.setModel(myorddetmodel);
                
                  
                
                 
-                sumqty();
+                setTotalHours();
                  sumlinecount();
                
                 if (i == 0) {
                    bsmf.MainFrame.show("No Order Record found for " + mykey);
                 } else {
-                            if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
+                         if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0 || ddstatus.getSelectedItem().toString().compareTo("void") == 0) {
                              disableAll();
                              btnew.setEnabled(true);
                          } else {
@@ -94,12 +101,23 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                               btadd.setEnabled(false);
                               btnew.setEnabled(false);
                          }
+                         
+                         ddtype.setEnabled(false);
+                         
+                         if (ddtype.getSelectedItem().toString().compareTo("order") == 0) {
+                             btquotetoorder.setEnabled(false);
+                             ordernbr.setBackground(null);
+                         } else {
+                             ordernbr.setBackground(Color.yellow);
+                         }
+                         
+                         
                     
                 }
 
             } catch (SQLException s) {
                 s.printStackTrace();
-                bsmf.MainFrame.show("Unable to retrieve do_mstr");
+                bsmf.MainFrame.show("Unable to retrieve sv_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -161,18 +179,62 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         }
     }
   
+      public void jobsiteChangeEvent(String mycust, String myship) {
+           
+            
+            
+           if (ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty() ) {
+               ddship.setBackground(Color.red);
+           } else {
+               ddship.setBackground(null);
+           }
+            
+            
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                String namestring = "";
+                res = st.executeQuery("select cms_name, cms_line1, cms_city, cms_state, cms_zip from cms_det where cms_code = " + "'" + mycust + "'" + " and cms_shipto = " + "'" + myship + "'"  + ";");
+                while (res.next()) {
+                    namestring = res.getString("cms_name") + " " + res.getString("cms_line1") + " " + res.getString("cms_city") + "," + res.getString("cms_state") + " " + res.getString("cms_zip");
+                    lblshipname.setText(namestring);
+                }
+                
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("SQL Code does not execute");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  
   
       
      public void sumlinecount() {
          totlines.setText(String.valueOf(orddet.getRowCount()));
     }
     
-    public void sumqty() {
-        int qty = 0;
+    public void setTotalHours() {
+        double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 3).toString()); 
+             qty = qty + Double.valueOf(orddet.getValueAt(j, 3).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
+    }
+    
+     public void setTotalPrice() {
+        double qty = 0;
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             qty = qty + Double.valueOf(orddet.getValueAt(j, 4).toString()); 
+         }
+         tbtotdollars.setText(String.valueOf(qty));
     }
     
     public Integer getmaxline() {
@@ -201,9 +263,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         ddcust.setEnabled(true);
         ddship.setEnabled(true);
         duedate.setEnabled(true);
-        tbref.setEnabled(true);
+        tbpo.setEnabled(true);
        
+        ddtype.setEnabled(true);
         ddstatus.setEnabled(true);
+        ddcrew.setEnabled(true);
       
         remarks.setEnabled(true);
         serviceitem.setEnabled(true);
@@ -215,6 +279,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         
         totlines.setEnabled(true);
         tbtotqty.setEnabled(true);
+        tbtotdollars.setEnabled(true);
        
         
           btbrowse.setEnabled(true);
@@ -225,6 +290,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
+         btquotetoorder.setEnabled(true);
         
     }
     
@@ -233,21 +299,23 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         ddcust.setEnabled(false);
         ddship.setEnabled(false);
         duedate.setEnabled(false);
-      
-        ddstatus.setEnabled(false);
-       tbref.setEnabled(false);
+      ddstatus.setEnabled(false);
+      ddcrew.setEnabled(false);
+        ddtype.setEnabled(false);
+       tbpo.setEnabled(false);
         remarks.setEnabled(false);
         serviceitem.setEnabled(false);
         tbprice.setEnabled(false);
         tbhours.setEnabled(false);
-       
-        tbref.setEnabled(false);
+       createdate.setEnabled(false);
+        tbpo.setEnabled(false);
       
         
         orddet.setEnabled(false);
         
         totlines.setEnabled(false);
         tbtotqty.setEnabled(false);
+        tbtotdollars.setEnabled(false);
        
         
           btbrowse.setEnabled(false);
@@ -258,6 +326,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
         btdelitem.setEnabled(false);
+         btquotetoorder.setEnabled(false);
     }
     
     public void initvars(String arg) {
@@ -266,15 +335,17 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         ordernbr.setEnabled(true);
         ordernbr.setText("");
+        ordernbr.setEditable(false);
+        ordernbr.setBackground(null);
      
         tbhours.setText("0");
-      
+        tbprice.setText("0.00");  
         
         
-       
-      
+        lblcustname.setText("");
+        lblshipname.setText("");
         duedate.setDate(now);
-       
+        
        
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
@@ -286,14 +357,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
+        ddtype.setEnabled(false);
       
        
         remarks.setText("");
         tbtotqty.setText("");
         totlines.setText("");
+        tbtotdollars.setText("");
         
         
-       
+        ddtype.setSelectedIndex(0);
         
          ddcust.removeAllItems();
         ddcust.insertItemAt("", 0);
@@ -304,12 +377,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         }
         ddship.removeAllItems();
         
-          
-          if (! arg.isEmpty()) {
-              getOrder(arg);
-          }
-         
-               if (! arg.isEmpty()) {
+        if (! arg.isEmpty()) {
             getOrder(arg);
         } else {
               disableAll();
@@ -344,7 +412,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         jScrollPane8 = new javax.swing.JScrollPane();
         orddet = new javax.swing.JTable();
         btdelitem = new javax.swing.JButton();
-        ddstatus = new javax.swing.JComboBox();
+        ddtype = new javax.swing.JComboBox();
         btadd = new javax.swing.JButton();
         jLabel81 = new javax.swing.JLabel();
         btedit = new javax.swing.JButton();
@@ -363,7 +431,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         jLabel91 = new javax.swing.JLabel();
         btpoprint = new javax.swing.JButton();
         btbrowse = new javax.swing.JButton();
-        tbref = new javax.swing.JTextField();
+        tbpo = new javax.swing.JTextField();
         jLabel92 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         remarks = new javax.swing.JTextArea();
@@ -375,6 +443,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         ddcust = new javax.swing.JComboBox();
         ddship = new javax.swing.JComboBox();
         lblcustname = new javax.swing.JLabel();
+        lblshipname = new javax.swing.JLabel();
+        btnewcust = new javax.swing.JButton();
+        btnewsite = new javax.swing.JButton();
+        ddstatus = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        createdate = new com.toedter.calendar.JDateChooser();
+        jLabel83 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
 
@@ -403,7 +478,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel85.setText("Status");
+        jLabel85.setText("Type");
 
         jLabel82.setText("Customer");
 
@@ -427,7 +502,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             }
         });
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Shipped", "PartialShipped", "Hold", "Canceled" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "quote", "order" }));
 
         btadd.setText("Save");
         btadd.addActionListener(new java.awt.event.ActionListener() {
@@ -445,9 +520,27 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             }
         });
 
+        tbhours.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbhoursFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbhoursFocusLost(evt);
+            }
+        });
+
         jLabel79.setText("Service Item");
 
         jLabel84.setText("Hours");
+
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbpriceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpriceFocusLost(evt);
+            }
+        });
 
         jLabel3.setText("Price");
 
@@ -511,13 +604,18 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel92.setText("Reference");
+        jLabel92.setText("PO");
 
         remarks.setColumns(20);
         remarks.setRows(5);
         jScrollPane3.setViewportView(remarks);
 
         btquotetoorder.setText("QuoteToOrder");
+        btquotetoorder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btquotetoorderActionPerformed(evt);
+            }
+        });
 
         jLabel93.setText("Crew");
 
@@ -535,6 +633,30 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             }
         });
 
+        btnewcust.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btnewcust.setToolTipText("");
+        btnewcust.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewcustActionPerformed(evt);
+            }
+        });
+
+        btnewsite.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btnewsite.setToolTipText("");
+        btnewsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewsiteActionPerformed(evt);
+            }
+        });
+
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "processing", "closed", "void" }));
+
+        jLabel6.setText("Status");
+
+        createdate.setDateFormatString("yyyy-MM-dd");
+
+        jLabel83.setText("Crt Date");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -543,7 +665,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 5, Short.MAX_VALUE)
+                        .addGap(0, 15, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(btadditem)
@@ -572,47 +694,67 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel76, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel86, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel85, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel82, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel91, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel76)
+                            .addComponent(jLabel86)
+                            .addComponent(jLabel85)
+                            .addComponent(jLabel82)
+                            .addComponent(jLabel91)
+                            .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btquotetoorder)
+                                .addGap(92, 92, 92))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(247, 247, 247)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnew)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
-                                        .addComponent(btquotetoorder))
+                                        .addComponent(ddcrew, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(92, 92, 92))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbpo, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblshipname, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(ddcust, 0, 133, Short.MAX_VALUE)
-                                                    .addComponent(ddship, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGap(27, 27, 27)
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel81, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(ddcust, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(ddship, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(ddtype, 0, 133, Short.MAX_VALUE)
+                                                    .addComponent(ddstatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addGap(2, 2, 2)
+                                                        .addGap(85, 85, 85)
+                                                        .addComponent(jLabel93))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                        .addGap(6, 6, 6)
+                                                        .addComponent(btnewcust, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel81))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                        .addGap(6, 6, 6)
+                                                        .addComponent(btnewsite, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(jLabel92))))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                                .addComponent(jLabel93)))
+                                                .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                                                .addComponent(jLabel83)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                            .addComponent(tbref, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                            .addComponent(ddcrew, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addComponent(lblcustname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(createdate, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                                            .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(jScrollPane8))
                 .addContainerGap())
@@ -631,32 +773,40 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                             .addComponent(jLabel76))
                         .addComponent(btbrowse)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel83))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel82)
-                            .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel91)
-                            .addComponent(ddship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel81))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel92))))
-                .addGap(14, 14, 14)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel82)
+                        .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel81))
+                    .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnewcust, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblshipname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel91)
+                        .addComponent(ddship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel92))
+                    .addComponent(btnewsite, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel85)
                     .addComponent(ddcrew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel93))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel86))
@@ -715,13 +865,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 String clocktime = dftime.format(now);
            
                 duedate.setDate(now);
-               
+                createdate.setDate(now);
                 
                 // tbDateShippedSM.setEnabled(false);
                 
                 enableAll();
                 
-                ddstatus.setEnabled(false);
+                ddtype.setEnabled(true);
                 btnew.setEnabled(false);
                 btbrowse.setEnabled(false);
                 btedit.setEnabled(false);
@@ -738,25 +888,18 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
          boolean canproceed = true;
         int line = 0;
         
-        String part = "";
-        String custpart = "";
-        
-            part = serviceitem.getText();
           
         orddet.setModel(myorddetmodel);
         
-        Pattern p = Pattern.compile("^[1-9]\\d*$");
-        Matcher m = p.matcher(tbhours.getText());
-        if (!m.find() || tbhours.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            canproceed = false;
-        }
+       
         line = getmaxline();
         line++;
         if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, part, ordernbr.getText(),  tbhours.getText(), tbref.getText()});
-         sumqty();
+            myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), ordernbr.getText(),  tbhours.getText(), tbprice.getText()});
+         setTotalHours();
          sumlinecount();
+         setTotalPrice();
+         serviceitem.setText("");
          serviceitem.requestFocus();
         }
     }//GEN-LAST:event_btadditemActionPerformed
@@ -773,17 +916,21 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
                 String site = OVData.getDefaultSite();
                 if (proceed) {
                     st.executeUpdate("insert into sv_mstr "
-                        + "(sv_nbr, sv_cust, sv_ship, sv_ref, sv_due_date, sv_type, sv_rmks ) "
-                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
+                        + "(sv_nbr, sv_cust, sv_ship, sv_site, sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks ) "
+                        + " values ( " + "'" + ordernbr.getText() + "'" + ","
                         + "'" + ddcust.getSelectedItem().toString() + "'" + ","
                         + "'" + ddship.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbref.getText() + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + tbpo.getText() + "'" + ","
                         + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + "'" + remarks.getText() + "'"
+                        + "'" + dfdate.format(now).toString() + "'" + ","        
+                        + "'" + ddtype.getSelectedItem().toString() + "'" + ","
+                        + "'" + "open" + "'" + ","
+                        + "'" + remarks.getText().replace("'", "") + "'"
                         + ")"
                         + ";");
 
@@ -794,17 +941,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                             + "(svd_line, svd_item, svd_nbr, svd_hrs, svd_netprice ) "
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + site + "'" 
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" 
                             + ")"
                             + ";");
 
                     }
                     bsmf.MainFrame.show("Service Order has been added");
-                   initvars("");
+                   initvars( ordernbr.getText());
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -836,15 +982,88 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        // TODO add your handling code here:
+         try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+              
+               
+                if (proceed) {
+                    st.executeUpdate("update sv_mstr "
+                        + " set sv_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
+                        + " sv_po = " + "'" + tbpo.getText().replace("'", "") + "'" + ","
+                        + " sv_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
+                        + " sv_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
+                        + " sv_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + " sv_crew = " + "'" + ddcrew.getSelectedItem() + "'" 
+                        + " where sv_nbr = " + "'" + ordernbr.getText().toString() + "'"
+                        + ";");
+
+                  //  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", shippedqty, status
+                   
+                    
+                    // if available sod_det line item...then update....else insert
+                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                         i = 0;
+                        // skip closed lines
+                        if (orddet.getValueAt(j, 10).toString().equals("close"))
+                            continue;
+                        res = st.executeQuery("Select svd_line from svd_det where svd_nbr = " + "'" + ordernbr.getText() + "'" +
+                                " and svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
+                            while (res.next()) {
+                            i++;
+                            }
+                            if (i > 0) {
+                              st.executeUpdate("update svd_det set "
+                            + " svd_item = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + " svd_hrs = " + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                            + " svd_netprice = " + "'" + orddet.getValueAt(j, 4).toString() + "'"
+                            + " where svd_nbr = " + "'" + ordernbr.getText() + "'" 
+                            + " AND svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
+                            + ";");
+                            } else {
+                            st.executeUpdate("insert into svd_det "
+                            + "(svd_line, svd_item, svd_nbr, svd_hrs, svd_netprice ) "
+                            + " values ( " 
+                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" 
+                            + ")"
+                            + ";");
+                            }
+
+                    }
+                    
+                  
+                   
+                    
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
-       OVData.printPurchaseOrder(ordernbr.getText());
+       OVData.printServiceOrder(ordernbr.getText());
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "domaint,do_nbr");
+        reinitpanels("BrowseUtil", true, "svmaint,sv_nbr");
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -857,8 +1076,82 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddcustActionPerformed
 
     private void ddshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipActionPerformed
-       
+        if (ddship.getItemCount() > 0) {
+            jobsiteChangeEvent(ddcust.getSelectedItem().toString(), ddship.getSelectedItem().toString());
+
+        } // if ddcust has a list
     }//GEN-LAST:event_ddshipActionPerformed
+
+    private void btnewcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewcustActionPerformed
+        reinitpanels("CustMaint", true, "");
+    }//GEN-LAST:event_btnewcustActionPerformed
+
+    private void btnewsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewsiteActionPerformed
+       reinitpanels("CustMaint", true, ddcust.getSelectedItem().toString());
+    }//GEN-LAST:event_btnewsiteActionPerformed
+
+    private void tbpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusGained
+         if (tbprice.getText().equals("0")) {
+            tbprice.setText("");
+        }
+    }//GEN-LAST:event_tbpriceFocusGained
+
+    private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
+              String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        if (x.equals("error")) {
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbprice.requestFocus();
+        } else {
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
+        }
+        setTotalPrice();
+    }//GEN-LAST:event_tbpriceFocusLost
+
+    private void tbhoursFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbhoursFocusGained
+          if (tbhours.getText().equals("0")) {
+            tbhours.setText("");
+        }
+    }//GEN-LAST:event_tbhoursFocusGained
+
+    private void tbhoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbhoursFocusLost
+              String x = BlueSeerUtils.bsformat("", tbhours.getText(), "2");
+        if (x.equals("error")) {
+            tbhours.setText("");
+            tbhours.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbhours.requestFocus();
+        } else {
+            tbhours.setText(x);
+            tbhours.setBackground(Color.white);
+        }
+        setTotalHours();
+    }//GEN-LAST:event_tbhoursFocusLost
+
+    private void btquotetoorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquotetoorderActionPerformed
+        try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                    st.executeUpdate("update sv_mstr set sv_type = 'order' where sv_nbr = " + "'" + ordernbr.getText() + "'" );
+                    bsmf.MainFrame.show("Quote has been confirmed to Order");
+                   initvars(ordernbr.getText());
+                    // btQualProbAdd.setEnabled(false);
+               
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Cannot update Service Order");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btquotetoorderActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -867,22 +1160,28 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btnewcust;
+    private javax.swing.JButton btnewsite;
     private javax.swing.JButton btpoprint;
     private javax.swing.JButton btquotetoorder;
+    private com.toedter.calendar.JDateChooser createdate;
     private javax.swing.JComboBox<String> ddcrew;
     private javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox ddship;
-    private javax.swing.JComboBox ddstatus;
+    private javax.swing.JComboBox<String> ddstatus;
+    private javax.swing.JComboBox ddtype;
     private com.toedter.calendar.JDateChooser duedate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel81;
     private javax.swing.JLabel jLabel82;
+    private javax.swing.JLabel jLabel83;
     private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel85;
     private javax.swing.JLabel jLabel86;
@@ -897,13 +1196,14 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel lblcustname;
+    private javax.swing.JLabel lblshipname;
     private javax.swing.JTable orddet;
     private javax.swing.JTextField ordernbr;
     private javax.swing.JTextArea remarks;
     private javax.swing.JTextArea serviceitem;
     private javax.swing.JTextField tbhours;
+    private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
-    private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField totlines;
