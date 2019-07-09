@@ -88,7 +88,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Nbr", "Item", "Hours", "NetPrice"});
+                        new String[]{"Nbr", "Item", "Qty/Hrs", "NetPrice"});
     
    
     
@@ -168,7 +168,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
                   
-                res = st.executeQuery("select sv_cust, cm_name, sum(svd_netprice) as 'sum' from svd_det " +
+                res = st.executeQuery("select sv_cust, cm_name, sum(svd_netprice * svd_qty) as 'sum' from svd_det " +
                         " inner join sv_mstr on sv_nbr = svd_nbr  " +
                         " inner join cm_mstr on cm_code = sv_cust  " +
                         " where sv_create_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
@@ -238,7 +238,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
                   
-                res = st.executeQuery("select sv_cust, cm_name, sum(svd_netprice) as 'sum' from svd_det " +
+                res = st.executeQuery("select sv_cust, cm_name, sum(svd_netprice * svd_qty) as 'sum' from svd_det " +
                         " inner join sv_mstr on sv_nbr = svd_nbr  " +
                         " inner join cm_mstr on cm_code = sv_cust  " +
                         " where sv_create_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
@@ -319,13 +319,13 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select svd_nbr, svd_item, svd_hrs, svd_netprice from svd_det " +
+                res = st.executeQuery("select svd_nbr, svd_item, svd_qty, svd_netprice from svd_det " +
                         " where svd_nbr = " + "'" + order + "'" +  ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("svd_nbr"), 
                       res.getString("svd_item"),
-                      res.getString("svd_hrs"),
+                      res.getString("svd_qty"),
                       res.getString("svd_netprice")});
                 }
                
@@ -721,7 +721,7 @@ try {
                 
                       
                   // now lets get the pos_mstr records    
-                  res = st.executeQuery("select sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched, sum(svd_netprice) as 'price' from sv_mstr " +
+                  res = st.executeQuery("select sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched, sum(svd_qty * svd_netprice) as 'price' from sv_mstr " +
                         " inner join svd_det on svd_nbr = sv_nbr " +
                         " where sv_create_date >= " + "'" + fromdate + "'" + 
                         " and sv_create_date <= " + "'" + todate + "'" +

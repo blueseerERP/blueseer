@@ -28,10 +28,13 @@ import javax.swing.JOptionPane;
  */
 public class ServiceOrderMaint extends javax.swing.JPanel {
 
+      boolean isLoad = false;
+    
    // OVData avmdata = new OVData();
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "line", "Part", "Order", "Qty", "Ref"
+             //   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
+                "line", "Part", "Type", "Desc", "Order", "Qty", "Price"
             });
       
     
@@ -79,8 +82,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 res = st.executeQuery("select * from svd_det where svd_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("svd_line"), res.getString("svd_item"),
-                      res.getString("svd_nbr"), 
-                      res.getString("svd_hrs"), res.getString("svd_netprice")});
+                      res.getString("svd_type"), res.getString("svd_desc"), res.getString("svd_nbr"),
+                      res.getString("svd_qty"), res.getString("svd_netprice")});
                 }
                 orddet.setModel(myorddetmodel);
                
@@ -126,6 +129,40 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
 
     }
     
+     public void itemChangeEvent(String myitem) {
+          
+         lbdesc.setText(OVData.getItemDesc(dditem.getSelectedItem().toString()));
+         tbprice.setText(String.valueOf(OVData.getItemPOSPrice(dditem.getSelectedItem().toString())));
+       
+         
+         /*
+         try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                
+                res = st.executeQuery("select cm_name, cm_carrier, cm_tax_code, cm_curr from cm_mstr where cm_code = " + "'" + mykey + "'" + ";");
+                while (res.next()) {
+                    lblcustname.setText(res.getString("cm_name"));
+                   
+                }
+                
+             
+                
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("SQL Code does not execute");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+         */
+     }
+     
      public void custChangeEvent(String mykey) {
            
             ddship.removeAllItems();
@@ -215,6 +252,50 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         }
     }
   
+     public String[] autoInvoiceOrder() {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         String[] message = new String[2];
+        message[0] = "";
+        message[1] = ""; 
+         int shipperid = OVData.getNextNbr("shipper");     
+                     boolean error = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+                             String.valueOf(shipperid), 
+                              ddcust.getSelectedItem().toString(),
+                              ddship.getSelectedItem().toString(),
+                              ordernbr.getText(),
+                              tbpo.getText().replace("'", ""),  // po
+                              tbpo.getText().replace("'", ""),  // ref
+                              dfdate.format(duedate.getDate()).toString(),
+                              dfdate.format(createdate.getDate()).toString(),
+                              remarks.getText().replace("'", ""),
+                              "", // shipvia
+                              "S" ); 
+
+                     if (error) {
+                         return message = new String[]{"1", "Error creating service order shipper header"};
+                     }  
+                    
+                    //  "line", "Part", "Order", "Qty", "Price"
+                   //  nbr, part, custpart, skupart, so, po, qty, listprice, discpercent, netprice, shipdate, desc, line, site, wh, loc, taxamt
+                     for (int j = 0; j < orddet.getRowCount(); j++) {
+                             OVData.CreateShipperDet(String.valueOf(shipperid), orddet.getValueAt(j, 1).toString(), "", "", ordernbr.getText(), tbpo.getText().replace("'", ""), orddet.getValueAt(j, 5).toString(), 
+                                     orddet.getValueAt(j, 6).toString(), "0", orddet.getValueAt(j, 6).toString(), dfdate.format(now), 
+                                     orddet.getValueAt(j, 2).toString(), orddet.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "", "0");
+                         }
+                    
+
+                     // now confirm shipment
+                     message = OVData.confirmShipment(String.valueOf(shipperid), now);
+                     if (message[0].equals("1")) { // if error
+                       return message;
+                     } else {
+                         OVData.updateServiceOrderFromShipper(String.valueOf(shipperid));
+                       message = new String[]{"0", "Service Order has been invoiced"};
+                     }
+                    
+                 return message;
+    }
   
       
      public void sumlinecount() {
@@ -224,7 +305,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     public void setTotalHours() {
         double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Double.valueOf(orddet.getValueAt(j, 3).toString()); 
+             qty = qty + Double.valueOf(orddet.getValueAt(j, 5).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -232,7 +313,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
      public void setTotalPrice() {
         double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Double.valueOf(orddet.getValueAt(j, 4).toString()); 
+             qty = qty + Double.valueOf(orddet.getValueAt(j, 6).toString()); 
          }
          tbtotdollars.setText(String.valueOf(qty));
     }
@@ -273,7 +354,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         serviceitem.setEnabled(true);
         tbprice.setEnabled(true);
         tbhours.setEnabled(true);
-       
+       dditem.setEnabled(true);
+       tbqty.setEnabled(true);
+        ddsite.setEnabled(true);
+        btinvoice.setEnabled(true);
         
         orddet.setEnabled(true);
         
@@ -302,6 +386,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
       ddstatus.setEnabled(false);
       ddcrew.setEnabled(false);
         ddtype.setEnabled(false);
+        ddsite.setEnabled(false);
+        btinvoice.setEnabled(false);
        tbpo.setEnabled(false);
         remarks.setEnabled(false);
         serviceitem.setEnabled(false);
@@ -309,7 +395,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         tbhours.setEnabled(false);
        createdate.setEnabled(false);
         tbpo.setEnabled(false);
-      
+       dditem.setEnabled(false);
+       tbqty.setEnabled(false);
         
         orddet.setEnabled(false);
         
@@ -368,7 +455,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         
         ddtype.setSelectedIndex(0);
         
-         ddcust.removeAllItems();
+        isLoad = true;
+        
+        ddcust.removeAllItems();
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
         ArrayList mycusts = OVData.getcustmstrlist();
@@ -376,6 +465,26 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             ddcust.addItem(mycusts.get(i));
         }
         ddship.removeAllItems();
+        
+        
+         dditem.removeAllItems();
+         ArrayList<String> items = OVData.getItemMasterAlllist();
+         for (String item : items) {
+         dditem.addItem(item);
+         }
+          dditem.insertItemAt("", 0);
+         dditem.setSelectedIndex(0);
+         
+        
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        isLoad = false;
+        
         
         if (! arg.isEmpty()) {
             getOrder(arg);
@@ -398,6 +507,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -424,6 +534,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         serviceitem = new javax.swing.JTextArea();
+        dditem = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        lbdesc = new javax.swing.JLabel();
+        tbqty = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         totlines = new javax.swing.JTextField();
         tbtotqty = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -450,8 +565,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         createdate = new com.toedter.calendar.JDateChooser();
         jLabel83 = new javax.swing.JLabel();
+        btinvoice = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
+
+        jLabel9.setText("jLabel9");
 
         setBackground(new java.awt.Color(0, 102, 204));
         add(jScrollPane1);
@@ -548,6 +668,25 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         serviceitem.setRows(5);
         jScrollPane2.setViewportView(serviceitem);
 
+        dditem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dditemActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("InventoryItem");
+
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbqtyFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
+
+        jLabel10.setText("Qty");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -555,18 +694,29 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel84)
-                    .addComponent(jLabel79))
+                    .addComponent(jLabel79)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71)
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(87, 87, 87)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel84))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addComponent(jScrollPane2)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -575,12 +725,20 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel79)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel84)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel84)
-                    .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addContainerGap())
         );
 
@@ -657,6 +815,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
 
         jLabel83.setText("Crt Date");
 
+        btinvoice.setText("Invoice");
+        btinvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btinvoiceActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Site");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -710,9 +877,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btquotetoorder)
-                                .addGap(92, 92, 92))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btinvoice)
+                                .addGap(13, 13, 13))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(247, 247, 247)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -766,7 +939,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
-                        .addComponent(btquotetoorder))
+                        .addComponent(btquotetoorder)
+                        .addComponent(btinvoice)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -887,19 +1063,21 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
          boolean canproceed = true;
         int line = 0;
-        
-          
         orddet.setModel(myorddetmodel);
-        
-       
         line = getmaxline();
         line++;
         if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), ordernbr.getText(),  tbhours.getText(), tbprice.getText()});
+         if (dditem.getSelectedIndex() > 0) {
+          myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), "I", lbdesc.getText(), ordernbr.getText(),  tbqty.getText(), tbprice.getText()});  
+         } else {
+          myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), "S", "", ordernbr.getText(),  tbhours.getText(), tbprice.getText()});   
+         }
+         
          setTotalHours();
          sumlinecount();
          setTotalPrice();
          serviceitem.setText("");
+         dditem.setSelectedIndex(0);
          serviceitem.requestFocus();
         }
     }//GEN-LAST:event_btadditemActionPerformed
@@ -938,13 +1116,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                  
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                         st.executeUpdate("insert into svd_det "
-                            + "(svd_line, svd_item, svd_nbr, svd_hrs, svd_netprice ) "
+                            + "(svd_line, svd_item, svd_type, svd_desc, svd_nbr, svd_qty, svd_netprice ) "
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" 
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","        
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" 
                             + ")"
                             + ";");
 
@@ -1024,20 +1204,22 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                             if (i > 0) {
                               st.executeUpdate("update svd_det set "
                             + " svd_item = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + " svd_hrs = " + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + " svd_netprice = " + "'" + orddet.getValueAt(j, 4).toString() + "'"
+                            + " svd_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " svd_netprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'"
                             + " where svd_nbr = " + "'" + ordernbr.getText() + "'" 
                             + " AND svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
                             + ";");
                             } else {
                             st.executeUpdate("insert into svd_det "
-                            + "(svd_line, svd_item, svd_nbr, svd_hrs, svd_netprice ) "
+                            + "(svd_line, svd_item, svd_nbr, svd_qty, svd_netprice ) "
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" 
+                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","               
+                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" 
                             + ")"
                             + ";");
                             }
@@ -1153,12 +1335,35 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btquotetoorderActionPerformed
 
+    private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
+          String[] message = autoInvoiceOrder();
+         if (message[0].equals("1")) { // if error
+           bsmf.MainFrame.show(message[1]);
+         } else {
+           getOrder(ordernbr.getText());
+         }
+    }//GEN-LAST:event_btinvoiceActionPerformed
+
+    private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbqtyFocusGained
+
+    private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbqtyFocusLost
+
+    private void dditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dditemActionPerformed
+        if (dditem.getSelectedItem() != null && ! isLoad)
+        itemChangeEvent(dditem.getSelectedItem().toString());
+    }//GEN-LAST:event_dditemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
+    private javax.swing.JButton btinvoice;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btnewcust;
     private javax.swing.JButton btnewsite;
@@ -1167,24 +1372,30 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser createdate;
     private javax.swing.JComboBox<String> ddcrew;
     private javax.swing.JComboBox ddcust;
+    private javax.swing.JComboBox<String> dditem;
     private javax.swing.JComboBox ddship;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox ddtype;
     private com.toedter.calendar.JDateChooser duedate;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel79;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel81;
     private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel83;
     private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel85;
     private javax.swing.JLabel jLabel86;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel91;
     private javax.swing.JLabel jLabel92;
     private javax.swing.JLabel jLabel93;
@@ -1195,6 +1406,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JLabel lbdesc;
     private javax.swing.JLabel lblcustname;
     private javax.swing.JLabel lblshipname;
     private javax.swing.JTable orddet;
@@ -1204,6 +1416,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbhours;
     private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
+    private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField totlines;

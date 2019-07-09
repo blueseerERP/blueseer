@@ -22,7 +22,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[select sv_nbr, svd_nbr, svd_due_date, svd_create_date,
-sv_cust,  sv_rmks, svd_item, svd_hrs, svd_netprice, cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from svd_det  inner join sv_mstr on sv_nbr = svd_nbr inner join cm_mstr on cm_code = sv_cust left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
+sv_cust,  sv_rmks, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from svd_det  inner join sv_mstr on sv_nbr = svd_nbr inner join cm_mstr on cm_code = sv_cust left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	</queryString>
 	<field name="sv_nbr" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="sv_nbr"/>
@@ -44,7 +44,7 @@ sv_cust,  sv_rmks, svd_item, svd_hrs, svd_netprice, cm_code, cm_terms, cm_code, 
 		<property name="com.jaspersoft.studio.field.label" value="svd_item"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="svd_det"/>
 	</field>
-	<field name="svd_hrs" class="java.lang.Double">
+	<field name="svd_qty" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="svd_hrs"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="svd_det"/>
 	</field>
@@ -112,8 +112,9 @@ sv_cust,  sv_rmks, svd_item, svd_hrs, svd_netprice, cm_code, cm_terms, cm_code, 
 	<field name="svd_due_date" class="java.lang.String"/>
 	<field name="svd_create_date" class="java.lang.String"/>
 	<field name="cm_terms" class="java.lang.String"/>
+	<field name="svd_desc" class="java.lang.String"/>
 	<variable name="totalamount" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{svd_netprice}.doubleValue())]]></variableExpression>
+		<variableExpression><![CDATA[new Double($F{svd_netprice}.doubleValue()) * new Double($F{svd_qty}.doubleValue())]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -331,7 +332,7 @@ sv_cust,  sv_rmks, svd_item, svd_hrs, svd_netprice, cm_code, cm_terms, cm_code, 
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Hours]]></text>
+				<text><![CDATA[Qty/Hrs]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="505" y="0" width="45" height="20" uuid="28ab6672-6ecc-44ec-b0d9-75dc3c7ecd69"/>
@@ -345,17 +346,21 @@ sv_cust,  sv_rmks, svd_item, svd_hrs, svd_netprice, cm_code, cm_terms, cm_code, 
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="391" height="30" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<reportElement x="19" y="0" width="199" height="30" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{svd_item}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="430" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textFieldExpression><![CDATA[$F{svd_hrs}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{svd_qty}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{svd_netprice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="220" y="0" width="190" height="16" uuid="90c06e0b-5d2f-4b38-8178-2f593a2d83a5"/>
+				<textFieldExpression><![CDATA[$F{svd_desc}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

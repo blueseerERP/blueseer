@@ -19675,6 +19675,42 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
        }
         
+        
+         public static void updateServiceOrderFromShipper(String shipper) {
+            
+            boolean partial = false;
+            boolean complete = true;
+            ArrayList<String> orders = new ArrayList<String>();
+            Set<String> uniqueorders = new HashSet<String>();
+            
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            ResultSet res = null;
+            try{
+                Statement st = con.createStatement();
+                String ordernbr = "";
+                 res = st.executeQuery("select svd_nbr from ship_det inner join " +
+                         " svd_det on shd_part = svd_item and shd_line = svd_line and shd_so = svd_nbr " +
+                   " where shd_id = " + "'" + shipper + "'" +";");
+                   while (res.next()) {
+                       ordernbr = res.getString("svd_nbr");
+                    }
+                   res.close();
+                   st.executeUpdate( "update sv_mstr set sv_status = 'closed' where sv_nbr = " + "'" + ordernbr + "'" + ";"); 
+            }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        
+       }
+        
+        
           public static void updateOrderFromShipperRV(String shipper) {
             
             boolean partial = false;

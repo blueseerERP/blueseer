@@ -122,6 +122,7 @@ com.blueseer.fgl.PayControl,,1
 com.blueseer.ord.OrderMaintPanel,,1
 com.blueseer.ord.ServiceOrderMaint,,1
 com.blueseer.ord.ServiceOrderBrowse,,1
+com.blueseer.fgl.PayRollBrowse,,1
 com.blueseer.ord.OrderReport1,,1
 com.blueseer.ord.OrderReport2,,1
 com.blueseer.ord.OrderReportSched,,1

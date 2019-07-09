@@ -28,9 +28,14 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -43,6 +48,34 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 "Type", "Desc", "AmountType", "Amt"
             });
     
+      
+       javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "RecID", "EmpNbr", "CheckNbr", "PayDate","tothrs", "Amount"})
+                       {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+    
+    
+                
+    javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"select", "ID", "Code", "InDate", "InTime", "OutDate", "OutTime", "tothrs"}){
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+    javax.swing.table.DefaultTableModel modelearnings = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
+     javax.swing.table.DefaultTableModel modeldeduct = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
+      
     
     
     /**
@@ -65,8 +98,235 @@ public class EmployeeMaster extends javax.swing.JPanel {
         
     }
     
-    
+     public void getEarnings(String empnbr, String checknbr) {
+          modelearnings.setNumRows(0);
+          jtpEarnings.setText("");
+          jtpEarnings.setContentType("text/html");
+         DecimalFormat df = new DecimalFormat("#0.00");
+        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
+                String codedesc = "";
+                 res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', t.code_id as 't.code_id', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate', clc_code, clc_desc " +
+                           "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
+                              " where t.emp_nbr = "  + "'" + empnbr + "'" +
+                           " and t.checknbr = " + "'" + checknbr + "'" +
+                                " group by t.code_id " +       
+                                " order by t.code_id " +      
+                               ";" );
+                 html += "<table>";
+                while (res.next()) {
+                    codedesc = res.getString("t.code_id");
+                    if (codedesc.equals("00") || codedesc.equals("77")) {
+                        codedesc = "Compensation";
+                    } else {
+                        codedesc = res.getString("clc_desc");
+                    }
+                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
+                
+                modelearnings.addRow(new Object []{empnbr,
+                                            "earnings",
+                                            res.getString("t.code_id"),
+                                            res.getString("clc_desc"),
+                                            res.getString("e.emp_rate"),
+                                            df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"))
+                                            } );
+                
+                }
+             html += "</table></body></html>";
+              jtpEarnings.setText(html);
+
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to get browse detail");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+         
+     }
+  
+     public void getDeductions(String empnbr, double amount) {
+         
+          modeldeduct.setNumRows(0);
+          jtpDeductions.setText("");
+          jtpDeductions.setContentType("text/html");
+          StyledDocument doc = jtpDeductions.getStyledDocument();
+          SimpleAttributeSet keyWord = new SimpleAttributeSet();
+          StyleConstants.setForeground(keyWord, Color.RED);
+          StyleConstants.setBackground(keyWord, Color.YELLOW);
+          StyleConstants.setBold(keyWord, true);
+         DecimalFormat df = new DecimalFormat("#0.00");
+         double empexception = 0.00;
+        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
+                res = st.executeQuery("SELECT paypd_desc, paypd_amt from pay_profdet inner join " +
+                             " emp_mstr on emp_profile = paypd_parentcode " +
+                              " where emp_nbr = " + "'" + empnbr + "'" +
+                              " order by paypd_desc " +        
+                               ";" );
+                
+                html += "<table>";
+                while (res.next()) {
+                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + df.format(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
+                // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
+                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null );
+                // "EmpID", "type", "code", "desc", "rate", "amt"
+                 modeldeduct.addRow(new Object []{empnbr,
+                                            "deduction",
+                                            "",
+                                            res.getString("paypd_desc"),
+                                            res.getString("paypd_amt"),
+                                            df.format(amount * (res.getDouble("paypd_amt") / 100))
+                                            } );
+                
+                }
+                
+                // now get specific employee deductions
+                res = st.executeQuery("SELECT empx_desc, empx_amt, empx_amttype from emp_exception " +
+                              " where empx_nbr = " + "'" + empnbr + "'" +
+                              " order by empx_desc " +        
+                               ";" );
+                while (res.next()) {
+                    if (res.getString("empx_amttype").equals("percent")) {
+                      empexception =  (amount * res.getDouble("empx_amt") / 100);
+                    } else {
+                      empexception = res.getDouble("empx_amt");  
+                    }
+                    html += "<tr><td align='right'>" + res.getString("empx_desc") + ":" + "</td><td>" + df.format(empexception) + "</td></tr>";
+                // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
+                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null ); 
+                
+                    modeldeduct.addRow(new Object []{empnbr,
+                                            "deduction",
+                                            "",
+                                            res.getString("empx_desc"),
+                                            res.getString("empx_amt"),
+                                            empexception
+                                            } );
+                }
+                
+                
+                html += "</table></body></html>";
+              jtpDeductions.setText(html);
+
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to get browse detail");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     }
      
+     public void getdetail(String empnbr, String checknbr) {
+      
+         modeldetail.setNumRows(0);
+         double totalsales = 0.00;
+         double totalqty = 0.00;
+         DecimalFormat df = new DecimalFormat("#0.00");
+        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                
+                
+                 
+                res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
+                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
+                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
+                              " where t.emp_nbr = " + "'" + empnbr + "'" +
+                              " and t.checknbr = " + "'" + checknbr + "'" +
+                               " and t.ispaid =  " + "'" + "1" + "'" +       
+                               " order by t.indate" +
+                               ";" );
+                while (res.next()) {
+                  
+                     modeldetail.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("t.recid"),
+                                            res.getString("t.code_id"),
+                                             res.getString("t.indate"),
+                                            res.getString("t.intime_adj"),
+                                            res.getString("t.outdate"),
+                                            res.getString("t.outtime_adj"),
+                                            res.getString("t.tothrs")
+                                            } );
+                    
+                    
+                }
+               
+             
+               
+                tabledetail.setModel(modeldetail);
+                this.repaint();
+
+            } catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to get browse detail");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+   
+     public void getPayRecords(String empnbr) {
+          try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                mymodel.setNumRows(0);
+                int i = 0;
+                    res = st.executeQuery("SELECT * FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
+                    while (res.next()) {
+                        
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("pyd_id"),
+                                            res.getString("pyd_empnbr"),
+                                            res.getString("pyd_checknbr"),
+                                            res.getString("pyd_paydate"),
+                                            res.getString("pyd_tothours"),
+                                            res.getDouble("pyd_payamt")
+                                            } );
+                    }
+            }
+            catch (SQLException s) {
+                s.printStackTrace();
+                bsmf.MainFrame.show("Unable to retrieve employee pay record");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     }
      
      public boolean getEmployee(String empidvar) {
          boolean gotIt = false;
@@ -140,7 +400,10 @@ public class EmployeeMaster extends javax.swing.JPanel {
                       });
                     }
                 }
-           
+                // now get payrecords
+                getPayRecords(empidvar);
+                
+                
             }
             catch (SQLException s) {
                 s.printStackTrace();
@@ -388,7 +651,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
         
           jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("PayRoll", jPanelPay);
+        jTabbedPane1.add("PaySetting", jPanelPay);
+         jTabbedPane1.add("PayHistory", jPanelHistory);
+        
+         
+          mymodel.setNumRows(0);
+        modeldetail.setNumRows(0);
+        tablereport.setModel(mymodel);
+        tabledetail.setModel(modeldetail);
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        detailpanel.setVisible(false);
+        chartpanel.setVisible(false);
         
         
          excmodel.setRowCount(0);
@@ -519,6 +794,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         tbprofile = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
+        jPanelHistory = new javax.swing.JPanel();
+        summarypanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablereport = new javax.swing.JTable();
+        detailpanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tabledetail = new javax.swing.JTable();
+        btsummary = new javax.swing.JButton();
+        chartpanel = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jtpEarnings = new javax.swing.JTextPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jtpDeductions = new javax.swing.JTextPane();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1176,6 +1464,83 @@ public class EmployeeMaster extends javax.swing.JPanel {
         );
 
         add(jPanelPay);
+
+        jPanelHistory.setPreferredSize(new java.awt.Dimension(938, 602));
+        jPanelHistory.setLayout(new javax.swing.BoxLayout(jPanelHistory, javax.swing.BoxLayout.LINE_AXIS));
+
+        summarypanel.setLayout(new java.awt.BorderLayout());
+
+        tablereport.setAutoCreateRowSorter(true);
+        tablereport.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablereportMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablereport);
+
+        summarypanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanelHistory.add(summarypanel);
+
+        detailpanel.setLayout(new java.awt.BorderLayout());
+
+        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tabledetail);
+
+        detailpanel.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        btsummary.setText("Back");
+        btsummary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btsummaryActionPerformed(evt);
+            }
+        });
+        detailpanel.add(btsummary, java.awt.BorderLayout.PAGE_START);
+
+        jPanelHistory.add(detailpanel);
+
+        chartpanel.setMinimumSize(new java.awt.Dimension(23, 23));
+        chartpanel.setName(""); // NOI18N
+        chartpanel.setPreferredSize(new java.awt.Dimension(452, 402));
+        chartpanel.setLayout(new javax.swing.BoxLayout(chartpanel, javax.swing.BoxLayout.Y_AXIS));
+
+        jScrollPane4.setViewportView(jtpEarnings);
+
+        chartpanel.add(jScrollPane4);
+
+        jScrollPane5.setViewportView(jtpDeductions);
+
+        chartpanel.add(jScrollPane5);
+
+        jPanelHistory.add(chartpanel);
+
+        add(jPanelHistory);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1532,6 +1897,37 @@ public class EmployeeMaster extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btexcdeleteActionPerformed
 
+    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        int row = tablereport.rowAtPoint(evt.getPoint());
+        int col = tablereport.columnAtPoint(evt.getPoint());
+        
+        if ( col == 0) {
+            getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+            summarypanel.setVisible(false);
+            detailpanel.setVisible(true);
+            chartpanel.setVisible(true);
+            getDeductions(tablereport.getValueAt(row, 2).toString(), Double.valueOf(tablereport.getValueAt(row,6).toString()));
+            getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
+        }
+        
+        
+    }//GEN-LAST:event_tablereportMouseClicked
+
+    private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
+        int row = tabledetail.rowAtPoint(evt.getPoint());
+        int col = tabledetail.columnAtPoint(evt.getPoint());
+        if (col == 0) {
+            
+        }
+    }//GEN-LAST:event_tabledetailMouseClicked
+
+    private void btsummaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsummaryActionPerformed
+            summarypanel.setVisible(true);
+            detailpanel.setVisible(false);
+            chartpanel.setVisible(false);
+    }//GEN-LAST:event_btsummaryActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btdelete;
@@ -1542,7 +1938,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JButton btexcadd;
     private javax.swing.JButton btexcdelete;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btsummary;
     private javax.swing.JCheckBox cbautoclock;
+    private javax.swing.JPanel chartpanel;
     private javax.swing.JTextArea comments;
     private com.toedter.calendar.JDateChooser dcdob;
     private javax.swing.JComboBox ddcountry;
@@ -1555,6 +1953,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JComboBox ddstate;
     private javax.swing.JComboBox ddstatus;
     private javax.swing.JComboBox ddtype;
+    private javax.swing.JPanel detailpanel;
     private javax.swing.JTextField empid;
     private javax.swing.JTable exctable;
     private javax.swing.JTextField firstname;
@@ -1601,16 +2000,26 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelHistory;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JPanel jPanelPay;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextPane jtpDeductions;
+    private javax.swing.JTextPane jtpEarnings;
     private javax.swing.JTextField lastname;
     private javax.swing.JTextField middlename;
     private javax.swing.JLabel percentlabel;
+    private javax.swing.JPanel summarypanel;
     private javax.swing.JTextArea taUMperms1;
+    private javax.swing.JTable tabledetail;
+    private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbaccount;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbclockin;
