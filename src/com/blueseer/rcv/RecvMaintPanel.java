@@ -266,15 +266,16 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 ResultSet res = null;
 
 
-                res = st.executeQuery("select vd_terms, po_rcpt_acct, po_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
+                res = st.executeQuery("select vd_terms, poc_rcpt_acct, poc_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;
-                   apacct = res.getString("po_rcpt_acct");
-                   apcc = res.getString("po_rcpt_cc");
+                   apacct = res.getString("poc_rcpt_acct");
+                   apcc = res.getString("poc_rcpt_cc");
                    terms = res.getString("vd_terms");
                 }
 
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("sql code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -393,6 +394,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                  
                  
              } catch (SQLException s) {
+                 s.printStackTrace();
              JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to update sod_det");
              }
               // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());

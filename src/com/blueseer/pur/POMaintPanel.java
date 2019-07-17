@@ -444,7 +444,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                  sumlinecount();
                
                 if (gotIt) {
-                         if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
+                         if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0) {
                              disableAll();
                              btnew.setEnabled(true);
                          } else {
@@ -457,7 +457,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to retrieve so_mstr");
+                bsmf.MainFrame.show("Unable to retrieve po_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -999,7 +999,7 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         jLabel82.setText("Vendor");
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Shipped", "PartialShipped", "Hold", "Canceled" }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "closed", "partial", "hold", "void" }));
 
         ddvend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1414,7 +1414,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btdelitem)
                     .addComponent(btadditem))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         orddet.setModel(new javax.swing.table.DefaultTableModel(

@@ -1,6 +1,6 @@
-1,default,Federal Tax Withholding,Deduction,14,percent,2018-01-01,2018-01-01,1,admin
-2,default,State Tax Withholding,Deduction,3,percent,2018-01-01,2018-01-01,1,admin
-3,default,Social Security (FICA),Deduction,4,percent,2018-01-01,2018-01-01,1,admin
-4,default,Medicare (Fica),Deduction,14,percent,2018-01-01,2018-01-01,1,admin
-5,default,Medical,Deduction,45.50,fixed,2018-01-01,2018-01-01,1,admin
-6,default,Dental,Deduction,3.75,fixed,2018-01-01,2018-01-01,1,admin
+1,default,Federal Tax Withholding,Deduction,70003000,,16,percent,2018-01-01,2018-01-01,1,admin
+2,default,State Tax Withholding,Deduction,70003000,,3,percent,2018-01-01,2018-01-01,1,admin
+3,default,Social Security (FICA),Deduction,70003000,,4,percent,2018-01-01,2018-01-01,1,admin
+4,default,Medicare (Fica),Deduction,70003000,,1.4,percent,2018-01-01,2018-01-01,1,admin
+5,default,Medical,Deduction,70003000,,5.50,fixed,2018-01-01,2018-01-01,1,admin
+6,default,Dental,Deduction,70003000,,3.75,fixed,2018-01-01,2018-01-01,1,admin

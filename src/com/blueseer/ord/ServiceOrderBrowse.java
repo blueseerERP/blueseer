@@ -431,7 +431,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("CashTranBrowse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Browse"));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 

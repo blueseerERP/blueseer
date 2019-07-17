@@ -5,6 +5,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.sql.DriverManager;
@@ -27,7 +28,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     
      javax.swing.table.DefaultTableModel profilemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Element", "Type", "Percent", "AmountType", "Enabled"
+                "Element", "Type", "Acct", "CC", "Percent", "AmountType", "Enabled"
             });
     
     /**
@@ -57,7 +58,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT * FROM  pay_profdet where " +
                             " paypd_parentcode = " + "'" + code + "'" + ";");
                     while (res.next()) {
-                     profilemodel.addRow(new Object[]{res.getString("paypd_desc"), res.getString("paypd_type"), res.getString("paypd_amt"), res.getString("paypd_amttype"), res.getBoolean("paypd_enabled")});   
+                     profilemodel.addRow(new Object[]{res.getString("paypd_desc"), res.getString("paypd_type"), res.getString("paypd_acct"), res.getString("paypd_cc"), res.getString("paypd_amt"), res.getString("paypd_amttype"), res.getBoolean("paypd_enabled")});   
                     }
            
                     if (i > 0) {
@@ -86,6 +87,8 @@ public class PayProfileMaint extends javax.swing.JPanel {
            tbdesc.setText("");
            tbelement.setText("");
            tbelementamt.setText("");
+           tbacct.setText("");
+           tbcc.setText("");
            cbenabled.setSelected(false);
            
      }
@@ -94,6 +97,8 @@ public class PayProfileMaint extends javax.swing.JPanel {
          tableelement.setEnabled(true);
          tbprofilecode.setEnabled(true);
          tbdesc.setEnabled(true);
+         tbacct.setEnabled(true);
+         tbcc.setEnabled(true);
          tbelement.setEnabled(true);
          tbelementamt.setEnabled(true);
          cbenabled.setEnabled(true);
@@ -112,6 +117,8 @@ public class PayProfileMaint extends javax.swing.JPanel {
          tableelement.setEnabled(false);
          tbprofilecode.setEnabled(false);
          tbdesc.setEnabled(false);
+         tbacct.setEnabled(false);
+         tbcc.setEnabled(false);
          tbelement.setEnabled(false);
          cbenabled.setEnabled(false);
          btbrowse.setEnabled(false);
@@ -166,6 +173,9 @@ public class PayProfileMaint extends javax.swing.JPanel {
         ddtype = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         ddamttype = new javax.swing.JComboBox<>();
+        tbacct = new javax.swing.JTextField();
+        tbcc = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -228,6 +238,20 @@ public class PayProfileMaint extends javax.swing.JPanel {
 
         ddamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "percent", "fixed" }));
 
+        tbacct.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbacctFocusLost(evt);
+            }
+        });
+
+        tbcc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbccFocusLost(evt);
+            }
+        });
+
+        jLabel1.setText("GL Acct");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -237,25 +261,32 @@ public class PayProfileMaint extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbelement)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbelementamt, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddamttype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbenabled)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(tbcc))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tbelementamt, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ddamttype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbenabled)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btaddelement)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteelement)
-                        .addGap(10, 10, 10))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(14, 14, 14)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -274,7 +305,12 @@ public class PayProfileMaint extends javax.swing.JPanel {
                     .addComponent(cbenabled)
                     .addComponent(jLabel4)
                     .addComponent(tbelementamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddamttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddamttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
                     .addComponent(btaddelement)
                     .addComponent(btdeleteelement))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -412,13 +448,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
                 st.executeUpdate("delete from pay_profdet where paypd_parentcode = " + "'" + tbprofilecode.getText() + "'" + ";");
                        
                  for (int j = 0; j < tableelement.getRowCount(); j++) {
-                st.executeUpdate("insert into pay_profdet (paypd_parentcode, paypd_desc, paypd_type, paypd_amt, paypd_amttype, paypd_enabled ) values ( " 
+                st.executeUpdate("insert into pay_profdet (paypd_parentcode, paypd_desc, paypd_type, paypd_acct, paypd_cc, paypd_amt, paypd_amttype, paypd_enabled ) values ( " 
                         + "'" + tbprofilecode.getText() + "'" + ","
                         + "'" + tableelement.getValueAt(j, 0).toString() + "'" + ","
                         + "'" + tableelement.getValueAt(j, 1).toString() + "'" + ","
                         + "'" + tableelement.getValueAt(j, 2).toString() + "'" + ","
-                        + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","        
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 4).toString())) + "'" 
+                        + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","    
+                        + "'" + tableelement.getValueAt(j, 4).toString() + "'" + ","
+                        + "'" + tableelement.getValueAt(j, 5).toString() + "'" + ","            
+                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 6).toString())) + "'" 
                         + " );" );
                  }
               
@@ -460,7 +498,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
             return;
         }
         
-        profilemodel.addRow(new Object[]{ tbelement.getText(), ddtype.getSelectedItem().toString(), tbelementamt.getText(), ddamttype.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected())) });
+        profilemodel.addRow(new Object[]{ tbelement.getText(), ddtype.getSelectedItem().toString(), tbacct.getText(), tbcc.getText(), tbelementamt.getText(), ddamttype.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected())) });
     }//GEN-LAST:event_btaddelementActionPerformed
 
     private void btdeleteelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteelementActionPerformed
@@ -508,8 +546,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
                             + "'" + tableelement.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","        
-                            + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 4).toString())) + "'" 
+                            + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","    
+                            + "'" + tableelement.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + tableelement.getValueAt(j, 5).toString() + "'" + ","              
+                            + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 6).toString())) + "'" 
                             + " );" );
                      }
               
@@ -574,6 +614,24 @@ public class PayProfileMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void tbacctFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbacctFocusLost
+        if (! tbacct.getText().isEmpty()) {
+            if (! OVData.isValidGLAcct(tbacct.getText())) {
+                bsmf.MainFrame.show("Invalid GL Acct");
+                tbacct.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_tbacctFocusLost
+
+    private void tbccFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbccFocusLost
+        if (! tbcc.getText().isEmpty()) {
+            if (! OVData.isValidGLcc(tbcc.getText())) {
+                bsmf.MainFrame.show("Invalid GL CC");
+                tbcc.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_tbccFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -586,6 +644,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JComboBox<String> ddamttype;
     private javax.swing.JComboBox<String> ddtype;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -596,6 +655,8 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableelement;
+    private javax.swing.JTextField tbacct;
+    private javax.swing.JTextField tbcc;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbelement;
     private javax.swing.JTextField tbelementamt;

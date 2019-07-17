@@ -1107,10 +1107,13 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbrate">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbrateFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Rate"/>
+                <Property name="text" type="java.lang.String" value="Rate/hr"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddtype">

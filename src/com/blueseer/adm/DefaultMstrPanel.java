@@ -42,6 +42,7 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                     tbcc.setText(res.getString("ov_cc"));
                     tbwh.setText(res.getString("ov_wh"));
                     tbcurrency.setText(res.getString("ov_currency"));
+                    tblabelprinter.setText(res.getString("ov_labelprinter"));
                 }
                
                 if (i == 0)
@@ -83,6 +84,8 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        tblabelprinter = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -103,6 +106,8 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
 
         jLabel4.setText("Default Dept/CC:");
 
+        jLabel5.setText("Default Label Printer:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -113,16 +118,19 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbwh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbcurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)))
+                        .addComponent(btupdate))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(tblabelprinter, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbcc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -145,7 +153,11 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tblabelprinter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -178,18 +190,20 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                         i++;
                     }
                     if (i == 0) {
-                    st.executeUpdate("insert into ov_mstr (ov_site, ov_cc, ov_wh, ov_currency) values (" + 
+                    st.executeUpdate("insert into ov_mstr (ov_site, ov_cc, ov_wh, ov_currency, ov_labelprinter) values (" + 
                             "'" + tbsite.getText() + "'" + "," +
                             "'" + tbcc.getText() + "'" + "," +
                             "'" + tbwh.getText() + "'" + "," +
-                            "'" + tbcurrency.getText() + "'" +       
+                            "'" + tbcurrency.getText() + "'" +  "," +
+                            "'" + tblabelprinter.getText() + "'" +        
                             ") ;");              
                           bsmf.MainFrame.show("Inserting Defaults");
                     } else {
                     st.executeUpdate("update ov_mstr set ov_site = " + "'" + tbsite.getText() + "'"  + "," +
                             " ov_cc = " + "'" + tbcc.getText() + "'" + "," +
                             " ov_wh = " + "'" + tbwh.getText() + "'" + "," +
-                            " ov_currency = " + "'" + tbcurrency.getText() + "'"                            
+                            " ov_currency = " + "'" + tbcurrency.getText() + "'" +
+                            " ov_labelprinter = " + "'" + tblabelprinter.getText() + "'"           
                             + ";");  
                            bsmf.MainFrame.show("Updating Defaults");
                     }
@@ -210,9 +224,11 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbcc;
     private javax.swing.JTextField tbcurrency;
+    private javax.swing.JTextField tblabelprinter;
     private javax.swing.JTextField tbsite;
     private javax.swing.JTextField tbwh;
     // End of variables declaration//GEN-END:variables

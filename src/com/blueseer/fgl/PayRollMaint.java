@@ -109,7 +109,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     javax.swing.table.DefaultTableModel modelearnings = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
      javax.swing.table.DefaultTableModel modeldeduct = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
+                        new String[]{"EmpID", "type", "code", "profile", "profline", "desc", "rate", "amt"});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -292,15 +292,18 @@ public class PayRollMaint extends javax.swing.JPanel {
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modelearnings.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
-                                + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_desc, pyl_rate, pyl_amt ) "
+                                + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
                                 + " values ( " 
                                 + "'" + tbid.getText().toString() + "'" + ","
                                 + "'" + modelearnings.getValueAt(e, 0).toString() + "'" + ","
                                 + "'" + modelearnings.getValueAt(e, 1).toString() + "'" + ","
                                 + "'" + modelearnings.getValueAt(e, 2).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 3).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 4).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" 
+                                + "''" + ","  // profile  
+                                + "''" + ","  // profileline          
+                                + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
+                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" + ","
+                                + "'" + modelearnings.getValueAt(e, 6).toString() + "'" + ","
+                                + "'" + modelearnings.getValueAt(e, 7).toString() + "'" 
                                 + ")"
                                 + ";");
                               }
@@ -310,18 +313,21 @@ public class PayRollMaint extends javax.swing.JPanel {
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modeldeduct.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
-                                + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_desc, pyl_rate, pyl_amt ) "
+                                + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
                                 + " values ( " 
                                 + "'" + tbid.getText().toString() + "'" + ","
                                 + "'" + modeldeduct.getValueAt(e, 0).toString() + "'" + ","
                                 + "'" + modeldeduct.getValueAt(e, 1).toString() + "'" + ","
                                 + "'" + modeldeduct.getValueAt(e, 2).toString() + "'" + ","
                                 + "'" + modeldeduct.getValueAt(e, 3).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" 
+                                + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","        
+                                + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
+                                + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 6).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 7).toString() + "'" 
                                 + ")"
                                 + ";");
-                                      netdeduction += Double.valueOf(modeldeduct.getValueAt(e, 5).toString());
+                                      netdeduction += Double.valueOf(modeldeduct.getValueAt(e, 7).toString());
                               }     
                         
                               // now update timeclock records for employee and date range
@@ -423,6 +429,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
                                             res.getString("t.code_id"),
+                                            "",
+                                            "",
                                             res.getString("clc_desc"),
                                             res.getString("e.emp_rate"),
                                             df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"))
@@ -466,7 +474,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
-                res = st.executeQuery("SELECT paypd_desc, paypd_amt from pay_profdet inner join " +
+                res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt from pay_profdet inner join " +
                              " emp_mstr on emp_profile = paypd_parentcode " +
                               " where emp_nbr = " + "'" + empnbr + "'" +
                               " order by paypd_desc " +        
@@ -481,6 +489,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                  modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
                                             "",
+                                            res.getString("paypd_parentcode"),
+                                            res.getString("paypd_id"),
                                             res.getString("paypd_desc"),
                                             res.getString("paypd_amt"),
                                             df.format(amount * (res.getDouble("paypd_amt") / 100))
@@ -506,6 +516,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                     modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
                                             "",
+                                            "",  // profile
+                                            "",  // profile line
                                             res.getString("empx_desc"),
                                             res.getString("empx_amt"),
                                             empexception
@@ -841,18 +853,21 @@ public class PayRollMaint extends javax.swing.JPanel {
          btrun.setEnabled(false);
         btcsv.setEnabled(false);
         btdetail.setEnabled(false);
+        btnacha.setEnabled(false);
         ddsite.setEnabled(false);
         dcfrom.setEnabled(false);
         dcto.setEnabled(false);
         dcpay.setEnabled(false);
         tbcomments.setEnabled(false);
         tbchecknbr.setEnabled(false);
+        ddbank.setEnabled(false);
     }
     
     public void enableAll() {
         btbrowse.setEnabled(true);
         btnew.setEnabled(true);
         btcommit.setEnabled(true);
+        btnacha.setEnabled(true);
         btrun.setEnabled(true);
         btcsv.setEnabled(true);
         btdetail.setEnabled(true);
@@ -862,6 +877,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         dcpay.setEnabled(true);
         tbcomments.setEnabled(true);
         tbchecknbr.setEnabled(true);
+        ddbank.setEnabled(true);
         
     }
     
@@ -1009,6 +1025,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Payroll Maintenance"));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1239, 564));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -1175,8 +1192,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                         .addComponent(btrun))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbid, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(tbid)
+                            .addComponent(ddsite, 0, 86, Short.MAX_VALUE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1192,11 +1209,11 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(66, 66, 66)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btcsv)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btcommit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnacha)
@@ -1212,7 +1229,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(tbchecknbr, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(dcpay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 68, Short.MAX_VALUE))))
+                        .addGap(0, 54, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1277,7 +1294,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(0, 194, Short.MAX_VALUE)
+                .addGap(0, 91, Short.MAX_VALUE)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tbtotpayroll, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1300,12 +1317,14 @@ public class PayRollMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

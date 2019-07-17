@@ -50,7 +50,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     
       
        javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RecID", "EmpNbr", "CheckNbr", "PayDate","tothrs", "Amount"})
+                      new String[]{"select", "RecID", "EmpNbr", "CheckNbr", "PayDate","tothrs", "GrossAmt", "Deduct", "NetAmt"})
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -306,15 +306,20 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 ResultSet res = null;
                 mymodel.setNumRows(0);
                 int i = 0;
-                    res = st.executeQuery("SELECT * FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
+                double netcheck = 0.00;
+                    res = st.executeQuery("SELECT pyd_id, pyd_empnbr, pyd_checknbr, pyd_paydate, pyd_tothours, pyd_payamt, " +
+                             " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr ) as 'deductions' " +
+                            " FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
                     while (res.next()) {
-                        
+                          netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
                           mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("pyd_id"),
                                             res.getString("pyd_empnbr"),
                                             res.getString("pyd_checknbr"),
                                             res.getString("pyd_paydate"),
                                             res.getString("pyd_tothours"),
-                                            res.getDouble("pyd_payamt")
+                                            res.getDouble("pyd_payamt"),
+                                            res.getDouble("deductions"),
+                                            netcheck
                                             } );
                     }
             }
@@ -595,6 +600,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
         tbemernumber.setText("");
         tbssn.setText("");
         tbrate.setText("0");
+        tbrate.setBackground(Color.white); 
         tbvacdays.setText("0");
         tbefladays.setText("0");
         tbvactaken.setText("0");
@@ -665,6 +671,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
         
+         tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+         tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+         tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         
          excmodel.setRowCount(0);
         exctable.setModel(excmodel);
@@ -1383,7 +1392,13 @@ public class EmployeeMaster extends javax.swing.JPanel {
 
         jLabel26.setText("Bank Account");
 
-        jLabel3.setText("Rate");
+        tbrate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbrateFocusLost(evt);
+            }
+        });
+
+        jLabel3.setText("Rate/hr");
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Temp" }));
 
@@ -1927,6 +1942,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
             detailpanel.setVisible(false);
             chartpanel.setVisible(false);
     }//GEN-LAST:event_btsummaryActionPerformed
+
+    private void tbrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrateFocusLost
+             String x = BlueSeerUtils.bsformat("", tbrate.getText(), "4");
+        if (x.equals("error")) {
+            tbrate.setText("");
+            tbrate.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbrate.requestFocus();
+        } else {
+            tbrate.setText(x);
+            tbrate.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbrateFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

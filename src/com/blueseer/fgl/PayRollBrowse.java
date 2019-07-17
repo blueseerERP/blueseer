@@ -59,7 +59,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      //pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empdept, pyd_emptype, pyd_paydate, pyd_checknbr, pyd_payamt
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "EmpNbr", "LastName", "FirstName", "Dept", "Type", "PayDate", "CheckNbr", "Amount"})
+                        new String[]{"Detail", "EmpNbr", "LastName", "FirstName", "Dept", "Type", "PayDate", "CheckNbr", "GrossAmt", "Deduct", "NetAmt"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -168,6 +168,8 @@ public class PayRollBrowse extends javax.swing.JPanel {
         
            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
            tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+           tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+           tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
          
        
           
@@ -192,6 +194,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
         for (Object emp : emps) {
             ddempfrom.addItem(emp);
         }
+        
         ddempto.removeAllItems();
         for (Object emp : emps) {
             ddempto.addItem(emp);
@@ -467,6 +470,7 @@ try {
                tbcount.setText("0"); 
                int i = 0;
                double total = 0.00;
+               double netcheck = 0.00;
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
                
@@ -480,9 +484,10 @@ try {
                      empto = ddempto.getSelectedItem().toString();
                       
                  
-                 
+            
         
-             res = st.executeQuery("select pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empdept, pyd_emptype, pyd_paydate, pyd_checknbr, pyd_payamt " +
+             res = st.executeQuery("select pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empdept, pyd_emptype, pyd_paydate, pyd_checknbr, pyd_payamt, " +
+                         " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr ) as 'deductions' " +
                          " from pay_det where " +
                         " pyd_empnbr >= " + "'" + empfrom + "'" + " AND " +
                         " pyd_empnbr <= " + "'" + empto + "'" + " AND " +
@@ -494,7 +499,8 @@ try {
                 
                 while (res.next()) {
                  i++;
-                 total += res.getDouble("pyd_payamt");
+                 netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
+                 total = total + netcheck;
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, res.getString("pyd_empnbr"),
                                 res.getString("pyd_emplname"),
                                 res.getString("pyd_empfname"),
@@ -502,12 +508,13 @@ try {
                                 res.getString("pyd_emptype"),
                                 res.getString("pyd_paydate"),
                                 res.getString("pyd_checknbr"),
-                                res.getDouble("pyd_payamt")
+                                res.getDouble("pyd_payamt"),
+                                res.getDouble("deductions"),
+                                netcheck
                             });
-                } // while   
-                    
-               
-                tbtotal.setText(String.valueOf(total));
+               } // while   
+                                                                                                                                
+                tbtotal.setText(df.format(total));
                 tbcount.setText(String.valueOf(i));
         
             } catch (SQLException s) {

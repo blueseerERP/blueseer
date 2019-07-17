@@ -184,6 +184,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbnetwt.setEnabled(true);
        tbshipwt.setEnabled(true);
        tbdesc.setEnabled(true);
+     //  btprintlabel.setEnabled(true);
        tbgroup.setEnabled(true);
        tbroutingcode.setEnabled(true);
        tbsellprice.setEnabled(true);
@@ -242,6 +243,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbroutingcode.setEnabled(false);
       tbmtlstd.setEnabled(false);
       tblbrstd.setEnabled(false);
+      btprintlabel.setEnabled(false);
       tbbdnstd.setEnabled(false);
       tbovhstd.setEnabled(false);
       tboutstd.setEnabled(false);
@@ -793,6 +795,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         ddloc = new javax.swing.JComboBox<>();
         jLabel78 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
+        btprintlabel = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         cbmrp = new javax.swing.JCheckBox();
         tbsafestock = new javax.swing.JTextField();
@@ -980,6 +983,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btprintlabel.setText("Print Label");
+        btprintlabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintlabelActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1039,20 +1049,25 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdescbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(210, 210, 210)
-                .addComponent(btdelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btedit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btadd, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(48, Short.MAX_VALUE)
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btedit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btadd, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btprintlabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1108,7 +1123,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     .addComponent(btadd)
                     .addComponent(btedit)
                     .addComponent(btdelete))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btprintlabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel2);
@@ -2428,6 +2445,15 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbminordqtyFocusLost
 
+    private void btprintlabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintlabelActionPerformed
+        String printer = OVData.getDefaultLabelPrinter();
+        if (OVData.isValidPrinter(printer)) {
+            OVData.printLabelItem(partnumber.getText(), printer);
+        } else {
+            bsmf.MainFrame.show("no default label printer defined");
+        }
+    }//GEN-LAST:event_btprintlabelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CostBOMPanel;
@@ -2442,6 +2468,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btedit;
     private javax.swing.JButton btitembrowse;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btprintlabel;
     private javax.swing.JCheckBox cbaltbom;
     private javax.swing.JCheckBox cbdefault;
     private javax.swing.JCheckBox cbmrp;

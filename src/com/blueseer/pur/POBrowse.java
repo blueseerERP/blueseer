@@ -47,7 +47,10 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.util.Enumeration;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -58,7 +61,7 @@ public class POBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "PO", "Vend", "OrdDate", "Type", "Status", "Amt"})
+                        new String[]{"Select", "Detail", "PO", "Vend", "Name", "OrdDate", "Type", "Status", "Amt"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -91,7 +94,40 @@ public class POBrowse extends javax.swing.JPanel {
         }
     }
     
-   
+    class SomeRenderer extends DefaultTableCellRenderer {
+        
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+        
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 7);  
+        
+         if ("error".equals(status)) {
+            c.setBackground(Color.red);
+            c.setForeground(Color.WHITE);
+        } else if ("closed".equals(status)) {
+            c.setBackground(Color.blue);
+            c.setForeground(Color.WHITE);
+        } else {
+            c.setBackground(table.getBackground());
+            c.setForeground(table.getForeground());
+        }       
+        
+        //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+      // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
+      // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
+       /*
+            if (column == 3)
+            c.setForeground(Color.BLUE);
+            else
+                c.setBackground(table.getBackground());
+       */
+        return c;
+    }
+    }
 
     
     
@@ -137,6 +173,7 @@ public class POBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("Unable to get PO Browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -152,6 +189,8 @@ public class POBrowse extends javax.swing.JPanel {
         lblqtytot.setText("0");
         labeldettotal.setText("");
         
+         cbopen.setSelected(true);
+         cbclose.setSelected(true);
         
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -232,6 +271,8 @@ public class POBrowse extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         tbfrompo = new javax.swing.JTextField();
         tbtopo = new javax.swing.JTextField();
+        cbclose = new javax.swing.JCheckBox();
+        cbopen = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lblqtytot = new javax.swing.JLabel();
@@ -314,15 +355,19 @@ public class POBrowse extends javax.swing.JPanel {
 
         jLabel6.setText("From PO");
 
+        cbclose.setText("Closed");
+
+        cbopen.setText("Open");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel6))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
@@ -337,14 +382,21 @@ public class POBrowse extends javax.swing.JPanel {
                         .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
-                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addGap(4, 4, 4)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btRun)
+                        .addGap(18, 18, 18)
+                        .addComponent(btdetail))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addComponent(cbopen)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbclose)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -366,7 +418,9 @@ public class POBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
-                        .addComponent(tbtopo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbtopo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbclose)
+                        .addComponent(cbopen)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -465,10 +519,7 @@ try {
                mymodel.setNumRows(0);
         
               tablereport.setModel(mymodel);
-              tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-         //     tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-         //      tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
@@ -496,9 +547,20 @@ try {
                  
                  
                  
-             res = st.executeQuery("select po_nbr, po_vend, po_ord_date, po_due_date, po_type, po_status, " +
+                  Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                 while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (tc.getIdentifier().toString().equals("Select") || 
+                             tc.getIdentifier().toString().equals("Detail") ) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new POBrowse.SomeRenderer());
+                 }
+                 tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 
+             res = st.executeQuery("select po_nbr, po_vend, vd_name, po_ord_date, po_due_date, po_type, po_status, " +
                       " sum(pod_ord_qty * pod_netprice) as 'total', sum(pod_ord_qty) as 'qty' " +
-                         " from po_mstr inner join pod_mstr on pod_nbr = po_nbr where " +
+                         " from po_mstr inner join pod_mstr on pod_nbr = po_nbr inner join vd_mstr on vd_addr = po_vend where " +
                         " po_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " po_vend <= " + "'" + vendto + "'" + " AND " +
                      " po_nbr >= " + "'" + pofrom + "'" + " AND " +
@@ -508,11 +570,20 @@ try {
                   
                 
                        while (res.next()) {
+                           
+                             if (! cbopen.isSelected() && res.getString("po_status").equals("open"))
+                             continue;
+                             if (! cbclose.isSelected() && res.getString("po_status").equals("closed"))
+                             continue;
+                    
+                           
+                           
                           totamt += res.getDouble(("total"));
                           totqty += res.getDouble(("qty"));
                
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("po_nbr"),
                                 res.getString("po_vend"),
+                                res.getString("vd_name"),
                                 res.getString("po_ord_date"),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
@@ -566,6 +637,8 @@ try {
     private javax.swing.JLabel EndBal;
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JCheckBox cbclose;
+    private javax.swing.JCheckBox cbopen;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvendfrom;
     private javax.swing.JComboBox ddvendto;

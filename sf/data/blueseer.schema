@@ -802,7 +802,8 @@ CREATE TABLE IF NOT EXISTS `ov_mstr` (
   `ov_site` varchar(10)  NOT NULL DEFAULT '',
   `ov_cc` varchar(10)  NOT NULL DEFAULT '',
   `ov_wh` varchar(10)  NOT NULL DEFAULT '',
-  `ov_currency` varchar(3)  NOT NULL DEFAULT ''
+  `ov_currency` varchar(3)  NOT NULL DEFAULT '',
+  `ov_labelprinter` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_parent` varchar(18) NOT NULL  DEFAULT '',
@@ -1817,9 +1818,12 @@ CREATE TABLE `pay_det` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_line` (
   `pyl_id` int(8) NOT NULL,
+  `pyl_profile_line` int(8) NOT NULL,
+  `pyl_profile` varchar(10) NOT NULL,
   `pyl_empnbr` int(8) NOT NULL,
   `pyl_type` varchar(10) NOT NULL DEFAULT '',
   `pyl_code` varchar(10) NOT NULL DEFAULT '',
+  `pyl_checknbr` varchar(8) NOT NULL DEFAULT '',
   `pyl_desc` varchar(70) NOT NULL DEFAULT '',
   `pyl_percent` decimal(7,2) NOT NULL DEFAULT '0.00',
   `pyl_rate` decimal(7,2) NOT NULL DEFAULT '0.00',
@@ -1828,6 +1832,7 @@ CREATE TABLE `pay_line` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_profile` (
   `payp_code` varchar(10) NOT NULL DEFAULT '',
+  `payp_site` varchar(10) NOT NULL DEFAULT '',
   `payp_desc` varchar(30) NOT NULL DEFAULT '',
   `payp_crtdate` date  DEFAULT NULL,
   `payp_moddate` date  DEFAULT NULL,
@@ -1838,6 +1843,8 @@ CREATE TABLE `pay_profdet` (
   `paypd_parentcode` varchar(10) NOT NULL DEFAULT '',
   `paypd_desc` varchar(30) NOT NULL DEFAULT '',
   `paypd_type` varchar(10) NOT NULL DEFAULT '',
+  `paypd_acct` varchar(10) NOT NULL DEFAULT '',
+  `paypd_cc` varchar(4) NOT NULL DEFAULT '',
   `paypd_amt` decimal(11,2) NOT NULL DEFAULT '0.00',
   `paypd_amttype` varchar(10) NOT NULL DEFAULT '',
   `paypd_crtdate` date  DEFAULT NULL,

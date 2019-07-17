@@ -90,12 +90,14 @@ import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import static java.lang.Math.abs;
 import java.math.RoundingMode;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Savepoint;
 import java.util.Map.Entry;
@@ -7256,6 +7258,34 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myitem;
         
     }
+       
+                    public static String getDefaultLabelPrinter() {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select ov_labelprinter from ov_mstr;" );
+               while (res.next()) {
+                myitem = res.getString("ov_labelprinter");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }
+              
               
                public static String getDefaultARBank() {
            String myitem = null;
@@ -7474,7 +7504,64 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
       
-       public static String getDefaultPayTaxCC() {
+          public static String getPayProfileDetAcct(String profile, String line) {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select paypd_acct from pay_profdet where paypd_id = " + "'" + line + "'" +
+                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("paypd_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }  
+      
+              public static String getPayProfileDetCC(String profile, String line) {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select paypd_cc from pay_profdet where paypd_id = " + "'" + line + "'" +
+                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("paypd_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myitem;
+        
+    }  
+          
+      
+       public static String getPayProfileAcctPayTaxCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -9430,6 +9517,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
+             
                 
                 res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
                 while (res.next()) {
@@ -14778,7 +14866,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     String laboracct = OVData.getDefaultPayLaborAcct();
                     String withhold = OVData.getDefaultPayWithHoldAcct();
                     String salariedacct = OVData.getDefaultPaySalariedAcct();
-                    String taxacct = OVData.getDefaultPayTaxAcct();
+                    String defaulttaxacct = OVData.getDefaultPayTaxAcct();
+                    String taxacct = "";
                     String cc = OVData.getDefaultCC();
                     String defaultcurr = OVData.getDefaultCurrency();
                     String bank = OVData.getDefaultAPBank();
@@ -14813,7 +14902,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     // NOW LETS DO WITHHOLDINGS...
                     // NOTE!!! THis needs to be broken into individual withholding accounts...currently lumped into one withholding account...with 'descriptions'
-                      res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept from pay_line " +
+                      res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_profile, pyl_profile_line, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept from pay_line " +
                               " inner join pay_det on pyd_id = pyl_id " +
                               " inner join pay_mstr on py_id = pyd_id  " +
                                " where pyl_type = 'deduction' and pyd_id = " + "'" + batch + "'" +";");
@@ -14821,8 +14910,16 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     amt = 0.00;   
                     while (res.next()) {
                      // credit withholding account and debit payroll tax expense
+                     // lets determine tax account based on profile line
+                     
+                     
+                    taxacct = OVData.getPayProfileDetAcct(res.getString("pyl_profile"), res.getString("pyl_profile_line"));
+                    if (taxacct.isEmpty()) {
+                       taxacct = defaulttaxacct; 
+                    }  
+                     
                     amt = res.getDouble("pyl_amt");
-                       acct_cr.add(withhold);
+                    acct_cr.add(withhold);
                     acct_dr.add(taxacct);
                     cc_cr.add(res.getString("pyd_empdept"));
                     cc_dr.add(res.getString("pyd_empdept"));
@@ -19819,7 +19916,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                   for (int j = 0; j < line.size(); j++) {
                       total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(recvdqty.get(j).toString());
                       if (total >= Integer.valueOf(ordqty.get(j).toString())) {
-                          status = "close";
+                          status = "closed";
                       } else {
                           status = linestatus.get(j).toString();
                       }
@@ -19830,7 +19927,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     st.executeUpdate(
                          " update pod_mstr inner join recv_det on rvd_part = pod_part and rvd_poline = pod_line and rvd_po = pod_nbr " +
                          " inner join po_mstr on po_nbr = pod_nbr " +
-                          " set pod_rcvd_qty = pod_rcvd_qty + rvd_qty, pod_status = (case when pod_rcvd_qty + rvd_qty >= pod_ord_qty then 'close' else pod_status end) " +
+                          " set pod_rcvd_qty = pod_rcvd_qty + rvd_qty, pod_status = (case when pod_rcvd_qty + rvd_qty >= pod_ord_qty then 'closed' else pod_status end) " +
                      " where rvd_id = " + "'" + receiver + "'" + ";" );
                 }
                    
@@ -19857,14 +19954,14 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                            if (res.getString("pod_status").equals("open")) {
                                    partial = true;
                                 }
-                           if (! res.getString("pod_status").equals("close")) {
+                           if (! res.getString("pod_status").equals("closed")) {
                                    complete = false;
                                 }
                         }
                         res.close();
                        
                        if (complete) {
-                        st.executeUpdate( "update po_mstr set po_status = 'close' where po_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update po_mstr set po_status = 'closed' where po_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update po_mstr set po_status = 'partial' where po_nbr = " + "'" + uniqueorder + "'" + ";");
@@ -19941,6 +20038,35 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return myreturn;
         
     }    
+      
+       public static boolean isValidPrinter(String printer) {
+          boolean myreturn = false;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select prt_ip from prt_mstr where  " +
+                        " prt_id = " + "'" + printer + "'" + " ;");
+               while (res.next()) {
+                myreturn = true;               
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myreturn;
+        
+    }    
+     
       
       public static void exportCSV(JTable tablereport) {
           FileDialog fDialog;
@@ -22296,7 +22422,52 @@ e.printStackTrace();
           return myreturn;
       }
       
-       public static boolean isInvCtrlPlanMultiScan() {
+      public static void printLabelItem(String item, String printer) {
+          String this_printer = "";
+          try {
+
+          if (printer.isEmpty()) {
+              this_printer = OVData.getDefaultLabelPrinter();
+          } else {
+              this_printer = printer;
+          }
+          
+          if (this_printer.isEmpty())
+              return;
+          
+        Socket soc = null;
+        DataOutputStream dos = null;
+        String ZPLPrinterIPAddress = OVData.getPrinterIP(this_printer);
+        int ZPLPrinterPort = 9100;
+
+        BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/item.prn")));
+        String line = "";
+        String concatline = "";
+
+        while ((line = fsr.readLine()) != null) {
+            concatline += line;
+        }
+        fsr.close();
+        // fos.write(concatline.getBytes());
+
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
+
+        concatline = concatline.replace("$ITEMNBR", item);
+
+         soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
+                dos= new DataOutputStream(soc.getOutputStream());
+                dos.writeBytes(concatline);
+
+         dos.close();
+         soc.close();
+ 
+} catch (Exception e) {
+e.printStackTrace();
+}
+      }
+      
+      public static boolean isInvCtrlPlanMultiScan() {
        boolean myreturn = false;
         try{
            Class.forName(driver).newInstance();
@@ -22322,7 +22493,7 @@ e.printStackTrace();
         
     }
       
-        public static boolean isPrintTicketFromPlanScan() {
+      public static boolean isPrintTicketFromPlanScan() {
        boolean myreturn = false;
         try{
            Class.forName(driver).newInstance();
@@ -22349,7 +22520,7 @@ e.printStackTrace();
     }
        
        
-        public static boolean isInvCtrlDemdToPlan() {
+      public static boolean isInvCtrlDemdToPlan() {
        boolean myreturn = false;
         try{
            Class.forName(driver).newInstance();
@@ -22375,7 +22546,7 @@ e.printStackTrace();
         
     }
        
-       public static boolean isPlanDetByOp(String serialno, String op) {
+      public static boolean isPlanDetByOp(String serialno, String op) {
           
           // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
           // assume it's false i.e. hasn't been scanned.

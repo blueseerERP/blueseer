@@ -960,7 +960,8 @@ CREATE TABLE "ov_mstr" (
   "ov_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "ov_cc" varchar(10) COLLATE NOCASE DEFAULT '',
   "ov_wh" varchar(10) COLLATE NOCASE DEFAULT '',
-  "ov_currency" varchar(3) COLLATE NOCASE DEFAULT ''
+  "ov_currency" varchar(3) COLLATE NOCASE DEFAULT '',
+  "ov_labelprinter" varchar(20) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1810,6 +1811,7 @@ CREATE TABLE "taxd_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pay_profile" (
   "payp_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payp_site" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "payp_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "payp_crtdate" date COLLATE NOCASE DEFAULT '',
   "payp_moddate" date COLLATE NOCASE DEFAULT '',
@@ -1823,6 +1825,8 @@ CREATE TABLE "pay_profdet" (
   "paypd_parentcode" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "paypd_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "paypd_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_acct" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "paypd_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "paypd_amt" decimal(11,2) NOT NULL DEFAULT '0',
   "paypd_amttype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "paypd_crtdate" date COLLATE NOCASE DEFAULT '',
@@ -1883,9 +1887,12 @@ CREATE TABLE "pay_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pay_line" (
   "pyl_id" int(8) NOT NULL,
+  "pyl_profile_line" int(8) NOT NULL,
+  "pyl_profile" varchar(10) COLLATE NOCASE DEFAULT '',
   "pyl_empnbr" int(8) NOT NULL,
   "pyl_type" varchar(10) COLLATE NOCASE DEFAULT '',
   "pyl_code" varchar(10) COLLATE NOCASE DEFAULT '',
+  "pyl_checknbr" varchar(8) COLLATE NOCASE DEFAULT '',
   "pyl_desc" varchar(70) COLLATE NOCASE DEFAULT '',
   "pyl_percent" decimal(7,2) COLLATE NOCASE DEFAULT '',
   "pyl_rate" decimal(7,2) COLLATE NOCASE DEFAULT '',
