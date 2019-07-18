@@ -1410,28 +1410,28 @@ public class PayRollMaint extends javax.swing.JPanel {
                     
                     // now collect Salaried personnel if they fall within the 7 day window
                     res = st.executeQuery("SELECT * from emp_mstr " +
-                              " where emp_type = 'salaried' AND " +
+                              " where emp_type = 'Salary' AND " +
                               " emp_active = '1' " +
                                ";" );
                     
                      while (res.next()) {
                          amount = 0;
                          hours = 0;
-                         java.util.Date paydate = OVData.getPayWindow(res.getString("emp_payfrequency"));
+                         java.util.Date paydate = OVData.getPayWindowForSalary(res.getString("emp_payfrequency"), dcpay.getDate());
                          if (paydate == null ) {
                              continue;
                          }
                         
                          if (res.getString("emp_payfrequency").equals("monthly")) {
-                             amount = res.getDouble("e.emp_rate") * 40 * 4; 
+                             amount = res.getDouble("emp_rate") * 40 * 4; 
                              hours = 160;
                          }
                          if (res.getString("emp_payfrequency").equals("bi-monthly")) {
-                             amount = res.getDouble("e.emp_rate") * 40 * 2; 
+                             amount = res.getDouble("emp_rate") * 40 * 2; 
                              hours = 160;
                          }
                          if (res.getString("emp_payfrequency").equals("weekly")) {
-                             amount = res.getDouble("e.emp_rate") * 40; 
+                             amount = res.getDouble("emp_rate") * 40; 
                              hours = 40;
                          }
                          
@@ -1449,7 +1449,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("emp_rate"),
                                             String.valueOf(hours),
                                             String.valueOf(amount),
-                                            paydate
+                                            dfdate.format(paydate)
                                             } );
                     }
                     

@@ -27237,7 +27237,7 @@ e.printStackTrace();
          return myreturn;
      }
     
-     public static java.util.Date getPayWindow(String frequency) {
+     public static java.util.Date getPayWindowForSalary(String frequency, java.util.Date weeklyPayDate) {
         java.util.Date r = null;
         
         java.util.Date now = new java.util.Date();
@@ -27256,6 +27256,9 @@ e.printStackTrace();
         }
         if (frequency.equals("monthly") && getDifferenceDays(now, endmonth) < 7) {
             r = endmonth;
+        }
+        if (frequency.equals("weekly")) {
+            r = weeklyPayDate;
         }
          
          return r;
