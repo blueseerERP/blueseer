@@ -384,6 +384,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         ddpayfrequency.setSelectedItem(res.getString("emp_payfrequency"));
                         tbsupervisor.setText(res.getString("emp_supervisor"));
                         cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_autoclock")));
+                        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_active")));
                         if (res.getString("emp_clockin").equals("1")) {
                         tbclockin.setText("yes");
                         } else {
@@ -392,6 +393,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         if (res.getString("emp_dob") != null && ! res.getString("emp_dob").isEmpty()) {
                         dcdob.setDate(bsmf.MainFrame.dfdate.parse(res.getString("emp_dob")));
                         }
+                        //    
                     }
 
                 if (i > 0) {
@@ -535,7 +537,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
          ddcountry.setEnabled(true);
          ddstatus.setEnabled(true);
          tbcity.setEnabled(true);
-         cbautoclock.setEnabled(true);
+         cbactive.setEnabled(true);
          ddpayfrequency.setEnabled(true);
          tbaccount.setEnabled(true);
          tbroute.setEnabled(true);
@@ -582,7 +584,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
          ddcountry.setEnabled(false);
          ddstatus.setEnabled(false);
          tbcity.setEnabled(false);
-         cbautoclock.setEnabled(false);
+         cbactive.setEnabled(false);
          ddpayfrequency.setEnabled(false);
          tbaccount.setEnabled(false);
          tbroute.setEnabled(false);
@@ -770,6 +772,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
         cbautoclock = new javax.swing.JCheckBox();
         btemplname = new javax.swing.JButton();
         btempfname = new javax.swing.JButton();
+        cbactive = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         dddept = new javax.swing.JComboBox();
@@ -1020,6 +1023,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
         });
 
+        cbactive.setText("Active?");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1036,22 +1041,6 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(firstname, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel55)
-                            .addComponent(jLabel50)
-                            .addComponent(jLabel56)
-                            .addComponent(jLabel51))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(termdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(hiredate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tbtitle)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(middlename, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(dcdob, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbvacdays, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1066,7 +1055,25 @@ public class EmployeeMaster extends javax.swing.JPanel {
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(tbsupervisor)
                                 .addComponent(tbvactaken, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                                .addComponent(tbclockin, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(tbclockin, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel55)
+                            .addComponent(jLabel50)
+                            .addComponent(jLabel56)
+                            .addComponent(jLabel51))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbactive)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(termdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(hiredate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tbtitle)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(middlename, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dcdob, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btemplname, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1078,14 +1085,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lastname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel47))
-                        .addGap(129, 129, 129)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel50)
-                            .addComponent(hiredate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lastname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel47))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1103,6 +1105,12 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbtitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel56))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
+                .addComponent(cbactive)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel50)
+                    .addComponent(hiredate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(termdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1129,7 +1137,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbautoclock)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         jLabel9.setText("FMLA Days");
@@ -1281,17 +1289,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     .addComponent(btnew))
                 .addGap(12, 12, 12)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel15)))
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(102, 102, 102)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel15))))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
@@ -1595,7 +1605,13 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 String autoclock = "";
+                String isactive = "";
                 
+                if (cbactive.isSelected()) {
+                    isactive = "1";
+                } else {
+                    isactive = "0";
+                }
                 
                 if (cbautoclock.isSelected()) {
                     autoclock = "1";
@@ -1642,7 +1658,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     st.executeUpdate("insert into emp_mstr "
                         + "(emp_nbr, emp_lname, emp_fname, "
                         + "emp_mname, emp_dept, emp_status, emp_startdate, emp_shift, emp_type, "
-                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_rate, emp_profile, emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
+                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_active, emp_rate, emp_profile, emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
                             + "emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
                        + "emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob ) "
                             + "values ( " + "'" + empid.getText().toString() + "'" + ","
@@ -1658,6 +1674,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                              + "'" + tbtitle.getText().toString() + "'" + ","
                              + "'" + tbssn.getText().toString() + "'" + ","
                              + "'" + autoclock + "'" + ","
+                             + "'" + isactive + "'" + ","        
                              + "'" + tbrate.getText().toString() + "'" + ","
                              + "'" + tbprofile.getText().toString() + "'" + ","  
                              + "'" + tbaccount.getText().toString() + "'" + ","  
@@ -1740,12 +1757,18 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     tbefladays.setText("0");
                 
                  String autoclock = "";
-                
+                 String isactive = "";
                 
                 if (cbautoclock.isSelected()) {
                     autoclock = "1";
                 } else {
                     autoclock = "0";
+                }
+                
+                 if (cbactive.isSelected()) {
+                    isactive = "1";
+                } else {
+                    isactive = "0";
                 }
                 
                 
@@ -1778,6 +1801,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                                 + "emp_shift = " + "'" + ddshift.getSelectedItem().toString() + "'" + ","
                                 + "emp_startdate = " + hiredatestr + ","
                                 + "emp_termdate = " + termdatestr + ","
+                                + "emp_active = " + isactive + ","        
                                 + "emp_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + ","
                                 + "emp_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
                                 + "emp_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
@@ -1995,6 +2019,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JButton btexcdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btsummary;
+    private javax.swing.JCheckBox cbactive;
     private javax.swing.JCheckBox cbautoclock;
     private javax.swing.JPanel chartpanel;
     private javax.swing.JTextArea comments;

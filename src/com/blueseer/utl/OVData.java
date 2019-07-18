@@ -102,6 +102,7 @@ import java.net.UnknownHostException;
 import java.sql.Savepoint;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import jcifs.smb.SmbFileInputStream;
@@ -27236,6 +27237,34 @@ e.printStackTrace();
          return myreturn;
      }
     
+     public static java.util.Date getPayWindow(String frequency) {
+        java.util.Date r = null;
+        
+        java.util.Date now = new java.util.Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        java.util.Date endmonth = cal.getTime();
+        cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 15);
+        java.util.Date midmonth = cal.getTime();
+        
+        if ( frequency.equals("bi-monthly") && getDifferenceDays(now, midmonth) < 7    ) {
+            r = midmonth;
+        }
+        if ( frequency.equals("bi-monthly") && getDifferenceDays(now, endmonth) < 7) {
+            r = endmonth;
+        }
+        if (frequency.equals("monthly") && getDifferenceDays(now, endmonth) < 7) {
+            r = endmonth;
+        }
+         
+         return r;
+     }
+     
+     public static long getDifferenceDays(Date d1, Date d2) {
+       long diff = d2.getTime() - d1.getTime();
+       return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
      
     
     public static double calcClockHours(String indate, String intime, String outdate, String outtime) {

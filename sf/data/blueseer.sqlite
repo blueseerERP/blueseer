@@ -555,6 +555,7 @@ CREATE TABLE "emp_mstr" (
   "emp_clockid" int(11) NOT NULL DEFAULT '0',
   "emp_supervisor" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_autoclock" tinyint(1) NOT NULL DEFAULT '0',
+  "emp_active" tinyint(1) NOT NULL DEFAULT '0',
   "emp_profile" varchar(20) COLLATE NOCASE DEFAULT '',
   "emp_routing" varchar(9) COLLATE NOCASE DEFAULT '',
   "emp_acct" varchar(20) COLLATE NOCASE DEFAULT '',

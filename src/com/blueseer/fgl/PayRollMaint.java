@@ -91,7 +91,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     boolean isnew = false;
     
      javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount"})
+                      new String[]{"select", "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount", "PayDate"})
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -259,8 +259,12 @@ public class PayRollMaint extends javax.swing.JPanel {
                   //    "select", "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount"
                    
                     int checknbr = Integer.valueOf(tbchecknbr.getText());
+                    String paydate = "";
                     for (int j = 0; j < tablereport.getRowCount(); j++) {
                         netcash += Double.valueOf(tablereport.getValueAt(j, 14).toString());
+                        if (tablereport.getValueAt(j, 15).toString().isEmpty()) {
+                            paydate = dfdate.format(dcpay.getDate()).toString();
+                        }
                         st.executeUpdate("insert into pay_det "
                             + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_empsupervisor, pyd_emptype, "
                             + "pyd_payprofile, pyd_empjobtitle, pyd_emprate,  pyd_status, pyd_checknbr, pyd_tothours, pyd_payamt, pyd_paydate ) "
@@ -280,8 +284,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                             + "'" + "paid" + "'" + ","    // status
                             + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber   
                             + "'" + tablereport.getValueAt(j, 13).toString() + "'" + ","  // tothours  
-                            + "'" + tablereport.getValueAt(j, 14).toString() + "'" + ","  // pay amount        
-                            + "'" + dfdate.format(dcpay.getDate()).toString() + "'" 
+                            + "'" + tablereport.getValueAt(j, 14).toString() + "'" + ","  // pay amount     
+                            + "'" + paydate + "'"   // paydate  
                             + ")"
                             + ";");
                         
@@ -642,7 +646,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("pyd_empjobtitle"),
                                             res.getString("pyd_emprate"),
                                             res.getString("pyd_tothours"),
-                                            res.getString("pyd_payamt")
+                                            res.getString("pyd_payamt"),
+                                            res.getString("pyd_paydate")
                                             } );
                     }
                     
@@ -1351,6 +1356,13 @@ public class PayRollMaint extends javax.swing.JPanel {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");   
+        java.util.Date now = new java.util.Date();
+        
+      
+        
+         // if lastdayofmonth >= today and less than nowplus7   --- monthly
+         // if 15th >= today and less than nowplus7  --- midmonth
+         
         DecimalFormat df = new DecimalFormat("#0.00");
         mymodel.setRowCount(0);
          try{
@@ -1361,8 +1373,10 @@ public class PayRollMaint extends javax.swing.JPanel {
                 ResultSet res = null;
              
                    double amount = 0.00;
+                   double hours = 0.00;
                    String ispaid = isnew ? "0" : "1";
-                   
+               
+                   // Collect hourly/timepunchers first
                        res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
                            " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
@@ -1389,9 +1403,57 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("e.emp_jobtitle"),
                                             res.getString("e.emp_rate"),
                                             res.getString("t.tothrs"),
-                                            String.valueOf(amount)
+                                            String.valueOf(amount),
+                                            dfdate.format(dcpay.getDate())
                                             } );
                     }
+                    
+                    // now collect Salaried personnel if they fall within the 7 day window
+                    res = st.executeQuery("SELECT * from emp_mstr " +
+                              " where emp_type = 'salaried' AND " +
+                              " emp_active = '1' " +
+                               ";" );
+                    
+                     while (res.next()) {
+                         amount = 0;
+                         hours = 0;
+                         java.util.Date paydate = OVData.getPayWindow(res.getString("emp_payfrequency"));
+                         if (paydate == null ) {
+                             continue;
+                         }
+                        
+                         if (res.getString("emp_payfrequency").equals("monthly")) {
+                             amount = res.getDouble("e.emp_rate") * 40 * 4; 
+                             hours = 160;
+                         }
+                         if (res.getString("emp_payfrequency").equals("bi-monthly")) {
+                             amount = res.getDouble("e.emp_rate") * 40 * 2; 
+                             hours = 160;
+                         }
+                         if (res.getString("emp_payfrequency").equals("weekly")) {
+                             amount = res.getDouble("e.emp_rate") * 40; 
+                             hours = 40;
+                         }
+                         
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, "",
+                                            res.getString("emp_nbr"),
+                                            res.getString("emp_lname"),
+                                            res.getString("emp_fname"),
+                                            res.getString("emp_mname"),
+                                            res.getString("emp_dept"),
+                                            res.getString("emp_shift"),
+                                            res.getString("emp_supervisor"),
+                                            res.getString("emp_type"),
+                                            res.getString("emp_profile"),
+                                            res.getString("emp_jobtitle"),
+                                            res.getString("emp_rate"),
+                                            String.valueOf(hours),
+                                            String.valueOf(amount),
+                                            paydate
+                                            } );
+                    }
+                    
+                    
            }
             catch (SQLException s){
                  s.printStackTrace();
