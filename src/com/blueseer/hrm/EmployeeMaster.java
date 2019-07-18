@@ -381,6 +381,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         tbprofile.setText(res.getString("emp_profile"));
                         tbaccount.setText(res.getString("emp_acct"));
                         tbroute.setText(res.getString("emp_routing"));
+                        ddpayfrequency.setSelectedItem(res.getString("emp_payfrequency"));
                         tbsupervisor.setText(res.getString("emp_supervisor"));
                         cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_autoclock")));
                         if (res.getString("emp_clockin").equals("1")) {
@@ -535,6 +536,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
          ddstatus.setEnabled(true);
          tbcity.setEnabled(true);
          cbautoclock.setEnabled(true);
+         ddpayfrequency.setEnabled(true);
+         tbaccount.setEnabled(true);
+         tbroute.setEnabled(true);
     }
     public void disableAll() {
         empid.setEnabled(false);
@@ -579,6 +583,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
          ddstatus.setEnabled(false);
          tbcity.setEnabled(false);
          cbautoclock.setEnabled(false);
+         ddpayfrequency.setEnabled(false);
+         tbaccount.setEnabled(false);
+         tbroute.setEnabled(false);
     }
     public void clearAll() {
         
@@ -613,6 +620,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
         comments.setText("");
         tbclockin.setText("");
         tbsupervisor.setText("");
+        tbaccount.setText("");
+        tbroute.setText("");
+        ddpayfrequency.setSelectedIndex(0);
         
         cbautoclock.setSelected(false);
        
@@ -803,6 +813,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         tbprofile = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
+        ddpayfrequency = new javax.swing.JComboBox<>();
+        jLabel27 = new javax.swing.JLabel();
         jPanelHistory = new javax.swing.JPanel();
         summarypanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -1406,6 +1418,10 @@ public class EmployeeMaster extends javax.swing.JPanel {
 
         jLabel20.setText("Profile");
 
+        ddpayfrequency.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "bi-monthly", "monthly", "weekly" }));
+
+        jLabel27.setText("Pay Frequency");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1429,10 +1445,18 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     .addComponent(jLabel26))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ddpaytype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbroute)
-                    .addComponent(tbaccount, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(343, 343, 343))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbroute)
+                            .addComponent(tbaccount, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(55, 55, 55))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddpaytype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addComponent(ddpayfrequency, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(186, 186, 186))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1442,7 +1466,9 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     .addComponent(ddpaytype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24)
                     .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(ddpayfrequency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbroute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1616,7 +1642,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     st.executeUpdate("insert into emp_mstr "
                         + "(emp_nbr, emp_lname, emp_fname, "
                         + "emp_mname, emp_dept, emp_status, emp_startdate, emp_shift, emp_type, "
-                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_rate, emp_profile, emp_acct, emp_routing, emp_efla_days, "
+                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_rate, emp_profile, emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
                             + "emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
                        + "emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob ) "
                             + "values ( " + "'" + empid.getText().toString() + "'" + ","
@@ -1635,7 +1661,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
                              + "'" + tbrate.getText().toString() + "'" + ","
                              + "'" + tbprofile.getText().toString() + "'" + ","  
                              + "'" + tbaccount.getText().toString() + "'" + ","  
-                             + "'" + tbroute.getText().toString() + "'" + ","          
+                             + "'" + tbroute.getText().toString() + "'" + ","   
+                             + "'" + ddpayfrequency.getSelectedItem().toString() + "'" + ","         
                              + "'" + tbefladays.getText().toString() + "'" + ","
                              + "'" + tbvacdays.getText().toString() + "'" + ","
                              + "'" + tbvactaken.getText().toString() + "'" + ","
@@ -1765,7 +1792,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
                                 + "emp_efla_days = " + "'" + tbefladays.getText().toString() + "'" + ","
                                 + "emp_profile = " + "'" + tbprofile.getText().toString() + "'" + ","   
                                 + "emp_acct = " + "'" + tbaccount.getText().toString() + "'" + ","   
-                                + "emp_routing = " + "'" + tbroute.getText().toString() + "'" + ","           
+                                + "emp_routing = " + "'" + tbroute.getText().toString() + "'" + ","       
+                                + "emp_payfrequency = " + "'" + ddpayfrequency.getSelectedItem().toString() + "'" + ","               
                                 + "emp_vac_days = " + "'" + tbvacdays.getText().toString() + "'" + ","
                                 + "emp_vac_taken = " + "'" + tbvactaken.getText().toString() + "'" + ","
                                 + "emp_jobtitle = " + "'" + tbtitle.getText().toString() + "'" + ","
@@ -1976,6 +2004,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddexcamttype;
     private javax.swing.JComboBox<String> ddexctype;
     private javax.swing.JComboBox ddgender;
+    private javax.swing.JComboBox<String> ddpayfrequency;
     private javax.swing.JComboBox<String> ddpaytype;
     private javax.swing.JComboBox ddshift;
     private javax.swing.JComboBox ddstate;
@@ -2005,6 +2034,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel46;

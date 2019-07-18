@@ -557,7 +557,8 @@ CREATE TABLE "emp_mstr" (
   "emp_autoclock" tinyint(1) NOT NULL DEFAULT '0',
   "emp_profile" varchar(20) COLLATE NOCASE DEFAULT '',
   "emp_routing" varchar(9) COLLATE NOCASE DEFAULT '',
-  "emp_acct" varchar(20) COLLATE NOCASE DEFAULT ''
+  "emp_acct" varchar(20) COLLATE NOCASE DEFAULT '',
+  "emp_payfrequency" varchar(20) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -566,6 +567,8 @@ CREATE TABLE "emp_exception" (
   "empx_nbr" int(8) NOT NULL,
   "empx_desc" varchar(20) COLLATE NOCASE DEFAULT '',
   "empx_type" varchar(20) COLLATE NOCASE DEFAULT '',
+  "empx_acct" varchar(10) COLLATE NOCASE DEFAULT '',
+  "empx_cc" varchar(4) COLLATE NOCASE DEFAULT '',
   "empx_amttype" varchar(20) COLLATE NOCASE DEFAULT '',
   "empx_amt" decimal(14,2) NOT NULL DEFAULT '0'
 );
