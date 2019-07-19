@@ -66,7 +66,7 @@
                       <Component id="jPanel3" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tablepanel" pref="377" max="32767" attributes="0"/>
+                  <Component id="tablepanel" pref="376" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -205,11 +205,22 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      <Component id="ddsite" min="-2" pref="95" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ddsite" min="-2" pref="95" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                              <Component id="cbhourly" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btRun" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btdetail" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="btRun" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btdetail" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="cbsalary" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -236,6 +247,8 @@
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="ddempto" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbsalary" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbhourly" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dcTo" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -315,6 +328,16 @@
             <Component class="com.toedter.calendar.JDateChooser" name="dcTo">
               <Properties>
                 <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbsalary">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Salaried"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbhourly">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Hourly"/>
               </Properties>
             </Component>
           </SubComponents>

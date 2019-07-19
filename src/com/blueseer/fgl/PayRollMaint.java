@@ -264,6 +264,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                         netcash += Double.valueOf(tablereport.getValueAt(j, 14).toString());
                         if (tablereport.getValueAt(j, 15).toString().isEmpty()) {
                             paydate = dfdate.format(dcpay.getDate()).toString();
+                        } else {
+                            paydate = tablereport.getValueAt(j, 15).toString();
                         }
                         st.executeUpdate("insert into pay_det "
                             + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_empsupervisor, pyd_emptype, "
@@ -866,6 +868,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         tbcomments.setEnabled(false);
         tbchecknbr.setEnabled(false);
         ddbank.setEnabled(false);
+        cbsalary.setEnabled(false);
     }
     
     public void enableAll() {
@@ -883,6 +886,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         tbcomments.setEnabled(true);
         tbchecknbr.setEnabled(true);
         ddbank.setEnabled(true);
+        cbsalary.setEnabled(true);
         
     }
     
@@ -890,6 +894,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         isnew = false;
         
+        cbsalary.setSelected(true);
         tbid.setText("");
         tbcomments.setText("");
         tbchecknbr.setText("");
@@ -1023,6 +1028,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         btnacha = new javax.swing.JButton();
         ddbank = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
+        cbsalary = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         tbtotpayroll = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -1177,6 +1183,8 @@ public class PayRollMaint extends javax.swing.JPanel {
 
         jLabel8.setText("Bank:");
 
+        cbsalary.setText("Salaried");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1190,8 +1198,11 @@ public class PayRollMaint extends javax.swing.JPanel {
                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbsalary))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btrun))
@@ -1279,7 +1290,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(dcpay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(dcpay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cbsalary))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                             .addComponent(tbchecknbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1322,14 +1335,12 @@ public class PayRollMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1370,7 +1381,9 @@ public class PayRollMaint extends javax.swing.JPanel {
             con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
+                Statement st2 = con.createStatement();
                 ResultSet res = null;
+                ResultSet res2 = null;
              
                    double amount = 0.00;
                    double hours = 0.00;
@@ -1409,6 +1422,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                     }
                     
                     // now collect Salaried personnel if they fall within the 7 day window
+                   
+                    
+                    if (cbsalary.isSelected()) {
                     res = st.executeQuery("SELECT * from emp_mstr " +
                               " where emp_type = 'Salary' AND " +
                               " emp_active = '1' " +
@@ -1435,6 +1451,17 @@ public class PayRollMaint extends javax.swing.JPanel {
                              hours = 40;
                          }
                          
+                         // now confirm that it hasn't been paid already
+                           res2 = st2.executeQuery("select pyd_paydate from pay_det where pyd_empnbr =  " + "'" + res.getString("emp_nbr") + "'" +
+                                   " and pyd_paydate = " + "'" + dfdate.format(paydate) + "'" + ";");
+                           int z = 0;
+                           while (res2.next()) {
+                            z++; 
+                           }
+                           if (z > 0)
+                               continue;
+                           
+                           
                           mymodel.addRow(new Object []{BlueSeerUtils.clickflag, "",
                                             res.getString("emp_nbr"),
                                             res.getString("emp_lname"),
@@ -1451,8 +1478,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             String.valueOf(amount),
                                             dfdate.format(paydate)
                                             } );
-                    }
-                    
+                    } // while
+                    }  // if salaried selected
                     
            }
             catch (SQLException s){
@@ -1575,6 +1602,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     private javax.swing.JButton btnacha;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
+    private javax.swing.JCheckBox cbsalary;
     private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcpay;

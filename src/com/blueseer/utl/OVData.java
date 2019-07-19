@@ -25038,7 +25038,68 @@ e.printStackTrace();
         return mymodel;
         
          }     
-           
+        
+       
+         public static DefaultTableModel getPrinterBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "PrinterID", "Desc", "Type", "IP", "Port"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" SELECT * " +
+                        " FROM  prt_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by prt_id ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" SELECT * " +
+                        " FROM  prt_mstr  where " + myfield + " like " + "'%" + str + "'" +
+                        " order by prt_id ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" SELECT * " +
+                        " FROM  prt_mstr  where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by prt_id ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
+                                   res.getString("prt_id"),
+                                   res.getString("prt_desc"),
+                                   res.getString("prt_type"),
+                                   res.getString("prt_ip"),
+                                   res.getString("prt_port")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 s.printStackTrace();
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            
+        }
+        return mymodel;
+        
+         }     
+      
+       
+       
         public static DefaultTableModel getCurrencyBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "CurID", "Desc"})

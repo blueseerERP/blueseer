@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -48,7 +49,15 @@ public class APAgingView extends javax.swing.JPanel {
     String selectedVendor = "";
     
      MyTableModel modelsummary = new APAgingView.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "Vend", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
+                        new String[]{"Detail", "Vend", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     MyTableModel2 modeldetail = new APAgingView.MyTableModel2(new Object[][]{},
                         new String[]{"VouchNbr", "Reference", "PONbr", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
@@ -392,7 +401,7 @@ public class APAgingView extends javax.swing.JPanel {
         tabledetail.setModel(modeldetail);
         tablepayment.setModel(modelpayment);
         
-         tablesummary.getColumnModel().getColumn(0).setCellRenderer(new APAgingView.ButtonRenderer());
+      //   tablesummary.getColumnModel().getColumn(0).setCellRenderer(new APAgingView.ButtonRenderer());
          tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
          
          detailpanel.setVisible(false);
@@ -683,7 +692,7 @@ try {
              //        TableColumn tc = en.nextElement();
              //        tc.setCellRenderer(new LabelBrowsePanel.SomeRenderer());
              //    }
-                  tablesummary.getColumnModel().getColumn(0).setCellRenderer(new APAgingView.ButtonRenderer());
+                //  tablesummary.getColumnModel().getColumn(0).setCellRenderer(new APAgingView.ButtonRenderer());
                   tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
                   tablesummary.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -745,7 +754,7 @@ try {
                     qty = qty + 0;
                     i++;
                         modelsummary.addRow(new Object[]{
-                                "Detail",
+                                BlueSeerUtils.clickbasket,
                                 res.getString("ap_vend"),
                                 Double.valueOf(df.format(res.getDouble("0"))),
                                 Double.valueOf(df.format(res.getDouble("30"))),
@@ -758,7 +767,7 @@ try {
                   if (i == 0) {
                       // create record with zero fields
                        modelsummary.addRow(new Object[]{
-                                "Detail",
+                                BlueSeerUtils.clickbasket,
                                 vends.get(j),
                                 0,0,0,0,0
                             });

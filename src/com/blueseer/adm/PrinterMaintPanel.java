@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,7 +85,6 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
-        btget = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
@@ -95,6 +95,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         tbport = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        btbrowse = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -103,13 +104,6 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         jLabel1.setText("Printer Code:");
 
         jLabel2.setText("Description:");
-
-        btget.setText("get");
-        btget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
-            }
-        });
 
         btdelete.setText("delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -140,6 +134,13 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Port:");
 
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -157,7 +158,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btget))
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -175,10 +176,11 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btget)
-                    .addComponent(jLabel1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addComponent(btbrowse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -205,10 +207,6 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-        getPrinterCode(tbcode.getText());
-    }//GEN-LAST:event_btgetActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        try {
@@ -330,11 +328,15 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, "printermaint,prt_id");
+    }//GEN-LAST:event_btbrowseActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btget;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JLabel jLabel1;

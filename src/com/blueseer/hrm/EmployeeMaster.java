@@ -114,7 +114,19 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
                 String codedesc = "";
-                 res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', t.code_id as 't.code_id', " +
+                String type = "";
+                
+                // first determine if salary versus hourly
+                res = st.executeQuery("select emp_type from emp_mstr where emp_nbr = " + "'" + empnbr + "'" + ";");
+                while (res.next()) {
+                    type = res.getString("emp_type");
+                }
+                
+                
+                 html += "<table>";
+                
+                if (type.equals("Hourly")) {
+                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', t.code_id as 't.code_id', " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
                            " e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate', clc_code, clc_desc " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
@@ -123,7 +135,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                                 " group by t.code_id " +       
                                 " order by t.code_id " +      
                                ";" );
-                 html += "<table>";
+                    
                 while (res.next()) {
                     codedesc = res.getString("t.code_id");
                     if (codedesc.equals("00") || codedesc.equals("77")) {
@@ -142,6 +154,28 @@ public class EmployeeMaster extends javax.swing.JPanel {
                                             } );
                 
                 }
+                    
+                } else {
+                     res = st.executeQuery("select pyd_payamt, pyd_tothours, pyd_emprate, emp_payfrequency " +
+                         " from pay_det inner join emp_mstr on emp_nbr = pyd_empnbr where " +
+                        " pyd_empnbr = " + "'" + empnbr + "'" + " AND pyd_checknbr = " + "'" + checknbr + "'" +
+                        " order by pyd_paydate desc ;");
+                      
+                     while (res.next()) {
+                     html += "<tr><td align='right'>" + "Salary" + ":" + "</td><td>" + df.format(res.getDouble("pyd_tothours") * res.getDouble("pyd_emprate")) + "</td></tr>";
+                
+                     modelearnings.addRow(new Object []{empnbr,
+                                            "earnings",
+                                            "Salary",
+                                            res.getString("emp_payfrequency"),
+                                            res.getString("pyd_emprate"),
+                                            df.format(res.getDouble("pyd_payamt"))
+                                            } );
+                     }
+                }
+                 
+                
+               
              html += "</table></body></html>";
               jtpEarnings.setText(html);
 
@@ -1293,7 +1327,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(102, 102, 102)
+                        .addGap(63, 63, 63)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addGap(4, 4, 4)

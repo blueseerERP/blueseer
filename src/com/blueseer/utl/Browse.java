@@ -297,6 +297,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("payrollmaint")) {
                 tablereport.setModel(OVData.getPayRollBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("printermaint")) {
+                tablereport.setModel(OVData.getPrinterBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("uommaint")) {
                 tablereport.setModel(OVData.getUOMBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
@@ -519,6 +522,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("BankMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
               reinitpanels("BankMaint", true, myparameter);
+            }
+            if (callingpanel.equals("printermaint")) {
+              if (! checkperms("PrinterMaint")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString();
+              reinitpanels("PrinterMaint", true, myparameter);
             }
             if (callingpanel.equals("calendarmaint")) {
               if (! checkperms("GLCalMaint")) { return; }

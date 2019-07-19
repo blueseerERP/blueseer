@@ -157,6 +157,10 @@ public class PayRollBrowse extends javax.swing.JPanel {
      
         tbtotal.setText("0");
         tbcount.setText("0");
+        
+        cbsalary.setSelected(true);
+        cbhourly.setSelected(true);
+        
         java.util.Date now = new java.util.Date();
          dcFrom.setDate(now);
          dcTo.setDate(now);
@@ -241,6 +245,8 @@ public class PayRollBrowse extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         dcFrom = new com.toedter.calendar.JDateChooser();
         dcTo = new com.toedter.calendar.JDateChooser();
+        cbsalary = new javax.swing.JCheckBox();
+        cbhourly = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         tbtotal = new javax.swing.JTextField();
         tbcount = new javax.swing.JTextField();
@@ -326,6 +332,10 @@ public class PayRollBrowse extends javax.swing.JPanel {
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
+        cbsalary.setText("Salaried");
+
+        cbhourly.setText("Hourly");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -351,11 +361,18 @@ public class PayRollBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addGap(4, 4, 4)
-                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(cbhourly)))
                 .addGap(18, 18, 18)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdetail))
+                    .addComponent(cbsalary))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -377,7 +394,9 @@ public class PayRollBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddempto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
+                        .addComponent(jLabel3)
+                        .addComponent(cbsalary)
+                        .addComponent(cbhourly))
                     .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -437,7 +456,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -501,6 +520,14 @@ try {
                  i++;
                  netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
                  total = total + netcheck;
+                 
+                  if (! cbsalary.isSelected() && res.getString("pyd_emptype").equals("Salary")) {
+                      continue;
+                  }
+                  if (! cbhourly.isSelected() && res.getString("pyd_emptype").equals("Hourly")) {
+                      continue;
+                  }
+                 
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, res.getString("pyd_empnbr"),
                                 res.getString("pyd_emplname"),
                                 res.getString("pyd_empfname"),
@@ -549,6 +576,8 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JCheckBox cbhourly;
+    private javax.swing.JCheckBox cbsalary;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
     private javax.swing.JComboBox ddempfrom;
