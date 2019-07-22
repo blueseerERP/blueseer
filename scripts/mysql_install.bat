@@ -49,17 +49,27 @@ mysql --defaults-extra-file=my.cnf -e "create database if not exists %DB%;"
 mysql --defaults-extra-file=my.cnf %DB%  <blueseer.schema 
 
 
-@echo "Loading additional class schema...."
+@echo "Loading panel_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'panelmstr.csv' replace into table panel_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading menu_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'menumstr.csv' replace into table menu_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading menu_tree class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'menutree.csv' replace into table menu_tree fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading shift_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'shiftmstr.csv' replace into table shift_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading clock_code class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'clockcode.csv' replace into table clock_code fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ov_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'ovctrl.csv' replace into table ov_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading counter class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'counter.csv' replace into table counter fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading code_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'codemstr.csv' replace into table code_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading label_zebra class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'labelzebra.csv' replace into table label_zebra fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading edi_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'edimstr.csv' replace into table edi_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading editp_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'editpmstr.csv' replace into table editp_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 
 
@@ -71,43 +81,79 @@ mysql --defaults-extra-file=my.cnf -e "grant select,insert,delete,update on *.* 
 
 
 @echo "loading 'some' default records for tables....."
+mysql --defaults-extra-file=my.cnf  -e "insert into car_mstr (car_code, car_Desc, car_scac, car_type) values ('USPS','US POSTAL SERVICE','USPS','carrier') ;" %DB% 
 mysql --defaults-extra-file=my.cnf  -e "insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30') ;" %DB% 
 mysql --defaults-extra-file=my.cnf  -e "insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ;" %DB% 
+mysql --defaults-extra-file=my.cnf  -e "insert into frt_mstr (frt_code) values ('PICKUP') ;" %DB% 
+@echo "Loading site_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'sitemstr.csv' replace into table site_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
-mysql --defaults-extra-file=my.cnf  --local-infile -e "update user_mstr set user_id = 'admin', user_passwd = 'admin', user_email = 'someone@acme.com', user_lname = 'one', user_fname = 'some'  ;" %DB% 
+@echo "Loading gl_cal class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'glcal.csv' replace into table gl_cal fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ac_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'acctmstr.csv' replace into table ac_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading bk_mstr class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading cm_mstr class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ov_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading cur_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'curmstr.csv' replace into table cur_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading pos_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'pos_ctrl.csv' replace into table pos_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading edi_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading dept_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'deptmstr.csv' replace into table dept_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading pl_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'plmstr.csv' replace into table pl_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ap_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'apctrl.csv' replace into table ap_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ar_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'arctrl.csv' replace into table ar_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading pay_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'payctrl.csv' replace into table pay_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ship_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'shipctrl.csv' replace into table ship_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading order_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'ordctrl.csv' replace into table order_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading cm_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'cmctrl.csv' replace into table cm_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading vd_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'vdctrl.csv' replace into table vd_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading inv_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'invctrl.csv' replace into table inv_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading ov_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
-
+@echo "Loading gl_ctrl class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'glctrl.csv' replace into table gl_ctrl fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading glic_def class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'glicdef.csv' replace into table glic_def fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading emp_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'empmstr.csv' replace into table emp_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading time_clock class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading pay_profile class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'profilemstr.csv' replace into table pay_profile fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading pay_profdet class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'profiledet.csv' replace into table pay_profdet fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading user_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'usrmstr.csv' replace into table user_mstr fields terminated by ';' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading perm_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ';' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading perm_mstr 2 class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'permwmstr.csv' replace into table perm_mstr fields terminated by ';' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading mock_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ';' ignore 0 Lines; show errors;" %DB% 
 
 @echo "finished install..."
 @echo "BlueSeer should start now..."
 @echo "Login = 'admin' and Password = 'admin'"
-@echo "If it does not start...click the 'login.bat' file in the blueseer dir"
+@echo "Click the login.bat file in the BlueSeer Directory to log in"
+REM @echo "If it does not start...click the 'login.bat' file in the blueseer dir"
 
 ping -n 5 127.0.0.1 > nul
 
 cd ..
 
-call login.bat
+REM call login.bat

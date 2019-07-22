@@ -51,12 +51,17 @@ mysql -e "drop user  'bs_user'@'localhost';" $DB -u $ROOT  ;
 mysql -e "create user 'bs_user'@'localhost' identified by 'bspasswd';" $DB -u $ROOT  ;
 mysql -e "grant select,insert,delete,update on *.* to 'bs_user'@'localhost'" $DB -u $ROOT ;
 
-echo "loading default records for tables....."
+echo "loading some default records for tables....."
+mysql -e "insert into car_mstr (car_code, car_desc, car_scac, car_type) values ('USPS','US POSTAL SERVICE','USPS','carrier') ;" $DB -u $ROOT ;
 mysql -e "insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30') ;" $DB -u $ROOT ;
 mysql -e "insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ;" $DB -u $ROOT ;
+mysql -e "insert into frt_mstr (frt_code) values ('PICKUP') ;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'sitemstr.csv' replace into table site_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'glcal.csv' replace into table gl_cal fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'acctmstr.csv' replace into table ac_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'curmstr.csv' replace into table cur_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'pos_ctrl.csv' replace into table pos_ctrl fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
@@ -73,14 +78,16 @@ mysql --local-infile -e "load data local infile 'vdctrl.csv' replace into table 
 mysql --local-infile -e "load data local infile 'invctrl.csv' replace into table inv_ctrl fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'glctrl.csv' replace into table gl_ctrl fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'glicdef.csv' replace into table glic_def fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
-mysql --local-infile -e "load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'empmstr.csv' replace into table emp_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'profilemstr.csv' replace into table pay_profile fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+mysql --local-infile -e "load data local infile 'profiledet.csv' replace into table pay_profdet fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 
-# now change to semi-colon
+# now semicolon delimiter
 mysql --local-infile -e "load data local infile 'usrmstr.csv' replace into table user_mstr fields terminated by ';' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ';' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ';' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 mysql --local-infile -e "load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ';' ignore 0 Lines; show errors;" $DB -u $ROOT ;
-mysql --local-infile -e "update user_mstr set user_id = 'admin', user_passwd = 'admin', user_email = 'someone@acme.com', user_lname = 'one', user_fname = 'some';" $DB -u $ROOT ;
 
 
 
