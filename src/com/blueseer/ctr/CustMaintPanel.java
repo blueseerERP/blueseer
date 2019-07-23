@@ -6,6 +6,7 @@ package com.blueseer.ctr;
 
 import com.blueseer.utl.BlueSeerUtils;
 import bsmf.MainFrame.*; 
+import com.blueseer.ord.OrderMaintPanel;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.sql.DriverManager;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 
 /**
@@ -38,8 +40,272 @@ public class CustMaintPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-  
+     class Task extends SwingWorker<String[], Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+          String type = "";
+          
+          public Task(String type) {
+              this.type = type;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRec();
+                    break;
+                case "edit":
+                    message = editRec();
+                    break;
+                case "delete":
+                    message = deleteRec();    
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars("");  
+           }  else {
+             initvars(tbcustcode.getText());  
+           }
+           
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            } 
+           
+        }
+    }  
+     
+     public boolean validateInput(String action) {
+         boolean r = true;
+          if ( tbcustcode.getText().isEmpty()) {
+                  r = false;
+                  bsmf.MainFrame.show("Must provide valid CustCode");
+              }  
+              if (action.equals("add") && OVData.isValidCustomer(tbcustcode.getText())) {
+                  r = false;
+                  bsmf.MainFrame.show("CustCode already in use");
+                 
+              }  
+              
+              if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+                  r = false;
+                  bsmf.MainFrame.show("Invalid Account Code");
+                  
+              }
+              
+              if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+                  r = false;
+                  bsmf.MainFrame.show("Invalid CC / Dept Code");
+                  
+              }
+                
+              if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
+              r = false;
+             bsmf.MainFrame.show("Invalid credit limit...must be integer");
+            
+             }
+              return r;
+     }
+     
+     public String[] addRec() {
+     String[] message = new String[2];
+     try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+               
+               
+                    st.executeUpdate("insert into cm_mstr "
+                        + "(cm_code, cm_name, cm_line1, cm_line2, "
+                        + "cm_line3, cm_city, cm_state, cm_zip, "
+                        + "cm_country, cm_dateadd, cm_datemod, cm_usermod, "
+                        + "cm_group, cm_market, cm_creditlimit, cm_onhold, "
+                        + "cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                        + "cm_disc_code, cm_tax_code, cm_salesperson, "
+                        + "cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_remarks, cm_label, cm_ps_jasper, cm_iv_jasper "
+                        + " ) "
+                        + " values ( " + "'" + tbcustcode.getText() + "'" + ","
+                        + "'" + tbname.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
+                        + "'" + tbcity.getText() + "'" + ","
+                        + "'" + ddstate.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbzip.getText() + "'" + ","
+                        + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbdateadded.getText() + "'" + ","
+                        + "'" + tbdatemod.getText() + "'" + ","
+                            + "'" + bsmf.MainFrame.userid + "'" + ","
+                            + "'" + tbgroup.getText() + "'" + ","
+                            + "'" + tbmarket.getText() + "'" + ","
+                            + "'" + tbcreditlimit.getText() + "'" + ","
+                           + "'" + BlueSeerUtils.boolToInt(cbonhold.isSelected()) + "'" + ","
+                           + "'" + ddcarrier.getSelectedItem().toString() + "'" + ","
+                           + "'" + ddterms.getSelectedItem().toString() + "'" + ","
+                           + "'" + ddfreightterms.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbpricecode.getText() + "'" + ","
+                            + "'" + tbdisccode.getText() + "'" + ","
+                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbsalesrep.getText().replace("'", "") + "'" + ","
+                            + "'" + ddaccount.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddcc.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddbank.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
+                            + "'" + tbremarks.getText().replace("'", "") + "'" + ","  
+                           + "'" + ddlabel.getSelectedItem().toString() + "'" + ","
+                           + "'" + tbshpformat.getText().replace("'", "") + "'" + ","
+                           + "'" + tbinvformat.getText().replace("'", "") + "'"
+                        + ")"
+                        + ";");
+
+                    for (int j = 0; j < contacttable.getRowCount(); j++) {
+                        st.executeUpdate("insert into cmc_det "
+                            + "(cmc_code, cmc_type, cmc_name, cmc_phone, cmc_fax, "
+                            + "cmc_email ) "
+                            + " values ( " + "'" + tbcustcode.getText() + "'" + ","
+                            + "'" + contacttable.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + contacttable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                            + "'" + contacttable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + "'" + contacttable.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
+                            + "'" + contacttable.getValueAt(j, 4).toString().replace("'", "") + "'"                           
+                            + ")"
+                            + ";");
+
+                    }
+                    if (cbshipto.isSelected())        
+                    addShipTo(tbcustcode.getText());
+                     message = new String[]{"0", "Customer has been added"};   
+                    initvars("");
+                    // btQualProbAdd.setEnabled(false);
+              
+            } catch (SQLException s) {
+                s.printStackTrace();
+                 message = new String[]{"1", "Customer cannot be added"};   
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+     return message;
+     }
     
+     public String[] editRec() {
+        String[] message = new String[2];
+           
+           try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+               st.executeUpdate("update cm_mstr set " + 
+                       " cm_name = " + "'" + tbname.getText() + "'" + "," +
+                       " cm_line1 = " + "'" + tbline1.getText() + "'" + "," +
+                       " cm_line2 = " + "'" + tbline2.getText() + "'" + "," +
+                       " cm_line3 = " + "'" + tbline3.getText() + "'" + "," +
+                       " cm_city = " + "'" + tbcity.getText() + "'" + "," +
+                       " cm_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
+                       " cm_zip = " + "'" + tbzip.getText() + "'" + "," +
+                       " cm_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
+                       " cm_datemod = " + "'" + tbdatemod.getText() + "'" + "," +
+                       " cm_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
+                       " cm_group = "  + "'" + tbgroup.getText() + "'" + "," +
+                       " cm_market = " + "'" + tbmarket.getText() + "'" + "," +
+                       " cm_creditlimit = " + "'" + tbcreditlimit.getText() + "'" + "," +
+                       " cm_onhold = " + "'" + BlueSeerUtils.boolToInt(cbonhold.isSelected()) + "'" + "," +
+                       " cm_carrier = " + "'" + ddcarrier.getSelectedItem().toString() + "'" + "," +
+                       " cm_terms = " + "'" + ddterms.getSelectedItem().toString() + "'" + "," +
+                       " cm_freight_type = " + "'" + ddfreightterms.getSelectedItem().toString() + "'" + "," +
+                       " cm_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
+                       " cm_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
+                       " cm_tax_code = " + "'" + ddtax.getSelectedItem().toString() + "'" + "," +
+                       " cm_salesperson = " + "'" + tbsalesrep.getText().replace("'", "") + "'" + "," +
+                       " cm_ar_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
+                       " cm_ar_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
+                       " cm_bank = " + "'" + ddbank.getSelectedItem().toString() + "'" + "," +
+                        " cm_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" + "," +        
+                       " cm_label = " + "'" + ddlabel.getSelectedItem().toString() + "'" + "," +
+                       " cm_ps_jasper = " + "'" + tbshpformat.getText() + "'" + "," +
+                       " cm_iv_jasper = " + "'" + tbinvformat.getText() + "'" + "," +
+                       " cm_remarks = " + "'" + tbremarks.getText() + "'" +                      
+                       " where " + 
+                        " cm_code = " + "'" + tbcustcode.getText() + "'" +  ";");
+
+                              
+               message = new String[]{"0", "Customer has been updated"};   
+              
+               initvars("");
+               
+            } catch (SQLException s) {
+                s.printStackTrace();
+                 message = new String[]{"1", "Unable to update Customer"};   
+            }
+              } catch (Exception e) {
+            e.printStackTrace();
+        }   
+           
+      
+        return message;
+     }
+     
+     public String[] deleteRec() {
+        String[] message = new String[2];
+          
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbcustcode.getText() + "'" + ";");
+                   st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbcustcode.getText() + "'" + ";");
+                   st.executeUpdate("delete from cup_mstr where cup_cust = " + "'" + tbcustcode.getText() + "'" + ";");
+                   st.executeUpdate("delete from cms_det where cms_code = " + "'" + tbcustcode.getText() + "'" + ";");
+                   st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbcustcode.getText() + "'" + ";");
+                    if (i > 0) {
+                        message = new String[]{"0", "Deleted code: " + tbcustcode.getText() };
+                    initvars("");
+                    }
+                } catch (SQLException s) {
+                    s.printStackTrace();
+                    message = new String[]{"1", "Unable to delete code: " + tbcustcode.getText() };
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return message;
+     }
+     
     public void addShipTo() {
         try {
 
@@ -617,6 +883,18 @@ public class CustMaintPanel extends javax.swing.JPanel {
         ddcontacttype.setSelectedIndex(0);
     }
     
+    public void disableAll() {
+        disableCust();
+        disableShipTo();
+        disableContact();
+    }
+    
+     public void enableAll() {
+        enableCust();
+        enableShipTo();
+        enableContact();
+    }
+     
     public void disableCust() {
         // tbcustcode.setEnabled(false);
         tbdateadded.setEnabled(false);
@@ -1567,119 +1845,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-               
-              if ( tbcustcode.getText().isEmpty()) {
-                  proceed = false;
-                  bsmf.MainFrame.show("Must provide valid CustCode");
-                  return;
-              }  
-              if (OVData.isValidCustomer(tbcustcode.getText())) {
-                  proceed = false;
-                  bsmf.MainFrame.show("CustCode already in use");
-                  return;
-              }  
-              
-              if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
-                  proceed = false;
-                  bsmf.MainFrame.show("Invalid Account Code");
-                  return;
-              }
-              
-              if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
-                  proceed = false;
-                  bsmf.MainFrame.show("Invalid CC / Dept Code");
-                  return;
-              }
-                
-              if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
-              proceed = false;
-             bsmf.MainFrame.show("Invalid credit limit...must be integer");
+           if (! validateInput("add")) {
              return;
-             }
-                
-
-                if (proceed) {
-                    st.executeUpdate("insert into cm_mstr "
-                        + "(cm_code, cm_name, cm_line1, cm_line2, "
-                        + "cm_line3, cm_city, cm_state, cm_zip, "
-                        + "cm_country, cm_dateadd, cm_datemod, cm_usermod, "
-                        + "cm_group, cm_market, cm_creditlimit, cm_onhold, "
-                        + "cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
-                        + "cm_disc_code, cm_tax_code, cm_salesperson, "
-                        + "cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_remarks, cm_label, cm_ps_jasper, cm_iv_jasper "
-                        + " ) "
-                        + " values ( " + "'" + tbcustcode.getText() + "'" + ","
-                        + "'" + tbname.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
-                        + "'" + tbcity.getText() + "'" + ","
-                        + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbzip.getText() + "'" + ","
-                        + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbdateadded.getText() + "'" + ","
-                        + "'" + tbdatemod.getText() + "'" + ","
-                            + "'" + bsmf.MainFrame.userid + "'" + ","
-                            + "'" + tbgroup.getText() + "'" + ","
-                            + "'" + tbmarket.getText() + "'" + ","
-                            + "'" + tbcreditlimit.getText() + "'" + ","
-                           + "'" + BlueSeerUtils.boolToInt(cbonhold.isSelected()) + "'" + ","
-                           + "'" + ddcarrier.getSelectedItem().toString() + "'" + ","
-                           + "'" + ddterms.getSelectedItem().toString() + "'" + ","
-                           + "'" + ddfreightterms.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbpricecode.getText() + "'" + ","
-                            + "'" + tbdisccode.getText() + "'" + ","
-                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbsalesrep.getText().replace("'", "") + "'" + ","
-                            + "'" + ddaccount.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddbank.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                            + "'" + tbremarks.getText().replace("'", "") + "'" + ","  
-                           + "'" + ddlabel.getSelectedItem().toString() + "'" + ","
-                           + "'" + tbshpformat.getText().replace("'", "") + "'" + ","
-                           + "'" + tbinvformat.getText().replace("'", "") + "'"
-                        + ")"
-                        + ";");
-
-                    for (int j = 0; j < contacttable.getRowCount(); j++) {
-                        st.executeUpdate("insert into cmc_det "
-                            + "(cmc_code, cmc_type, cmc_name, cmc_phone, cmc_fax, "
-                            + "cmc_email ) "
-                            + " values ( " + "'" + tbcustcode.getText() + "'" + ","
-                            + "'" + contacttable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + contacttable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + contacttable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + contacttable.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
-                            + "'" + contacttable.getValueAt(j, 4).toString().replace("'", "") + "'"                           
-                            + ")"
-                            + ";");
-
-                    }
-                    if (cbshipto.isSelected())        
-                    addShipTo(tbcustcode.getText());
-                    
-                    bsmf.MainFrame.show("Added Customer Record");
-                    initvars("");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql Cannot Add Customer");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+         }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("add");
+        task.execute();   
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btaddcontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddcontactActionPerformed
@@ -1697,68 +1869,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeletecontactActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        boolean proceed = true;
-        java.util.Date now = new java.util.Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-       if (proceed) {
-           
-           try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-               st.executeUpdate("update cm_mstr set " + 
-                       " cm_name = " + "'" + tbname.getText() + "'" + "," +
-                       " cm_line1 = " + "'" + tbline1.getText() + "'" + "," +
-                       " cm_line2 = " + "'" + tbline2.getText() + "'" + "," +
-                       " cm_line3 = " + "'" + tbline3.getText() + "'" + "," +
-                       " cm_city = " + "'" + tbcity.getText() + "'" + "," +
-                       " cm_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
-                       " cm_zip = " + "'" + tbzip.getText() + "'" + "," +
-                       " cm_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
-                       " cm_datemod = " + "'" + tbdatemod.getText() + "'" + "," +
-                       " cm_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
-                       " cm_group = "  + "'" + tbgroup.getText() + "'" + "," +
-                       " cm_market = " + "'" + tbmarket.getText() + "'" + "," +
-                       " cm_creditlimit = " + "'" + tbcreditlimit.getText() + "'" + "," +
-                       " cm_onhold = " + "'" + BlueSeerUtils.boolToInt(cbonhold.isSelected()) + "'" + "," +
-                       " cm_carrier = " + "'" + ddcarrier.getSelectedItem().toString() + "'" + "," +
-                       " cm_terms = " + "'" + ddterms.getSelectedItem().toString() + "'" + "," +
-                       " cm_freight_type = " + "'" + ddfreightterms.getSelectedItem().toString() + "'" + "," +
-                       " cm_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
-                       " cm_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
-                       " cm_tax_code = " + "'" + ddtax.getSelectedItem().toString() + "'" + "," +
-                       " cm_salesperson = " + "'" + tbsalesrep.getText().replace("'", "") + "'" + "," +
-                       " cm_ar_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
-                       " cm_ar_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
-                       " cm_bank = " + "'" + ddbank.getSelectedItem().toString() + "'" + "," +
-                        " cm_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" + "," +        
-                       " cm_label = " + "'" + ddlabel.getSelectedItem().toString() + "'" + "," +
-                       " cm_ps_jasper = " + "'" + tbshpformat.getText() + "'" + "," +
-                       " cm_iv_jasper = " + "'" + tbinvformat.getText() + "'" + "," +
-                       " cm_remarks = " + "'" + tbremarks.getText() + "'" +                      
-                       " where " + 
-                        " cm_code = " + "'" + tbcustcode.getText() + "'" +  ";");
-
-                              
-               bsmf.MainFrame.show("Updated Customer Successfully");
-              
-               initvars("");
-               
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to get selected cust code");
-            }
-              } catch (Exception e) {
-            e.printStackTrace();
-        }   
-                
-           
-       } else {
-           bsmf.MainFrame.show("Cannot Proceed...Data Field flagged");
-       }
-       
+          if (!validateInput("edit")) {
+             return;
+         }
+        BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableAll();
+        Task task = new Task("edit");
+        task.execute();      
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btshipaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipaddActionPerformed
@@ -1883,34 +2000,16 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btcustzipbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-           boolean proceed = bsmf.MainFrame.warn("This is not advised.  Deleting Customers with historical transactions may cause issues.");
+          boolean proceed = false;
+          bsmf.MainFrame.show("This is not advised.  Deleting Customers with historical transactions may cause issues.");
            proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cup_mstr where cup_cust = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cms_det where cms_code = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbcustcode.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbcustcode.getText());
-                    initvars("");
-                    }
-                } catch (SQLException s) {
-                    s.printStackTrace();
-                bsmf.MainFrame.show("Unable to Delete Customer Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        }
+           if (proceed) {
+             BlueSeerUtils.startTask(new String[]{"","Committing..."});
+             disableAll();
+             Task task = new Task("delete");
+             task.execute();
+           }
+        
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbcustcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcustcodeActionPerformed
