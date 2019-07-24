@@ -23,6 +23,7 @@ ItemLevelCalculate,,com.blueseer.inv.ItemLevelMaint,JMenuItem,mrpx
 ItemSearchMenu,,com.blueseer.inv.ItemMastSearch,JMenuItem,itms
 LedgerBalanceExport,,com.blueseer.fgl.LedgerBalanceExport,JMenuItem,glbe
 About,,com.blueseer.adm.AboutPanel,JMenuItem,about
+SysInfo,,com.blueseer.adm.AboutPanel,JMenuItem,sysi
 AcctBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,accb
 AcctMaint,,com.blueseer.fgl.LedgerAcctMstrPanel,JMenuItem,accm
 ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
