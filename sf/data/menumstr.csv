@@ -32,6 +32,7 @@ BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt
 BOMBrowse,,com.blueseer.inv.BOMBrowse,JMenuItem,bomb
 CarrierMaint,,com.blueseer.ctr.CarrierMaintPanel,JMenuItem,carm
 CostRoll,,com.blueseer.inv.CostRollUpPanel,JMenuItem,roll
+CostRollRange,,com.blueseer.inv.CostRollRange,JMenuItem,rolr
 CustMaint,,com.blueseer.ctr.CustMaintPanel,JMenuItem,cusm
 CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt1,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMstrPanel,JMenuItem,defm

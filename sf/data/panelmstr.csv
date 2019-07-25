@@ -95,6 +95,7 @@ com.blueseer.inv.BOMTree,,1
 com.blueseer.inv.BOMBrowse,,1
 com.blueseer.inv.calcCost,,1
 com.blueseer.inv.CostRollUpPanel,,1
+com.blueseer.inv.CostRollRange,,1
 com.blueseer.inv.ImportItemMstr,,1
 com.blueseer.inv.InventoryCtrl,,1
 com.blueseer.inv.InventoryMiscPanel,,1

@@ -40,7 +40,7 @@
                       <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="btmrp" min="-2" max="-2" attributes="0"/>
+                              <Component id="btroll" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -55,8 +55,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="btlevel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="92" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -70,7 +69,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btlevel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -83,7 +81,7 @@
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                  <Component id="btmrp" min="-2" max="-2" attributes="0"/>
+                  <Component id="btroll" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" pref="270" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -94,20 +92,12 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btmrp">
+        <Component class="javax.swing.JButton" name="btroll">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Run MRP"/>
+            <Property name="text" type="java.lang.String" value="Roll Cost"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btmrpActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btlevel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Set Level"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlevelActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrollActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddsite">

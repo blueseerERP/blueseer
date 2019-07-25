@@ -38,6 +38,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static bsmf.MainFrame.port;
+import com.blueseer.inv.calcCost;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -2619,7 +2620,7 @@ public class OVData {
         
     }
           
-        public static void createMRPByLevel(int level, String site) {
+        public static void createMRPByLevel(int level, String site, String fromitem, String toitem) {
          
         try{
             Class.forName(driver).newInstance();
@@ -2632,9 +2633,13 @@ public class OVData {
 
            
                 st.executeUpdate(
-                "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr " +
-                " inner join pbm_mstr  on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent " +
-                " where it_mrp = '1' and it_level = " + "'" + level + "'" + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) " +
+                        " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr " +
+                " inner join pbm_mstr on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent " +
+                " where it_mrp = '1' and it_level = " + "'" + level + "'" + 
+                " AND ps_child >= " + "'" + fromitem + "'" + 
+                " AND ps_child <= " + "'" + toitem + "'" +
+                " group by ps_child, mrp_date order by ps_child, mrp_date; ");
             }
             catch (SQLException s){
                  s.printStackTrace();
@@ -2672,14 +2677,16 @@ public class OVData {
         
     }
         
-        public static void deleteAllMRP() {
+        public static void deleteAllMRP(String site, String fromitem, String toitem) {
        
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
-                st.executeUpdate(" delete from mrp_mstr;" );
+                st.executeUpdate(" delete from mrp_mstr where mrp_site = " + "'" + site + "'" +
+                        " AND mrp_part >= " + "'" + fromitem + "'" +
+                        " AND mrp_part <= " + "'" + toitem + "'" + ";" );
             }
             catch (SQLException s){
                  s.printStackTrace();
@@ -11184,6 +11191,39 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
     }
          
+            public static ArrayList getItemRange(String site, String fromitem, String toitem) {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
+                        " and it_item <= " + "'" + toitem + "'" + 
+                        " and it_site = " + "'" + site + "'" + " order by it_item ;");
+               while (res.next()) {
+                    myarray.add(res.getString("it_item"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                s.printStackTrace();
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return myarray;
+        
+    }
+         
+          
+          
             public static boolean isVendItemOnly() {
              
            boolean venditemonly = false;
@@ -12283,7 +12323,107 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
          
       
            
-      
+        public static void setStandardCosts(String site, String item) {
+            calcCost cur = new calcCost();
+            DecimalFormat df = new DecimalFormat("#.0000"); 
+            ArrayList<Double> costcur = new ArrayList<Double>();
+            costcur = cur.getTotalCostElements(item);
+            Double totalcost = 0.00;
+            for (Double d : costcur) {
+               totalcost += d;
+            }
+            try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                
+                int i = 0;
+                String perms = "";
+                double itrcost = 0.00;
+                String routing = OVData.getItemRouting(item);
+                ArrayList<String> ops = OVData.getOperationsByPart(item);
+                // lets do item_cost first 
+                res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + item + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+
+                    if (i > 0) {
+                        st.executeUpdate("update item_cost set "
+                                + "itc_mtl_low = " + "'" + costcur.get(0) + "'" + ","
+                                + "itc_mtl_top = " + "'" + costcur.get(5) + "'" + ","
+                                + "itc_lbr_low = " + "'" + costcur.get(1) + "'" + ","
+                                + "itc_lbr_top = " + "'" + costcur.get(6) + "'" + ","
+                                + "itc_bdn_low = " + "'" + costcur.get(2) + "'" + ","
+                                + "itc_bdn_top = " + "'" + costcur.get(7) + "'" + ","
+                                + "itc_ovh_low = " + "'" + costcur.get(3) + "'" + ","
+                                + "itc_ovh_top = " + "'" + costcur.get(8) + "'" + ","
+                                + "itc_out_low = " + "'" + costcur.get(4) + "'" + ","
+                                + "itc_out_top = " + "'" + costcur.get(9) + "'" + ","
+                                + "itc_total = " + "'" +  totalcost + "'" 
+                                + " where itc_item = " + "'" + item + "'"
+                                + " AND itc_set = 'standard' "
+                                + " AND itc_site = " + "'" + site + "'"
+                                + ";");
+                       
+                    } else {
+                        proceed = false;
+                    }
+                    // ok now lets do itemr_cost ...routing based costing
+                   if (proceed) { 
+                    i = -1;
+                    for (String op : ops) {
+                    // bsmf.MainFrame.show(op);
+                    i++;
+                    // delete original itemr_cost records for this item, op, routing, standard
+                    st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
+                                         +  " AND itr_op = " + "'" + op + "'"
+                                         + " AND itr_set = 'standard' "
+                                         + " AND itr_site = " + "'" + site + "'"
+                                         + " AND itr_routing = " + "'" + routing + "'" + ";");
+                        
+                    }
+                     ArrayList<String> costs = new ArrayList<String>();
+                     costs = OVData.rollCost(item);
+                     
+                    for (String cost : costs) {
+                     String[] elements = cost.split(",", -1);
+                         
+                            st.executeUpdate("insert into itemr_cost (itr_item, itr_site, itr_set, itr_routing, itr_op, " +
+                                 " itr_total, itr_lbr_top, itr_bdn_top, itr_mtl_top,  itr_ovh_top, itr_out_top, " +
+                                 " itr_mtl_low, itr_lbr_low, itr_bdn_low, itr_ovh_low, itr_out_low ) values ( "
+                                + "'" + item + "'" + ","
+                                + "'" + site + "'" + ","
+                                + "'" + "standard" + "'" + ","
+                                + "'" + routing + "'" + ","
+                                + "'" + elements[1].toString() + "'" + ","
+                                + "'" + df.format(Double.valueOf(elements[17].toString())) + "'" + "," 
+                                + "'" + df.format(Double.valueOf(elements[6].toString())) + "'" + ","   
+                                + "'" + df.format(Double.valueOf(elements[7].toString())) + "'" + ","
+                                + "'" + df.format(Double.valueOf(elements[8].toString())) + "'" + ","
+                                + "'" + df.format(Double.valueOf(elements[9].toString())) + "'" + ","
+                                + "'" + df.format(Double.valueOf(elements[10].toString())) + "'" + ","
+                                + "'" + "0" + "'" + ","
+                                + "'" + "0" + "'" + ","
+                                + "'" + "0" + "'" + ","
+                                + "'" + "0" + "'" + ","
+                                + "'" + "0" + "'" + " ) ;");
+                    }  
+                   
+                   }
+            } // if proceed
+            catch (SQLException s) {
+                s.printStackTrace();
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+        }
        
     
        

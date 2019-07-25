@@ -138,7 +138,8 @@ ItemMenu,ItemBrowse,2,JMenuItem,Item Browse,,1,,1,1
 ItemMenu,UOMMaint,3,JMenuItem,UOM Maintenance,,,,1,1
 ItemMenu,ItemSearchMenu,4,JMenuItem,Item Browse And SubReports,,,,1,1
 ItemMenu,CostRoll,5,JMenuItem,Cost Maintenance,,,,1,1
-ItemMenu,CostReports,6,JMenu,Cost Reports,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,Cost Roll By Range,,,,1,1
+ItemMenu,CostReports,7,JMenu,Cost Reports,,,,1,1
 Inventory,RoutingMenu,8,JMenu,Routing Menu,,,,1,1
 RoutingMenu,WorkCellMaint,1,JMenuItem,Work Cell Maintenance,,,,1,1
 RoutingMenu,WorkCellBrowse,2,JMenuItem,Work Cell Browse,,1,,1,1

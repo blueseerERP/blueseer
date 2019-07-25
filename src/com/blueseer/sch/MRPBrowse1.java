@@ -5,6 +5,7 @@
  */
 package com.blueseer.sch;
 
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
 import java.awt.Color;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -39,7 +41,15 @@ import javax.swing.table.TableColumnModel;
 public class MRPBrowse1 extends javax.swing.JPanel {
 
     MyTableModel mymodel = new MyTableModel(new Object[][]{},
-                    new String[]{"Select","PART", "CALC", "DATE1", "DATE2", "DATE3", "DATE4", "DATE5", "DATE6", "DATE7"});
+                    new String[]{"Select","PART", "CALC", "DATE1", "DATE2", "DATE3", "DATE4", "DATE5", "DATE6", "DATE7"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     MyTableModelDetail modelorder = new MyTableModelDetail(new Object[][]{},
                         new String[]{"Part", "Order", "Type","Status", "DueDate", "Qty"});
      javax.swing.table.DefaultTableModel modeltrans = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -842,6 +852,9 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
+                      if (tc.getIdentifier().toString().equals("Select")) {
+                         continue;
+                     }
                      tc.setCellRenderer(new MRPBrowse1.MainRenderer());
                  }
                 // TableColumnModel tcm = tablereport.getColumnModel();
@@ -849,7 +862,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 // tablereport.getColumnModel().getColumns().setCellRenderer(new MRPBrowse1.SomeRenderer());
                 // tablereport.getColumnModel().getColumn(3).setCellRenderer(new MRPBrowse1.SomeRenderer());       
                  
-                 tablereport.getColumnModel().getColumn(0).setCellRenderer(new MRPBrowse1.ButtonRenderer());
+               // tablereport.getColumnModel().getColumn(0).setCellRenderer(new MRPBrowse1.ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                 // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
@@ -1014,7 +1027,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     qoh7 = qoh6 - Double.valueOf(res.getString("G"));
                    */ 
                     mymodel.addRow(new Object[]{
-                        "select", res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
                         "DEMAND",
                         res.getString("A"),
                         res.getString("B"),
@@ -1052,7 +1065,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                        z++;
                         
                     mymodel.addRow(new Object[]{
-                        "select", res2.getString("plan_part"),
+                        BlueSeerUtils.clickflag, res2.getString("plan_part"),
                         "PLAN",
                         res2.getString("A"),
                         res2.getString("B"),
@@ -1076,7 +1089,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                    // if no plan records then create dummy zero 'PLAN' record
                    if (z == 0) {
                       mymodel.addRow(new Object[]{
-                        "select", res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
                         "PLAN",
                         "0",
                         "0",
@@ -1128,7 +1141,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                    while (res2.next()) {
                        z++;
                     mymodel.addRow(new Object[]{
-                        "select", res2.getString("it_item"),
+                        BlueSeerUtils.clickflag, res2.getString("it_item"),
                         "PURCH",
                         res2.getString("A"),
                         res2.getString("B"),
@@ -1152,7 +1165,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                      // if no plan records then create dummy zero 'PURCH' record
                    if (z == 0) {
                       mymodel.addRow(new Object[]{
-                        "select", res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
                         "PURCH",
                         "0",
                         "0",
@@ -1246,7 +1259,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
          int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 0 && tablereport.getValueAt(row, col).toString().equals("select")) {
+        if ( col == 0 && ! tablereport.getValueAt(row, col).toString().isEmpty()) {
             
             modelorder.setNumRows(0);
             modeltrans.setNumRows(0);

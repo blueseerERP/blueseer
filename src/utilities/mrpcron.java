@@ -42,14 +42,14 @@ public static void main(String args[]) {
           // now lets do the MRP regen
            ArrayList<String> myarray2 = new ArrayList<String>();
         // delete all current MRP records...clean slate
-          OVData.deleteAllMRP();
+          OVData.deleteAllMRP(site, bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar);
         
         // create zero level demand for specific site
           OVData.createMRPZeroLevel(site);
         
         // create derived mrp records from zero level demand
         for (int i = 0; i < 8; i++) {
-            OVData.createMRPByLevel(i, site);
+            OVData.createMRPByLevel(i, site, bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar);
         }
 
               
