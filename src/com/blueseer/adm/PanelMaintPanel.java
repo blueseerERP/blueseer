@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -50,7 +51,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve panel_mstr");
             }
             bsmf.MainFrame.con.close();

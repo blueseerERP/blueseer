@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -214,7 +215,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {

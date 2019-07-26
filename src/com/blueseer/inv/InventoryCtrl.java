@@ -1,6 +1,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
@@ -178,7 +179,7 @@ public class InventoryCtrl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating inv_ctrl");
             }
             bsmf.MainFrame.con.close();

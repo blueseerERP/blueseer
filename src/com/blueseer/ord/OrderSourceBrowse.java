@@ -6,6 +6,7 @@
 
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
@@ -130,7 +131,7 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get SO Browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -510,7 +511,7 @@ try {
                 lblamttot.setText(df.format(totamt));
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing SO Browse Report");
             }
             con.close();

@@ -5,6 +5,7 @@
 package com.blueseer.frt;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
@@ -314,7 +315,7 @@ public class FOMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve fo_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -473,7 +474,7 @@ public class FOMaint extends javax.swing.JPanel {
                      
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1954,7 +1955,7 @@ public class FOMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add Freight Order");
             }
             bsmf.MainFrame.con.close();
@@ -2043,7 +2044,7 @@ public class FOMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add Freight Order");
             }
             bsmf.MainFrame.con.close();

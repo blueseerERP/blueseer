@@ -6,6 +6,7 @@
 
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -595,7 +596,7 @@ try {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
             }
             bsmf.MainFrame.con.close();

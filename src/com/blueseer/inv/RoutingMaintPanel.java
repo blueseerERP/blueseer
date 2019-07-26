@@ -5,6 +5,7 @@
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -130,7 +131,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve wf_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -189,7 +190,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve wf_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -545,7 +546,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to wf_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -606,7 +607,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating wf_mstr");
             }
             bsmf.MainFrame.con.close();

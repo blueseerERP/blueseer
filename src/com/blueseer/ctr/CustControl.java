@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import bsmf.MainFrame;
 /**
  *
  * @author vaughnte
@@ -42,7 +42,7 @@ public class CustControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve cm_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -148,7 +148,7 @@ public class CustControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating cm_ctrl");
             }
             bsmf.MainFrame.con.close();

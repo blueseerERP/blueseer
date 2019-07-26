@@ -15,6 +15,7 @@
  */
 package com.blueseer.hrm;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -72,7 +73,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve shift_mstr");
             }
             bsmf.MainFrame.con.close();

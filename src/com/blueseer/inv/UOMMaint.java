@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -50,7 +51,7 @@ public class UOMMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve uom_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -265,7 +266,7 @@ public class UOMMaint extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to uom_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -297,7 +298,7 @@ public class UOMMaint extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating uom_mstr");
             }
             bsmf.MainFrame.con.close();

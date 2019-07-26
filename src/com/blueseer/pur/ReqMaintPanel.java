@@ -6,6 +6,7 @@
 
 package com.blueseer.pur;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -486,7 +487,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                
            }
             catch (SQLException s){
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  bsmf.MainFrame.show("Cannot send email to requestor");
             }
             bsmf.MainFrame.con.close();
@@ -539,7 +540,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                
            }
             catch (SQLException s){
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  bsmf.MainFrame.show("Cannot set admins");
             }
             bsmf.MainFrame.con.close();
@@ -566,7 +567,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                
            }
             catch (SQLException s){
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  bsmf.MainFrame.show("Cannot set all tasks approved with override");
             }
             bsmf.MainFrame.con.close();
@@ -699,7 +700,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to retrieve requisition record");
                
             }
@@ -731,7 +732,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                        " where " + 
                         " req_id = " + "'" + myid + "'" +  ";");
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to update req_mstr for no approval scenario");
             }
               } catch (Exception e) {
@@ -851,7 +852,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to approve Req");
             }
             bsmf.MainFrame.con.close();

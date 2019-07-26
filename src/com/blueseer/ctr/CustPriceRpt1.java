@@ -26,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
+import bsmf.MainFrame;
 
 /**
  *
@@ -286,7 +287,7 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();

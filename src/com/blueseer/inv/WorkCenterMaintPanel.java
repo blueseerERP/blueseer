@@ -5,6 +5,7 @@
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
@@ -143,7 +144,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve wc_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -466,7 +467,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to wc_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -511,7 +512,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating wc_mstr");
             }
             bsmf.MainFrame.con.close();

@@ -5,6 +5,7 @@
  */
 package com.blueseer.dst;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -55,7 +56,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve wh_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -383,7 +384,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to wh_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -416,7 +417,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating wh_mstr");
             }
             bsmf.MainFrame.con.close();

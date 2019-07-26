@@ -5,6 +5,7 @@
 package com.blueseer.fap;
 
 import com.blueseer.utl.OVData;
+import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -326,7 +327,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 receiverdet.setModel(receivermodel);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve Receiver");
             }
             bsmf.MainFrame.con.close();
@@ -368,7 +369,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 receiverdet.setModel(receivermodel);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve Voucher");
             }
             bsmf.MainFrame.con.close();
@@ -978,7 +979,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Voucher");
             }
             bsmf.MainFrame.con.close();
@@ -1011,7 +1012,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 ddpo.insertItemAt("", 0);
                 ddpo.setSelectedIndex(0);
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get PO list for this Vendor");
             }
             bsmf.MainFrame.con.close();
@@ -1115,7 +1116,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 ddreceiver.insertItemAt("", 0);
                 ddreceiver.setSelectedIndex(0);
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get Receiver list for this Vendor");
             }
             bsmf.MainFrame.con.close();

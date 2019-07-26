@@ -6,6 +6,7 @@
 
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -403,7 +404,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Trans Report");
             }
             con.close();

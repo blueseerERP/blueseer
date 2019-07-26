@@ -15,6 +15,7 @@
  */
 package com.blueseer.fap;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -59,7 +60,7 @@ public class APControl extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No AP Ctrl Record found");
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ap_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -189,7 +190,7 @@ public class APControl extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating ap_ctrl");
             }
             bsmf.MainFrame.con.close();

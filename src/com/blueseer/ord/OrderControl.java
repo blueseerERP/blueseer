@@ -1,6 +1,7 @@
 
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -42,7 +43,7 @@ public class OrderControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve order_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -175,7 +176,7 @@ public class OrderControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating order_ctrl");
             }
             bsmf.MainFrame.con.close();

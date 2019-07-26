@@ -161,7 +161,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
            
             
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
            
         }
@@ -259,12 +259,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
   
@@ -421,12 +421,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve so_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
         return gotIt;
@@ -461,7 +461,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     } 
      
@@ -540,12 +540,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -1348,12 +1348,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 message = new String[]{"1", "Cannot add Order"};
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -1468,12 +1468,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 message = new String[]{"1", "Order cannot be edited"};     
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      return message;
     }
@@ -1493,12 +1493,12 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                         message = new String[]{"0", "deleted order number " + ordernbr.getText()};
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 message = new String[]{"1", "unabled to delete order"};
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return message;
     }
@@ -2876,11 +2876,11 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                             }
 
                         } catch (SQLException s) {
-                            s.printStackTrace();
+                            MainFrame.bslog(s);
                         }
                         bsmf.MainFrame.con.close();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        MainFrame.bslog(e);
                     }
               disableShipAddress();
               }

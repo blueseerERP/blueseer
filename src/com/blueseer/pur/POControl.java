@@ -1,6 +1,7 @@
 
 package com.blueseer.pur;
 
+import bsmf.MainFrame;
 import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
@@ -42,7 +43,7 @@ public class POControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve po_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -147,7 +148,7 @@ public class POControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating po_ctrl");
             }
             bsmf.MainFrame.con.close();

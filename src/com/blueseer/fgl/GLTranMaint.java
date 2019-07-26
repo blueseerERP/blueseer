@@ -4,6 +4,7 @@
  */
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -759,7 +760,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Add GL Transactions via SQL statement");
             }
             bsmf.MainFrame.con.close();
@@ -793,7 +794,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                      bsmf.MainFrame.show("unable to delete...may have been posted" + tbref.getText());   
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete GL_TRAN Record");
             }
             bsmf.MainFrame.con.close();
@@ -907,7 +908,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     lbacct.setText(res.getString("ac_desc"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -931,7 +932,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     lbcc.setText(res.getString("dept_desc"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

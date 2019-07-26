@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -60,7 +61,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
               btadd.setEnabled(false);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
             bsmf.MainFrame.con.close();

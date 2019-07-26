@@ -6,6 +6,7 @@
 
 package com.blueseer.frt;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
 import java.awt.Color;
@@ -125,7 +126,7 @@ public class FOBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get FO Browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -468,7 +469,7 @@ try {
                  
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing FO Browse Report");
             }
             con.close();

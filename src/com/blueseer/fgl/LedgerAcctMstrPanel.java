@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -67,7 +68,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ac_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -353,7 +354,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to insert into ac_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -389,7 +390,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "unable to edit ac_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -432,7 +433,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                         initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to Delete Account Record");
                 }
                 bsmf.MainFrame.con.close();

@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -58,7 +59,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve menu_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -311,7 +312,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                    menumap = bsmf.MainFrame.getmenulistmap();
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to menu_mstr");
             }
             bsmf.MainFrame.con.close();

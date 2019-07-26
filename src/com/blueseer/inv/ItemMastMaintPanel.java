@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -409,7 +410,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve item master record");
             }
             bsmf.MainFrame.con.close();
@@ -529,7 +530,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 }
                 tbqtyoh.setText(String.valueOf(tot));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -653,7 +654,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                    // bsmf.MainFrame.show("No Routing Cost Defined");
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("problem with getroutingcost");
             }
             bsmf.MainFrame.con.close();
@@ -2219,7 +2220,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     getItemImages(partnumber.getText());
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Image File");
             }
             bsmf.MainFrame.con.close();
@@ -2248,7 +2249,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                            + " ;");
                   
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to update default Image File");
             }
             bsmf.MainFrame.con.close();
@@ -2283,7 +2284,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Item Record");
             }
             bsmf.MainFrame.con.close();

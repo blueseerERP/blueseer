@@ -4,6 +4,7 @@
  */
 package com.blueseer.far;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -723,7 +724,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -794,7 +795,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 } // if proceed
                 */
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

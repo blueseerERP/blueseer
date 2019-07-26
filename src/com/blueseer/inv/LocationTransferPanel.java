@@ -5,6 +5,7 @@
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -68,7 +69,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                 s.printStackTrace();
+                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

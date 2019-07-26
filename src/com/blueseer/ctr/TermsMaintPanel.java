@@ -6,6 +6,7 @@
 
 package com.blueseer.ctr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -55,7 +56,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve term");
             }
             bsmf.MainFrame.con.close();
@@ -317,7 +318,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                    initvars("");
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to cust_term");
             }
             bsmf.MainFrame.con.close();
@@ -345,7 +346,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Updated Terms");
                     initvars("");
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating cust_term");
             }
             bsmf.MainFrame.con.close();

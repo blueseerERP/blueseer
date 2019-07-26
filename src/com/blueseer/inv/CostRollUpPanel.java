@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.Point;
@@ -836,7 +837,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                    }
             } // if proceed
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {

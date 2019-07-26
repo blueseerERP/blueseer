@@ -4,6 +4,7 @@
  */
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.prd.ProdSchedPanel;
@@ -366,7 +367,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             
             tbrexptotamt.setText(String.valueOf(totexpense)); 
@@ -402,7 +403,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             
             
@@ -612,7 +613,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -809,7 +810,7 @@ public class CashTran extends javax.swing.JPanel {
                   } // 2nd proceed     
                     
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -949,7 +950,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1105,7 +1106,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1167,7 +1168,7 @@ public class CashTran extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to insert into ac_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -1623,7 +1624,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("cannot set vendor variables");
             }
             bsmf.MainFrame.con.close();
@@ -3050,7 +3051,7 @@ public class CashTran extends javax.swing.JPanel {
                     lbname.setText(res.getString("name"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get entity name");
             }
             bsmf.MainFrame.con.close();
@@ -3126,7 +3127,7 @@ public class CashTran extends javax.swing.JPanel {
                     lbname1.setText(res.getString("name"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get entity name");
             }
             bsmf.MainFrame.con.close();
@@ -3189,7 +3190,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
             
@@ -3284,7 +3285,7 @@ public class CashTran extends javax.swing.JPanel {
                     lbname2.setText(res.getString("name"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get entity name");
             }
             bsmf.MainFrame.con.close();
@@ -3341,7 +3342,7 @@ public class CashTran extends javax.swing.JPanel {
                         lbacct2.setText(res.getString("ac_desc"));
                     }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3439,7 +3440,7 @@ public class CashTran extends javax.swing.JPanel {
                     lbname3.setText(res.getString("name"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get entity name");
             }
             bsmf.MainFrame.con.close();
@@ -3478,7 +3479,7 @@ public class CashTran extends javax.swing.JPanel {
                         lbrexpacctname.setText(res.getString("ac_desc"));
                     }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3504,7 +3505,7 @@ public class CashTran extends javax.swing.JPanel {
                     bsmf.MainFrame.show("deleted order number " + recurexpensetable.getValueAt(row, 1).toString());
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Recurring Expense record");
             }
             bsmf.MainFrame.con.close();
@@ -3571,7 +3572,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
             getRecurringExpense();
@@ -3699,7 +3700,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

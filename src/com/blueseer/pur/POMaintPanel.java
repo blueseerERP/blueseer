@@ -4,6 +4,7 @@
  */
 package com.blueseer.pur;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -253,7 +254,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  message = new String[]{"1", "Cannot add Order"};
             }
             bsmf.MainFrame.con.close();
@@ -279,7 +280,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                         message = new String[]{"0", "deleted order number " + ordernbr.getText()};
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 message = new String[]{"1", "unabled to delete order"};
             }
             bsmf.MainFrame.con.close();
@@ -375,7 +376,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 message = new String[]{"1", "Order cannot be edited"};     
             }
             bsmf.MainFrame.con.close();
@@ -652,7 +653,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();

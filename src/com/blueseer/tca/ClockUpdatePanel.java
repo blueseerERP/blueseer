@@ -133,7 +133,7 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
 
         }
       catch (SQLException s){
-          s.printStackTrace();
+          MainFrame.bslog(s);
        bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
       }
       bsmf.MainFrame.con.close();
@@ -512,7 +512,7 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
             } // if proceed
         }
       catch (SQLException s){
-          s.printStackTrace();
+          MainFrame.bslog(s);
         bsmf.MainFrame.show("SQL code does not execute.");
       }
       bsmf.MainFrame.con.close();

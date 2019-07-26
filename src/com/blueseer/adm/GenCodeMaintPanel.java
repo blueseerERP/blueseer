@@ -5,6 +5,7 @@
  */
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -229,7 +230,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to code_mstr");
             }
             bsmf.MainFrame.con.close();

@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.ord.*;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -326,7 +327,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                     jasperViewer.setVisible(true);
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
                 }
                 bsmf.MainFrame.con.close();
@@ -420,7 +421,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                 labelcount.setText(String.valueOf(i));
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {

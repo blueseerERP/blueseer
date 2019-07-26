@@ -1,6 +1,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
@@ -70,7 +71,7 @@ public class TaxMaint extends javax.swing.JPanel {
                     
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve task master record");
             }
             bsmf.MainFrame.con.close();
@@ -420,7 +421,7 @@ public class TaxMaint extends javax.swing.JPanel {
                  bsmf.MainFrame.show("Updated Tax Master");
                  initvars("");
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating tax master");
             }
             bsmf.MainFrame.con.close();
@@ -504,7 +505,7 @@ public class TaxMaint extends javax.swing.JPanel {
                  initvars("");
                  
             } catch (SQLException s) {
-                s.printStackTrace();                  
+                MainFrame.bslog(s);                  
                 bsmf.MainFrame.show("Problem adding master tax");
             }
             bsmf.MainFrame.con.close();
@@ -547,7 +548,7 @@ public class TaxMaint extends javax.swing.JPanel {
                         initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to Delete Tax Code Record");
                 }
                 bsmf.MainFrame.con.close();

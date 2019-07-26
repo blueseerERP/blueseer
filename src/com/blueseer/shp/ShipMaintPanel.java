@@ -4,6 +4,7 @@
  */
 package com.blueseer.shp;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -587,7 +588,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 itemlock = false;
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve cup_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -613,7 +614,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve sod_det");
             }
             bsmf.MainFrame.con.close();
@@ -647,7 +648,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve sod_det");
             }
             bsmf.MainFrame.con.close();
@@ -766,7 +767,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 btadd.setEnabled(true);
                 btedit.setEnabled(false);
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("sql code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -886,7 +887,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             btedit.setEnabled(false);
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("sql code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -1928,7 +1929,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();

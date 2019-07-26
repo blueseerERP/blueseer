@@ -355,7 +355,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 message = new String[]{"1", "Cannot commit PayRoll"};
             }
             bsmf.MainFrame.con.close();
@@ -387,7 +387,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                ";" );
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to update timeclock");
             }
             bsmf.MainFrame.con.close();
@@ -447,7 +447,7 @@ public class PayRollMaint extends javax.swing.JPanel {
               jtpEarnings.setText(html);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -535,7 +535,7 @@ public class PayRollMaint extends javax.swing.JPanel {
               jtpDeductions.setText(html);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -606,7 +606,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -663,7 +663,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     }
            }
             catch (SQLException s){
-                 s.printStackTrace();
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -838,7 +838,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     
            }
             catch (SQLException s){
-                 s.printStackTrace();
+                 MainFrame.bslog(s);
                  myreturn = false;
             }
             con.close();
@@ -1483,7 +1483,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     
            }
             catch (SQLException s){
-                 s.printStackTrace();
+                 MainFrame.bslog(s);
                  
             }
             con.close();

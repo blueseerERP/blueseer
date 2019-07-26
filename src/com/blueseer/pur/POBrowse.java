@@ -6,6 +6,7 @@
 
 package com.blueseer.pur;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
@@ -173,7 +174,7 @@ public class POBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get PO Browse detail");
             }
             bsmf.MainFrame.con.close();

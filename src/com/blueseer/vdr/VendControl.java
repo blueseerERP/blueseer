@@ -1,6 +1,7 @@
 
 package com.blueseer.vdr;
 
+import bsmf.MainFrame;
 import com.blueseer.ctr.*;
 import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
@@ -43,7 +44,7 @@ public class VendControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve vd_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -149,7 +150,7 @@ public class VendControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating vd_ctrl");
             }
             bsmf.MainFrame.con.close();

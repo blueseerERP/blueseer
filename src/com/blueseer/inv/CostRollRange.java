@@ -109,7 +109,7 @@ public class CostRollRange extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Level and MRP engine"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cost Roll Range Maintenance"));
 
         btroll.setText("Roll Cost");
         btroll.addActionListener(new java.awt.event.ActionListener() {

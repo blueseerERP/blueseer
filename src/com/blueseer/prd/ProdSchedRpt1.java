@@ -6,6 +6,7 @@
 
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -370,7 +371,7 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -442,7 +443,7 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

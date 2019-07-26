@@ -5,6 +5,7 @@
  */
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -53,7 +54,7 @@ public class FTPMaint extends javax.swing.JPanel {
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ftp_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -357,7 +358,7 @@ public class FTPMaint extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to ftp_mstr");
             }
             bsmf.MainFrame.con.close();

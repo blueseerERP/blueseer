@@ -5,6 +5,7 @@
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -52,7 +53,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve loc_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -314,7 +315,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to loc_mstr");
             }
             bsmf.MainFrame.con.close();

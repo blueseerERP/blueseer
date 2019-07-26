@@ -4,8 +4,8 @@
  */
 package com.blueseer.ctr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
-import bsmf.MainFrame.*; 
 import com.blueseer.ord.OrderMaintPanel;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -90,7 +91,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
            
             
             } catch (Exception e) {
-                e.printStackTrace();
+               MainFrame.bslog(e);
             } 
            
         }
@@ -140,7 +141,6 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-               
                
                     st.executeUpdate("insert into cm_mstr "
                         + "(cm_code, cm_name, cm_line1, cm_line2, "
@@ -206,12 +206,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  message = new String[]{"1", "Customer cannot be added"};   
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      return message;
      }
@@ -264,11 +264,11 @@ public class CustMaintPanel extends javax.swing.JPanel {
                initvars("");
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  message = new String[]{"1", "Unable to update Customer"};   
             }
               } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }   
            
       
@@ -295,12 +295,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     message = new String[]{"1", "Unable to delete code: " + tbcustcode.getText() };
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return message;
@@ -348,7 +348,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -397,7 +397,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -433,12 +433,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Contact Info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -472,12 +472,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Contact Info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -500,12 +500,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Deleted Contact Info");
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Delete Contact Info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -625,12 +625,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }    
             
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem retrieving customer list");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        return gotIt; 
     }
@@ -671,12 +671,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
             btshipedit.setEnabled(true);
            
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem retrieving shipto list");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
     }
@@ -697,12 +697,12 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 contacttable.setModel(contactmodel);
                 
                  } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem retrieving contact list");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
      }
@@ -1918,7 +1918,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 bsmf.MainFrame.show("Unable to get selected cust code");
             }
               } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }   
        } else {
            bsmf.MainFrame.show("Cannot Proceed...Data Field flagged");

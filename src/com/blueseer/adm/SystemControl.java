@@ -1,6 +1,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
@@ -68,7 +69,7 @@ public class SystemControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ov_ctrl");
             }
             bsmf.MainFrame.con.close();

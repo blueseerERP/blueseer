@@ -4,6 +4,7 @@
  */
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -642,7 +643,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                     lbacct.setText(res.getString("ac_desc"));
                 }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

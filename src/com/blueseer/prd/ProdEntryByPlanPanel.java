@@ -7,6 +7,7 @@
 package com.blueseer.prd;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.print.PrinterException;
@@ -127,7 +128,7 @@ String sitecitystatezip = "";
     
     
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to print prodentrybyplan");
             }
             bsmf.MainFrame.con.close();
@@ -443,7 +444,7 @@ String sitecitystatezip = "";
                     }
            }
             catch (SQLException s){
-                s.printStackTrace();
+                MainFrame.bslog(s);
                  
             }
             con.close();

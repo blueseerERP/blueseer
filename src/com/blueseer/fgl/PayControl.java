@@ -15,6 +15,7 @@
  */
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.far.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -245,7 +246,7 @@ public class PayControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating pay_ctrl");
             }
             bsmf.MainFrame.con.close();

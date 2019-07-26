@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import bsmf.MainFrame;
 
 /**
  *
@@ -293,7 +294,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Retrieve Price List");
             }
             bsmf.MainFrame.con.close();
@@ -696,7 +697,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Price");
             }
             bsmf.MainFrame.con.close();
@@ -760,7 +761,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to Delete cpr_mstr Record");
             }
             bsmf.MainFrame.con.close();
@@ -995,7 +996,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Price List Record");
             }
             bsmf.MainFrame.con.close();
@@ -1033,7 +1034,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                btUpdate.setEnabled(true);
                btDelete.setEnabled(true);
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Retrieve Selected Part Price");
             }
             bsmf.MainFrame.con.close();

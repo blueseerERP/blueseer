@@ -7,6 +7,7 @@
 package com.blueseer.utl;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -241,7 +242,7 @@ public class ChartView extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -311,7 +312,7 @@ public class ChartView extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -420,7 +421,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
                 }
                 con.close();
@@ -572,7 +573,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Problem with ProdByWeekFGUnits");
                 }
                 con.close();
@@ -659,7 +660,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                     s.printStackTrace();
+                     MainFrame.bslog(s);
                     bsmf.MainFrame.show("Problem with ProdByWeekFGDollars");
                 }
                 con.close();
@@ -743,7 +744,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("unable to process DiscreteOrderPerWeekUnits");
                 }
                 con.close();
@@ -822,7 +823,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("unable to process DiscreteOrderPerWeekDollars");
                 }
                 con.close();
@@ -1213,7 +1214,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("unable to get HoursPerWeek");
                 }
                 con.close();
@@ -1278,7 +1279,7 @@ public class ChartView extends javax.swing.JPanel {
         this.repaint();
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -1340,7 +1341,7 @@ public class ChartView extends javax.swing.JPanel {
         this.repaint();
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -1402,7 +1403,7 @@ public class ChartView extends javax.swing.JPanel {
         this.repaint();
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -1485,7 +1486,7 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to run ScrapPerWeek");
                 }
                 con.close();

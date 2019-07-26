@@ -4,6 +4,7 @@
  */
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -444,7 +445,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Add User Mstr");
             }
             bsmf.MainFrame.con.close();
@@ -496,7 +497,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 }
             } // if proceed
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Edit UserMstr");
             }
             bsmf.MainFrame.con.close();

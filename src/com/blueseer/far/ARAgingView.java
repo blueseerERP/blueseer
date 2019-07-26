@@ -6,6 +6,7 @@
 
 package com.blueseer.far;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -304,7 +305,7 @@ public class ARAgingView extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Detail");
             }
             bsmf.MainFrame.con.close();
@@ -368,7 +369,7 @@ public class ARAgingView extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get payment");
             }
             bsmf.MainFrame.con.close();
@@ -813,7 +814,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labeldollar.setText(String.valueOf(df.format(dol)));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for AR Aging View");
             }
             bsmf.MainFrame.con.close();
@@ -958,7 +959,7 @@ try {
             
             
           } catch (SQLException s) {
-              s.printStackTrace();
+              MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for AR Export");
             }
             bsmf.MainFrame.con.close();
@@ -1002,7 +1003,7 @@ try {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
             }
             bsmf.MainFrame.con.close();

@@ -6,6 +6,7 @@
 
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -55,7 +56,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                    
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve editp_mstr");
             }
             bsmf.MainFrame.con.close();

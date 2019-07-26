@@ -4,6 +4,7 @@
  */
 package com.blueseer.vdr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.Color;
@@ -70,7 +71,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Contact Info");
             }
             bsmf.MainFrame.con.close();
@@ -109,7 +110,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Contact Info");
             }
             bsmf.MainFrame.con.close();
@@ -137,7 +138,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Deleted Contact Info");
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Delete Contact Info");
             }
             bsmf.MainFrame.con.close();
@@ -162,7 +163,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                 contacttable.setModel(contactmodel);
                 
                  } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem retrieving contact list");
             }
             bsmf.MainFrame.con.close();
@@ -275,7 +276,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                btadd.setEnabled(false);
                }
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get selected vendor");
             }
             bsmf.MainFrame.con.close();
@@ -1179,7 +1180,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Vendor");
             }
             bsmf.MainFrame.con.close();
@@ -1334,7 +1335,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Vendor Record");
             }
             bsmf.MainFrame.con.close();

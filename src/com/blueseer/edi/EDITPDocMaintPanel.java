@@ -6,6 +6,7 @@
 
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -88,7 +89,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve edi_mstr");
             }
             bsmf.MainFrame.con.close();

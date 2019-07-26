@@ -6,6 +6,7 @@
 
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import com.blueseer.fgl.*;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
@@ -218,7 +219,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 tbtot.setText(String.valueOf(i));
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();

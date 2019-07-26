@@ -85,6 +85,7 @@
     </path>
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="test">
+	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
 

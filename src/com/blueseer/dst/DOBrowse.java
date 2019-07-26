@@ -6,6 +6,7 @@
 
 package com.blueseer.dst;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
@@ -126,7 +127,7 @@ public class DOBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get DO Browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -474,7 +475,7 @@ try {
                  
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing DO Browse Report");
             }
             con.close();

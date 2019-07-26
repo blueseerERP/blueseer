@@ -6,6 +6,7 @@
 
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -414,7 +415,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Prod Report");
             }
             con.close();

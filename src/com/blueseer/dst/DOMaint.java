@@ -4,6 +4,7 @@
  */
 package com.blueseer.dst;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.Color;
@@ -98,7 +99,7 @@ public class DOMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve do_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -747,7 +748,7 @@ public class DOMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add DO");
             }
             bsmf.MainFrame.con.close();

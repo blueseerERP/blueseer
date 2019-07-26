@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -180,7 +181,7 @@ public class MenuTreeMaint extends javax.swing.JPanel {
                         btdelete.setEnabled(true);  
                     }
              } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

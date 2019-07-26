@@ -27,7 +27,7 @@ if %jver%=="0" (
 
 
 :startapp
- start javaw -cp "dist\*" bsmf.MainFrame
+ start javaw -D"java.util.logging.config.file=bslogging.properties" -cp "dist\*" bsmf.MainFrame
  goto :EOF
 
 

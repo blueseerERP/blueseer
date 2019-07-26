@@ -1,6 +1,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
@@ -71,7 +72,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                     
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve profile master record");
             }
             bsmf.MainFrame.con.close();
@@ -463,7 +464,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                  bsmf.MainFrame.show("Updated Profile Master");
                  initvars("");
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating profile master");
             }
             bsmf.MainFrame.con.close();
@@ -561,7 +562,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                  
                  
             } catch (SQLException s) {
-                s.printStackTrace();                  
+                MainFrame.bslog(s);                  
                 bsmf.MainFrame.show("Problem adding master profile");
             }
             bsmf.MainFrame.con.close();
@@ -604,7 +605,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                         initvars("");
                     }
                 } catch (SQLException s) {
-                    s.printStackTrace();
+                    MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to Delete Profile Code Record");
                 }
                 bsmf.MainFrame.con.close();

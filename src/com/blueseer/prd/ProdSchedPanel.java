@@ -6,6 +6,7 @@
 
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -381,7 +382,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -417,7 +418,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -955,7 +956,7 @@ try {
                 
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {

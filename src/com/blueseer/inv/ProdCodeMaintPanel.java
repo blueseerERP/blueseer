@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -243,7 +244,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                 }
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Get Prod Code");
             }
             bsmf.MainFrame.con.close();
@@ -840,7 +841,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                 
             } 
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add Prod Code");
             }
             bsmf.MainFrame.con.close();
@@ -915,7 +916,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                 } 
             } // if proceed
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Edit Prod Code");
             }
             bsmf.MainFrame.con.close();

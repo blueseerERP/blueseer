@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -963,7 +964,7 @@ try {
                 lblbegbal.setText(df.format(totbegbal));
                 lblactbal.setText(df.format(totactivity));
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Acct Bal Report");
             }
             con.close();

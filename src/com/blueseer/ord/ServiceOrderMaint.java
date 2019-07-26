@@ -4,6 +4,7 @@
  */
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.dst.*;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
@@ -119,7 +120,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve sv_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -153,7 +154,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
              
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -207,7 +208,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
              
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -243,7 +244,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("SQL Code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -728,9 +729,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel84)))
+                    .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel84))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1134,7 +1134,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add Service Order");
             }
             bsmf.MainFrame.con.close();
@@ -1232,7 +1232,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1326,7 +1326,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot update Service Order");
             }
             bsmf.MainFrame.con.close();

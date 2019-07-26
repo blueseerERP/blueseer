@@ -6,6 +6,7 @@
 
 package com.blueseer.tca;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -292,7 +293,7 @@ try {
          labelhours.setText(String.valueOf(hours));
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for TimeClock Report");
             }
             con.close();

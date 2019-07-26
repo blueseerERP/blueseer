@@ -6,6 +6,7 @@
 
 package com.blueseer.vdr;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -251,7 +252,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

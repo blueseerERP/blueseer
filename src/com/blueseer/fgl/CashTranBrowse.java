@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -216,7 +217,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -277,7 +278,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -805,7 +806,7 @@ try {
              
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Cash Trans Browse Report");
             }
             con.close();

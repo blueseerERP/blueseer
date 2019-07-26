@@ -6,6 +6,7 @@
 
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.fgl.*;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
@@ -217,7 +218,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -285,7 +286,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                  s.printStackTrace();
+                  MainFrame.bslog(s);
             }
             con.close();
         } catch (Exception e) {
@@ -335,7 +336,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get service order browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -764,7 +765,7 @@ try {
                 tbtotquotes.setText(df.format(totquotes));
                 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Service Order Browse Report");
             }
             con.close();

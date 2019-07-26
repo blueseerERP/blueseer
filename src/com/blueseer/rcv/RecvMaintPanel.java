@@ -4,6 +4,7 @@
  */
 package com.blueseer.rcv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
@@ -275,7 +276,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("sql code does not execute");
             }
             bsmf.MainFrame.con.close();
@@ -333,7 +334,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve Receiver");
             }
             bsmf.MainFrame.con.close();
@@ -394,7 +395,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                  
                  
              } catch (SQLException s) {
-                 s.printStackTrace();
+                 MainFrame.bslog(s);
              JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to update sod_det");
              }
               // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
@@ -1003,7 +1004,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add Receiver");
             }
             bsmf.MainFrame.con.close();
@@ -1072,7 +1073,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 }
              res.close();
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot find po line item");
             }
             
@@ -1106,7 +1107,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 ddpo.setSelectedIndex(0);
                 res.close();
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get PO list for this Vendor");
             }
        //     bsmf.MainFrame.con.close();
@@ -1214,7 +1215,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 }
                 res.close();
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot find po line items for this PO");
             }
             } // if mypo is not empty

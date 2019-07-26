@@ -15,6 +15,7 @@
  */
 package com.blueseer.far;
 
+import bsmf.MainFrame;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -324,7 +325,7 @@ public class ARControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating ar_ctrl");
             }
             bsmf.MainFrame.con.close();

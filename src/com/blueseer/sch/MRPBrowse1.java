@@ -5,6 +5,7 @@
  */
 package com.blueseer.sch;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
@@ -1242,7 +1243,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
          }
   
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

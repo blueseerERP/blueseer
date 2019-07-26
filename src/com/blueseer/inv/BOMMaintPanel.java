@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import java.awt.Color;
@@ -218,7 +219,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                         btdelete.setEnabled(true);  
                     }
              } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -605,7 +606,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
 
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to BOM Master Record");
             }
             bsmf.MainFrame.con.close();

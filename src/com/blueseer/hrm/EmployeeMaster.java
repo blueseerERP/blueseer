@@ -4,6 +4,7 @@
  */
 package com.blueseer.hrm;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -180,7 +181,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
               jtpEarnings.setText(html);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -264,7 +265,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
               jtpDeductions.setText(html);
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -321,7 +322,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();
@@ -358,7 +359,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     }
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve employee pay record");
             }
             bsmf.MainFrame.con.close();
@@ -448,7 +449,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 
             }
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve employee record");
             }
             bsmf.MainFrame.con.close();
@@ -1751,7 +1752,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Add Employee Mstr");
             }
             bsmf.MainFrame.con.close();
@@ -1887,7 +1888,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 }
             } // if proceed
             catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Edit Employee Master");
             }
             bsmf.MainFrame.con.close();

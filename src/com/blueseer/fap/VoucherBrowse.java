@@ -6,6 +6,7 @@
 
 package com.blueseer.fap;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
@@ -523,7 +524,7 @@ try {
                  
         
             } catch (SQLException s) {
-                s.printStackTrace();
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing voucher Browse Report");
             }
             con.close();
