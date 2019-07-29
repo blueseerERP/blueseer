@@ -6,6 +6,7 @@
 
 package com.blueseer.ord;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -395,7 +396,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

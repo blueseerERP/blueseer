@@ -552,7 +552,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
   
@@ -593,7 +593,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
       
@@ -619,7 +619,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -653,7 +653,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -680,7 +680,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }  
       
@@ -707,7 +707,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }  
       
@@ -772,7 +772,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -892,7 +892,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
 
@@ -1934,7 +1934,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -2041,7 +2041,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_bteditActionPerformed
 
@@ -2059,7 +2059,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
              initvars(tbshipper.getText());
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btconfirmActionPerformed
 

@@ -6,6 +6,7 @@
 
 package com.blueseer.shp;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.sql.DriverManager;
@@ -113,7 +114,7 @@ public class ShipUnConfirmPanel extends javax.swing.JPanel {
            
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btConfirmActionPerformed
 

@@ -320,7 +320,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -352,7 +352,7 @@ public class FOMaint extends javax.swing.JPanel {
         is.close();
         os.close();
         } catch (IOException e) {
-        e.printStackTrace();
+        MainFrame.bslog(e);
         System.exit(1);
         }
         
@@ -478,7 +478,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      
     
@@ -1960,7 +1960,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -2049,7 +2049,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_bteditActionPerformed
 

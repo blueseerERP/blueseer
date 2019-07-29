@@ -61,7 +61,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -389,7 +389,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -422,7 +422,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 
@@ -446,7 +446,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

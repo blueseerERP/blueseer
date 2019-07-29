@@ -6,6 +6,7 @@
 
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,11 +50,12 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Printer Record found for " + mykey);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve prt_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -260,11 +262,12 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                    
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to prt_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -294,11 +297,12 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating prt_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 
@@ -319,11 +323,12 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Printer Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

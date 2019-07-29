@@ -179,7 +179,7 @@ public class POBrowse extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -603,7 +603,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

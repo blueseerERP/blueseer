@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 package com.blueseer.utl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.io.BufferedReader;
@@ -84,7 +85,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     

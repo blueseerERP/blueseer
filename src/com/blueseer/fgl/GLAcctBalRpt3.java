@@ -205,7 +205,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         
         ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.5));
         } catch (IOException e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(chartfilepath);
         myicon.getImage().flush();   
@@ -219,7 +219,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
        
@@ -606,7 +606,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

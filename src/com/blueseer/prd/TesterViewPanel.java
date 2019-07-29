@@ -4,6 +4,7 @@
  */
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -362,7 +363,7 @@ public class TesterViewPanel extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
     }
@@ -466,7 +467,7 @@ public class TesterViewPanel extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -585,7 +586,7 @@ public class TesterViewPanel extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     

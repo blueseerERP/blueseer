@@ -4,6 +4,7 @@
  */
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -52,11 +53,12 @@ public class FileOrderLoadPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code reinitddcustcode");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code reinitddcustcode");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     

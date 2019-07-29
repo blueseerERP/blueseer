@@ -278,7 +278,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
            
         }
@@ -374,7 +374,7 @@ public class CashTran extends javax.swing.JPanel {
             tbrexpincome.setText(String.valueOf(totincome)); 
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -409,7 +409,7 @@ public class CashTran extends javax.swing.JPanel {
             
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -617,7 +617,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return message;
@@ -814,7 +814,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return message;
@@ -954,7 +954,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return message;
@@ -1110,7 +1110,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return message;
@@ -1173,7 +1173,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -1629,7 +1629,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
       
@@ -3056,7 +3056,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddentityActionPerformed
 
@@ -3132,7 +3132,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
     }//GEN-LAST:event_ddentity1ActionPerformed
@@ -3195,7 +3195,7 @@ public class CashTran extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_dditem1ActionPerformed
 
@@ -3290,7 +3290,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddentity2ActionPerformed
 
@@ -3346,7 +3346,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddaccountexpenseActionPerformed
 
@@ -3445,7 +3445,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddrexpentityActionPerformed
 
@@ -3483,7 +3483,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddrexpacctActionPerformed
 
@@ -3512,7 +3512,7 @@ public class CashTran extends javax.swing.JPanel {
             getRecurringExpense();
             calcdiff();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btrexpdelitemActionPerformed
@@ -3578,7 +3578,7 @@ public class CashTran extends javax.swing.JPanel {
             getRecurringExpense();
             calcdiff();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
          
             
@@ -3704,7 +3704,7 @@ public class CashTran extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateincomeActionPerformed
 

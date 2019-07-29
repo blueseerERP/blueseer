@@ -242,7 +242,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -766,7 +766,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
            
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btsubmitActionPerformed
 
@@ -799,7 +799,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteALLActionPerformed
@@ -912,7 +912,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddacctActionPerformed
 
@@ -936,7 +936,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddccActionPerformed
 

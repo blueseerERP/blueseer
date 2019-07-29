@@ -1,6 +1,7 @@
 
 package com.blueseer.ctr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
@@ -51,11 +52,12 @@ public class POSControlMaint extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ov_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
     
@@ -194,11 +196,12 @@ public class POSControlMaint extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating pos_ctrl");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 

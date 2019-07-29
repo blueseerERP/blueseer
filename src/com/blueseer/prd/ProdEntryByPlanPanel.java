@@ -133,7 +133,7 @@ String sitecitystatezip = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         }
@@ -450,7 +450,7 @@ String sitecitystatezip = "";
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         

@@ -493,7 +493,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }
@@ -546,7 +546,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }
@@ -573,7 +573,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }
@@ -706,7 +706,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -736,7 +736,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 bsmf.MainFrame.show("unable to update req_mstr for no approval scenario");
             }
               } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
                          
                          
@@ -857,7 +857,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -1526,7 +1526,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
              
            } // if can proceed
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btPurchReqAddActionPerformed
 
@@ -1614,7 +1614,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     }//GEN-LAST:event_ddvendItemStateChanged
@@ -1684,7 +1684,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to get selected vd_name");
             }
               } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }   
                 
            
@@ -1724,7 +1724,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
       

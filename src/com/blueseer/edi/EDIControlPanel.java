@@ -15,6 +15,7 @@
  */
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -65,7 +66,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -245,7 +246,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 

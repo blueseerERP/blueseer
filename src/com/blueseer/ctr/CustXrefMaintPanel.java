@@ -6,6 +6,7 @@
 
 package com.blueseer.ctr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -68,11 +69,12 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Customer Cross Reference found for " + cust + " / " + custpart);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve cup_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -320,11 +322,12 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Cust Xref Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -373,11 +376,12 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Retrieve Vend Xref Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_custitemFocusLost
 
@@ -398,11 +402,12 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
               initvars("");
              
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Delete Cust Xref Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
@@ -434,11 +439,12 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                     initvars("");
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Cust Xref Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 

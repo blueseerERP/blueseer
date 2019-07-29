@@ -5,7 +5,7 @@
 bs="blueseer-4.2"
 bsshare="$bs/usr/share/blueseer"
 
-cp -R ../sf/linux/blueseer-4.2 $bs
+cp -R ../sf/linux/blueseer.sqlite.linux.v42 $bs
 mkdir $bs/usr
 mkdir $bs/usr/share
 mkdir $bs/usr/share/blueseer

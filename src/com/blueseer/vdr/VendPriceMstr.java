@@ -83,7 +83,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -217,7 +217,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     /**
@@ -446,7 +446,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_pricelistMouseClicked
 
@@ -488,7 +488,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btUpdateActionPerformed
 
@@ -524,7 +524,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                 }
                 bsmf.MainFrame.con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
         }
     }//GEN-LAST:event_btDeleteActionPerformed
@@ -613,7 +613,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btAddActionPerformed
 

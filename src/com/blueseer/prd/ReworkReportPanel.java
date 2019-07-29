@@ -6,6 +6,7 @@
 
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedWriter;
@@ -478,7 +479,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed
@@ -677,7 +678,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         

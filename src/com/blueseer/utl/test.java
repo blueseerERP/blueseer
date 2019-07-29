@@ -6,6 +6,7 @@
 
 package com.blueseer.utl;
 
+import bsmf.MainFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -203,7 +204,7 @@ public class test extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
 
@@ -275,7 +276,7 @@ try {
 // printer.close();
 //fos.close();
 } catch (Exception e) {
-e.printStackTrace();
+MainFrame.bslog(e);
 }
     }//GEN-LAST:event_btlabelprintActionPerformed
 
@@ -312,7 +313,7 @@ e.printStackTrace();
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }//GEN-LAST:event_btjobticketActionPerformed

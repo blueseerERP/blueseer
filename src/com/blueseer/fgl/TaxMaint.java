@@ -76,7 +76,7 @@ public class TaxMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
     
@@ -426,7 +426,7 @@ public class TaxMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_bteditActionPerformed
@@ -510,7 +510,7 @@ public class TaxMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -553,7 +553,7 @@ public class TaxMaint extends javax.swing.JPanel {
                 }
                 bsmf.MainFrame.con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

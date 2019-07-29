@@ -4,6 +4,7 @@
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -56,7 +57,7 @@ public class ImportItemMstr extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     

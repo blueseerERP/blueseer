@@ -7,6 +7,7 @@
 package com.blueseer.prd;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -91,7 +92,7 @@ public class OEEEntry extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -595,7 +596,7 @@ public class OEEEntry extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         

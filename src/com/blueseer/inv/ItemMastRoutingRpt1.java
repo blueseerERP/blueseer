@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -182,7 +183,7 @@ public class ItemMastRoutingRpt1 extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btviewActionPerformed
 

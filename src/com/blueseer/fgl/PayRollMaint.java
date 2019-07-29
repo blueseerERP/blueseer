@@ -215,7 +215,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            
             
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
            
         }
@@ -360,7 +360,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -392,7 +392,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
       
@@ -452,7 +452,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
          
@@ -540,7 +540,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -611,7 +611,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -668,7 +668,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return myreturn;
@@ -844,7 +844,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myreturn = false;
             
         }
@@ -1489,7 +1489,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         

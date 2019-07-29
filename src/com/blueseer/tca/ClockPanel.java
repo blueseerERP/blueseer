@@ -6,6 +6,7 @@
 
 package com.blueseer.tca;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -56,7 +57,7 @@ public class ClockPanel extends javax.swing.JPanel {
                 }
                 catch (Exception e)
                 {
-                        e.printStackTrace();
+                        MainFrame.bslog(e);
                 }
         }
 }
@@ -189,7 +190,7 @@ public class ClockPanel extends javax.swing.JPanel {
 
     }
     catch (Exception e){
-      e.printStackTrace();
+      MainFrame.bslog(e);
     }
       return returnvalue;
    }
@@ -504,7 +505,7 @@ public class ClockPanel extends javax.swing.JPanel {
 
             }
             catch (Exception e){
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
 
         } // if not isclocked

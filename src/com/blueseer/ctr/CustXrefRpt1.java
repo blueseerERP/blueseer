@@ -6,6 +6,7 @@
 
 package com.blueseer.ctr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.loadPanel;
@@ -240,11 +241,12 @@ public class CustXrefRpt1 extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btviewActionPerformed
 

@@ -6,6 +6,7 @@
 
 package com.blueseer.eng;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.itextpdf.text.Document;
@@ -565,7 +566,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -602,7 +603,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             bsmf.MainFrame.con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }
@@ -780,7 +781,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
   
@@ -812,7 +813,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
 
@@ -841,7 +842,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
        
@@ -871,7 +872,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
    
@@ -1286,7 +1287,7 @@ public class ECNMaint extends javax.swing.JPanel  {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 

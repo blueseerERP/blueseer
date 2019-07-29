@@ -332,7 +332,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                 }
                 bsmf.MainFrame.con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
         }
     }//GEN-LAST:event_tbprintActionPerformed
@@ -425,7 +425,7 @@ public class BOMBrowse extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }//GEN-LAST:event_btRunActionPerformed

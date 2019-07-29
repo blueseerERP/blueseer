@@ -60,7 +60,7 @@
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <EmptySpace pref="5" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="tbinarch" min="-2" pref="242" max="-2" attributes="0"/>
                               </Group>
                           </Group>

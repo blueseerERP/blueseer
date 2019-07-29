@@ -186,7 +186,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
          
@@ -270,7 +270,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -327,7 +327,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -364,7 +364,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -454,7 +454,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
          
          return gotIt;
@@ -497,7 +497,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
      
@@ -1758,7 +1758,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
             reinitusermaintvariables();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -1894,7 +1894,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
             reinitusermaintvariables();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_bteditActionPerformed
 
@@ -1918,7 +1918,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

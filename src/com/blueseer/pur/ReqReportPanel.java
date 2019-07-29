@@ -6,6 +6,7 @@
 
 package com.blueseer.pur;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.ReportPanel;
 import com.blueseer.utl.BlueSeerUtils;
@@ -229,7 +230,7 @@ res = st.executeQuery("SELECT * FROM  req_mstr where " +
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btviewActionPerformed
 

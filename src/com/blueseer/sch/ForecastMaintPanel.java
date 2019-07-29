@@ -5,6 +5,7 @@
  */
 package com.blueseer.sch;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -177,7 +178,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -1196,7 +1197,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_tbaddActionPerformed
 
@@ -1233,7 +1234,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_tbdeleteActionPerformed
@@ -1332,7 +1333,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_tbeditActionPerformed
 

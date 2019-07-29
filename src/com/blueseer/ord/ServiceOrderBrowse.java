@@ -207,7 +207,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         ChartUtilities.saveChartAsJPEG(new File(quotesfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
        // ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, 400, 200);
         } catch (IOException e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(quotesfilepath);
         myicon.getImage().flush();  
@@ -222,7 +222,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
        
@@ -276,7 +276,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         
         ChartUtilities.saveChartAsJPEG(new File(ordersfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
         } catch (IOException e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(ordersfilepath);
         myicon.getImage().flush();   
@@ -290,7 +290,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
        
@@ -341,7 +341,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -770,7 +770,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

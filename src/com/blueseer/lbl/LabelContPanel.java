@@ -7,6 +7,7 @@
 package com.blueseer.lbl;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -100,7 +101,7 @@ String shipcountry = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -158,7 +159,7 @@ String shipcountry = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -454,7 +455,7 @@ concatline = concatline.replace("$TODAYTIME", dftime.format(now));
 
 
 } catch (Exception e) {
-e.printStackTrace();
+MainFrame.bslog(e);
 }
     }//GEN-LAST:event_btprintActionPerformed
 

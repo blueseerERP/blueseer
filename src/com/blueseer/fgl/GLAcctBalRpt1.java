@@ -6,6 +6,7 @@
 
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -494,7 +495,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed
@@ -557,7 +558,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         

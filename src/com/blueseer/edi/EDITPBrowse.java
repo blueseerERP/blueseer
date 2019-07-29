@@ -5,6 +5,7 @@
  */
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -82,7 +83,7 @@ public class EDITPBrowse extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         

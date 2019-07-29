@@ -1,6 +1,7 @@
 
 package com.blueseer.tca;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -45,7 +46,7 @@ public class ClockControl extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
     
@@ -143,7 +144,7 @@ public class ClockControl extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btupdateActionPerformed
 

@@ -168,7 +168,7 @@ public class OVData {
         }
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -195,7 +195,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return proceed;
     } 
@@ -224,7 +224,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        
@@ -258,7 +258,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        
@@ -291,7 +291,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        
@@ -323,7 +323,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -356,7 +356,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mypo;
         
@@ -393,7 +393,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return nbr;
         
@@ -450,7 +450,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
        
@@ -491,7 +491,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
              mystring = "2";
         }  
          return mystring;
@@ -546,7 +546,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
             mystring = "2";
         }  
          return  mystring;
@@ -595,7 +595,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
             mystring = "2";
         }  
          return  mystring;
@@ -627,7 +627,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
        
@@ -673,7 +673,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
        
@@ -704,7 +704,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
         
@@ -740,7 +740,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
         
@@ -779,7 +779,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
         
@@ -807,7 +807,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -834,7 +834,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }         
@@ -856,7 +856,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }         
@@ -1011,7 +1011,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     
        
@@ -1052,7 +1052,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1092,7 +1092,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1126,7 +1126,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1162,7 +1162,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1195,7 +1195,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1228,7 +1228,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1256,7 +1256,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1287,7 +1287,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1316,7 +1316,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1345,7 +1345,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1375,7 +1375,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1402,7 +1402,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1430,7 +1430,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1457,7 +1457,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -1485,7 +1485,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1513,7 +1513,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1541,7 +1541,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1569,7 +1569,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1597,7 +1597,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1624,7 +1624,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1653,7 +1653,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1682,7 +1682,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1715,7 +1715,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1748,7 +1748,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1783,7 +1783,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -1816,7 +1816,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxpercent;
         
@@ -1848,7 +1848,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxpercent;
         
@@ -1874,7 +1874,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return amt;
         
@@ -1913,7 +1913,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxamt;
         
@@ -1952,7 +1952,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxamt;
         
@@ -1990,7 +1990,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxamt;
         
@@ -2028,7 +2028,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxamt;
         
@@ -2067,7 +2067,7 @@ public class OVData {
             }
             con.close();
         } catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return taxamt;
         
@@ -2120,7 +2120,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return acct;
         
@@ -2172,7 +2172,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cc;
         
@@ -2200,7 +2200,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2229,7 +2229,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2258,7 +2258,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2286,7 +2286,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2315,7 +2315,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2349,7 +2349,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2380,7 +2380,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2413,7 +2413,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2441,7 +2441,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2471,7 +2471,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -2511,7 +2511,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -2557,7 +2557,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -2588,7 +2588,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return myarray;
@@ -2615,7 +2615,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -2648,7 +2648,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -2672,7 +2672,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -2695,7 +2695,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -2954,7 +2954,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -2994,7 +2994,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3034,7 +3034,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3091,7 +3091,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3141,7 +3141,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3189,7 +3189,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3230,7 +3230,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3286,7 +3286,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3340,7 +3340,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3389,7 +3389,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3443,7 +3443,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3495,7 +3495,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3546,7 +3546,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3589,7 +3589,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3635,7 +3635,7 @@ public class OVData {
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3683,7 +3683,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3722,7 +3722,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3766,7 +3766,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3817,7 +3817,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            
@@ -3859,7 +3859,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -3887,7 +3887,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -3921,7 +3921,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -3959,7 +3959,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -4000,7 +4000,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -4224,7 +4224,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -4312,7 +4312,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              }
@@ -4392,7 +4392,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              }
@@ -4440,7 +4440,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4495,7 +4495,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4549,7 +4549,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4635,7 +4635,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4693,7 +4693,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4750,7 +4750,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4825,7 +4825,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -4907,7 +4907,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -5008,7 +5008,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -5069,7 +5069,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
@@ -5133,7 +5133,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
        }
        
@@ -5166,7 +5166,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -5298,7 +5298,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return fg;
         
@@ -5348,7 +5348,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }        
                
@@ -5509,7 +5509,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -5613,7 +5613,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -5736,7 +5736,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -5869,7 +5869,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -5901,7 +5901,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
           return delimiters;
@@ -5953,7 +5953,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -5998,7 +5998,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -6030,7 +6030,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6061,7 +6061,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6089,7 +6089,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6117,7 +6117,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6145,7 +6145,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -6177,7 +6177,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -6207,7 +6207,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -6236,7 +6236,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -6264,7 +6264,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -6291,7 +6291,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6318,7 +6318,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6346,7 +6346,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -6374,7 +6374,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return myarray;
         }
@@ -6403,7 +6403,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6432,7 +6432,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6461,7 +6461,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6490,7 +6490,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6519,7 +6519,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6548,7 +6548,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6577,7 +6577,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6620,7 +6620,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6714,7 +6714,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return TypeAndPrice;
         
@@ -6758,7 +6758,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return price;
         
@@ -6790,7 +6790,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6833,7 +6833,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return myreturn;
@@ -6873,7 +6873,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6904,7 +6904,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -6931,7 +6931,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6958,7 +6958,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -6985,7 +6985,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7012,7 +7012,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7038,7 +7038,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7064,7 +7064,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7090,7 +7090,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7116,7 +7116,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -7151,7 +7151,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7178,7 +7178,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7205,7 +7205,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7235,7 +7235,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7262,7 +7262,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7289,7 +7289,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7317,7 +7317,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7344,7 +7344,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7371,7 +7371,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7399,7 +7399,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7426,7 +7426,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7453,7 +7453,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7480,7 +7480,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7507,7 +7507,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7535,7 +7535,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7563,7 +7563,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7591,7 +7591,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7618,7 +7618,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7645,7 +7645,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7672,7 +7672,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7699,7 +7699,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7726,7 +7726,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7753,7 +7753,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7780,7 +7780,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7808,7 +7808,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7835,7 +7835,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7864,7 +7864,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7893,7 +7893,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7924,7 +7924,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return outvalue;
         
@@ -7951,7 +7951,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -7978,7 +7978,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8005,7 +8005,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8032,7 +8032,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8059,7 +8059,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8086,7 +8086,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8114,7 +8114,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8141,7 +8141,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8168,7 +8168,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8195,7 +8195,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8223,7 +8223,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8251,7 +8251,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -8302,7 +8302,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8345,7 +8345,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8390,7 +8390,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8434,7 +8434,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8478,7 +8478,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8522,7 +8522,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8589,7 +8589,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8628,7 +8628,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8670,7 +8670,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8711,7 +8711,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8752,7 +8752,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8794,7 +8794,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8840,7 +8840,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8884,7 +8884,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8930,7 +8930,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -8975,7 +8975,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -9020,7 +9020,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -9054,7 +9054,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -9099,7 +9099,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -9149,7 +9149,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -9180,7 +9180,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9209,7 +9209,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9237,7 +9237,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return percent;
         
@@ -9265,7 +9265,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myloc;
         
@@ -9305,7 +9305,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myloc;
         
@@ -9334,7 +9334,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return qty;
     }
@@ -9361,7 +9361,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myuom;
         
@@ -9388,7 +9388,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myloc;
         
@@ -9416,7 +9416,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9446,7 +9446,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9474,7 +9474,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9511,7 +9511,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -9584,7 +9584,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9612,7 +9612,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9640,7 +9640,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -9667,7 +9667,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myimage;
         
@@ -9695,7 +9695,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9722,7 +9722,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9749,7 +9749,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
                 return bank;
             }
@@ -9775,7 +9775,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9805,7 +9805,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9833,7 +9833,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mycount;
         
@@ -9860,7 +9860,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9887,7 +9887,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9914,7 +9914,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9941,7 +9941,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -9977,7 +9977,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
             return address;
         }       
@@ -10013,7 +10013,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
             
             return address;
@@ -10050,7 +10050,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
             
             return address;
@@ -10086,7 +10086,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           con.close();  
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
             
             return address;
@@ -10113,7 +10113,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10140,7 +10140,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem; 
         
@@ -10167,7 +10167,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10194,7 +10194,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10222,7 +10222,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10249,7 +10249,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            con.close(); 
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10277,7 +10277,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;  
          }
@@ -10303,7 +10303,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10330,7 +10330,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -10357,7 +10357,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -10388,7 +10388,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10419,7 +10419,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10451,7 +10451,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10478,7 +10478,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return price;
         
@@ -10505,7 +10505,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return price;
         
@@ -10534,7 +10534,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10573,7 +10573,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10612,7 +10612,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -10641,7 +10641,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10668,7 +10668,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10697,7 +10697,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10724,7 +10724,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10753,7 +10753,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10780,7 +10780,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return cost;
         
@@ -10807,7 +10807,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10834,7 +10834,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myitem;
         
@@ -10862,7 +10862,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -10889,7 +10889,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -10916,7 +10916,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -10957,7 +10957,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        } //else
         
@@ -10991,7 +10991,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isGood;
         
@@ -11018,7 +11018,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11045,7 +11045,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11073,7 +11073,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11101,7 +11101,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11129,7 +11129,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11157,7 +11157,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11186,7 +11186,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11217,7 +11217,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11247,7 +11247,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 con.close();
             }
             catch (Exception e){
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
             return venditemonly;
         
@@ -11277,7 +11277,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 con.close();
             }
             catch (Exception e){
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
             return custitemonly;
         
@@ -11305,7 +11305,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 con.close();
             }
             catch (Exception e){
-                e.printStackTrace();
+                MainFrame.bslog(e);
             }
             return custitemonly;
         
@@ -11334,7 +11334,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autosource;
         
@@ -11362,7 +11362,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autoitem;
         
@@ -11390,7 +11390,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autoinvoice;
         
@@ -11418,7 +11418,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autocust;
         
@@ -11446,7 +11446,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autovend;
         
@@ -11474,7 +11474,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autopost;
         
@@ -11504,7 +11504,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return autovoucher;
         
@@ -11534,7 +11534,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11564,7 +11564,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11593,7 +11593,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11621,7 +11621,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11649,7 +11649,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11679,7 +11679,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11707,7 +11707,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11735,7 +11735,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11763,7 +11763,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11791,7 +11791,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11821,7 +11821,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isGood;
         
@@ -11851,7 +11851,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isGood;
         
@@ -11880,7 +11880,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isgood;
         
@@ -11907,7 +11907,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11966,7 +11966,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -11995,7 +11995,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -12024,7 +12024,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -12058,7 +12058,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return labor;
             
@@ -12092,7 +12092,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return burden;
             
@@ -12127,7 +12127,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return labor;
          }
@@ -12161,7 +12161,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return burden;
          }
@@ -12195,7 +12195,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return labor;
             
@@ -12240,7 +12240,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return labor;
             
@@ -12283,7 +12283,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return burden;
             
@@ -12316,7 +12316,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return burden;
             
@@ -12422,7 +12422,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
         }
        
@@ -12549,7 +12549,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return myarray;
          }
@@ -12581,7 +12581,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return billto;
@@ -12614,7 +12614,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return billto;
@@ -12642,7 +12642,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return wh;
@@ -12674,7 +12674,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return carrier;
@@ -12702,7 +12702,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return fo;
@@ -12742,7 +12742,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
              return carriers;
@@ -12789,7 +12789,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -12833,7 +12833,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return header;
@@ -12890,7 +12890,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -12946,7 +12946,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -13005,7 +13005,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -13064,7 +13064,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return detail;
@@ -13103,7 +13103,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return header;
@@ -13151,7 +13151,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return detail;
@@ -13194,7 +13194,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mystring;
@@ -13240,7 +13240,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mylist;
@@ -13274,7 +13274,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mylist;
@@ -13357,7 +13357,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -13483,7 +13483,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -13612,7 +13612,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -13740,7 +13740,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -13839,7 +13839,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -13885,7 +13885,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-               e.printStackTrace();
+               MainFrame.bslog(e);
                count = 0;
         }
           return count;
@@ -13999,7 +13999,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14108,7 +14108,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14203,7 +14203,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14316,7 +14316,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14647,7 +14647,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
         con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
                }  
        
           
@@ -14714,7 +14714,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14819,7 +14819,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               
         con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
                }  
        } // if amount does not equal 0
           
@@ -14891,7 +14891,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -14967,7 +14967,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15095,7 +15095,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15188,7 +15188,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15261,7 +15261,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15429,7 +15429,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15511,7 +15511,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15593,7 +15593,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -15754,7 +15754,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -16026,7 +16026,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -16285,7 +16285,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -16362,7 +16362,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             myerror = true;
         }
         return myerror;
@@ -16391,7 +16391,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16419,7 +16419,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16447,7 +16447,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16474,7 +16474,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16501,7 +16501,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16529,7 +16529,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16555,7 +16555,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16581,7 +16581,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16607,7 +16607,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16633,7 +16633,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16662,7 +16662,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16691,7 +16691,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16720,7 +16720,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16748,7 +16748,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16776,7 +16776,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -16804,7 +16804,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16845,7 +16845,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16884,7 +16884,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isclosed;
         
@@ -16925,7 +16925,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16960,7 +16960,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -16994,7 +16994,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -17025,7 +17025,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17056,7 +17056,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17087,7 +17087,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17118,7 +17118,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17149,7 +17149,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17180,7 +17180,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return account;
         
@@ -17220,7 +17220,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return amt;
         
@@ -17253,7 +17253,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return amt;
         
@@ -17291,7 +17291,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return amt;
         
@@ -17321,7 +17321,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return myamt;
          }
@@ -17349,7 +17349,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              return myamt;
          }
@@ -17376,7 +17376,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -17405,7 +17405,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -17433,7 +17433,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -17461,7 +17461,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -17489,7 +17489,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -17518,7 +17518,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -17551,7 +17551,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               
               return myamt;
@@ -17585,7 +17585,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               
               return myamt;
@@ -17714,7 +17714,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               return mylist;
           }
@@ -17844,7 +17844,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               return mylist;
           }
@@ -17947,7 +17947,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               return mylist;
           }
@@ -18071,7 +18071,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
               return mylist;
           }
@@ -18137,7 +18137,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         }
@@ -18213,7 +18213,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         }
@@ -18295,7 +18295,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
            
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }
        
@@ -18391,7 +18391,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
            
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }
        
@@ -18424,7 +18424,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
            
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }
                        
@@ -18452,7 +18452,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
            
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            // now let's copy gl_tran to gl_hist and delete gl_tran
@@ -18563,7 +18563,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-               e.printStackTrace();
+               MainFrame.bslog(e);
         }
                 
                 
@@ -18652,7 +18652,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-               e.printStackTrace();
+               MainFrame.bslog(e);
                myreturn = true;
         }
                 
@@ -18693,7 +18693,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            return myreturn;
@@ -18725,7 +18725,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            return myreturn;
@@ -18804,7 +18804,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            
            return myreturn;
@@ -18838,7 +18838,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
                    
            return duedate;           
@@ -19009,7 +19009,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         } catch (Exception e) {
             myerror = true;
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return myerror;
        }
@@ -19128,7 +19128,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         } catch (Exception e) {
             myerror = true;
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return myerror;
        }
@@ -19188,7 +19188,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         } catch (Exception e) {
             myerror = true;
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
             return myerror;
         }
@@ -19214,7 +19214,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
          return myreturn;
      }
@@ -19271,7 +19271,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }  
        
@@ -19333,7 +19333,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }  
        
@@ -19392,7 +19392,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }  
         
@@ -19449,7 +19449,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }  
          
@@ -19493,7 +19493,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
                  
                 if (proceed) {
@@ -19591,7 +19591,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }
        
@@ -19613,7 +19613,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19645,7 +19645,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return sac;
        }
@@ -19727,7 +19727,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19756,7 +19756,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19779,7 +19779,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19801,7 +19801,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19909,7 +19909,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -19944,7 +19944,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -20013,7 +20013,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -20118,7 +20118,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -20147,7 +20147,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mylist;
         
@@ -20175,7 +20175,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -20203,7 +20203,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -20292,7 +20292,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }      
       
@@ -20350,7 +20350,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }    
     
@@ -20403,7 +20403,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }   
     
@@ -20447,7 +20447,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     } 
     
@@ -20499,7 +20499,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }    
       
@@ -20548,7 +20548,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     } 
      
@@ -20602,7 +20602,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }    
     
@@ -20663,7 +20663,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }    
     
@@ -20746,7 +20746,7 @@ Transport.send(message);
 
   } catch (MessagingException e) {
 
-e.printStackTrace();
+MainFrame.bslog(e);
 
   }
     }
@@ -20783,7 +20783,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
 
@@ -20854,7 +20854,7 @@ e.printStackTrace();
 	 
 	  } catch (MessagingException e) {
 	 
-	e.printStackTrace();
+	MainFrame.bslog(e);
 	 
 	  }
 	    }
@@ -20933,7 +20933,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           
           
@@ -20960,7 +20960,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -20987,7 +20987,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -21015,7 +21015,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -21042,7 +21042,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -21069,7 +21069,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return mystring;
         
@@ -21096,7 +21096,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return isArchive; 
         
@@ -21126,7 +21126,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -21163,7 +21163,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
        
@@ -21255,7 +21255,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return returnkey;
       }
@@ -21380,7 +21380,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return isError;
       } 
@@ -21543,7 +21543,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return messg;
       } 
@@ -21664,7 +21664,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return isError;
       } 
@@ -21710,7 +21710,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -21756,7 +21756,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -21813,7 +21813,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }  
        
@@ -21853,7 +21853,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }  
        
@@ -21905,7 +21905,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }  
        
@@ -21968,7 +21968,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return fo;
       }  
@@ -22009,7 +22009,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return fo;
       }  
@@ -22064,7 +22064,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }  
        
@@ -22128,7 +22128,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }   
        
@@ -22165,7 +22165,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }  
         
@@ -22287,7 +22287,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return isError;
       }
@@ -22330,7 +22330,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -22408,7 +22408,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -22463,7 +22463,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22489,7 +22489,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22529,7 +22529,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22559,7 +22559,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22605,7 +22605,7 @@ e.printStackTrace();
          soc.close();
  
 } catch (Exception e) {
-e.printStackTrace();
+MainFrame.bslog(e);
 }
       }
       
@@ -22629,7 +22629,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -22655,7 +22655,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -22682,7 +22682,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myreturn;
         
@@ -22714,7 +22714,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22814,7 +22814,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
           return planid;
@@ -22869,7 +22869,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           
       }
@@ -22897,7 +22897,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -22931,7 +22931,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22961,7 +22961,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -22992,7 +22992,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -23024,7 +23024,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -23044,7 +23044,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -23063,7 +23063,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -23082,7 +23082,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -23101,7 +23101,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
       }
       
@@ -23134,7 +23134,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -23166,7 +23166,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         return myarray;
         
@@ -23201,7 +23201,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -23261,7 +23261,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return myreturn;
       }
@@ -23331,7 +23331,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return shiptocode;
       }
@@ -23464,7 +23464,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           return shiptocode;
       }
@@ -23485,7 +23485,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23506,7 +23506,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23527,7 +23527,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23548,7 +23548,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23569,7 +23569,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23590,7 +23590,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        }
@@ -23708,7 +23708,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return recnumber;
@@ -23900,7 +23900,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return recnumber;
@@ -24025,7 +24025,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return recnumber;
@@ -24081,7 +24081,7 @@ e.printStackTrace();
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return fctdates;
@@ -24158,7 +24158,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24223,7 +24223,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24266,7 +24266,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24312,7 +24312,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24366,7 +24366,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24419,7 +24419,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24477,7 +24477,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24539,7 +24539,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24598,7 +24598,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24657,7 +24657,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24713,7 +24713,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24768,7 +24768,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24827,7 +24827,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24885,7 +24885,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -24945,7 +24945,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25005,7 +25005,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25064,7 +25064,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25118,7 +25118,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25173,7 +25173,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25232,7 +25232,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25288,7 +25288,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25345,7 +25345,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25402,7 +25402,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25457,7 +25457,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25513,7 +25513,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25572,7 +25572,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25630,7 +25630,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25686,7 +25686,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25746,7 +25746,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25805,7 +25805,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25864,7 +25864,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25923,7 +25923,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -25982,7 +25982,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26040,7 +26040,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26096,7 +26096,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26173,7 +26173,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26232,7 +26232,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26290,7 +26290,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26346,7 +26346,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26407,7 +26407,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26466,7 +26466,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26525,7 +26525,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26585,7 +26585,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26644,7 +26644,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26701,7 +26701,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26758,7 +26758,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26817,7 +26817,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26889,7 +26889,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -26945,7 +26945,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27001,7 +27001,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27048,7 +27048,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27097,7 +27097,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27142,7 +27142,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27225,7 +27225,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mymodel;
@@ -27266,7 +27266,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
        
@@ -27317,7 +27317,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mylist;
@@ -27347,7 +27347,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mylist;
@@ -27376,7 +27376,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
             
         }
         return mylist;
@@ -27407,7 +27407,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         return myreturn;
@@ -27434,7 +27434,7 @@ e.printStackTrace();
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
          return myreturn;
      }
@@ -27550,7 +27550,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -27607,7 +27607,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         
@@ -27685,7 +27685,7 @@ e.printStackTrace();
             con.close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
         

@@ -6,6 +6,7 @@
 
 package com.blueseer.vdr;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.menumap;
@@ -240,7 +241,7 @@ public class VendXrefRpt1 extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btviewActionPerformed
 

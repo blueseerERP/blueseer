@@ -7,6 +7,7 @@
 package com.blueseer.inv;
 
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -82,7 +83,7 @@ String sitecitystatezip = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -112,7 +113,7 @@ String sitecitystatezip = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     

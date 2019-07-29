@@ -281,7 +281,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
       
@@ -339,7 +339,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
 
@@ -1009,7 +1009,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -1080,7 +1080,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
         //    bsmf.MainFrame.con.close();
             } // if mypart and mypo
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_ddpartActionPerformed
 
@@ -1112,7 +1112,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             }
        //     bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        }
     }//GEN-LAST:event_ddvendActionPerformed
@@ -1186,7 +1186,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_bteditActionPerformed
 
@@ -1222,7 +1222,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             
            // bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         
     }//GEN-LAST:event_ddpoActionPerformed

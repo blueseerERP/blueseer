@@ -131,7 +131,7 @@ public class POMaintPanel extends javax.swing.JPanel {
            
             
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
            
         }
@@ -259,7 +259,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
          
          return message;
@@ -285,7 +285,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
            return message;
     }
@@ -381,7 +381,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      return message;
     }
@@ -462,7 +462,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      return gotIt;
     }
@@ -564,7 +564,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -658,7 +658,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
   

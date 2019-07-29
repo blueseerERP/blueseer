@@ -344,6 +344,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Customer Shipto");
             }
             bsmf.MainFrame.con.close();
@@ -393,6 +394,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Customer Shipto");
             }
             bsmf.MainFrame.con.close();
@@ -1915,6 +1917,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                bsmf.MainFrame.show("Updated Customer Shipto Successfully");
                           
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get selected cust code");
             }
               } catch (Exception e) {

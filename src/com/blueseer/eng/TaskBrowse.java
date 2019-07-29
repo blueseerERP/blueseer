@@ -6,6 +6,7 @@
 
 package com.blueseer.eng;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
 import java.awt.Color;
 import java.awt.Component;
@@ -160,7 +161,7 @@ public class TaskBrowse extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -421,7 +422,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

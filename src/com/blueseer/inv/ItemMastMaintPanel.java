@@ -415,7 +415,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
            } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     return hasItem;
     }
@@ -486,7 +486,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              
              
@@ -534,7 +534,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              
              
@@ -659,7 +659,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
              
              
@@ -1953,7 +1953,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -2084,7 +2084,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_bteditActionPerformed
 
@@ -2225,7 +2225,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteimageActionPerformed
@@ -2254,7 +2254,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_cbdefaultActionPerformed
@@ -2289,7 +2289,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

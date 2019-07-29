@@ -270,7 +270,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -841,7 +841,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }  
     }//GEN-LAST:event_btrollActionPerformed
 

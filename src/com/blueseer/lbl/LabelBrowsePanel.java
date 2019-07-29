@@ -6,6 +6,7 @@
 
 package com.blueseer.lbl;
 
+import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -181,7 +182,7 @@ public class LabelBrowsePanel extends javax.swing.JPanel {
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
     }
@@ -573,7 +574,7 @@ try {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
        
     }//GEN-LAST:event_btRunActionPerformed

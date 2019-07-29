@@ -6,6 +6,7 @@
 
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Font;
@@ -129,7 +130,7 @@ String sqeemail = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
           
           
@@ -673,11 +674,12 @@ String sqeemail = "";
 
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_jButtonNewComplaintActionPerformed
 
@@ -793,7 +795,7 @@ String sqeemail = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
 
         // TODO add your handling code here:
@@ -900,7 +902,7 @@ String sqeemail = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_btQualProbUpdateActionPerformed
@@ -938,7 +940,7 @@ String sqeemail = "";
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
     
@@ -1146,7 +1148,7 @@ String sqeemail = "";
             }
             pjob.print();
         } catch (PrinterException pe) {
-            pe.printStackTrace();
+            MainFrame.bslog(pe);
         }// TODO add your handling code here:
     }//GEN-LAST:event_btPrintQPRActionPerformed
 

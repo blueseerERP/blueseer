@@ -153,11 +153,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve userid");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -451,7 +452,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
             initvars("");
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btUMAddActionPerformed
 
@@ -503,7 +504,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.con.close();
             initvars("");
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btUMEditActionPerformed
 
@@ -523,11 +524,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete User ID");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         }
     }//GEN-LAST:event_btdeleteActionPerformed

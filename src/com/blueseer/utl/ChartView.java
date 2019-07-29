@@ -231,7 +231,7 @@ public class ChartView extends javax.swing.JPanel {
         try {
         ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
         } catch (IOException e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(chartfilepath);
         myicon.getImage().flush();   
@@ -246,7 +246,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
        
@@ -301,7 +301,7 @@ public class ChartView extends javax.swing.JPanel {
         try {
         ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
         } catch (IOException e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
         ImageIcon myicon = new ImageIcon(chartfilepath);
         myicon.getImage().flush();   
@@ -316,7 +316,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
         
@@ -426,7 +426,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
        
@@ -496,7 +496,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
@@ -578,7 +578,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
              
@@ -665,7 +665,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
              
@@ -749,7 +749,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
              
@@ -828,7 +828,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }  
         
@@ -899,7 +899,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }
       
@@ -970,7 +970,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
     }  
         
@@ -1031,7 +1031,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
@@ -1090,7 +1090,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
@@ -1150,7 +1150,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
         
@@ -1219,7 +1219,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
         
@@ -1283,7 +1283,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -1345,7 +1345,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -1407,7 +1407,7 @@ public class ChartView extends javax.swing.JPanel {
             }
             con.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainFrame.bslog(e);
         }
      }
      
@@ -1491,7 +1491,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
          
@@ -1549,7 +1549,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
@@ -1612,7 +1612,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
         
@@ -1675,7 +1675,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
         
@@ -1743,7 +1743,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
           
@@ -1811,7 +1811,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
          
@@ -1879,7 +1879,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
         
@@ -1944,7 +1944,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
@@ -2020,7 +2020,7 @@ public class ChartView extends javax.swing.JPanel {
                 }
                 con.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                MainFrame.bslog(e);
             } 
      }
      
