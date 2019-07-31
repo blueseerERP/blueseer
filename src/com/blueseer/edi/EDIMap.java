@@ -25,8 +25,11 @@ THE SOFTWARE.
  */
 package com.blueseer.edi;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  *
@@ -38,6 +41,11 @@ public abstract class EDIMap implements EDIMapi {
          
          public static  int segcount = 0;
          
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         Date now = new Date();
          
          public static String ISA = "";
          public static String GS = "";
@@ -89,6 +97,16 @@ public abstract class EDIMap implements EDIMapi {
          
          public static String content = "";
          
+         
+         public static boolean isSet(ArrayList list, Integer index) {
+         return index != null && index >=0 && index < list.size() && list.get(index) != null;
+         }
+    
+         public static boolean isSet(String[] list, Integer index) {
+         return index != null && index >=0 && index < list.length && list[index] != null;
+         }
+    
+         
          public void setISA (String[] isa) {
              isa06 = isa[6].trim();
              isa08 = isa[8].trim();
@@ -124,43 +142,13 @@ public abstract class EDIMap implements EDIMapi {
         return delim;
       }
       
-         
-        
-         
          public void setFinalOutputString() {
            content = ISA + GS + ST + header + detail  + trailer + SE + GE + IEA;  
          } 
     
-         public void setEnvelopesArrayWithInBoundEnvelopes(ArrayList<String> doc, String ed_escape) {
-              for (String seg : doc) {
-               String[] segarr = seg.toString().split(ed_escape, -1);
-                switch (segarr[0].toString()) {
-                 case "ISA" :
-                     isaArray = segarr;
-                     break;
-                 case "GS" :
-                     gsArray = segarr;
-                     break;
-                 case "ST" :
-                     stArray = segarr;
-                     break;
-                 case "SE" :
-                     seArray = segarr;
-                     break;
-                 case "GE" :
-                     geArray = segarr;
-                     break;
-                 case "IEA" :
-                     ieaArray = segarr;
-                     break;
-                 default :
-                   break;
-               }
-              }
-         }
+     
+         public void setOutPutEnvelopeStrings(String[] c) { 
          
-         public void setOutPutEnvelopeStrings(ArrayList<String> doc) {
-              
              if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
                envelope = EDI.generateEnvelope(sender, doctype, "0"); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
                ISA = envelope[0];
@@ -174,17 +162,100 @@ public abstract class EDIMap implements EDIMapi {
                ST = "ST" + ed + doctype + ed + stctrl + sd;
                SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl + sd;  
                } else {
-                setEnvelopesArrayWithInBoundEnvelopes(doc, EDI.escapeDelimiter(ed));   
                  // you can override elements within the envelope xxArray fields at this point....or merge into segment string
                  // need to figure out what kind of error this bullshit is....
-                 ISA = String.join(ed,isaArray) + sd;
-                 GS = String.join(ed,gsArray) + sd;
-                 ST = String.join(ed,stArray) + sd;
-                 SE = String.join(ed,seArray) + sd;
-                 GE = String.join(ed,geArray) + sd;
-                 IEA = String.join(ed,ieaArray) + sd;
+                 ISA = c[13] + sd;
+                 GS = c[14] + sd;
+                 GE = "GE" + ed + "1" + ed + c[5] + sd;
+                 IEA = "IEA" + ed + "1" + ed + c[4] + sd;
+                 ST = "ST" + ed + doctype + ed + c[6] + sd; 
+                 SE = "SE" + ed + "1" + ed + c[6] + sd;
+                 
+                 updateISA(9,""); // set date to now
+                 updateISA(10,"");  // set time to now
+                
                }
              
+         }
+         
+         public String getISA(int i) {
+             if (i > 16) {
+                 return "";
+             }
+           isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);  
+           return isaArray[i];
+         }
+         
+         public String getGS(int i) {
+             if (i > 8) {
+                 return "";
+             }
+           gsArray = GS.split(EDI.escapeDelimiter(ed), -1);  
+           return gsArray[i];
+         }
+         
+         
+         public void updateISA(int i, String value) {
+             isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
+             switch (i) {
+               case 1 :
+                 isaArray[i] = String.format("%-2s", value);
+                 break;
+               case 2 :
+                 isaArray[i] = String.format("%-10s", value);
+                 break;
+               case 3 :
+                 isaArray[i] = String.format("%-2s", value);
+                 break;
+               case 4 :
+                 isaArray[i] = String.format("%-10s", value);
+                 break;
+               case 5 :
+                 isaArray[i] = String.format("%-2s", value);
+                 break; 
+               case 6 :
+                 isaArray[i] = String.format("%-15s", value);
+                 break;
+               case 7 :
+                 isaArray[i] = String.format("%-2s", value);
+                 break;   
+               case 8 :
+                 isaArray[i] = String.format("%-15s", value);
+                 break;  
+               case 9 :
+                 isaArray[i] = isadfdate.format(now);
+                 break;  
+               case 10 :
+                 isaArray[i] = isadftime.format(now);
+                 break;  
+               case 11 :
+                 isaArray[i] = String.format("%-1s", value);  
+                 break;  
+               case 12 :
+                 isaArray[i] = String.format("%-5s", value);  
+                 break;  
+               case 13 :
+                 isaArray[i] = String.format("%-9s", value);  
+                 break;  
+               case 14 :
+                 isaArray[i] = String.format("%-1s", value);  
+                 break;  
+               case 15 :
+                 isaArray[i] = String.format("%-1s", value);  
+                 break; 
+               default :
+               break;
+       }
+             
+             ISA = String.join(ed,isaArray);
+         }
+          public void updateGS(int i, String value) {
+             if (i > 8) {
+                 return;
+             }
+             gsArray = GS.split(EDI.escapeDelimiter(ed), -1);
+             gsArray[i] = String.valueOf(value);
+             GS = String.join(ed,gsArray);
          }
          
          public void updateSE() {

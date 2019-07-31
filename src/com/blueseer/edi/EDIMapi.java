@@ -38,7 +38,7 @@ public interface EDIMapi {
     
     public void setControl(String[] c);
     
-    public void setOutPutEnvelopeStrings(ArrayList<String> doc);
+    public void setOutPutEnvelopeStrings(String[] c);
     
     public void setHDTStrings();
     

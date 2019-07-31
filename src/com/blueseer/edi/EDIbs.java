@@ -39,7 +39,7 @@ public class EDIbs {
 public static void main(String args[]) {
  
     // set config
-    bsmf.MainFrame.setConfig();
+   // bsmf.MainFrame.setConfig();
     
     // lets process the arguments
     String[] vs = checkargs(args);

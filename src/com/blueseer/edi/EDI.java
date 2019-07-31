@@ -147,6 +147,7 @@ public class EDI {
          int ststart = 0;
          int sestart = 0;
          String ed_escape = "";
+         String sd_escape = "";
          int gsstart = 0;
          ArrayList<String> isaList = new ArrayList<String>();
           
@@ -163,6 +164,7 @@ public class EDI {
                     u = cbuf[i+104];
                     s = cbuf[i+105];
                     ed_escape = escapeDelimiter(String.valueOf(e));
+                    sd_escape = escapeDelimiter(String.valueOf(s));
                     if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
                         s = cbuf[i+106];
                     start = i;
@@ -191,7 +193,7 @@ public class EDI {
                     gsstart = i;
                     String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
                     c[5] = gs[6]; // gsctrlnbr
-                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 8));
                     
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
@@ -201,8 +203,8 @@ public class EDI {
                     
                     String[] st = new String(cbuf, i, 16).split(ed_escape);
                     c[1] = st[1]; // doctype
-                   // c[6] = st[2]; //docID
-                   c[6] = "boohoo";
+                    c[6] = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
+                   
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
@@ -234,9 +236,15 @@ public class EDI {
          
          if (editype.equals("X12")) {
             // create batch file and assign to control replacing infile name
+            
+             if (isOverride.isEmpty()) {
              int filenumber = OVData.getNextNbr("edifile");
-             batchfile = "R" + String.format("%07d", filenumber); 
+             batchfile = "R" + String.format("%07d", filenumber);
              processX12CmdLine(ISAmap, cbuf, batchfile);
+             } else {
+              processX12CmdLine(ISAmap, cbuf, infile);   
+             }
+             
          }
          
      //    if (editype.equals("CSV")) {
@@ -251,7 +259,9 @@ public class EDI {
          if (editype.isEmpty()) {
            System.out.println("Unknown file type");
          } else {
+             if (isOverride.isEmpty()) {
              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath());
+             }
          }
          
          
@@ -761,7 +771,7 @@ public class EDI {
         
      for (Object z : d) {
             Integer[] k = (Integer[]) z;
-           // System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+         //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
         
         String ed_escape = escapeDelimiter(String.valueOf(c[10]));
     // here you are inserting 'segments' into ArrayList doc
@@ -778,7 +788,7 @@ public class EDI {
             } 
         }
     }
-          
+     
              c[3] = batchfile;
              
              
@@ -790,17 +800,18 @@ public class EDI {
           c[20] = String.valueOf(k[1]);
           
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+          if (c[12].isEmpty()) {   // if not override
           int idxnbr = OVData.writeEDIIDX(c);
           c[16] = String.valueOf(idxnbr);
-          
+          }
              String map = c[2];
              
-               if (map.isEmpty()) {
+               if (map.isEmpty() && c[12].isEmpty()) {
                   map = OVData.getEDIInMap(c[0], c[1]); 
                } 
             
                // if no map then bail
-               if (map.isEmpty()) {
+               if (map.isEmpty() && c[12].isEmpty()) {
                   OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + c[0] + " / " + c[1]); 
                } else {
                    
@@ -814,13 +825,15 @@ public class EDI {
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
+                        if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "0", "ERROR", "unable to load map class for " + c[0] + " / " + c[1]);
+                        }
                         ex.printStackTrace();
                     }
                    
                }
                
-              
+           
            
             
     } // object k
@@ -1897,7 +1910,8 @@ public class EDI {
       public static Boolean isEnvelopeSegment(String seg) {
       
       return (seg.equals("ISA") || seg.equals("GS") || 
-               seg.equals("GE") | seg.equals("IEA") ) ? true : false ;
+              seg.equals("ST") || seg.equals("SE") ||
+               seg.equals("GE") || seg.equals("IEA") ) ? true : false ;
       }
       
      public void writeFile(String filecontent, String dir, String filename) throws MalformedURLException, SmbException, IOException {

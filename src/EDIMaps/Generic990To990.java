@@ -51,7 +51,7 @@ public class Generic990To990 extends com.blueseer.edi.EDIMap {
     
     // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
     // you can then override individual envelope elements as desired
-    setOutPutEnvelopeStrings(doc);
+    setOutPutEnvelopeStrings(c);
            
             
      // MAP  ...this is the MAP section  Note:  Outbound looping is driven by Inbound assignments and conditional logic (if user defines)
