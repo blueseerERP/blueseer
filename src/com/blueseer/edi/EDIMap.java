@@ -164,12 +164,12 @@ public abstract class EDIMap implements EDIMapi {
                } else {
                  // you can override elements within the envelope xxArray fields at this point....or merge into segment string
                  // need to figure out what kind of error this bullshit is....
-                 ISA = c[13] + sd;
-                 GS = c[14] + sd;
-                 GE = "GE" + ed + "1" + ed + c[5] + sd;
-                 IEA = "IEA" + ed + "1" + ed + c[4] + sd;
-                 ST = "ST" + ed + doctype + ed + c[6] + sd; 
-                 SE = "SE" + ed + "1" + ed + c[6] + sd;
+                 ISA = c[13];
+                 GS = c[14];
+                 GE = "GE" + ed + "1" + ed + c[5];
+                 IEA = "IEA" + ed + "1" + ed + c[4];
+                 ST = "ST" + ed + doctype + ed + c[6]; 
+                 SE = "SE" + ed + "1" + ed + c[6];
                  
                  updateISA(9,""); // set date to now
                  updateISA(10,"");  // set time to now
@@ -243,13 +243,17 @@ public abstract class EDIMap implements EDIMapi {
                case 15 :
                  isaArray[i] = String.format("%-1s", value);  
                  break; 
+                 case 16 :
+                 isaArray[i] = String.format("%-1s", value);  
+                 break; 
                default :
                break;
        }
              
              ISA = String.join(ed,isaArray);
          }
-          public void updateGS(int i, String value) {
+         
+         public void updateGS(int i, String value) {
              if (i > 8) {
                  return;
              }
@@ -271,6 +275,14 @@ public abstract class EDIMap implements EDIMapi {
          }
          
          public void setHDTStrings() {
+              // first set segment terminator for envelope segments
+                 ISA = ISA + sd;
+                 GS = GS + sd;
+                 ST = ST + sd;
+                 SE = SE + sd;
+                 GE = GE + sd;
+                 IEA = IEA + sd;
+             
              segcount = 2;  // ST and SE inclusive
              for (String h : H) {
                  header += (EDI.trimSegment(h, ed).toUpperCase() + sd);
@@ -287,6 +299,8 @@ public abstract class EDIMap implements EDIMapi {
                  segcount++;
              }
              updateSE();
+             
+                 
              
          }
          

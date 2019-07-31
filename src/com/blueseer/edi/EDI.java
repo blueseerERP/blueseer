@@ -193,7 +193,8 @@ public class EDI {
                     gsstart = i;
                     String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
                     c[5] = gs[6]; // gsctrlnbr
-                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 8));
+                    gs[8] = gs[8].split(sd_escape)[0];
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
                     
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {

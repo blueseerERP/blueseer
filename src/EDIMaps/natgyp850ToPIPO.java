@@ -115,7 +115,7 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
              }
              break;    
         case "PO1" :
-              newseg = new String[]{"PO1",elementArray[1],elementArray[2],elementArray[3],elementArray[4],elementArray[5],"IN",elementArray[9],"","","PO",po};
+              newseg = new String[]{"PO1",elementArray[1],elementArray[2],elementArray[3],elementArray[4],elementArray[5],"IN",getCustItem(elementArray),"","","PO",po};
               D.add(String.join(ed,newseg));
              break; 
         case "PID" :
@@ -139,9 +139,13 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
      updateISA(6,"NATGYP");
      updateISA(7,"ZZ");
      updateISA(8,"SAPGYP");
+     updateISA(11,"|");
+     updateISA(12,"00501");
+     updateISA(16,">");
      
      updateGS(2,"NATGYP");
      updateGS(3,"NATSAP");
+     updateGS(8,"005010");
      
     // Call this function to join H, D, T arrays into H, D, T Strings     
     setHDTStrings();
@@ -158,7 +162,26 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
       
     }
 
- 
+    public String getCustItem(String[] a) {
+        String s = "";
+        for (int i = 0; i < a.length ; i++) {
+            s = (a[i].equals("BP")) ? a[i+1] : "";
+            if (! s.isEmpty()) break;
+        }
+        if (s.isEmpty()) {
+          for (int i = 0; i < a.length ; i++) {
+            s = (a[i].equals("SK")) ? a[i+1] : "";
+            if (! s.isEmpty()) break;
+          }  
+        }
+        if (s.isEmpty()) {
+          for (int i = 0; i < a.length ; i++) {
+            s = (a[i].equals("IN")) ? a[i+1] : "";
+            if (! s.isEmpty()) break;
+          }  
+        }
+        return s;
+    }
 }
 
 
