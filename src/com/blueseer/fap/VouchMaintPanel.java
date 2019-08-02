@@ -290,7 +290,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot retrieve vendor info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1075,7 +1076,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot insert into recv_det");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

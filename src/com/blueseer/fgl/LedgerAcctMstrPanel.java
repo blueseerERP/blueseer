@@ -391,7 +391,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "unable to edit ac_mstr");
+                bsmf.MainFrame.show("unable to edit ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

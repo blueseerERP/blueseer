@@ -166,7 +166,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from vd_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -579,7 +580,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot add expense..sql error");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -604,6 +606,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                     lbvendor.setText(res.getString("vd_name"));
                 }
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot get vendor name for this Vendor");
             }
             bsmf.MainFrame.con.close();
@@ -644,6 +647,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

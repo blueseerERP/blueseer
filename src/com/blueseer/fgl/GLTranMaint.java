@@ -238,6 +238,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     btbrowse.setEnabled(true);
                 }
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve gl_tran record");
             }
             bsmf.MainFrame.con.close();
@@ -909,6 +910,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select from ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -933,6 +935,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select from dept_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

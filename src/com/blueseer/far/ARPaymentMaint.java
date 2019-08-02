@@ -164,7 +164,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot retrieve from cm_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -207,6 +208,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 referencedet.setModel(referencemodel);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Get AR / Memo References");
             }
             bsmf.MainFrame.con.close();
@@ -268,7 +270,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                  
                  
              } catch (SQLException s) {
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to update sod_det");
+                 MainFrame.bslog(s);
+                 bsmf.MainFrame.show("Unable to update sod_det");
              }
               // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
               
@@ -725,7 +728,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
+                bsmf.MainFrame.show("cannot insert into ard_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

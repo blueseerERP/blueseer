@@ -53,6 +53,7 @@ public class DeptMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Department Record found for " + mykey);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve dept_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -301,6 +302,7 @@ public class DeptMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to dept_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -339,6 +341,7 @@ public class DeptMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating dept_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -363,6 +366,7 @@ public class DeptMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Department Record");
             }
             bsmf.MainFrame.con.close();

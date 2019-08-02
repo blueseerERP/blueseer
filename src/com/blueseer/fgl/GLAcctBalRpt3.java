@@ -216,6 +216,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("cannot chart...sql error");
             }
             con.close();
         } catch (Exception e) {
@@ -602,6 +603,7 @@ try {
                  ddsum.setSelectedIndex(0);
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Acct Bal Report");
             }
             con.close();

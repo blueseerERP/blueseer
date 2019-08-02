@@ -61,6 +61,7 @@ public class ARControl extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No AR Ctrl Record found");
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ar_ctrl");
             }
             bsmf.MainFrame.con.close();

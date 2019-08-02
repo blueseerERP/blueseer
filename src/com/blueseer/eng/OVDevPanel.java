@@ -60,6 +60,7 @@ public class OVDevPanel extends javax.swing.JPanel {
                     }
                     getnotes(parent);
                       } catch (SQLException s) {
+                          MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve notes from ov_devd");
             }
             bsmf.MainFrame.con.close();
@@ -88,6 +89,7 @@ public class OVDevPanel extends javax.swing.JPanel {
                         log.append("\n");
                     }
                       } catch (SQLException s) {
+                          MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve notes from ov_devd");
             }
             bsmf.MainFrame.con.close();
@@ -308,6 +310,7 @@ public class OVDevPanel extends javax.swing.JPanel {
                     }
                     
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add or update ov_devm");
             }
             bsmf.MainFrame.con.close();
@@ -363,6 +366,7 @@ public class OVDevPanel extends javax.swing.JPanel {
                     } 
                     
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot note to ov_devd");
             }
             bsmf.MainFrame.con.close();

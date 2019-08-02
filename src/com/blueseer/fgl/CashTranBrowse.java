@@ -218,6 +218,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("cannot get pos_det");
             }
             con.close();
         } catch (Exception e) {
@@ -279,6 +280,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("cannot get pos_det");
             }
             con.close();
         } catch (Exception e) {

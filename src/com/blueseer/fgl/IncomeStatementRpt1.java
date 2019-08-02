@@ -851,6 +851,7 @@ try {
                 labelcount.setText(String.valueOf(df.format(opprofitbeforetaxes)));
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Income Statement Report");
             }
             con.close();
@@ -883,7 +884,8 @@ try {
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to print via jasper");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

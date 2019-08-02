@@ -55,6 +55,7 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Bank Record found for " + mykey);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve bk_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -278,6 +279,7 @@ public class BankMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to bk_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -314,6 +316,7 @@ public class BankMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating bk_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -339,7 +342,8 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to Delete Bank Record");
+                 MainFrame.bslog(s); 
+                 bsmf.MainFrame.show("Unable to Delete Bank Record");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

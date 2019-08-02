@@ -268,6 +268,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
             }
             bsmf.MainFrame.con.close();

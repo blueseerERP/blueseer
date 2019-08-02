@@ -100,6 +100,7 @@ public class TaskMaint extends javax.swing.JPanel {
                     
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve task master record");
             }
             bsmf.MainFrame.con.close();
@@ -444,6 +445,7 @@ public class TaskMaint extends javax.swing.JPanel {
                  bsmf.MainFrame.show("Updated Master Task");
                  initvars("");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating master task");
             }
             bsmf.MainFrame.con.close();
@@ -529,6 +531,7 @@ public class TaskMaint extends javax.swing.JPanel {
                  initvars("");
                  
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem adding master task");
             }
             bsmf.MainFrame.con.close();

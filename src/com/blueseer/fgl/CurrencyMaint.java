@@ -321,6 +321,7 @@ public class CurrencyMaint extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Currency Record");
             }
             bsmf.MainFrame.con.close();

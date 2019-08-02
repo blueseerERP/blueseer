@@ -180,6 +180,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Account GL detail");
             }
             bsmf.MainFrame.con.close();
@@ -231,6 +232,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Account GL detail");
             }
             bsmf.MainFrame.con.close();

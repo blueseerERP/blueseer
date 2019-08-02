@@ -79,6 +79,7 @@ public class EDITPBrowse extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();

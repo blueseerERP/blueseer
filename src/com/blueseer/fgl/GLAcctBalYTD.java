@@ -279,7 +279,8 @@ try {
                 labelcount.setText(String.valueOf(i));
                 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(mydialog, "Cannot execute sql query for Acct Balance Summary Report");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot execute sql query for Acct Balance Summary Report");
             }
             con.close();
         } catch (Exception e) {

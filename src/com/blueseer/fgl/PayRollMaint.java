@@ -664,6 +664,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+                 bsmf.MainFrame.show("unable to select from pay_mstr");
             }
             con.close();
         }
@@ -1484,6 +1485,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+                 bsmf.MainFrame.show("unable to select pay hours...sql error");
                  
             }
             con.close();

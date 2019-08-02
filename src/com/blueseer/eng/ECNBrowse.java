@@ -159,6 +159,7 @@ public class ECNBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get ECN Task detail");
             }
             bsmf.MainFrame.con.close();
@@ -483,6 +484,7 @@ try {
               
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing ECN Browse");
             }
             con.close();

@@ -304,6 +304,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to editp_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -339,6 +340,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating editp_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -368,6 +370,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete editp_mstr");
             }
             bsmf.MainFrame.con.close();

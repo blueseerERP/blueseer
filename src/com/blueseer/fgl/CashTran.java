@@ -367,6 +367,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot select from exp_mstr");
                 MainFrame.bslog(s);
             }
             
@@ -403,6 +404,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot select from pos_mstr");
                 MainFrame.bslog(s);
             }
             
@@ -613,6 +615,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot insert into pos_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -810,6 +813,7 @@ public class CashTran extends javax.swing.JPanel {
                   } // 2nd proceed     
                     
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot insert into pos_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -950,6 +954,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot insert into pos_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1106,6 +1111,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot insert into pos_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -3190,6 +3196,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                 
             } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot select from item_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -3343,6 +3350,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3480,6 +3488,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3573,6 +3582,7 @@ public class CashTran extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot insert into exp_mstr");
             }
             bsmf.MainFrame.con.close();
             getRecurringExpense();
@@ -3701,6 +3711,7 @@ public class CashTran extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot insert into exp_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

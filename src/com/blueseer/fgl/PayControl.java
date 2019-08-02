@@ -63,6 +63,7 @@ public class PayControl extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No PAY Ctrl Record found");
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve pay_ctrl");
             }
             bsmf.MainFrame.con.close();

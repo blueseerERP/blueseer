@@ -157,6 +157,7 @@ public class TaskBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Task detail");
             }
             bsmf.MainFrame.con.close();
@@ -418,6 +419,7 @@ try {
               
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Task Browse");
             }
             con.close();

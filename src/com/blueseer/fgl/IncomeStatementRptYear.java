@@ -1015,6 +1015,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
             ChartIt("sales");
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Income Statement Report");
             }
             con.close();

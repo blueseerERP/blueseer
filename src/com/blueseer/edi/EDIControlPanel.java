@@ -62,6 +62,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No EDI Ctrl Record found");
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve edi_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -242,6 +243,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating edi_ctrl");
             }
             bsmf.MainFrame.con.close();

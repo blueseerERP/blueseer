@@ -348,6 +348,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to edi_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -388,6 +389,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating edi_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -414,6 +416,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete edi_mstr");
             }
             bsmf.MainFrame.con.close();

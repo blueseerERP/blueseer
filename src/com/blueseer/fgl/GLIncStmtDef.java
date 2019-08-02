@@ -330,6 +330,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to update glic_accts");
             }
             bsmf.MainFrame.con.close();

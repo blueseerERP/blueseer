@@ -209,7 +209,8 @@ public class ARTranRpt1 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to get Detail");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to get ard_mstr detail");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -597,6 +598,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labeldollar.setText(String.valueOf(df.format(dol)));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for AR Report");
             }
             bsmf.MainFrame.con.close();

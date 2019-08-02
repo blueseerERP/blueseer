@@ -100,6 +100,7 @@ public class GLCalMaint extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve gl_cal record");
             }
             bsmf.MainFrame.con.close();
@@ -283,7 +284,8 @@ public class GLCalMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "unable to insert into ac_mstr");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to insert into ac_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -326,7 +328,8 @@ public class GLCalMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "unable to edit glc_cal");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to edit glc_cal");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

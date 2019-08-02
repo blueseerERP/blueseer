@@ -61,7 +61,8 @@ public class ARMaintPanel extends javax.swing.JPanel {
                 String clocktime = dftime.format(now);
                 tbARMdate.setText(clockdate);
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot retrieve cm_mstr or ac_mstr data");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -312,7 +313,8 @@ public class ARMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot insert into ar_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -356,7 +358,8 @@ public class ARMaintPanel extends javax.swing.JPanel {
                 tbARMdate.setText(clockdate);
                
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot execute counter");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

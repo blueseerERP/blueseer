@@ -562,6 +562,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                 
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                bsmf.MainFrame.show("Unable to Complete Task");
             }
             bsmf.MainFrame.con.close();
@@ -598,6 +599,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                
            }
             catch (SQLException s){
+                MainFrame.bslog(s);
                  bsmf.MainFrame.show("Cannot send email to engineers");
             }
             bsmf.MainFrame.con.close();
@@ -777,6 +779,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to retrieve ECN Mstr and Tasks");
             }
             bsmf.MainFrame.con.close();
@@ -809,6 +812,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to retrieve Task Mstr Details");
             }
             bsmf.MainFrame.con.close();
@@ -838,6 +842,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to retrieve ECN Task Notes");
             }
             bsmf.MainFrame.con.close();
@@ -868,6 +873,7 @@ public class ECNMaint extends javax.swing.JPanel  {
              tanotes.setText("");   
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("unable to update ECN Task Notes");
             }
             bsmf.MainFrame.con.close();
@@ -1283,6 +1289,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add ECN");
             }
             bsmf.MainFrame.con.close();

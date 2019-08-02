@@ -442,6 +442,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Warehouse Record");
             }
             bsmf.MainFrame.con.close();

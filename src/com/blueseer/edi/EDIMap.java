@@ -174,6 +174,14 @@ public abstract class EDIMap implements EDIMapi {
                  updateISA(9,""); // set date to now
                  updateISA(10,"");  // set time to now
                 
+                 H.clear();
+                 D.clear();
+                 T.clear();
+                 
+                 header = "";
+                 detail = "";
+                 trailer = "";
+                 content = "";
                }
              
          }

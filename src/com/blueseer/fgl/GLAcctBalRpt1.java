@@ -491,6 +491,7 @@ try {
                 lblbegbal.setText(df.format(totbegbal));
                 lblactbal.setText(df.format(totactivity));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Acct Bal Report");
             }
             con.close();
@@ -554,6 +555,7 @@ try {
                 }
              bsmf.MainFrame.show("file has been created");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot extract tran_mstr data");
             }
             con.close();

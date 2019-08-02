@@ -769,10 +769,10 @@ public class EDI {
         
         String[] c = (String[]) isa.getValue()[6];
         ArrayList d = (ArrayList) isa.getValue()[5];
-        
+   //    System.out.println("isa start/end : " + isa.getValue()[0] + "/" + isa.getValue()[1]); 
      for (Object z : d) {
             Integer[] k = (Integer[]) z;
-         //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+      //      System.out.println("doc start/end : " + k[0] + "/" + k[1]);
         
         String ed_escape = escapeDelimiter(String.valueOf(c[10]));
     // here you are inserting 'segments' into ArrayList doc
@@ -834,9 +834,6 @@ public class EDI {
                    
                }
                
-           
-           
-            
     } // object k
         
     } // ISAMap entries
@@ -1986,7 +1983,7 @@ public class EDI {
          output.write(filecontent);
          output.close();
          } else {
-         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile(), true)));
          output.write(filecontent);
          output.close();  
          }

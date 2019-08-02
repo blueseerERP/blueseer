@@ -72,6 +72,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
              
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get selected Customer Info");
             }
             bsmf.MainFrame.con.close();
@@ -700,7 +701,8 @@ public class ARMemoMaint extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot insert into ard_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
