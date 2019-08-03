@@ -2,7 +2,7 @@
 
 # script to create directory structure for deb packaging
 
-bs="blueseer-4.2"
+bs="blueseer.sqlite.linux.v42"
 bsshare="$bs/usr/share/blueseer"
 
 cp -R ../sf/linux/blueseer.sqlite.linux.v42 $bs
@@ -34,6 +34,11 @@ echo "cd /usr/share/blueseer; java -D\"java.util.logging.config.file=bslogging.p
 
 chmod -R 0755 $bs
 chmod -R 0777 $bsshare/data
+chmod -R 0777 $bsshare/zebra
+chmod -R 0777 $bsshare/edi
+chmod -R 0777 $bsshare/temp
+chmod -R 0777 $bsshare/jasper
+chmod -R 0777 $bsshare/images
 chmod -R 0777 $bsshare/data/bsdb.db
 
 
