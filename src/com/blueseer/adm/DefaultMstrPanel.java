@@ -204,7 +204,7 @@ public class DefaultMstrPanel extends javax.swing.JPanel {
                     st.executeUpdate("update ov_mstr set ov_site = " + "'" + tbsite.getText() + "'"  + "," +
                             " ov_cc = " + "'" + tbcc.getText() + "'" + "," +
                             " ov_wh = " + "'" + tbwh.getText() + "'" + "," +
-                            " ov_currency = " + "'" + tbcurrency.getText() + "'" +
+                            " ov_currency = " + "'" + tbcurrency.getText() + "'" + "," +
                             " ov_labelprinter = " + "'" + tblabelprinter.getText() + "'"           
                             + ";");  
                            bsmf.MainFrame.show("Updating Defaults");
