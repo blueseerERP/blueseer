@@ -17,6 +17,7 @@ set "DB=bsdb"
 @echo PORT=3306>>bsconfig
 @echo DRIVER=org.sqlite.JDBC>>bsconfig
 
+copy ..\.patch %~dp0\
 cd data
 
 if exist bsdb.db del bsdb.db
