@@ -941,7 +941,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if (OVData.addVendMstr(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -1070,6 +1070,8 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
+            fsr.close();
+            
             
              if (proceed) {
                    if (OVData.addCustMstrWShipTo(list))

@@ -4,7 +4,14 @@
  */
 package com.blueseer.adm;
 
+import bsmf.MainFrame;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
@@ -73,7 +80,22 @@ public class AboutPanel extends javax.swing.JPanel {
        jTextArea2.append("Java Class Version: " + System.getProperty("java.class.version") + "\n");   
        jTextArea2.append("Java Compiler: " + System.getProperty("sun.management.compiler") + "\n");   
        
-         
+       
+       // now get patch info...created from git command :  git rev-parse HEAD
+       BufferedReader fsr;
+        try {
+            fsr = new BufferedReader(new FileReader(new File(".patch")));
+            String line = "";
+            while ((line = fsr.readLine()) != null) {
+               jTextArea2.append("Git Hash: " + line);
+            }
+            fsr.close();
+        } catch (FileNotFoundException ex) {
+            MainFrame.bslog(ex);
+        } catch (IOException ex) {
+            MainFrame.bslog(ex);
+        }
+           
     }
     
     

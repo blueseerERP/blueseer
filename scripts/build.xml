@@ -78,6 +78,11 @@
 	</exec>
 </target>
 
+<target name="patch">
+	<exec executable="cmd"> <arg line="/c git rev-parse HEAD >.patch"/>
+	</exec>
+</target>
+
 <target name="run">
     <path id="runtime.path">
 	    <fileset dir="../dist" includes="*.jar"/>

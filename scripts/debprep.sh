@@ -21,6 +21,7 @@ echo "PORT=3306" >>$bsshare/bsconfig
 echo "DRIVER=org.sqlite.JDBC" >>$bsshare/bsconfig
 
 cp bslogging.properties $bsshare/
+cp .patch $bsshare/
 cp -R ../dist $bsshare/
 cp -R ../sf/data $bsshare/
 cp -R ../sf/zebra $bsshare/
