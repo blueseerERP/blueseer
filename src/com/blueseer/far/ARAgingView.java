@@ -405,9 +405,12 @@ public class ARAgingView extends javax.swing.JPanel {
          btpdf.setEnabled(false);
          
          cbpaymentpanel.setEnabled(false);
+         cbpaymentpanel.setSelected(false);
          paymentpanel.setVisible(false);
          
-              ArrayList mycusts = OVData.getcustmstrlist();
+        ddfromcust.removeAllItems();
+        ddtocust.removeAllItems();
+        ArrayList mycusts = OVData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddfromcust.addItem(mycusts.get(i));
         }
@@ -759,6 +762,8 @@ try {
                  
                  for (int j = 0; j < custs.size(); j++) {
                  
+                 // init for new cust
+                 i = 0;
                  
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                      res = st.executeQuery("SELECT ar_cust, " +

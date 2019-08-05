@@ -330,6 +330,12 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("bankmaint")) {
                 tablereport.setModel(OVData.getBankBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                 if (callingpanel.equals("arpaymentmaint")) {
+                tablereport.setModel(OVData.getARPaymentBrowseUtil(tbtext.getText(), state, searchfield));
+                }
+                if (callingpanel.equals("expensemaint")) {
+                tablereport.setModel(OVData.getExpenseBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("calendarmaint")) {
                 tablereport.setModel(OVData.getCalendarBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -522,6 +528,16 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("BankMaint")) { return; }
               myparameter = tablereport.getValueAt(row, 1).toString();
               reinitpanels("BankMaint", true, myparameter);
+            }
+            if (callingpanel.equals("arpaymentmaint")) {
+              if (! checkperms("ARPaymentMaint")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString();
+              reinitpanels("ARPaymentMaint", true, myparameter);
+            }
+            if (callingpanel.equals("expensemaint")) {
+              if (! checkperms("ExpenseMaint")) { return; }
+              myparameter = tablereport.getValueAt(row, 1).toString();
+              reinitpanels("ExpenseMaint", true, myparameter);
             }
             if (callingpanel.equals("printermaint")) {
               if (! checkperms("PrinterMaint")) { return; }

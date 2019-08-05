@@ -466,14 +466,14 @@ try {
                  String pofrom = tbfrompo.getText();
                  String poto = tbtopo.getText();
                  
-                 /*
+                 
                  if (pofrom.isEmpty()) {
-                     pofrom = bsmf.MainFrame.lownbr;
+                     pofrom = bsmf.MainFrame.lowchar;
                  }
                   if (poto.isEmpty()) {
-                     poto = bsmf.MainFrame.hinbr;
+                     poto = bsmf.MainFrame.hichar;
                  }
-                 */
+                 
                  
                  String vendfrom = "";
                  String vendto = "";

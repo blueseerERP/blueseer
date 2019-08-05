@@ -1282,7 +1282,7 @@ public class OVData {
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vend list");
+                MainFrame.bslog(s);
             }
             con.close();
         }
@@ -18555,7 +18555,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    OVData.APCheckRunUpdateVouchers(batchid);
                    
                    // print checks to jasper
-                   OVData.printAPCheck(String.valueOf(batchid));
+                  // OVData.printAPCheck(String.valueOf(batchid));
                    
                    
               } catch (SQLException s) {
@@ -26592,6 +26592,119 @@ MainFrame.bslog(e);
         
          } 
             
+              public static DefaultTableModel getARPaymentBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "ARBatch", "Cust", "Date", "Amt"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select ar_nbr, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr  where " + myfield + " like " + "'" + str + "%'" +
+                        " and ar_type = 'P' order by ar_nbr desc ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select ar_nbr, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " and ar_type = 'P' order by ar_nbr desc ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select ar_nbr, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " and ar_type = 'P' order by ar_nbr desc ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ar_nbr"),
+                                   res.getString("ar_cust"),
+                                   res.getString("ar_effdate"),
+                                   res.getString("ar_amt")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+            
+              public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Batch", "Vend", "Date", "Amt"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select ap_nbr, ap_vend, ap_effdate, ap_amt " +
+                        " FROM  ap_mstr  where " + myfield + " like " + "'" + str + "%'" +
+                        " and ap_type = 'V' order by ap_nbr desc ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select ap_nbr, ap_vend, ap_effdate, ap_amt " +
+                        " FROM  ap_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " and ap_type = 'V' order by ap_nbr desc ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select ap_nbr, ap_vend, ap_effdate, ap_amt " +
+                        " FROM  ap_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " and ap_type = 'V' order by ap_nbr desc ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ap_nbr"),
+                                   res.getString("ap_vend"),
+                                   res.getString("ap_effdate"),
+                                   res.getString("ap_amt")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+            
+              
              public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "RecvID", "Vend", "PO", "PackingSlip", "Item", "RecvDate", "Qty"})

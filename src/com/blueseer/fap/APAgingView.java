@@ -391,7 +391,7 @@ public class APAgingView extends javax.swing.JPanel {
       
     public void initvars(String arg) {
         modelsummary.setRowCount(0);
-         java.util.Date now = new java.util.Date();
+        java.util.Date now = new java.util.Date();
        
          
           modelsummary.setNumRows(0);
@@ -407,8 +407,11 @@ public class APAgingView extends javax.swing.JPanel {
          detailpanel.setVisible(false);
          btdetail.setEnabled(false);
          cbpaymentpanel.setEnabled(false);
+         cbpaymentpanel.setSelected(false);
          paymentpanel.setVisible(false);
-         
+        
+        ddfromvend.removeAllItems();
+        ddtovend.removeAllItems();
         ArrayList vends = OVData.getvendmstrlist();
         for (int i = 0; i < vends.size(); i++) {
             ddfromvend.addItem(vends.get(i));
@@ -708,8 +711,6 @@ try {
                 double dol = 0;
                 String fromvend = "";
                 String tovend = "";
-                String fromcode = "";
-                String tocode = "";
                 
                 if (ddfromvend.getSelectedItem().toString().isEmpty()) {
                     fromvend = bsmf.MainFrame.lowchar;
@@ -724,8 +725,12 @@ try {
                 
                  ArrayList vends = OVData.getvendmstrlistBetween(fromvend, tovend);
                  
+                
                  for (int j = 0; j < vends.size(); j++) {
-                 
+                  
+                      // init for new vend
+                      i = 0;
+                     
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                      res = st.executeQuery("SELECT ap_vend, " +
                         " sum(case when ap_duedate > date() then ap_amt else 0 end) as '0', " +

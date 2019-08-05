@@ -5,6 +5,8 @@
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -57,6 +59,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
+import java.awt.Color;
 
 
 /**
@@ -69,10 +72,24 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 String aracct = "";
                 String arcc = "";
                 String arbank = "";
-                Double actamt = 0.00;
-                Double baseamt = 0.00;
-                Double rcvamt = 0.00;
+                double actamt = 0.00;
+                double control = 0.00;
+                double baseamt = 0.00;
+                double rcvamt = 0.00;
                 String curr = "";
+                
+                boolean isInit = false;
+                
+                  javax.swing.table.DefaultTableModel referencemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen", "Tax", "Curr"});
+    javax.swing.table.DefaultTableModel armodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Reference", "AmountToApply", "TaxAmount", "Curr"
+            });
+                
+                
+                
     /**
      * Creates new form ShipMaintPanel
      */
@@ -85,59 +102,210 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }
    
     
-    public void initvars(String arg) {
+    public void clearAll() {
         
          terms = "";
          aracct = "";
          arcc = "";
          arbank = "";
          actamt = 0.00;
+         control = 0.00;
          rcvamt = 0.00;
-         batchnbr.setText("");
-         tbcheck.setText("");
+        
+        lbcust.setText("");
+        lbmessage.setText("");
+        lbmessage.setForeground(Color.blue);
+        
+        batchnbr.setText(""); 
+        
         tbrmks.setText("");
-        tbcontrolamt.setText("");
-        tbrefamt.setText("");
-        tbactualamt.setText("");
+        tbcontrolamt.setText("0");
+        tbcontrolamt.setBackground(Color.white);
+        tbcheck.setText("");
+        tbactualamt.setText("0");
+        tbactualamt.setBackground(Color.white);
+        tbrefamt.setText("0");
         referencemodel.setRowCount(0);
         armodel.setRowCount(0);
         referencedet.setModel(referencemodel);
         ardet.setModel(armodel);
-        if (ddcust.getItemCount() == 0) {
+        
+       
+        
+        java.util.Date now = new java.util.Date();
+        dcdate.setEnabled(true);
+        dcdate.setDate(now);
+        
+        
+        isInit = true;
+        ddcust.removeAllItems();
         ArrayList mycust = OVData.getcustmstrlist();
         for (int i = 0; i < mycust.size(); i++) {
             ddcust.addItem(mycust.get(i));
         }
-        }
-        
-         
-          ddsite.removeAllItems();
+        ddcust.insertItemAt("", 0);
+        ddcust.setSelectedIndex(0);
+          
+        ddsite.removeAllItems();
         ArrayList mylist = OVData.getSiteList();
         for (int i = 0; i < mylist.size(); i++) {
             ddsite.addItem(mylist.get(i));
         }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
         
-           ddcurr.removeAllItems();
+        ddcurr.removeAllItems();
         ArrayList<String> curr = OVData.getCurrlist();
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
         ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
         
+        isInit = false;
+       
+        
+        
+    }
+    
+    public void enableAll() {
+        ddcust.setEnabled(true);
+        ddsite.setEnabled(true);
+        ddcurr.setEnabled(true);
+        batchnbr.setEnabled(true);
+        tbrmks.setEnabled(true);
+        tbcontrolamt.setEnabled(true);
+        tbcheck.setEnabled(true);
+        tbactualamt.setEnabled(true);
+        tbrefamt.setEnabled(true);
+        referencedet.setEnabled(true);
+        ardet.setEnabled(true);
+        
+        btadditem.setEnabled(true);
+        btdeleteitem.setEnabled(true);
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        btadd.setEnabled(true);
+        btedit.setEnabled(true);  
+        btaddall.setEnabled(true);
+        
+        dcdate.setEnabled(true);
+    }
+    
+    public void disableAll() {
+         ddcust.setEnabled(false);
+        ddsite.setEnabled(false);
+        ddcurr.setEnabled(false);
+        batchnbr.setEnabled(false);
+        tbrmks.setEnabled(false);
+        tbcontrolamt.setEnabled(false);
+        tbactualamt.setEditable(false);
+        tbcheck.setEnabled(false);
+        tbactualamt.setEnabled(false);
+        tbrefamt.setEnabled(false);
+        tbrefamt.setEditable(false);
+        referencedet.setEnabled(false);
+        ardet.setEnabled(false);
+        
+        btadditem.setEnabled(false);
+        btdeleteitem.setEnabled(false);
+        btnew.setEnabled(false);
+        btbrowse.setEnabled(false);
+        btadd.setEnabled(false);
+        btedit.setEnabled(false);
+        btaddall.setEnabled(false);
+        
+        dcdate.setEnabled(false); 
+    }
+    
+    public boolean isValidInput() {
+        boolean myreturn = true;
+       
+        return myreturn;
+    }
+    
+    public void initvars(String arg) {
+        
+        
+         clearAll();
+         disableAll();
+         btnew.setEnabled(true);
+         btbrowse.setEnabled(true);
+       
+         if (! arg.isEmpty()) {
+            getBatch(arg);
+        }
+        
+        
+       
+        
         // ddcust.setEnabled(false); 
         
     }
     
+    public void getBatch(String batch) {
+         try {
+            DecimalFormat df = new DecimalFormat("#0.00");  
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            int i = 0;
+            int d = 0;
+            boolean gotIt = false;
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+                actamt = 0.00;
+                res = st.executeQuery("select * from ar_mstr where ar_nbr = " + "'" + batch + "'" + ";");
+                while (res.next()) {
+                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
+                     batchnbr.setText(res.getString("ar_nbr"));
+                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_effdate")));
+                     tbcheck.setText(res.getString("ar_ref"));
+                     tbrmks.setText(res.getString("ar_rmks"));
+                     ddcust.setSelectedItem(res.getString("ar_cust"));
+                     ddsite.setSelectedItem(res.getString("ar_site"));
+                     ddcurr.setSelectedItem(res.getString("ar_curr"));
+                     gotIt = true;
+                }
+                
+                res = st.executeQuery("select * from ard_mstr where ard_id = " + "'" + batch + "'" + ";");
+                while (res.next()) {
+                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
+                     armodel.addRow(new Object[] { res.getString("ard_ref"),
+                                              res.getString("ard_amt"),
+                                              res.getString("ard_amt_tax"),
+                                              res.getString("ard_curr")
+                                              });
+                 
+                  
+                  actamt += res.getDouble("ard_amt");
+                d++;
+                }
+                
+                 if (gotIt) {
+                tbactualamt.setText(df.format(actamt));
+                tbcontrolamt.setText(df.format(actamt));
+                lbmessage.setText("Batch has been committed");
+                enableAll();
+                btadd.setEnabled(false);
+                } else {
+                 lbmessage.setText("Unable to find batch");   
+                }
+                
+                
+             
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot retrieve AR Batch");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
     
     
-    
-    javax.swing.table.DefaultTableModel referencemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen", "Tax", "Curr"});
-    javax.swing.table.DefaultTableModel armodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Reference", "AmountToApply", "TaxAmount", "Curr"
-            });
+  
      
       
       public void setcustvariables(String cust) {
@@ -291,8 +459,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        btget = new javax.swing.JButton();
         batchnbr = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
@@ -313,7 +481,6 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         tbcheck = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         tbactualamt = new javax.swing.JTextField();
-        jLabel28 = new javax.swing.JLabel();
         btaddall = new javax.swing.JButton();
         tbrefamt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -323,17 +490,16 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         jLabel37 = new javax.swing.JLabel();
         ddcurr = new javax.swing.JComboBox<>();
         jLabel38 = new javax.swing.JLabel();
+        btbrowse = new javax.swing.JButton();
+        lbmessage = new javax.swing.JLabel();
+        lbcust = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+
+        jLabel1.setText("jLabel1");
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Payment Maintenance"));
-
-        btget.setText("Get");
-        btget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
-            }
-        });
 
         jLabel24.setText("Batch Nbr");
 
@@ -341,6 +507,15 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
+            }
+        });
+
+        tbcontrolamt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbcontrolamtFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbcontrolamtFocusLost(evt);
             }
         });
 
@@ -353,7 +528,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             }
         });
 
-        btadd.setText("Save");
+        btadd.setText("Commit");
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -386,7 +561,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Edit");
+        btedit.setText("Uncommit");
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -414,8 +589,6 @@ public class ARPaymentMaint extends javax.swing.JPanel {
 
         jLabel2.setText("CheckNbr");
 
-        jLabel28.setText("Actual Amt");
-
         btaddall.setText("Add All");
         btaddall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -442,6 +615,15 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         });
 
         jLabel38.setText("Currency");
+
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("ActualAmt");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -472,62 +654,73 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btget)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnew)
-                                    .addGap(54, 54, 54)
-                                    .addComponent(jLabel27)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(tbrmks)
+                                    .addComponent(tbrmks)
+                                    .addGap(215, 215, 215))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(ddcust, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE)
-                                        .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel28)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel35)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tbrefamt, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(btaddall)))
-                            .addGap(5, 5, 5))))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(26, 26, 26)
+                                            .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btnew))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(ddcust, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE)
+                                                .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lbcust, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addComponent(jLabel3)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(tbrefamt, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(btaddall)
+                                                    .addGap(14, 14, 14))
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.TRAILING))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                .addComponent(tbactualamt)
+                                                                .addComponent(tbcontrolamt, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
+                                                            .addGap(10, 10, 10)
+                                                            .addComponent(jLabel2)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                    .addGap(22, 22, 22))))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(lbmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(0, 105, Short.MAX_VALUE))))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btget)
-                    .addComponent(btnew)
-                    .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24)
-                    .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel27)
-                    .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel28))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnew)
+                                .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel24))
+                            .addComponent(btbrowse))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel36))
+                            .addComponent(jLabel36)
+                            .addComponent(lbcust, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -535,24 +728,34 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel38))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel38)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel35)
+                            .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel27)
                             .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btaddall)
-                            .addComponent(tbrefamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel35))
+                        .addGap(9, 9, 9)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbrefamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(btaddall))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -570,30 +773,24 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-        initvars("");
-        getreferences(batchnbr.getText());
-
-    }//GEN-LAST:event_btgetActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+                
+        enableAll();
+        clearAll();
+        btedit.setEnabled(false);
+        btnew.setEnabled(false);
+        btbrowse.setEnabled(false);
         batchnbr.setText(String.valueOf(OVData.getNextNbr("ar")));
-                java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String clockdate = dfdate.format(now);
-                String clocktime = dftime.format(now);
+        batchnbr.setEnabled(false);
                
-                dcdate.setDate(now);
-                ddcust.setEnabled(true);
-             
                
         
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
-        DecimalFormat df = new DecimalFormat("#0.00");   
+        DecimalFormat df = new DecimalFormat("#0.00"); 
+              
        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
        // "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen"
@@ -611,10 +808,19 @@ public class ARPaymentMaint extends javax.swing.JPanel {
          if (ardet.getRowCount() >= 1) {
              ddcurr.setEnabled(false);
            }
+         if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
         tbactualamt.setText(df.format(actamt));
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+        
+    
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -668,8 +874,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                         + "'" + "P" + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
                         + "'" + basecurr + "'" + ","
-                        + "'" + tbcheck.getText() + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
+                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
@@ -737,9 +943,13 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
-       
-        if (! ddcust.getSelectedItem().toString().isEmpty() ) {
+        // clean slate
+        referencemodel.setRowCount(0);
+        armodel.setRowCount(0);
+        lbcust.setText("");
+        if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isInit) {
         ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
+        lbcust.setText(OVData.getCustName(ddcust.getSelectedItem().toString()));
         getreferences(ddcust.getSelectedItem().toString());
         }
     }//GEN-LAST:event_ddcustActionPerformed
@@ -766,6 +976,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
+                
+                bsmf.MainFrame.show("This rollback functionality has not been implemented yet");
         /*
                 if (proceed) {
                     st.executeUpdate("update recv_mstr set recv_po = " + "'" + ddrefs.getSelectedItem().toString() + "'" + ","
@@ -815,6 +1027,14 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                                               referencedet.getModel().getValueAt(i, 5)
                                               });
         }
+        
+       if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
         tbactualamt.setText(df.format(actamt));
     }//GEN-LAST:event_btaddallActionPerformed
 
@@ -823,11 +1043,47 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddsiteActionPerformed
 
     private void ddcurrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcurrActionPerformed
-        if (! ddcust.getSelectedItem().toString().isEmpty() && ! ddcurr.getSelectedItem().toString().isEmpty() ) {
+        if (ddcust.getSelectedItem() != null &&  ddcurr.getSelectedItem() != null && ! isInit ) {
         curr = ddcurr.getSelectedItem().toString();
         getreferences(ddcust.getSelectedItem().toString());
         }
     }//GEN-LAST:event_ddcurrActionPerformed
+
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, "arpaymentmaint,ar_nbr");
+    }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void tbcontrolamtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusGained
+       if (tbcontrolamt.getText().equals("0")) {
+            tbcontrolamt.setText("");
+        }
+    }//GEN-LAST:event_tbcontrolamtFocusGained
+
+    private void tbcontrolamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusLost
+           String x = BlueSeerUtils.bsformat("", tbcontrolamt.getText(), "2");
+        if (x.equals("error")) {
+            tbcontrolamt.setText("");
+            tbcontrolamt.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbcontrolamt.requestFocus();
+        } else {
+            tbcontrolamt.setText(x);
+            tbcontrolamt.setBackground(Color.white);
+        }
+        
+        if (! tbcontrolamt.getText().isEmpty()) {
+            control = Double.valueOf(tbcontrolamt.getText());
+        }
+        
+       if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
+       
+    }//GEN-LAST:event_tbcontrolamtFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ardet;
@@ -835,27 +1091,30 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
     private javax.swing.JButton btadditem;
+    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btedit;
-    private javax.swing.JButton btget;
     private javax.swing.JButton btnew;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox ddsite;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JLabel lbcust;
+    private javax.swing.JLabel lbmessage;
     private javax.swing.JTable referencedet;
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbcheck;
