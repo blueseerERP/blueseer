@@ -20679,12 +20679,25 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
     
     public static MimeBodyPart attachmentPart;
 
+     private static final String SMTP_HOST_NAME = "smtp.vcscode.com";
+    private static final String SMTP_AUTH_USER = "";
+    private static final String SMTP_AUTH_PWD  = "";
+    
+     public static class SMTPAuthenticator extends javax.mail.Authenticator {
+        public PasswordAuthentication getPasswordAuthentication() {
+           String username = SMTP_AUTH_USER;
+           String password = SMTP_AUTH_PWD;
+           return new PasswordAuthentication(username, password);
+        }
+    }
+    
     public static void sendEmail(String to, String subject, String body, String filename) {
 
   // Strings that contain from, to, subject, body and file path to the attachment
 
   String from = getEmailFrom();
   String emailserver = getEmailServerIP();
+  
   
   if (emailserver.isEmpty() || from.isEmpty()) {
       return;
@@ -20693,14 +20706,16 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
   Properties properties = new Properties();
 
+  
 // properties.put("mail.smtp.host", "10.17.2.9");
 
  properties.put("mail.smtp.host", emailserver);
-
-  Session session = Session.getDefaultInstance(properties, null);
+ properties.put("mail.smtp.auth", "true");
+  Authenticator auth = new SMTPAuthenticator();
+  Session session = Session.getDefaultInstance(properties, auth);
 
   try {
-
+   
 MimeMessage message = new MimeMessage(session);
 
 message.setFrom(new InternetAddress(from));

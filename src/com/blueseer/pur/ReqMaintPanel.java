@@ -717,7 +717,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                          tbpo.setText(String.valueOf(mypo));
                           tbstatus.setForeground(Color.green);
                          tbstatus.setText("approved");
-                        // sendEmailToRequestor(tbrequestor.getText(), String.valueOf(mypo));
+                         sendEmailToRequestor(myid, String.valueOf(mypo));
           
                           try {
              Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -745,6 +745,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
       public void approvereq(String myid, String thissequence) {
         
         try {
+            
+            
             int mypo = 0;
             int mysequence = Integer.valueOf(thissequence);
             reqtask.setRowCount(0);
@@ -829,16 +831,17 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                          tbpo.setText(String.valueOf(mypo));
                          tbstatus.setText("approved");
                        
-                         if (emailrequestor)
+                         if (emailrequestor) {
                          sendEmailToRequestor(myid, String.valueOf(mypo));
+                         } 
                  }
                  
                  if (islast)
-                 bsmf.MainFrame.show("Req is approved....PO Number = " + String.valueOf(mypo));
+                 bsmf.MainFrame.show("Req is approved..PO Number = " + String.valueOf(mypo));
                  
-                 if (! islast)
-                 bsmf.MainFrame.show("You have Successfully Approved");  
-                 
+                 if (! islast) {
+                 bsmf.MainFrame.show("You have Successfully approved");  
+                 }
                  // reinit the task list
                 res = st.executeQuery("select * from req_task where reqt_id = " + "'" + myid + "'" + " order by reqt_sequence ;");
                 while (res.next()) {
@@ -1347,7 +1350,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
 
     private void btPurchReqAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPurchReqAddActionPerformed
        try {
-           
            boolean canproceed = true;
            boolean preapproved = false;
            String mystatus = "";
