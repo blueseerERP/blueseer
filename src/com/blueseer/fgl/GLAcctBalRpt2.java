@@ -83,7 +83,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Acct", "CC", "Site", "Ref", "Key", "EffDate", "Desc", "Amt"});
+                        new String[]{"Acct", "CC", "Site", "Ref", "Type", "EffDate", "Desc", "Amt"});
     
     
    
@@ -157,7 +157,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt from gl_hist " +
+                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_type, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt from gl_hist " +
                         " where glh_acct = " + "'" + acct + "'" + " AND " + 
                         " glh_site = " + "'" + site + "'" + " AND " +
                         " glh_effdate >= " + "'" + datestart + "'" + " AND " +
@@ -169,7 +169,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                        res.getString("glh_cc"),
                        res.getString("glh_site"),
                       res.getString("glh_ref"), 
-                      res.getString("glh_doc"), 
+                      res.getString("glh_type"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
                       Double.valueOf(df.format(res.getDouble("glh_amt")))  });

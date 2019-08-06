@@ -2332,6 +2332,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             tbpurchprice.requestFocus();
         } else {
             tbpurchprice.setText(x);
+            tbmtlcost.setText(x);
             tbpurchprice.setBackground(Color.white);
         }
     }//GEN-LAST:event_tbpurchpriceFocusLost

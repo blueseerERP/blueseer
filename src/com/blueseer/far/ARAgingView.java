@@ -207,6 +207,7 @@ public class ARAgingView extends javax.swing.JPanel {
       public void getdetail(String cust) {
       
          modeldetail.setNumRows(0);
+         modelpayment.setNumRows(0);
          double total = 0.00;
          DecimalFormat df = new DecimalFormat("#0.00");
         
@@ -845,6 +846,8 @@ try {
             btexport.setEnabled(true);
             btcsv.setEnabled(true);
             btpdf.setEnabled(true);
+            paymentpanel.setVisible(false);
+            cbpaymentpanel.setSelected(false);
         }
     }//GEN-LAST:event_tablesummaryMouseClicked
 
@@ -854,6 +857,8 @@ try {
        btexport.setEnabled(false);
        btcsv.setEnabled(false);
        btpdf.setEnabled(false);
+       paymentpanel.setVisible(false);
+       cbpaymentpanel.setSelected(false);
     }//GEN-LAST:event_btdetailActionPerformed
 
     private void cbpaymentpanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbpaymentpanelActionPerformed

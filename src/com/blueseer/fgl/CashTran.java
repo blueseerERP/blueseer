@@ -565,7 +565,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     /* emulate cash payment */    
                         if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt, "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "Error Occurred in Buy"};
@@ -906,7 +906,7 @@ public class CashTran extends javax.swing.JPanel {
                         error = OVData.glEntryFromVoucherExpense(expensenbr2.getText(), dcdate2.getDate());
                          
                         if (! error)
-                        error = OVData.APExpense(dcdate2.getDate(), exp, expensenbr2.getText(), tbpo2.getText(), ddentity2.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(dcdate2.getDate(), exp, expensenbr2.getText(), tbpo2.getText(), ddentity2.getSelectedItem().toString(), actamt, "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};
@@ -1057,7 +1057,7 @@ public class CashTran extends javax.swing.JPanel {
                         error = OVData.glEntryFromVoucherExpense(key, now);
                          
                         if (! error)
-                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), Double.valueOf(recurexpensetable.getValueAt(z, 9).toString()));
+                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), Double.valueOf(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};

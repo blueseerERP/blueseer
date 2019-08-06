@@ -14931,7 +14931,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     String thistype = "RCT-VOUCH";
                    
                    
-                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
                     Double amt = 0.00;   
@@ -14948,7 +14948,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     curr.add(res.getString("ap_curr"));
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
-                    ref.add(res.getString("ap_nbr"));
+                    ref.add(res.getString("ap_check"));
                     type.add(thistype);
                     desc.add("Expensed:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));         
                
@@ -15303,8 +15303,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     ArrayList basecurr =  new ArrayList(); 
                     
                     
-                    String thistype = "AR-PAYMENT";
-                    String thisdesc = "AR Payment";
+                    String thistype = "AR-Payment";
+                    String thisdesc = "";
                 
                    double net = 0.00;
                    double netbase = 0.00;
@@ -15320,6 +15320,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                    
                     while (res.next()) {
                      // credit AR Acct and debit cash account
+                     thisdesc = "Cust Check: " + res.getString("ar_ref");
                      amt = res.getDouble("ard_amt");
                      baseamt = res.getDouble("ard_base_amt");
                      net = res.getDouble("ard_amt") - res.getDouble("ard_amt_tax"); // credit AR for sales less tax
@@ -16325,12 +16326,18 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     
                     
                     String thistype = ctype;
-                    String thisdesc = "Check Run";   
+                    String thisdesc = "";   
                    
                   
                    
                     if (ctype.equals("AP-Expense")) {
                         thisdesc = "Expense Maint";
+                    }
+                    if (ctype.equals("AP-Cash")) {
+                        thisdesc = "Cash Maint";
+                    }
+                    if (ctype.equals("AP-Vendor")) {
+                        thisdesc = "Check Run";
                     }
                     
                        res = st.executeQuery("select ap_check, ap_ref, ap_site, ap_acct, bk_acct, ap_cc, ap_amt, ap_base_amt, ap_curr, ap_base_curr from ap_mstr inner join bk_mstr on bk_id = ap_bank " +
@@ -16347,7 +16354,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         site.add(res.getString("ap_site"));
                         ref.add(res.getString("ap_check"));
                         type.add(thistype);
-                        desc.add("Expense: " + res.getString("ap_ref"));
+                        desc.add(thisdesc);
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
@@ -18572,7 +18579,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           
        }
  
-       public static boolean APExpense(Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount) {
+       public static boolean APExpense(Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount, String type) {
            boolean myreturn = false; 
            DecimalFormat df = new DecimalFormat("#0.00");   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -18584,7 +18591,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             String terms = "";
             String bank = "";
             String site = "";
-            String type = "AP-Expense";
+            String ref = "";
+           
            
             // ok...lets create the apd_mstr table
                 APExpense_apd_mstr(batchid, vend, voucher, invoice, amount) ;
@@ -18601,7 +18609,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 ResultSet res2 = null;
          
                   
-                   res = st.executeQuery("select ap_site, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms from apd_mstr " +
+                   res = st.executeQuery("select ap_site, ap_ref, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms from apd_mstr " +
                            " inner join vd_mstr on vd_addr = apd_vend " +
                            " inner join ap_mstr on ap_nbr = apd_nbr " +
                            " where apd_batch = " + "'" + batchid + "'" +
@@ -18615,6 +18623,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         terms = res.getString("vd_terms");
                         bank = res.getString("vd_bank");
                         site = res.getString("ap_site");
+                        ref = res.getString("ap_ref");
                         
                         st2.executeUpdate("insert into ap_mstr "
                         + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_check, "
@@ -18625,7 +18634,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         + "'" + checknbr + "'" + ","
                         + "'" + df.format(sum) + "'" + ","
                         + "'" + "E" + "'" + ","
-                        + "'" + "" + "'" + ","
+                        + "'" + ref + "'" + ","
                         + "'" + checknbr + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(effdate) + "'" + ","

@@ -655,7 +655,7 @@ try {
              
              // now all that should be left is vouchers that needs a check cut against them....pass it over to APCHECKRUN
              if (mytable.getRowCount() > 0) {
-              OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-CHECK");
+              OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-Vendor");
              }
              postcommit();
              bsmf.MainFrame.show("Check Run Complete");

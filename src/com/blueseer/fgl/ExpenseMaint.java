@@ -267,7 +267,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
                   // "Reference", "AmountToApply", "TaxAmount", "Curr"
                      expensenbr.setText(res.getString("ap_nbr"));
                      dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ap_effdate")));
-                     tbcheck.setText(res.getString("ap_ref"));
+                     tbcheck.setText(res.getString("ap_check"));
+                     tbref.setText(res.getString("ap_ref"));
                      tbrmks.setText(res.getString("ap_rmks"));
                      ddvend.setSelectedItem(res.getString("ap_vend"));
                      ddsite.setSelectedItem(res.getString("ap_site"));
@@ -782,7 +783,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                     if (proceed) {
                                         
                       st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_check, ap_rmks, "
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
                         + "ap_terms, ap_status, ap_bank ) "
                         + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
@@ -791,6 +792,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                         + "'" + df.format(actamt) + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + tbref.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
                         + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
@@ -830,7 +832,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                         error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
                          
                         if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbref.getText(), ddvend.getSelectedItem().toString(), actamt);
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbref.getText(), ddvend.getSelectedItem().toString(), actamt, "AP-Expense");
                         
                     if (error) {
                         bsmf.MainFrame.show("An error occurred");

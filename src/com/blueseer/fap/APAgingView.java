@@ -199,6 +199,7 @@ public class APAgingView extends javax.swing.JPanel {
       public void getdetail(String vend) {
       
          modeldetail.setNumRows(0);
+          modelpayment.setNumRows(0);
          double total = 0.00;
          DecimalFormat df = new DecimalFormat("#0.00");
         
@@ -805,13 +806,17 @@ try {
             getdetail(tablesummary.getValueAt(row, 1).toString());
             btdetail.setEnabled(true);
             detailpanel.setVisible(true);
+            paymentpanel.setVisible(false);
+            cbpaymentpanel.setSelected(false);
         }
        
     }//GEN-LAST:event_tablesummaryMouseClicked
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
         detailpanel.setVisible(false);
-       btdetail.setEnabled(false);
+        paymentpanel.setVisible(false);
+        cbpaymentpanel.setSelected(false);
+        btdetail.setEnabled(false);
     }//GEN-LAST:event_btdetailActionPerformed
 
     private void cbpaymentpanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbpaymentpanelActionPerformed

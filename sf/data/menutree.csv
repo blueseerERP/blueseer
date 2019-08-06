@@ -105,13 +105,12 @@ Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
 Finance,ARMenu,5,JMenu,Accounts Receivable Menu,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Payment Maintenance,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Payment Browse,,1,,1,1
-ARMenu,ARUnAppMaint,3,JMenuItem,Unapplied Payment Maintenance,,,,1,1
-ARMenu,ARMemoMaint,4,JMenuItem,Memo Maintenance,,,,1,1
-ARMenu,ARAgingView,5,JMenuItem,AR Aging View,,,,1,1
-APMenu,APAgingView,5,JMenuItem,AP Payables Report,,,,1,1
+ARMenu,ARMemoMaint,3,JMenuItem,Memo Maintenance,,,,1,1
+ARMenu,ARAgingView,4,JMenuItem,AR Aging View,,,,1,1
+APMenu,APAgingView,5,JMenuItem,AP Aging View,,,,1,1
 APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
-ARMenu,ARTranRpt1,6,JMenuItem,AR Transacation Report,,1,,1,1
-ARMenu,ARControl,7,JMenuItem,AR Control,,,,1,1
+ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
+ARMenu,ARControl,6,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
 Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
 Finance,PayRollMenu,7,JMenu,Payroll Menu,,,,1,1
