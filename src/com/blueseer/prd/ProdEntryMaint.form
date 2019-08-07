@@ -53,14 +53,6 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="tbsite" max="32767" attributes="0"/>
-                                      <EmptySpace min="48" pref="48" max="48" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="tbdate" pref="164" max="32767" attributes="0"/>
-                                      <EmptySpace min="48" pref="48" max="48" attributes="0"/>
-                                  </Group>
                                   <Component id="tbreference" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbserialno" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbpart" alignment="0" max="32767" attributes="0"/>
@@ -71,6 +63,13 @@
                                           <Component id="tbqty" min="-2" pref="94" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="tbsite" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="tbdate" alignment="0" pref="164" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="48" pref="48" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>

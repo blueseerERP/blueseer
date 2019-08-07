@@ -107,9 +107,13 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
              if (elementArray[1].equals("002")) {
              D.add(String.join(ed,elementArray)); 
              }
+             if (elementArray[1].equals("010")) {
+             D.add(String.join(ed,elementArray)); 
+             }
              break;
          case "N1" :
              if (elementArray[1].equals("ST") || elementArray[1].equals("SO") ) {
+                 elementArray[3] = "92";
                  elementArray[2] = isSet(elementArray,4) ? elementArray[4] : "" ;
              D.add(String.join(ed,elementArray));
              }
