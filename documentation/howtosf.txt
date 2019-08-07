@@ -1,0 +1,31 @@
+Examples are provided for sftp:
+For managing file releases
+FRS Hostname: frs.sourceforge.net
+Path: /home/frs/project/PROJECT_UNIX_NAME/ - Substitute your project UNIX name data for PROJECT_UNIX_NAME
+Username: Your SourceForge.net Username
+Password: Your SourceForge.net Password
+An example session might look like (where Username="jsmith", Project UNIX name="fooproject",Release dir is "Rel_1"):
+
+[jsmith@linux ~]$ sftp jsmith@frs.sourceforge.net
+Connecting to frs.sourceforge.net...
+The authenticity of host 'frs.sourceforge.net (216.34.181.57)' can't be established.
+RSA key fingerprint is 68:b3:26:02:a0:07:e4:78:d4:ec:7f:2f:6a:4d:32:c5.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'frs.sourceforge.net,216.34.181.57' (RSA) to the list of known hosts.
+jsmith@frs.sourceforge.net's password:
+sftp> cd /home/frs/project/fooproject/Rel_1
+sftp> put foofile
+Uploading foofile to /home/frs/project/fooproject/Rel_1/foofile
+foofile                                                                                       100%  241     0.2KB/s   00:01
+sftp> exit
+
+
+
+to put an entire directory :
+cd /home/pfs/project/blueseer
+mkdir somedir
+cd somedir
+put -r somedir
+
+
+
