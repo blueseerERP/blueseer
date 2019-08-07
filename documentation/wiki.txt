@@ -1,0 +1,92 @@
+{{Infobox software
+| name = BlueSeer ERP
+| logo = [[File:BlueSeerImage.png|thumb]] 
+| collapsible = yes
+| developer = Terry Vaughn
+| latest release version = 4.2
+| latest release date = {{release date and age|2019|06|21}}
+| programming language = [[Java (programming language)|Java]] 
+| operating system = [[Cross-platform]]
+| genre = [[Accounting]],[[Enterprise resource planning|ERP]],[[Personal finance]] 
+| license = [[MIT License|MIT]]
+| website = {{url|//www.blueseer.com}}
+}}
+'''BlueSeer ERP''' is a Free [[Open-source software|open source]] [[Enterprise
+resource planning|ERP]] system.  It was developed primarily for the
+manufacturing community, but it has many specific utilities that are useful in
+other markets such as transportation, distribution, warehouse management systems.<ref>{{cite web|url=https://www.thesmbguide.com/free-manufacturing-software|title=The Small Manufacturing Business Guide|website=www.smbguide.com|accessdate= 11 July 2019}}</ref>  
+The accounting aspects of the software also make it particularly useful for
+personal finance.<ref>{{cite web|url=https://finance.yahoo.com/news/goodfirms-publishes-best-free-open-143000000.html|title=GoodFirms Publish Best Free Open|website=finance.yahoo.com|accessdate=8 July 2019}} </ref>  
+The development of BlueSeer started in 2005
+and continues with the latest version 4.2 released on June 26th 2019.</br>
+The core objective in the development of BlueSeer has always been to
+provide the manufacturing community with an ERP system that would be as generic as possible to fit a wide variety of
+functional needs right out of the box while at the same time providing an
+affordable avenue for customization and a simplified development framework to
+add/extend new business logic.
+BlueSeer is currently ranked in the top 5 listings of free ERP solutions.<ref>{{cite web|url=https://erpinnews.com/top-15-free-and-open-source-erp-solutions|title=Top 15 Free ERP Solutions|website=erpinnews.com|accessdate=12 July 2019}}</ref>                 
+
+== Functionality ==
+BlueSeer provides a set of generic functional modules that are universally
+found in many different manufacturing environments.   The modules are designed
+to be a widely usable as possible and therefore generic in scope.   
+BlueSeer offers the following functionality:
+* Double Entry General Ledger
+* Cost Accounting
+* Accounts Receivable Processing and Aging
+* Accounts Payable Processing and Aging
+* PayRoll
+* Inventory Control
+* Job Tracking
+* Lot Traceability
+* Order Management
+* Service Order and Quoting Management
+* Electronic Data Interchange (EDI)
+* UCC Label Generation
+* Materials Resource Planning (MRP)
+* Human Resources (HR)
+
+== Technology ==
+BlueSeer ERP is written entirely in [[Java]].  BlueSeer is a non-web based
+[[graphical user interface]] desktop application that relies heavily on the Java Swing [[Swing (Java)]] widget
+toolkit/library.  The options for back-end database depends on the usage.
+For single client deployment, The relational database [[SQLite]] is used for
+it's simplicity, deployment ease, and server-less design.  For multi-client
+deployment scenarios, the open-source relational database [[MySQL]] is used as the
+back-end database server.  MySQL was chosen for it's popularity and excellent
+performance reviews<ref>[http://review.techworld.com/applications/346/mysql-50-open-source-database/ Review of MySQL Server 5.0], Techworld.com, November 2005</ref>.
+</br>
+BlueSeer is a menu-driven application.  It's "molecular composition" is essentially a collection of Java Swing
+JPanel widgets.  Each Business Function, i.e. Order Entry, Item Master
+Maintenance is a stand-alone JPanel (except for shared database
+calls between functional modules).  </br>
+BlueSeer's unique design loads the JPanel
+at runtime using [[Reflection (computer programming)]] to 'inject' the JPanel into the JFrame at user
+demand (assuming the user has permissions to execute the Menu/JPanel).  The
+JPanel class name is stored in the database and associated
+with a menu option which in turn is associated with user permissions.  This
+allows for ease of customization and extension.  Adding additional
+functionality
+simply becomes a matter of creating a new JPanel that encapcuslates the new
+business logic (and relevant widgets), associating the new class with a menu option, and inserting
+the class/menu/permission records into the database with the built-in
+management menu.  </br>
+The ease of adding new JPanel classes
+makes BlueSeer an attractive
+Desktop Application Framework to quickly deploy new desktop application
+functionality given the menu/class managment and
+permissions functionality that's built into the BlueSeer framework.
+
+== See also ==
+* [[List of ERP software packages]]
+* [[Comparison of accounting software]]
+
+== References ==
+{{reflist}}
+
+
+{{ERP software}}
+
+[[Category:Free ERP software]]
+[[Category:Free software programmed in Java (programming language)]]
+
