@@ -132,6 +132,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Order Detail");
             }
             bsmf.MainFrame.con.close();
@@ -199,6 +200,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Plan Detail for MRP");
             }
             bsmf.MainFrame.con.close();
@@ -250,6 +252,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Plan Detail for MRP");
             }
             bsmf.MainFrame.con.close();
@@ -303,7 +306,8 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem selecting recent trans");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -982,16 +986,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 
                 tablereport.getTableHeader().repaint();
                 
-                
-                // lets start with outer item search
-                /*
-                res3 = st3.executeQuery("select it_item from item_mstr where " + 
-                        " it_item >= " + "'" + frompart + "'" + " AND " +
-                        " it_item <= " + "'" + topart + "'" + ";");
-                 while (res3.next()) {
-                     
-                 }
-                */
+              
                 
                res = st.executeQuery("select mrp_part, it_code, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
                " sum(A) as A, sum(B) as B, sum(C) as C, sum(D) as D, sum(E) as E, sum(F) as F, sum(G) as G from " +
@@ -1017,16 +1012,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     i++;
                     qoh =  res.getDouble("in_qoh");
                     thispart = res.getString("mrp_part");
-                 /*
-                    qoh =  res.getDouble("in_qoh");
-                    qoh1 = qoh - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 - Double.valueOf(res.getString("G"));
-                   */ 
+             
                     mymodel.addRow(new Object[]{
                         BlueSeerUtils.clickflag, res.getString("mrp_part"),
                         "DEMAND",
@@ -1203,47 +1189,11 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     });
                 }
                 
-                // if no MRP records within date range...then set all three rows to 0
-                if (i == 0) {
-            /*     
-                    mymodel.addRow(new Object[]{
-                        "select", res.getString("mrp_part"),
-                        "DEMAND",
-                        res.getString("A"),
-                        res.getString("B"),
-                        res.getString("C"),
-                        res.getString("D"),
-                        res.getString("E"),
-                        res.getString("F"),
-                        res.getString("G")
-                    });
-                  mymodel.addRow(new Object[]{
-                        "select", res.getString("mrp_part"),
-                        "PURCH",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0",
-                        "0"
-                    });
-                   mymodel.addRow(new Object[]{
-                       "", res.getString("mrp_part"),
-                        "QOH",
-                        qoh1,
-                        qoh2,
-                        qoh3,
-                        qoh4,
-                        qoh5,
-                        qoh6,
-                        qoh7
-                    });
-          */              
-         }
+        
   
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem during execution");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

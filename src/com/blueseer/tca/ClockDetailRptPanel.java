@@ -361,6 +361,7 @@ try {
                 }
              bsmf.MainFrame.show("file has been created");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot extract timeclock data");
             }
             con.close();

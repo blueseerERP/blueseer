@@ -538,6 +538,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete WorkCell Record");
             }
             bsmf.MainFrame.con.close();

@@ -158,12 +158,10 @@ public class ClockPanel extends javax.swing.JPanel {
         String myid = String.valueOf(input);
         String emp_clockin = null;
         int i = 0;
-        try {
+       
         res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
       //  System.out.println("Make: " + "\t" + "MakeName: ");
-          } catch (SQLException se) {
-              bsmf.MainFrame.show(se.getMessage());
-          }
+        
         while (res.next()) {
             emp_clockin = res.getString("emp_clockin");
             i++;
@@ -185,7 +183,8 @@ public class ClockPanel extends javax.swing.JPanel {
        
       }
       catch (SQLException s){
-        System.out.println("SQL code does not execute.");
+          MainFrame.bslog(s);
+        System.out.println("sql problem at ifClockedDir");
       }
 
     }
@@ -386,12 +385,10 @@ public class ClockPanel extends javax.swing.JPanel {
                     String myid = String.valueOf(input) ;
 
                    
-                    try {
+                   
                         res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
                         //  System.out.println("Make: " + "\t" + "MakeName: ");
-                    } catch (SQLException se) {
-                        bsmf.MainFrame.show(se.getMessage());
-                    }
+                   
                     
                     int i = 0;
                     String clockdate = "";
@@ -500,7 +497,8 @@ public class ClockPanel extends javax.swing.JPanel {
 
                 }
                 catch (SQLException s){
-                   bsmf.MainFrame.show(s.toString());
+                    MainFrame.bslog(s);
+                   bsmf.MainFrame.show("sql problem during execution");
                 }
 
             }

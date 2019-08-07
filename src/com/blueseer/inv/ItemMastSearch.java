@@ -311,7 +311,8 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 } // if index = 1
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("problem with sql query");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

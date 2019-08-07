@@ -62,18 +62,16 @@ public class test extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        btjasper = new javax.swing.JButton();
         btlabelprint = new javax.swing.JButton();
         testmail = new javax.swing.JButton();
         btjobticket = new javax.swing.JButton();
-        btm3d = new javax.swing.JButton();
         btautoclock = new javax.swing.JButton();
-        btqad = new javax.swing.JButton();
 
-        jButton1.setText("jasper");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btjasper.setText("jasper");
+        btjasper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btjasperActionPerformed(evt);
             }
         });
 
@@ -98,13 +96,6 @@ public class test extends javax.swing.JPanel {
             }
         });
 
-        btm3d.setText("m3d");
-        btm3d.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btm3dActionPerformed(evt);
-            }
-        });
-
         btautoclock.setText("AutoClock");
         btautoclock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,69 +103,43 @@ public class test extends javax.swing.JPanel {
             }
         });
 
-        btqad.setText("QADLoad");
-        btqad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btqadActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(btautoclock)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(testmail)
-                .addGap(105, 105, 105))
             .addGroup(layout.createSequentialGroup()
                 .addGap(152, 152, 152)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btlabelprint)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btlabelprint)
+                            .addComponent(btjasper)
+                            .addComponent(btjobticket))
                         .addContainerGap(148, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btm3d)
-                        .addGap(51, 51, 51))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btjobticket)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btqad)
-                        .addGap(39, 39, 39))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btautoclock)
+                            .addComponent(testmail))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(testmail)
-                            .addComponent(btautoclock))
-                        .addGap(37, 37, 37)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(119, 119, 119)
-                        .addComponent(btm3d)))
-                .addGap(24, 24, 24)
+                .addGap(39, 39, 39)
+                .addComponent(btautoclock)
+                .addGap(18, 18, 18)
+                .addComponent(testmail)
+                .addGap(18, 18, 18)
+                .addComponent(btjasper)
+                .addGap(18, 18, 18)
                 .addComponent(btlabelprint)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(btjobticket)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btqad)
-                        .addGap(56, 56, 56))))
+                .addGap(18, 18, 18)
+                .addComponent(btjobticket)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btjasperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btjasperActionPerformed
        
   try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -200,7 +165,8 @@ public class test extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem during execution");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -208,7 +174,7 @@ public class test extends javax.swing.JPanel {
         }
 
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btjasperActionPerformed
 
     private void btlabelprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlabelprintActionPerformed
         try {
@@ -231,7 +197,7 @@ while ((line = fsr.readLine()) != null) {
 fsr.close();
 // fos.write(concatline.getBytes());
 
-concatline = concatline.replace("$ADDRNAME", "TERRY VAUGHN");
+concatline = concatline.replace("$ADDRNAME", "TEST USER");
 
 
 
@@ -309,7 +275,8 @@ MainFrame.bslog(e);
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem during execution");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -318,79 +285,17 @@ MainFrame.bslog(e);
 
     }//GEN-LAST:event_btjobticketActionPerformed
 
-    private void btm3dActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btm3dActionPerformed
-        try {
-              BufferedWriter output;
-              String detail = "";
-              String delimiter = "__M3D__";
-     
-              // lets do the Ledger Balance for 1516
-               File f = new File("temp/balance.csv");
-                if(f.exists()) {
-                    f.delete();
-                }
-              output = new BufferedWriter(new FileWriter(f));
-              String myheader = "Company" + delimiter +
-                      "AcctID" + delimiter +
-                      "DeptID" + delimiter +
-                      "Period" + delimiter +
-                      "Year" + delimiter + 
-                      "Amt"
-                      ;
-              output.write(myheader + '\n');
-              
-               ArrayList<String> mylist = new ArrayList<String>();
-                String[] ac = null;
-                mylist = OVData.getGLBalanceRangeM3DByCC(2014, 2015, "1516");
-                for (String rec : mylist) {
-                ac = rec.split(",", -1);
-                   detail = "AVM" + delimiter +
-                           ac[0] + delimiter +
-                           ac[1] + delimiter +
-                           ac[2] + delimiter +
-                           ac[3] + delimiter +
-                           ac[4]
-                           ;
-                output.write(detail + '\n');
-               }
-             
-               output.close();
-               
-            
-               
-               // DONE
-              
-       } catch (IOException ex) {
-          ex.printStackTrace();
-       }
-
-    }//GEN-LAST:event_btm3dActionPerformed
-
     private void btautoclockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btautoclockActionPerformed
         OVData.autoclock(-7);
         bsmf.MainFrame.show("clock complete");
     }//GEN-LAST:event_btautoclockActionPerformed
 
-    private void btqadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btqadActionPerformed
-       ArrayList<String> mylist = new ArrayList<String>();
-       mylist.add("S869201");
-        try {
-            OVData.createQADLoadFile(mylist);
-        } catch (SmbException ex) {
-            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btqadActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btautoclock;
+    private javax.swing.JButton btjasper;
     private javax.swing.JButton btjobticket;
     private javax.swing.JButton btlabelprint;
-    private javax.swing.JButton btm3d;
-    private javax.swing.JButton btqad;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton testmail;
     // End of variables declaration//GEN-END:variables
 }

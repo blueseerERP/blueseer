@@ -124,6 +124,7 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Shipper detail");
             }
             bsmf.MainFrame.con.close();
@@ -445,6 +446,7 @@ try {
                 tbtotsales.setText(df.format(totsales));
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Shipper Report");
             }
             con.close();

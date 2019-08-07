@@ -1490,6 +1490,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                         + ";");
                         
                         } catch (SQLException s) {
+                            MainFrame.bslog(s);
                         bsmf.MainFrame.show("cannot insert req_task");
                         }
                         mystatus = "queued";
@@ -1520,7 +1521,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql Cannot Add ReqMstr");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql Cannot Add ReqMstr");
             }
              bsmf.MainFrame.con.close();
              
@@ -1612,7 +1614,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to get selected vd_name");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to get selected vd_name");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1683,7 +1686,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                
                bsmf.MainFrame.show("Updated Requisition Successfully");
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to get selected vd_name");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to get selected vd_name");
             }
               } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1722,7 +1726,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem with print function");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

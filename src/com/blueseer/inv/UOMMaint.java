@@ -321,6 +321,7 @@ public class UOMMaint extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete UOM Record");
             }
             bsmf.MainFrame.con.close();

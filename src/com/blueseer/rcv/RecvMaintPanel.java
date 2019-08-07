@@ -396,7 +396,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                  
              } catch (SQLException s) {
                  MainFrame.bslog(s);
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to update sod_det");
+             bsmf.MainFrame.show("Unable to update sod_det");
              }
               // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
               
@@ -1182,6 +1182,7 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to edit receiver");
             }
             bsmf.MainFrame.con.close();

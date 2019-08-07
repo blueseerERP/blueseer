@@ -81,7 +81,8 @@ public class MassLoad extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code reinitddcustcode");
+                MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during execution");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -241,7 +242,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
             }
-            
+            fsr.close();
              if (proceed) {
                    if(OVData.addItemMaster(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -316,6 +317,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
             }
+            fsr.close();
             
              if (proceed) {
                    if(OVData.addGenericCode(list))
@@ -412,7 +414,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if (OVData.addCustXref(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -506,7 +508,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+           fsr.close();
              if (proceed) {
                    if(OVData.addVendXref(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -626,7 +628,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if(OVData.addInvAdjustments(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -723,7 +725,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if (OVData.addCustPriceList(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -818,7 +820,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if (OVData.addVendPriceList(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -1171,7 +1173,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                
             }
-            
+            fsr.close();
              if (proceed) {
                    if (OVData.addCustShipToMstr(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
@@ -1253,7 +1255,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
             }
-            
+            fsr.close();
             // now we should have a clean file....attempt to load
             if (proceed) {
                    bsmf.MainFrame.show("File is clean.");

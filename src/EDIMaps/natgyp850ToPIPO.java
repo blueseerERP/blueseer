@@ -138,7 +138,7 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
      updateISA(5,"ZZ");
      updateISA(6,"NATGYP");
      updateISA(7,"ZZ");
-     updateISA(8,"SAPGYP");
+     updateISA(8,"NATSAP");
      updateISA(11,"|");
      updateISA(12,"00501");
      updateISA(16,">");
@@ -177,6 +177,12 @@ public  class natgyp850ToPIPO extends com.blueseer.edi.EDIMap {
         if (s.isEmpty()) {
           for (int i = 0; i < a.length ; i++) {
             s = (a[i].equals("IN")) ? a[i+1] : "";
+            if (! s.isEmpty()) break;
+          }  
+        }
+        if (s.isEmpty()) {
+          for (int i = 0; i < a.length ; i++) {
+            s = (a[i].equals("PI")) ? a[i+1] : "";
             if (! s.isEmpty()) break;
           }  
         }

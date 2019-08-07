@@ -73,6 +73,7 @@ String sitecitystatezip = "";
                     bsmf.MainFrame.show("No Address Record found for site " + site );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -109,6 +110,7 @@ String sitecitystatezip = "";
                     bsmf.MainFrame.show("No Address Record found for billto/shipto " + billto + "/" + shipto );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve cms_det");
             }
             bsmf.MainFrame.con.close();

@@ -70,6 +70,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                  MainFrame.bslog(s);
+                 bsmf.MainFrame.show("unable to select in_mstr info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

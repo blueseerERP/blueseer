@@ -219,6 +219,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("unable to chart");
             }
             con.close();
         } catch (Exception e) {
@@ -287,6 +288,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("unable to chart orders");
             }
             con.close();
         } catch (Exception e) {

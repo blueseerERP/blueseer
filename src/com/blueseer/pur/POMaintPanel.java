@@ -458,6 +458,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve po_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -560,7 +561,8 @@ public class POMaintPanel extends javax.swing.JPanel {
                 
                
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL Code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem with getparts function");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -654,7 +656,7 @@ public class POMaintPanel extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show("sql problem with vendchange event");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

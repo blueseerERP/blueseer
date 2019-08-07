@@ -383,6 +383,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem printing ticket");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -419,6 +420,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem printing single ticket");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -957,6 +959,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem running view");
             }
             con.close();
         } catch (Exception e) {
@@ -1029,6 +1032,7 @@ try {
                 }
              bsmf.MainFrame.show("file has been created");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot extract tran_mstr data");
             }
             con.close();

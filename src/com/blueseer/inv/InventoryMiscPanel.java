@@ -56,6 +56,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
+                bsmf.MainFrame.show("unable to get item_mstr info");
                  MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();

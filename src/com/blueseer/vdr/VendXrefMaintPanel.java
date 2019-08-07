@@ -66,6 +66,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Vendor Cross Reference found for " + vend + " / " + vendpart);
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve cup_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -309,6 +310,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Add Vend Xref Record");
             }
             bsmf.MainFrame.con.close();
@@ -360,6 +362,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Retrieve Vend Xref Record");
             }
             bsmf.MainFrame.con.close();
@@ -385,6 +388,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
               reinitvars();
              
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Delete Vend Xref Record");
             }
             bsmf.MainFrame.con.close();
@@ -420,6 +424,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                     reinitvars();
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Vend Xref Record");
             }
             bsmf.MainFrame.con.close();

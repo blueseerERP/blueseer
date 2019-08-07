@@ -474,6 +474,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to shift_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -519,6 +520,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating shift_mstr");
             }
             bsmf.MainFrame.con.close();

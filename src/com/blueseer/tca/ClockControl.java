@@ -42,6 +42,7 @@ public class ClockControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve clock_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -140,6 +141,7 @@ public class ClockControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating clock_ctrl");
             }
             bsmf.MainFrame.con.close();

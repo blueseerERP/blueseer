@@ -52,6 +52,7 @@ public class InventoryCtrl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ov_ctrl");
             }
             bsmf.MainFrame.con.close();

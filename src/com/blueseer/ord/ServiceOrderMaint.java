@@ -134,34 +134,6 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
           
          lbdesc.setText(OVData.getItemDesc(dditem.getSelectedItem().toString()));
          tbprice.setText(String.valueOf(OVData.getItemPOSPrice(dditem.getSelectedItem().toString())));
-       
-         
-         /*
-         try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
-                res = st.executeQuery("select cm_name, cm_carrier, cm_tax_code, cm_curr from cm_mstr where cm_code = " + "'" + mykey + "'" + ";");
-                while (res.next()) {
-                    lblcustname.setText(res.getString("cm_name"));
-                   
-                }
-                
-             
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-         */
      }
      
      public void custChangeEvent(String mykey) {
@@ -1233,6 +1205,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to insert svd_det");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

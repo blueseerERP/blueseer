@@ -457,7 +457,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
                 tablesched.setModel(modelsched);
                
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL Code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select srl_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

@@ -475,6 +475,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Scrap Report");
             }
             con.close();
@@ -674,6 +675,7 @@ try {
                 
              bsmf.MainFrame.show("file has been created");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot extract tran_mstr data");
             }
             con.close();

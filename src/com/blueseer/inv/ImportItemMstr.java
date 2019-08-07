@@ -53,7 +53,8 @@ public class ImportItemMstr extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code reinitddcustcode");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code reinitddcustcode");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

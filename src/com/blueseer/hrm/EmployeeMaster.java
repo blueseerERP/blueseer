@@ -493,7 +493,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(mydialog, "Cannot SQL User_Mstr");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot SQL User_Mstr");
             }
             con.close();
         } catch (Exception e) {
@@ -1914,6 +1915,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Employee Record");
             }
             bsmf.MainFrame.con.close();

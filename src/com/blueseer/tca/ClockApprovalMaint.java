@@ -74,6 +74,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
 
         }
       catch (SQLException s){
+          MainFrame.bslog(s);
        bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
       }
       bsmf.MainFrame.con.close();
@@ -416,6 +417,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
             } // if proceed
         }
       catch (SQLException s){
+          MainFrame.bslog(s);
         bsmf.MainFrame.show("SQL code does not execute.");
       }
       bsmf.MainFrame.con.close();

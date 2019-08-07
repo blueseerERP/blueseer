@@ -65,6 +65,7 @@ public class ReqControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve req_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -390,6 +391,7 @@ public class ReqControl extends javax.swing.JPanel {
                  bsmf.MainFrame.show("Updated Defaults");
                  
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating req_ctrl and req_auth");
             }
             bsmf.MainFrame.con.close();

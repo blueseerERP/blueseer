@@ -350,6 +350,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating loc_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -374,6 +375,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Location Record");
             }
             bsmf.MainFrame.con.close();

@@ -174,6 +174,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Forecast Record found" );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve fct_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -1193,6 +1194,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to fct_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -1230,6 +1232,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Forecast Record");
             }
             bsmf.MainFrame.con.close();
@@ -1329,6 +1332,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                     } 
                
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Edit to fct_mstr");
             }
             bsmf.MainFrame.con.close();

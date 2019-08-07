@@ -432,6 +432,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Order Report");
             }
             con.close();
@@ -477,7 +478,8 @@ try {
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot print report");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

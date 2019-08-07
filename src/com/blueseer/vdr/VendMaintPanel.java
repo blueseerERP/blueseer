@@ -1253,7 +1253,8 @@ public class VendMaintPanel extends javax.swing.JPanel {
                initvars("");
                
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to get selected vend code");
+                 MainFrame.bslog(s);
+                 bsmf.MainFrame.show("Unable to get selected vend code");
             }
               } catch (Exception e) {
             MainFrame.bslog(e);

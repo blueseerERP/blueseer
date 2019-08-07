@@ -142,6 +142,7 @@ public class RecvBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Recv Browse detail");
             }
             bsmf.MainFrame.con.close();

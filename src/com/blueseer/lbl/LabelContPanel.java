@@ -97,6 +97,7 @@ String shipcountry = "";
                     bsmf.MainFrame.show("No Address Record found for site " + site );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -155,6 +156,7 @@ String shipcountry = "";
                  }
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve tables for order line container label");
             }
             bsmf.MainFrame.con.close();

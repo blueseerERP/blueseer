@@ -253,6 +253,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select vd_mstr info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

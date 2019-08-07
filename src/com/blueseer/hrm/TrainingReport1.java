@@ -333,7 +333,8 @@ public class TrainingReport1 extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to select emp_mstr");
             }
             con.close();
         } catch (Exception e) {
@@ -387,6 +388,7 @@ public class TrainingReport1 extends javax.swing.JPanel {
                 }
              bsmf.MainFrame.show("file has been created");
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                bsmf.MainFrame.show("Cannot extract training data");
             }
             con.close();
@@ -429,7 +431,8 @@ public class TrainingReport1 extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select emp_mstr");
             }
             con.close();
         } catch (Exception e) {

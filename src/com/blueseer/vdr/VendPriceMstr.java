@@ -484,6 +484,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql Cannot Update Price List Record");
             }
             bsmf.MainFrame.con.close();

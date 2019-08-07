@@ -548,6 +548,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 i = 0;
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve shipper");
             }
             bsmf.MainFrame.con.close();
@@ -676,7 +677,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
               
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem selecting cms_det");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -703,7 +705,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem selecting so_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -948,15 +951,10 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                  
                  
              } catch (SQLException s) {
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Unable to update sod_det");
+                 MainFrame.bslog(s);
+             bsmf.MainFrame.show("Unable to update sod_det");
              }
-              // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
-              
-                
-            //if (iscomplete) {
-            //    st.executeUpdate("update so_mstr set so_status = 'Shipped' where so_nbr = " + "'" + mytable.getModel().getValueAt(j, 1).toString() + "'" );
-           // }
-            
+          
          }
     }
     
@@ -2037,6 +2035,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to edit shipper");
             }
             bsmf.MainFrame.con.close();

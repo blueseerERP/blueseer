@@ -58,6 +58,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Code Mstr Record found for " + mycode );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve clock_code");
             }
             bsmf.MainFrame.con.close();
@@ -227,6 +228,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                    
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to clock_code");
             }
             bsmf.MainFrame.con.close();
@@ -279,6 +281,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating clock_code");
             }
             bsmf.MainFrame.con.close();
@@ -321,6 +324,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                    
                    
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Code Record");
             }
             bsmf.MainFrame.con.close();

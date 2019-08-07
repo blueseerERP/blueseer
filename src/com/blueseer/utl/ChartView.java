@@ -243,6 +243,7 @@ public class ChartView extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -313,6 +314,7 @@ public class ChartView extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -422,7 +424,7 @@ public class ChartView extends javax.swing.JPanel {
 
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -492,7 +494,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -895,7 +898,8 @@ public class ChartView extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+               MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -966,7 +970,8 @@ public class ChartView extends javax.swing.JPanel {
        // bsmf.MainFrame.show("your chart is complete...go to chartview");
                 
               } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -1027,7 +1032,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1086,7 +1092,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1146,7 +1153,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1280,6 +1288,7 @@ public class ChartView extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -1341,7 +1350,8 @@ public class ChartView extends javax.swing.JPanel {
         this.repaint();
                 
               } catch (SQLException s) {
-                  MainFrame.bslog(s);
+                 MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -1404,6 +1414,7 @@ public class ChartView extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
             }
             con.close();
         } catch (Exception e) {
@@ -1545,7 +1556,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1608,7 +1620,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1671,7 +1684,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1739,7 +1753,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1807,7 +1822,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1875,7 +1891,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -1940,7 +1957,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {
@@ -2016,7 +2034,8 @@ public class ChartView extends javax.swing.JPanel {
                     // bsmf.MainFrame.show("your chart is complete...go to chartview");
 
                 } catch (SQLException s) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "sql code does not execute");
+                    MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
                 }
                 con.close();
             } catch (Exception e) {

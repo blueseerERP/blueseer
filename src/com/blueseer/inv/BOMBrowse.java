@@ -421,6 +421,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                 labelcount.setText(String.valueOf(i));
                
             } catch (SQLException s) {
+                bsmf.MainFrame.show("unable to select pbm_mstr");
                 MainFrame.bslog(s);
             }
             con.close();

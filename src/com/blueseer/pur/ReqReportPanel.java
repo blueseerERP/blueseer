@@ -226,6 +226,7 @@ res = st.executeQuery("SELECT * FROM  req_mstr where " +
 
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve req records");
             }
             con.close();

@@ -266,7 +266,8 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select pbm_mstr and/or item_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -837,6 +838,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                    }
             } // if proceed
             catch (SQLException s) {
+                bsmf.MainFrame.show("problem rolling cost at sql level");
                 MainFrame.bslog(s);
             }
             con.close();

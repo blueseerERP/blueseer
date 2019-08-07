@@ -142,6 +142,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                     }
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve emp_train");
             }
             bsmf.MainFrame.con.close();
@@ -459,6 +460,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Add Training Records");
             }
             bsmf.MainFrame.con.close();
@@ -494,6 +496,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                 }
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add User To Table");
             }
             bsmf.MainFrame.con.close();
@@ -532,6 +535,7 @@ public class TrainingMaster extends javax.swing.JPanel {
              initvars("");
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to delete emp_train record");
             }
             bsmf.MainFrame.con.close();
@@ -610,6 +614,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Update Training Records");
             }
             bsmf.MainFrame.con.close();

@@ -599,6 +599,7 @@ try {
                 lblamttot.setText(df.format(totamt));
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing PO Browse Report");
             }
             con.close();

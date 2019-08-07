@@ -954,6 +954,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete ProductCode Record");
             }
             bsmf.MainFrame.con.close();

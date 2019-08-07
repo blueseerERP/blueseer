@@ -219,6 +219,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                         btdelete.setEnabled(true);  
                     }
              } catch (SQLException s) {
+                 bsmf.MainFrame.show("Unable to select pbm_mstr");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -634,6 +635,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete BOM Record");
             }
             bsmf.MainFrame.con.close();
@@ -685,6 +687,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 } 
          
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating pbm_mstr");
             }
             bsmf.MainFrame.con.close();

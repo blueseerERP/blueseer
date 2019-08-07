@@ -482,7 +482,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to get tran_mstr info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -530,6 +531,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 }
                 tbqtyoh.setText(String.valueOf(tot));
             } catch (SQLException s) {
+                bsmf.MainFrame.show("unable to get location qty");
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1949,6 +1951,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add partnumber");
             }
             bsmf.MainFrame.con.close();
@@ -2080,7 +2083,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 // btQualProbAdd.setEnabled(false);
             } // if proceed
             catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to update item");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

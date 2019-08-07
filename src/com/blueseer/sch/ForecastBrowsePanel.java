@@ -181,6 +181,7 @@ public class ForecastBrowsePanel extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Tran Detail");
             }
             bsmf.MainFrame.con.close();

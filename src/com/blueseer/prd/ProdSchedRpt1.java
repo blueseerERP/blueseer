@@ -372,6 +372,7 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem getting detail");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -407,7 +408,8 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
                 
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem printing tickets");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -444,6 +446,7 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem printing single ticket");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -946,6 +949,7 @@ try {
                 
                 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for plan_mstr");
             }
             con.close();

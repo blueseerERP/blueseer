@@ -178,6 +178,7 @@ public class LabelBrowsePanel extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Tran Detail");
             }
             bsmf.MainFrame.con.close();
@@ -570,6 +571,7 @@ try {
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Label Report");
             }
             con.close();

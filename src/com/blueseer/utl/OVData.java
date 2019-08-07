@@ -1,7 +1,9 @@
 /*
-   Copyright 2005-2018 Terry Evans Vaughn ("VCSCode").
+The MIT License (MIT)
 
-With regard to the Blueseer Software:
+Copyright (c) Terry Evans Vaughn "VCSCode"
+
+All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10,18 +12,16 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
  */
 
 package com.blueseer.utl;
@@ -17726,7 +17726,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               return mylist;
           }
           
-          public static ArrayList getGLBalanceRangeM3D(int fromyear, int toyear, String site) {
+          public static ArrayList getGLBalanceRangeXXX(int fromyear, int toyear, String site) {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   
@@ -17856,7 +17856,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               return mylist;
           }
           
-          public static ArrayList getGLBalanceRangeM3DByCC(int fromyear, int toyear, String site) {
+          public static ArrayList getGLBalanceRangeXXXByCC(int fromyear, int toyear, String site) {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   

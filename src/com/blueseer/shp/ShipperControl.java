@@ -43,6 +43,7 @@ public class ShipperControl extends javax.swing.JPanel {
            
             }
             catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve ship_ctrl");
             }
             bsmf.MainFrame.con.close();
@@ -159,6 +160,7 @@ public class ShipperControl extends javax.swing.JPanel {
                 }
               
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating ship_ctrl");
             }
             bsmf.MainFrame.con.close();

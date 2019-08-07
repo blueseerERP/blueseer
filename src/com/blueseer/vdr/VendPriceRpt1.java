@@ -258,6 +258,7 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select vpr_mstr info");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

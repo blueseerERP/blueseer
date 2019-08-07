@@ -467,6 +467,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Routing / Op Record Found");
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve wf_mstr");
             }
             bsmf.MainFrame.con.close();
@@ -633,6 +634,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                     initvars("");
                     }
                 } catch (SQLException s) {
+                    MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete Routing/Op Record");
             }
             bsmf.MainFrame.con.close();

@@ -109,7 +109,7 @@ String sqeemail = "";
                 }
 
                 if (i == 0) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "No Record Found");
+                    bsmf.MainFrame.show("No Record Found");
                     initvars("");
                 } else {
                     tbComplaintNbr.setEnabled(false);
@@ -126,7 +126,8 @@ String sqeemail = "";
                 }
               
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -675,7 +676,7 @@ String sqeemail = "";
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -696,7 +697,7 @@ String sqeemail = "";
                 int i = 0;
 
                 if (!BlueSeerUtils.isParsableToInt(tbQtyRejected.getText())) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Not Parseable");
+                    bsmf.MainFrame.show("Not Parseable");
                     proceed = false;
                 }
                 if (tbQtyRejected.getText().isEmpty()) {
@@ -710,7 +711,7 @@ String sqeemail = "";
                 if (createdate != null) {
                     m = p.matcher(createdate);
                     if (!m.find()) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Invalid Create date");
+                        bsmf.MainFrame.show("Invalid Create date");
                         proceed = false;
                     }
                 }
@@ -719,18 +720,18 @@ String sqeemail = "";
                 if (closedate != null && (!closedate.isEmpty())) {
                     m = p.matcher(closedate);
                     if (!m.find()) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Invalid Close date");
+                        bsmf.MainFrame.show("Invalid Close date");
                         proceed = false;
                     }
                 }
 
                 if (taComments.getText().length() > 400) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQE Comments cannot be greater than 400 chars");
+                        bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
                         proceed = false;
                 }
                 
                  if (taIssue.getText().length() > 400) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Issues cannot be greater than 400 chars");
+                        bsmf.MainFrame.show("Issues cannot be greater than 400 chars");
                         proceed = false;
                 }
                 
@@ -786,12 +787,13 @@ String sqeemail = "";
                         + null + "," + null + "," + null
                         + ")"
                         + ";");
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Added Quality Record");
+                    bsmf.MainFrame.show("Added Quality Record");
                     initvars("");
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -815,7 +817,7 @@ String sqeemail = "";
                 int i = 0;
 
                 if (!BlueSeerUtils.isParsableToInt(tbQtyRejected.getText())) {
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Not Parseable");
+                    bsmf.MainFrame.show("Not Parseable");
                     proceed = false;
                 }
                 if (tbQtyRejected.getText().isEmpty()) {
@@ -829,7 +831,7 @@ String sqeemail = "";
                 if (createdate != null) {
                     m = p.matcher(createdate);
                     if (!m.find()) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Invalid Create date");
+                        bsmf.MainFrame.show("Invalid Create date");
                         proceed = false;
                     }
                 }
@@ -838,19 +840,19 @@ String sqeemail = "";
                 if (closedate != null && (!closedate.isEmpty())) {
                     m = p.matcher(closedate);
                     if (!m.find()) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Invalid Close date");
+                        bsmf.MainFrame.show("Invalid Close date");
                         proceed = false;
                     }
                 }
                 
                 
                 if (taComments.getText().length() > 400) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQE Comments cannot be greater than 400 chars");
+                        bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
                         proceed = false;
                 }
                 
                  if (taIssue.getText().length() > 400) {
-                        JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Issues cannot be greater than 400 chars");
+                        bsmf.MainFrame.show("Issues cannot be greater than 400 chars");
                         proceed = false;
                 }
 
@@ -893,12 +895,13 @@ String sqeemail = "";
                         + "qual_desc_sqe_comt = " + "'" + taComments.getText().replace("'", "\\'") + "'"
                         + " where qual_id = " + "'" + tbComplaintNbr.getText().replace("'", "\\'").toString() + "'"
                         + " ;");
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Updated Quality Record");
+                    bsmf.MainFrame.show("Updated Quality Record");
 
                     initvars("");
                 } // if proceed
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -936,6 +939,7 @@ String sqeemail = "";
                     bsmf.MainFrame.show("No Address Record found for site " + site );
 
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
             bsmf.MainFrame.con.close();

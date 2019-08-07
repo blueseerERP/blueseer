@@ -88,7 +88,8 @@ public class OEEEntry extends javax.swing.JPanel {
                 }
                
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL Code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to select from eeo_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -592,6 +593,7 @@ public class OEEEntry extends javax.swing.JPanel {
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add EEO record");
             }
             bsmf.MainFrame.con.close();

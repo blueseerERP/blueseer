@@ -179,7 +179,8 @@ public class ItemMastRoutingRpt1 extends javax.swing.JPanel {
                     bsmf.MainFrame.show("No Routing or Unknown Item");
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to get itemr_cost");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

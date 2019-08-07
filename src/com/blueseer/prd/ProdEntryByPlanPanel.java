@@ -445,6 +445,7 @@ String sitecitystatezip = "";
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+                bsmf.MainFrame.show("problem with sql commit");
                  
             }
             con.close();
