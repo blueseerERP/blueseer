@@ -1,4 +1,5 @@
 build
 dist
 scripts/test
+nbproject/private
 scripts/.patch
