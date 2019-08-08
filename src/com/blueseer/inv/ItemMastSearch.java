@@ -41,6 +41,7 @@ import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.DTData;
 import java.util.Enumeration;
 import javax.swing.JButton;
 import javax.swing.UIManager;
@@ -304,7 +305,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 
                 // IF index = 0
                 if (ddreport.getSelectedIndex() == 0) {
-                tablereport.setModel(OVData.getItemInfoAll());
+                tablereport.setModel(DTData.getItemInfoAll());
                  //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
             //    tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -313,7 +314,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 
                 // IF index = 1
                 if (ddreport.getSelectedIndex() == 1) {
-                tablereport.setModel(OVData.getQOHvsSSAll());
+                tablereport.setModel(DTData.getQOHvsSSAll());
                 
                  //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
              //   tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());

@@ -31,6 +31,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.BufferedInputStream;
@@ -397,7 +398,7 @@ public class FOMaint extends javax.swing.JPanel {
     
     public void getQuotes(String nbr) {
         
-          tablequotes.setModel(OVData.getFreightOrderQuotesTable(nbr));
+          tablequotes.setModel(DTData.getFreightOrderQuotesTable(nbr));
           //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
                 tablequotes.getColumn("select").setCellRenderer(new ButtonRenderer()); 
                 tablequotes.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -408,7 +409,7 @@ public class FOMaint extends javax.swing.JPanel {
     
     public void getTenders(String nbr) {
         
-          tabletenders.setModel(OVData.getFreightOrderTendersTable(nbr));
+          tabletenders.setModel(DTData.getFreightOrderTendersTable(nbr));
           //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
                 tabletenders.getColumn("select").setCellRenderer(new ButtonRenderer()); 
                 tabletenders.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -419,7 +420,7 @@ public class FOMaint extends javax.swing.JPanel {
     
      public void getStatus(String nbr) {
         
-          tablestatus.setModel(OVData.getFreightOrderStatusTable(nbr));
+          tablestatus.setModel(DTData.getFreightOrderStatusTable(nbr));
           //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
                 tablestatus.getColumn("select").setCellRenderer(new ButtonRenderer()); 
                 tablestatus.getColumnModel().getColumn(0).setMaxWidth(100);

@@ -67,6 +67,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.DTData;
 import static com.blueseer.utl.ReportPanel.TableReport;
 
 /**
@@ -441,7 +442,7 @@ public class ForecastBrowsePanel extends javax.swing.JPanel {
             frompart = bsmf.MainFrame.lowchar;
         if (topart.isEmpty())
             topart = bsmf.MainFrame.hichar;
-       javax.swing.table.DefaultTableModel mymodel = OVData.getForecast13weeksByPart(frompart, topart, OVData.getForecastWeek(now));
+       javax.swing.table.DefaultTableModel mymodel = DTData.getForecast13weeksByPart(frompart, topart, OVData.getForecastWeek(now));
     
         tablelabel.setModel(mymodel);
         //TableReport.setName("forecast");

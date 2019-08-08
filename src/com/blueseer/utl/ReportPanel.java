@@ -111,151 +111,151 @@ public int[] mywidth;
          
          
         if (arg.equals("ReqPendingApproval")) {
-             mymodel = OVData.getReqByApprover(bsmf.MainFrame.userid);
+             mymodel = DTData.getReqByApprover(bsmf.MainFrame.userid);
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("ReqBrowseAll")) {
-             mymodel = OVData.getReqAll();
+             mymodel = DTData.getReqAll();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("ReqPendRpt1")) {
-             mymodel = OVData.getReqPending();
+             mymodel = DTData.getReqPending();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("SchemaBrowse")) {
-             mymodel = OVData.getDBSchema();
+             mymodel = DTData.getDBSchema();
         }
         if (arg.equals("UserBrowse")) {
-             mymodel = OVData.getUserAll();
+             mymodel = DTData.getUserAll();
         }
         if (arg.equals("ProdCodeBrowse")) {
-             mymodel = OVData.getProdCodeAll();
+             mymodel = DTData.getProdCodeAll();
         }
         if (arg.equals("QPRBrowse")) {
-             mymodel = OVData.getQPRAll();
+             mymodel = DTData.getQPRAll();
         }
         if (arg.equals("ShipperBrowse")) {
-             mymodel = OVData.getShipperAll();
+             mymodel = DTData.getShipperAll();
         }
         if (arg.equals("OpenOrdReport")) {
-             mymodel = OVData.getOrderOpen();
+             mymodel = DTData.getOrderOpen();
         }
         if (arg.equals("ReqApprovedBrowse")) {
-             mymodel = OVData.getReqApproved();
+             mymodel = DTData.getReqApproved();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("PlantDirectoryMenu")) {
-             mymodel = OVData.getPlantDirectory();
+             mymodel = DTData.getPlantDirectory();
         }
         if (arg.equals("NavCodeBrowse")) {
-             mymodel = OVData.getNavCodeList();
+             mymodel = DTData.getNavCodeList();
         }
         
         if (arg.equals("AcctBrowse")) {
-             mymodel = OVData.getGLAcctAll();
+             mymodel = DTData.getGLAcctAll();
         }
         if (arg.equals("ItemBrowse")) {
-             mymodel = OVData.getItemBrowse(); 
+             mymodel = DTData.getItemBrowse(); 
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
              TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("ItemRoutingRpt")) {
-             mymodel = OVData.getItemRoutingAll();
+             mymodel = DTData.getItemRoutingAll();
         }
        
         if (arg.equals("EmpBrowse")) {
-             mymodel = OVData.getEmployeeAll();
+             mymodel = DTData.getEmployeeAll();
         }
         if (arg.equals("GenCodeBrowse")) {
-             mymodel = OVData.getGenCodeAll();
+             mymodel = DTData.getGenCodeAll();
         }
         if (arg.equals("WorkCellBrowse")) {
-             mymodel = OVData.getWorkCellAll();
+             mymodel = DTData.getWorkCellAll();
         }
         if (arg.equals("RoutingBrowse")) {
-             mymodel = OVData.getRoutingsAll();
+             mymodel = DTData.getRoutingsAll();
         }
         if (arg.equals("LocationBrowse")) {
-             mymodel = OVData.getLocationsAll();
+             mymodel = DTData.getLocationsAll();
         }
         if (arg.equals("WareHouseBrowse")) {
-             mymodel = OVData.getWareHousesAll();
+             mymodel = DTData.getWareHousesAll();
         }
         if (arg.equals("DeptBrowse")) {
-             mymodel = OVData.getDeptsAll();
+             mymodel = DTData.getDeptsAll();
         }
         if (arg.equals("CustReport1")) {
-             mymodel = OVData.getCustAddrInfoAll();
+             mymodel = DTData.getCustAddrInfoAll();
         }
          if (arg.equals("MenuBrowse")) {
-             mymodel = OVData.getMenusAll();
+             mymodel = DTData.getMenusAll();
         }
         if (arg.equals("PanelBrowse")) {
-             mymodel = OVData.getPanelsAll();
+             mymodel = DTData.getPanelsAll();
         }
         if (arg.equals("TermsBrowse")) {
-             mymodel = OVData.getTermsAll();
+             mymodel = DTData.getTermsAll();
         }
         if (arg.equals("FreightBrowse")) {
-             mymodel = OVData.getFreightAll();
+             mymodel = DTData.getFreightAll();
         }
         if (arg.equals("CarrierBrowse")) {
-             mymodel = OVData.getCarrierAll();
+             mymodel = DTData.getCarrierAll();
         }
         if (arg.equals("TaxBrowse")) {
-             mymodel = OVData.getTaxAll();
+             mymodel = DTData.getTaxAll();
         }
          if (arg.equals("PayProfileBrowse")) {
-             mymodel = OVData.getPayProfileAll(); 
+             mymodel = DTData.getPayProfileAll(); 
         }
         if (arg.equals("EDITPMaintBrowse")) {
-             mymodel = OVData.getEDITPAll();
+             mymodel = DTData.getEDITPAll();
         }
         if (arg.equals("noStdCostBrowse")) {
-             mymodel = OVData.getNoStdCostItems();
+             mymodel = DTData.getNoStdCostItems();
         }
         if (arg.equals("BankBrowse")) {
-             mymodel = OVData.getBankAll();
+             mymodel = DTData.getBankAll();
         }
         if (arg.equals("UnPostedTransRpt")) {
-             mymodel = OVData.getUnPostedGLTrans();
+             mymodel = DTData.getUnPostedGLTrans();
               TableReport.setModel(mymodel);
               TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg.equals("CalendarBrowse")) {
-             mymodel = OVData.getGLCalendar();
+             mymodel = DTData.getGLCalendar();
         }
          if (arg.equals("SiteBrowse")) {
-             mymodel = OVData.getSitesAll();
+             mymodel = DTData.getSitesAll();
         }
          if (arg.equals("ForecastBrowse")) {
-             mymodel = OVData.getForecast13weeks(OVData.getForecastWeek(now));
+             mymodel = DTData.getForecast13weeks(OVData.getForecastWeek(now));
         }
         if (arg.equals("PrinterBrowse")) {
-             mymodel = OVData.getPrintersAll();
+             mymodel = DTData.getPrintersAll();
         } 
         if (arg.equals("CustEDIBrowse")) {
-             mymodel = OVData.getCustEDIAll();
+             mymodel = DTData.getCustEDIAll();
         } 
         if (arg.equals("LabelFileBrowse")) {
-             mymodel = OVData.getLabelFileAll();
+             mymodel = DTData.getLabelFileAll();
         } 
          if (arg.equals("ShiftBrowse")) {
-             mymodel = OVData.getShiftAll();
+             mymodel = DTData.getShiftAll();
         } 
           if (arg.equals("ClockCodeBrowse")) {
-             mymodel = OVData.getClockCodesAll();
+             mymodel = DTData.getClockCodesAll();
         } 
           if (arg.equals("ClockCode66Browse")) {
-             mymodel = OVData.getClockRecords66All();
+             mymodel = DTData.getClockRecords66All();
         } 
          if (arg.equals("ARPaymentBrowse")) {
-             mymodel = OVData.getARPaymentBrowse();
+             mymodel = DTData.getARPaymentBrowse();
         }  
          
         if (mymodel != null) { 
