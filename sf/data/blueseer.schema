@@ -1580,6 +1580,7 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_assy_date` date  DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',
+  `user_site` varchar(10)  DEFAULT '',
   `user_lname` varchar(30)  DEFAULT '',
   `user_fname` varchar(30)  DEFAULT '',
   `user_mname` varchar(30)  DEFAULT '',
@@ -1786,7 +1787,9 @@ CREATE TABLE `ov_ctrl` (
   `ov_jasper_directory` varchar(200) NOT NULL DEFAULT '',
   `ov_edi_directory` varchar(200) NOT NULL DEFAULT '',
   `ov_email_server` varchar(20) NOT NULL DEFAULT '',
-  `ov_email_from` varchar(80) NOT NULL DEFAULT ''
+  `ov_email_from` varchar(80) NOT NULL DEFAULT '',
+  `ov_smtpauthuser` varchar(50) NOT NULL DEFAULT '',
+  `ov_smtpauthpass` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `pay_mstr` (
   `py_id` int(8) NOT NULL,

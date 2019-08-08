@@ -26,12 +26,14 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -87,6 +89,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btuserbrowse.setEnabled(false);
         btlastnamebrowse.setEnabled(false);
         btnew.setEnabled(false);  
+         ddsite.setEnabled(false);
      }
      
      public void enableAll() {
@@ -105,6 +108,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btuserbrowse.setEnabled(true);
         btlastnamebrowse.setEnabled(false);
         btnew.setEnabled(true);
+        ddsite.setEnabled(true);
      }
      
      public void clearAll() {
@@ -117,6 +121,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
         tbemail.setText("");
         tbphone.setText("");
         tbcell.setText("");
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
      }
      
      public void initvars(String arg) {
@@ -162,6 +172,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
                         tbcell.setText(res.getString("user_cell"));
                         tarmks.setText(res.getString("user_rmks"));
                         tbpassword.setText(res.getString("user_passwd"));
+                        ddsite.setSelectedItem(res.getString("user_site"));
                        
                     }
 
@@ -248,6 +259,8 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btnew = new javax.swing.JButton();
         btuserbrowse = new javax.swing.JButton();
         btlastnamebrowse = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -319,6 +332,8 @@ public class UserMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setText("Default Site");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -361,15 +376,19 @@ public class UserMaintPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel138)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btdelete)
                                 .addGap(18, 18, 18)
                                 .addComponent(btUMEdit)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btUMAdd)))))
+                                .addComponent(btUMAdd))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel138)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddsite, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tbpassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -421,6 +440,10 @@ public class UserMaintPanel extends javax.swing.JPanel {
                         .addComponent(jLabel138))
                     .addComponent(tbpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -447,10 +470,11 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 if (proceed) {
                     String passwd = new String(tbpassword.getPassword());
                     st.executeUpdate("insert into user_mstr "
-                        + "(user_id, user_lname, user_fname,"
+                        + "(user_id, user_site, user_lname, user_fname,"
                         + "user_mname, user_email, user_phone, user_cell, user_rmks, user_passwd) "
                         + "values ( " + "'" + tbUMuserid.getText().toString() + "'" + ","
-                        + "'" + tbUMLastName.getText() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbUMLastName.getText() + "'" + ","        
                         + "'" + tbUMFirstName.getText() + "'" + ","
                         + null + ","
                         + "'" + tbemail.getText() + "'" + ","
@@ -499,15 +523,16 @@ public class UserMaintPanel extends javax.swing.JPanel {
                     }
 
                     if (i > 0) {
-                        String passwd = new String(tbpassword.getPassword());
+                        String passwd = new String(tbpassword.getPassword().toString().replace("'", "''"));
                         st.executeUpdate("update user_mstr set "
-                                + "user_lname = " + "'" + tbUMLastName.getText().toString() + "'" + ","
+                                + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                                + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
                                 + "user_fname = " + "'" + tbUMFirstName.getText().toString() + "'" + ","
                                 + "user_email = " + "'" + tbemail.getText().toString() + "'" + ","
                                 + "user_phone = " + "'" + tbphone.getText().toString() + "'" + ","
                                 + "user_cell = " + "'" + tbcell.getText().toString() + "'" + ","
                                 + "user_passwd = " + "'" + passwd + "'" + ","
-                                + "user_rmks = " + "'" + tarmks.getText().toString()  + "'"
+                                + "user_rmks = " + "'" + tarmks.getText().toString().replace("'", "''")  + "'"
                                 + " where user_id = " + "'" + tbUMuserid.getText().toString() + "'"
                                 + ";");
 
@@ -579,10 +604,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btlastnamebrowse;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btuserbrowse;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel138;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;

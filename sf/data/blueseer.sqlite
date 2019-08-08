@@ -1982,6 +1982,7 @@ CREATE TABLE "tran_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "user_mstr" (
   "user_id" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "user_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "user_lname" varchar(30) COLLATE NOCASE DEFAULT '',
   "user_fname" varchar(30) COLLATE NOCASE DEFAULT '',
   "user_mname" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -2180,7 +2181,9 @@ CREATE TABLE "ov_ctrl" (
   "ov_jasper_directory" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "ov_edi_directory" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "ov_email_server" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "ov_email_from" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+  "ov_email_from" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ov_smtpauthuser" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ov_smtpauthpass" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "counter" (
   "counter_name" varchar(30) NOT NULL COLLATE NOCASE,

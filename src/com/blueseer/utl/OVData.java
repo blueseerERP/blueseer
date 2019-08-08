@@ -6006,8 +6006,12 @@ public class OVData {
         
     }
         
-          public static String getEmailFrom() {
-         String myreturn = "";
+          
+           public static String[] getSMTPCredentials() {
+         String[] x = new String[4];
+         for (int i = 0; i < x.length; i++) {
+             x[i] = "";
+         }
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -6015,9 +6019,12 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select ov_email_from from ov_ctrl;" );
+                res = st.executeQuery("select * from ov_ctrl;" );
                while (res.next()) {
-                myreturn = res.getString("ov_email_from");                    
+                x[0] = res.getString("ov_email_server");   
+                x[1] = res.getString("ov_email_from"); 
+                x[2] = res.getString("ov_smtpauthuser"); 
+                x[3] = res.getString("ov_smtpauthpass"); 
                 }
                
            }
@@ -6029,36 +6036,11 @@ public class OVData {
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myreturn;
+        return x;
         
     }
           
-           public static String getEmailServerIP() {
-         String myreturn = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select ov_email_server from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_email_server");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
+         
           
             public static String getSystemImageDirectory() {
          String myreturn = "";
@@ -18706,14 +18688,13 @@ public class OVData {
     
     public static MimeBodyPart attachmentPart;
 
-     private static final String SMTP_HOST_NAME = "smtp.vcscode.com";
-    private static final String SMTP_AUTH_USER = "";
-    private static final String SMTP_AUTH_PWD  = "";
+    
     
      public static class SMTPAuthenticator extends javax.mail.Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
-           String username = SMTP_AUTH_USER;
-           String password = SMTP_AUTH_PWD;
+           String[] smtpcreds = getSMTPCredentials(); 
+           String username = smtpcreds[2];
+           String password = smtpcreds[3];
            return new PasswordAuthentication(username, password);
         }
     }
@@ -18722,8 +18703,9 @@ public class OVData {
 
   // Strings that contain from, to, subject, body and file path to the attachment
 
-  String from = getEmailFrom();
-  String emailserver = getEmailServerIP();
+  String[] smtpcreds = getSMTPCredentials();
+  String from = smtpcreds[1];
+  String emailserver = smtpcreds[0];
   
   
   if (emailserver.isEmpty() || from.isEmpty()) {
@@ -18805,8 +18787,9 @@ MainFrame.bslog(e);
     public static void sendEmailByID(String to, String subject, String body, String filename) {
 	 
 	
-         String from = getEmailFrom();
-         String emailserver = getEmailServerIP();
+          String[] smtpcreds = getSMTPCredentials();
+          String from = smtpcreds[1];
+          String emailserver = smtpcreds[0];
   
           if (emailserver.isEmpty() || from.isEmpty()) {
               return;
@@ -18829,7 +18812,7 @@ MainFrame.bslog(e);
                 }
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get User Email");
+                MainFrame.bslog(s);
             }
             con.close();
         }

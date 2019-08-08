@@ -74,6 +74,8 @@ public class SystemControl extends javax.swing.JPanel {
                         tbbcolor.setText(res.getString("ov_bcolor"));
                         tbemailserver.setText(res.getString("ov_email_server"));
                         tbemailfrom.setText(res.getString("ov_email_from"));
+                        tbsmtpuser.setText(res.getString("ov_smtpauthuser"));
+                        tbsmtppass.setText(res.getString("ov_smtpauthpass"));
                         tbimagedir.setText(res.getString("ov_image_directory"));
                         tbtempdir.setText(res.getString("ov_temp_directory"));
                         tblabeldir.setText(res.getString("ov_label_directory"));
@@ -160,6 +162,10 @@ public class SystemControl extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        tbsmtpuser = new javax.swing.JTextField();
+        tbsmtppass = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -232,6 +238,10 @@ public class SystemControl extends javax.swing.JPanel {
 
         jLabel12.setText("EDI Dir");
 
+        jLabel13.setText("SMTP Auth User");
+
+        jLabel14.setText("SMTP Auth Pass");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -241,11 +251,13 @@ public class SystemControl extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel8)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
                     .addComponent(jLabel11)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbedidir, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
@@ -254,20 +266,34 @@ public class SystemControl extends javax.swing.JPanel {
                     .addComponent(tbtempdir)
                     .addComponent(tbimagedir)
                     .addComponent(tbemailserver)
-                    .addComponent(tbemailfrom))
+                    .addComponent(tbemailfrom)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbsmtppass, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(tbsmtpuser))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbemailserver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbemailserver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbemailfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbsmtpuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbemailfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(tbsmtppass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbimagedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,7 +353,7 @@ public class SystemControl extends javax.swing.JPanel {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(86, 86, 86)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,7 +385,7 @@ public class SystemControl extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addContainerGap())
         );
@@ -419,6 +445,8 @@ public class SystemControl extends javax.swing.JPanel {
                             "'" + tbedidir.getText() + "'" +  "," + "," +
                             "'" + tbemailserver.getText() + "'" +  "," + "," +
                             "'" + tbemailfrom.getText() + "'" +  "," + 
+                            "'" + tbsmtpuser.getText() + "'" +  "," + 
+                            "'" + tbsmtppass.getText() + "'" +        
                             ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
@@ -437,7 +465,9 @@ public class SystemControl extends javax.swing.JPanel {
                             " ov_jasper_directory = " + "'" + tbjasperdir.getText() + "'" + "," +
                             " ov_edi_directory = " + "'" + tbedidir.getText() + "'" + "," +
                             " ov_email_server = " + "'" + tbemailserver.getText() + "'" + "," +
-                            " ov_email_from = " + "'" + tbemailfrom.getText() + "'" +   
+                            " ov_email_from = " + "'" + tbemailfrom.getText() + "'" + "," +
+                            " ov_smtpauthuser = " + "'" + tbsmtpuser.getText() + "'" + "," +
+                            " ov_smtpauthpass = " + "'" + tbsmtppass.getText() + "'" +        
                             ";");   
                    
                     bsmf.MainFrame.show("Updated Defaults");
@@ -469,6 +499,8 @@ public class SystemControl extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -493,6 +525,8 @@ public class SystemControl extends javax.swing.JPanel {
     private javax.swing.JTextField tbjasperdir;
     private javax.swing.JTextField tblabeldir;
     private javax.swing.JTextField tbrcolor;
+    private javax.swing.JTextField tbsmtppass;
+    private javax.swing.JTextField tbsmtpuser;
     private javax.swing.JTextField tbtempdir;
     private javax.swing.JTextField tbversion;
     // End of variables declaration//GEN-END:variables
