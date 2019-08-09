@@ -29,6 +29,13 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/utl/Browse.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/fgl/PayRollMaint.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/tca/ClockDetailRptPanel.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/tca/ClockUpdatePanel.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/utl/DTData.java</file>
+            <file>file:/C:/bs/blueseer/src/com/blueseer/ord/OrderReport1.java</file>
+        </group>
     </open-files>
 </project-private>

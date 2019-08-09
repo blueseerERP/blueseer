@@ -134,7 +134,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbmtlcost.setText("");
        
        
-       
+       isLoad = true;
        ddprodcode.removeAllItems();
        ddsite.removeAllItems();
        dduom.removeAllItems();
@@ -142,6 +142,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        ddloc.removeAllItems();
        ddwh.removeAllItems();
        ddtype.removeAllItems();
+       
+       
        ArrayList<String[]> mylist = OVData.getItemMaintInit();
        for (String[] code : mylist) {
             if (code[0].equals("prodline"))
@@ -175,7 +177,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        
         ddsite.setSelectedItem(OVData.getDefaultSite());
         ddcode.setSelectedIndex(0);
-        
+        isLoad = false;
        
     }
     public void enableAll() {
@@ -947,11 +949,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jLabel22.setText("PartNumber");
 
         dduom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EA", "FT" }));
-        dduom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dduomActionPerformed(evt);
-            }
-        });
 
         jLabel37.setText("Class Code");
 
@@ -2112,10 +2109,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_bteditActionPerformed
 
-    private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dduomActionPerformed
-
     private void btcurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcurrentActionPerformed
        getcurrentcost(partnumber.getText());
     }//GEN-LAST:event_btcurrentActionPerformed
@@ -2147,7 +2140,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
-         if (ddwh.getSelectedItem() != null) {
+         if (ddwh.getSelectedItem() != null && ! isLoad) {
              ddloc.removeAllItems();
              ArrayList<String> loc = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
              for (String lc : loc) {

@@ -453,6 +453,71 @@ public class OVData {
         }  
        }
        
+       public static boolean copySite(String fromsite, String tosite) {
+         boolean r = true;
+           try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                boolean canadd = false;
+                ArrayList<String> perms = new ArrayList();
+                
+                
+                if (tosite.compareTo(fromsite) == 0) {
+                    bsmf.MainFrame.show("Cannot overwrite site with same site");
+                    proceed = false;
+                }
+
+                if (proceed) {
+                 i = 0;
+                 
+                 // first check that it does not already exist
+                 res = st.executeQuery("SELECT * FROM  site_mstr where site_site = " + "'" + tosite + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                  if (i > 0) {
+                      bsmf.MainFrame.show("Site already exists");
+                      return r = false;
+                  }  
+                  res = st.executeQuery("SELECT * FROM  site_mstr where site_site = " + "'" + fromsite + "'" + ";");
+                    while (res.next()) {
+                        st.executeUpdate("insert into site_mstr (site_site, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper ) values ( " + 
+                                     "'" + tosite + "'" + "," +
+                                    "'" + res.getString("site_logo") + "'" + "," +
+                                    "'" + res.getString("site_iv_jasper") + "'" + "," +
+                                    "'" +  res.getString("site_sh_jasper") + "'" + "," +
+                                    "'" +  res.getString("site_po_jasper") + "'" + "," +
+                                    "'" +  res.getString("site_or_jasper") + "'" + "," +
+                                    "'" +  res.getString("site_pos_jasper") + "'" +        
+                                ");"
+                                );
+                    }
+                    
+                  
+                 /* st.executeUpdate("insert into site_mstr (site_site, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper ) " +
+                          " values ( select " + "'" + tosite + "'" + ", f.site_logo, f.site_iv_jasper, f.site_sh_jasper, f.site_po_jasper, f.site_or_jasper, f.site_pos_jasper " +
+                          " from site_mstr f where f.site_site = " + "'" + fromsite + "'" + ")"  );
+                  */
+                }  // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                r = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            r = false;
+        }  
+           return r; 
+       }
+       
+       
         public static String addMenuToUser(String menu, String thisuser) {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {

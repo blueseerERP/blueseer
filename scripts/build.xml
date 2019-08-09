@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="blueseer" default="build" basedir=".">
+<project name="blueseer" default="main" basedir=".">
     <!-- Sets variables which can later be used. -->
     <!-- The value of a property is accessed via ${} -->
     <property name="src.dir" location="../src" />
@@ -95,7 +95,7 @@
 </target>
 
 
-    <target name="build" depends="compile, jar">
+    <target name="main" depends="compile, jar">
         <description>Main target</description>
     </target>
 

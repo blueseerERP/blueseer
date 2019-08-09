@@ -86,6 +86,9 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
     }
 
     public void initvars(String arg) {
+        
+        cbpaid.setSelected(false);
+        cbunpaid.setSelected(true);
          mymodel.setRowCount(0);
          tablerecs.setModel(mymodel);
          java.util.Date now = new java.util.Date();
@@ -128,13 +131,15 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablerecs = new javax.swing.JTable();
-        btexport = new javax.swing.JButton();
+        btcsv = new javax.swing.JButton();
         labelcount = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         labelhours = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         ddempfrom = new javax.swing.JComboBox();
         ddempto = new javax.swing.JComboBox();
+        cbunpaid = new javax.swing.JCheckBox();
+        cbpaid = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -176,10 +181,10 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablerecs);
 
-        btexport.setText("Export");
-        btexport.addActionListener(new java.awt.event.ActionListener() {
+        btcsv.setText("CSV");
+        btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btexportActionPerformed(evt);
+                btcsvActionPerformed(evt);
             }
         });
 
@@ -190,6 +195,10 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
         labelhours.setText("0");
 
         jLabel8.setText("Hours");
+
+        cbunpaid.setText("UnPaid");
+
+        cbpaid.setText("Paid");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -212,17 +221,21 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ddempfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddempto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(225, 225, 225)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btexport)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbunpaid)
+                        .addGap(114, 114, 114)
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbpaid)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelhours, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -236,20 +249,22 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
-                        .addComponent(btexport))
+                        .addComponent(btcsv))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
-                                .addComponent(ddempfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ddempfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbunpaid))
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
-                            .addComponent(ddempto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ddempto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbpaid)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel7)
@@ -259,7 +274,7 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
                             .addComponent(jLabel8)
                             .addComponent(labelhours, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(32, 32, 32)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -310,9 +325,11 @@ try {
         while (res.next()) {
             i++;
            
+            if (! cbpaid.isSelected() && res.getString("ispaid").equals("1")) { continue;}
+            if (! cbunpaid.isSelected() && res.getString("ispaid").equals("0")) { continue;}
+              
             
             hours = hours + res.getDouble("t.tothrs");
-            
             mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("t.recid"),
                                             res.getString("t.emp_nbr"),
                                             res.getString("e.emp_lname"),
@@ -347,81 +364,10 @@ try {
        
     }//GEN-LAST:event_btRunActionPerformed
 
-    private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
-       FileDialog fDialog;
-        fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
-        fDialog.setVisible(true);
-        //fDialog.setFile("data.csv");
-        String path = fDialog.getDirectory() + fDialog.getFile();
-        File f = new File(path);
-        BufferedWriter output;
-        
-         int i = 0;
-                String frompart = "";
-                String topart = "";
-                String fromcode = "";
-                String tocode = "";
-                
-            
-                   
-           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            output = new BufferedWriter(new FileWriter(f));
-      
-             
-                
-            String myheader = "RecID, EmpID, LastName, FirstName, InDate, InTime, InTmAdj, OutDate, OutTime, OutTmAdj, tothrs";
-           
-                 output.write(myheader + '\n');
-                 
-        try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-              
- res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
-                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
-                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
-                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
-                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
-                              " where t.emp_nbr >= " + "'" + ddempfrom.getSelectedItem().toString() + "'" +
-                              "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
-                              "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                               "and t.indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                               "and e.emp_termdate is " + null + " order by e.emp_nbr, t.indate" +
-                               ";" );
-
-                while (res.next()) {
-                    String newstring = res.getString("t.recid") + "," + res.getString("t.emp_nbr").replace(",","") + "," + 
-                            res.getString("e.emp_lname") + "," + res.getString("e.emp_fname") + "," + res.getString("t.indate") + "," + 
-                            res.getString("t.intime") + "," + res.getString("t.intime_adu") + "," + 
-                            res.getString("t.outdate") + "," + res.getString("t.outtime") + "," +
-                            res.getString("t.outtime_adj") + "," + res.getString("t.tothrs");
-                            
-                    output.write(newstring + '\n');
-                }
-             bsmf.MainFrame.show("file has been created");
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot extract timeclock data");
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        
-        
-        output.close();
-        
-        
-        
-        } catch (IOException ex) {
-            Logger.getLogger(bsmf.MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btexportActionPerformed
+    private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
+      if (tablerecs != null && mymodel.getRowCount() > 0)
+        OVData.exportCSV(tablerecs);
+    }//GEN-LAST:event_btcsvActionPerformed
 
     private void tablerecsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablerecsMouseClicked
         int row = tablerecs.rowAtPoint(evt.getPoint());
@@ -435,7 +381,9 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton btexport;
+    private javax.swing.JButton btcsv;
+    private javax.swing.JCheckBox cbpaid;
+    private javax.swing.JCheckBox cbunpaid;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
     private javax.swing.JComboBox ddempfrom;
