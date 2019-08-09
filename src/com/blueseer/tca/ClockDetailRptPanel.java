@@ -66,7 +66,7 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
  
          javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
             new String [] {
-            "Select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
+            "Select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs", "ispaid", "checknbr"
             })
                        {
                       @Override  
@@ -298,7 +298,7 @@ try {
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
                            " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
                            " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
-                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
+                           " t.outtime_adj as 't.outtime_adj', ispaid, checknbr FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
                               " where t.emp_nbr >= " + "'" + ddempfrom.getSelectedItem().toString() + "'" +
                               "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
                               "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
@@ -325,7 +325,9 @@ try {
                                             res.getString("t.outdate"),
                                             res.getString("t.outtime"),
                                             res.getString("t.outtime_adj"),
-                                            res.getString("t.tothrs")
+                                            res.getString("t.tothrs"),
+                                            res.getString("ispaid"),
+                                            res.getString("checknbr")
                                             } );
             
        

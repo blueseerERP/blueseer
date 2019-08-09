@@ -327,9 +327,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "''" + ","  // profile  
                                 + "''" + ","  // profileline          
                                 + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
-                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 6).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 7).toString() + "'" 
+                                + "'" + modelearnings.getValueAt(e, 3).toString() + "'" + ","
+                                + "'" + modelearnings.getValueAt(e, 4).toString() + "'" + ","
+                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" 
                                 + ")"
                                 + ";");
                               }
@@ -446,7 +446,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                 while (res.next()) {
                     codedesc = res.getString("t.code_id");
                     if (codedesc.equals("00") || codedesc.equals("77")) {
-                        codedesc = "Compensation";
+                        codedesc = "Compensation (" + codedesc + "):";
                     } else {
                         codedesc = res.getString("clc_desc");
                     }
