@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.checkperms;
 import com.blueseer.utl.OVData;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -51,8 +52,11 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -60,6 +64,20 @@ import static bsmf.MainFrame.user;
  */
 public class ClockDetailRptPanel extends javax.swing.JPanel {
  
+         javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
+            new String [] {
+            "Select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
+            })
+                       {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+    
+    
     /**
      * Creates new form ScrapReportPanel
      */
@@ -68,11 +86,12 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
     }
 
     public void initvars(String arg) {
+         mymodel.setRowCount(0);
+         tablerecs.setModel(mymodel);
          java.util.Date now = new java.util.Date();
          Calendar calfrom = Calendar.getInstance();
          calfrom.add(Calendar.DATE, -7);
          dcFrom.setDate(calfrom.getTime());
-         
          dcTo.setDate(now);
          
         ddempfrom.removeAllItems();
@@ -82,6 +101,8 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
             ddempfrom.addItem(myemp.get(i));
             ddempto.addItem(myemp.get(i));
         }
+        if (ddempto.getItemCount() > 0)
+        ddempto.setSelectedIndex(ddempto.getItemCount() - 1);
          
          labelcount.setText(""); 
          labelhours.setText("");
@@ -148,6 +169,11 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablerecs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablerecsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablerecs);
 
         btexport.setText("Export");
@@ -250,6 +276,7 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
+        mymodel.setRowCount(0);
     
 try {
             Class.forName(driver).newInstance();
@@ -258,13 +285,9 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-               javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {
-
-            },
-            new String [] {
-            "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
-            });
-                tablerecs.setModel(mymodel);
+          
+                       
+                
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
@@ -280,7 +303,7 @@ try {
                               "and t.emp_nbr <= " + "'" + ddempto.getSelectedItem().toString() + "'" +
                               "and t.indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                "and t.indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                               "and e.emp_termdate = '' order by e.emp_nbr, t.indate" +
+                               " order by e.emp_nbr, t.indate" +
                                ";" );
            
 
@@ -290,7 +313,7 @@ try {
             
             hours = hours + res.getDouble("t.tothrs");
             
-            mymodel.addRow(new Object []{res.getString("t.recid"),
+            mymodel.addRow(new Object []{BlueSeerUtils.clickflag, res.getString("t.recid"),
                                             res.getString("t.emp_nbr"),
                                             res.getString("e.emp_lname"),
                                             res.getString("e.emp_fname"),
@@ -397,6 +420,15 @@ try {
             Logger.getLogger(bsmf.MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btexportActionPerformed
+
+    private void tablerecsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablerecsMouseClicked
+        int row = tablerecs.rowAtPoint(evt.getPoint());
+        int col = tablerecs.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+              if (! checkperms("TimeClockAdjust")) { return; }
+              reinitpanels("TimeClockAdjust", true, tablerecs.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_tablerecsMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
