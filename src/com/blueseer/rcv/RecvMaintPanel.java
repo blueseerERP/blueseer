@@ -26,8 +26,12 @@ SOFTWARE.
 package com.blueseer.rcv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeer;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.DBTask;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,76 +39,98 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ToolTipManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import static com.blueseer.utl.OVData.TRHistIssSales;
-import static com.blueseer.utl.OVData.UpdateInventoryFromShipper;
-import static com.blueseer.utl.OVData.glEntryFromShipper;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 
 /**
  *
  * @author vaughnte
  */
-public class RecvMaintPanel extends javax.swing.JPanel {
+public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
+    // global variable declarations
                 String terms = "";
                 String apacct = "";
                 String apcc = "";
+                
+    // global datatablemodel declarations            
+                javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+            });
     
-    /**
-     * Creates new form ShipMaintPanel
-     */
+   
     public RecvMaintPanel() {
         initComponents();
-      
-        
-       
-       
     }
    
+    
+
+    // interface functions implemented
+    public void executeTask(String x, String y) {
+       class Task extends SwingWorker<String[], Void> {
+        /*
+         * Executed in background thread.
+         */
+          String type = "";
+          String key = "";
+          
+          public Task(String type, String key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "edit":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars("");  
+           }  else {
+             initvars(key);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+    }
     
     public void disableAll() {
         cbautovoucher.setEnabled(false);
@@ -255,59 +281,19 @@ public class RecvMaintPanel extends javax.swing.JPanel {
     public void initvars(String arg) {
        
         clearAll();
-        
         disableAll();
         
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
         if (! arg.isEmpty()) {
-            getreceiverinfo(arg);
+            getRecord(arg);
         }
         
     }
     
-    
-    javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-            });
-    
-      
-      public void setvendorvariables(String vendor) {
-        
-        try {
-     
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
-            int d = 0;
-            String uniqpo = null;
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-
-                res = st.executeQuery("select vd_terms, poc_rcpt_acct, poc_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
-                while (res.next()) {
-                    i++;
-                   apacct = res.getString("poc_rcpt_acct");
-                   apcc = res.getString("poc_rcpt_cc");
-                   terms = res.getString("vd_terms");
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-      
-      public void getreceiverinfo(String myreceiver) {
-       
+    public String[] getRecord(String myreceiver) {
+       String[] m = new String[2];
         try {
      
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -356,79 +342,236 @@ public class RecvMaintPanel extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve Receiver");
+                m = new String[]{"0", "Cannot retrieve receiver"};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return m;
+    }
+
+    public String[] addRecord(String x) {
+     String[] m = new String[2];
+         try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                boolean error = false;
+                String receiver = tbreceiver.getText().toString();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+
+                
+                javax.swing.table.DefaultTableModel tempmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                new String[]{
+                "RecvID", "RecvLine", "Part", "Qty", "Price"
+                });
+                JTable temptable = new JTable(tempmodel); 
+                
+                boolean proceed = validateInput("addRecord");
+                
+                if (proceed) {
+                    setvendorvariables(ddvend.getSelectedItem().toString());
+                    st.executeUpdate("insert into recv_mstr "
+                        + "(rv_id, rv_vend, "
+                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
+                        + " values ( " + "'" + tbreceiver.getText().toString() + "'" + ","
+                        + "'" + ddvend.getSelectedItem() + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + tbpackingslip.getText() + "'" + ","
+                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'"
+                        + ")"
+                        + ";");
+           
+           
+               
+           
+                 //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                    for (int j = 0; j < rvdet.getRowCount(); j++) {
+                        st.executeUpdate("insert into recv_det "
+                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
+                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
+                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
+                            + " values ( " + "'" + tbreceiver.getText() + "'" + ","
+                            + "'" + String.valueOf(j + 1) + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbpackingslip.getText() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
+                            + ")"
+                            + ";");
+                        
+                        tempmodel.addRow(new Object[] {tbreceiver.getText(), String.valueOf(j+ 1),
+                           rvdet.getValueAt(j, 0).toString(),
+                           rvdet.getValueAt(j, 3).toString(),
+                           rvdet.getValueAt(j, 6).toString()
+                        });
+                        
+                    } 
+                    
+                    
+                    /* update PO from receiver */
+                    OVData.updatePOFromReceiver(tbreceiver.getText());
+                    
+                    /* create tran_mstr records */
+                        if (! error)
+                        error = OVData.TRHistRctPurch(receiver, dcdate.getDate());
+                       
+                        /* adjust inventory */
+                        if (! error)
+                        error = OVData.UpdateInventoryFromReceiver(receiver);
+                        
+                        /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromReceiver(receiver, dcdate.getDate());
+                       
+                
+                  if (! error) {        
+                  m = new String[] {"0","receiver has been added"};
+                   
+                       /* create auto-voucher from temptable if autovoucher is on */
+                    if (cbautovoucher.isSelected()) {
+                    String messg = OVData.CreateVoucher(temptable, ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
+                     if (! messg.isEmpty()) {
+                         m = new String[] {"1","unable to add voucher"};
+                     } else {
+                         m = new String[] {"0","vouchering complete"};
+                     }
+                    }
+                  
+                  
+                  initvars("");
+                  } else {
+                  m = new String[] {"1","unable to add receiver"};
+                  }
+                    
+               
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[] {"1","unable to add receiver"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+     return m;
+    }
+    
+    public String[] updateRecord(String x) {
+     String[] m = new String[2];
+     return m;
+    }
+    
+    public String[] deleteRecord(String x) {
+     String[] m = new String[2];
+     return m;
+    }
+    
+    public boolean validateInput(String e) {
+        
+        boolean x = true;
+          if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+                    x = false;
+                    bsmf.MainFrame.show("Must Have a Vendor");
+                    return x;
+                }
+                
+                if (ddpo.getSelectedItem() == null || ddpo.getSelectedItem().toString().isEmpty()) {
+                    x = false;
+                    bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
+                    return x;
+                }
+                
+                if (tbpackingslip.getText().isEmpty()) {
+                    x = false;
+                    bsmf.MainFrame.show("Must enter a packing slip number");
+                    tbpackingslip.requestFocus();
+                    return x;
+                }
+                
+                if (! e.equals("addItem")) {
+                    if (rvdet.getRowCount() <= 0) {
+                        x = false;
+                        bsmf.MainFrame.show("There are no rows received");
+                        return x;
+                    }
+                }
+                
+                if (e.equals("addItem")) {
+                    if (tbqty.getText().isEmpty()) {
+                        x = false;
+                        bsmf.MainFrame.show("Must enter a quantity");
+                        tbqty.requestFocus();
+                        return x;
+                    }
+                }
+               
+                
+                if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
+                    x = false;
+                    bsmf.MainFrame.show("Period is closed");
+                    return x;
+                }
+        return x;
+    }
+    
+
+    // additional functions
+    public void setvendorvariables(String vendor) {
+        
+        try {
+     
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            int i = 0;
+            int d = 0;
+            String uniqpo = null;
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+
+                res = st.executeQuery("select vd_terms, poc_rcpt_acct, poc_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
+                while (res.next()) {
+                    i++;
+                   apacct = res.getString("poc_rcpt_acct");
+                   apcc = res.getString("poc_rcpt_cc");
+                   terms = res.getString("vd_terms");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql code does not execute");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
-
- public void setstatus(javax.swing.JTable mytable) throws SQLException {
-            
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
-             ResultSet res = null;
-             Statement st = bsmf.MainFrame.con.createStatement();
-             String sonbr = null;
-             int qty = 0;
-             boolean iscomplete = true;
-             String sodstatus = "";
-             
-        // find the sod record for each line / So pair
-        for (int j = 0; j < mytable.getRowCount(); j++) {
-               //    mytable.getModel().getValueAt(j, 0);  
-             i = 0;
-             String thispart = mytable.getModel().getValueAt(j, 0).toString();
-             String thisorder = mytable.getModel().getValueAt(j, 1).toString();
-             String thispo = mytable.getModel().getValueAt(j, 2).toString();
-             int thisrecvqty = Integer.valueOf(mytable.getModel().getValueAt(j, 3).toString());
-             String thislinestatus = "";
-             int thisrecvpedtotal = 0;
-            
-             try {
-            
-                 /* ok....let's get the current state of this line item on the sales order */
-                 res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
-                                     " AND sod_part = " + "'" + thispart + "'" + ";");
-               while (res.next()) {     
-                 i++;
-                   if (Integer.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Integer.valueOf(res.getString("sod_ord_qty")) ) {
-                   thislinestatus = "Partial"; 
-                   }
-                   if (Integer.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) >= Integer.valueOf(res.getString("sod_ord_qty")) ) {
-                   thislinestatus = "Shipped"; 
-                   }
-                   thisrecvpedtotal = thisrecvqty + Integer.valueOf(res.getString("sod_recvped_qty"));
-                   
-                }
-                 
-                 
-                 
-                 /* ok...now lets update the status of this sod_det line item */
-                 st.executeUpdate("update sod_det set sod_recvped_qty = " + "'" + thisrecvpedtotal + "'" + 
-                                  "," + " sod_status = " + "'" + thislinestatus + "'" +
-                                  " where sod_nbr = " + "'" + thisorder + "'" + 
-                                  " and sod_part = " + "'" + thispart + "'" + 
-                                  " and sod_po = " + "'" + thispo + "'" +
-                     ";");
-                 
-                 
-                 
-             } catch (SQLException s) {
-                 MainFrame.bslog(s);
-             bsmf.MainFrame.show("Unable to update sod_det");
-             }
-              // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
-              
-                
-            //if (iscomplete) {
-            //    st.executeUpdate("update so_mstr set so_status = 'Shipped' where so_nbr = " + "'" + mytable.getModel().getValueAt(j, 1).toString() + "'" );
-           // }
-            
-         }
-    }
-    /**
+      
+     
+    
+    
+ /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -580,6 +723,12 @@ public class RecvMaintPanel extends javax.swing.JPanel {
         jLabel34.setText("Qty Ordered");
 
         jLabel28.setText("OrdDate");
+
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
 
         jLabel29.setText("Qty");
 
@@ -839,199 +988,24 @@ public class RecvMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-        
-        
-        Pattern p = Pattern.compile("^[1-9]\\d*$");
-                Matcher m = p.matcher(tbqty.getText());
-                if (!m.find() || tbqty.getText() == null) {
-                    bsmf.MainFrame.show("Invalid Qty");
-                    return;
-                }
-                if (tbpackingslip.getText().isEmpty()) {
-                    bsmf.MainFrame.show("Must enter a packing slip number");
-                    return;
-                }
-                 if (ddvend.getSelectedItem() == null) {
-                    bsmf.MainFrame.show("Must Have a Vendor");
-                    return;
-                }
-                
-                if (ddpo.getSelectedItem() == null) {
-                    bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
-                    return;
-                }
+          
+          boolean proceed = validateInput("addItem"); 
+      
        //   "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, cost
-       
-            myrecvdetmodel.addRow(new Object[]{ddpart.getSelectedItem(), ddpo.getSelectedItem(), tbline.getText(), tbqty.getText(), tbprice.getText(), "0", tbprice.getText(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), tbserial.getText(), tblot.getText(), tbcost.getText()});
+            if (proceed)
+            myrecvdetmodel.addRow(new Object[]{ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
+                tbline.getText(), tbqty.getText(), tbprice.getText(), "0", 
+                tbprice.getText(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), 
+                tbserial.getText(), tblot.getText(), tbcost.getText()});
        
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                boolean error = false;
-                String receiver = tbreceiver.getText().toString();
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-                
-                javax.swing.table.DefaultTableModel tempmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                new String[]{
-                "RecvID", "RecvLine", "Part", "Qty", "Price"
-                });
-                JTable temptable = new JTable(tempmodel); 
-                
-                
-                setvendorvariables(ddvend.getSelectedItem().toString());
-                
-                if (ddvend.getSelectedItem() == null) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must Have a Vendor");
-                    return;
-                }
-                
-                if (ddpo.getSelectedItem() == null) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
-                    return;
-                }
-                
-                if (tbpackingslip.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a packing slip number");
-                    return;
-                }
-                
-                if (rvdet.getRowCount() <= 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show("There are no rows received");
-                    return;
-                }
-                
-               
-                
-                if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Period is closed");
-                    return;
-                }
-                
-                
-                if (proceed) {
-                    
-                    st.executeUpdate("insert into recv_mstr "
-                        + "(rv_id, rv_vend, "
-                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
-                        + " values ( " + "'" + tbreceiver.getText().toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + tbpackingslip.getText() + "'" + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'"
-                        + ")"
-                        + ";");
-           
-           
-               
-           
-                 //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-                    for (int j = 0; j < rvdet.getRowCount(); j++) {
-                        st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + tbreceiver.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbpackingslip.getText() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                        
-                        tempmodel.addRow(new Object[] {tbreceiver.getText(), String.valueOf(j+ 1),
-                           rvdet.getValueAt(j, 0).toString(),
-                           rvdet.getValueAt(j, 3).toString(),
-                           rvdet.getValueAt(j, 6).toString()
-                        });
-                        
-                    } 
-                    
-                    
-                   
-                    
-                    /* update PO from receiver */
-                    OVData.updatePOFromReceiver(tbreceiver.getText());
-                    
-                    /* create tran_mstr records */
-                        if (! error)
-                        error = OVData.TRHistRctPurch(receiver, dcdate.getDate());
-                       
-                        /* adjust inventory */
-                        if (! error)
-                        error = OVData.UpdateInventoryFromReceiver(receiver);
-                        
-                        /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromReceiver(receiver, dcdate.getDate());
-                        
-                   
-                        
-                        
-                        
-                
-                  if (! error) {        
-                  bsmf.MainFrame.show("Added Receiver");
-                   
-                       /* create auto-voucher from temptable if autovoucher is on */
-                    if (cbautovoucher.isSelected()) {
-                    String messg = OVData.CreateVoucher(temptable, ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
-                     if (! messg.isEmpty()) {
-                         bsmf.MainFrame.show("Unable to auto voucher");
-                     } else {
-                         bsmf.MainFrame.show("Auto Voucher complete");
-                     }
-                    }
-                  
-                  
-                  initvars("");
-                  } else {
-                  bsmf.MainFrame.show("An Error Occurred");  
-                  }
-                    
-                  
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add Receiver");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput(tbreceiver.getText())) {
+           return;
+       }
+        disableAll();
+        executeTask("add", tbreceiver.getText());
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1072,15 +1046,18 @@ public class RecvMaintPanel extends javax.swing.JPanel {
                 
                 res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr " +
-                       " inner join item_mstr on it_item = pod_part " +
+                       " left outer join item_mstr on it_item = pod_part " +
                        " left outer join item_cost on itc_item = pod_part and itc_set = 'standard' and itc_site = po_site " + 
                        " where pod_part = " + "'" + mypart + "'" + 
                         " AND pod_nbr = " + "'" + mypo + "'" + ";");
                 while (res.next()) {
                     tbline.setText(res.getString("pod_line"));
                     tbprice.setText(res.getString("pod_netprice"));
+                    if (res.getString("itc_total") != null)
                     tbcost.setText(res.getString("itc_total"));
+                    if (res.getString("it_loc") != null)
                     ddwh.setSelectedItem(res.getString("it_loc"));
+                    if (res.getString("it_wh") != null)
                     ddloc.setSelectedItem(res.getString("it_wh"));
                     ddsite.setSelectedItem(res.getString("pod_site"));
                     lblvendpart.setText(res.getString("pod_vendpart"));
@@ -1154,16 +1131,8 @@ public class RecvMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Period is closed");
-                    return;
-                }
                 
+                boolean proceed = validateInput("updateRecord");
                 
                 if (proceed) {
                     st.executeUpdate("update recv_mstr set recv_po = " + "'" + ddpo.getSelectedItem().toString() + "'" + ","
@@ -1264,6 +1233,19 @@ public class RecvMaintPanel extends javax.swing.JPanel {
         ddloc.setSelectedIndex(0);
         }
     }//GEN-LAST:event_ddwhActionPerformed
+
+    private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
+            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbqtyFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

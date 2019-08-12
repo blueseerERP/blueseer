@@ -477,6 +477,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbqty">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbqtyFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel29">
           <Properties>

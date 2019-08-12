@@ -3167,230 +3167,7 @@ public class OVData {
         
     }
         
-             public static ArrayList exportlabeldata() {
-       ArrayList myarray = new ArrayList();
-       String lastpart = "";
-       String thispart = "";
-       String delim = ",";
-       String mystring = "";
-       String vmp = "";
-       String vsa = "";
-       String vsaupc = "";
-       String vsaalpha = "";
-       String vsacaseupc = "";
-       String vml = "";
-       String vmlupc = "";
-       String vmlalphacode = "";
-       String vmlcaseupc = "";
-        String vmax = "";
-       String vmaxalphacode = "";
-       String vmaxupc = "";
-       String vac = "";
-       String vgm = "";
-       String vgmupc = "";
-       String vgmmstrbox = "";
-       String vctc = "";
-       String vmop = "";
-       String vsl = "";
-       String vslupc = "";
-       String vslalphacode = "";
-       String vjc = "";
-       String vmmark = "";
-       String vpmupc = "";
-       String vpmupccase = "";
-       String vsachs = "";
-       String vamp = "";
-       String vampdesc = "";
-       String vams = "";
-       String vsai = "";
-       String vsam = "";
-       String vbk = "";
-       String vbkupc = "";
-       String vbkupccase = "";
-       
-       
-       int i = 0;
-       
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + "apddb", user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                
-               
-                
-                res = st.executeQuery("select * from brand_mstr order by br_base ;"); 
-               while (res.next()) {
-                   
-                   if (i == 0) 
-                       lastpart = res.getString("br_base");
-                  
-                   
-                   if (! res.getString("br_base").equals(lastpart)) {
-                       mystring = vmp + delim + 
-                               vsa + delim + 
-                               vsaupc + delim +
-                               vsacaseupc + delim + 
-                               vml + delim +
-                               vmlupc + delim + 
-                               vmlalphacode + delim +
-                               vmlcaseupc + delim + 
-                               vmax + delim +
-                               vmaxupc + delim +
-                               vmaxalphacode + delim +
-                               vgm + delim +
-                               vac + delim + 
-                               vgmupc + delim +
-                               vgmmstrbox + delim +
-                               vctc + delim +
-                               vmop + delim +
-                               vsl + delim +
-                               vslupc + delim +
-                               vslalphacode + delim +
-                               vmmark + delim +
-                               vjc + delim +
-                               vpmupc + delim +
-                               vpmupccase + delim +
-                               vsachs + delim +
-                               vsaalpha + delim +
-                               vamp + delim + 
-                               vampdesc + delim +
-                               vams + delim +
-                               vsai + delim + 
-                               vsam + delim +
-                               vbk + delim +
-                               vbkupc + delim +
-                               vbkupccase 
-                               ;
-                       myarray.add(mystring);
-                       lastpart = res.getString("br_base");
-                       
-                           vmp = "";
-                           vsa = "";
-                           vsaupc = "";
-                           vsaalpha = "";
-                           vsacaseupc = "";
-                           vml = "";
-                           vmlupc = "";
-                           vmlalphacode = "";
-                           vmlcaseupc = "";
-                            vmax = "";
-                           vmaxalphacode = "";
-                           vmaxupc = "";
-                           vac = "";
-                          vgm = "";
-                           vgmupc = "";
-                           vgmmstrbox = "";
-                           vctc = "";
-                          vmop = "";
-                           vsl = "";
-                          vslupc = "";
-                           vslalphacode = "";
-                           vjc = "";
-                           vmmark = "";
-                           vpmupc = "";
-                           vpmupccase = "";
-                           vsachs = "";
-                           vamp = "";
-                           vampdesc = "";
-                           vams = "";
-                          vsai = "";
-                           vsam = "";
-                           vbk = "";
-                           vbkupc = "";
-                          vbkupccase = "";
-                   }
-                   vmp = res.getString("br_mstrpart");
-                   if (res.getString("br_brand").toLowerCase().equals("strongarm")) {
-                       vsa = res.getString("br_brandnumber");
-                       vsaupc = res.getString("br_upcnumber");
-                       vsaalpha = res.getString("br_alphacode");
-                       vsacaseupc = res.getString("br_caseupc");
-                   }                   
-                   if (res.getString("br_brand").toLowerCase().equals("mightylift")) {
-                       vml = res.getString("br_brandnumber");
-                       vmlupc = res.getString("br_upcnumber");
-                       vmlcaseupc = res.getString("br_caseupc");
-                       vmlalphacode = res.getString("br_alphacode");
-                      // if (res.getString("br_base").toString().endsWith("Z"))
-                      // {
-                       vsa = res.getString("br_base");
-                      // }
-                   }
-                   if (res.getString("br_brand").toLowerCase().equals("maxlift")) {
-                       vmax = res.getString("br_brandnumber");
-                       vmaxupc = res.getString("br_upcnumber");
-                       vmaxalphacode = res.getString("br_alphacode");
-                   }
-                   if (res.getString("br_brand").toLowerCase().equals("acdelco")) {
-                       vac = res.getString("br_brandnumber");
-                       vgm = res.getString("br_custnumber");
-                       vgmupc = res.getString("br_upcnumber");
-                       vgmmstrbox = res.getString("br_caseupc");
-                   }
-                   if (res.getString("br_brand").toLowerCase().equals("canadiantire")) {
-                       vctc = res.getString("br_brandnumber");
-                   }
-                    if (res.getString("br_brand").toLowerCase().equals("mopar")) {
-                       vmop = res.getString("br_custnumber");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("steadylift")) {
-                       vsl = res.getString("br_brandnumber");
-                       vslupc = res.getString("br_upcnumber");
-                       vslalphacode = res.getString("br_alphacode");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("jcwhitney")) {
-                       vjc = res.getString("br_brandnumber");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("mmark")) {
-                       vmmark = res.getString("br_brandnumber");
-                   } 
-                   
-                    if (res.getString("br_brand").toLowerCase().equals("partsmaster")) {
-                       vpmupc = res.getString("br_upcnumber");
-                       vpmupccase = res.getString("br_caseupc");
-                   }   
-                     
-                      if (res.getString("br_brand").toLowerCase().equals("sachs")) {
-                       vsachs = res.getString("br_brandnumber");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("amp")) {
-                       vamp = res.getString("br_brandnumber");
-                       vampdesc = "";
-                   } 
-                       if (res.getString("br_brand").toLowerCase().equals("ams")) {
-                       vams = res.getString("br_caseupc");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("sai")) {
-                       vsai = res.getString("br_brandnumber");
-                   }
-                     if (res.getString("br_brand").toLowerCase().equals("sam")) {
-                       vsam = res.getString("br_brandnumber");
-                   }
-                      if (res.getString("br_brand").toLowerCase().equals("balkamp")) {
-                       vbk = res.getString("br_brandnumber");
-                       vbkupc = res.getString("br_upcnumber");
-                       vbkupccase = res.getString("br_caseupc");
-                   }
-                   i++;
-                   
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot export data label list");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-             
+            
              public static boolean addItemMaster(ArrayList<String> list) {
                  boolean myreturn = true;
                  
@@ -4235,68 +4012,6 @@ public class OVData {
                   return myreturn;
              } 
                
-             public static void insertlabeldata(ArrayList<String> list) {
-         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + "apddb", user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                
-                // first delete all records in labeldata table
-                st.executeUpdate(" delete from LabelData;");
-                
-                // now loop through comma delimited list and insert into labeldata table
-                for (String rec : list) {
-                    ld = rec.split(",", -1);
-                    st.executeUpdate(" insert into LabelData values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +  
-                            "'" +  ld[8] + "'" + "," +  
-                            "'" +  ld[9] + "'" + "," +  
-                            "'" +  ld[10] + "'" + "," +  
-                            "'" +  ld[11] + "'" + "," +  
-                            "'" +  ld[12] + "'" + "," +  
-                            "'" +  ld[13] + "'" + "," +  
-                            "'" +  ld[14] + "'" + "," +  
-                            "'" +  ld[15] + "'" + "," +  
-                            "'" +  ld[16] + "'" + "," +  
-                            "'" +  ld[17] + "'" + "," +  
-                            "'" +  ld[18] + "'" + "," +  
-                            "'" +  ld[19] + "'" + "," +  
-                            "'" +  ld[20] + "'" + "," +  
-                            "'" +  ld[21] + "'" + "," +  
-                            "'" +  ld[22] + "'" + "," +  
-                            "'" +  ld[23] + "'" + "," +  
-                            "'" +  ld[24] + "'" + "," +  
-                            "'" +  ld[25] + "'" + "," +  
-                            "'" +  ld[26] + "'" + "," +  
-                            "'" +  ld[27] + "'" + "," +  
-                            "'" +  ld[28] + "'" + "," +  
-                            "'" +  ld[29] + "'" + "," +  
-                            "'" +  ld[30] + "'" + "," +  
-                            "'" +  ld[31] + "'" + "," +  
-                            "'" +  ld[32] + "'" + "," +  
-                            "'" +  ld[33] + "'" + ");"
-                           );
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-       }
        
          public static ArrayList getpsmstrparents(String mypart) {
        ArrayList myarray = new ArrayList();
@@ -21436,7 +21151,7 @@ MainFrame.bslog(e);
       }
       
       
-       public static void kanban2k2tfr(String partno, int qty, String user) throws ParseException {
+       public static void locTolocTransfer(String partno, int qty, String user) throws ParseException {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           String op = "";
@@ -21448,7 +21163,7 @@ MainFrame.bslog(e);
                   0.00, 
                   0.00, 
                 OVData.getDefaultSite(), 
-                "k2",  // location
+                "locA",  // location
                 "", // warehouse
                 "", 
                 "", 
@@ -21457,64 +21172,23 @@ MainFrame.bslog(e);
                 "", 
                 "", 
                 "", // lot 
-                "KANBAN 2 K2", //rmks
-                "KAN2K2", //ref
+                "locA transfer", //rmks
+                "locA", //ref
                 "", 
                 "", 
                 "", 
-                "k2",  // serial
-                "k2scan", // program
+                "locA",  // serial
+                "someProg", // program
                 user
                 );
         
         
-          OVData.UpdateInventoryDiscrete(partno, "QAD", "KANBAN", "warehouse", (-1 * Double.valueOf(qty)));
-          OVData.UpdateInventoryDiscrete(partno, "QAD", "K2", "warehouse", Double.valueOf(qty)); 
+          OVData.UpdateInventoryDiscrete(partno, "BS", "locA", "warehouse", (-1 * Double.valueOf(qty)));
+          OVData.UpdateInventoryDiscrete(partno, "BS", "locB", "warehouse", Double.valueOf(qty)); 
                
       }
       
-      public static void nitrideTransferAVM2TT(String serialno) throws ParseException {
-          String labelinfo = OVData.getLabelInfo(serialno);
-          String[] arr = labelinfo.split("\\+\\-\\+", -1);
-          boolean isbad = false;
-          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-          String op = "";
-          OVData.TRHistIssDiscrete(dfdate.parse(arr[22]), 
-                  arr[1], 
-                  Integer.valueOf(arr[5]),
-                  op,
-                  "LOC-TRNF", 
-                  0.00, 
-                  0.00, 
-                arr[29], //site
-                arr[30],  //loc
-                "", // warehouse
-                "", 
-                "", 
-                "", 
-                0, 
-                "", 
-                "", 
-                arr[0], // lot 
-                "CHrome Rod Nitride Tfr to TT", //rmks
-                "AVM2TT", //ref
-                "", 
-                "", 
-                "", 
-                arr[0],  // serial
-                "ovscan", // program
-                "ov"
-                );
-        
-        
-          OVData.UpdateInventoryDiscrete(arr[1], arr[29], "AVMNITRIDE", "warehouse", (-1 * Double.valueOf(arr[5])));
-          OVData.UpdateInventoryDiscrete(arr[1], arr[29], "TRUTECH", "warehouse", Double.valueOf(arr[5])); 
-          
-          OVData.updateLabelStatus(serialno, "2");
-               
-      }
-      
-     
+   
       public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
           String shiptocode = "";
           try {
@@ -21813,7 +21487,7 @@ MainFrame.bslog(e);
         return recnumber;
        }
       
-       public static int createPlanFromKanbanMin(String fromsite, String tosite, String fromprod, String toprod) {
+       public static int createPlanFromLocationMin(String fromsite, String tosite, String fromprod, String toprod) {
         
         int recnumber = 0;
         
@@ -21866,9 +21540,9 @@ MainFrame.bslog(e);
                   res = st.executeQuery("select it_item, ita_fct, sod_site, in_qoh, round(ita_fct / 25) as '2week', " +
                           " coalesce(sum(sod_ord_qty - sod_shipped_qty),0) as mydemand " +
                           " from item_mstr " +
-                          " left outer join in_mstr on in_part = it_item and in_loc = 'kanban' and in_site = 'QAD' " +
+                          " left outer join in_mstr on in_part = it_item and in_loc = 'locA' and in_site = '1000' " +
                           " left outer join item_apd on ita_item = it_item " +
-                          " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = 'QAD' " +
+                          " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = '1000' " +
                           " where it_prodline >= " + "'" + fromprod + "'" +
                           " and it_prodline <= " + "'" + toprod + "'" + 
                           " group by it_item " +
@@ -21958,7 +21632,7 @@ MainFrame.bslog(e);
                                         + "'" + min + "'" + ","
                                         + "'" + df.format(now) + "'" + ","
                                         + "'" + df.format(now) + "'" + ","
-                                        + "'KANB'" + ","
+                                        + "'LocA'" + ","
                                         + "'" + site + "'" + "," 
                                         + "'" + remarks + "'"
                                         + ")"
@@ -21981,7 +21655,7 @@ MainFrame.bslog(e);
                                         + "'" + min + "'" + ","
                                         + "'" + df.format(now) + "'" + ","
                                         + "'" + df.format(now) + "'" + ","
-                                        + "'KANB'" + ","
+                                        + "'LocB'" + ","
                                         + "'" + site + "'" + "," 
                                         + "'" + remarks + "'"
                                         + ")"
@@ -22644,122 +22318,7 @@ MainFrame.bslog(e);
         
     }
     
-    public static void createQADLoadFile(ArrayList<String> mylist) throws MalformedURLException, SmbException, IOException {
-        
-        String billto = "";
-        String doctype = "";
-        String filename = "";
-         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
-         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
-         DateFormat isadftime = new SimpleDateFormat("HHmm");
-         DateFormat gsdftime = new SimpleDateFormat("HHmm");
-         Date now = new Date();
-          String content = "";
-          String SS = "";
-          String R10 = "";
-          
-        for (String order : mylist) {
-        billto = OVData.getOrderBillto(order);
-        
-        if (billto.toUpperCase().equals("JAZ00002")) {
-            doctype = "850";
-            filename = "auzo850." + order + ".evi";
-        }
-        
-         String[] defaults  = OVData.getEDIOutCustDefaults(billto, doctype, "1");
-        
-        
-        // Autozone
-        if (billto.toUpperCase().equals("JAZ00002") || billto.toUpperCase().equals("JAZ00003") || billto.toUpperCase().equals("JAM00001"))  {
-         String ss0 = "**";
-          String ss1 = String.format("%-18s", defaults[0]);
-         String  ss2 = String.format("%-6s", doctype);
-         String  ss3 = "00";
-         String  ss4 = "          ";
-         String  ss5 = "00";
-         String  ss6 = "          ";
-         String ss7 = "01";
-         String ss8 = String.format("%-15s", defaults[0]);
-         String ss9 = "01";
-         String ss10 = String.format("%-15s", defaults[3]);
-         String ss11 = String.format("%-8s", isadfdate.format(now));
-         String ss12 = String.format("%-100s", " ");
-                
-         SS = ss0 + ss1 + ss2 + ss3 + ss4 + ss5 + ss6 + ss7 + ss8 + ss9 + ss10 + ss11 + ss12 + "\n";
-         
-            // cust, ship, so, po, orddate, duedate, remarks, char1, char2, char3, shipvia
-         
-          String sh_string = OVData.getOrderHeader(order);
-        String[] sh = sh_string.split(",", -1);
-         
-         String r10e1 = "10";
-         String r10e2 = String.format("%-4s", " ");
-         String r10e3 = String.format("%-22s", sh[3]);
-         String r10e4 = String.format("%-8s", sh[4].replace("-", ""));
-         String r10e5 = String.format("%-8s", sh[5].replace("-", ""));
-         String r10e6 = String.format("%-8s", sh[5].replace("-", ""));
-         
-         String r10e7 = String.format("%-17s", " ");
-         String r10e8 = String.format("%-17s", sh[9]);
-         String r10e9 = String.format("%-17s", "1516");
-         
-         
-         String r10e10 = String.format("%-44s", " ");
-         String r10e11 = String.format("%-20s", sh[10]);
-         String r10e12 = String.format("%-124s", " ");
-         String r10e13 = String.format("%-17s", sh[8]);
-         String r10e14 = String.format("%-24s", " ");
-         
-         R10 = r10e1 + r10e2 + r10e3 + r10e4 + r10e5 + r10e6 + r10e7 + r10e8 + r10e9 + r10e10 + r10e11 + r10e12 + r10e13 + r10e14 + "\n";
-         
-         content = SS + R10;
-        
-        } // autozone
-         
-         
-         
-         
-         OVData.writeQADLoadFile(content, filename);
-         
-         
-         
-        }   // for each order ..aka shipper
-        
-        
-    }
-    
-      public static void writeQADLoadFile(String filecontent, String filename) throws MalformedURLException, SmbException, IOException {
-    
-//    File folder = new File("smb://10.17.2.55/edi");
-  // File[] listOfFiles = folder.listFiles();
-
-    
- //   NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, null, null);
-          
-    NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
-    // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
-    
-   // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
-    String file = "smb://10.17.2.5/edi/inqueue/" + filename;
-    BufferedWriter output;
-    
-         if (file.startsWith("smb")) {
-         SmbFile edifile = new SmbFile(file, auth);
-         output = new BufferedWriter(new OutputStreamWriter(new SmbFileOutputStream(edifile)));
-         output.write(filecontent);
-         output.close();
-         } else {
-         File edifile = new File(file);
-         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edifile)));
-         output.write(filecontent);
-         output.close();    
-         }
-   // SmbFile[] listOfFiles = folder.listFiles();
-         
-        
-    }
-    
-      
+   
       public static ArrayList parseFile(char[] cbuf, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
     

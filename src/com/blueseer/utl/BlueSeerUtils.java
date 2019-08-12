@@ -40,6 +40,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 /**
@@ -322,6 +323,8 @@ public class BlueSeerUtils {
 	}
 }
   
+    
+    
      public static void startTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);

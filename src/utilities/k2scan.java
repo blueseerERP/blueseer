@@ -63,7 +63,7 @@ public static void printscreen() throws InterruptedException, ParseException {
 mylist.clear();
 Scanner in = new Scanner(System.in);
 System.out.println("*************************");
-System.out.println("*  1) Scan To K2        *");
+System.out.println("*  1) Scan To LocA      *");
 System.out.println("*  0) Quit              *");
 System.out.println("*************************");
 System.out.print("Choose option:");
@@ -140,7 +140,7 @@ if (! isParsableToInt(sqty)) {
 
 
    if (! myscan.equals("d")) {
-       OVData.kanban2k2tfr(myscan.toString(), myqty, user);
+       OVData.locTolocTransfer(myscan.toString(), myqty, user);
        System.out.println("scan complete.");
        Thread.sleep(1000);
        continue;
@@ -148,73 +148,12 @@ if (! isParsableToInt(sqty)) {
 
    // end program by pressing 'd'
    if (myscan.equals("d")) {
-       OVData.kanban2k2tfr(myscan.toString(),myqty, user);
+       OVData.locTolocTransfer(myscan.toString(),myqty, user);
        System.out.println("End Program");
        Thread.sleep(1000);
        return;
    } 
   
-
-} // while loop
-
-}
- 
-public static void example() throws InterruptedException, ParseException {
-String myscan = "";
-int i = 0;
-boolean isbad = false;
-
-while ( ! myscan.equals("d") ) {
-clearscreen();
-System.out.println("Scan Label:");
-myscan = in.nextLine();
-   if (myscan.equals("d")) {
-       // lets insert tran_mstr record for each serial number
-       for (String element : mylist) {
-           if (OVData.isLabel(element) &&  OVData.getLabelStatus(element) == 1 ) {
-               OVData.nitrideTransferAVM2TT(element);
-           } 
-       }
-       System.out.println("program complete.");
-   Thread.sleep(1000);
-   return;
-   } 
-
-  
-   
-   if (! myscan.equals("d") && ! myscan.isEmpty()) {
-      
-      if (! OVData.isLabel(myscan)) {
-          System.out.println("Bad Label");
-          Thread.sleep(1000);
-          continue;
-      } 
-      
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 0) {
-          System.out.println("Missing CR scan");
-          Thread.sleep(1000);
-          continue;
-      }
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) > 2) {
-          System.out.println("Closed Label");
-          Thread.sleep(1000);
-          continue;
-      }
-      if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 2) {
-          System.out.println("Previously Scanned");
-          Thread.sleep(1000);
-          continue;
-      } 
-      if (! mylist.contains(myscan)) {
-          i++;
-          mylist.add(myscan);
-          System.out.println("Scanned " + String.valueOf(i));
-          Thread.sleep(1000);
-      } else {
-          System.out.println("Already Scanned");
-          Thread.sleep(1000);
-      }
-   }
 
 } // while loop
 
