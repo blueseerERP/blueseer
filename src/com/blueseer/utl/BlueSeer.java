@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 /**
@@ -35,12 +36,14 @@ public interface BlueSeer {
         
     public void initvars(String x);
     
-    public void disableAll();
+    public void setPanelComponentState(JPanel panel, boolean b);
     
-    public void enableAll();
+    public void setComponentDefaultValues();
     
-    public void clearAll();
-    
+    // NOTE!!  the below methods that return a String[] array return a 2 element String array....element 1 contains either '0' or '1'.  
+    // They are defined as follows:  '0' == Success.....'1' == Error.   2nd element is arbitrary description
+    // Example of success:   String[] somearray = new String[]{"0", "Yay!!!  Something good happened"}; 
+    // Example of bad:       String[] somearray = new String[]{"1", "Crap!!!! Another method bites the dust"}; 
     public String[] getRecord(String x);
     
     public String[] addRecord(String x);

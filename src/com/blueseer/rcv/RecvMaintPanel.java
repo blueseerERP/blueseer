@@ -40,8 +40,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -51,6 +55,7 @@ import javax.swing.SwingWorker;
 public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
     // global variable declarations
+                boolean isLoad = false;
                 String terms = "";
                 String apacct = "";
                 String apcc = "";
@@ -59,7 +64,16 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-            });
+            })
+                        {
+               boolean[] canEdit = new boolean[]{
+               false, false, false, true, false, false, false, true, true, true, true, true
+               };       
+           @Override  
+           public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit[columnIndex];
+           }
+                        };
     
    
     public RecvMaintPanel() {
@@ -69,11 +83,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     
 
     // interface functions implemented
-    public void executeTask(String x, String y) {
-       class Task extends SwingWorker<String[], Void> {
-        /*
-         * Executed in background thread.
-         */
+    public void executeTask(String x, String y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
           String type = "";
           String key = "";
           
@@ -93,12 +106,15 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 case "add":
                     message = addRecord(key);
                     break;
-                case "edit":
+                case "update":
                     message = updateRecord(key);
                     break;
                 case "delete":
                     message = deleteRecord(key);    
                     break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -106,9 +122,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             return message;
         }
  
-        /*
-         * Executed in event dispatch thread
-         */
+        
         public void done() {
             try {
             String[] message = get();
@@ -116,7 +130,9 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars("");  
-           }  else {
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else {
              initvars(key);  
            }
            
@@ -127,75 +143,31 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
            
         }
     }  
+      
        BlueSeerUtils.startTask(new String[]{"","Running..."});
        Task z = new Task(x, y); 
        z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(JPanel panel, boolean b) {
+         panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                component.setEnabled(b);
+            }
+    } 
     
-    public void disableAll() {
-        cbautovoucher.setEnabled(false);
-        tbreceiver.setEnabled(false);
-         tbline.setEnabled(false);
-         tbprice.setEnabled(false);
-         tbcost.setEnabled(false);
-         ddsite.setEnabled(false);
-         duedate.setEnabled(false);
-         tbqtyrcvd.setEnabled(false);
-         tbqtyord.setEnabled(false);
-         orddate.setEnabled(false);
-         ddpo.setEnabled(false);
-        ddpart.setEnabled(false);
-        ddvend.setEnabled(false);
-        btadd.setEnabled(false);
-        btedit.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        btadditem.setEnabled(false);
-        btdeleteitem.setEnabled(false);
-        tbpackingslip.setEnabled(false);
-        dcdate.setEnabled(false);
-        tbqty.setEnabled(false);
-        ddwh.setEnabled(false);
-        ddloc.setEnabled(false);
-        tblot.setEnabled(false);
-        tbserial.setEnabled(false);
-        rvdet.setEnabled(false);
-    }
-    
-    public void enableAll() {
-      //   tbline.setEnabled(true);
-      //   tbprice.setEnabled(true);
-      //   tbcost.setEnabled(true);
-         
-     //    duedate.setEnabled(true);
-      //   tbqtyrcvd.setEnabled(true);
-      //   tbqtyord.setEnabled(true);
-     //    orddate.setEnabled(true);
-        cbautovoucher.setEnabled(true);
-        ddsite.setEnabled(true);
-         ddpo.setEnabled(true);
-        ddpart.setEnabled(true);
-        ddvend.setEnabled(true);
-        btadd.setEnabled(true);
-        btedit.setEnabled(true);
-        btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        btadditem.setEnabled(true);
-        btdeleteitem.setEnabled(true);
-        tbpackingslip.setEnabled(true);
-        dcdate.setEnabled(true);
-        tbqty.setEnabled(true);
-        ddwh.setEnabled(true);
-        ddloc.setEnabled(true);
-        tblot.setEnabled(true);
-        tbserial.setEnabled(true);
-        rvdet.setEnabled(true);
+    public void setComponentDefaultValues() {
         
+        isLoad = true;
         rvdet.setModel(myrecvdetmodel);
-        
-    }
-    
-    public void clearAll() {
         
          java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -205,18 +177,15 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                
                 dcdate.setDate(now);
         
-         tbpackingslip.setBackground(Color.white);
+        tbpackingslip.setBackground(Color.white);
         tbpackingslip.setText("");
-        tbqty.setText("");
+        tbqty.setText("0");
         tbserial.setText("");
         tblot.setText("");
-        tbreceiver.setText("");
+        tbkey.setText("");
+        tbkey.setForeground(Color.black);
        
-        tbline.setDisabledTextColor(Color.black);
-        tbline.setText("");
-       
-        tbprice.setDisabledTextColor(Color.black);
-        tbprice.setText("");
+        
         
         tbcost.setDisabledTextColor(Color.black);
         tbcost.setText("");
@@ -228,11 +197,21 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         duedate.setDisabledTextColor(Color.black);
         duedate.setText("");
         
-        tbqtyrcvd.setDisabledTextColor(Color.black);
+        tbqtyrcvd.setEditable(false);
+        tbqtyrcvd.setForeground(Color.blue);
         tbqtyrcvd.setText("");
         
-        tbqtyord.setDisabledTextColor(Color.black);
+        tbqtyord.setEditable(false);
+        tbqtyord.setForeground(Color.blue);
         tbqtyord.setText("");
+        
+        tbline.setEditable(false);
+        tbline.setForeground(Color.blue);
+        tbline.setText("");
+       
+        tbprice.setEditable(false);
+        tbprice.setForeground(Color.blue);
+        tbprice.setText("");
         
         orddate.setDisabledTextColor(Color.black);
         orddate.setText("");
@@ -276,24 +255,30 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         
         
         myrecvdetmodel.setRowCount(0);
+        
+        isLoad = false;
     }
     
     public void initvars(String arg) {
-       
-        clearAll();
-        disableAll();
-        
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
         if (! arg.isEmpty()) {
             getRecord(arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
         }
         
     }
     
-    public String[] getRecord(String myreceiver) {
+    public String[] getRecord(String x) {
        String[] m = new String[2];
+       
+       myrecvdetmodel.setRowCount(0);
+       
         try {
      
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -309,7 +294,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 String tdate = "";
                 String tps = "";
                 
-                res = st.executeQuery("select rv_vend, rv_recvdate, rv_packingslip from recv_mstr where rv_id = " + "'" + myreceiver + "'" + ";");
+                res = st.executeQuery("select rv_vend, rv_recvdate, rv_packingslip from recv_mstr where rv_id = " + "'" + x + "'" + ";");
                 while (res.next()) {
                     i++;
                     tvend = res.getString("rv_vend");
@@ -317,32 +302,40 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     tps = res.getString("rv_packingslip");
                 }
                 res.close();
+                if (i > 0) {
                     ddvend.setSelectedItem(tvend);
                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(tdate));
                     tbpackingslip.setText(tps);
-                    tbreceiver.setText(myreceiver);
+                    tbkey.setText(x);
+                }
                
-               
-                res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + myreceiver + "'" + ";");
+                res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + x + "'" + ";");
                 
                 while (res.next()) {
-                    // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot"
+                    
+                  //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                   myrecvdetmodel.addRow(new Object[]{res.getString("rvd_part"), res.getString("rvd_po"), 
                       res.getString("rvd_poline"), res.getString("rvd_qty"), res.getString("rvd_listprice"),
                    res.getString("rvd_disc"), res.getString("rvd_netprice"), res.getString("rvd_loc"), res.getString("rvd_wh"),
-                  res.getString("rvd_serial"), res.getString("rvd_lot")});
+                  res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_cost")});
                 }
-                rvdet.setModel(myrecvdetmodel);
+                
                 if (i > 0) {
-                    enableAll();
+                    m = new String[]{"0", "found record"};  
+                    setPanelComponentState(this, true);
                     btnew.setEnabled(false);
                     btadd.setEnabled(false);
+                    tbkey.setEditable(false);
+                    tbkey.setForeground(Color.blue);
+                } else {
+                   m = new String[]{"1", "no record found"}; 
+                   tbkey.setForeground(Color.red);
                 }
                
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{"0", "Cannot retrieve receiver"};  
+                m = new String[]{"1", "Cannot retrieve receiver"};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -361,7 +354,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 boolean error = false;
-                String receiver = tbreceiver.getText().toString();
+                String receiver = tbkey.getText().toString();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                 
@@ -378,7 +371,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     st.executeUpdate("insert into recv_mstr "
                         + "(rv_id, rv_vend, "
                         + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
-                        + " values ( " + "'" + tbreceiver.getText().toString() + "'" + ","
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                         + "'" + ddvend.getSelectedItem() + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                         + "'" + tbpackingslip.getText() + "'" + ","
@@ -399,7 +392,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
                             + "rvd_listprice, rvd_disc, rvd_netprice,  "
                             + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + tbreceiver.getText() + "'" + ","
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
                             + "'" + String.valueOf(j + 1) + "'" + ","
                             + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
@@ -419,7 +412,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + ")"
                             + ";");
                         
-                        tempmodel.addRow(new Object[] {tbreceiver.getText(), String.valueOf(j+ 1),
+                        tempmodel.addRow(new Object[] {tbkey.getText(), String.valueOf(j+ 1),
                            rvdet.getValueAt(j, 0).toString(),
                            rvdet.getValueAt(j, 3).toString(),
                            rvdet.getValueAt(j, 6).toString()
@@ -429,7 +422,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     
                     
                     /* update PO from receiver */
-                    OVData.updatePOFromReceiver(tbreceiver.getText());
+                    OVData.updatePOFromReceiver(tbkey.getText());
                     
                     /* create tran_mstr records */
                         if (! error)
@@ -478,6 +471,80 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     
     public String[] updateRecord(String x) {
      String[] m = new String[2];
+     
+      try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                // first validate input
+                boolean proceed = validateInput("updateRecord");
+                
+                // if this receiver has 'any' line items already vouchered then bale...cannot update
+                res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x + "'" + 
+                                      " and rvd_voqty > 0 " + ";");
+                int i = 0;
+                while (res.next()) {
+                    i++;
+                }
+                if (i > 0) {
+                   return m = new String[] {"1","cannot update receiver...some lines already vouchered"};
+                }
+                
+                
+                if (proceed) {
+                    st.executeUpdate("update recv_mstr set "
+                        + "rv_packingslip = " + "'" + tbpackingslip.getText() + "'" + ","
+                        + "rv_recvdate = " + "'" + dfdate.format(dcdate.getDate()) + "'"
+                        + " where rv_id = " + "'" + tbkey.getText().toString() + "'"
+                        + ";");
+                    // delete the recv_det records and add back.
+                    st.executeUpdate("delete from recv_det where rvd_id = " + "'" + tbkey.getText() + "'"  );
+                    
+                   // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                    for (int j = 0; j < rvdet.getRowCount(); j++) {
+                        st.executeUpdate("insert into recv_det "
+                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
+                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
+                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + String.valueOf(j + 1) + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbpackingslip.getText() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
+                            + ")"
+                            + ";");
+                    }
+                   m = new String[] {"0","receiver has been updated"};
+                    initvars("");
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+               m = new String[] {"1","unable to update receiver"};
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[] {"1","unable to update receiver"};
+        }
+     
      return m;
     }
     
@@ -486,52 +553,53 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
     }
     
-    public boolean validateInput(String e) {
+    public boolean validateInput(String x) {
         
-        boolean x = true;
-          if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
-                    x = false;
+        boolean b = true;
+                if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+                    b = false;
                     bsmf.MainFrame.show("Must Have a Vendor");
-                    return x;
+                    return b;
                 }
-                
-                if (ddpo.getSelectedItem() == null || ddpo.getSelectedItem().toString().isEmpty()) {
-                    x = false;
-                    bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
-                    return x;
-                }
-                
-                if (tbpackingslip.getText().isEmpty()) {
-                    x = false;
-                    bsmf.MainFrame.show("Must enter a packing slip number");
-                    tbpackingslip.requestFocus();
-                    return x;
-                }
-                
-                if (! e.equals("addItem")) {
-                    if (rvdet.getRowCount() <= 0) {
-                        x = false;
-                        bsmf.MainFrame.show("There are no rows received");
-                        return x;
+                if (! x.equals("updateRecord")) {  // if adjusting fields in the table....this validation is not necessary as they cannot change the PO
+                    if (ddpo.getSelectedItem() == null || ddpo.getSelectedItem().toString().isEmpty()) {
+                        b = false;
+                        bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
+                        return b;
                     }
                 }
                 
-                if (e.equals("addItem")) {
+                if (tbpackingslip.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must enter a packing slip number");
+                    tbpackingslip.requestFocus();
+                    return b;
+                }
+                
+                if (! x.equals("addItem")) {
+                    if (rvdet.getRowCount() <= 0) {
+                        b = false;
+                        bsmf.MainFrame.show("There are no rows received");
+                        return b;
+                    }
+                }
+                
+                if (x.equals("addItem")) {
                     if (tbqty.getText().isEmpty()) {
-                        x = false;
+                        b = false;
                         bsmf.MainFrame.show("Must enter a quantity");
                         tbqty.requestFocus();
-                        return x;
+                        return b;
                     }
                 }
                
                 
                 if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    x = false;
+                    b = false;
                     bsmf.MainFrame.show("Period is closed");
-                    return x;
+                    return b;
                 }
-        return x;
+        return b;
     }
     
 
@@ -568,8 +636,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         }
     }
       
-     
-    
+   
     
  /**
      * This method is called from within the constructor to initialize the form.
@@ -581,7 +648,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        tbreceiver = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         tbpackingslip = new javax.swing.JTextField();
@@ -633,6 +700,12 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Receiver Maintenance"));
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel24.setText("Receiver#");
 
@@ -725,6 +798,9 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         jLabel28.setText("OrdDate");
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbqtyFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tbqtyFocusLost(evt);
             }
@@ -836,7 +912,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(tbreceiver, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -886,7 +962,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         .addComponent(btnew)
                         .addComponent(cbautovoucher))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbreceiver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel24)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -977,20 +1053,17 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
       
-        tbreceiver.setText(String.valueOf(OVData.getNextNbr("receiver")));
-          
-        enableAll();
+        tbkey.setText(String.valueOf(OVData.getNextNbr("receiver")));
+        setPanelComponentState(this, true);
         btedit.setEnabled(false);
-        
-                
-               
-        
+        tbkey.setEditable(false);
+        tbkey.setForeground(Color.blue);
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
           
           boolean proceed = validateInput("addItem"); 
-      
+                
        //   "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, cost
             if (proceed)
             myrecvdetmodel.addRow(new Object[]{ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
@@ -1001,11 +1074,11 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput(tbreceiver.getText())) {
+       if (! validateInput("addRecord")) {
            return;
        }
-        disableAll();
-        executeTask("add", tbreceiver.getText());
+        setPanelComponentState(this, false);
+        executeTask("add", tbkey.getText());
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1024,7 +1097,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     tbqtyrcvd.setText("");
                     tbqtyord.setText("");
                     orddate.setText("");
-                    tbqty.setText("");
+                    tbqty.setText("0");
                     tbserial.setText("");
                     tblot.setText("");
                     tbcost.setText("");
@@ -1124,61 +1197,11 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                
-                boolean proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update recv_mstr set recv_po = " + "'" + ddpo.getSelectedItem().toString() + "'" + ","
-                        + "recv_create_date = " + "'" + tbpackingslip.getText() + "'" + ","
-                        + "recv_recv_date = " + "'" + dfdate.format(dcdate.getDate()) + "'"
-                        + " where recv_id = " + "'" + tbreceiver.getText().toString() + "'"
-                        + ";");
-                    // delete the recv_det records and add back.
-                    st.executeUpdate("delete from recv_det where rvdet_id = " + "'" + tbreceiver.getText() + "'"  );
-                    for (int j = 0; j < rvdet.getRowCount(); j++) {
-                        st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + tbreceiver.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbpackingslip.getText() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                    }
-                    bsmf.MainFrame.show("Edited Receiver Record");
-                    initvars("");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to edit receiver");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", tbkey.getText());
     }//GEN-LAST:event_bteditActionPerformed
 
     private void ddpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpoActionPerformed
@@ -1235,7 +1258,8 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_ddwhActionPerformed
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (! isLoad) {
+        String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);
@@ -1245,7 +1269,18 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             tbqty.setText(x);
             tbqty.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbqtyFocusLost
+
+    private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
+        if (tbqty.getText().equals("0") && ! isLoad) {
+            tbqty.setText("");
+        }
+    }//GEN-LAST:event_tbqtyFocusGained
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", tbkey.getText());
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1288,6 +1323,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private javax.swing.JTextField orddate;
     private javax.swing.JTable rvdet;
     private javax.swing.JTextField tbcost;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline;
     private javax.swing.JTextField tblot;
     private javax.swing.JTextField tbpackingslip;
@@ -1295,7 +1331,6 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbqtyord;
     private javax.swing.JTextField tbqtyrcvd;
-    private javax.swing.JTextField tbreceiver;
     private javax.swing.JTextField tbserial;
     // End of variables declaration//GEN-END:variables
 }
