@@ -43,6 +43,7 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -123,7 +124,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         }
  
         
-        public void done() {
+       public void done() {
             try {
             String[] message = get();
            
@@ -132,8 +133,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
              initvars("");  
            } else if (this.type.equals("get") && message[0].equals("1")) {
              tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
            } else {
-             initvars(key);  
+             initvars("");  
            }
            
             
@@ -150,9 +153,21 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
        
     }
    
-    public void setPanelComponentState(JPanel panel, boolean b) {
-         panel.setEnabled(b);
+     public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
         Component[] components = panel.getComponents();
+        
             for (Component component : components) {
                 if (component instanceof JLabel || component instanceof JTable ) {
                     continue;
@@ -160,10 +175,28 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 if (component instanceof JPanel) {
                     setPanelComponentState((JPanel) component, b);
                 }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
                 component.setEnabled(b);
             }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
     } 
-    
+     
     public void setComponentDefaultValues() {
         
         isLoad = true;
@@ -266,7 +299,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         btbrowse.setEnabled(true);
         
         if (! arg.isEmpty()) {
-            getRecord(arg);
+            executeTask("get",arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);

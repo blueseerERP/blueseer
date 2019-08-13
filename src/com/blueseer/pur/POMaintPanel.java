@@ -29,7 +29,9 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeer;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,9 +42,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -50,9 +56,9 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author vaughnte
  */
-public class POMaintPanel extends javax.swing.JPanel {
+public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
-    
+    // global variable declarations
      boolean editmode = false;
      boolean isLoad = false;
      String curr = "";
@@ -65,24 +71,13 @@ public class POMaintPanel extends javax.swing.JPanel {
       boolean venditemonly = true;  
      DecimalFormat df = new DecimalFormat("#0.0000");
      
-   // OVData avmdata = new OVData();
-    javax.swing.table.DefaultTableModel myorddetmodel = new POMaintPanel.MyTableModel(new Object[][]{},
+     // global datatablemodel declarations  
+    javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
-            });
-      javax.swing.table.DefaultTableModel modelsched = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Date", "Ref", "Qty", "Type"
-            });
-    
-      
-     class MyTableModel extends DefaultTableModel {  
-      
-        public MyTableModel(Object rowData[][], Object columnNames[]) {  
-             super(rowData, columnNames);  
-          }  
-         
-       boolean[] canEdit = new boolean[]{
+            })
+    {
+        boolean[] canEdit = new boolean[]{
                 false, false, false, false, true, true, false, false, false, false
         };
 
@@ -90,26 +85,40 @@ public class POMaintPanel extends javax.swing.JPanel {
                canEdit = new boolean[]{false, false, false, false, true, true, false, false, false, false}; 
             return canEdit[columnIndex];
         }
-   
-        /*
-        public Class getColumnClass(int column) {
-               if (column == 6 || column == 7)       
-                return Double.class; 
-            else return String.class;  //other columns accept String values 
-        }
-       
-        */
-        
-   }    
+    };
+    javax.swing.table.DefaultTableModel modelsched = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Date", "Ref", "Qty", "Type"
+            });
     
-      class Task extends SwingWorker<String[], Void> {
-        /*
-         * Main task. Executed in background thread.
-         */
+     javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent tme) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 4 || tme.getColumn() == 5 )) {
+                            retotal();
+                            refreshDisplayTotals();
+                        }
+                        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };  
+      
+    
+    public POMaintPanel() {
+        initComponents();
+    }
+  
+      
+    // interface functions implemented  
+    public void executeTask(String x, String y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
           String type = "";
+          String key = "";
           
-          public Task(String type) {
+          public Task(String type, String key) { 
               this.type = type;
+              this.key = key;
           } 
            
         @Override
@@ -121,14 +130,17 @@ public class POMaintPanel extends javax.swing.JPanel {
             
              switch(this.type) {
                 case "add":
-                    message = addOrder();
+                    message = addRecord(key);
                     break;
-                case "edit":
-                    message = editOrder();
+                case "update":
+                    message = updateRecord(key);
                     break;
                 case "delete":
-                    message = deleteOrder();    
+                    message = deleteRecord(key);    
                     break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -136,9 +148,7 @@ public class POMaintPanel extends javax.swing.JPanel {
             return message;
         }
  
-        /*
-         * Executed in event dispatch thread
-         */
+        
         public void done() {
             try {
             String[] message = get();
@@ -146,8 +156,12 @@ public class POMaintPanel extends javax.swing.JPanel {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars("");  
-           }  else {
-             initvars(ordernbr.getText());  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars("");  
            }
            
             
@@ -157,60 +171,192 @@ public class POMaintPanel extends javax.swing.JPanel {
            
         }
     }  
-    
-       public boolean validateInput() {
-        boolean proceed = true;
-            
-            
-         if (ddstatus.getSelectedItem().toString().isEmpty()) {
-                    status = "open";
-                } else {
-                    status = ddstatus.getSelectedItem().toString();
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+  
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
                 }
                 
-                if (cbblanket.isSelected())
-                    blanket = "BLANKET";
-                else
-                    blanket = "DISCRETE";
-                
-                if ( ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty() ) {
-                   bsmf.MainFrame.show("must choose a vendor");
-                   proceed = false;
-                    ddvend.requestFocus();
-                }
-               
-                
-                terms = OVData.getVendTerms(ddvend.getSelectedItem().toString()); 
-                cc = OVData.getVendAPCC(ddvend.getSelectedItem().toString());
-                acct = OVData.getVendAPAcct(ddvend.getSelectedItem().toString());
-                curr = ddcurr.getSelectedItem().toString();
-                
-                if (terms == null   || acct == null   || cc == null || curr == null ||
-                        terms.isEmpty() || acct.isEmpty() || cc.isEmpty() || curr.isEmpty()
-                         ) {
-                        bsmf.MainFrame.show("Terms|ARacct|ARcc|Currency is not defined for this customer");
-                        proceed = false;
-                    }   
-                
-                if (orddet.getRowCount() == 0) {
-                    bsmf.MainFrame.show("No Line Items");
-                }
-                
-                
-                 // lets check for foreign currency with no exchange rate
-            if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
-            if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
-                bsmf.MainFrame.show("Foreign currency has no exchange rate " + curr + "/" + basecurr);
-                proceed = false;
+                component.setEnabled(b);
             }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
             }
-                
-                    
-        return proceed;
+    } 
+        
+    public void setComponentDefaultValues() {
+        
+        isLoad = true;
+        
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add("Main", panelMain);
+        jTabbedPane1.add("Lines", panelDetail);
+        jTabbedPane1.add("Schedule", panelSchedule);
+        
+        
+        jTabbedPane1.setEnabledAt(2, true);
+        jTabbedPane1.setEnabledAt(1, true);
+        jTabbedPane1.setEnabledAt(0, true);
+        
+         java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+       
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        
+        listprice.setText("0.00");
+        netprice.setText("0.00");
+        netprice.setEditable(false);
+        qtyshipped.setText("0");
+        discount.setText("0.00");
+        
+        lbvend.setText("");
+       
+        userid.setText(bsmf.MainFrame.userid);
+        duedate.setDate(now);
+        orddate.setDate(now);
+        
+        orddate.setEnabled(false);
+       
+        
+        myorddetmodel.setRowCount(0);
+        orddet.setModel(myorddetmodel);
+        myorddetmodel.addTableModelListener(ml);
+        
+        modelsched.setRowCount(0);
+        tablesched.setModel(modelsched);
+        
+        lblcurr.setText("");
+        remarks.setText("");
+        tbtotqty.setText("");
+        tbtotdollars.setText("");
+        totlines.setText("");
+        vendnumber.setText("");
+        cbblanket.setEnabled(true);
+        
+        
+        
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        ddshipvia.removeAllItems();
+        mylist = OVData.getScacCarrierOnly();   
+        for (int i = 0; i < mylist.size(); i++) {
+            ddshipvia.addItem(mylist.get(i));
+        }
+        ddshipvia.insertItemAt("", 0);
+        ddshipvia.setSelectedIndex(0);
+        
+        
+        ddcurr.removeAllItems();
+         ddcurr.insertItemAt("", 0);
+         ddcurr.setSelectedIndex(0);
+        mylist = OVData.getCurrlist();
+        for (String code : mylist) {
+            ddcurr.addItem(code);
+        }
+        
+        
+         venditemonly = OVData.isCustItemOnly();
+        if (! venditemonly) {
+            ddpart.removeAllItems();
+            ArrayList<String> items = OVData.getItemMasterAlllist();
+            for (String item : items) {
+            ddpart.addItem(item);
+            }  
+        }
+        
+        
+        
+        dduom.removeAllItems();
+        mylist = OVData.getUOMList();
+        for (String code : mylist) {
+            dduom.addItem(code);
+        }
+        
+         ddpart.setForeground(Color.black);
+        vendnumber.setForeground(Color.black);
+        vendnumber.setEditable(false);
+        
+        
+        ddvend.removeAllItems();
+          ArrayList myvends = OVData.getvendmstrlist();
+          for (int i = 0; i < myvends.size(); i++) {
+            ddvend.addItem(myvends.get(i));
+          }
+          ddvend.insertItemAt("", 0);
+          ddvend.setSelectedIndex(0);
+        isLoad = false;
+        
+        
     }
     
-      
-     public String[] addOrder() {
+    public void initvars(String arg) {
+       
+       
+       setPanelComponentState(panelMain, false); 
+       setPanelComponentState(panelDetail, false); 
+       setPanelComponentState(panelSchedule, false); 
+       setPanelComponentState(this, false); 
+       
+       
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (! arg.isEmpty()) {
+            executeTask("get", arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+        }
+          
+    }
+   
+    public String[] addRecord(String x) {
          
          String[] message = new String[2];
          try {
@@ -231,7 +377,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                         + "(po_nbr, po_vend, po_site, po_type, po_curr, po_buyer, po_due_date, "
                         + " po_ord_date, po_userid, po_status,"
                         + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
-                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                         + "'" + ddvend.getSelectedItem().toString() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + BlueSeerUtils.boolToInt(cbblanket.isSelected()) + "'" + ","
@@ -286,7 +432,7 @@ public class POMaintPanel extends javax.swing.JPanel {
          return message;
      } 
       
-     public String[] deleteOrder() {
+    public String[] deleteRecord(String x) {
         String[] message = new String[2];
            try {
 
@@ -295,10 +441,10 @@ public class POMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + ordernbr.getText() + "'" + ";");   
-                int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + ordernbr.getText() + "'" + ";");
+                st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
+                int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
-                        message = new String[]{"0", "deleted order number " + ordernbr.getText()};
+                        message = new String[]{"0", "deleted order number " + tbkey.getText()};
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -311,8 +457,8 @@ public class POMaintPanel extends javax.swing.JPanel {
            return message;
     }
     
-      public String[] editOrder() {
-     String[] message = new String[2];
+    public String[] updateRecord(String x) {
+     String[] m = new String[2];
        try {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -329,12 +475,12 @@ public class POMaintPanel extends javax.swing.JPanel {
                
                
                     st.executeUpdate("update po_mstr "
-                       + " set po_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + " po_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + "," 
-                        + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "") + "'" + "," 
+                       + " set po_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
+                        + " po_rmks = " + "'" + remarks.getText().replace("'", "''") + "'" + "," 
+                        + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "''") + "'" + "," 
                         + " po_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + "," 
-                       + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","          
-                       + " where po_nbr = " + "'" + ordernbr.getText().toString() + "'"
+                       + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'"          
+                       + " where po_nbr = " + "'" + x + "'"
                         + ";");
 
                  
@@ -344,9 +490,9 @@ public class POMaintPanel extends javax.swing.JPanel {
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
-                        if (orddet.getValueAt(j, 10).toString().equals("close"))
+                        if (orddet.getValueAt(j, 9).toString().equals("close"))
                             continue;
-                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + ordernbr.getText() + "'" +
+                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + x + "'" +
                                 " and pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
                             while (res.next()) {
                             i++;
@@ -355,15 +501,15 @@ public class POMaintPanel extends javax.swing.JPanel {
                              //   "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
                             if (i > 0) {
                               st.executeUpdate("update pod_mstr set "
-                            + " pod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + " pod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "''") + "'" + ","
+                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
                             + " pod_ord_qty = " + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
                             + " pod_listprice = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
                             + " pod_disc = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                             + " pod_netprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
-                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                            + " where pod_nbr = " + "'" + ordernbr.getText() + "'" 
+                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" 
+                            + " where pod_nbr = " + "'" + x + "'" 
                             + " AND pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
                             + ";");
                             } else {
@@ -390,30 +536,26 @@ public class POMaintPanel extends javax.swing.JPanel {
 
                     }
                     
-                    
-                    message = new String[]{"0", "Order has been edited"};     
+                    m = new String[]{"0", "Order has been edited"};     
                     
                     
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                message = new String[]{"1", "Order cannot be edited"};     
+                m = new String[]{"1", "sql error when editing purchase order"};     
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
+             m = new String[]{"1", "sql communication error when editing purchase order"};   
             MainFrame.bslog(e);
         }
-     return message;
+     return m;
     }
-    
-     
-     public boolean getOrder(String mykey) {
-        boolean gotIt = false;
-        //initvars("");
-        
-      
-        
+         
+    public String[] getRecord(String x) {
+        String[] m = new String[2];
+         myorddetmodel.setRowCount(0);
         
         try {
 
@@ -424,17 +566,18 @@ public class POMaintPanel extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + mykey + "'" + ";");
+                res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + x + "'" + ";");
                 while (res.next()) {
                     i++;
-                    gotIt = true;
-                    ordernbr.setText(mykey);
+                    
+                    tbkey.setText(x);
                    
                     ddvend.setSelectedItem(res.getString("po_vend"));
                     ddvend.setEnabled(false);
                     ddstatus.setSelectedItem(res.getString("po_status"));
                     ddcurr.setSelectedItem(res.getString("po_curr"));
                     ddshipvia.setSelectedItem(res.getString("po_shipvia"));
+                    remarks.setText(res.getString("po_rmks"));
                     duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("po_due_date")));
                     blanket = res.getString("po_type");
                     if (blanket != null && blanket.compareTo("BLANKET") == 0)
@@ -443,54 +586,107 @@ public class POMaintPanel extends javax.swing.JPanel {
                     cbblanket.setSelected(false);
                     cbblanket.setEnabled(false);
                 }
-                 myorddetmodel.setRowCount(0);
-                 // myorddetmodel  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + mykey + "'" + ";");
+                
+                 // myorddetmodel  "Line", "Part", "CustPart",  "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
+                res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + x + "'" + ";");
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("pod_line"), res.getString("pod_part"),
                       res.getString("pod_vendpart"), res.getString("pod_nbr"), 
                       res.getString("pod_ord_qty"), res.getString("pod_listprice"),
                       res.getDouble("pod_disc"), res.getString("pod_netprice"), res.getString("pod_rcvd_qty"), res.getString("pod_status")});
                 }
-                orddet.setModel(myorddetmodel);
                
                  
-                if (cbblanket.isSelected())
-                    panelSchedule.setVisible(true);
-                else
-                    panelSchedule.setVisible(false);
                
                 
                 sumqty();
-                 sumdollars();
-                 sumlinecount();
+                sumdollars();
+                sumlinecount();
                
-                if (gotIt) {
+                if (i > 0) {
                          if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0) {
-                             disableAll();
+                             setPanelComponentState(this, false);
+                             m = new String[]{"1", "purchase order is closed"};
                              btnew.setEnabled(true);
                          } else {
-                             enableAll();
+                             m = new String[]{"0", "found purchase order"};
+                             setPanelComponentState(this, true);
                               btadd.setEnabled(false);
                               btnew.setEnabled(false);
+                              tbkey.setEditable(false);
+                              tbkey.setForeground(Color.blue);
                          }
                 } else {
-                     return false;   
+                     tbkey.setForeground(Color.red);
+                     return m = new String[]{"1", "no purchase order found"};   
                 }
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve po_mstr");
+                m = new String[]{"1", "sql error getting purchase order"}; 
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{"1", "sql connection error"}; 
         }
-     return gotIt;
+     return m;
     }
     
+    public boolean validateInput(String x) {
+        boolean proceed = true;
+            
+            
+         if (ddstatus.getSelectedItem().toString().isEmpty()) {
+                    status = "open";
+                } else {
+                    status = ddstatus.getSelectedItem().toString();
+                }
+                
+                if (cbblanket.isSelected())
+                    blanket = "BLANKET";
+                else
+                    blanket = "DISCRETE";
+                
+                if ( ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty() ) {
+                   bsmf.MainFrame.show("must choose a vendor");
+                   proceed = false;
+                    ddvend.requestFocus();
+                }
+               
+                
+                terms = OVData.getVendTerms(ddvend.getSelectedItem().toString()); 
+                cc = OVData.getVendAPCC(ddvend.getSelectedItem().toString());
+                acct = OVData.getVendAPAcct(ddvend.getSelectedItem().toString());
+                curr = ddcurr.getSelectedItem().toString();
+                
+                if (terms == null   || acct == null   || cc == null || curr == null ||
+                        terms.isEmpty() || acct.isEmpty() || cc.isEmpty() || curr.isEmpty()
+                         ) {
+                        bsmf.MainFrame.show("Terms|ARacct|ARcc|Currency is not defined for this customer");
+                        proceed = false;
+                    }   
+                
+                if (orddet.getRowCount() == 0) {
+                    bsmf.MainFrame.show("No Line Items");
+                }
+                
+                
+                 // lets check for foreign currency with no exchange rate
+            if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
+            if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
+                bsmf.MainFrame.show("Foreign currency has no exchange rate " + curr + "/" + basecurr);
+                proceed = false;
+            }
+            }
+                
+                    
+        return proceed;
+    }
     
-     public void setPrice() {
+       
+     // additional functions
+    public void setPrice() {
          DecimalFormat df = new DecimalFormat("#0.0000");
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 String[] TypeAndPrice = OVData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
@@ -510,7 +706,7 @@ public class POMaintPanel extends javax.swing.JPanel {
          }
      }
      
-      public void getparts(String part) {
+    public void getparts(String part) {
         try {
 
              Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -591,7 +787,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         }
     }
     
-        public void setnetprice() {
+    public void setnetprice() {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
@@ -614,7 +810,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         }
     }
       
-     public void sumlinecount() {
+    public void sumlinecount() {
          totlines.setText(String.valueOf(orddet.getRowCount()));
     }
     
@@ -637,6 +833,7 @@ public class POMaintPanel extends javax.swing.JPanel {
          }
         return max;
     }
+    
     public void sumdollars() {
         DecimalFormat df = new DecimalFormat("#.00");
         double dol = 0;
@@ -647,7 +844,13 @@ public class POMaintPanel extends javax.swing.JPanel {
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
    
-     public void vendChangeEvent(String mykey) {
+     public void refreshDisplayTotals() {
+        sumqty();
+        sumdollars();
+        sumlinecount();
+    }
+    
+    public void vendChangeEvent(String mykey) {
         
        
       try {
@@ -684,229 +887,33 @@ public class POMaintPanel extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
     }
-  
- 
-    /**
-     * Creates new form OrderMaintPanel
-     */
-    public POMaintPanel() {
-        initComponents();
-    }
-
-     public void enableAll() {
-        ordernbr.setEnabled(true);
-        ddvend.setEnabled(true);
-        ddshipvia.setEnabled(true);
-        duedate.setEnabled(true);
-        ddcurr.setEnabled(true);
-        
-        ddsite.setEnabled(true);
-        ddstatus.setEnabled(true);
-        cbblanket.setEnabled(true);
-        remarks.setEnabled(true);
-        ddpart.setEnabled(true);
-        dduom.setEnabled(true);
-        vendnumber.setEnabled(true);
-        qtyshipped.setEnabled(true);
-        listprice.setEnabled(true);
-      
-      
-      netprice.setEnabled(true);
-      totlines.setEnabled(true);
-      tbtotqty.setEnabled(true);
-      tbtotdollars.setEnabled(true);
-      
-      netprice.setEditable(false);
-      totlines.setEditable(false);
-      tbtotqty.setEditable(false);
-      tbtotdollars.setEditable(false);
-      
-      
-      discount.setEnabled(true);
-        
-        orddet.setEnabled(true);
-        
-       
-        
-          btbrowse.setEnabled(true);
-          btpovendbrowse.setEnabled(true);
-          btpoprint.setEnabled(true);
-        btnew.setEnabled(true);
-        btedit.setEnabled(true);
-        btdelete.setEnabled(true);
-        btadd.setEnabled(true);
-        btadditem.setEnabled(true);
-        btdelitem.setEnabled(true);
-        tbbuyer.setEnabled(true);
-        
-    }
     
-     public void disableAll() {
-     //   ordernbr.setEnabled(false);
-        ddvend.setEnabled(false);
-        ddshipvia.setEnabled(false);
-        duedate.setEnabled(false);
-        orddate.setEnabled(false);
-        ddsite.setEnabled(false);
-        ddstatus.setEnabled(false);
-        cbblanket.setEnabled(false);
-        remarks.setEnabled(false);
-        ddpart.setEnabled(false);
-        dduom.setEnabled(false);
-        qtyshipped.setEnabled(false);
-        listprice.setEnabled(false);
-        netprice.setEnabled(false);
-        discount.setEnabled(false);
-        tbbuyer.setEnabled(false);
-        vendnumber.setEnabled(false);
-        userid.setEnabled(false);
-        ddcurr.setEnabled(false);
-        orddet.setEnabled(false);
+     public void retotal() {
         
-        totlines.setEnabled(false);
-        tbtotqty.setEnabled(false);
-        tbtotdollars.setEnabled(false);
+        DecimalFormat df = new DecimalFormat("#.00");
+        double dol = 0;
+        double newdisc = 0;
+        double newprice = 0;
+        double newtax = 0;
+        double listprice = 0;
         
-          btbrowse.setEnabled(false);
-           btpovendbrowse.setEnabled(false);
-          btpoprint.setEnabled(false);
-        btnew.setEnabled(false);
-        btedit.setEnabled(false);
-        btdelete.setEnabled(false);
-        btadd.setEnabled(false);
-        btadditem.setEnabled(false);
-        btdelitem.setEnabled(false);
-    }
-    
-    public void initvars(String arg) {
-       
-         jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", panelMain);
-        jTabbedPane1.add("Lines", panelDetail);
-        jTabbedPane1.add("Schedule", panelSchedule);
-        
-        
-        jTabbedPane1.setEnabledAt(2, false);
-        jTabbedPane1.setEnabledAt(1, false);
-        
-         java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-       
-        ordernbr.setText("");
-        ordernbr.setEditable(true);
-        ordernbr.setForeground(Color.black);
-        
-        listprice.setText("0.00");
-        netprice.setText("0.00");
-        netprice.setEditable(false);
-        qtyshipped.setText("0");
-        discount.setText("0.00");
-        
-        lbvend.setText("");
-       
-        userid.setText(bsmf.MainFrame.userid);
-        duedate.setDate(now);
-        orddate.setDate(now);
-        
-        orddate.setEnabled(false);
-       
-        myorddetmodel.setRowCount(0);
-        orddet.setModel(myorddetmodel);
-        modelsched.setRowCount(0);
-        tablesched.setModel(modelsched);
-        
-        btbrowse.setEnabled(true);
-        btpovendbrowse.setEnabled(true);
-        btnew.setEnabled(true);
-        btedit.setEnabled(true);
-        btdelete.setEnabled(true);
-        btadd.setEnabled(true);
-        btadditem.setEnabled(true);
-        btdelitem.setEnabled(true);
-      
-        lblcurr.setText("");
-        remarks.setText("");
-        tbtotqty.setText("");
-        tbtotdollars.setText("");
-        totlines.setText("");
-        vendnumber.setText("");
-        cbblanket.setEnabled(true);
-        
-        
-        
-         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-        ddshipvia.removeAllItems();
-        mylist = OVData.getScacCarrierOnly();   
-        for (int i = 0; i < mylist.size(); i++) {
-            ddshipvia.addItem(mylist.get(i));
-        }
-        ddshipvia.insertItemAt("", 0);
-        ddshipvia.setSelectedIndex(0);
-        
-        
-        ddcurr.removeAllItems();
-         ddcurr.insertItemAt("", 0);
-         ddcurr.setSelectedIndex(0);
-        mylist = OVData.getCurrlist();
-        for (String code : mylist) {
-            ddcurr.addItem(code);
-        }
-        
-        
-         venditemonly = OVData.isCustItemOnly();
-        if (! venditemonly) {
-            ddpart.removeAllItems();
-            ArrayList<String> items = OVData.getItemMasterAlllist();
-            for (String item : items) {
-            ddpart.addItem(item);
-            }  
-        }
-        
-        
-        
-        dduom.removeAllItems();
-        mylist = OVData.getUOMList();
-        for (String code : mylist) {
-            dduom.addItem(code);
-        }
-        
-         ddpart.setForeground(Color.black);
-        vendnumber.setForeground(Color.black);
-        vendnumber.setEditable(false);
-        
-        isLoad = true;
-        ddvend.removeAllItems();
-          ArrayList myvends = OVData.getvendmstrlist();
-          for (int i = 0; i < myvends.size(); i++) {
-            ddvend.addItem(myvends.get(i));
-          }
-          ddvend.insertItemAt("", 0);
-          ddvend.setSelectedIndex(0);
-        isLoad = false;
-        
-          
-          if (! arg.isEmpty()) {
-              getOrder(arg);
-          }
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             listprice = Double.valueOf(orddet.getValueAt(j, 5).toString());
+             orddet.setValueAt(String.valueOf(newdisc), j, 6);
+             if (newdisc > 0) {
+             newprice = listprice - (listprice * (newdisc / 100));
+             } else {
+             newprice = listprice;    
+             }
+             orddet.setValueAt(String.valueOf(newprice), j, 7);
+              
+             
+         }
+                
          
-               if (! arg.isEmpty()) {
-            getOrder(arg);
-        } else {
-              disableAll();
-              btnew.setEnabled(true);
-              btbrowse.setEnabled(true);
-              btpovendbrowse.setEnabled(true);
-            
-          }
-          
-          
     }
+   
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -921,7 +928,7 @@ public class POMaintPanel extends javax.swing.JPanel {
         panelMain = new javax.swing.JPanel();
         jLabel76 = new javax.swing.JLabel();
         jLabel86 = new javax.swing.JLabel();
-        ordernbr = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         duedate = new com.toedter.calendar.JDateChooser();
         jLabel77 = new javax.swing.JLabel();
         remarks = new javax.swing.JTextField();
@@ -1000,9 +1007,9 @@ public class POMaintPanel extends javax.swing.JPanel {
 
         jLabel86.setText("Remarks");
 
-        ordernbr.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ordernbrActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -1093,151 +1100,148 @@ public class POMaintPanel extends javax.swing.JPanel {
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMainLayout.createSequentialGroup()
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel91)
+                        .addGap(10, 10, 10)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(179, 179, 179)
+                        .addComponent(jLabel77)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel82)
+                        .addGap(7, 7, 7)
+                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel78)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel90)
+                        .addGap(5, 5, 5)
+                        .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(199, 199, 199)
+                        .addComponent(jLabel83)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel92)
+                        .addGap(10, 10, 10)
+                        .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(jLabel85)
+                        .addGap(9, 9, 9)
+                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(cbblanket))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addComponent(btpoprint)
+                        .addGap(255, 255, 255)
+                        .addComponent(btdelete)
+                        .addGap(6, 6, 6)
+                        .addComponent(btedit)
+                        .addGap(10, 10, 10)
+                        .addComponent(btadd))
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(panelMainLayout.createSequentialGroup()
-                            .addGap(159, 159, 159)
-                            .addComponent(btpoprint)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btdelete)
+                            .addGap(27, 27, 27)
+                            .addComponent(jLabel76)
                             .addGap(6, 6, 6)
-                            .addComponent(btedit)
-                            .addGap(10, 10, 10)
-                            .addComponent(btadd))
+                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(7, 7, 7)
+                            .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(6, 6, 6)
+                            .addComponent(btnew)
+                            .addGap(157, 157, 157)
+                            .addComponent(jLabel81)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(panelMainLayout.createSequentialGroup()
                             .addGap(60, 60, 60)
                             .addComponent(jLabel86)
                             .addGap(4, 4, 4)
-                            .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(54, 54, 54)
-                                .addComponent(jLabel91))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jLabel82))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jLabel90))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel76))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jLabel92))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel85)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbblanket))
-                                .addGap(13, 13, 13)
-                                .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel77, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel78, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel81, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(2, 2, 2))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel83)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(btnew)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                            .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(54, 54, 54))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMainLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(jLabel76))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btbrowse, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelMainLayout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(jLabel81))
-                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btpovendbrowse)
-                                    .addComponent(btnew))))
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel76))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(btbrowse))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnew)
+                            .addComponent(jLabel81)))
+                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btpovendbrowse))
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
                         .addGap(4, 4, 4)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel78)
-                                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(2, 2, 2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel91)
-                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(6, 6, 6)
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelMainLayout.createSequentialGroup()
-                                        .addGap(3, 3, 3)
-                                        .addComponent(jLabel82))
-                                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(6, 6, 6)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel90))
-                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel83)))
-                        .addGap(9, 9, 9)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel92))
-                            .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel85))
-                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(2, 2, 2)
-                        .addComponent(cbblanket))
+                            .addComponent(jLabel91)
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel77))
-                            .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel77)))
+                .addGap(6, 6, 6)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel82))
+                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel78))))
+                .addGap(4, 4, 4)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel90))
+                    .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel83))))
+                .addGap(5, 5, 5)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel92))
+                    .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel85))
+                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(cbblanket)
                 .addGap(2, 2, 2)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1249,8 +1253,7 @@ public class POMaintPanel extends javax.swing.JPanel {
                     .addComponent(btpoprint)
                     .addComponent(btdelete)
                     .addComponent(btedit)
-                    .addComponent(btadd))
-                .addContainerGap(233, Short.MAX_VALUE))
+                    .addComponent(btadd)))
         );
 
         add(panelMain);
@@ -1517,47 +1520,13 @@ public class POMaintPanel extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
      
-         initvars("");
+        tbkey.setText(String.valueOf(OVData.getNextNbr("order")));
+        setPanelComponentState(this, true);
+        btedit.setEnabled(false);
+        tbkey.setEditable(false);
+        tbkey.setForeground(Color.blue);
         
-        if (ddvend.getItemCount() > 0) {
-           vendChangeEvent(ddvend.getSelectedItem().toString());
-        } 
         
-         ordernbr.setText(String.valueOf(OVData.getNextNbr("order")));
-         ordernbr.setEditable(false);
-         ordernbr.setForeground(Color.blue);
-                java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String clockdate = dfdate.format(now);
-                String clocktime = dftime.format(now);
-                userid.setText(clockdate);
-                userid.setEnabled(false);
-                duedate.setDate(now);
-               
-                
-                // tbDateShippedSM.setEnabled(false);
-                
-                userid.setText(bsmf.MainFrame.userid.toString());
-                
-                userid.setEnabled(false);
-                
-                
-                enableAll();
-                
-                ddstatus.setEnabled(false);
-                btnew.setEnabled(false);
-                btbrowse.setEnabled(false);
-                btedit.setEnabled(false);
-                btdelete.setEnabled(false);
-                btadd.setEnabled(false);
-                btpoprint.setEnabled(false);
-                btpovendbrowse.setEnabled(false);
-                
-                editmode = false;
-               
-               
-       
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1606,10 +1575,10 @@ public class POMaintPanel extends javax.swing.JPanel {
             btadd.setEnabled(true);
         } 
         
-        //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice"
-        //  "Line, "Part", "VendPart", "PO", "Line", "Qty", "Rcvd Qty", "ListPrice", "Discount", "NetPrice"
+        // "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
         if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, part, custpart, ordernbr.getText(),  qtyshipped.getText(), listprice.getText(), discount.getText(), netprice.getText(), "0", "open"});
+            myorddetmodel.addRow(new Object[]{line, part, custpart, tbkey.getText(),  qtyshipped.getText(), listprice.getText(), 
+                discount.getText(), netprice.getText(), "0", "open"});
          sumqty();
          sumdollars();
          sumlinecount();
@@ -1623,13 +1592,11 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (!validateInput()) {
-            return;
-        } 
-        BlueSeerUtils.startTask(new String[]{"","Committing..."});
-        disableAll();
-        Task task = new Task("add");
-        task.execute();   
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", tbkey.getText());
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1640,8 +1607,8 @@ public class POMaintPanel extends javax.swing.JPanel {
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
 
         if (ddvend.getItemCount() > 0 && ! isLoad && ! ddvend.getSelectedItem().toString().isEmpty()) {
-           vendChangeEvent(ddvend.getSelectedItem().toString());
            jTabbedPane1.setEnabledAt(1, true);
+           vendChangeEvent(ddvend.getSelectedItem().toString());
         } // if ddvend has a list
     }//GEN-LAST:event_ddvendActionPerformed
 
@@ -1663,13 +1630,11 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        if (!validateInput()) {
-            return;
-        }
-        BlueSeerUtils.startTask(new String[]{"","Committing..."});
-        disableAll();
-        Task task = new Task("edit");
-        task.execute();  
+          if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", tbkey.getText());
     }//GEN-LAST:event_bteditActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -1707,7 +1672,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_discountFocusLost
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
-       OVData.printPurchaseOrder(ordernbr.getText());
+       OVData.printPurchaseOrder(tbkey.getText());
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -1750,15 +1715,9 @@ public class POMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
-    private void ordernbrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordernbrActionPerformed
-         boolean gotIt = getOrder(ordernbr.getText());
-        if (gotIt) {
-          ordernbr.setEditable(false);
-          ordernbr.setForeground(Color.blue);
-        } else {
-            ordernbr.setForeground(Color.red);
-        }
-    }//GEN-LAST:event_ordernbrActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", tbkey.getText());
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained
          if (listprice.getText().equals("0")) {
@@ -1769,10 +1728,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-             BlueSeerUtils.startTask(new String[]{"","Committing..."});
-             disableAll();
-             Task task = new Task("delete");
-             task.execute(); 
+             executeTask("delete", tbkey.getText());
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
@@ -1829,7 +1785,6 @@ public class POMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField netprice;
     private com.toedter.calendar.JDateChooser orddate;
     private javax.swing.JTable orddet;
-    private javax.swing.JTextField ordernbr;
     private javax.swing.JPanel panelDetail;
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelSchedule;
@@ -1837,6 +1792,7 @@ public class POMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField remarks;
     private javax.swing.JTable tablesched;
     private javax.swing.JTextField tbbuyer;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField totlines;

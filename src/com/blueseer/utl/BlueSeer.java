@@ -36,7 +36,7 @@ public interface BlueSeer {
         
     public void initvars(String x);
     
-    public void setPanelComponentState(JPanel panel, boolean b);
+    public void setPanelComponentState(Object panel, boolean b);
     
     public void setComponentDefaultValues();
     
