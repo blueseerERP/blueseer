@@ -173,7 +173,9 @@
                           <EmptySpace min="536" pref="536" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                          <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btadd" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
@@ -286,7 +288,8 @@
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -430,12 +433,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteitemActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btedit">
+        <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddpo">
@@ -579,6 +582,11 @@
         <Component class="javax.swing.JCheckBox" name="cbautovoucher">
           <Properties>
             <Property name="text" type="java.lang.String" value="AutoVoucher?"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btdelete">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -106,7 +106,7 @@
                           <EmptySpace min="255" pref="255" max="-2" attributes="0"/>
                           <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="btadd" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -241,7 +241,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btpoprint" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" min="-2" max="-2" attributes="0"/>
-                      <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                      <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                       <Component id="btadd" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -337,12 +337,12 @@
             <Property name="text" type="java.lang.String" value="Due Date"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btedit">
+        <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddshipvia">

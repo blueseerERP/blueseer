@@ -54,6 +54,10 @@ public interface BlueSeer {
     
     public boolean validateInput(String e);
     
+    public String[] setAction(int i);
+    
+    public void newAction(String x);
+    
     public void executeTask(String x, String y);
    
     

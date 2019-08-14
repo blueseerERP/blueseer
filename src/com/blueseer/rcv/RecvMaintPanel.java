@@ -292,6 +292,36 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         isLoad = false;
     }
     
+    public void newAction(String x) {
+      setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+    }
+   
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btnew.setEnabled(false);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    
     public void initvars(String arg) {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
@@ -353,26 +383,18 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                   res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_cost")});
                 }
                 
-                if (i > 0) {
-                    m = new String[]{"0", "found record"};  
-                    setPanelComponentState(this, true);
-                    btnew.setEnabled(false);
-                    btadd.setEnabled(false);
-                    tbkey.setEditable(false);
-                    tbkey.setForeground(Color.blue);
-                } else {
-                   m = new String[]{"1", "no record found"}; 
-                   tbkey.setForeground(Color.red);
-                }
+                // set Action if Record found (i > 0)
+                m = setAction(i);
                
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{"1", "Cannot retrieve receiver"};  
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
         
         return m;
@@ -471,7 +493,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                        
                 
                   if (! error) {        
-                  m = new String[] {"0","receiver has been added"};
+                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                    
                        /* create auto-voucher from temptable if autovoucher is on */
                     if (cbautovoucher.isSelected()) {
@@ -486,18 +508,19 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                   
                   initvars("");
                   } else {
-                  m = new String[] {"1","unable to add receiver"};
+                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
                   }
                     
                
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[] {"1","unable to add receiver"};
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
      return m;
     }
@@ -564,18 +587,18 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + ")"
                             + ";");
                     }
-                   m = new String[] {"0","receiver has been updated"};
+                  m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars("");
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-               m = new String[] {"1","unable to update receiver"};
+               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError}; 
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[] {"1","unable to update receiver"};
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
         }
      
      return m;
@@ -583,6 +606,44 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     
     public String[] deleteRecord(String x) {
      String[] m = new String[2];
+     boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                 res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x + "'" + 
+                                      " and rvd_voqty > 0 " + ";");
+                int i = 0;
+                while (res.next()) {
+                    i++;
+                }
+                if (i > 0) {
+                   return m = new String[] {"1","cannot delete receiver...some lines already vouchered"};
+                }
+                
+                
+                   int k = st.executeUpdate("delete from recv_mstr where rv_id = " + "'" + tbkey.getText() + "'" + ";");
+                   int j = st.executeUpdate("delete from recv_det where rvd_id = " + "'" + tbkey.getText() + "'" + ";");
+                    if (k > 0 && j > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars("");
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
      return m;
     }
     
@@ -700,7 +761,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         rvdet = new javax.swing.JTable();
         ddvend = new javax.swing.JComboBox();
         btdeleteitem = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         ddpo = new javax.swing.JComboBox();
         dcdate = new com.toedter.calendar.JDateChooser();
         jLabel27 = new javax.swing.JLabel();
@@ -728,6 +789,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         ddloc = new javax.swing.JComboBox<>();
         jLabel42 = new javax.swing.JLabel();
         cbautovoucher = new javax.swing.JCheckBox();
+        btdelete = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -806,10 +868,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             }
         });
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -868,6 +930,8 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         jLabel42.setText("Location");
 
         cbautovoucher.setText("AutoVoucher?");
+
+        btdelete.setText("Delete");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -979,7 +1043,9 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         .addComponent(jLabel32)
                         .addGap(536, 536, 536))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btedit)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd)
                         .addGap(23, 23, 23))))
@@ -1068,7 +1134,8 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btadd)
-                                    .addComponent(btedit)))
+                                    .addComponent(btupdate)
+                                    .addComponent(btdelete)))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel31))))
@@ -1084,12 +1151,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-      
-        tbkey.setText(String.valueOf(OVData.getNextNbr("receiver")));
-        setPanelComponentState(this, true);
-        btedit.setEnabled(false);
-        tbkey.setEditable(false);
-        tbkey.setForeground(Color.blue);
+         newAction("receiver");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1228,13 +1290,13 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         }
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         if (! validateInput("updateRecord")) {
            return;
        }
         setPanelComponentState(this, false);
         executeTask("update", tbkey.getText());
-    }//GEN-LAST:event_bteditActionPerformed
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void ddpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpoActionPerformed
        ddpart.removeAllItems();
@@ -1318,9 +1380,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteitem;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbautovoucher;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddloc;

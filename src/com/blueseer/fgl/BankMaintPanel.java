@@ -203,6 +203,35 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
        isLoad = false;
     }
     
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btnew.setEnabled(false);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
     public String[] addRecord(String x) {
      String[] m = new String[2];
      
@@ -247,12 +276,12 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
      
      return m;
@@ -315,12 +344,12 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
         }
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -352,17 +381,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     cbactive.setSelected(res.getBoolean("bk_active"));
                 }
                
-                if (i > 0) {
-                   m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
-                   setPanelComponentState(this, true);
-                   btnew.setEnabled(false);
-                   btadd.setEnabled(false);
-                   tbkey.setEditable(false);
-                   tbkey.setForeground(Color.blue);
-                } else {
-                   m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
-                   tbkey.setForeground(Color.red);
-                }
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
@@ -628,13 +649,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       // manual creation of bank code
-       // tbkey.setText(String.valueOf(OVData.getNextNbr("receiver")));
-        setPanelComponentState(this, true);
-        setComponentDefaultValues();
-        btupdate.setEnabled(false);
-       // tbkey.setEditable(false);
-        tbkey.setForeground(Color.blue);
+      newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed

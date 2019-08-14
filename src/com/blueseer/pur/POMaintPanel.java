@@ -355,10 +355,40 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         }
           
     }
-   
+  
+    public void newAction(String x) {
+        setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btnew.setEnabled(false);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+        
     public String[] addRecord(String x) {
          
-         String[] message = new String[2];
+         String[] m = new String[2];
          try {
 
            Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -417,44 +447,64 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + ";");
 
                     }
-                    message = new String[]{"0", "Order has been added"}; 
-                    // btQualProbAdd.setEnabled(false);
+                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                   
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 message = new String[]{"1", "Cannot add Order"};
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
          
-         return message;
+         return m;
      } 
       
     public String[] deleteRecord(String x) {
-        String[] message = new String[2];
-           try {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+                   try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
-                int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + tbkey.getText() + "'" + ";");
-                    if (i > 0) {
-                        message = new String[]{"0", "deleted order number " + tbkey.getText()};
+                    Class.forName(bsmf.MainFrame.driver).newInstance();
+                    bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+                    try {
+                        Statement st = bsmf.MainFrame.con.createStatement();
+                        ResultSet res = null;
+ 
+                        // if this PO has 'any' line items already received then bale...cannot delete
+                        res = st.executeQuery("select pod_nbr from pod_mstr where pod_nbr = " + "'" + x + "'" + 
+                                              " and pod_rcvd_qty > 0 " + ";");
+                        int z = 0;
+                        while (res.next()) {
+                            z++;
+                        }
+                        if (z > 0) {
+                           return m = new String[] {"1","cannot delete PO...some lines already received"};
+                        }
+                        
+                        
+                        
+                        st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
+                        int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + tbkey.getText() + "'" + ";");
+                            if (i > 0) {
+                                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                            }
+                        } catch (SQLException s) {
+                            MainFrame.bslog(s);
+                        m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
                     }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                message = new String[]{"1", "unabled to delete order"};
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+                    bsmf.MainFrame.con.close();
+                } catch (Exception e) {
+                    MainFrame.bslog(e);
+                }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled};  
         }
-           return message;
+           return m;
     }
     
     public String[] updateRecord(String x) {
@@ -536,18 +586,18 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
                     }
                     
-                    m = new String[]{"0", "Order has been edited"};     
+                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
                     
                     
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{"1", "sql error when editing purchase order"};     
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
-             m = new String[]{"1", "sql communication error when editing purchase order"};   
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
             MainFrame.bslog(e);
         }
      return m;
@@ -569,9 +619,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + x + "'" + ";");
                 while (res.next()) {
                     i++;
-                    
                     tbkey.setText(x);
-                   
                     ddvend.setSelectedItem(res.getString("po_vend"));
                     ddvend.setEnabled(false);
                     ddstatus.setSelectedItem(res.getString("po_status"));
@@ -597,38 +645,23 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 }
                
                  
-               
+               // set Action if Record found (i > 0)
+                m = setAction(i);
                 
                 sumqty();
                 sumdollars();
                 sumlinecount();
                
-                if (i > 0) {
-                         if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0) {
-                             setPanelComponentState(this, false);
-                             m = new String[]{"1", "purchase order is closed"};
-                             btnew.setEnabled(true);
-                         } else {
-                             m = new String[]{"0", "found purchase order"};
-                             setPanelComponentState(this, true);
-                              btadd.setEnabled(false);
-                              btnew.setEnabled(false);
-                              tbkey.setEditable(false);
-                              tbkey.setForeground(Color.blue);
-                         }
-                } else {
-                     tbkey.setForeground(Color.red);
-                     return m = new String[]{"1", "no purchase order found"};   
-                }
+               
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{"1", "sql error getting purchase order"}; 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{"1", "sql connection error"}; 
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
         }
      return m;
     }
@@ -941,7 +974,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         ddvend = new javax.swing.JComboBox();
         btadd = new javax.swing.JButton();
         jLabel81 = new javax.swing.JLabel();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         ddshipvia = new javax.swing.JComboBox();
         jLabel90 = new javax.swing.JLabel();
         cbblanket = new javax.swing.JCheckBox();
@@ -1047,10 +1080,10 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
         jLabel81.setText("Due Date");
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -1148,7 +1181,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         .addGap(255, 255, 255)
                         .addComponent(btdelete)
                         .addGap(6, 6, 6)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addGap(10, 10, 10)
                         .addComponent(btadd))
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1252,7 +1285,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btpoprint)
                     .addComponent(btdelete)
-                    .addComponent(btedit)
+                    .addComponent(btupdate)
                     .addComponent(btadd)))
         );
 
@@ -1519,14 +1552,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-     
-        tbkey.setText(String.valueOf(OVData.getNextNbr("order")));
-        setPanelComponentState(this, true);
-        btedit.setEnabled(false);
-        tbkey.setEditable(false);
-        tbkey.setForeground(Color.blue);
-        
-        
+      newAction("order");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1629,13 +1655,13 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
          sumlinecount();
     }//GEN-LAST:event_btdelitemActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
           if (! validateInput("updateRecord")) {
            return;
        }
         setPanelComponentState(this, false);
         executeTask("update", tbkey.getText());
-    }//GEN-LAST:event_bteditActionPerformed
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
         // TODO add your handling code here:
@@ -1738,10 +1764,10 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
     private javax.swing.JButton btpovendbrowse;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbblanket;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddpart;
