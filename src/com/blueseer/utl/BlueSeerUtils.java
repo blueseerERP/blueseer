@@ -66,7 +66,31 @@ public class BlueSeerUtils {
     public static  ImageIcon clickcheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/check.png"));
     public static  ImageIcon clicknocheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/nocheck.png"));
     
+    public static String getRecordSuccess = "record found";
+    public static String addRecordSuccess = "record added successfully";
+    public static String updateRecordSuccess = "record updated successfully";
+    public static String deleteRecordSuccess = "record deleted successfully";
     
+    public static String getRecordError = "record could not be found";
+    public static String addRecordError = "record could not be added";
+    public static String updateRecordError = "record could not be updated";
+    public static String deleteRecordError = "record could not be deleted";
+    
+    public static String addRecordAlreadyExists = "record already exists";
+    public static String deleteRecordCanceled = "delete transaction cancelled";
+    
+    public static String getRecordSQLError = "sql error in function getRecord";
+    public static String addRecordSQLError = "sql error in function addRecord";
+    public static String updateRecordSQLError = "sql error in function updateRecord";
+    public static String deleteRecordSQLError = "sql error in function deleteRecord";
+    
+    public static String getRecordConnError = "sql conn error in getRecord";
+    public static String addRecordConnError = "sql conn error in addRecord";
+    public static String updateRecordConnError = "sql conn error in updateRecord";
+    public static String deleteRecordConnError = "sql conn error in deleteRecord";
+    
+    public static String SuccessBit = "0";
+    public static String ErrorBit = "1";
     
     public static String bsformat(String type, String invalue, String precision) {
         String outvalue = "";

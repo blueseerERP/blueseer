@@ -153,7 +153,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
        
     }
    
-     public void setPanelComponentState(Object myobj, boolean b) {
+    public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
         if (myobj instanceof JPanel) {
@@ -587,7 +587,6 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }
     
     public boolean validateInput(String x) {
-        
         boolean b = true;
                 if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
                     b = false;

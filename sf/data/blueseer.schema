@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `ard_mstr` (
   `ard_cc` varchar(4) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `bk_mstr` (
   `bk_id` varchar(30) NOT NULL  DEFAULT '',
+  `bk_site` varchar(10) NOT NULL  DEFAULT '',
   `bk_desc` varchar(50) NOT NULL  DEFAULT '',
   `bk_acct` varchar(10)  DEFAULT '',
   `bk_cur` varchar(10)  DEFAULT '',
@@ -196,6 +197,7 @@ CREATE TABLE IF NOT EXISTS `clock_ctrl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `cm_mstr` (
   `cm_code` varchar(10) NOT NULL  DEFAULT '',
+  `cm_site` varchar(10)  DEFAULT '',
   `cm_name` varchar(30)  DEFAULT '',
   `cm_line1` varchar(30)  DEFAULT '',
   `cm_line2` varchar(30)  DEFAULT '',
@@ -1594,6 +1596,7 @@ CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_role` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `vd_mstr` (
   `vd_addr` varchar(30) NOT NULL  DEFAULT '',
+  `vd_site` varchar(10)  DEFAULT '',
   `vd_name` varchar(30)  DEFAULT '',
   `vd_line1` varchar(30)  DEFAULT '',
   `vd_line2` varchar(30)  DEFAULT '',

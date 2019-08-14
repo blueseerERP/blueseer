@@ -162,6 +162,7 @@ CREATE TABLE "ard_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "bk_mstr" (
   "bk_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bk_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "bk_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "bk_acct" varchar(10) COLLATE NOCASE DEFAULT '',
   "bk_cur" varchar(10) COLLATE NOCASE DEFAULT '',
@@ -227,6 +228,7 @@ CREATE TABLE "clock_ctrl" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cm_mstr" (
   "cm_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cm_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "cm_name" varchar(30) COLLATE NOCASE DEFAULT '',
   "cm_line1" varchar(30) COLLATE NOCASE DEFAULT '',
   "cm_line2" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -1999,6 +2001,7 @@ CREATE TABLE "user_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "vd_mstr" (
   "vd_addr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vd_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "vd_name" varchar(30) COLLATE NOCASE DEFAULT '',
   "vd_line1" varchar(30) COLLATE NOCASE DEFAULT '',
   "vd_line2" varchar(30) COLLATE NOCASE DEFAULT '',

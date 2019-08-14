@@ -833,6 +833,7 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineVendMstr() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("vd_addr,s,30,mandatory,unvalidated");
+        list.add("vd_site,s,10,mandatory,unvalidated");
         list.add("vd_name,s,30,optional,unvalidated");
         list.add("vd_line1,s,30,optional,unvalidated");
         list.add("vd_line2,s,30,optional,unvalidated");
@@ -956,6 +957,7 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineCustMstr() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cm_code,s,10,mandatory,unvalidated");
+        list.add("cm_site,s,10,optional,unvalidated");
         list.add("cm_name,s,30,optional,unvalidated");
         list.add("cm_line1,s,30,optional,unvalidated");
         list.add("cm_line2,s,30,optional,unvalidated");

@@ -27,30 +27,310 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class BankMaintPanel extends javax.swing.JPanel {
+public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
 
-    /**
-     * Creates new form CarrierMaintPanel
-     */
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations    
+                
+                
     public BankMaintPanel() {
         initComponents();
     }
 
-    public void getBankCode(String mykey) {
-        initvars("");
+    
+    
+    // interface functions implemented
+    public void executeTask(String x, String y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String key = "";
+          
+          public Task(String type, String key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars("");  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars("");  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
+        tbdesc.setText("");
+        tbacct.setText("");
+        tbroute.setText("");
+        tbassignedID.setText("");
+        cbactive.setSelected(false);
+        
+        ddsite.removeAllItems();
+        ArrayList<String> site = OVData.getSiteList();
+        for (int i = 0; i < site.size(); i++) {
+            ddsite.addItem(site.get(i));
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        ddcurr.removeAllItems();
+        ArrayList<String> curr = OVData.getCurrlist();
+        for (int i = 0; i < curr.size(); i++) {
+            ddcurr.addItem(curr.get(i));
+        }
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+        
+       isLoad = false;
+    }
+    
+    public String[] addRecord(String x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into bk_mstr "
+                            + "(bk_id, bk_site, bk_desc, bk_acct, bk_cur, bk_active, bk_route, bk_assignedID ) "
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + tbacct.getText().toString() + "'" + ","
+                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'" + ","
+                            + "'" + tbroute.getText().toString() + "'" + ","
+                            + "'" + tbassignedID.getText().toString() + "'"      
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars("");
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
+                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
+                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
+                            + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
+                            + "bk_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
+                            + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + " where bk_id = " + "'" + tbkey.getText() + "'"                             
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars("");
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars("");
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String x) {
+       String[] m = new String[2];
+       
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -59,49 +339,84 @@ public class BankMaintPanel extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + mykey + "'" + ";");
+                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x + "'" + ";");
                 while (res.next()) {
                     i++;
-                    tbcode.setText(res.getString("bk_id"));
+                    tbkey.setText(res.getString("bk_id"));
                     tbdesc.setText(res.getString("bk_desc"));
                     tbacct.setText(res.getString("bk_acct"));
                     tbroute.setText(res.getString("bk_route"));
                     tbassignedID.setText(res.getString("bk_assignedID"));
                     ddcurr.setSelectedItem(res.getString("bk_cur"));
+                    ddsite.setSelectedItem(res.getString("bk_site"));
                     cbactive.setSelected(res.getBoolean("bk_active"));
                 }
                
-                if (i == 0)
-                    bsmf.MainFrame.show("No Bank Record found for " + mykey);
-
+                if (i > 0) {
+                   m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btnew.setEnabled(false);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+                } else {
+                   m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red);
+                }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve bk_mstr");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
-
+      return m;
     }
     
-      public void initvars(String arg) {
-        tbcode.setText("");
-        tbdesc.setText("");
-        tbacct.setText("");
-        cbactive.setSelected(false);
-        
-        ddcurr.removeAllItems();
-        ArrayList mycode = OVData.getCurrlist();
-        for (int i = 0; i < mycode.size(); i++) {
-            ddcurr.addItem(mycode.get(i));
-        }
-        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a currency");
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String arg) {
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
         if (! arg.isEmpty()) {
-            getBankCode(arg);
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
         }
     }
+    
+    
+    // custom functions
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -120,7 +435,7 @@ public class BankMaintPanel extends javax.swing.JPanel {
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         cbactive = new javax.swing.JCheckBox();
         tbacct = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -131,6 +446,9 @@ public class BankMaintPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         tbassignedID = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        btnew = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -163,6 +481,12 @@ public class BankMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
         cbactive.setText("Active?");
 
         jLabel3.setText("Account:");
@@ -180,6 +504,15 @@ public class BankMaintPanel extends javax.swing.JPanel {
 
         jLabel6.setText("assignedID:");
 
+        jLabel7.setText("Site:");
+
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -192,25 +525,30 @@ public class BankMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tbassignedID)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tbassignedID)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btadd)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btdelete)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btupdate))
+                        .addComponent(cbactive)
+                        .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                        .addComponent(tbacct)
+                        .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbroute))
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btadd)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdelete)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate))
-                    .addComponent(cbactive)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                    .addComponent(tbacct)
-                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbroute))
+                        .addComponent(btnew)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -219,9 +557,14 @@ public class BankMaintPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
-                    .addComponent(btbrowse))
+                    .addComponent(btbrowse)
+                    .addComponent(btnew))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -256,146 +599,71 @@ public class BankMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a bank code");
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + tbcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into bk_mstr "
-                            + "(bk_id, bk_desc, bk_acct, bk_cur, bk_active, bk_route, bk_assignedID ) "
-                            + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'" + ","
-                            + "'" + tbroute.getText().toString() + "'" + ","
-                            + "'" + tbassignedID.getText().toString() + "'"      
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added Bank Record");
-                    } else {
-                        bsmf.MainFrame.show("Bank Record Already Exists");
-                    }
-
-                   initvars("");
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to bk_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", tbkey.getText());
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the code field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a code");
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
-                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
-                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
-                            + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'"
-                            + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where bk_id = " + "'" + tbcode.getText() + "'"                             
-                            + ";");
-                    bsmf.MainFrame.show("Updated Bank Code");
-                    initvars("");
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating bk_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", tbkey.getText());
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + tbcode.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                 bsmf.MainFrame.show("Unable to Delete Bank Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+       if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", tbkey.getText());   
+     
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
         reinitpanels("BrowseUtil", true, "bankmaint,bk_id");
     }//GEN-LAST:event_btbrowseActionPerformed
 
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+       // manual creation of bank code
+       // tbkey.setText(String.valueOf(OVData.getNextNbr("receiver")));
+        setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+       // tbkey.setEditable(false);
+        tbkey.setForeground(Color.blue);
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", tbkey.getText());
+    }//GEN-LAST:event_tbkeyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbactive;
     private javax.swing.JComboBox ddcurr;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbassignedID;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbroute;
     // End of variables declaration//GEN-END:variables
 }
