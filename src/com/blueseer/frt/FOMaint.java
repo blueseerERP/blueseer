@@ -167,7 +167,7 @@ public class FOMaint extends javax.swing.JPanel {
    
      public void getOrder(String mykey) {
         
-        initvars("");
+        initvars(null);
         
         btbrowse.setEnabled(false);
         btnew.setEnabled(true);
@@ -663,7 +663,7 @@ public class FOMaint extends javax.swing.JPanel {
         btdelitem.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", jPanelMain);
         jTabbedPane1.add("Load", jPanelLoad);
@@ -788,8 +788,8 @@ public class FOMaint extends javax.swing.JPanel {
         }
         
          
-        if (! arg.isEmpty()) {
-            getOrder(arg);
+        if (arg != null && arg.length > 0) {
+            getOrder(arg[0]);
         } else {
               disableAll();
               btnew.setEnabled(true);
@@ -1801,7 +1801,7 @@ public class FOMaint extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
      
-         initvars("");
+         initvars(null);
         
         
          freightorder.setText(String.valueOf(OVData.getNextNbr("fo")));
@@ -1973,7 +1973,7 @@ public class FOMaint extends javax.swing.JPanel {
                     OVData.updateShipperWithFreightOrder(orddet);
                     
                     bsmf.MainFrame.show("Freight Order has been added");
-                   initvars("");
+                   initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -2062,7 +2062,7 @@ public class FOMaint extends javax.swing.JPanel {
                     OVData.updateShipperWithFreightOrder(orddet);
                     
                     bsmf.MainFrame.show("Freight Order has been edited");
-                   initvars("");
+                   initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -2092,12 +2092,12 @@ public class FOMaint extends javax.swing.JPanel {
 
     private void btquoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquoteActionPerformed
         OVData.quoteFreightOrder(freightorder.getText());
-        initvars(freightorder.getText());
+        initvars(new String[] {freightorder.getText()});
     }//GEN-LAST:event_btquoteActionPerformed
 
     private void bttenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttenderActionPerformed
         OVData.tenderFreightOrder(freightorder.getText());
-        initvars(freightorder.getText());
+        initvars(new String[]{freightorder.getText()});
     }//GEN-LAST:event_bttenderActionPerformed
 
     private void bthidequotefilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidequotefilesActionPerformed
@@ -2225,7 +2225,7 @@ public class FOMaint extends javax.swing.JPanel {
 
     private void btacceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btacceptActionPerformed
         OVData.tenderResponse(freightorder.getText(), "Accepted");
-        initvars(freightorder.getText());
+        initvars(new String[]{freightorder.getText()});
     }//GEN-LAST:event_btacceptActionPerformed
 
     private void btdeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeclineActionPerformed
@@ -2239,7 +2239,7 @@ public class FOMaint extends javax.swing.JPanel {
         if (proceed) {
            OVData.updateFreightOrderReasonCode(freightorder.getText(), ddreasoncode.getSelectedItem().toString().substring(0, 4));
            OVData.tenderResponse(freightorder.getText(), "Declined");
-           initvars(freightorder.getText()); 
+           initvars(new String[]{freightorder.getText()}); 
         }
     }//GEN-LAST:event_btdeclineActionPerformed
 

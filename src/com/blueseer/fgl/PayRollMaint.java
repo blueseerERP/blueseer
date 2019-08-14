@@ -227,9 +227,9 @@ public class PayRollMaint extends javax.swing.JPanel {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            }  else {
-             initvars(tbid.getText());  
+             initvars(new String[]{tbid.getText()});  
            }
            
             
@@ -979,14 +979,14 @@ public class PayRollMaint extends javax.swing.JPanel {
         return myreturn;
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
          clearAll(); 
          disableAll();
          
          
-          if (! arg.isEmpty()) {
-            boolean gotIt = getPaymentBatch(arg);
+          if (arg != null && arg.length > 0) {
+            boolean gotIt = getPaymentBatch(arg[0].toString());
             if (gotIt) {
               tbid.setEditable(false);
               tbid.setForeground(Color.blue);
@@ -1568,7 +1568,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
        
-        initvars("");
+        initvars(null);
         
          isnew = true;
          tbid.setText(String.valueOf(OVData.getNextNbr("payroll")));
@@ -1595,7 +1595,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbidActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
-       initvars("");
+       initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btnachaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnachaActionPerformed

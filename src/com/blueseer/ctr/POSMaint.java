@@ -215,7 +215,7 @@ public class POSMaint extends javax.swing.JPanel {
         orddet.setEnabled(true);
    }
    
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         ArrayList<String> mylist = new ArrayList<String>();
        
         disable();
@@ -282,7 +282,7 @@ public class POSMaint extends javax.swing.JPanel {
         // disable certain fields
      
       
-          if (! arg.isEmpty()) {
+          if (arg != null && arg.length > 0) {
             //getOrder(arg);
         }
 
@@ -961,7 +961,7 @@ public class POSMaint extends javax.swing.JPanel {
                     if (! isError)
                     OVData.printPOS_Jasper(ordernbr.getText());
                     
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {

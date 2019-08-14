@@ -80,7 +80,7 @@ public class CustXrefRpt1 extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        rbpart.setSelected(true);
        rbcustpart.setSelected(false);
        buttonGroup1.add(rbpart);

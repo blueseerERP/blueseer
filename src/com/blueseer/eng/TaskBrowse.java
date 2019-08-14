@@ -189,7 +189,7 @@ public class TaskBrowse extends javax.swing.JPanel {
   
      
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);

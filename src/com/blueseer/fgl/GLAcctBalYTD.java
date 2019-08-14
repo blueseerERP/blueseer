@@ -96,7 +96,7 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
          
          
          

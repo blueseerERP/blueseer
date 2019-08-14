@@ -44,7 +44,7 @@ String mystring = "";
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
     }
     

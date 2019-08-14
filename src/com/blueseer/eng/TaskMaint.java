@@ -135,7 +135,7 @@ public class TaskMaint extends javax.swing.JPanel {
          btadd.setEnabled(false);
      }
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
           
            taskmodel.setRowCount(0);
            tabletasks.setModel(taskmodel);
@@ -153,9 +153,9 @@ public class TaskMaint extends javax.swing.JPanel {
            
           
            
-           if (! arg.isEmpty()) {
+            if (arg != null && arg.length > 0) {
            enableAll();
-           getTask(arg);
+           getTask(arg[0]);
            } else {
                disableAll();
                tasknbr.setEnabled(true);
@@ -440,7 +440,7 @@ public class TaskMaint extends javax.swing.JPanel {
                  }
               
                  bsmf.MainFrame.show("Updated Master Task");
-                 initvars("");
+                 initvars(null);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating master task");
@@ -525,7 +525,7 @@ public class TaskMaint extends javax.swing.JPanel {
                  }
               
                 bsmf.MainFrame.show("Added Master Task Record");
-                 initvars("");
+                 initvars(null);
                  
             } catch (SQLException s) {
                 MainFrame.bslog(s);

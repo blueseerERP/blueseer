@@ -46,17 +46,17 @@ public class ClockCodeMaint extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         tbcode.setText("");
        cbpayable.setSelected(false);
         tbdesc.setText("");
-        if (! arg.isEmpty()) {
-            getCode(arg);
+         if (arg != null && arg.length > 0) {
+            getCode(arg[0]);
         }
     }
     
       public void getCode(String mycode) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -244,7 +244,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Code Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -297,7 +297,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                             + " where clc_code = " + "'" + tbcode.getText() + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated Code Value");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -337,7 +337,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                            " AND clc_syscode <> '1' " + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code" + tbcode.getText() );
-                    initvars("");
+                    initvars(null);
                     }
                     
                     }

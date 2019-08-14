@@ -107,7 +107,7 @@ public class SystemControl extends javax.swing.JPanel {
      }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
          buttonGroup1.add(rbsamba);
         buttonGroup1.add(rbwin);
@@ -562,7 +562,7 @@ public class SystemControl extends javax.swing.JPanel {
        boolean r = OVData.copySite(ddfromsite.getSelectedItem().toString(), tbtosite.getText());
        if (r == true) {
            bsmf.MainFrame.show("copied site successfully");
-           initvars("");
+           initvars(null);
        } else {
            bsmf.MainFrame.show("unable to copy site");
        }

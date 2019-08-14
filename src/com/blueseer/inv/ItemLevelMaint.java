@@ -50,7 +50,7 @@ public class ItemLevelMaint extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
          btlevel.setEnabled(true);
          btmrp.setEnabled(true);
        ddsite.removeAllItems();

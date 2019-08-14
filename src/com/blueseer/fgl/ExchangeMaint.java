@@ -115,7 +115,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
       
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
           clearAll();
           disableAll();
           exchangemodel.setRowCount(0);
@@ -293,7 +293,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Exchange Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -342,7 +342,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                             + " and exc_foreign = " + "'" + ddforeign.getSelectedItem().toString() + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated Exchange Record");
-                    initvars("");
+                    initvars(null);
                     }
                 } 
          
@@ -370,7 +370,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                             + ";"); 
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted exchange rate");
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

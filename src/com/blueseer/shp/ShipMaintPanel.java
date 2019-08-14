@@ -169,7 +169,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     }
      
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", panelMain);
@@ -301,8 +301,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         disableLowerInputs();
         
-        if (! arg.isEmpty()) {
-            getshipperinfo(arg);
+         if (arg != null && arg.length > 0) {
+            getshipperinfo(arg[0]);
         }
       
     }
@@ -491,7 +491,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
      
       
       public void getshipperinfo(String myshipper) {
-        initvars("");
+        initvars(null);
         try {
      
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1943,7 +1943,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     
                     
                     bsmf.MainFrame.show("Added Shipper Record");
-                    initvars(tbshipper.getText());
+                    initvars(new String[]{tbshipper.getText()});
                    
                     
                 } // if proceed
@@ -2077,7 +2077,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 String[] message = OVData.confirmShipment(tbshipper.getText(), dcshipdate.getDate() );
                 bsmf.MainFrame.show(message[1]);
             bsmf.MainFrame.con.close();
-             initvars(tbshipper.getText());
+             initvars(new String[]{tbshipper.getText()});
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

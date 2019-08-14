@@ -61,7 +61,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
 
     
       public void getVendPriceRecord(String vend, String part, String uom, String curr) {
-        initvars("");
+        initvars(null);
         try {
 
             DecimalFormat df = new DecimalFormat("#0.0000");
@@ -108,7 +108,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
          
          lblpricecode.setVisible(false);
@@ -163,10 +163,9 @@ public class VendPriceMstr extends javax.swing.JPanel {
       
         setPriceList();
          
-             String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            getVendPriceRecord(args[0], args[1], args[2], args[3]);
+             
+         if (arg != null && arg.length > 3) {
+            getVendPriceRecord(arg[0], arg[1], arg[2], arg[3]);
         }
     }
     
@@ -500,7 +499,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                         + ";");
 
                     bsmf.MainFrame.show("Updated Price List Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -537,7 +536,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                                             " and vpr_type = 'LIST' " + ";");
                     if (i > 0) {
                         bsmf.MainFrame.show("deleted code " + pricelist.getSelectedValue().toString());
-                        initvars("");
+                        initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -625,7 +624,7 @@ public class VendPriceMstr extends javax.swing.JPanel {
                         + ";");
 
                     bsmf.MainFrame.show("Added Price Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {

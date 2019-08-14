@@ -134,7 +134,7 @@ public class OEEEntry extends javax.swing.JPanel {
       }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         dcdate.setDate(now);
@@ -608,7 +608,7 @@ public class OEEEntry extends javax.swing.JPanel {
                     
                     bsmf.MainFrame.show("Record has been committed");
                   
-                    initvars("");
+                    initvars(null);
                     getRecords(ddcell.getSelectedItem().toString(), dfdate.format(now));
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed

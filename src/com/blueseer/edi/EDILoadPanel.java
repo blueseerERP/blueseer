@@ -427,7 +427,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
         return filename;
     }
     
-    public void initvars(String arg) throws MalformedURLException, SmbException {
+    public void initvars(String[] arg) throws MalformedURLException, SmbException {
     tafile.setText("");
    
     File folder = new File(inDir);

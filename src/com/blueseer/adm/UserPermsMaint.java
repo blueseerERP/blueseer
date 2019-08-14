@@ -45,7 +45,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String arg)
+    public void initvars(String[] arg)
     {
         tausers.setText("");
          fromuser.removeAllItems();
@@ -344,7 +344,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
 
     private void btCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCopyActionPerformed
          OVData.copyUserPerms(fromuser.getSelectedItem().toString(), touser.getSelectedItem().toString());
-         initvars("");
+         initvars(null);
     }//GEN-LAST:event_btCopyActionPerformed
 
     private void btgetusersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetusersActionPerformed

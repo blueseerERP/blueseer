@@ -55,7 +55,7 @@ public class ARMaintPanel extends javax.swing.JPanel {
     }
 
     
-   public void initvars(String arg)
+   public void initvars(String[] arg)
    {
         try {
 

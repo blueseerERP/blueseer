@@ -247,7 +247,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
     
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         chartpanel.setVisible(false);
         bthidechart.setEnabled(false);
         java.util.Date now = new java.util.Date();

@@ -175,9 +175,9 @@ public class OrderMaintPanel extends javax.swing.JPanel {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            }  else {
-             initvars(ordernbr.getText());  
+             initvars(new String[]{ordernbr.getText()});  
            }
            
             
@@ -355,7 +355,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     
     public boolean getOrder(String mykey) {
         boolean gotIt = false;
-       // initvars("");
+       // initvars(null);
         
         
         
@@ -837,7 +837,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
         btdelete.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
      
         isLoad = true;
         
@@ -1022,8 +1022,8 @@ public class OrderMaintPanel extends javax.swing.JPanel {
        
         isLoad = false;
       
-          if (! arg.isEmpty()) {
-            boolean gotIt = getOrder(arg);
+         if (arg != null && arg.length > 0) {
+            boolean gotIt = getOrder(arg[0]);
             if (gotIt) {
               ordernbr.setEditable(false);
               ordernbr.setForeground(Color.blue);
@@ -2678,7 +2678,7 @@ public class OrderMaintPanel extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
       
-        initvars("");
+        initvars(null);
         
         if (ddcust.getItemCount() > 0) {
            custChangeEvent(ddcust.getSelectedItem().toString());

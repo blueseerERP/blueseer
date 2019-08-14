@@ -145,7 +145,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
        
        
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
           ddreport.removeAllItems();
           ddreport.addItem("Item Browse"); // index 0
           ddreport.addItem("Item QtyOnHand Vs SafetyStock"); // index 1

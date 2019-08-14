@@ -48,7 +48,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
     }
 
     public void getWareHouseCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -152,7 +152,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
          btbrowse.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         clearAll();
         disableAll();
@@ -160,8 +160,8 @@ public class WareHouseMaint extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            getWareHouseCode(arg);
+         if (arg != null && arg.length > 0) {
+            getWareHouseCode(arg[0]);
         }
     }
     
@@ -400,7 +400,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Warehouse Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -433,7 +433,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                             + " where wh_id = " + "'" + tbwh.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Warehouse");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -459,7 +459,7 @@ public class WareHouseMaint extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from wh_mstr where wh_id = " + "'" + tbwh.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbwh.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                 MainFrame.bslog(s);

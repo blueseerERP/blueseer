@@ -122,15 +122,15 @@ public class MenuMaintPanel extends javax.swing.JPanel {
        cbparent.setSelected(false);
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
       
           clearAll();
           disableAll();
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-          getMenu(arg);
+        if (arg != null && arg.length > 0) {
+          getMenu(arg[0]);
         }
     }
     
@@ -327,7 +327,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     // now assign menu to admin user as default
                     String myreturn = OVData.addMenuToUser(tbcode.getText().toString(), "Admin");
                     
-                   initvars("");
+                   initvars(null);
                    menumap.clear();
                    menumap = bsmf.MainFrame.getmenulistmap();
                 } // if proceed
@@ -369,7 +369,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                             + " where menu_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Menu");
-                    initvars("");
+                    initvars(null);
                     menumap.clear();
                    menumap = bsmf.MainFrame.getmenulistmap();
                 } 
@@ -399,7 +399,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
                     OVData.deleteMenuToUser(tbcode.getText().toString(), "Admin");
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -413,7 +413,7 @@ public class MenuMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "menumaint,menu_id");
+        reinitpanels("BrowseUtil", true, new String[]{"menumaint","menu_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

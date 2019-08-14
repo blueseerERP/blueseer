@@ -110,15 +110,15 @@ public class CurrencyMaint extends javax.swing.JPanel {
       
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
           clearAll();
           disableAll();
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
           
-        if (! arg.isEmpty()) {
-            getCurrencyCode(arg);
+        if (arg != null && arg.length > 0) {
+            getCurrencyCode(arg[0]);
         }
     }
     
@@ -282,7 +282,7 @@ public class CurrencyMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Currency Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -314,7 +314,7 @@ public class CurrencyMaint extends javax.swing.JPanel {
                             + " where cur_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Currency");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -338,7 +338,7 @@ public class CurrencyMaint extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from cur_mstr where uom_id = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

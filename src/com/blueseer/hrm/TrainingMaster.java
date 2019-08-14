@@ -97,7 +97,7 @@ public class TrainingMaster extends javax.swing.JPanel {
 
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -126,8 +126,8 @@ public class TrainingMaster extends javax.swing.JPanel {
             ddempid.addItem(emp);
         }
         
-         if (! arg.isEmpty()) {
-        getemptraininfo(arg);
+          if (arg != null && arg.length > 0) {
+        getemptraininfo(arg[0]);
         }
     }  
     
@@ -475,7 +475,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                         + ";");
                     }
 
-                    initvars("");
+                    initvars(null);
                     bsmf.MainFrame.show("Added Training Records");
                     
                     // btQualProbAdd.setEnabled(false);
@@ -553,7 +553,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                     st.executeUpdate("delete FROM  emp_train where emptrid = " + "'" + 
                             trid.toString() + "'" + ";");
              bsmf.MainFrame.show("Deleted Record");    
-             initvars("");
+             initvars(null);
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -629,7 +629,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                         + ";");
                     }
 
-                    initvars("");
+                    initvars(null);
                     bsmf.MainFrame.show("Updated Training Record");
                     
                     // btQualProbAdd.setEnabled(false);

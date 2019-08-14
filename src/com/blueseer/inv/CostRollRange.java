@@ -50,7 +50,7 @@ public class CostRollRange extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
          btroll.setEnabled(true);
        ddsite.removeAllItems();
        ArrayList<String>  mylist = OVData.getSiteList();

@@ -58,7 +58,7 @@ public class GLCalMaint extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        Calendar now = Calendar.getInstance();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         if (ddyear.getItemCount() == 0) {
@@ -81,9 +81,8 @@ public class GLCalMaint extends javax.swing.JPanel {
         }
         
         
-        if (! arg.isEmpty()) {
-            String[] args = arg.split(",", -1);
-            getcal(args[0],args[1]);
+         if (arg != null && arg.length > 1) {
+            getcal(arg[0],arg[1]);
         }
         
       

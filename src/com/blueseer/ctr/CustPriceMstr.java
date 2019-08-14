@@ -63,7 +63,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
    
     
     public void getCustPriceRecord(String cust, String part, String type, String uom, String curr) {
-        initvars("");
+        initvars(null);
         try {
 
             DecimalFormat df = new DecimalFormat("#0.0000");
@@ -120,7 +120,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
          lbldisccode.setVisible(false);
          lbldisccode.setForeground(Color.red);
          disclist.setModel(listmodel);
@@ -196,10 +196,9 @@ public class CustPriceMstr extends javax.swing.JPanel {
          }
         
         
-           String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            getCustPriceRecord(args[0], args[1], args[2], args[3], args[4]);
+          
+        if (arg != null && arg.length > 5) {
+            getCustPriceRecord(arg[0], arg[1], arg[2], arg[3], arg[4]);
         }
          
     }
@@ -715,7 +714,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                     
         
                     bsmf.MainFrame.show("Added Price Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -780,7 +779,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                                             " and cpr_type = 'LIST' " + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + pricelist.getSelectedValue().toString());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -858,7 +857,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                     
         
                     bsmf.MainFrame.show("Added Discount Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -892,7 +891,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                                             " and cpr_type = 'DISCOUNT' " + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + disclist.getSelectedValue().toString());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -942,7 +941,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                         + ";");
 
                     bsmf.MainFrame.show("Updated Discount Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -1018,7 +1017,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                         + ";");
 
                     bsmf.MainFrame.show("Updated Price List Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {

@@ -29,7 +29,6 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
-import com.blueseer.utl.BlueSeer;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -50,13 +49,14 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
+import com.blueseer.utl.IBlueSeer;
 
 
 /**
  *
  * @author vaughnte
  */
-public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
+public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
      boolean editmode = false;
@@ -109,14 +109,14 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
   
       
     // interface functions implemented  
-    public void executeTask(String x, String y) { 
+     public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
-          String key = "";
+          String[] key = null;
           
-          public Task(String type, String key) { 
+          public Task(String type, String[] key) { 
               this.type = type;
               this.key = key;
           } 
@@ -149,19 +149,19 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         }
  
         
-        public void done() {
+       public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
            } else {
-             initvars("");  
+             initvars(null);  
            }
            
             
@@ -177,7 +177,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
        z.execute(); 
        
     }
-  
+    
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -334,7 +334,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
        
        setPanelComponentState(panelMain, false); 
@@ -347,7 +347,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
+        if (arg != null && arg.length > 0) {
             executeTask("get", arg);
         } else {
             tbkey.setEnabled(true);
@@ -386,7 +386,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
         return m;
     }
         
-    public String[] addRecord(String x) {
+    public String[] addRecord(String[] x) {
          
          String[] m = new String[2];
          try {
@@ -463,7 +463,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
          return m;
      } 
       
-    public String[] deleteRecord(String x) {
+    public String[] deleteRecord(String[] x) {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
@@ -476,7 +476,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         ResultSet res = null;
  
                         // if this PO has 'any' line items already received then bale...cannot delete
-                        res = st.executeQuery("select pod_nbr from pod_mstr where pod_nbr = " + "'" + x + "'" + 
+                        res = st.executeQuery("select pod_nbr from pod_mstr where pod_nbr = " + "'" + x[0] + "'" + 
                                               " and pod_rcvd_qty > 0 " + ";");
                         int z = 0;
                         while (res.next()) {
@@ -507,7 +507,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return m;
     }
     
-    public String[] updateRecord(String x) {
+    public String[] updateRecord(String[] x) {
      String[] m = new String[2];
        try {
         java.util.Date now = new java.util.Date();
@@ -530,7 +530,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "''") + "'" + "," 
                         + " po_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + "," 
                        + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'"          
-                       + " where po_nbr = " + "'" + x + "'"
+                       + " where po_nbr = " + "'" + x[0] + "'"
                         + ";");
 
                  
@@ -542,7 +542,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                         // skip closed lines
                         if (orddet.getValueAt(j, 9).toString().equals("close"))
                             continue;
-                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + x + "'" +
+                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + x[0] + "'" +
                                 " and pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
                             while (res.next()) {
                             i++;
@@ -559,7 +559,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + " pod_netprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
                             + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" 
-                            + " where pod_nbr = " + "'" + x + "'" 
+                            + " where pod_nbr = " + "'" + x[0] + "'" 
                             + " AND pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
                             + ";");
                             } else {
@@ -603,7 +603,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
     }
          
-    public String[] getRecord(String x) {
+    public String[] getRecord(String[] x) {
         String[] m = new String[2];
          myorddetmodel.setRowCount(0);
         
@@ -616,10 +616,10 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + x + "'" + ";");
+                res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                     i++;
-                    tbkey.setText(x);
+                    tbkey.setText(x[0]);
                     ddvend.setSelectedItem(res.getString("po_vend"));
                     ddvend.setEnabled(false);
                     ddstatus.setSelectedItem(res.getString("po_status"));
@@ -636,7 +636,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 }
                 
                  // myorddetmodel  "Line", "Part", "CustPart",  "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + x + "'" + ";");
+                res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("pod_line"), res.getString("pod_part"),
                       res.getString("pod_vendpart"), res.getString("pod_nbr"), 
@@ -1622,7 +1622,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", tbkey.getText());
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1660,7 +1660,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", tbkey.getText());
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -1742,7 +1742,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", tbkey.getText());
+       executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained
@@ -1754,7 +1754,7 @@ public class POMaintPanel extends javax.swing.JPanel implements BlueSeer {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-             executeTask("delete", tbkey.getText());
+             executeTask("delete", new String[]{tbkey.getText()});
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 

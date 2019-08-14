@@ -51,7 +51,7 @@ public class OVDevPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         java.util.Date now = new java.util.Date();
                 dcdate.setDate(now);
                 log.setText("");

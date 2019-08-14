@@ -48,7 +48,7 @@ public class ReworkMaintPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-       public void initvars(String arg) {
+       public void initvars(String[] arg) {
         
            tbpart.setText("");
         transmodel.setRowCount(0);

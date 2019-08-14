@@ -198,7 +198,7 @@ String sitecitystatezip = "";
       }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
         tbqty.setText("");
         tbscan.setText("");
@@ -375,20 +375,20 @@ String sitecitystatezip = "";
             lblmessage.setText("Bad Ticket: " + tbscan.getText());
             lblmessage.setForeground(Color.red);
             bsmf.MainFrame.show("Bad Ticket: " + tbscan.getText());
-            initvars("");
+            initvars(null);
             return;
         }
         
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
             lblmessage.setText("Ticket CLosed: " + tbscan.getText());
             lblmessage.setForeground(Color.red);
-            initvars("");
+            initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
             lblmessage.setText("Ticket Voided: " + tbscan.getText());
             lblmessage.setForeground(Color.red);
-            initvars("");
+            initvars(null);
             return;
         }
         
@@ -397,7 +397,7 @@ String sitecitystatezip = "";
         if (! OVData.isInvCtrlPlanMultiScan() && OVData.isPlanDetByOp(tbscan.getText(), ddop.getSelectedItem().toString())) {
             lblmessage.setText("Ticket Already Reported for this Operation " + tbscan.getText() + " / " + ddop.getSelectedItem().toString());
             lblmessage.setForeground(Color.red);
-                initvars("");
+                initvars(null);
                 return;
         }
         
@@ -410,7 +410,7 @@ String sitecitystatezip = "";
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
             lblmessage.setForeground(Color.red);
-            initvars("");
+            initvars(null);
             return;
         }
         
@@ -496,7 +496,7 @@ String sitecitystatezip = "";
                     }
                 }
             }
-              initvars("");
+              initvars(null);
        } 
     }//GEN-LAST:event_btcommitActionPerformed
 

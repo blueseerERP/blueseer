@@ -149,15 +149,15 @@ public class TaxMaint extends javax.swing.JPanel {
          ddtype.setEnabled(false);
      }
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
           
            clearAll();
            disableAll();
            
           
            
-           if (! arg.isEmpty()) {
-             getTax(arg);
+           if (arg != null && arg.length > 0) {
+             getTax(arg[0]);
            } else {
                disableAll();
                btbrowse.setEnabled(true);
@@ -443,7 +443,7 @@ public class TaxMaint extends javax.swing.JPanel {
                  }
               
                  bsmf.MainFrame.show("Updated Tax Master");
-                 initvars("");
+                 initvars(null);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating tax master");
@@ -526,7 +526,7 @@ public class TaxMaint extends javax.swing.JPanel {
                  }
               
                 bsmf.MainFrame.show("Added Master Tax Record");
-                 initvars("");
+                 initvars(null);
                  
             } catch (SQLException s) {
                 MainFrame.bslog(s);                  
@@ -569,7 +569,7 @@ public class TaxMaint extends javax.swing.JPanel {
                     int j = st.executeUpdate("delete from taxd_mstr where taxd_parentcode = " + "'" + tbtaxcode.getText() + "'" + ";");
                     if (i > 0 && j > 0) {
                         bsmf.MainFrame.show("deleted tax code " + tbtaxcode.getText());
-                        initvars("");
+                        initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

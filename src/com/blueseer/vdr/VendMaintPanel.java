@@ -194,7 +194,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
        
      }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", mainPanel);
@@ -209,8 +209,8 @@ public class VendMaintPanel extends javax.swing.JPanel {
         contacttable.setModel(contactmodel);
        
       String[] args = null; 
-      if (! arg.isEmpty()) {
-            boolean gotIt = getVend(arg);  
+      if (arg != null && arg.length > 0) {
+            boolean gotIt = getVend(arg[0]);  
             if (gotIt) {
               tbcode.setEditable(false);
               tbcode.setForeground(Color.blue);
@@ -1197,7 +1197,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                         + ";");
         
                     bsmf.MainFrame.show("Added Vendor Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -1271,7 +1271,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                
                bsmf.MainFrame.show("Updated Vendor Successfully");
               
-               initvars("");
+               initvars(null);
                
             } catch (SQLException s) {
                  MainFrame.bslog(s);
@@ -1354,7 +1354,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                    st.executeUpdate("delete from vdc_det where vdc_code = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

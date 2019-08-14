@@ -175,7 +175,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
      
         tbtotal.setText("0");
         tbcount.setText("0");

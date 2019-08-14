@@ -87,7 +87,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        
        tbtext.setText("");
        rbname.setSelected(true);

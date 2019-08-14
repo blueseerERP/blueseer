@@ -78,7 +78,7 @@ public class VendXrefRpt1 extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        rbpart.setSelected(true);
        rbvendpart.setSelected(false);
        buttonGroup1.add(rbpart);

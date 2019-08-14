@@ -298,7 +298,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
         tbtoterrors.setText("0");
         tbtot.setText("0");

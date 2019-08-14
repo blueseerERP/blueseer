@@ -68,7 +68,7 @@ String sqeemail = "";
         
         initComponents();
         
-        this.initvars("");
+        this.initvars(null);
         
     }
 
@@ -130,7 +130,7 @@ String sqeemail = "";
 
                 if (i == 0) {
                     bsmf.MainFrame.show("No Record Found");
-                    initvars("");
+                    initvars(null);
                 } else {
                     tbComplaintNbr.setEnabled(false);
                     btQualProbAdd.setEnabled(false);
@@ -157,7 +157,7 @@ String sqeemail = "";
           
       }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbQtyRejected.setText("0");
         tbNumSuspectCont.setText("0");
         tbTotalQty.setText("0");
@@ -201,8 +201,8 @@ String sqeemail = "";
         this.revalidate();
         
         
-        if (! arg.isEmpty()) {
-            getQPR(arg);
+        if (arg != null && arg.length > 0) {
+            getQPR(arg[0]);
         }
     }
     
@@ -808,7 +808,7 @@ String sqeemail = "";
                         + ")"
                         + ";");
                     bsmf.MainFrame.show("Added Quality Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -917,7 +917,7 @@ String sqeemail = "";
                         + " ;");
                     bsmf.MainFrame.show("Updated Quality Record");
 
-                    initvars("");
+                    initvars(null);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);

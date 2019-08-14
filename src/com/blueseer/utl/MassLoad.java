@@ -90,7 +90,7 @@ public class MassLoad extends javax.swing.JPanel {
         }
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
       tacomments.setText("");
     }

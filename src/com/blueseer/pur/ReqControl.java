@@ -99,7 +99,7 @@ public class ReqControl extends javax.swing.JPanel {
      }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
            
            cbrequestor.setSelected(false);
            authmodel.setRowCount(0);

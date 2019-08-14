@@ -80,7 +80,7 @@ public class TrainingReport1 extends javax.swing.JPanel {
         
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
         mymodel.setRowCount(0);
          java.util.Date now = new java.util.Date();

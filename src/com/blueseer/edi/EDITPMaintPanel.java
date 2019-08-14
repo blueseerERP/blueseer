@@ -120,15 +120,15 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
         btnew.setEnabled(false);
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        
        clearAll();
        disableAll();
        btbrowse.setEnabled(true);
        btnew.setEnabled(true);
         
-       if (! arg.isEmpty()) {
-           getTPID(arg);
+        if (arg != null && arg.length > 0) {
+           getTPID(arg[0]);
        }
     }
     
@@ -320,7 +320,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("TPID Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -356,7 +356,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                             + " where editp_id = " + "'" + tbtpid.getText() + "'"     
                             + ";");
                     bsmf.MainFrame.show("Updated TPID");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -387,7 +387,7 @@ public class EDITPMaintPanel extends javax.swing.JPanel {
                                            ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbtpid.getText() );
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

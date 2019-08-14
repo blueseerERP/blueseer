@@ -167,7 +167,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
         
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         buttonGroup1.add(rbcarrier);
         buttonGroup1.add(rbgroup);
         carrierlist.setModel(mymodel);
@@ -177,8 +177,8 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
           
-        if (! arg.isEmpty()) {
-            getCarrierCode(arg);
+        if (arg != null && arg.length > 0) {
+            getCarrierCode(arg[0]);
         }
     }
     
@@ -457,7 +457,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Carrier Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -519,7 +519,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                     
                     
                     bsmf.MainFrame.show("Updated Carrier");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -548,7 +548,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                    
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

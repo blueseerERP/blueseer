@@ -157,7 +157,7 @@ String sitecitystatezip = "";
         }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbqty.setText("");
         tbscan.setText("");
        partlabel.setText("");
@@ -423,7 +423,7 @@ concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
  dos.close();
  soc.close();
  
- initvars("");
+ initvars(null);
 
  //ps.println(commands);
  //                   ps.print("\f");
@@ -472,7 +472,7 @@ MainFrame.bslog(e);
         //   try {
             //   OVData.nitrideTransferCR2AVM(tbscan.getText());
          //      bsmf.MainFrame.show("Scan Complete!");
-          //     initvars("");
+          //     initvars(null);
           // } 
          //  catch (ParseException ex) {
           //     Logger.getLogger(LabelPartPanel.class.getName()).log(Level.SEVERE, null, ex);

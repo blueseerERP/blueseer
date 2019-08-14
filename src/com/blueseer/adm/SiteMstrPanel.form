@@ -103,7 +103,7 @@
                               <Component id="tbline3" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="tbsite" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="tbkey" min="-2" pref="83" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -120,7 +120,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
@@ -226,7 +226,10 @@
                 <Property name="text" type="java.lang.String" value="AddrLine1"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbsite">
+            <Component class="javax.swing.JTextField" name="tbkey">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btbrowse">
               <Properties>

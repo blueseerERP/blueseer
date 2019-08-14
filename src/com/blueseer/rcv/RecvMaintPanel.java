@@ -29,7 +29,6 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
-import com.blueseer.utl.BlueSeer;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.DBTask;
 import java.sql.DriverManager;
@@ -47,13 +46,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
+import com.blueseer.utl.IBlueSeer;
 
 
 /**
  *
  * @author vaughnte
  */
-public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
+public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -84,14 +84,14 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     
 
     // interface functions implemented
-    public void executeTask(String x, String y) { 
+     public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
-          String key = "";
+          String[] key = null;
           
-          public Task(String type, String key) { 
+          public Task(String type, String[] key) { 
               this.type = type;
               this.key = key;
           } 
@@ -130,13 +130,13 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
            } else {
-             initvars("");  
+             initvars(null);  
            }
            
             
@@ -322,14 +322,14 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            executeTask("get",arg);
+        if (arg != null && arg.length > 1) {
+            executeTask("get", arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -337,7 +337,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         
     }
     
-    public String[] getRecord(String x) {
+    public String[] getRecord(String[] x) {
        String[] m = new String[2];
        
        myrecvdetmodel.setRowCount(0);
@@ -357,7 +357,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 String tdate = "";
                 String tps = "";
                 
-                res = st.executeQuery("select rv_vend, rv_recvdate, rv_packingslip from recv_mstr where rv_id = " + "'" + x + "'" + ";");
+                res = st.executeQuery("select rv_vend, rv_recvdate, rv_packingslip from recv_mstr where rv_id = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                     i++;
                     tvend = res.getString("rv_vend");
@@ -369,10 +369,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     ddvend.setSelectedItem(tvend);
                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(tdate));
                     tbpackingslip.setText(tps);
-                    tbkey.setText(x);
+                    tbkey.setText(x[0]);
                 }
                
-                res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + x + "'" + ";");
+                res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + x[0] + "'" + ";");
                 
                 while (res.next()) {
                     
@@ -400,7 +400,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
         return m;
     }
 
-    public String[] addRecord(String x) {
+    public String[] addRecord(String[] x) {
      String[] m = new String[2];
          try {
 
@@ -506,7 +506,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                     }
                   
                   
-                  initvars("");
+                  initvars(null);
                   } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
                   }
@@ -525,7 +525,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
     }
     
-    public String[] updateRecord(String x) {
+    public String[] updateRecord(String[] x) {
      String[] m = new String[2];
      
       try {
@@ -541,7 +541,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 boolean proceed = validateInput("updateRecord");
                 
                 // if this receiver has 'any' line items already vouchered then bale...cannot update
-                res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x + "'" + 
+                res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x[0] + "'" + 
                                       " and rvd_voqty > 0 " + ";");
                 int i = 0;
                 while (res.next()) {
@@ -588,7 +588,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + ";");
                     }
                   m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -604,7 +604,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
     }
     
-    public String[] deleteRecord(String x) {
+    public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
      boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
@@ -615,7 +615,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                 res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x + "'" + 
+                 res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x[0] + "'" + 
                                       " and rvd_voqty > 0 " + ";");
                 int i = 0;
                 while (res.next()) {
@@ -630,7 +630,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
                    int j = st.executeUpdate("delete from recv_det where rvd_id = " + "'" + tbkey.getText() + "'" + ";");
                     if (k > 0 && j > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
@@ -1172,7 +1172,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", tbkey.getText());
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
@@ -1295,7 +1295,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", tbkey.getText());
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void ddpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpoActionPerformed
@@ -1373,7 +1373,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_tbqtyFocusGained
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", tbkey.getText());
+        executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

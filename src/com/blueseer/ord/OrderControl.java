@@ -77,7 +77,7 @@ public class OrderControl extends javax.swing.JPanel {
      }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
            getcontrol();
     }
     /**

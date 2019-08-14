@@ -100,7 +100,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
              
          }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         //tbpart.requestFocus();
         mymodel.setRowCount(0);
@@ -520,7 +520,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
        else
            bsmf.MainFrame.show("Problem with Transfer Occurred");
        
-       initvars("");
+       initvars(null);
        
        } // proceed
        

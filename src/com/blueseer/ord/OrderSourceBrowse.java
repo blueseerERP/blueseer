@@ -162,7 +162,7 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         lblamttot.setText("0");
         lblqtytot.setText("0");
         labeldettotal.setText("");

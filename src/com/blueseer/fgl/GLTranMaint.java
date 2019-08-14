@@ -268,7 +268,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         }
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
        clearAll();
        disableAll();
@@ -276,8 +276,8 @@ public class GLTranMaint extends javax.swing.JPanel {
        btnew.setEnabled(true);
        btbrowse.setEnabled(true);
        
-       if (! arg.isEmpty()) {
-             getGLTran(arg);
+        if (arg != null && arg.length > 0) {
+             getGLTran(arg[0]);
          }
         
             
@@ -778,7 +778,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                         
                     }
                     bsmf.MainFrame.show("Transactions added successfully");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -811,7 +811,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from gl_tran where glt_ref = " + "'" + tbref.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted " + String.valueOf(i) + " gl_tran records for ref= " + tbref.getText());
-                    initvars("");
+                    initvars(null);
                     } else {
                      bsmf.MainFrame.show("unable to delete...may have been posted" + tbref.getText());   
                     }

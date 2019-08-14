@@ -125,7 +125,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
     
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         java.util.Date now = new java.util.Date();
                  
         tbrecid.setText("");
@@ -143,8 +143,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
             ddcode.addItem(code);
         }
         
-        if (! arg.isEmpty()) {
-            getClockRecord(arg);
+         if (arg != null && arg.length > 0) {
+            getClockRecord(arg[0]);
         }
         
     }

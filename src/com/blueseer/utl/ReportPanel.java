@@ -101,7 +101,7 @@ public int[] mywidth;
         }
     }
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        // TableReport.setModel(new javax.swing.table.DefaultTableModel());
         
          javax.swing.table.DefaultTableModel mymodel = null;
@@ -260,7 +260,7 @@ public int[] mywidth;
          
         if (mymodel != null) { 
             TableReport.setModel(mymodel);
-            TableReport.setName(arg);
+            TableReport.setName(arg[0]);
             if (TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
                 TableReport.getColumnModel().getColumn(0).setMaxWidth(100);
             }

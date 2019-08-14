@@ -57,7 +57,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
 
     
       public void getXref(String cust, String custpart) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -102,7 +102,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
     
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         ArrayList mycust = OVData.getcustmstrlist();
         ddcust.removeAllItems();
         for (int i = 0; i < mycust.size(); i++) {
@@ -131,10 +131,10 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
          lblexists.setText("");
          lblexists.setForeground(Color.black);
          
-         String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            getXref(args[0], args[1]);
+        
+        if (arg != null && arg.length > 1) {
+           
+            getXref(arg[0], arg[1]);
         }
          
          
@@ -338,7 +338,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                     
         
                     bsmf.MainFrame.show("Added Cust Xref Record");
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -419,7 +419,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                       " and cup_cust = " + "'" + ddcust.getSelectedItem().toString() + "'" +
                       ";");
               bsmf.MainFrame.show("Record deleted");
-              initvars("");
+              initvars(null);
              
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -456,7 +456,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel {
                         + ";");
         
                     bsmf.MainFrame.show("Updated Cust Xref Record");
-                    initvars("");
+                    initvars(null);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);

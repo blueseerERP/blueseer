@@ -112,7 +112,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
         
     }
     
-     public void initvars(String arg) {
+     public void initvars(String[] arg) {
        
        
         
@@ -122,15 +122,14 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
           btnew.setEnabled(true);
         
         
-        String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            getWorkCell(args[0], args[1]);
+       
+        if (arg != null && arg.length > 1) {
+            getWorkCell(arg[0], arg[1]);
         }
     }
     
       public void getWorkCell(String wc, String mch) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -483,7 +482,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Work Cell/Machine Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -528,7 +527,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                             + " wc_mch = " + "'" + tbmachine.getText() + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated WorkCell/Machine");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -555,7 +554,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel {
                            " wc_mch = " + "'" + tbmachine.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted WorkCell/Machine " + tbwc.getText() + "/" + tbmachine.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

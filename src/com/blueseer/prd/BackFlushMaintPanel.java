@@ -54,7 +54,7 @@ public class BackFlushMaintPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         transmodel.setRowCount(0);
         ddtype.addItem("WIP-TRAN");
@@ -413,7 +413,7 @@ public class BackFlushMaintPanel extends javax.swing.JPanel {
         if (! OVData.loadTranHistByTable(transtable)) {
             bsmf.MainFrame.show("Unable to perform BackFlush Transactions");
         } else {
-            initvars("");
+            initvars(null);
             bsmf.MainFrame.show("Successfully Submitted Transactions");
         }
     }//GEN-LAST:event_btsubmitActionPerformed

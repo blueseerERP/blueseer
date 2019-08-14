@@ -362,7 +362,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         tbtotexpenses.setText("0");
         tbtotsales.setText("0");
         tbtotpurch.setText("0");

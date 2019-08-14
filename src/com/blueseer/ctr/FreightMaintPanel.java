@@ -47,7 +47,7 @@ public class FreightMaintPanel extends javax.swing.JPanel {
     }
 
     public void getFreightCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -78,13 +78,13 @@ public class FreightMaintPanel extends javax.swing.JPanel {
 
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbcode.setText("");
         tbdesc.setText("");
         cbapply.setSelected(false);
         
-        if (! arg.isEmpty()) {
-            getFreightCode(arg);
+         if (arg != null && arg.length > 0) {
+            getFreightCode(arg[0]);
         }
     }
     
@@ -236,7 +236,7 @@ public class FreightMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Freight Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -269,7 +269,7 @@ public class FreightMaintPanel extends javax.swing.JPanel {
                             + " where frt_code = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Freight");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -296,7 +296,7 @@ public class FreightMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from frt_mstr where frt_code = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

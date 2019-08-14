@@ -32,9 +32,9 @@ import javax.swing.SwingWorker;
  *
  * @author Terry Evans Vaughn
  */
-public interface BlueSeer {
+public interface IBlueSeer {
         
-    public void initvars(String x);
+    public void initvars(String[] x);
     
     public void setPanelComponentState(Object panel, boolean b);
     
@@ -44,13 +44,13 @@ public interface BlueSeer {
     // They are defined as follows:  '0' == Success.....'1' == Error.   2nd element is arbitrary description
     // Example of success:   String[] somearray = new String[]{"0", "Yay!!!  Something good happened"}; 
     // Example of bad:       String[] somearray = new String[]{"1", "Crap!!!! Another method bites the dust"}; 
-    public String[] getRecord(String x);
+    public String[] getRecord(String[] x);
+   
+    public String[] addRecord(String[] x);
     
-    public String[] addRecord(String x);
+    public String[] updateRecord(String[] x);
     
-    public String[] updateRecord(String x);
-    
-    public String[] deleteRecord(String x);
+    public String[] deleteRecord(String[] x);
     
     public boolean validateInput(String e);
     
@@ -58,7 +58,7 @@ public interface BlueSeer {
     
     public void newAction(String x);
     
-    public void executeTask(String x, String y);
+    public void executeTask(String x, String[] y);
    
     
 }

@@ -263,7 +263,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     }
      
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         lblendbal.setText("0");
         lblbegbal.setText("0");
         lblactbal.setText("0");

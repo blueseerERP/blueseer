@@ -159,17 +159,15 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
         cbisFA.setEnabled(false);
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
        clearAll();
        disableAll();
        btbrowse.setEnabled(true);
        btnew.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            String[] vars = arg.split(",", -1);
-            if (vars.length == 2)
-            getTPMAP(vars[0], vars[1]);
+         if (arg != null && arg.length > 1) {
+            getTPMAP(arg[0], arg[1]);
         }
        
     }
@@ -364,7 +362,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("TPID / DOC Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -405,7 +403,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                             + " AND edi_doctype = " + "'" + dddoc.getSelectedItem().toString() + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated TPID / DOC");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -433,7 +431,7 @@ public class EDITPDocMaintPanel extends javax.swing.JPanel {
                                             " and edi_doctype = " + "'" + dddoc.getSelectedItem().toString() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + ddtp.getSelectedItem().toString() + "/" + dddoc.getSelectedItem().toString());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

@@ -158,7 +158,7 @@ public class DOBrowse extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         lblqtytot.setText("0");
         labeldettotal.setText("");
         

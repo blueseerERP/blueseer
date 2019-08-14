@@ -84,7 +84,7 @@ public class Browse extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
           
        rbbegin.setSelected(true);
        rbend.setSelected(false);
@@ -100,15 +100,15 @@ public class Browse extends javax.swing.JPanel {
         DefaultTableModel dtm = (DefaultTableModel) tablereport.getModel();
         dtm.setRowCount(0);
         
-        String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            callingpanel = args[0];
-            searchfield = args[1];
-            if (args.length > 2) {
-                tievar = args[2];
-            }
+        
+        if (arg != null && arg.length == 2) {
+            callingpanel = arg[0];
+            searchfield = arg[1];
         }
+        if (arg != null && arg.length == 3) {
+                tievar = arg[2];
+        }
+        
         
     }
     /**
@@ -285,6 +285,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("taxmaint")) {
                 tablereport.setModel(DTData.getTaxBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                 if (callingpanel.equals("gencodemaint")) {
+                tablereport.setModel(DTData.getGenCodeBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
                 if (callingpanel.equals("payprofilemaint")) {
                 tablereport.setModel(DTData.getPayProfileBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
@@ -420,241 +423,247 @@ public class Browse extends javax.swing.JPanel {
          int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         String myparameter = "";
+        String[] arg = new String[10];
         if ( col == 0) {
             if (callingpanel.equals("glmaint")) {
               if (! checkperms("GLTranMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 2).toString();
-              reinitpanels("GLTranMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("GLTranMaint", true, arg);
             }
             if (callingpanel.equals("costmaint")) {
               if (! checkperms("CostRoll")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("CostRoll", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("CostRoll", true, arg);
             }
             if (callingpanel.equals("bommaint")) {
               if (! checkperms("BOMMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("BOMMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("BOMMaint", true, arg);
             }
             if (callingpanel.equals("editpmaint")) {
               if (! checkperms("EDITPMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("EDITPMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("EDITPMaint", true, arg);
             }
             if (callingpanel.equals("editpdocmaint")) {
               if (! checkperms("EDITPDocMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString();
-              reinitpanels("EDITPDocMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("EDITPDocMaint", true, arg);
             }
             if (callingpanel.equals("edicustmaint")) {
               if (! checkperms("CustEDIMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString() + "," + tablereport.getValueAt(row, 3).toString();
-              reinitpanels("CustEDIMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()};
+              reinitpanels("CustEDIMaint", true, arg);
             }
             if (callingpanel.equals("uommaint")) {
               if (! checkperms("UOMMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("UOMMaint", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("UOMMaint", true, arg);
             }
             if (callingpanel.equals("curmaint")) {
               if (! checkperms("CurrencyMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("CurrencyMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("CurrencyMaint", true, arg);
             }
              if (callingpanel.equals("domaint")) {
               if (! checkperms("DOMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("DOMaint", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("DOMaint", true, arg);
             }
              if (callingpanel.equals("svmaint")) {
               if (! checkperms("ServiceOrderMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ServiceOrderMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ServiceOrderMaint", true, arg);
             }
               if (callingpanel.equals("fomaint")) {
               if (! checkperms("FOMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("FOMaint", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("FOMaint", true, arg);
             }
             if (callingpanel.equals("taskmaint")) {
               if (! checkperms("TaskMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("TaskMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("TaskMaint", true, arg);
             }
             if (callingpanel.equals("taxmaint")) {
               if (! checkperms("TaxMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("TaxMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("TaxMaint", true, arg);
             }
             if (callingpanel.equals("payprofilemaint")) {
               if (! checkperms("PayProfileMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("PayProfileMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("PayProfileMaint", true, arg);
             }
             if (callingpanel.equals("ecnmaint")) {
               if (! checkperms("ECNMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ECNMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ECNMaint", true, arg);
             }
              if (callingpanel.equals("payrollmaint")) {
               if (! checkperms("PayRollMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("PayRollMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("PayRollMaint", true, arg);
             }
             if (callingpanel.equals("sitemaint")) {
               if (! checkperms("SiteMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("SiteMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("SiteMaint", true, arg);
             }
             if (callingpanel.equals("prodcodemaint")) {
               if (! checkperms("ProdCodeMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ProdCodeMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ProdCodeMaint", true, arg);
             }
             if (callingpanel.equals("recvmaint")) {
               if (! checkperms("ReceiverMaintMenu")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ReceiverMaintMenu", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ReceiverMaintMenu", true, arg);
             }
             if (callingpanel.equals("vouchmaint")) {
               if (! checkperms("VouchMaintPanel")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("VouchMaintPanel", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("VouchMaintPanel", true, arg);
             }
             if (callingpanel.equals("bankmaint")) {
               if (! checkperms("BankMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("BankMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("BankMaint", true, arg);
             }
             if (callingpanel.equals("arpaymentmaint")) {
               if (! checkperms("ARPaymentMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ARPaymentMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ARPaymentMaint", true, arg);
             }
             if (callingpanel.equals("expensemaint")) {
               if (! checkperms("ExpenseMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ExpenseMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ExpenseMaint", true, arg);
             }
             if (callingpanel.equals("printermaint")) {
               if (! checkperms("PrinterMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("PrinterMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("PrinterMaint", true, arg);
             }
             if (callingpanel.equals("calendarmaint")) {
               if (! checkperms("GLCalMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString();
-              reinitpanels("GLCalMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("GLCalMaint", true, arg);
+            }
+            if (callingpanel.equals("gencodemaint")) {
+              if (! checkperms("GenericCodeMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("GenericCodeMaint", true, arg);
             }
             if (callingpanel.equals("deptccmaint")) {
               if (! checkperms("DeptMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("DeptMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("DeptMaint", true, arg);
             }
             if (callingpanel.equals("shiftmaint")) {
               if (! checkperms("ShiftMaintenance")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ShiftMaintenance", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ShiftMaintenance", true, arg);
             }
             if (callingpanel.equals("locationmaint")) {
               if (! checkperms("LocationMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("LocationMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("LocationMaint", true, arg);
             }
             if (callingpanel.equals("ftpmaint")) {
               if (! checkperms("FTPMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("FTPMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("FTPMaint", true, arg);
             }
              if (callingpanel.equals("warehousemaint")) {
               if (! checkperms("WareHouseMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("WareHouseMaint", true, myparameter);
+             arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("WareHouseMaint", true, arg);
             }
             if (callingpanel.equals("itemmaint")) {
               if (! checkperms("ItemMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("ItemMaint", true, myparameter);
+               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ItemMaint", true, arg);
             }
              if (callingpanel.equals("panelmaint")) {
               if (! checkperms("PanelMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString();
-              reinitpanels("PanelMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("PanelMaint", true, arg);
             }
             if (callingpanel.equals("termmaint")) {
               if (! checkperms("TermsMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("TermsMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("TermsMaint", true, arg);
             }
             if (callingpanel.equals("carriermaint")) {
               if (! checkperms("CarrierMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("CarrierMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("CarrierMaint", true, arg);
             }
             if (callingpanel.equals("empmaint")) {
               if (! checkperms("EmployeeMaster")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("EmployeeMaster", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("EmployeeMaster", true, arg);
             }
              if (callingpanel.equals("clockrecupdate")) {
               if (! checkperms("TimeClockAdjust")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("TimeClockAdjust", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("TimeClockAdjust", true, arg);
             }
              if (callingpanel.equals("acctmaint")) {
               if (! checkperms("AcctMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("AcctMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("AcctMaint", true, arg);
             }
             if (callingpanel.equals("usermaint")) {
               if (! checkperms("UserMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("UserMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("UserMaint", true, arg);
             }
              if (callingpanel.equals("menumaint")) {
               if (! checkperms("MenuMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("MenuMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("MenuMaint", true, arg);
             }
                if (callingpanel.equals("vendmaint")) {
               if (! checkperms("VendMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("VendMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("VendMaint", true, arg);
             }
               if (callingpanel.equals("custmaint")) {
               if (! checkperms("CustMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("CustMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("CustMaint", true, arg);
             }
                 if (callingpanel.equals("ordermaint")) {
               if (! checkperms("OrderMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("OrderMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("OrderMaint", true, arg);
             }
                      if (callingpanel.equals("pomaint")) {
               if (! checkperms("POMaintMenu")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("POMaintMenu", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("POMaintMenu", true, arg);
             }
                     if (callingpanel.equals("shipmaint")) {
               if (! checkperms("ShipMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("ShipMaint", true, myparameter);
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ShipMaint", true, arg);
             }
                if (callingpanel.equals("shiptomaint")) {
               if (! checkperms("CustMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 2).toString() + "," + tablereport.getValueAt(row, 1).toString() ;
-              reinitpanels("CustMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("CustMaint", true, arg);
             }
                   if (callingpanel.equals("routingmaint")) {
               if (! checkperms("RoutingMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString() ;
-              reinitpanels("RoutingMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("RoutingMaint", true, arg);
             }
                         if (callingpanel.equals("wcmaint")) {
               if (! checkperms("WorkCellMaint")) { return; }
-              myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 2).toString() ;
-              reinitpanels("WorkCellMaint", true, myparameter);
+              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("WorkCellMaint", true, arg);
             }
         }
     }//GEN-LAST:event_tablereportMouseClicked

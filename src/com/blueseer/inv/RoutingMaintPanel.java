@@ -103,15 +103,14 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
           clearAll();
           disableAll();
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            String[] args = arg.split(",", -1);
-            getRoutingAndOp(args[0],args[1]);
+        if (arg != null && arg.length > 1) {
+            getRoutingAndOp(arg[0],arg[1]);
         }
     }
     
@@ -127,7 +126,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     }
     
      public void getRouting(String routing) {
-        initvars("");
+        initvars(null);
         tbrouting.setText(routing);
         try {
 
@@ -563,7 +562,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Routing / Op Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -624,7 +623,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                             + " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated Routing/Op Record");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -651,7 +650,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                            " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted Routing/Op " + tbrouting.getText() + "/" + ddop.getSelectedItem().toString());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

@@ -54,7 +54,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         transmodel.setRowCount(0);
        
@@ -275,7 +275,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         if (! OVData.loadTranHistByTable(transtable)) {
             bsmf.MainFrame.show("Unable to perform Production Entry for this Item");
         } else {
-            initvars("");
+            initvars(null);
             bsmf.MainFrame.show("Production Entry Successfull");
         }
         

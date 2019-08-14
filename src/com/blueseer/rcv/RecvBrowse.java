@@ -173,7 +173,7 @@ public class RecvBrowse extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
      
         
         java.util.Date now = new java.util.Date();

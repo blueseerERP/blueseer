@@ -83,11 +83,11 @@ public class UserMaintPanel extends javax.swing.JPanel {
         tbemail.setEnabled(false);
         tbphone.setEnabled(false);
         tbcell.setEnabled(false);
-        btUMEdit.setEnabled(false);
+        btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        btUMAdd.setEnabled(false);
-        btuserbrowse.setEnabled(false);
-        btlastnamebrowse.setEnabled(false);
+        btadd.setEnabled(false);
+        btbrowseUser.setEnabled(false);
+        btbrowseLastName.setEnabled(false);
         btnew.setEnabled(false);  
          ddsite.setEnabled(false);
      }
@@ -102,11 +102,11 @@ public class UserMaintPanel extends javax.swing.JPanel {
         tbemail.setEnabled(true);
         tbphone.setEnabled(true);
         tbcell.setEnabled(true);
-        btUMEdit.setEnabled(true);
+        btupdate.setEnabled(true);
         btdelete.setEnabled(true);
-        btUMAdd.setEnabled(true);
-        btuserbrowse.setEnabled(true);
-        btlastnamebrowse.setEnabled(false);
+        btadd.setEnabled(true);
+        btbrowseUser.setEnabled(true);
+        btbrowseLastName.setEnabled(false);
         btnew.setEnabled(true);
         ddsite.setEnabled(true);
      }
@@ -129,21 +129,21 @@ public class UserMaintPanel extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
      }
      
-     public void initvars(String arg) {
+     public void initvars(String[] arg) {
         
         clearAll();
        
                
-        if (! arg.isEmpty()) {
-            getuserinfo(arg);
+         if (arg != null && arg.length > 0) {
+            getuserinfo(arg[0]);
             enableAll();
-            btUMAdd.setEnabled(false);
+            btadd.setEnabled(false);
             tbUMuserid.setEnabled(false);
         } else {
               disableAll();
               btnew.setEnabled(true);
-              btuserbrowse.setEnabled(true);
-              btlastnamebrowse.setEnabled(true);
+              btbrowseUser.setEnabled(true);
+              btbrowseLastName.setEnabled(true);
           }
         
     }
@@ -179,7 +179,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
                  if (i == 0) {
                     bsmf.MainFrame.show("USERID does not exists");
                  } else {
-                     btUMEdit.setEnabled(true);
+                     btupdate.setEnabled(true);
                      btdelete.setEnabled(true);
                  }
            
@@ -233,8 +233,8 @@ public class UserMaintPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btUMAdd = new javax.swing.JButton();
-        btUMEdit = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         tbUMuserid = new javax.swing.JTextField();
         jLabel46 = new javax.swing.JLabel();
         tbUMLastName = new javax.swing.JTextField();
@@ -257,8 +257,8 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btdelete = new javax.swing.JButton();
         tbpassword = new javax.swing.JPasswordField();
         btnew = new javax.swing.JButton();
-        btuserbrowse = new javax.swing.JButton();
-        btlastnamebrowse = new javax.swing.JButton();
+        btbrowseUser = new javax.swing.JButton();
+        btbrowseLastName = new javax.swing.JButton();
         ddsite = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
 
@@ -266,17 +266,17 @@ public class UserMaintPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("User Maintenance"));
 
-        btUMAdd.setText("Add");
-        btUMAdd.addActionListener(new java.awt.event.ActionListener() {
+        btadd.setText("Add");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btUMAddActionPerformed(evt);
+                btaddActionPerformed(evt);
             }
         });
 
-        btUMEdit.setText("Edit");
-        btUMEdit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btUMEditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -318,17 +318,17 @@ public class UserMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btuserbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btuserbrowse.addActionListener(new java.awt.event.ActionListener() {
+        btbrowseUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowseUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btuserbrowseActionPerformed(evt);
+                btbrowseUserActionPerformed(evt);
             }
         });
 
-        btlastnamebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btlastnamebrowse.addActionListener(new java.awt.event.ActionListener() {
+        btbrowseLastName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowseLastName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btlastnamebrowseActionPerformed(evt);
+                btbrowseLastNameActionPerformed(evt);
             }
         });
 
@@ -378,9 +378,9 @@ public class UserMaintPanel extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btdelete)
                                 .addGap(18, 18, 18)
-                                .addComponent(btUMEdit)
+                                .addComponent(btupdate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btUMAdd))
+                                .addComponent(btadd))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel138)
@@ -392,10 +392,10 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btuserbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btbrowseUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew))
-                    .addComponent(btlastnamebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btbrowseLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -413,9 +413,9 @@ public class UserMaintPanel extends javax.swing.JPanel {
                             .addComponent(tbUMLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel47)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btuserbrowse)
+                        .addComponent(btbrowseUser)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btlastnamebrowse)))
+                        .addComponent(btbrowseLastName)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbUMFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -447,8 +447,8 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btUMEdit)
-                    .addComponent(btUMAdd)
+                    .addComponent(btupdate)
+                    .addComponent(btadd)
                     .addComponent(btdelete))
                 .addGap(30, 30, 30))
         );
@@ -456,7 +456,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btUMAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUMAddActionPerformed
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -495,13 +495,13 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 bsmf.MainFrame.show("Cannot Add User Mstr");
             }
             bsmf.MainFrame.con.close();
-            initvars("");
+            initvars(null);
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    }//GEN-LAST:event_btUMAddActionPerformed
+    }//GEN-LAST:event_btaddActionPerformed
 
-    private void btUMEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUMEditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -548,11 +548,11 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 bsmf.MainFrame.show("Unable to Edit UserMstr");
             }
             bsmf.MainFrame.con.close();
-            initvars("");
+            initvars(null);
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    }//GEN-LAST:event_btUMEditActionPerformed
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
          boolean proceed = bsmf.MainFrame.warn("Are you sure?");
@@ -567,7 +567,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from user_mstr where user_id = " + "'" + tbUMuserid.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("User Deleted: " + tbUMuserid.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -580,30 +580,30 @@ public class UserMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btuserbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuserbrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, "usermaint,user_id");
-    }//GEN-LAST:event_btuserbrowseActionPerformed
+    private void btbrowseUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseUserActionPerformed
+        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"usermaint","user_id"});
+    }//GEN-LAST:event_btbrowseUserActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
                 enableAll();
                 clearAll();
                 btnew.setEnabled(false);
-                btuserbrowse.setEnabled(false);
-                btUMEdit.setEnabled(false);
+                btbrowseUser.setEnabled(false);
+                btupdate.setEnabled(false);
                 btdelete.setEnabled(false);
     }//GEN-LAST:event_btnewActionPerformed
 
-    private void btlastnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlastnamebrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, "usermaint,user_lname");
-    }//GEN-LAST:event_btlastnamebrowseActionPerformed
+    private void btbrowseLastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseLastNameActionPerformed
+        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"usermaint","user_lname"});
+    }//GEN-LAST:event_btbrowseLastNameActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btUMAdd;
-    private javax.swing.JButton btUMEdit;
+    private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowseLastName;
+    private javax.swing.JButton btbrowseUser;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btlastnamebrowse;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btuserbrowse;
+    private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel138;

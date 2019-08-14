@@ -80,7 +80,7 @@ public class PostGLPanel extends javax.swing.JPanel {
          */
         public void done() {
             BlueSeerUtils.endTask(new String[]{"0","Posting is complete"});
-            initvars("");
+            initvars(null);
         }
     }  
     

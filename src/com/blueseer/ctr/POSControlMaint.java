@@ -86,7 +86,7 @@ public class POSControlMaint extends javax.swing.JPanel {
      }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         ddbank.removeAllItems();
         ArrayList<String> mybanks = OVData.getbanklist();
         for (String bank : mybanks) {

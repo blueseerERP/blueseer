@@ -184,7 +184,7 @@ String shipcountry = "";
         }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbqty.setText("");
         tbordnbr.setText("");
         tbline.setText("");
@@ -469,7 +469,7 @@ concatline = concatline.replace("$TODAYTIME", dftime.format(now));
  dos.close();
  soc.close();
  
- initvars("");
+ initvars(null);
 } else {
     bsmf.MainFrame.show("zebra dir/file does not exist " + labelfile);
 }

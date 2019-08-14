@@ -46,7 +46,7 @@ public class FTPMaint extends javax.swing.JPanel {
     }
 
     public void getFTPCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -132,7 +132,7 @@ public class FTPMaint extends javax.swing.JPanel {
          btbrowse.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         clearAll();
         disableAll();
@@ -140,8 +140,8 @@ public class FTPMaint extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            getFTPCode(arg);
+       if (arg != null && arg.length > 0) {
+            getFTPCode(arg[0]);
         }
     }
     
@@ -374,7 +374,7 @@ public class FTPMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("FTP Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -413,7 +413,7 @@ public class FTPMaint extends javax.swing.JPanel {
                             + " where ftp_id = " + "'" + tbid.getText() + "'"                             
                             + ";"); 
                     bsmf.MainFrame.show("Updated FTP Record");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -439,7 +439,7 @@ public class FTPMaint extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from ftp_mstr where ftp_id = " + "'" + tbid.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbid.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -453,7 +453,7 @@ public class FTPMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ftpmaint,ftp_id");
+        reinitpanels("BrowseUtil", true, new String[]{"ftpmaint","ftp_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

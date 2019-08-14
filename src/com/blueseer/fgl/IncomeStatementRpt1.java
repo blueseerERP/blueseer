@@ -151,7 +151,7 @@ public class IncomeStatementRpt1 extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         mymodel.setRowCount(0);
         
         mytable.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());

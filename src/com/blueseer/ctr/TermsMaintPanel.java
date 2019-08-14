@@ -49,7 +49,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
     }
 
     public void getTermsCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -155,15 +155,15 @@ public class TermsMaintPanel extends javax.swing.JPanel {
         btbrowse.setEnabled(false); 
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
           clearAll();
           disableAll();
           btnew.setEnabled(true);
           btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            getTermsCode(arg);
+       if (arg != null && arg.length > 0) {
+            getTermsCode(arg[0]);
         }
     }
     
@@ -335,7 +335,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Terms Record");
-                   initvars("");
+                   initvars(null);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -364,7 +364,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                             + " where cut_code = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Terms");
-                    initvars("");
+                    initvars(null);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating cust_term");
@@ -404,7 +404,7 @@ public class TermsMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from cust_term where cut_code = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

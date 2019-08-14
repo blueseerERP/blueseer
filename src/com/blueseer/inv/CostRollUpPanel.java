@@ -359,16 +359,16 @@ public class CostRollUpPanel extends javax.swing.JPanel {
          thissite = OVData.getDefaultSite();
     }
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
         clearAll();
         disableAll();
       
          
          
-         if (! arg.isEmpty()) {
-           tbitem.setText(arg);
-           establishParent(arg);
+         if (arg != null && arg.length > 0) {
+           tbitem.setText(arg[0]);
+           establishParent(arg[0]);
           
        }
          
@@ -854,7 +854,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
                   
                     } // for ops
                     bsmf.MainFrame.show("Cost Roll Complete");
-                    initvars(tbitem.getText());
+                    initvars(new String[]{tbitem.getText()});
                    }
             } // if proceed
             catch (SQLException s) {
@@ -876,7 +876,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tbitemActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
-        initvars("");
+        initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
 

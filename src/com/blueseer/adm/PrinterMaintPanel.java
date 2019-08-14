@@ -47,7 +47,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
     }
 
     public void getPrinterCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -80,7 +80,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
 
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbcode.setText("");
         tbdesc.setText("");
         tbip.setText("");
@@ -89,8 +89,8 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         ddtype.setSelectedIndex(0);
         
         
-        if (! arg.isEmpty()) {
-            getPrinterCode(arg);
+        if (arg != null && arg.length > 0) {
+            getPrinterCode(arg[0]);
         }
     }
     
@@ -118,6 +118,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         btbrowse = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -163,6 +164,13 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -180,7 +188,9 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnew))
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -192,7 +202,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                             .addComponent(btdelete)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btupdate))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,7 +212,8 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
-                    .addComponent(btbrowse))
+                    .addComponent(btbrowse)
+                    .addComponent(btnew))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -278,7 +289,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Could not Add Printer Record");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                
             } catch (SQLException s) {
@@ -313,7 +324,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                             + " where prt_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Printer");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -340,7 +351,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from prt_mstr where prt_id = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -354,14 +365,19 @@ public class PrinterMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "printermaint,prt_id");
+        reinitpanels("BrowseUtil", true, new String[]{"printermaint","prt_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnewActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JLabel jLabel1;

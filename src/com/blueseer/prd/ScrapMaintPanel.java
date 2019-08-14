@@ -62,7 +62,7 @@ public class ScrapMaintPanel extends javax.swing.JPanel {
     
     
     
-       public void initvars(String arg) {
+       public void initvars(String[] arg) {
         
        transmodel.setRowCount(0);
         tbuser.setText(bsmf.MainFrame.userid);
@@ -410,7 +410,7 @@ public class ScrapMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.show("Successfully Submitted Transactions");
         }
         
-        initvars("");
+        initvars(null);
             
         }
        

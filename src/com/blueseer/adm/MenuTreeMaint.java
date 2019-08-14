@@ -101,7 +101,7 @@ public class MenuTreeMaint extends javax.swing.JPanel {
 }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         tbpar.setText("");
         ddcomp.removeAllItems();
         tbinitvar.setText("");
@@ -549,7 +549,7 @@ public class MenuTreeMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Menu Tree Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -611,7 +611,7 @@ public class MenuTreeMaint extends javax.swing.JPanel {
                    
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted Menu Tree record");
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -672,7 +672,7 @@ public class MenuTreeMaint extends javax.swing.JPanel {
                OVData.indexMenuChildren(tbpar.getText().toString(), ddcomp.getSelectedItem().toString(), Integer.valueOf(tbindex.getText()), oldindex);
                    
                     bsmf.MainFrame.show("Updated Menu Tree Record");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {

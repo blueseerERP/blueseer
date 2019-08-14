@@ -146,7 +146,7 @@ public class TransBrowsePanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         mymodel.setRowCount(0);
          java.util.Date now = new java.util.Date();
          dcfrom.setDate(now);

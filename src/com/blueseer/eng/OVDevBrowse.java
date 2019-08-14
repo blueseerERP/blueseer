@@ -100,7 +100,7 @@ public class OVDevBrowse extends javax.swing.JPanel {
     }
 
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        rbactive.setSelected(true);
        rbinactive.setSelected(false);
        buttonGroup1.add(rbactive);

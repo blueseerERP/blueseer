@@ -139,7 +139,7 @@ String sitecitystatezip = "";
         }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         tbqty.setText("");
         tbscan.setText("");
         ddcell.removeAllItems();
@@ -277,17 +277,17 @@ String sitecitystatezip = "";
         
         if (! OVData.isPlan(tbscan.getText())) {
             bsmf.MainFrame.show("Bad Ticket: " + tbscan.getText());
-            initvars("");
+            initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
             bsmf.MainFrame.show("Already Scanned: " + tbscan.getText());
-            initvars("");
+            initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
             bsmf.MainFrame.show("Plan Voided: " + tbscan.getText());
-            initvars("");
+            initvars(null);
             return;
         }
        
@@ -297,7 +297,7 @@ String sitecitystatezip = "";
                OVData.updatePlanQty(tbscan.getText(), qty);
                OVData.updatePlanStatus(tbscan.getText(), "1");
                bsmf.MainFrame.show("Scan Complete!");
-               initvars("");
+               initvars(null);
            
            
        } 

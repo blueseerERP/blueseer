@@ -210,7 +210,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         rbout.setEnabled(false);
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
        clearAll();
        disableAll();
@@ -218,10 +218,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
        
-        if (! arg.isEmpty()) {
-            String[] args = arg.split(",",-1);
-            getCustEDI(args[0], args[1], args[2]);
+        if (arg != null && arg.length > 0) {
+            getCustEDI(arg[0], arg[1], arg[2]);
         }
+        
        
     }
     
@@ -649,7 +649,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Cust / Doc Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -717,7 +717,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             + " AND cme_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated Cust / doc");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -754,7 +754,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                             ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcust.getText() + "/" + dddoc.getSelectedItem().toString() + "/" + String.valueOf(BlueSeerUtils.boolToInt(dir)));
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

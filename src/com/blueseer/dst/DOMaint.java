@@ -58,7 +58,7 @@ public class DOMaint extends javax.swing.JPanel {
     
      public void getOrder(String mykey) {
         
-        initvars("");
+        initvars(null);
         
         btbrowse.setEnabled(false);
         btnew.setEnabled(true);
@@ -232,7 +232,7 @@ public class DOMaint extends javax.swing.JPanel {
         btdelitem.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -298,12 +298,9 @@ public class DOMaint extends javax.swing.JPanel {
         }
         
           
-          if (! arg.isEmpty()) {
-              getOrder(arg);
-          }
          
-               if (! arg.isEmpty()) {
-            getOrder(arg);
+        if (arg != null && arg.length > 0) {
+            getOrder(arg[0]);
         } else {
               disableAll();
               btnew.setEnabled(true);
@@ -663,7 +660,7 @@ public class DOMaint extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
      
-         initvars("");
+         initvars(null);
         
         
          ordernbr.setText(String.valueOf(OVData.getNextNbr("order")));
@@ -765,7 +762,7 @@ public class DOMaint extends javax.swing.JPanel {
 
                     }
                     bsmf.MainFrame.show("DO has been added");
-                   initvars("");
+                   initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {

@@ -139,7 +139,7 @@ String sitecitystatezip = "";
         }
     }
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         ddshipto.removeAllItems();
         ddbillto.removeAllItems();
         ArrayList mycusts = OVData.getcustmstrlist();

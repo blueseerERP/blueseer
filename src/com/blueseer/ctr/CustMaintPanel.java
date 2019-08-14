@@ -105,9 +105,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            }  else {
-             initvars(tbcustcode.getText());  
+             initvars(new String[]{tbcustcode.getText()});  
            }
            
             
@@ -223,7 +223,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                     if (cbshipto.isSelected())        
                     addShipTo(tbcustcode.getText());
                      message = new String[]{"0", "Customer has been added"};   
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
               
             } catch (SQLException s) {
@@ -282,7 +282,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                               
                message = new String[]{"0", "Customer has been updated"};   
               
-               initvars("");
+               initvars(null);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -313,7 +313,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                    st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbcustcode.getText() + "'" + ";");
                     if (i > 0) {
                         message = new String[]{"0", "Deleted code: " + tbcustcode.getText() };
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -532,7 +532,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         }
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", mainPanel);
@@ -549,18 +549,17 @@ public class CustMaintPanel extends javax.swing.JPanel {
          contactmodel.setRowCount(0);
         contacttable.setModel(contactmodel);
        
-      String[] args = null; 
-      if (! arg.isEmpty()) {
-            if (arg.contains(",")) {
-              args = arg.split(",",-1);
-              getbillto(args[0]);
-              getshipto(args[0], args[1]);
-              jTabbedPane1.setSelectedIndex(1);
+     
+      if (arg != null && arg.length > 0) {
+            if (arg.length > 1) {
+              getbillto(arg[0]);
+              getshipto(arg[0], arg[1]);
+              jTabbedPane1.setSelectedIndex(1); 
               enableShipTo();
               btshipadd.setEnabled(false);
               tbshipcode.setEnabled(false);
             } else {
-              getbillto(arg);  
+              getbillto(arg[0]);  
               disableShipTo();
               btshipnew.setEnabled(true);
               btshiptobrowse.setEnabled(true);

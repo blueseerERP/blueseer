@@ -237,7 +237,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
          clearAll();
         
@@ -246,8 +246,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            getvoucherinfo(arg);
+         if (arg != null && arg.length > 0) {
+            getvoucherinfo(arg[0]);
         }
     }
     
@@ -994,7 +994,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("An error occurred");
                     } else {
                     bsmf.MainFrame.show("Vouchering Complete");
-                    initvars("");
+                    initvars(null);
                     }
                     //reinitreceivervariables("");
                    

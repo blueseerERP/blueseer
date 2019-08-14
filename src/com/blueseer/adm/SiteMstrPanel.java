@@ -29,114 +29,156 @@ package com.blueseer.adm;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class SiteMstrPanel extends javax.swing.JPanel {
+public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form MasterDataPanel
-     */
-    public SiteMstrPanel() {
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations    
+        
+    
+    public SiteMstrPanel() { 
         initComponents();
     }
 
-    public void getsite(String site) {
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                res = st.executeQuery("select * from site_mstr where site_site = " + "'" + site + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("site_desc"));
-                    tbline1.setText(res.getString("site_line1"));
-                    tbline2.setText(res.getString("site_line2"));
-                    tbline3.setText(res.getString("site_line3"));
-                    tbcity.setText(res.getString("site_city"));
-                    ddstate.setSelectedItem(res.getString("site_state"));
-                    tbzip.setText(res.getString("site_zip"));
-                    tblogo.setText(res.getString("site_logo"));
-                    tb_iv_generic.setText(res.getString("site_iv_jasper"));
-                    tb_sh_generic.setText(res.getString("site_sh_jasper"));
-                    tb_po_generic.setText(res.getString("site_po_jasper"));
-                    tb_or_generic.setText(res.getString("site_or_jasper"));
-                    tb_pos_generic.setText(res.getString("site_pos_jasper"));
-                    tbsite.setText(site);
-                }
-              enableAll();
-              btadd.setEnabled(false);
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+    
+      // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            return message;
         }
-
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-    public void enableAll() {
-        tbsite.setEnabled(true);
-        tbdesc.setEnabled(true);
-        tbline1.setEnabled(true);
-        tbline2.setEnabled(true);
-        tbline3.setEnabled(true);
-        tbcity.setEnabled(true);
-        tbzip.setEnabled(true);
-        tblogo.setEnabled(true);
-        tb_iv_generic.setEnabled(true);
-        tb_sh_generic.setEnabled(true);
-        tb_po_generic.setEnabled(true);
-        tb_or_generic.setEnabled(true);
-        tb_pos_generic.setEnabled(true);
-        btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        btadd.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-        ddstate.setEnabled(true);
-    }
-    
-    public void disableAll() {
-        tbsite.setEnabled(false);
-        tbdesc.setEnabled(false);
-        tbline1.setEnabled(false);
-        tbline2.setEnabled(false);
-        tbline3.setEnabled(false);
-        tbcity.setEnabled(false);
-        tbzip.setEnabled(false);
-        tblogo.setEnabled(false);
-        tb_iv_generic.setEnabled(false);
-        tb_sh_generic.setEnabled(false);
-        tb_po_generic.setEnabled(false);
-        tb_or_generic.setEnabled(false);
-        tb_pos_generic.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        btadd.setEnabled(false);
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
-        ddstate.setEnabled(false);
-    }
-    
-    public void clearAll() {
-         tbsite.setText("");
+    public void setComponentDefaultValues() {
+       isLoad = true;
+           tbkey.setText("");
         tbdesc.setText("");
         tbline1.setText("");
         tbline2.setText("");
@@ -159,20 +201,253 @@ public class SiteMstrPanel extends javax.swing.JPanel {
            ddstate.setSelectedIndex(0); 
         }
         
-    }
-    
-    public void initvars(String arg) {
-       clearAll();
-       disableAll();
-       btbrowse.setEnabled(true);
-       btnew.setEnabled(true);
        
-        if (! arg.isEmpty()) {
-            getsite(arg);
-        }
-           
+        
+       isLoad = false;
     }
     
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btnew.setEnabled(false);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+     public boolean validateInput(String x) {
+        boolean b = true;
+               
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        
+        
+         if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+        }
+    }
+        
+    public String[] getRecord(String[] x) {
+         String[] m = new String[2];
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("select * from site_mstr where site_site = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbdesc.setText(res.getString("site_desc"));
+                    tbline1.setText(res.getString("site_line1"));
+                    tbline2.setText(res.getString("site_line2"));
+                    tbline3.setText(res.getString("site_line3"));
+                    tbcity.setText(res.getString("site_city"));
+                    ddstate.setSelectedItem(res.getString("site_state"));
+                    tbzip.setText(res.getString("site_zip"));
+                    tblogo.setText(res.getString("site_logo"));
+                    tb_iv_generic.setText(res.getString("site_iv_jasper"));
+                    tb_sh_generic.setText(res.getString("site_sh_jasper"));
+                    tb_po_generic.setText(res.getString("site_po_jasper"));
+                    tb_or_generic.setText(res.getString("site_or_jasper"));
+                    tb_pos_generic.setText(res.getString("site_pos_jasper"));
+                    tbkey.setText(x[0]);
+                }
+             
+               // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+               
+                int i = 0;
+             
+                boolean proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT site_site FROM  site_mstr where site_site = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into site_mstr "
+                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper   ) "
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + tbdesc.getText().toString().replace("'","''") + "'" + ","
+                            + "'" + tbline1.getText().toString().replace("'","''") + "'" + ","
+                            + "'" + tbline2.getText().toString().replace("'","''") + "'" + ","
+                            + "'" + tbline3.getText().toString().replace("'","''") + "'" + ","    
+                            + "'" + tbcity.getText().toString().replace("'","''") + "'" + ","
+                            + "'" + ddstate.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbzip.getText().toString() + "'" + ","
+                                + "'" + tblogo.getText().toString() + "'" + ","
+                                + "'" + tb_iv_generic.getText().toString() + "'" + ","
+                                + "'" + tb_sh_generic.getText().toString() + "'" + ","
+                                + "'" + tb_po_generic.getText().toString() + "'" + ","
+                                + "'" + tb_or_generic.getText().toString() + "'" + ","
+                                 + "'" + tb_pos_generic.getText().toString() + "'"
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+          } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+    return m;
+    }
+    
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+      try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+                // check the site field
+                if (tbkey.getText().isEmpty()) {
+                    proceed = false;
+                    bsmf.MainFrame.show("Must enter a site code");
+                }
+                
+                if (proceed) {
+                    st.executeUpdate("update site_mstr set site_line1 = " + "'" + tbline1.getText() + "'" + ","
+                            + "site_line2 = " + "'" + tbline2.getText().replace("'","''") + "'" + ","
+                            + "site_line3 = " + "'" + tbline3.getText().replace("'","''") + "'" + ","
+                            + "site_city = " + "'" + tbcity.getText().replace("'","''") + "'" + ","
+                            + "site_zip = " + "'" + tbzip.getText() + "'" + ","
+                            + "site_desc = " + "'" + tbdesc.getText().replace("'","''") + "'" + ","
+                            + "site_logo = " + "'" + tblogo.getText() + "'" + ","
+                            + "site_iv_jasper = " + "'" + tb_iv_generic.getText() + "'" + ","
+                            + "site_sh_jasper = " + "'" + tb_sh_generic.getText() + "'" + ","
+                            + "site_po_jasper = " + "'" + tb_po_generic.getText() + "'" + ","
+                            + "site_or_jasper = " + "'" + tb_or_generic.getText() + "'" + ","        
+                            + "site_pos_jasper = " + "'" + tb_pos_generic.getText() + "'" + ","
+                            + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'"
+                            + " where site_site = " + "'" + tbkey.getText() + "'"                             
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                  
+                } 
+         
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+    return m;
+    }
+    
+    public String[] deleteRecord(String[] x) {
+    String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from site_mstr where site_site = " + "'" + tbkey.getText() + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+    }
+   
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -200,7 +475,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tbsite = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -240,6 +515,12 @@ public class SiteMstrPanel extends javax.swing.JPanel {
         jLabel2.setText("Site Desc:");
 
         jLabel3.setText("AddrLine1");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -285,7 +566,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                         .addComponent(tbcity, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(tbline3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -298,7 +579,7 @@ public class SiteMstrPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btbrowse)
                     .addComponent(btnew))
@@ -481,143 +762,40 @@ public class SiteMstrPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the site field
-                if (tbsite.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a site code");
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update site_mstr set site_line1 = " + "'" + tbline1.getText() + "'" + ","
-                            + "site_line2 = " + "'" + tbline2.getText().replace("'","''") + "'" + ","
-                            + "site_line3 = " + "'" + tbline3.getText().replace("'","''") + "'" + ","
-                            + "site_city = " + "'" + tbcity.getText().replace("'","''") + "'" + ","
-                            + "site_zip = " + "'" + tbzip.getText() + "'" + ","
-                            + "site_desc = " + "'" + tbdesc.getText().replace("'","''") + "'" + ","
-                            + "site_logo = " + "'" + tblogo.getText() + "'" + ","
-                            + "site_iv_jasper = " + "'" + tb_iv_generic.getText() + "'" + ","
-                            + "site_sh_jasper = " + "'" + tb_sh_generic.getText() + "'" + ","
-                            + "site_po_jasper = " + "'" + tb_po_generic.getText() + "'" + ","
-                            + "site_or_jasper = " + "'" + tb_or_generic.getText() + "'" + ","        
-                            + "site_pos_jasper = " + "'" + tb_pos_generic.getText() + "'" + ","
-                            + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'"
-                            + " where site_site = " + "'" + tbsite.getText() + "'"                             
-                            + ";");
-                    bsmf.MainFrame.show("Updated Site"); 
-                  
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating site_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbsite.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a site code");
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT site_site FROM  site_mstr where site_site = " + "'" + tbsite.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into site_mstr "
-                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper   ) "
-                            + " values ( " + "'" + tbsite.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline1.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline2.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline3.getText().toString().replace("'","''") + "'" + ","    
-                            + "'" + tbcity.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbzip.getText().toString() + "'" + ","
-                                + "'" + tblogo.getText().toString() + "'" + ","
-                                + "'" + tb_iv_generic.getText().toString() + "'" + ","
-                                + "'" + tb_sh_generic.getText().toString() + "'" + ","
-                                + "'" + tb_po_generic.getText().toString() + "'" + ","
-                                + "'" + tb_or_generic.getText().toString() + "'" + ","
-                                 + "'" + tb_pos_generic.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added Site Master");
-                    } else {
-                        bsmf.MainFrame.show("Site Master already exists");
-                    }
-
-                  initvars("");
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add Site Master");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from site_mstr where site_site = " + "'" + tbsite.getText() + "'" + ";");
-                    initvars("");
-                    bsmf.MainFrame.show("delete was " + String.valueOf(i));
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Site Master");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete" ,new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "sitemaint,site_site");
+        reinitpanels("BrowseUtil", true, new String[]{"sitemaint","site_site"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       clearAll();
-       enableAll();
-       btbrowse.setEnabled(false);
-       btupdate.setEnabled(false);
-       btdelete.setEnabled(false);
-      
+       newAction("");
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -652,11 +830,11 @@ public class SiteMstrPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tb_sh_generic;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbline2;
     private javax.swing.JTextField tbline3;
     private javax.swing.JTextField tblogo;
-    private javax.swing.JTextField tbsite;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
 }

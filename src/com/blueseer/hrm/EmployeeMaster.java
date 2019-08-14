@@ -721,7 +721,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
        } 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         
           jTabbedPane1.removeAll();
@@ -757,8 +757,8 @@ public class EmployeeMaster extends javax.swing.JPanel {
          btempbrowse.setEnabled(true);
          btnew.setEnabled(true);
         
-       if (! arg.isEmpty()) {
-           getEmployee(arg);
+       if (arg != null && arg.length > 0) {
+           getEmployee(arg[0]);
        }
         
         
@@ -1768,7 +1768,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     }
                     
                     
-                    initvars("");
+                    initvars(null);
                     bsmf.MainFrame.show("Added Employee Record");
                     
                     // btQualProbAdd.setEnabled(false);
@@ -1901,7 +1901,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                     }
                         
                         
-                        initvars("");
+                        initvars(null);
                         bsmf.MainFrame.show("Updated Employee Record");
                     }
 
@@ -1933,7 +1933,7 @@ public class EmployeeMaster extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from emp_mstr where emp_nbr = " + "'" + empid.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted employee record " + empid.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                 MainFrame.bslog(s);

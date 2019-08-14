@@ -59,7 +59,7 @@ public class PlanMiscMaint extends javax.swing.JPanel {
     
    
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
         java.util.Date now = new java.util.Date();
         dcduedate.setDate(now);
@@ -242,7 +242,7 @@ public class PlanMiscMaint extends javax.swing.JPanel {
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Plan Record");
-                   initvars("");
+                   initvars(null);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);

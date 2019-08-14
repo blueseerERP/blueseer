@@ -72,7 +72,7 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         mymodel.setNumRows(0);
         tablereport.setModel(mymodel);

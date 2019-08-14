@@ -137,7 +137,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         java.util.Date now = new java.util.Date();
          dcfrom.setDate(now);
          dcto.setDate(now);

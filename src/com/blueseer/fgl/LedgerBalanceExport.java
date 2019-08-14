@@ -56,7 +56,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         initComponents();
     }
 
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
      
           lblendbal.setText("");
         

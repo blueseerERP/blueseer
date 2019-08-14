@@ -375,7 +375,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
          tbtbd.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
          
          
         clearAll();
@@ -383,8 +383,8 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
          
-         if (! arg.isEmpty()) {
-             getProdCode(arg);
+         if (arg != null && arg.length > 0) {
+             getProdCode(arg[0]);
          }
        
     }
@@ -852,7 +852,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                             + ";");
 
                         bsmf.MainFrame.show("Added Prod Code Record");
-                        initvars("");
+                        initvars(null);
                     } else {
                     bsmf.MainFrame.show("Prod Code already exists");
                 }
@@ -930,7 +930,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                             + ";");
 
                         bsmf.MainFrame.show("Updated Prod Code Record");
-                        initvars("");
+                        initvars(null);
                     }
 
                 } 
@@ -971,7 +971,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from pl_mstr where pl_line = " + "'" + tbnbr.getText() + "'" +  ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted Product Code " + tbnbr.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

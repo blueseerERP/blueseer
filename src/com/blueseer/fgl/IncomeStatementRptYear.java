@@ -316,7 +316,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
      }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         
         mymodel.setRowCount(0);

@@ -208,7 +208,7 @@ public class LabelBrowsePanel extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         mymodel.setRowCount(0);
          java.util.Date now = new java.util.Date();
          dcFrom.setDate(now);

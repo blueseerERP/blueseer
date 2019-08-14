@@ -253,7 +253,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
        
          clearAll();
@@ -261,8 +261,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
          btnew.setEnabled(true);
          btbrowse.setEnabled(true);
        
-         if (! arg.isEmpty()) {
-            getBatch(arg);
+         if (arg != null && arg.length > 0) {
+            getBatch(arg[0]);
         }
         
       
@@ -859,7 +859,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("An error occurred");
                     } else {
                     bsmf.MainFrame.show("Expense Complete");
-                    initvars("");
+                    initvars(null);
                     }
                     //reinitreceivervariables("");
                    

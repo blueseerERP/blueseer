@@ -120,7 +120,7 @@ public class AboutPanel extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
        
         

@@ -243,7 +243,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         return myreturn;
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         
          clearAll();
@@ -251,8 +251,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
          btnew.setEnabled(true);
          btbrowse.setEnabled(true);
        
-         if (! arg.isEmpty()) {
-            getBatch(arg);
+         if (arg != null && arg.length > 0) {
+            getBatch(arg[0]);
         }
         
         
@@ -949,7 +949,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("An error occurred");
                     } else {
                     bsmf.MainFrame.show("AR Payment Complete");
-                    initvars("");
+                    initvars(null);
                     }
                
                 } // if proceed

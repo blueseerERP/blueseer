@@ -47,7 +47,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     }
 
       public void getShiftCode(String mykey) {
-       // initvars("");
+       // initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -199,15 +199,15 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     }
     
     
-     public void initvars(String arg) {
+     public void initvars(String[] arg) {
        
          clearAll();
           disableAll();
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
         
-        if (! arg.isEmpty()) {
-            getShiftCode(arg);
+        if (arg != null && arg.length > 0) {
+            getShiftCode(arg[0]);
         }
     }
     
@@ -480,7 +480,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Shift Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -526,7 +526,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                             + " where shf_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Shift Code");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {

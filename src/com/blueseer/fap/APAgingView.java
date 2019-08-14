@@ -410,7 +410,7 @@ public class APAgingView extends javax.swing.JPanel {
       
       
       
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         modelsummary.setRowCount(0);
         java.util.Date now = new java.util.Date();
        

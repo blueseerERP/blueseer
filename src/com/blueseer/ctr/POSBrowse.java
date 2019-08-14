@@ -213,7 +213,7 @@ public class POSBrowse extends javax.swing.JPanel {
      }
      
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         tbdetqty.setText("0");
         tbtotqty.setText("0");
         tbtotsales.setText("0");

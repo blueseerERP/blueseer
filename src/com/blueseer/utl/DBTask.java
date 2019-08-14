@@ -83,7 +83,7 @@ public abstract class DBTask extends SwingWorker<String[], Void> {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            }  else {
              initvars(key);  
            }

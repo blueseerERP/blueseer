@@ -60,7 +60,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
 
     
      public void getAcctCode(String mykey) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -137,7 +137,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         btedit.setEnabled(false);
         btdelete.setEnabled(false);
     }
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         clearAll();
         disableAll();
@@ -148,8 +148,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
         
         ddtype.setSelectedItem("E");
         
-        if (! arg.isEmpty()) {
-            getAcctCode(arg);
+         if (arg != null && arg.length > 0) {
+            getAcctCode(arg[0]);
         }
     }
     
@@ -365,7 +365,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                             + ")"
                             + ";");
                         bsmf.MainFrame.show("Added Acct Number");
-                        initvars("");
+                        initvars(null);
                     } else {
                         bsmf.MainFrame.show("Acct Number Already Exists");
                     }
@@ -450,7 +450,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
                     int i = st.executeUpdate("delete from ac_mstr where ac_id = " + "'" + tbacct.getText() + "'" + ";");
                     if (i > 0) {
                         bsmf.MainFrame.show("deleted account record " + tbacct.getText());
-                        initvars("");
+                        initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

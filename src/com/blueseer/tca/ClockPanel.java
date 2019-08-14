@@ -137,7 +137,7 @@ public class ClockPanel extends javax.swing.JPanel {
         
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         count = 0;
     lbempid.setText(null);
     lbstatus.setText(null);

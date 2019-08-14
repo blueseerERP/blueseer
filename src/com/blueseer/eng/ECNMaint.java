@@ -630,7 +630,7 @@ public class ECNMaint extends javax.swing.JPanel  {
        
     }
       
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         
           java.util.Date now = new java.util.Date();
         TreeScrollPanel.setVisible(false);  
@@ -698,8 +698,8 @@ public class ECNMaint extends javax.swing.JPanel  {
         
         
 
-          if (! arg.isEmpty()) {
-            getECN(arg);
+           if (arg != null && arg.length > 0) {
+            getECN(arg[0]);
         } else {
               disableAll();
               btnew.setEnabled(true);
@@ -1223,7 +1223,7 @@ public class ECNMaint extends javax.swing.JPanel  {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
          
-        initvars("");
+        initvars(null);
         
         ecnnbr.setText(String.valueOf(OVData.getNextNbr("ecn")));
                 java.util.Date now = new java.util.Date();
@@ -1305,7 +1305,7 @@ public class ECNMaint extends javax.swing.JPanel  {
                     }
                     bsmf.MainFrame.show("ECN has been added");
                   
-                    initvars("");
+                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {

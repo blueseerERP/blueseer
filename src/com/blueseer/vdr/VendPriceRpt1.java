@@ -92,7 +92,7 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
        rbpart.setSelected(true);
        rbcode.setSelected(false);
        buttonGroup1.add(rbpart);

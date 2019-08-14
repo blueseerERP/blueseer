@@ -338,7 +338,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
          }
         
         
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
        
         

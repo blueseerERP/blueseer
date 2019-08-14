@@ -283,19 +283,19 @@ public class CashTran extends javax.swing.JPanel {
              
             switch(this.type) {
                 case "buy":
-                    initvars("0");
+                    initvars(new String[]{"0"});
                     break;
                 case "sell":
-                    initvars("1");
+                    initvars(new String[]{"1"});
                     break;
                 case "expense":
-                    initvars("2");
+                    initvars(new String[]{"2"});
                     break;
                 case "recurexpense":
-                    initvars("3");
+                    initvars(new String[]{"3"});
                     break;
                 default:
-                    initvars("0");
+                    initvars(new String[]{"0"});
             }
             
             } catch (Exception e) {
@@ -1204,10 +1204,11 @@ public class CashTran extends javax.swing.JPanel {
         }
     }
     
-    public void initvars(String arg) {
-        if (arg.isEmpty()) {
-            arg = "0";
-        }
+    public void initvars(String[] arg) {
+         if (arg != null && arg.length > 0) {
+        } else {
+             arg[0] = "0";
+         }
         isLoad = true;
         if (jTabbedPane1.getTabCount() == 0) {
         jTabbedPane1.add("buy asset", buyPanel);
@@ -1215,7 +1216,7 @@ public class CashTran extends javax.swing.JPanel {
         jTabbedPane1.add("misc expense", expensePanel);
         jTabbedPane1.add("recurring expense", expenseRecurPanel);
         } else {
-            jTabbedPane1.setSelectedIndex(Integer.valueOf(arg));
+            jTabbedPane1.setSelectedIndex(Integer.valueOf(arg[0]));
         }
        // jTabbedPane1.setEnabledAt(1, false);
        // jTabbedPane1.setEnabledAt(2, false);

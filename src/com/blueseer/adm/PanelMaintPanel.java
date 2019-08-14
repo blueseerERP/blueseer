@@ -48,7 +48,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
     }
 
     public void getPanel(String panel) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -106,15 +106,15 @@ public class PanelMaintPanel extends javax.swing.JPanel {
     }
     
     
-      public void initvars(String arg) {
+      public void initvars(String[] arg) {
         clearAll();
           disableAll();
           btbrowse.setEnabled(true);
           btnew.setEnabled(true);
        
         
-        if (! arg.isEmpty()) {
-            getPanel(arg);
+        if (arg != null && arg.length > 0) {
+            getPanel(arg[0]);
         }
     }
     
@@ -275,7 +275,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
                         bsmf.MainFrame.show("Panel Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -308,7 +308,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
                             + " where panel_id = " + "'" + tbcode.getText() + "'"                             
                             + ";");
                     bsmf.MainFrame.show("Updated Panel");
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -335,7 +335,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from panel_mstr where panel_id = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -349,7 +349,7 @@ public class PanelMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "panelmaint,panel_id");
+        reinitpanels("BrowseUtil", true, new String[]{"panelmaint","panel_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

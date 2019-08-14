@@ -121,7 +121,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         
        clearAll();
@@ -132,9 +132,9 @@ public class BOMMaintPanel extends javax.swing.JPanel {
        
         
          
-        if (! arg.isEmpty()) {
-           tbpart.setText(arg);
-           establishParent(arg);
+         if (arg != null && arg.length > 0) {
+           tbpart.setText(arg[0]);
+           establishParent(arg[0]);
          }  
     }
     
@@ -755,7 +755,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "bommaint,it_item");
+        reinitpanels("BrowseUtil", true, new String[]{"bommaint","it_item"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void complistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_complistMouseClicked
@@ -769,7 +769,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tbpartActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
-        initvars("");
+        initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
 

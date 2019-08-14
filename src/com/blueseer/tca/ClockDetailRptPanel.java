@@ -85,7 +85,7 @@ public class ClockDetailRptPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         
         cbpaid.setSelected(false);
         cbunpaid.setSelected(true);

@@ -310,7 +310,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         tablelocqty.setEnabled(false);
     }
     
-   public void initvars(String mypart) {
+   public void initvars(String[] arg) {
       
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", MainPanel);
@@ -328,8 +328,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
           btnew.setEnabled(true);
           partnumber.setEnabled(true);
          
-         if (! mypart.isEmpty()) {
-            boolean hasItem =  getitemmasterinfo(mypart);
+        if (arg != null && arg.length > 0) {
+            boolean hasItem =  getitemmasterinfo(arg[0]);
              if (hasItem) {
               partnumber.setEditable(false);
               partnumber.setForeground(Color.blue);
@@ -1958,7 +1958,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         // now add item cost record for later use
                         OVData.addItemCostRec(partnumber.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
                         
-                        initvars("");
+                        initvars(null);
                         bsmf.MainFrame.show("Added Part Number");
                     } else {
                         bsmf.MainFrame.show("Part Number Already Exists");
@@ -2091,7 +2091,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         + " where it_item = " + "'" + partnumber.getText().toString() + "'"
                         + ";");
                     bsmf.MainFrame.show("Updated Part Number");
-                    initvars("");
+                    initvars(null);
                 } else {
                     bsmf.MainFrame.show("Unable to Update");
                 }
@@ -2114,11 +2114,11 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btcurrentActionPerformed
 
     private void btitembrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btitembrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "itemmaint,it_item");
+       reinitpanels("BrowseUtil", true, new String[]{"itemmaint","it_item"});
     }//GEN-LAST:event_btitembrowseActionPerformed
 
     private void btdescbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdescbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "itemmaint,it_desc");
+        reinitpanels("BrowseUtil", true, new String[]{"itemmaint","it_desc"});
     }//GEN-LAST:event_btdescbrowseActionPerformed
 
     private void cbmrpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbmrpActionPerformed
@@ -2298,7 +2298,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                    st.executeUpdate("delete from mrp_mstr where mrp_part = " + "'" + partnumber.getText() + "'" + ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted item " + partnumber.getText());
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

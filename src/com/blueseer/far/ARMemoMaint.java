@@ -148,7 +148,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
 
     }
 
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        actamt = 0.00;
        labeltotal.setText("0.00");
        java.util.Date now = new java.util.Date();
@@ -715,7 +715,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                         bsmf.MainFrame.show("An error occurred");
                     } else {
                     bsmf.MainFrame.show("AR Memo Complete");
-                    initvars("");
+                    initvars(null);
                     }
                     //reinitreceivervariables("");
                    

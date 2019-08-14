@@ -158,15 +158,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
          ddamttype.setEnabled(false);
      }
      
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
           
            clearAll();
            disableAll();
            
           
            
-           if (! arg.isEmpty()) {
-             getProfile(arg);
+            if (arg != null && arg.length > 0) {
+             getProfile(arg[0]);
            } else {
                disableAll();
                btbrowse.setEnabled(true);
@@ -486,7 +486,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                  }
               
                  bsmf.MainFrame.show("Updated Profile Master");
-                 initvars("");
+                 initvars(null);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating profile master");
@@ -579,7 +579,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                      }
               
                 bsmf.MainFrame.show("Added Master Profile Record");
-                initvars("");
+                initvars(null);
                 }  else {
                         bsmf.MainFrame.show("Profile Master already exists");
                 } 
@@ -626,7 +626,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                     int j = st.executeUpdate("delete from pay_profdet where paypd_parentcode = " + "'" + tbprofilecode.getText() + "'" + ";");
                     if (i > 0 && j > 0) {
                         bsmf.MainFrame.show("deleted profile code " + tbprofilecode.getText());
-                        initvars("");
+                        initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

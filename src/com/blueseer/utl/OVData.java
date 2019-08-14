@@ -20596,7 +20596,7 @@ MainFrame.bslog(e);
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
             lblmessage.setForeground(Color.red);
-            initvars("");
+            initvars(null);
             return;
         }
                         

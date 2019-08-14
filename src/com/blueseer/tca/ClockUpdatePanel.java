@@ -197,12 +197,12 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
           clearAll();
           disableAll();
           btbrowse.setEnabled(true);
-        if (! arg.isEmpty()) {
-            getTimeClockRecord(arg);
+         if (arg != null && arg.length > 0) {
+            getTimeClockRecord(arg[0]);
         }
         
     }
@@ -528,7 +528,7 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
                               ";" );
         
         bsmf.MainFrame.show("Updated RecID");
-        initvars(tbrecid.getText());
+        initvars(new String[]{tbrecid.getText()});
             } // if proceed
         }
       catch (SQLException s){

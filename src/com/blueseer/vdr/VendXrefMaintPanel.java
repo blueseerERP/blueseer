@@ -53,7 +53,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
     
     
        public void getXref(String vend, String vendpart) {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -98,7 +98,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
     
     
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
         ArrayList myvend = OVData.getvendmstrlist();
         ddvend.removeAllItems();
         for (int i = 0; i < myvend.size(); i++) {
@@ -118,10 +118,9 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
          lblexists.setText("");
          lblexists.setForeground(Color.black);
          
-            String[] args = null;
-        if (! arg.isEmpty()) {
-            args = arg.split(",",-1);
-            getXref(args[0], args[1]);
+            
+         if (arg != null && arg.length > 1) {
+            getXref(arg[0], arg[1]);
         }
          
     }

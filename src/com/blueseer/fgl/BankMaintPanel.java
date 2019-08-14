@@ -31,7 +31,6 @@ import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
-import com.blueseer.utl.BlueSeer;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -44,12 +43,13 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import com.blueseer.utl.IBlueSeer;
 
 /**
  *
  * @author vaughnte
  */
-public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
+public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -64,14 +64,14 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
     
     
     // interface functions implemented
-    public void executeTask(String x, String y) { 
+  public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
-          String key = "";
+          String[] key = null;
           
-          public Task(String type, String key) { 
+          public Task(String type, String[] key) { 
               this.type = type;
               this.key = key;
           } 
@@ -110,13 +110,13 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars("");  
+             initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
            } else {
-             initvars("");  
+             initvars(null);  
            }
            
             
@@ -232,7 +232,46 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
         return m;
     }
     
-    public String[] addRecord(String x) {
+     public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a currency");
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
      String[] m = new String[2];
      
      try {
@@ -271,7 +310,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                        m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -287,7 +326,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
      }
      
-    public String[] updateRecord(String x) {
+    public String[] updateRecord(String[] x) {
      String[] m = new String[2];
      
      try {
@@ -310,7 +349,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                             + " where bk_id = " + "'" + tbkey.getText() + "'"                             
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars("");
+                    initvars(null);
                 } 
          
             } catch (SQLException s) {
@@ -326,7 +365,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
      }
      
-    public String[] deleteRecord(String x) {
+    public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
@@ -340,7 +379,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                    int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
@@ -357,7 +396,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
      return m;
      }
       
-    public String[] getRecord(String x) {
+    public String[] getRecord(String[] x) {
        String[] m = new String[2];
        
         try {
@@ -368,7 +407,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x + "'" + ";");
+                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                     i++;
                     tbkey.setText(res.getString("bk_id"));
@@ -396,45 +435,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
       return m;
     }
     
-    public boolean validateInput(String x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a site");
-                    return b;
-                }
-               
-                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a currency");
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a description");
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-               
-        return b;
-    }
-    
-    public void initvars(String arg) {
-       setPanelComponentState(this, false); 
-       setComponentDefaultValues();
-        btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        
-        if (! arg.isEmpty()) {
-            executeTask("get",arg);
-        } else {
-            tbkey.setEnabled(true);
-            tbkey.setEditable(true);
-        }
-    }
-    
+   
     
     // custom functions
     
@@ -624,7 +625,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", tbkey.getText());
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -632,7 +633,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", tbkey.getText());
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -640,7 +641,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", tbkey.getText());   
+        executeTask("delete", new String[]{tbkey.getText()});   
      
     }//GEN-LAST:event_btdeleteActionPerformed
 
@@ -653,7 +654,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements BlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", tbkey.getText());
+       executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
 

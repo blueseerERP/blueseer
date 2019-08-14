@@ -1535,7 +1535,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                     
                     
                     itemmodel.setNumRows(0);
-                    initvars("");
+                    initvars(null);
                     disableall();
                     //OVData.sendEmail("terry.vaughn@avmind.com", "test", "test", "");
                     // btQualProbAdd.setEnabled(false);

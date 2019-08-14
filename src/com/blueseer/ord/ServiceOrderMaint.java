@@ -63,7 +63,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     
      public void getOrder(String mykey) {
         
-        initvars("");
+        initvars(null);
         
         btbrowse.setEnabled(false);
         btnew.setEnabled(true);
@@ -410,7 +410,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
          btquotetoorder.setEnabled(false);
     }
     
-    public void initvars(String arg) {
+    public void initvars(String[] arg) {
        
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -480,8 +480,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
         isLoad = false;
         
         
-        if (! arg.isEmpty()) {
-            getOrder(arg);
+        if (arg != null && arg.length > 0) {
+            getOrder(arg[0]);
         } else {
               disableAll();
               btnew.setEnabled(true);
@@ -1023,7 +1023,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
      
-         initvars("");
+         initvars(null);
         
         
          ordernbr.setText(String.valueOf(OVData.getNextNbr("serviceorder")));
@@ -1123,7 +1123,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
 
                     }
                     bsmf.MainFrame.show("Service Order has been added");
-                   initvars( ordernbr.getText());
+                   initvars(new String[]{ordernbr.getText()});
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
@@ -1316,7 +1316,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                     st.executeUpdate("update sv_mstr set sv_type = 'order' where sv_nbr = " + "'" + ordernbr.getText() + "'" );
                     bsmf.MainFrame.show("Quote has been confirmed to Order");
-                   initvars(ordernbr.getText());
+                   initvars(new String[]{ordernbr.getText()});
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {

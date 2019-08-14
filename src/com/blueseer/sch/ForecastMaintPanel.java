@@ -118,7 +118,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
     }
     
     public void getForecast(String part, String year, String site)  {
-        initvars("");
+        initvars(null);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1205,12 +1205,12 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                             + ")"
                             + ";");
                       bsmf.MainFrame.show("Added Forecast Record");
-                      initvars("");
+                      initvars(null);
                     } else {
                         bsmf.MainFrame.show("Forecast Record Already Exists");
                     }
 
-                   initvars("");
+                   initvars(null);
                    
                 } // if proceed
             } catch (SQLException s) {
@@ -1249,7 +1249,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                                 + ";");
                         
                     bsmf.MainFrame.show("deleted forecast record");
-                    initvars("");
+                    initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -1348,7 +1348,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
                                 + ";");
                         
                       bsmf.MainFrame.show("Updated Forecast Record");
-                      initvars("");
+                      initvars(null);
                     } 
                
             } catch (SQLException s) {
