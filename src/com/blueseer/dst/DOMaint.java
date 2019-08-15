@@ -807,7 +807,7 @@ public class DOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "domaint,do_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"domaint","do_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -596,7 +596,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "payprofilemaint,payp_code");
+        reinitpanels("BrowseUtil", true, new String[]{"payprofilemaint","payp_code"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed

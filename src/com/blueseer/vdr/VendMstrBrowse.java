@@ -291,7 +291,7 @@ public class VendMstrBrowse extends javax.swing.JPanel {
         if ( col == 0) {
             if (! bsmf.MainFrame.checkperms("VendMaint")) { return; }
             bsmf.MainFrame.loadPanel("VendMaint", bsmf.MainFrame.main);
-           reinitpanels("VendMaint", true, tablereport.getValueAt(row, 1).toString());
+           reinitpanels("VendMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

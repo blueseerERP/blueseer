@@ -465,7 +465,7 @@ public class TrainingReport1 extends javax.swing.JPanel {
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
               if (! checkperms("TrainingMstr")) { return; }
-                reinitpanels("TrainingMstr", true, tablereport.getValueAt(row, col).toString());
+                reinitpanels("TrainingMstr", true, new String[]{tablereport.getValueAt(row, col).toString()});
            
         }
     }//GEN-LAST:event_tablereportMouseClicked

@@ -59,7 +59,7 @@ public class PostGLPanel extends javax.swing.JPanel {
         tbcount.setEnabled(false);
     }
     
-    public void initvars(String args) {
+    public void initvars(String[] args) {
         tbcount.setText("");
         enableAll();
         btpost.setEnabled(false);

@@ -538,7 +538,7 @@ public class TaskMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "taskmaint,task_id");
+        reinitpanels("BrowseUtil", true, new String[]{"taskmaint","task_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
 

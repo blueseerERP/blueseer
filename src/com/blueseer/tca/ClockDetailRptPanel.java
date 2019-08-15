@@ -374,7 +374,7 @@ try {
         int col = tablerecs.columnAtPoint(evt.getPoint());
         if ( col == 0) {
               if (! checkperms("TimeClockAdjust")) { return; }
-              reinitpanels("TimeClockAdjust", true, tablerecs.getValueAt(row, 1).toString());
+              reinitpanels("TimeClockAdjust", true, new String[]{tablerecs.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablerecsMouseClicked
 

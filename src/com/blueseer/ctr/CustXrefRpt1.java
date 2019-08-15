@@ -277,7 +277,7 @@ public class CustXrefRpt1 extends javax.swing.JPanel {
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
          int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 4).toString();
+        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 4).toString()};
         if ( col == 0) {
               if (! checkperms("CustXrefMaint")) { return; }
            reinitpanels("CustXrefMaint", true, myparameter);

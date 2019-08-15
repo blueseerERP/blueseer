@@ -1239,7 +1239,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "svmaint,sv_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"svmaint","sv_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -1259,11 +1259,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddshipActionPerformed
 
     private void btnewcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewcustActionPerformed
-        reinitpanels("CustMaint", true, "");
+        reinitpanels("CustMaint", true, new String[]{});
     }//GEN-LAST:event_btnewcustActionPerformed
 
     private void btnewsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewsiteActionPerformed
-       reinitpanels("CustMaint", true, ddcust.getSelectedItem().toString());
+       reinitpanels("CustMaint", true, new String[]{ddcust.getSelectedItem().toString()});
     }//GEN-LAST:event_btnewsiteActionPerformed
 
     private void tbpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusGained

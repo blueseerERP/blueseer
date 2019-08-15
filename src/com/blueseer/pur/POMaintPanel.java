@@ -1702,11 +1702,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "pomaint,po_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btpovendbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpovendbrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "pomaint,po_vend");
+       reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_vend"});
     }//GEN-LAST:event_btpovendbrowseActionPerformed
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed

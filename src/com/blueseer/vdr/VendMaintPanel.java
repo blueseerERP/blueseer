@@ -1289,7 +1289,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btvendcodebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvendcodebrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "vendmaint,vd_addr");
+        reinitpanels("BrowseUtil", true, new String[]{"vendmaint","vd_addr"});
     }//GEN-LAST:event_btvendcodebrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1330,11 +1330,11 @@ public class VendMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_contacttableMouseClicked
 
     private void btvendnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvendnamebrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "vendmaint,vd_name");
+       reinitpanels("BrowseUtil", true, new String[]{"vendmaint","vd_name"});
     }//GEN-LAST:event_btvendnamebrowseActionPerformed
 
     private void btvendzipbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvendzipbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "vendmaint,vd_zip");
+        reinitpanels("BrowseUtil", true, new String[]{"vendmaint","vd_zip"});
     }//GEN-LAST:event_btvendzipbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed

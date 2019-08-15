@@ -273,7 +273,7 @@ public class VendXrefRpt1 extends javax.swing.JPanel {
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
              int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String myparameter = tablereport.getValueAt(row, 1).toString() + "," + tablereport.getValueAt(row, 3).toString();
+        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 3).toString()};
         if ( col == 0) {
               if (! checkperms("VendXrefMaint")) { return; }
            reinitpanels("VendXrefMaint", true, myparameter);

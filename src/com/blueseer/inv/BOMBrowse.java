@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.blueseer.inv;
+package com.blueseer.inv; 
 
 import bsmf.MainFrame;
 import com.blueseer.ord.*;
@@ -363,7 +363,7 @@ public class BOMBrowse extends javax.swing.JPanel {
         if ( col == 0) {
             if (! checkperms("BOMMaint")) { return; }
             //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-            reinitpanels("BOMMaint",  true, tableorder.getValueAt(row, 1).toString());
+            reinitpanels("BOMMaint",  true, new String[] {tableorder.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tableorderMouseClicked
 

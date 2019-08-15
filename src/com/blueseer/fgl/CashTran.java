@@ -3099,7 +3099,7 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_tbactualamtActionPerformed
 
     private void btaddentityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentityActionPerformed
-                reinitpanels("VendMaint", true, "");
+                reinitpanels("VendMaint", true, new String[]{});
     }//GEN-LAST:event_btaddentityActionPerformed
 
     private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
@@ -3180,7 +3180,7 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewsellActionPerformed
 
     private void btaddentity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentity1ActionPerformed
-        reinitpanels("CustMaint", true, "");
+        reinitpanels("CustMaint", true, new String[]{});
     }//GEN-LAST:event_btaddentity1ActionPerformed
 
     private void tbprice1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbprice1FocusLost
@@ -3336,7 +3336,7 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewexpenseActionPerformed
 
     private void btaddentity2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentity2ActionPerformed
-         reinitpanels("VendMaint", true, "");
+         reinitpanels("VendMaint", true, new String[]{});
     }//GEN-LAST:event_btaddentity2ActionPerformed
 
     private void tbprice2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbprice2FocusLost
@@ -3474,7 +3474,7 @@ public class CashTran extends javax.swing.JPanel {
     }//GEN-LAST:event_ddrexpentityActionPerformed
 
     private void btaddentity3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddentity3ActionPerformed
-         reinitpanels("VendMaint", true, "");
+         reinitpanels("VendMaint", true, new String[]{}); 
     }//GEN-LAST:event_btaddentity3ActionPerformed
 
     private void tbrexpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrexpriceFocusLost

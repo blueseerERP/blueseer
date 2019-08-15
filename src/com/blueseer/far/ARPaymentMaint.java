@@ -1071,7 +1071,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddcurrActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "arpaymentmaint,ar_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"arpaymentmaint","ar_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbcontrolamtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusGained

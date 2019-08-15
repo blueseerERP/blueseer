@@ -588,7 +588,7 @@ try {
         if ( col == 0) {
               if (! checkperms("OrderMaint")) { return; }
               //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-              reinitpanels("OrderMaint",  true, tableorder.getValueAt(row, 1).toString());
+              reinitpanels("OrderMaint",  true, new String[]{tableorder.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tableorderMouseClicked
 

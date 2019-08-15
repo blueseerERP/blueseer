@@ -868,7 +868,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btrollActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "costmaint,it_item");
+        reinitpanels("BrowseUtil", true, new String[]{"costmaint","it_item"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed

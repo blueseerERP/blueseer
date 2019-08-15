@@ -540,7 +540,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "shiftmaint,shf_id");
+        reinitpanels("BrowseUtil", true, new String[]{"shiftmaint","shf_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

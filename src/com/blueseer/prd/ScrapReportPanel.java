@@ -836,7 +836,7 @@ try {
         int col = tablescrap.columnAtPoint(evt.getPoint());
         if ( col == 0) {
               if (! checkperms("MenuItemMastMaint")) { return; }
-                bsmf.MainFrame.reinitpanels("MenuItemMastMaint", true, tablescrap.getValueAt(row, col).toString());
+                bsmf.MainFrame.reinitpanels("MenuItemMastMaint", true, new String[]{tablescrap.getValueAt(row, col).toString()});
         }
     }//GEN-LAST:event_tablescrapMouseClicked
 

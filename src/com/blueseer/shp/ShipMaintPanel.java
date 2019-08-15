@@ -2123,15 +2123,15 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_rborderStateChanged
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "shipmaint,sh_id");
+        reinitpanels("BrowseUtil", true, new String[]{"shipmaint","sh_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btcustbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustbrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "shipmaint,sh_cust");
+       reinitpanels("BrowseUtil", true, new String[]{"shipmaint","sh_cust"});
     }//GEN-LAST:event_btcustbrowseActionPerformed
 
     private void btorderbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btorderbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "shipmaint,sh_so");
+        reinitpanels("BrowseUtil", true, new String[]{"shipmaint","sh_so"});
     }//GEN-LAST:event_btorderbrowseActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed

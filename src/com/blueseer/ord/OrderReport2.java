@@ -468,7 +468,7 @@ try {
         if ( col == 0) {
               if (! checkperms("MenuOrderMaint")) { return; }
               //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-              reinitpanels("MenuOrderMaint", true, tableorder.getValueAt(row, col).toString());
+              reinitpanels("MenuOrderMaint", true, new String[]{tableorder.getValueAt(row, col).toString()});
                
                
            

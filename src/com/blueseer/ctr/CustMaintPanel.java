@@ -1950,7 +1950,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btshipeditActionPerformed
 
     private void btcustcodebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustcodebrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, "custmaint,cm_code");
+        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_code"});
     }//GEN-LAST:event_btcustcodebrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1979,7 +1979,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btshiptobrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiptobrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, "shiptomaint,cms_code" + "," + tbcustcode.getText());
+        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"shiptomaint","cms_code",tbcustcode.getText()}); 
     }//GEN-LAST:event_btshiptobrowseActionPerformed
 
     private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
@@ -2015,11 +2015,11 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_contacttableMouseClicked
 
     private void btcustnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustnamebrowseActionPerformed
-       bsmf.MainFrame.reinitpanels("BrowseUtil", true, "custmaint,cm_name");
+       bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_name"});
     }//GEN-LAST:event_btcustnamebrowseActionPerformed
 
     private void btcustzipbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustzipbrowseActionPerformed
-       bsmf.MainFrame.reinitpanels("BrowseUtil", true, "custmaint,cm_zip");
+       bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_zip"});
     }//GEN-LAST:event_btcustzipbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed

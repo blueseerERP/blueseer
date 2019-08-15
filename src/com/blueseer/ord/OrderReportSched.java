@@ -432,7 +432,7 @@ try {
         if ( col == 0) {
               if (! checkperms("MenuOrderMaint")) { return; }
               //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-                bsmf.MainFrame.reinitpanels("MenuOrderMaint", true, tableorder.getValueAt(row, col).toString());
+                bsmf.MainFrame.reinitpanels("MenuOrderMaint", true, new String[]{tableorder.getValueAt(row, col).toString()});
            
         }
     }//GEN-LAST:event_tableorderMouseClicked

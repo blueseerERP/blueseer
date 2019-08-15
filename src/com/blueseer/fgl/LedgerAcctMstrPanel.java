@@ -420,11 +420,11 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btacctbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btacctbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "acctmaint,ac_id");
+        reinitpanels("BrowseUtil", true, new String[]{"acctmaint","ac_id"});
     }//GEN-LAST:event_btacctbrowseActionPerformed
 
     private void btdescbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdescbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "acctmaint,ac_desc");
+        reinitpanels("BrowseUtil", true, new String[]{"acctmaint","ac_desc"});
     }//GEN-LAST:event_btdescbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

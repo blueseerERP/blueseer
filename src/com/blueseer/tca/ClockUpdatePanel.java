@@ -556,7 +556,7 @@ public class ClockUpdatePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tbtothrsFocusLost
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "clockrecupdate,recid");
+        reinitpanels("BrowseUtil", true, new String[]{"clockrecupdate","recid"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbrecidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbrecidActionPerformed

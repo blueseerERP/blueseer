@@ -911,7 +911,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "glmaint,glt_ref");
+        reinitpanels("BrowseUtil", true, new String[]{"glmaint","glt_ref"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed

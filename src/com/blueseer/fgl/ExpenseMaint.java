@@ -973,7 +973,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbcontrolamtFocusGained
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "expensemaint,ap_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"expensemaint","ap_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed

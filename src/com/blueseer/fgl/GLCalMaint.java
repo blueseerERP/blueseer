@@ -357,7 +357,7 @@ public class GLCalMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "calendarmaint,glc_year");
+        reinitpanels("BrowseUtil", true, new String[]{"calendarmaint","glc_year"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
 

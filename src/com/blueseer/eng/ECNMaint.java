@@ -1351,7 +1351,7 @@ public class ECNMaint extends javax.swing.JPanel  {
     }//GEN-LAST:event_btnotesActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ecnmaint,ecn_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"ecnmaint","ecn_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
 

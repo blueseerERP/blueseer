@@ -539,7 +539,7 @@ public class TaxMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "taxmaint,tax_code");
+        reinitpanels("BrowseUtil", true, new String[]{"taxmaint","tax_code"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed

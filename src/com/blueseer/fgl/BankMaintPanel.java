@@ -646,7 +646,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "bankmaint,bk_id");
+        reinitpanels("BrowseUtil", true, new String[]{"bankmaint","bk_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

@@ -1947,15 +1947,15 @@ public class EmployeeMaster extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btempbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btempbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "empmaint,emp_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_nbr"});
     }//GEN-LAST:event_btempbrowseActionPerformed
 
     private void btemplnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btemplnameActionPerformed
-        reinitpanels("BrowseUtil", true, "empmaint,emp_lname");
+        reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_lname"});
     }//GEN-LAST:event_btemplnameActionPerformed
 
     private void btempfnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btempfnameActionPerformed
-         reinitpanels("BrowseUtil", true, "empmaint,emp_fname");
+         reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_fname"});
     }//GEN-LAST:event_btempfnameActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

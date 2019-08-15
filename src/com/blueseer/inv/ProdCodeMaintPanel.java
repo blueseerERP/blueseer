@@ -946,7 +946,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "prodcodemaint,pl_line");
+        reinitpanels("BrowseUtil", true, new String[]{"prodcodemaint","pl_line"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

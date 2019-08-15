@@ -397,7 +397,7 @@ public class DeptMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "deptccmaint,dept_id");
+        reinitpanels("BrowseUtil", true, new String[]{"deptccmaint","dept_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
 

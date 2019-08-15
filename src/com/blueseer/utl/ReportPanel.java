@@ -315,7 +315,7 @@ public int[] mywidth;
       
         int row = TableReport.rowAtPoint(evt.getPoint());
         int col = TableReport.columnAtPoint(evt.getPoint());
-        String args = "";
+        String[] args = null;
         String mypanel = "";
         if (col == 0 && TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
              // if (! checkperms("MenuReqMaint")) { return; }
@@ -323,208 +323,208 @@ public int[] mywidth;
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqBrowseAll") == 0) {
                 mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqPendingApproval") == 0) {
                 mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqPendRpt1") == 0) {
                 mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }   
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqApproveBrowse") == 0) {
                 mypanel = "ReqMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("AcctBrowse") == 0) {
                 mypanel = "AcctMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("ItemBrowse") == 0) {
                 mypanel = "ItemMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("EmpBrowse") == 0) {
                  mypanel = "EmployeeMaster";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("WorkCellBrowse") == 0) {
                 mypanel = "WorkCellMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
             }  
             
             if (TableReport.getName() != null && TableReport.getName().compareTo("RoutingBrowse") == 0) {
                 mypanel = "RoutingMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
             }  
             
             if (TableReport.getName() != null && TableReport.getName().compareTo("CalendarBrowse") == 0) {
                  mypanel = "GLCalMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
             }
             
             if (TableReport.getName() != null && TableReport.getName().compareTo("LocationBrowse") == 0) {
                 mypanel = "LocationMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("WareHouseBrowse") == 0) {
                 mypanel = "WareHouseMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("ProdCodeBrowse") == 0) {
                 mypanel = "ProdCodeMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("DeptBrowse") == 0) {
                  mypanel = "DeptMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("MenuBrowse") == 0) {
                 mypanel = "MenuMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("PanelBrowse") == 0) {
                  mypanel = "PanelMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("CustReport1") == 0) {
                  mypanel = "CustMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("TermsBrowse") == 0) {
                 mypanel = "TermsMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("FreightBrowse") == 0) {
                mypanel = "FreightMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("CarrierBrowse") == 0) {
                mypanel = "CarrierMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("TaxBrowse") == 0) {
                mypanel = "TaxMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("PayProfileBrowse") == 0) {
                mypanel = "PayProfileMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("QPRBrowse") == 0) {
                mypanel = "QPRMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("BankBrowse") == 0) {
                  mypanel = "BankMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("SiteBrowse") == 0) {
                mypanel = "SiteMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("PrinterBrowse") == 0) {
                mypanel = "PrinterMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPMaintBrowse") == 0) {
                  mypanel = "EDITPMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+              args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("LabelFileBrowse") == 0) {
                  mypanel = "LabelFileMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("GenCodeBrowse") == 0) {
                  mypanel = "GenericCodeMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString() ;
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("ForecastBrowse") == 0) {
                  mypanel = "ForecastMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString() + "," + TableReport.getValueAt(row, 3).toString() ;
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 3).toString()};
                reinitpanels(mypanel, true, args);
             } 
             if (TableReport.getName() != null && TableReport.getName().compareTo("CustEDIBrowse") == 0) {
                  mypanel = "CustEDIMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString() + "," + TableReport.getValueAt(row, 2).toString() + "," + TableReport.getValueAt(row, 3).toString() ;
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 3).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("ShiftBrowse") == 0) {
                  mypanel = "ShiftMaintenance";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("ClockCodeBrowse") == 0) {
                 mypanel = "ClockCodeMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("ClockCode66Browse") == 0) {
                 mypanel = "ClockApprovalMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = TableReport.getValueAt(row, 1).toString();
+              args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
             

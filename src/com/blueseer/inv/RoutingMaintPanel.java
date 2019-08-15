@@ -688,7 +688,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tbrunhoursinvertedFocusLost
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "routingmaint,wf_id");
+        reinitpanels("BrowseUtil", true, new String[]{"routingmaint","wf_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

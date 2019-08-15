@@ -349,7 +349,7 @@ public class ItemMastSearch extends javax.swing.JPanel {
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
               if (! checkperms("MenuItemMastMaint")) { return; }
-           reinitpanels("MenuItemMastMaint", true, tablereport.getValueAt(row, 1).toString());
+           reinitpanels("MenuItemMastMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

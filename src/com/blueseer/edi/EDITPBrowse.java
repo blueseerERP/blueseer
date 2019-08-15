@@ -159,7 +159,7 @@ public class EDITPBrowse extends javax.swing.JPanel {
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
               if (! checkperms("EDITPDocMaint")) { return; }
-                String args = tablereport.getValueAt(row, col).toString() + "," + tablereport.getValueAt(row, 1).toString();
+                String[] args = new String[]{tablereport.getValueAt(row, col).toString(),tablereport.getValueAt(row, 1).toString()};
                 reinitpanels("EDITPDocMaint",  true, args);
         }
     }//GEN-LAST:event_tablereportMouseClicked

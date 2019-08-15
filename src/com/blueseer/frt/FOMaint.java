@@ -2080,7 +2080,7 @@ public class FOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "fomaint,fo_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"fomaint","fo_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void ddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipperActionPerformed

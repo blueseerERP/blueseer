@@ -1553,7 +1553,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "payrollmaint,py_id");
+        reinitpanels("BrowseUtil", true, new String[]{"payrollmaint","py_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed

@@ -2994,23 +2994,23 @@ public class OrderMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btordnbrbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordnbrbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ordermaint,so_nbr");
+        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_nbr"});
     }//GEN-LAST:event_btordnbrbrowseActionPerformed
 
     private void btordcustbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordcustbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ordermaint,so_cust");
+        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_cust"});
     }//GEN-LAST:event_btordcustbrowseActionPerformed
 
     private void btordduebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordduebrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "ordermaint,so_due_date");
+        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_due_date"});
     }//GEN-LAST:event_btordduebrowseActionPerformed
 
     private void btorddatebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btorddatebrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "ordermaint,so_ord_date");
+       reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_ord_date"});
     }//GEN-LAST:event_btorddatebrowseActionPerformed
 
     private void btordpobrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordpobrowseActionPerformed
-       reinitpanels("BrowseUtil", true, "ordermaint,so_po");
+       reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_po"});
     }//GEN-LAST:event_btordpobrowseActionPerformed
 
     private void tbmiscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbmiscActionPerformed

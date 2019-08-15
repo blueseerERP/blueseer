@@ -538,7 +538,7 @@ try {
         if ( col == 0) {
                 String mypanel = "POMaintMenu";
                if (! checkperms(mypanel)) { return; }
-               String args = tablereport.getValueAt(row, 2).toString() ;
+               String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
               
         }

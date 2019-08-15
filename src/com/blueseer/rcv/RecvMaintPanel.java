@@ -1336,7 +1336,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_ddpoActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, "recvmaint,rv_id");
+        reinitpanels("BrowseUtil", true, new String[]{"recvmaint","rv_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
