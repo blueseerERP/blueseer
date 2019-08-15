@@ -4,4 +4,4 @@ USER=bs_user
 PASS=bspasswd
 IP=localhost
 PORT=3306
-DRIVER=com.mysql.jdbc.Driver
+DRIVER=com.mysql.cj.jdbc.Driver

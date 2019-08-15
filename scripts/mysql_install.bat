@@ -29,7 +29,7 @@ cd %~dp0
 @echo PASS=bspasswd>>bsconfig
 @echo IP=%IP%>>bsconfig
 @echo PORT=3306>>bsconfig
-@echo DRIVER=com.mysql.jdbc.Driver>>bsconfig
+@echo DRIVER=com.mysql.cj.jdbc.Driver>>bsconfig
 
 
 
@@ -147,10 +147,8 @@ mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'p
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ';' ignore 0 Lines; show errors;" %DB% 
 
 @echo "finished install..."
-@echo "BlueSeer should start now..."
 @echo "Login = 'admin' and Password = 'admin'"
 @echo "Click the login.bat file in the BlueSeer Directory to log in"
-REM @echo "If it does not start...click the 'login.bat' file in the blueseer dir"
 
 ping -n 5 127.0.0.1 > nul
 

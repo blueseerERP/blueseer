@@ -1,10 +1,13 @@
-Address,CustomerMenu,1,JMenu,Customer Menu,,,,1,1
 CustomerMenu,CustMaint,1,JMenuItem,Customer Maintenance,,,,1,1
 CustomerMenu,CustReport1,2,JMenuItem,Customer Browse,,1,,1,1
 CustomerMenu,CustXrefMaint,3,JMenuItem,Customer Xref Maint,,,,1,1
 CustomerMenu,CustXrefBrowse,4,JMenuItem,Customer Xref Browse,,,,1,1
 CustomerMenu,CustPriceMaint,5,JMenuItem,Customer Price Maintenance,,,,1,1
 CustomerMenu,CustPriceReport,6,JMenuItem,Customer Price Browse,,,,1,1
+Address,CustomerMenu,1,JMenu,Customer Menu,,,,1,1
+Address,VendorMenu,2,JMenu,Vendor Menu,,,,1,1
+Address,EDIMenu,3,JMenu,EDI Menu,,,,1,1
+Address,LabelMenu,4,JMenu,Label Menu,,,,1,1
 Address,CarrierMaint,5,JMenuItem,Carrier Maintenance,,,,1,1
 Address,CarrierBrowse,6,JMenuItem,Carrier Browse,,1,,1,1
 Address,FreightMaint,7,JMenuItem,Freight Maintenance,,,,1,1
@@ -17,7 +20,6 @@ CustomerMenu,CustomerReports,7,JMenu,Customer Reports,,,,1,1
 CustomerMenu,CustControl,8,JMenuItem,Customer Control,,,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Sales By Customer (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Receivables By Customer (PieChart),,1,,1,1
-Address,VendorMenu,1,JMenu,Vendor Menu,,,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Vendor Maintenance,,,,1,1
 VendorMenu,VendBrowse,2,JMenuItem,Vendor Browse,,1,,1,1
 VendorMenu,VendXrefMaint,3,JMenuItem,Vendor Xref Maintenance,,,,1,1
@@ -25,7 +27,6 @@ VendorMenu,VendXrefRpt1,4,JMenuItem,Vendor Xref Browse,,,,1,1
 VendorMenu,VendPriceMaint,5,JMenuItem,Vendor Price Maintenance,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
 VendorMenu,VendControl,7,JMenuItem,Vendor Control,,,,1,1
-Address,EDIMenu,1,JMenu,EDI Menu,,,,1,1
 EDIMenu,EDILoad,1,JMenuItem,EDI Inbound Load,,,,1,1
 EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDIMenu,EDITransactionLog,3,JMenuItem,EDI Trans Log,,,,1,1
@@ -36,7 +37,6 @@ EDIMenu,EDITPBrowse,7,JMenuItem,TP/DOC Browse,,1,,1,1
 EDIMenu,CustEDIMaint,8,JMenuItem,Customer/TPDOC Maintenance,,,,1,1
 EDIMenu,CustEDIBrowse,9,JMenuItem,Customer/TPDOC Browse,,1,,1,1
 EDIMenu,EDIControl,10,JMenuItem,EDI Control,,,,1,1
-Address,LabelMenu,1,JMenu,Label Menu,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Address Labels,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Label Browse,,1,,1,1

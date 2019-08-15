@@ -21,7 +21,7 @@ echo "USER=bs_user" >>bsconfig
 echo "PASS=bspasswd" >>bsconfig
 echo "IP=$IP" >>bsconfig
 echo "PORT=3306" >>bsconfig
-echo "DRIVER=com.mysql.jdbc.Driver" >>bsconfig
+echo "DRIVER=com.mysql.cj.jdbc.Driver" >>bsconfig
 
 cd data
 
