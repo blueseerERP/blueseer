@@ -110,151 +110,151 @@ public int[] mywidth;
         
          
          
-        if (arg.equals("ReqPendingApproval")) {
+        if (arg[0].equals("ReqPendingApproval")) {
              mymodel = DTData.getReqByApprover(bsmf.MainFrame.userid);
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("ReqBrowseAll")) {
+        if (arg[0].equals("ReqBrowseAll")) {
              mymodel = DTData.getReqAll();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("ReqPendRpt1")) {
+        if (arg[0].equals("ReqPendRpt1")) {
              mymodel = DTData.getReqPending();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("SchemaBrowse")) {
+        if (arg[0].equals("SchemaBrowse")) {
              mymodel = DTData.getDBSchema();
         }
-        if (arg.equals("UserBrowse")) {
+        if (arg[0].equals("UserBrowse")) {
              mymodel = DTData.getUserAll();
         }
-        if (arg.equals("ProdCodeBrowse")) {
+        if (arg[0].equals("ProdCodeBrowse")) {
              mymodel = DTData.getProdCodeAll();
         }
-        if (arg.equals("QPRBrowse")) {
+        if (arg[0].equals("QPRBrowse")) {
              mymodel = DTData.getQPRAll();
         }
-        if (arg.equals("ShipperBrowse")) {
+        if (arg[0].equals("ShipperBrowse")) {
              mymodel = DTData.getShipperAll();
         }
-        if (arg.equals("OpenOrdReport")) {
+        if (arg[0].equals("OpenOrdReport")) {
              mymodel = DTData.getOrderOpen();
         }
-        if (arg.equals("ReqApprovedBrowse")) {
+        if (arg[0].equals("ReqApprovedBrowse")) {
              mymodel = DTData.getReqApproved();
               TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("PlantDirectoryMenu")) {
+        if (arg[0].equals("PlantDirectoryMenu")) {
              mymodel = DTData.getPlantDirectory();
         }
-        if (arg.equals("NavCodeBrowse")) {
+        if (arg[0].equals("NavCodeBrowse")) {
              mymodel = DTData.getNavCodeList();
         }
         
-        if (arg.equals("AcctBrowse")) {
+        if (arg[0].equals("AcctBrowse")) {
              mymodel = DTData.getGLAcctAll();
         }
-        if (arg.equals("ItemBrowse")) {
+        if (arg[0].equals("ItemBrowse")) {
              mymodel = DTData.getItemBrowse(); 
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
              TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("ItemRoutingRpt")) {
+        if (arg[0].equals("ItemRoutingRpt")) {
              mymodel = DTData.getItemRoutingAll();
         }
        
-        if (arg.equals("EmpBrowse")) {
+        if (arg[0].equals("EmpBrowse")) {
              mymodel = DTData.getEmployeeAll();
         }
-        if (arg.equals("GenCodeBrowse")) {
+        if (arg[0].equals("GenCodeBrowse")) {
              mymodel = DTData.getGenCodeAll();
         }
-        if (arg.equals("WorkCellBrowse")) {
+        if (arg[0].equals("WorkCellBrowse")) {
              mymodel = DTData.getWorkCellAll();
         }
-        if (arg.equals("RoutingBrowse")) {
+        if (arg[0].equals("RoutingBrowse")) {
              mymodel = DTData.getRoutingsAll();
         }
-        if (arg.equals("LocationBrowse")) {
+        if (arg[0].equals("LocationBrowse")) {
              mymodel = DTData.getLocationsAll();
         }
-        if (arg.equals("WareHouseBrowse")) {
+        if (arg[0].equals("WareHouseBrowse")) {
              mymodel = DTData.getWareHousesAll();
         }
-        if (arg.equals("DeptBrowse")) {
+        if (arg[0].equals("DeptBrowse")) {
              mymodel = DTData.getDeptsAll();
         }
-        if (arg.equals("CustReport1")) {
+        if (arg[0].equals("CustReport1")) {
              mymodel = DTData.getCustAddrInfoAll();
         }
-         if (arg.equals("MenuBrowse")) {
+         if (arg[0].equals("MenuBrowse")) {
              mymodel = DTData.getMenusAll();
         }
-        if (arg.equals("PanelBrowse")) {
+        if (arg[0].equals("PanelBrowse")) {
              mymodel = DTData.getPanelsAll();
         }
-        if (arg.equals("TermsBrowse")) {
+        if (arg[0].equals("TermsBrowse")) {
              mymodel = DTData.getTermsAll();
         }
-        if (arg.equals("FreightBrowse")) {
+        if (arg[0].equals("FreightBrowse")) {
              mymodel = DTData.getFreightAll();
         }
-        if (arg.equals("CarrierBrowse")) {
+        if (arg[0].equals("CarrierBrowse")) {
              mymodel = DTData.getCarrierAll();
         }
-        if (arg.equals("TaxBrowse")) {
+        if (arg[0].equals("TaxBrowse")) {
              mymodel = DTData.getTaxAll();
         }
-         if (arg.equals("PayProfileBrowse")) {
+         if (arg[0].equals("PayProfileBrowse")) {
              mymodel = DTData.getPayProfileAll(); 
         }
-        if (arg.equals("EDITPMaintBrowse")) {
+        if (arg[0].equals("EDITPMaintBrowse")) {
              mymodel = DTData.getEDITPAll();
         }
-        if (arg.equals("noStdCostBrowse")) {
+        if (arg[0].equals("noStdCostBrowse")) {
              mymodel = DTData.getNoStdCostItems();
         }
-        if (arg.equals("BankBrowse")) {
+        if (arg[0].equals("BankBrowse")) {
              mymodel = DTData.getBankAll();
         }
-        if (arg.equals("UnPostedTransRpt")) {
+        if (arg[0].equals("UnPostedTransRpt")) {
              mymodel = DTData.getUnPostedGLTrans();
               TableReport.setModel(mymodel);
               TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg.equals("CalendarBrowse")) {
+        if (arg[0].equals("CalendarBrowse")) {
              mymodel = DTData.getGLCalendar();
         }
-         if (arg.equals("SiteBrowse")) {
+         if (arg[0].equals("SiteBrowse")) {
              mymodel = DTData.getSitesAll();
         }
-         if (arg.equals("ForecastBrowse")) {
+         if (arg[0].equals("ForecastBrowse")) {
              mymodel = DTData.getForecast13weeks(OVData.getForecastWeek(now));
         }
-        if (arg.equals("PrinterBrowse")) {
+        if (arg[0].equals("PrinterBrowse")) {
              mymodel = DTData.getPrintersAll();
         } 
-        if (arg.equals("CustEDIBrowse")) {
+        if (arg[0].equals("CustEDIBrowse")) {
              mymodel = DTData.getCustEDIAll();
         } 
-        if (arg.equals("LabelFileBrowse")) {
+        if (arg[0].equals("LabelFileBrowse")) {
              mymodel = DTData.getLabelFileAll();
         } 
-         if (arg.equals("ShiftBrowse")) {
+         if (arg[0].equals("ShiftBrowse")) {
              mymodel = DTData.getShiftAll();
         } 
-          if (arg.equals("ClockCodeBrowse")) {
+          if (arg[0].equals("ClockCodeBrowse")) {
              mymodel = DTData.getClockCodesAll();
         } 
-          if (arg.equals("ClockCode66Browse")) {
+          if (arg[0].equals("ClockCode66Browse")) {
              mymodel = DTData.getClockRecords66All();
         } 
-         if (arg.equals("ARPaymentBrowse")) {
+         if (arg[0].equals("ARPaymentBrowse")) {
              mymodel = DTData.getARPaymentBrowse();
         }  
          

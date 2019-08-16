@@ -178,7 +178,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
     public void setComponentDefaultValues() {
         isLoad = true;
            tbkey.setText("");
-        tbcode.setText("");
+        tbkey2.setText("");
         tbvalue.setText("");
       
        isLoad = false;
@@ -195,6 +195,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
+        tbkey.requestFocus();
     }
     
     public String[] setAction(int i) {
@@ -217,17 +218,17 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         boolean b = true;
                
                 
-                if (tbcode.getText().isEmpty()) {
+                if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
-                    tbcode.requestFocus();
+                    bsmf.MainFrame.show("must enter a key1");
+                    tbkey.requestFocus();
                     return b;
                 }
                 
-                if (tbkey.getText().isEmpty()) {
+                if (tbkey2.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
-                    tbkey.requestFocus();
+                    bsmf.MainFrame.show("must enter a key2");
+                    tbkey2.requestFocus();
                     return b;
                 }
                
@@ -246,6 +247,8 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
+            tbkey2.setEnabled(true);
+            tbkey2.setEditable(true);
         }
     }
      
@@ -387,13 +390,19 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("select * from code_mstr where code_code = " + "'" + x[0] + "'"  + 
+                if (x == null && x.length < 1) { return new String[]{}; };
+                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
+                if (x[1].isEmpty()) {
+                res = st.executeQuery("select * from code_mstr where code_code = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                } else {
+                 res = st.executeQuery("select * from code_mstr where code_code = " + "'" + x[0] + "'"  + 
                         " and code_key = " + "'" + x[1] + "'" +
-                        ";");
+                        ";");   
+                }
                 while (res.next()) {
                     i++;
-                    tbcode.setText(x[0]);
-                    tbkey.setText(x[1]);
+                    tbkey.setText(x[0]);
+                    tbkey2.setText(res.getString("code_key"));
                     tbvalue.setText(res.getString("code_value"));
                     
                 }
@@ -425,13 +434,13 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btupdate = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        tbkey = new javax.swing.JTextField();
+        tbkey2 = new javax.swing.JTextField();
         tbvalue = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
@@ -442,6 +451,12 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Generic Code Maintenance"));
 
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
         btupdate.setText("Update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -449,9 +464,9 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
             }
         });
 
-        jLabel1.setText("Code");
+        jLabel1.setText("Key1");
 
-        jLabel2.setText("Key");
+        jLabel2.setText("Key2");
 
         btdelete.setText("Delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -467,9 +482,20 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
             }
         });
 
+        tbkey2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkey2ActionPerformed(evt);
+            }
+        });
+
         jLabel3.setText("Value / Desc");
 
         btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -500,7 +526,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -509,7 +535,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btadd))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btbrowsekey, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbvalue, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -526,14 +552,14 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
                         .addComponent(btnew))
                     .addComponent(btbrowse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2))
                     .addComponent(btbrowsekey))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -556,7 +582,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbcode.getText(), tbkey.getText()});
+        executeTask("add", new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -564,7 +590,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbcode.getText(), tbkey.getText()});
+        executeTask("update", new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -572,7 +598,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbcode.getText(), tbkey.getText()});   
+        executeTask("delete", new String[]{tbkey.getText(), tbkey2.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -583,6 +609,18 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
     private void btbrowsekeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowsekeyActionPerformed
         reinitpanels("BrowseUtil", true, new String[]{"gencodemaint","code_key"});
     }//GEN-LAST:event_btbrowsekeyActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+       newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText(), tbkey2.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void tbkey2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkey2ActionPerformed
+       executeTask("get", new String[]{tbkey.getText(), tbkey2.getText()});
+    }//GEN-LAST:event_tbkey2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -596,8 +634,8 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbkey2;
     private javax.swing.JTextField tbvalue;
     // End of variables declaration//GEN-END:variables
 }

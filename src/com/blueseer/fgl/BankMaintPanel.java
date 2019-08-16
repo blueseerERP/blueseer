@@ -214,6 +214,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
+        tbkey.requestFocus();
     }
     
     public String[] setAction(int i) {
