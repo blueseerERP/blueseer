@@ -213,8 +213,11 @@ public int[] mywidth;
          if (arg[0].equals("PayProfileBrowse")) {
              mymodel = DTData.getPayProfileAll(); 
         }
-        if (arg[0].equals("EDITPMaintBrowse")) {
+        if (arg[0].equals("EDITPBrowse")) {
              mymodel = DTData.getEDITPAll();
+        }
+        if (arg[0].equals("EDITPDocBrowse")) {
+             mymodel = DTData.getEDITPDOCAll();
         }
         if (arg[0].equals("noStdCostBrowse")) {
              mymodel = DTData.getNoStdCostItems();
@@ -479,10 +482,16 @@ public int[] mywidth;
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPMaintBrowse") == 0) {
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPBrowse") == 0) {
                  mypanel = "EDITPMaint";
                 if (! checkperms(mypanel)) { return; }
               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPDocBrowse") == 0) {
+                 mypanel = "EDITPDocMaint";
+                if (! checkperms(mypanel)) { return; }
+              args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("LabelFileBrowse") == 0) {

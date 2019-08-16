@@ -82,7 +82,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String key) {
+    public void initvars(String[] key) {
         getdefault();
     }
     

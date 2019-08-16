@@ -33,7 +33,7 @@ EDIMenu,EDITransactionLog,3,JMenuItem,EDI Trans Log,,,,1,1
 EDIMenu,EDITPMaint,4,JMenuItem,TP Maintenance,,,,1,1
 EDIMenu,EDITPBrowse,5,JMenuItem,TP Browse,,1,,1,1
 EDIMenu,EDITPDocMaint,6,JMenuItem,TP/DOC Maintenance,,,,1,1
-EDIMenu,EDITPBrowse,7,JMenuItem,TP/DOC Browse,,1,,1,1
+EDIMenu,EDITPDocBrowse,7,JMenuItem,TP/DOC Browse,,1,,1,1
 EDIMenu,CustEDIMaint,8,JMenuItem,Customer/TPDOC Maintenance,,,,1,1
 EDIMenu,CustEDIBrowse,9,JMenuItem,Customer/TPDOC Browse,,1,,1,1
 EDIMenu,EDIControl,10,JMenuItem,EDI Control,,,,1,1

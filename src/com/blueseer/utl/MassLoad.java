@@ -423,6 +423,145 @@ public class MassLoad extends javax.swing.JPanel {
             }
     }
     
+     // EDI Partner stuff
+    public ArrayList<String> defineEDIPartner() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("editp_id,s,30,mandatory,validated");
+        list.add("editp_name,s,50,optional,validated");
+        list.add("editp_contact,s,50,optional,unvalidated");
+        list.add("editp_web,s,50,optional,unvalidated");
+        list.add("editp_helpdesk,s,50,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkEDIPartner(String[] rs, int i) {
+        boolean proceed = true;
+        ArrayList<String> list = defineEDIPartner();
+        // first check for correct number of fields
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == list.size()) {
+            // now check individual fields
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                j++;
+            } 
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processEDIPartner (File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkEDIPartner(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (OVData.addEDIPartner(list)) 
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+     // EDI Partner-Doc stuff
+    public ArrayList<String> defineEDIPartnerDoc() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("edi_id,s,30,mandatory,validated");
+        list.add("edi_doctype,s,10,mandatory,validated");
+        list.add("edi_map,s,50,optional,unvalidated");
+        list.add("edi_fa_required,b,1,mandatory,validated");
+        list.add("edi_desc,s,50,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkEDIPartnerDoc(String[] rs, int i) {
+        boolean proceed = true;
+        ArrayList<String> list = defineEDIPartnerDoc();
+        // first check for correct number of fields
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == list.size()) {
+            // now check individual fields
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                j++;
+            } 
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processEDIPartnerDoc (File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkEDIPartnerDoc(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (OVData.addEDIPartnerDoc(list))  
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+    
     
      // vend xref stuff
     public ArrayList<String> defineVendXref() {
@@ -1298,6 +1437,12 @@ public class MassLoad extends javax.swing.JPanel {
                if (ddtable.getSelectedItem().toString().compareTo("Inventory Adjustment") == 0) {
                   processInvAdjustment(myfile);
                }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Master") == 0) {
+                  processEDIPartner(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner-Doc Master") == 0) {
+                  processEDIPartnerDoc(myfile);
+               }
          }
     }
     
@@ -1399,7 +1544,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "EDI Partner-Doc Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

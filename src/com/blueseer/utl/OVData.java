@@ -3383,8 +3383,113 @@ public class OVData {
                   return myreturn;
              } 
              
-             
-             public static boolean addCustXref(ArrayList<String> list) {
+          
+    public static boolean addEDIPartner(ArrayList<String> list) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select editp_id from editp_mstr where " +
+                                           " editp_id = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into editp_mstr " 
+                      + "(editp_id, editp_name, editp_contact, editp_web, editp_helpdesk  ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                            "'" +  ld[3] + "'" + "," +  
+                            "'" +  ld[4] + "'"
+                             +  ");"
+                           );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
+    public static boolean addEDIPartnerDoc(ArrayList<String> list) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select edi_id from edi_mstr where " +
+                                           " edi_id = " + "'" + ld[0] + "'" +
+                                           " and edi_doctype = " + "'" + ld[1] + "'" +
+                                                   ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edi_mstr " 
+                      + "(edi_id, edi_doctype, edi_map, edi_fa_required, edi_desc  ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                            "'" +  ld[3] + "'" + "," +  
+                            "'" +  ld[4] + "'"
+                             +  ");"
+                           );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+     
+    
+    public static boolean addCustXref(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -3438,7 +3543,7 @@ public class OVData {
                   return myreturn;
              } 
              
-               public static boolean addVendXref(ArrayList<String> list) {
+    public static boolean addVendXref(ArrayList<String> list) {
                    boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();

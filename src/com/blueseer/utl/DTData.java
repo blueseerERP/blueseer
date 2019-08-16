@@ -5121,7 +5121,52 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         return mymodel;
         
          }
+        
+        
+          public static DefaultTableModel getEDITPDOCAll() {
+              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "TP ID", "Name", "Contact", "Web", "HelpDesk"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+             
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               
+                   
+                      res = st.executeQuery("select * from edi_mstr order by edi_id;");
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
+                                   res.getString("edi_doctype"),
+                                   res.getString("edi_map"),
+                                   res.getString("edi_fa_required"),
+                                   res.getString("edi_desc")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
             
+        }
+        return mymodel;
+        
+         }
+       
             public static DefaultTableModel getCustAddrInfoAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "CustCode", "Market", "Name", "Line1", "City", "State", "Zip"})
