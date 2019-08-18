@@ -549,7 +549,7 @@
                                               <Component id="btnewbuy" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace pref="12" max="32767" attributes="0"/>
                                       <Component id="lbtitle" min="-2" pref="281" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                                   </Group>

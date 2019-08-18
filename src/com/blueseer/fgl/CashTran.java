@@ -1205,10 +1205,10 @@ public class CashTran extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
-         if (arg != null && arg.length > 0) {
-        } else {
-             arg[0] = "0";
-         }
+        String v = "0";
+        if (arg != null && arg.length > 0) {
+        v = arg[0];
+        } 
         isLoad = true;
         if (jTabbedPane1.getTabCount() == 0) {
         jTabbedPane1.add("buy asset", buyPanel);
@@ -1216,7 +1216,7 @@ public class CashTran extends javax.swing.JPanel {
         jTabbedPane1.add("misc expense", expensePanel);
         jTabbedPane1.add("recurring expense", expenseRecurPanel);
         } else {
-            jTabbedPane1.setSelectedIndex(Integer.valueOf(arg[0]));
+            jTabbedPane1.setSelectedIndex(Integer.valueOf(v));
         }
        // jTabbedPane1.setEnabledAt(1, false);
        // jTabbedPane1.setEnabledAt(2, false);
