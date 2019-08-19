@@ -71,10 +71,10 @@ public class BlueSeerUtils {
     public static String updateRecordSuccess = "record updated successfully";
     public static String deleteRecordSuccess = "record deleted successfully";
     
-    public static String getRecordError = "record could not be found";
-    public static String addRecordError = "record could not be added";
-    public static String updateRecordError = "record could not be updated";
-    public static String deleteRecordError = "record could not be deleted";
+    public static String getRecordError = "record not found";
+    public static String addRecordError = "record not added";
+    public static String updateRecordError = "record not updated";
+    public static String deleteRecordError = "record not deleted";
     
     public static String addRecordAlreadyExists = "record already exists";
     public static String deleteRecordCanceled = "delete transaction cancelled";

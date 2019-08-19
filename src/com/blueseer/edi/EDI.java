@@ -153,7 +153,7 @@ public class EDI {
          
     }
     
-     public static void processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
         String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
@@ -173,14 +173,18 @@ public class EDI {
          String ed_escape = "";
          String sd_escape = "";
          int gsstart = 0;
+         String doctype = "";
+         String docid = "";
          ArrayList<String> isaList = new ArrayList<String>();
           
           char e = 0;
           char s = 0;
           char u = 0;
           
-           ArrayList<Integer[]> stse = new ArrayList<Integer[]>();
+          
+           Map<Integer, Object[]> stse_hash = new HashMap<Integer, Object[]>();
            
+          
             for (int i = 0; i < cbuf.length; i++) {
                 
                 if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
@@ -227,29 +231,30 @@ public class EDI {
                     ststart = i;
                     
                     String[] st = new String(cbuf, i, 16).split(ed_escape);
-                    c[1] = st[1]; // doctype
-                    c[6] = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
+                    doctype = st[1]; // doctype
+                    docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
                    
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
                     isaList.add("SE" + ":" + String.valueOf(i));
                     sestart = i;
-                    stse.add(new Integer[] {ststart, sestart});
+                   
+                    stse_hash.put(stcount, new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                   //  System.out.println("keyset for docs: " + stse_hash.keySet());
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
                     end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
                     // now add to ISAmap
-                    ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, stse.clone(), c});
+                 
+                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, stse_hash, c});
                     isaList.add("IEA" + ":" + String.valueOf(i));
-                    stse.clear();
+                   
+                    
                 } 
             }
+       
             
-            
-         //   for (String out : isaList) {
-        //        System.out.println(out);
-        //    }
          
          /* lets check to see if its x12 or edifact or csv or xml */
          /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
@@ -792,13 +797,27 @@ public class EDI {
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
         
         String[] c = (String[]) isa.getValue()[6];
-        ArrayList d = (ArrayList) isa.getValue()[5];
-   //    System.out.println("isa start/end : " + isa.getValue()[0] + "/" + isa.getValue()[1]); 
-     for (Object z : d) {
-            Integer[] k = (Integer[]) z;
-      //      System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+      //  ArrayList d = (ArrayList) isa.getValue()[5];
+        Map<Integer, Object[]> d = (HashMap<Integer, Object[]>)isa.getValue()[5];
         
-        String ed_escape = escapeDelimiter(String.valueOf(c[10]));
+      //  System.out.println("keyset for docs: " + d.keySet());
+        
+        ArrayList<String> falist = new ArrayList<String>();
+     //  System.out.println("isa start/end : " + isa.getValue()[0] + "/" + isa.getValue()[1]); 
+    
+       for (Map.Entry<Integer, Object[]> z : d.entrySet()) {
+        
+   // for (Object z : d) {
+            Integer[] k = (Integer[])z.getValue()[0];
+            String doctype = (String)z.getValue()[1];
+            String docid = (String)z.getValue()[2];
+            c[1] = doctype;
+            c[6] = docid;
+            
+      //      System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+        falist.add(docid); // add ST doc id to falist for functional acknowledgement
+      //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
+       
     // here you are inserting 'segments' into ArrayList doc
     StringBuilder segment = new StringBuilder();
    // for (int i = 0; i < cbuf.length; i++) {
@@ -858,8 +877,34 @@ public class EDI {
                    
                }
                
+            
+               
+               
+               
     } // object k
         
+     
+            // 997
+          
+                if (BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[0], c[1]))) {
+                   try {
+                    String[] _isa = c[13].toString().split(EDI.escapeDelimiter(ed), -1);
+                    String[] _gs = c[14].toString().split(EDI.escapeDelimiter(ed), -1);
+                    Class cls = Class.forName("EDIMaps." + "Generic997o");
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                    method.invoke(obj, falist, c);
+                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        OVData.writeEDILog(c, "0", "ERROR", "Problem generating 997 for " + c[0] + " / " + c[1]);
+                        ex.printStackTrace();
+                    }
+                }
+            
+     
+     
     } // ISAMap entries
    
   
@@ -1716,9 +1761,7 @@ public class EDI {
         
         return errorcode;
      }
-       
-       
-       
+              
       public static String[] generateEnvelope(String entity, String doctype, String dir) {
         
         String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
@@ -1817,11 +1860,10 @@ public class EDI {
             return envelope;
       }
       
-     
-      
-       public static String[] generate997Envelope(String isaq, String isaid, String gsid, String bsisaq, String bsisa, String bsgs, String ver) {
+       public static String[] generate997Envelope(String[] in_isa, String[] in_gs) {
         
-           
+        
+                    
         String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
         
         // get counter for ediout
@@ -1834,7 +1876,7 @@ public class EDI {
          
          
        //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
-         String filename = "997" + "." + isaid + "." + String.valueOf(filenumber) + "." + "txt";
+         String filename = "997" + "." + in_isa[6].trim() + "." + String.valueOf(filenumber) + "." + "txt";
         
          //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
          //BufferedWriter output;
@@ -1850,14 +1892,14 @@ public class EDI {
          String isa2 = "          ";
          String isa3 = "00";
          String isa4 = "          ";
-         String isa5 = String.format("%2s", bsisaq);
-         String isa6 = String.format("%-15s", bsisa);
-         String isa7 = String.format("%2s", isaq);
-         String isa8 = String.format("%-15s", isaid);
+         String isa5 = String.format("%2s", in_isa[7]);
+         String isa6 = String.format("%-15s", in_isa[8].trim());
+         String isa7 = String.format("%2s", in_isa[5]);
+         String isa8 = String.format("%-15s", in_isa[6].trim());
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = "U";
-         String isa12 = ver.substring(0,5);
+         String isa12 = in_gs[8].substring(0,5);
          String isa13 = String.format("%09d", filenumber);
          String isa14 = "0";
          String isa15 = "P";
@@ -1867,13 +1909,13 @@ public class EDI {
          
         
          
-         String gs2 = bsgs;
-         String gs3 = gsid;
+         String gs2 = in_gs[3];
+         String gs3 = in_gs[2];
          String gs4 = gsdfdate.format(now);
          String gs5 = gsdftime.format(now);
          String gs6 = String.valueOf(filenumber);
          String gs7 = "X";
-         String gs8 = ver;
+         String gs8 = in_gs[8];
           
         
         

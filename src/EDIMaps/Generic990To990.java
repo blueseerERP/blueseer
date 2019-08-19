@@ -1,3 +1,5 @@
+package EDIMaps;
+
 /*
 The MIT License (MIT)
 

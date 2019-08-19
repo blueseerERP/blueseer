@@ -310,7 +310,6 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
-                   btnew.setEnabled(false);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);

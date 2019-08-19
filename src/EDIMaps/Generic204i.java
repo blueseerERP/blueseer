@@ -35,156 +35,151 @@ import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import bsmf.MainFrame;
+import static com.blueseer.edi.EDIMap.ed;
 import static com.blueseer.utl.OVData.writeEDILog;
+import java.io.IOException;
 
 
 /**
  *
  * @author vaughnte
  */
-public class Generic204i {
+public class Generic204i extends com.blueseer.edi.EDIMap {
     
-    public static void Mapdata(ArrayList doc, String flddelim, String subdelim, String[] control) {
+    public void Mapdata(ArrayList doc, String[] c) throws IOException {
      
-    edi204i e = null;
+   
     
-     String isaSenderID = "";
-     String isaReceiverID = "";
-     String gsSenderID = "";
-     String gsReceiverID = "";
-     String isaCtrlNum = "";
-     String isaDate = "";
-     String doctype = "";
-     String docid = "";
-     
-        int doctypecount = 0;
-        int linecount = 0;
-        String custfo = "";
-        String origfo = "";
-        String purpose = "";
-        String line = "";
-     
-        boolean hasline = true;
-        boolean S5 = false;
-        int S5Count = 0;
-        boolean error = false;
-        ArrayList<String[]> dt = new ArrayList<String[]>();
-         
-         
+         com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
+    
+    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
+    setControl(c);    
+    
+    
+    // case inbound
+    // set envelope segments
+    String[] isa = c[13].split(EDI.escapeDelimiter(ed), -1);
+    String[] gs = c[14].split(EDI.escapeDelimiter(ed), -1);
+    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
+    // you can then override individual envelope elements as desired
+    // Only for Outbound!!!
+    // setOutPutEnvelopeStrings(c);
+      
+    // set temp variables
+    String custfo = ""; 
+    String origfo = "";
+    String purpose = "";
+    int S5Count = 0;
+    int linecount = 0;
+    boolean S5 = false;
+    boolean error = false;
+    
+        // set edi doc class (for loading into BlueSeer)
+         edi204i e = null;   
         
+         
+         // MAP  ...this is the MAP section  Note:  Outbound looping is driven by Inbound assignments and conditional logic (if user defines)
+     // All non-envelope segments are constructed here and assigned to one of three arrays H = Header, D = Detail, T = Trailer
          for (Object seg : doc) {
-             
-           String segarr[] = seg.toString().split(flddelim, -1);
+            String elementArray[] = seg.toString().split(EDI.escapeDelimiter(ed), -1);
+            String segment = elementArray[0]; 
            
-           
-           if (segarr[0].toString().equals("ISA")) {
-              isaSenderID = segarr[6].trim();
-              isaReceiverID = segarr[8].trim();
-              isaCtrlNum = segarr[13];
-           }
-           
-           if (segarr[0].toString().equals("GS")) {
-              gsSenderID = segarr[1];
-              gsReceiverID = segarr[2];
-           }
-           
-           if (segarr[0].toString().equals("ST")) {
-               doctype = segarr[1];
-           e = new edi204i(isaSenderID, isaReceiverID, gsSenderID, gsReceiverID, isaCtrlNum, isaDate, doctype, docid);
-           }
-          
-           
-           
-           if (segarr[0].toString().equals("B2")) {
-               custfo = segarr[4];
-               e.setCustFO(custfo);
-               e.setCarrier(segarr[2]);
+         
+             switch (segment) {
                
-               // lets set tpid and cust at this point with ISA sender ID and cross reference lookup into cmedi_mstr
-               e.setTPID(isaSenderID); 
-               e.setCust(OVData.getEDICustFromSenderISA(isaSenderID, "204", "1"));
+               case "ST" :
+                   e = new edi204i(isa[6].trim(), isa[8].trim(), gs[2], gs[3], c[4], isa[9], c[1], c[6]);
+                   break;
                
-           }
-           
-           if (segarr[0].toString().equals("B2A")) {
-               purpose = segarr[1];
+               case "B2" :
+                   custfo = elementArray[4];
+                   e.setCustFO(custfo);
+                   e.setCarrier(elementArray[2]);
+                   // lets set tpid and cust at this point with ISA sender ID and cross reference lookup into cmedi_mstr
+                   e.setTPID(isa[6].trim()); 
+                   e.setCust(OVData.getEDICustFromSenderISA(isa[6].trim(), "204", "1"));
+                   break;
                
-               // if cancellation...cancel original freight order based on custfo number...if status is not 'InTransit'
-               if (purpose.equals("01")) {
+               case "B2A" :
+                   purpose = elementArray[1];
+               
+                    // if cancellation...cancel original freight order based on custfo number...if status is not 'InTransit'
+                   if (purpose.equals("01")) {
                    OVData.CancelFOFrom204i(custfo);
                    return;
-               }
+                   }
                
-               if (purpose.equals("04")) {
-                  origfo = OVData.getFreightOrderNbrFromCustFO(custfo);
-               }
-           }
-           
-           
-           
-           /* Now the Detail  */ 
-           
-                 
-           
-           if ( segarr[0].toString().equals("S5")  ) {
-               S5 = true;  
-               S5Count++;
-               linecount = S5Count - 1; // for base zero array
-               String[] a = new String[e.DetFieldsCount204i];
-               e.detailArray.add(e.initDetailArray(a)); 
-               e.setDetLine(linecount, segarr[1]);
-               e.setDetType(linecount, segarr[2]);
-               e.setDetWeight(linecount, segarr[3]);
-               e.setDetWeightUOM(linecount, segarr[4]);
-               e.setDetBoxes(linecount, segarr[5]);
-                if ( segarr[6].toString().equals("PL")  ) {
-                e.setDetUnits(linecount, segarr[5]);
-                }
-           }
-           
-           if ( segarr[0].toString().equals("G62") && S5  ) {
-               if ( segarr[1].toString().equals("68") || segarr[1].toString().equals("70")) {
-                   e.setDetDelvDate(linecount, convertDateFormat("yyyyMMdd", segarr[2]));
-                   if (isSet(segarr,4)) {
-                      e.setDetDelvTime(linecount, segarr[4]);
+                   if (purpose.equals("04")) {
+                   origfo = OVData.getFreightOrderNbrFromCustFO(custfo);
+                   }
+                   break;    
+               
+               case "S5" :
+                   S5 = true;  
+                   S5Count++;
+                   linecount = S5Count - 1; // for base zero array
+                   String[] a = new String[e.DetFieldsCount204i];
+                   e.detailArray.add(e.initDetailArray(a)); 
+                   e.setDetLine(linecount, elementArray[1]);
+                   e.setDetType(linecount, elementArray[2]);
+                   e.setDetWeight(linecount, elementArray[3]);
+                   e.setDetWeightUOM(linecount, elementArray[4]);
+                   e.setDetBoxes(linecount, elementArray[5]);
+                    if ( elementArray[6].toString().equals("PL")  ) {
+                    e.setDetUnits(linecount, elementArray[5]);
+                    }
+                   break;    
+                  
+               case "G62" :
+                   if ( elementArray[1].toString().equals("68") || elementArray[1].toString().equals("70")) {
+                   e.setDetDelvDate(linecount, convertDateFormat("yyyyMMdd", elementArray[2]));
+                   if (isSet(elementArray,4)) {
+                      e.setDetDelvTime(linecount, elementArray[4]);
                       }
-               } 
-               if ( segarr[1].toString().equals("69")) {
-                   e.setDetShipDate(linecount, convertDateFormat("yyyyMMdd", segarr[2]));
-                   if (isSet(segarr,4)) {
-                      e.setDetShipTime(linecount, segarr[4]);
-                      }
-               } 
-           }
-                      
-           if ( segarr[0].toString().equals("N1") && S5  ) {
-               e.setDetAddrName(linecount, segarr[2]);
-               if (isSet(segarr,4)) {
-                      e.setDetAddrCode(linecount, segarr[4]);
-                      }
-           }
+                   } 
+                   if ( elementArray[1].toString().equals("69")) {
+                       e.setDetShipDate(linecount, convertDateFormat("yyyyMMdd", elementArray[2]));
+                       if (isSet(elementArray,4)) {
+                          e.setDetShipTime(linecount, elementArray[4]);
+                          }
+                   } 
+                   break;    
+                   
+               case "N1" :
+                    e.setDetAddrName(linecount, elementArray[2]);
+                    if (isSet(elementArray,4)) {
+                      e.setDetAddrCode(linecount, elementArray[4]);
+                    }
+                   break;        
+              
+               case "N3" :
+                     e.setDetAddrLine1(linecount, elementArray[1]);
+                   break;   
+                   
+               case "N4" :
+                    e.setDetAddrCity(linecount, elementArray[1]);
+                    e.setDetAddrState(linecount, elementArray[2]);
+                    e.setDetAddrZip(linecount, elementArray[3]);
+                   break;        
+               
+               case "61" :
+                    e.setDetAddrContact(linecount, elementArray[2]);
+                    e.setDetAddrPhone(linecount, elementArray[4]);
+                   break; 
+                   
+                   
+               default :
+                   break;
+           } // end switch
+            
            
-           if ( segarr[0].toString().equals("N3") && S5  ) {
-               e.setDetAddrLine1(linecount, segarr[1]);
-           }
-           
-           if ( segarr[0].toString().equals("N4") && S5  ) {
-               e.setDetAddrCity(linecount, segarr[1]);
-               e.setDetAddrState(linecount, segarr[2]);
-               e.setDetAddrZip(linecount, segarr[3]);
-           }
-           if ( segarr[0].toString().equals("G61") && S5  ) {
-               e.setDetAddrContact(linecount, segarr[2]);
-               e.setDetAddrPhone(linecount, segarr[4]);
-           }
-           
-         }
+         } // for each seg
          
          
          
          /* Load Freight Order unless cancellation....cancellation is handled above */
          if (! error &&  purpose.equals("00")) {
-             com.blueseer.edi.EDI.createFOMSTRFrom204i(e, control);
+             com.blueseer.edi.EDI.createFOMSTRFrom204i(e, c);
          }
          
          if (! error &&  purpose.equals("04")) {

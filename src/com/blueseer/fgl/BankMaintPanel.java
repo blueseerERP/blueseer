@@ -209,6 +209,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
+        tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
@@ -222,7 +223,6 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
-                   btnew.setEnabled(false);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);

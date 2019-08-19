@@ -40,6 +40,7 @@ import java.util.Map;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
+import static com.blueseer.edi.EDI.delimConvertIntToStr;
 import com.blueseer.utl.BlueSeerUtils;
 
 
@@ -47,12 +48,16 @@ import com.blueseer.utl.BlueSeerUtils;
  *
  * @author vaughnte
  */
-public class Generic997o {
-    // ArrayList doc, String flddelim, String subdelim, String control
-    public static String[] Mapdata(ArrayList<String> docs, String[] control, String gstype, String gsctrlnbr, String sttype, String isaid, String gsid, String isaq, String bsisaq, String bsisa, String bsgs, String ver) throws IOException {
+public class Generic997o  {
+    
+    public static String[] Mapdata(ArrayList<String> docs, String[] c) throws IOException {
         com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = "997";
+        String doctype = "997";
         
+       
+        
+         String[] _isa = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+         String[] _gs = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);  
      
      DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
      Date now = new Date();
@@ -68,7 +73,7 @@ public class Generic997o {
          int detsegcount = 0;
          
          // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generate997Envelope(isaq, isaid, gsid, bsisaq, bsisa, bsgs, ver);
+         String[] envelope = EDI.generate997Envelope(_isa, _gs);
          String ISA = envelope[0];
          String GS = envelope[1];
          String GE = envelope[2];
@@ -79,10 +84,10 @@ public class Generic997o {
          String stctrl = "0001"; // String.format("%09d", gsctrl);
         
          // assign missing pieces of control (filename, isactrl, gsctrl, stctrl) which are characteristic of ALL outbound documents.  This must be done for ALL outbound maps
-        control[3] = filename;
-        control[4] = isactrl;
-        control[5] = gsctrl;
-        control[6] = stctrl;
+        c[3] = filename;
+        c[4] = isactrl;
+        c[5] = gsctrl;
+        c[6] = stctrl;
         
          
                 
@@ -94,10 +99,10 @@ public class Generic997o {
          String Header = "";
        
          ArrayList<String> S = new ArrayList();
-         S.add("AK1" + ed + gstype + ed + gsctrlnbr);
+         S.add("AK1" + ed + _gs[1] + ed + _gs[6]);
          hdrsegcount += 1;
          for (String d : docs) {
-             S.add("AK2" + ed + sttype + ed + d);
+             S.add("AK2" + ed + c[1] + ed + d);
              S.add("AK5" + ed + "A");
              hdrsegcount += 2;
          }
@@ -131,7 +136,7 @@ public class Generic997o {
          output.write(Trailer);
          output.close();
  */
-                 return control; 
+                 return c; 
 }
 
 }

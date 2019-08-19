@@ -36,97 +36,100 @@ import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import bsmf.MainFrame;
 import static com.blueseer.utl.OVData.writeEDILog;
+import java.io.IOException;
 
 
 /**
  *
  * @author vaughnte
  */
-public class Generic214i {
+public class Generic214i extends com.blueseer.edi.EDIMap {
     
-    public static void Mapdata(ArrayList doc, String flddelim, String subdelim, String[] control) {
+    public void Mapdata(ArrayList doc, String[] c) throws IOException {
      
-    edi214 e = null;  
+   
     
-     String isaSenderID = "";
-     String isaReceiverID = "";
-     String gsSenderID = "";
-     String gsReceiverID = "";
-     String isaCtrlNum = "";
-     String isaDate = "";
-     String doctype = "";
-     String docid = "";
-     
-     String order = "";
-     
+         com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
+    
+    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
+    setControl(c);    
+    
+    
+    // case inbound
+    // set envelope segments
+    String[] isa = c[13].split(EDI.escapeDelimiter(ed), -1);
+    String[] gs = c[14].split(EDI.escapeDelimiter(ed), -1);
+    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
+    // you can then override individual envelope elements as desired
+    // Only for Outbound!!!
+    // setOutPutEnvelopeStrings(c);
       
-        boolean error = false;
-       
-         
+    // set temp variables
+    String order = ""; 
+    boolean error = false;
+    
+        // set edi doc class (for loading into BlueSeer)
+         edi214 e = null;   
         
+         
+         // MAP  ...this is the MAP section  Note:  Outbound looping is driven by Inbound assignments and conditional logic (if user defines)
+     // All non-envelope segments are constructed here and assigned to one of three arrays H = Header, D = Detail, T = Trailer
          for (Object seg : doc) {
-             
-           String segarr[] = seg.toString().split(flddelim, -1);
+            String elementArray[] = seg.toString().split(EDI.escapeDelimiter(ed), -1);
+            String segment = elementArray[0]; 
            
            
-           if (segarr[0].toString().equals("ISA")) {
-              isaSenderID = segarr[6].trim();
-              isaReceiverID = segarr[8].trim();
-              isaCtrlNum = segarr[13];
-           }
-           
-           if (segarr[0].toString().equals("GS")) {
-              gsSenderID = segarr[1];
-              gsReceiverID = segarr[2];
-           }
-           
-           if (segarr[0].toString().equals("ST")) {
-               doctype = segarr[1];
-           e = new edi214(isaSenderID, isaReceiverID, gsSenderID, gsReceiverID, isaCtrlNum, isaDate, doctype, docid);
-           }
-           
-          
-           if (segarr[0].toString().equals("B10")) {
-               e.setOrder(segarr[2]);  
-               order = segarr[2];
-               e.setProNbr(segarr[1]);
-           } // B10 segment
-           
-           
-           if (segarr[0].toString().equals("AT7")) {
-               e.setStatus(segarr[1]);
-               e.setRemarks(segarr[2]);
-               if (isSet(segarr, 5)) {
-                   e.setApptDate(segarr[5]);
-               }
-               if (isSet(segarr, 6)) {
-                   e.setApptTime(segarr[6]);
-               }
+           switch (segment) {
                
-           } // AT7 segment
+               case "ST" :
+                   e = new edi214(isa[6].trim(), isa[8].trim(), gs[2], gs[3], c[4], isa[9], c[1], c[6]);
+                   break;
+               
+               case "B10" :
+                   e.setOrder(elementArray[2]);  
+                   order = elementArray[2];
+                   e.setProNbr(elementArray[1]);
+                   break;
+                   
+               case "AT7" :
+                   e.setStatus(elementArray[1]);
+                   e.setRemarks(elementArray[2]);
+                   if (isSet(elementArray, 5)) {
+                    e.setApptDate(elementArray[5]);
+                   }
+                   if (isSet(elementArray, 6)) {
+                    e.setApptTime(elementArray[6]);
+                   }
+                   break;
+                
+               case "MS1" :
+                   e.setLat(elementArray[4]); 
+                   e.setLon(elementArray[5]); 
+                   break;
+                   
+                   
+               case "MS2" :
+                   e.setSCAC(elementArray[1]);
+                   e.setEquipmentNbr(elementArray[2]); 
+                   e.setEquipmentType(elementArray[3]); 
+                   break;
+                   
+               default :
+                   break;
+           } // end switch
+            
            
-           if (segarr[0].toString().equals("MS1")) {
-               e.setLat(segarr[4]); 
-               e.setLon(segarr[5]); 
-           } // MS1 segment
-           
-           if (segarr[0].toString().equals("MS2")) {
-               e.setSCAC(segarr[1]);
-               e.setEquipmentNbr(segarr[2]); 
-               e.setEquipmentType(segarr[3]); 
-           } // MS2 segment
-           
-           
-         }
+         } // end for each doc
+         
          
           if (order.isEmpty()) {
-               writeEDILog(control, "0", "ERROR", "No Freight Order found for this 214 in the B10 Segment");
+               writeEDILog(c, "0", "ERROR", "No Freight Order found for this 214 in the B10 Segment");
                error = true;
           }
           
           if (! order.isEmpty()) {
                if (! OVData.isValidFreightOrderNbr(order)) {
-               writeEDILog(control, "0", "ERROR", "Invalid Freight Order found for this 214 in the B10 Segment");
+               writeEDILog(c, "0", "ERROR", "Invalid Freight Order found for this 214 in the B10 Segment");
                error = true;
                }
           }
@@ -134,7 +137,7 @@ public class Generic214i {
          
          /* Load Shipper */
          if (! error) {
-             com.blueseer.edi.EDI.createFOTDETFrom214(e, control); 
+             com.blueseer.edi.EDI.createFOTDETFrom214(e, c); 
          }
          
         
