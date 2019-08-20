@@ -233,7 +233,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         return m;
     }
     
-     public boolean validateInput(String x) {
+    public boolean validateInput(String x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -251,6 +251,13 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     b = false;
                     bsmf.MainFrame.show("must enter a description");
                     tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
                     return b;
                 }
                 
