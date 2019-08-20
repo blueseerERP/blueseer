@@ -3383,8 +3383,63 @@ public class OVData {
                   return myreturn;
              } 
              
-          
-    public static boolean addEDIPartner(ArrayList<String> list) {
+    
+              public static boolean addCarrier(ArrayList<String> list) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select car_code from car_mstr where " +
+                                           " car_code = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into car_mstr " 
+                      + "(car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_type, car_acct  ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[3] + "'" + "," + 
+                    "'" +  ld[4] + "'" + "," + 
+                    "'" +  ld[5] + "'" + "," + 
+                    "'" +  ld[6] + "'" + "," +         
+                    "'" +  ld[7] + "'"
+                             +  ");"
+                           );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
+              
+        public static boolean addEDIPartner(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -3435,7 +3490,7 @@ public class OVData {
                   return myreturn;
              } 
     
-    public static boolean addEDIPartnerDoc(ArrayList<String> list) {
+        public static boolean addEDIPartnerDoc(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -18994,7 +19049,7 @@ MainFrame.bslog(e);
         
     }
       
-      public static boolean getEDIArchFlag() {
+      public static boolean isEDIArchFlag() {
        boolean isArchive = true;
         try{
             Class.forName(driver).newInstance();
@@ -19018,6 +19073,33 @@ MainFrame.bslog(e);
             MainFrame.bslog(e);
         }
         return isArchive; 
+        
+    }
+      
+       public static boolean isEDIDeleteFlag() {
+       boolean isDelete = true;
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edic_delete from edi_ctrl ;");
+               while (res.next()) {
+                   isDelete = BlueSeerUtils.ConvertStringToBool(res.getString("edic_delete"));
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isDelete; 
         
     }
       
@@ -19877,7 +19959,9 @@ MainFrame.bslog(e);
                         
                         // create the fot_det
                         CreateFOTDETFrom204i(control, fo, remarks, custfo );
-                        
+                        OVData.writeEDILog(control, "0", "INFO", "FONbr: " + custfo);
+                       } else {
+                           OVData.writeEDILog(control, "0", "INFO", "duplicate: " + custfo);
                        }
                         
                         
@@ -19949,6 +20033,13 @@ MainFrame.bslog(e);
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
+                
+                if (weight.isEmpty())
+                    weight = "0";
+                if (units.isEmpty())
+                    units = "0";
+                
+                
                 if (proceed) {
                         st.executeUpdate("insert into fod_det "
                             + "(fod_nbr, fod_line, fod_type, fod_shipper, fod_delvdate, fod_delvtime, fod_shipdate, fod_shiptime, " 

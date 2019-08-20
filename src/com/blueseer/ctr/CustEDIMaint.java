@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import java.awt.Color;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -311,17 +312,17 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
         jLabel5.setText("Code:");
 
-        jLabel15.setText("OV GS");
+        jLabel15.setText("Our GS");
 
         jLabel7.setText("GS ID");
 
         jLabel1.setText("TPID / ISA ID");
 
-        jLabel13.setText("OV ISA");
+        jLabel13.setText("Our ISA");
 
         jLabel9.setText("Map");
 
-        jLabel16.setText("OV ISA Q");
+        jLabel16.setText("Our ISA Q");
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -450,9 +451,27 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
         jLabel14.setText("FilePath");
 
+        tbelement.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbelementFocusLost(evt);
+            }
+        });
+
+        tbsegment.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsegmentFocusLost(evt);
+            }
+        });
+
         jLabel4.setText("Elem Sep");
 
         jLabel10.setText("Seg Sep");
+
+        tbsub.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsubFocusLost(evt);
+            }
+        });
 
         jLabel12.setText("Prefix");
 
@@ -522,17 +541,17 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbfilepath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17))
                         .addGap(6, 6, 6)
-                        .addComponent(tbsupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbsupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
-                        .addComponent(jLabel14)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel17)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel18)))
-                .addContainerGap())
+                        .addComponent(jLabel14)))
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -605,9 +624,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 }
                 
                 if (rbin.isSelected()) {
-                    dir = false;
-                } else {
                     dir = true;
+                } else {
+                    dir = false;
                 }
                 
                 if (proceed) {
@@ -689,10 +708,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     return;
                 }
                 
-                 if (rbin.isSelected()) {
-                    dir = false;
-                } else {
+                if (rbin.isSelected()) {
                     dir = true;
+                } else {
+                    dir = false;
                 }
                 
                 
@@ -779,6 +798,45 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btbrowse.setEnabled(false);
         btnew.setEnabled(false);
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbelementFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbelementFocusLost
+            String x = BlueSeerUtils.bsformat("", tbelement.getText(), "0");
+        if (x.equals("error")) {
+            tbelement.setText("");
+            tbelement.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbelement.requestFocus();
+        } else {
+            tbelement.setText(x);
+            tbelement.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbelementFocusLost
+
+    private void tbsegmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsegmentFocusLost
+           String x = BlueSeerUtils.bsformat("", tbsegment.getText(), "0");
+        if (x.equals("error")) {
+            tbsegment.setText("");
+            tbsegment.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsegment.requestFocus();
+        } else {
+            tbsegment.setText(x);
+            tbsegment.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbsegmentFocusLost
+
+    private void tbsubFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsubFocusLost
+         String x = BlueSeerUtils.bsformat("", tbsub.getText(), "0");
+        if (x.equals("error")) {
+            tbsub.setText("");
+            tbsub.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsub.requestFocus();
+        } else {
+            tbsub.setText(x);
+            tbsub.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbsubFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

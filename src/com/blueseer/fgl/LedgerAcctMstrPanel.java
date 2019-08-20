@@ -231,7 +231,54 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         }
         return m;
     }
-      
+     
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must choose a currency"});
+                    return b;
+                }
+               
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must enter a description"});
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must enter a code"});
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (Integer.valueOf(tbkey.getText().toString()) >= 99000000 && Integer.valueOf(tbkey.getText().toString()) <= 99999999) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "Account numbers between 99000000 and 99999999 are system reserved"});
+                    tbkey.requestFocus();
+                } 
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btacctbrowse.setEnabled(true);
+        btdescbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+        }
+    }
+   
     public String[] getRecord(String[] key) {
        String[] m = new String[2];
         try {
@@ -268,48 +315,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
       return m;
     }
     
-   
-    public boolean validateInput(String x) {
-        boolean b = true;
-                if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a currency");
-                    return b;
-                }
-               
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a description");
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a code");
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-               
-        return b;
-    }
-    
-    public void initvars(String[] arg) {
-       setPanelComponentState(this, false); 
-       setComponentDefaultValues();
-        btnew.setEnabled(true);
-        btacctbrowse.setEnabled(true);
-        btdescbrowse.setEnabled(true);
-        
-        if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
-        } else {
-            tbkey.setEnabled(true);
-            tbkey.setEditable(true);
-        }
-    }
-    
     public String[] addRecord(String[] key) {
          String[] m = new String[2];
          try {
@@ -319,18 +324,9 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                boolean proceed = true;
+                
                 int i = 0;
-
-                
-                if (Integer.valueOf(tbkey.getText().toString()) >= 99000000 && Integer.valueOf(tbkey.getText().toString()) <= 99999999) {
-                    proceed = false;
-                    return new String[] {"1", "Account numbers between 99000000 and 99999999 are system reserved"};
-                } 
-                
-                
-                if (proceed) {
-
+              
                     res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + tbkey.getText() + "'" + ";");
                     while (res.next()) {
                         i++;
@@ -351,7 +347,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                     }
 
                    initvars(null);
-                } // if proceed
+               
            } catch (SQLException s) {
                 MainFrame.bslog(s);
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
@@ -372,11 +368,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
-                
-                boolean proceed = true;
-                
-
-                if (proceed) {
 
                         st.executeUpdate("update ac_mstr set "
                             + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
@@ -387,7 +378,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                             + ";");
                  m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
-                } 
+          
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -687,7 +678,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         if (x.equals("error")) {
             tbkey.setText("");
             tbkey.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show("non-numeric in textbox");
             tbkey.requestFocus();
         } else {
             tbkey.setText(x);

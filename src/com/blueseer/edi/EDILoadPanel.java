@@ -575,8 +575,15 @@ public class EDILoadPanel extends javax.swing.JPanel {
                     // EDI.processFile(edifile);
                      EDI.processFileCmdLine(infile,"","","");
                     
+                     
+                         // if delete set in control panel...remove file and continue;
+                         if (OVData.isEDIDeleteFlag()) {
+                          Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                          Files.delete(filetodelete);
+                         }
+                     
                          // now archive file
-                         if (! inArch.isEmpty() && OVData.getEDIArchFlag()) {
+                         if (! inArch.isEmpty() && ! OVData.isEDIDeleteFlag() && OVData.isEDIArchFlag() ) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
                          Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);

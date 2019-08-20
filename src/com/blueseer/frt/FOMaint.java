@@ -683,7 +683,7 @@ public class FOMaint extends javax.swing.JPanel {
         freightorder.setText("");
        
         ddstatus.setBackground(null);
-      
+        ddstatus.setSelectedItem("open");
         shipdate.setDate(now);
         delvdate.setDate(now);
        

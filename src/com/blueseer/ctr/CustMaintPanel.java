@@ -81,13 +81,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
             
              switch(this.type) {
                 case "add":
-                    message = addRec();
+                    message = addRecord();
                     break;
                 case "edit":
-                    message = editRec();
+                    message = updateRecord();
                     break;
                 case "delete":
-                    message = deleteRec();    
+                    message = deleteRecord();    
                     break;
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -150,7 +150,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
               return r;
      }
      
-     public String[] addRec() {
+     public String[] addRecord() {
      String[] message = new String[2];
      try {
 
@@ -237,7 +237,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
      return message;
      }
     
-     public String[] editRec() {
+     public String[] updateRecord() {
         String[] message = new String[2];
            
            try {
@@ -296,7 +296,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         return message;
      }
      
-     public String[] deleteRec() {
+     public String[] deleteRecord() {
         String[] message = new String[2];
           
         try {

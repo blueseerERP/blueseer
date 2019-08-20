@@ -28,7 +28,10 @@ package com.blueseer.vdr;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,15 +41,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class VendMaintPanel extends javax.swing.JPanel {
+public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    public String newcode = "";
+     
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "ID", "Type", "Name", "Phone", "Fax", "Email"
@@ -60,271 +72,135 @@ public class VendMaintPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-     public void addContact(String vend) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("insert into vdc_det "
-                        + "(vdc_code, vdc_type, vdc_name, vdc_phone, vdc_fax, "
-                            + "vdc_email ) "
-                            + " values ( " + "'" + vend + "'" + ","
-                            + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
-                            + "'" + tbphone.getText().replace("'", "") + "'" + ","
-                            + "'" + tbfax.getText().replace("'", "") + "'" + ","
-                            + "'" + tbemail.getText().replace("'", "") + "'"                           
-                            + ")"
-                            + ";");
-        
-                   
-                    bsmf.MainFrame.show("Added Contact Info");
-                    
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Contact Info");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
     
-    public void editContact(String vend, String z) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+        // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
           
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("update vdc_det set "
-                            + "vdc_type = " + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
-                            + "vdc_name = " + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
-                            + "vdc_phone = " + "'" + tbphone.getText().replace("'", "") + "'" + ","
-                            + "vdc_fax = " +  "'" + tbfax.getText().replace("'", "") + "'" + ","
-                            + "vdc_email = " + "'" + tbemail.getText().replace("'", "") + "'"                           
-                            + " where vdc_code = " + "'" + vend + "'"
-                            + " and vdc_id = " + "'" + z + "'" 
-                            + ";");
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
-                   
-                    bsmf.MainFrame.show("Updated Contact Info");
-                    
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Update Contact Info");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    
-    public void deleteContact(String vend, String z) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+       public void done() {
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("delete from vdc_det where vdc_id = " + "'" + z + "'"
-                            + " AND vdc_code = " + "'" + vend + "'"
-                            + ";");
-                    bsmf.MainFrame.show("Deleted Contact Info");
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Delete Contact Info");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
         }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
    
-     public void refreshContactTable(String vend) {
-      contactmodel.setRowCount(0);
-       try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                res = st.executeQuery("select * from vdc_det where vdc_code = " + "'" + vend + "'" + ";");
-                while (res.next()) {
-                    contactmodel.addRow(new Object[]{res.getString("vdc_id"), res.getString("vdc_type"), res.getString("vdc_name"), res.getString("vdc_phone"), res.getString("vdc_fax"), res.getString("vdc_email") }); 
-                }
-                contacttable.setModel(contactmodel);
-                
-                 } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem retrieving contact list");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
         }
-       
-     }
-    
-    public void initvars(String[] arg) {
         
-        jTabbedPane1.removeAll();
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+       
+       jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", mainPanel);
         jTabbedPane1.add("Contact", contactPanel);
-        
-        
-       clearVend();
-        disableVend();
-        disableContact();
-        
-         contactmodel.setRowCount(0);
-        contacttable.setModel(contactmodel);
        
-      String[] args = null; 
-      if (arg != null && arg.length > 0) {
-            boolean gotIt = getVend(arg[0]);  
-            if (gotIt) {
-              tbcode.setEditable(false);
-              tbcode.setForeground(Color.blue);
-             } 
-        } else {
-              disableVend();
-              btnew.setEnabled(true);
-              btvendcodebrowse.setEnabled(true);
-              btvendzipbrowse.setEnabled(true);
-              btvendnamebrowse.setEnabled(true);
-              
-          }
-       
-        
-    }
-    
-    
-     public boolean getVend(String vend) {
-         boolean gotIt = false; 
-         try {
-           
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
-                tbname.setText("");
-                
-                
-                res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + vend + "'"  + ";");
-                while (res.next()) {
-                gotIt = true;
-                
-                tbcode.setText(res.getString("vd_addr"));
-                tbname.setText(res.getString("vd_name"));
-                tbline1.setText(res.getString("vd_line1"));
-                tbline2.setText(res.getString("vd_line2"));
-                tbline3.setText(res.getString("vd_line3"));
-                tbcity.setText(res.getString("vd_city"));
-                ddstate.setSelectedItem(res.getString("vd_state"));
-               ddcountry.setSelectedItem(res.getString("vd_country"));
-                if (res.getString("vd_country").equals("US")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                if (res.getString("vd_country").equals("United States")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                 if (res.getString("vd_country").equals("CA")) {
-                    ddcountry.setSelectedItem("Canada");
-                } 
-                tbzip.setText(res.getString("vd_zip"));
-                
-                tbdateadded.setText(res.getString("vd_dateadd"));
-                tbdatemod.setText(res.getString("vd_datemod"));
-                tbgroup.setText(res.getString("vd_group"));
-                tbmarket.setText(res.getString("vd_market"));
-                tbbuyer.setText(res.getString("vd_buyer"));
-                ddcarrier.setSelectedItem(res.getString("vd_shipvia"));
-                tbmisc.setText(res.getString("vd_misc"));
-                ddterms.setSelectedItem(res.getString("vd_terms"));
-                tbpricecode.setText(res.getString("vd_price_code"));
-                tbdisccode.setText(res.getString("vd_disc_code"));
-                tbtaxcode.setText(res.getString("vd_tax_code"));
-                ddaccount.setSelectedItem(res.getString("vd_ap_acct"));
-                ddcc.setSelectedItem(res.getString("vd_ap_cc"));
-                tbremarks.setText(res.getString("vd_remarks"));
-                ddbank.setSelectedItem(res.getString("vd_bank"));
-                 ddcurr.setSelectedItem(res.getString("vd_curr"));
-                
-                 contactmodel.setRowCount(0);
-            //    res = st.executeQuery("select * from vdc_det where vdc_code = " + "'" + ddvendcode.getSelectedItem() + "'" + ";");
-            //    while (res.next()) {
-           //         contactmodel.addRow(new Object[]{res.getString("vdc_type"), res.getString("vdc_name"), res.getString("vdc_phone")}); 
-            //    }
-           //     contacttable.setModel(contactmodel);
-                                    
-                }
-               
-               if (gotIt) {
-               refreshContactTable(tbcode.getText()); 
-               enableVend();
-               enableContact();
-               btadd.setEnabled(false);
-               }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get selected vendor");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-         
-         return gotIt;
-     }
-    
-     public void clearAllContacts() {
-        tbcontactname.setText("");
-        tbphone.setText("");
-        tbfax.setText("");
-        tbemail.setText("");
-       
-     }
-     
-     public void clearVend() {
-         
-          java.util.Date now = new java.util.Date();
+       java.util.Date now = new java.util.Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         tbdateadded.setText(df.format(now));
         tbdatemod.setText(df.format(now));
-        tbcode.setText("");
-        tbcode.setForeground(Color.black);
-        tbcode.setEditable(true);
+        tbkey.setText("");
+        tbkey.setForeground(Color.black);
+        tbkey.setEditable(true);
         tbname.setText("");
         tbline1.setText("");
         tbline2.setText("");
@@ -413,121 +289,467 @@ public class VendMaintPanel extends javax.swing.JPanel {
         ddcountry.setSelectedItem("USA");
         if (ddstate.getItemCount() > 0)
         ddstate.setSelectedIndex(0);
-       
-       
         
+        // contacts
+         tbcontactname.setText("");
+        tbphone.setText("");
+        tbfax.setText("");
+        tbemail.setText("");
+        
+       isLoad = false;
     }
     
-     public void enableVend() {
-         tbname.setEnabled(true);
-        tbline1.setEnabled(true);
-        tbline2.setEnabled(true);
-        tbline3.setEnabled(true);
-        tbcity.setEnabled(true);
-        tbzip.setEnabled(true);
-        tbtaxcode.setEnabled(true);
-        tbpricecode.setEnabled(true);
-        tbmarket.setEnabled(true);
-        tbdisccode.setEnabled(true);
-        tbbuyer.setEnabled(true);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+     
+    public boolean validateInput(String x) {
+        boolean b = true;
+         if (OVData.isValidVendor(tbkey.getText()) &&  x.equals("addRecord")) {
+                  b = false;
+                  BlueSeerUtils.message(new String[] {"1", "vendor code already in use"});
+                  return b;
+              } 
+                
+                if (ddaccount.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must assign an account"});
+                    return b;
+                }
+                if (ddcc.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                   BlueSeerUtils.message(new String[] {"1", "must assign a cost center"});
+                    return b;
+                }       
         
-        ddcurr.setEnabled(true);
-        ddbank.setEnabled(true);
-        ddcarrier.setEnabled(true);
-        ddterms.setEnabled(true);
-        tbmisc.setEnabled(true);
-       
-        tbcode.setEnabled(true);
-        ddstate.setEnabled(true);
-        ddcountry.setEnabled(true);
-        btadd.setEnabled(true);
-        btedit.setEnabled(true);
-        btdelete.setEnabled(true);
-        
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must enter a vendor code"});
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
         btvendcodebrowse.setEnabled(true);
         btvendnamebrowse.setEnabled(true);
         btvendzipbrowse.setEnabled(true);
         
-        tbremarks.setEnabled(true);
-        ddaccount.setEnabled(true);
-        ddcc.setEnabled(true);
-        tbsalesrep.setEnabled(true);
-        tbgroup.setEnabled(true);
-        tbmarket.setEnabled(true);
-        tbbuyer.setEnabled(true);
-        tbpricecode.setEnabled(true);
-        tbdisccode.setEnabled(true);
-        tbtaxcode.setEnabled(true);
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+        }
+    }
+   
+    public String[] getRecord(String[] key) {
+         String[] m = new String[2];
+         try {
+           
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                
+                contactmodel.setRowCount(0);
+                int i = 0;
+                res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + key[0] + "'"  + ";");
+                while (res.next()) {
+                    i++;
+                tbkey.setText(res.getString("vd_addr"));
+                tbname.setText(res.getString("vd_name"));
+                tbline1.setText(res.getString("vd_line1"));
+                tbline2.setText(res.getString("vd_line2"));
+                tbline3.setText(res.getString("vd_line3"));
+                tbcity.setText(res.getString("vd_city"));
+                ddstate.setSelectedItem(res.getString("vd_state"));
+               ddcountry.setSelectedItem(res.getString("vd_country"));
+                if (res.getString("vd_country").equals("US")) {
+                    ddcountry.setSelectedItem("USA");
+                } 
+                if (res.getString("vd_country").equals("United States")) {
+                    ddcountry.setSelectedItem("USA");
+                } 
+                 if (res.getString("vd_country").equals("CA")) {
+                    ddcountry.setSelectedItem("Canada");
+                } 
+                tbzip.setText(res.getString("vd_zip"));
+                
+                tbdateadded.setText(res.getString("vd_dateadd"));
+                tbdatemod.setText(res.getString("vd_datemod"));
+                tbgroup.setText(res.getString("vd_group"));
+                tbmarket.setText(res.getString("vd_market"));
+                tbbuyer.setText(res.getString("vd_buyer"));
+                ddcarrier.setSelectedItem(res.getString("vd_shipvia"));
+                tbmisc.setText(res.getString("vd_misc"));
+                ddterms.setSelectedItem(res.getString("vd_terms"));
+                tbpricecode.setText(res.getString("vd_price_code"));
+                tbdisccode.setText(res.getString("vd_disc_code"));
+                tbtaxcode.setText(res.getString("vd_tax_code"));
+                ddaccount.setSelectedItem(res.getString("vd_ap_acct"));
+                ddcc.setSelectedItem(res.getString("vd_ap_cc"));
+                tbremarks.setText(res.getString("vd_remarks"));
+                ddbank.setSelectedItem(res.getString("vd_bank"));
+                 ddcurr.setSelectedItem(res.getString("vd_curr"));
+                
+                }
+               // custom get contacts
+               refreshContactTable(key[0]);
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
      }
-     
-     public void disableVend() {
-           tbname.setEnabled(false);
-        tbline1.setEnabled(false);
-        tbline2.setEnabled(false);
-        tbline3.setEnabled(false);
-        tbcity.setEnabled(false);
-        tbzip.setEnabled(false);
-        tbtaxcode.setEnabled(false);
-        tbpricecode.setEnabled(false);
-        tbmarket.setEnabled(false);
-        tbdisccode.setEnabled(false);
-        tbbuyer.setEnabled(false);
+    
+    public String[] addRecord(String[] key) {
+        String[] m = new String[2];
+         try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                
+                int i = 0;
+                
+                     res = st.executeQuery("SELECT vd_addr FROM  vd_mstr where vd_addr = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                    st.executeUpdate("insert into vd_mstr "
+                        + "(vd_addr, vd_name, vd_line1, vd_line2, "
+                        + "vd_line3, vd_city, vd_state, vd_zip, "
+                        + "vd_country, vd_dateadd, vd_datemod, vd_usermod, "
+                        + "vd_group, vd_market, vd_buyer, "
+                        + "vd_shipvia, vd_terms, vd_misc, vd_price_code, "
+                        + "vd_disc_code, vd_tax_code,  "
+                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks "
+                        + " ) "
+                        + " values ( " + "'" + tbkey.getText() + "'" + ","
+                        + "'" + tbname.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
+                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
+                        + "'" + tbcity.getText() + "'" + ","
+                        + "'" + ddstate.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbzip.getText() + "'" + ","
+                        + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbdateadded.getText() + "'" + ","
+                        + "'" + tbdatemod.getText() + "'" + ","
+                            + "'" + bsmf.MainFrame.userid + "'" + ","
+                            + "'" + tbgroup.getText() + "'" + ","
+                            + "'" + tbmarket.getText() + "'" + ","
+                            + "'" + tbbuyer.getText() + "'" + ","
+                           + "'" + ddcarrier.getSelectedItem().toString() + "'" + ","
+                           + "'" + ddterms.getSelectedItem() + "'" + ","
+                           + "'" + tbmisc.getText() + "'" + ","
+                            + "'" + tbpricecode.getText() + "'" + ","
+                            + "'" + tbdisccode.getText() + "'" + ","
+                            + "'" + tbtaxcode.getText() + "'" + ","
+                            + "'" + ddaccount.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddcc.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddbank.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
+                            + "'" + tbremarks.getText().replace("'", "") + "'"                            
+                        + ")"
+                        + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+              
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+         return m;
+    }
+    
+    public String[] updateRecord(String[] key) {
+        String[] m = new String[2];
+          try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+              
+               st.executeUpdate("update vd_mstr set " + 
+                       " vd_name = " + "'" + tbname.getText() + "'" + "," +
+                       " vd_line1 = " + "'" + tbline1.getText() + "'" + "," +
+                       " vd_line2 = " + "'" + tbline2.getText() + "'" + "," +
+                       " vd_line3 = " + "'" + tbline3.getText() + "'" + "," +
+                       " vd_city = " + "'" + tbcity.getText() + "'" + "," +
+                       " vd_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
+                       " vd_zip = " + "'" + tbzip.getText() + "'" + "," +
+                       " vd_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
+                       " vd_datemod = " + "'" + bsmf.MainFrame.dfdate.format(new java.util.Date()) + "'" + "," +
+                       " vd_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
+                       " vd_group = "  + "'" + tbgroup.getText() + "'" + "," +
+                       " vd_market = " + "'" + tbmarket.getText() + "'" + "," +
+                       " vd_buyer = " + "'" + tbbuyer.getText() + "'" + "," +
+                       " vd_shipvia = " + "'" + ddcarrier.getSelectedItem() + "'" + "," +
+                       " vd_terms = " + "'" + ddterms.getSelectedItem() + "'" + "," +
+                       " vd_misc = " + "'" + tbmisc.getText() + "'" + "," +
+                       " vd_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
+                       " vd_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
+                       " vd_tax_code = " + "'" + tbtaxcode.getText() + "'" + "," +
+                       " vd_ap_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
+                       " vd_ap_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
+                       " vd_bank = " + "'" + ddbank.getSelectedItem() + "'" + "," +
+                       " vd_curr = " + "'" + ddcurr.getSelectedItem() + "'" + "," +        
+                       " vd_remarks = " + "'" + tbremarks.getText() + "'" +                      
+                       " where " + 
+                        " vd_addr = " + "'" + tbkey.getText() + "'" +  ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+          
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+         return m;
+    }
+    
+    public String[] deleteRecord(String[] key) {
+        String[] m = new String[2];
+          boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from vd_mstr where vd_addr = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from vdp_mstr where vdp_vend = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from vdc_det where vdc_code = " + "'" + tbkey.getText() + "'" + ";");
+                     if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+         return m;
+    }
+    
+    
+    // custom functions
+     public void addContact(String vend) {
+        try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+
+                if (proceed) {
+                    st.executeUpdate("insert into vdc_det "
+                        + "(vdc_code, vdc_type, vdc_name, vdc_phone, vdc_fax, "
+                            + "vdc_email ) "
+                            + " values ( " + "'" + vend + "'" + ","
+                            + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
+                            + "'" + tbphone.getText().replace("'", "") + "'" + ","
+                            + "'" + tbfax.getText().replace("'", "") + "'" + ","
+                            + "'" + tbemail.getText().replace("'", "") + "'"                           
+                            + ")"
+                            + ";");
         
-        tbremarks.setEnabled(false);
-        ddaccount.setEnabled(false);
-        ddcc.setEnabled(false);
+                   
+                    BlueSeerUtils.message(new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess});
+                    
+                  
+                    
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError});
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
+    public void editContact(String vend, String z) {
+        try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+
+                if (proceed) {
+                    st.executeUpdate("update vdc_det set "
+                            + "vdc_type = " + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
+                            + "vdc_name = " + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
+                            + "vdc_phone = " + "'" + tbphone.getText().replace("'", "") + "'" + ","
+                            + "vdc_fax = " +  "'" + tbfax.getText().replace("'", "") + "'" + ","
+                            + "vdc_email = " + "'" + tbemail.getText().replace("'", "") + "'"                           
+                            + " where vdc_code = " + "'" + vend + "'"
+                            + " and vdc_id = " + "'" + z + "'" 
+                            + ";");
         
-        ddcurr.setEnabled(false);
-        ddbank.setEnabled(false);
-        ddcarrier.setEnabled(false);
-        ddterms.setEnabled(false);
-        tbmisc.setEnabled(false);
-        tbdateadded.setEnabled(false);
-        tbdatemod.setEnabled(false);
-       // tbcode.setEnabled(false);
-        ddstate.setEnabled(false);
-        ddcountry.setEnabled(false);
-        btadd.setEnabled(false);
-        btedit.setEnabled(false);
-        btdelete.setEnabled(false);
-        btvendcodebrowse.setEnabled(false);
-        btvendnamebrowse.setEnabled(false);
-        btvendzipbrowse.setEnabled(false);
-        
-        tbsalesrep.setEnabled(false);
-        tbgroup.setEnabled(false);
-        tbmarket.setEnabled(false);
-        tbbuyer.setEnabled(false);
-        tbpricecode.setEnabled(false);
-        tbdisccode.setEnabled(false);
-        tbtaxcode.setEnabled(false);
+                   
+                   BlueSeerUtils.message(new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess});
+                    
+                  
+                    
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError});
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
+    public void deleteContact(String vend, String z) {
+        try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+
+                if (proceed) {
+                    st.executeUpdate("delete from vdc_det where vdc_id = " + "'" + z + "'"
+                            + " AND vdc_code = " + "'" + vend + "'"
+                            + ";");
+                    BlueSeerUtils.message(new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess});
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError});
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+   
+    public void clearAllContacts() {
+         tbcontactname.setText("");
+        tbphone.setText("");
+        tbfax.setText("");
+        tbemail.setText("");
+    }
+    
+    public void refreshContactTable(String vend) {
+      contactmodel.setRowCount(0);
+       try {
+            
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                res = st.executeQuery("select * from vdc_det where vdc_code = " + "'" + vend + "'" + ";");
+                while (res.next()) {
+                    contactmodel.addRow(new Object[]{res.getString("vdc_id"), res.getString("vdc_type"), res.getString("vdc_name"), res.getString("vdc_phone"), res.getString("vdc_fax"), res.getString("vdc_email") }); 
+                }
+                contacttable.setModel(contactmodel);
+                
+                 } catch (SQLException s) {
+                MainFrame.bslog(s);
+                BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError});
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+       
      }
-     
-     public void enableContact() {
-            tbcontactname.setEnabled(true);
-        tbphone.setEnabled(true);
-        tbfax.setEnabled(true);
-        tbemail.setEnabled(true);
-        ddcontacttype.setEnabled(true);
-        btAddContact.setEnabled(true);
-        btDeleteContact.setEnabled(true);
-        btEditContact.setEnabled(true);
-        contacttable.setEnabled(true);
-     }
-     
-     public void disableContact() {
-             tbcontactname.setEnabled(false);
-        tbphone.setEnabled(false);
-        tbfax.setEnabled(false);
-        tbemail.setEnabled(false);
-        
-        ddcontacttype.setEnabled(false);
-        btAddContact.setEnabled(false);
-        btDeleteContact.setEnabled(false);
-        btEditContact.setEnabled(false);
-        contacttable.setEnabled(false);
-     }
-     
+    
+    
+   
      
     /**
      * This method is called from within the constructor to initialize the form.
@@ -559,7 +781,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btvendcodebrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btvendnamebrowse = new javax.swing.JButton();
@@ -599,7 +821,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
         tbmisc = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         ddcurr = new javax.swing.JComboBox<>();
         jLabel33 = new javax.swing.JLabel();
@@ -645,9 +867,9 @@ public class VendMaintPanel extends javax.swing.JPanel {
 
         jLabel6.setText("City");
 
-        tbcode.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbcodeActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -714,7 +936,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btvendnamebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btvendcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -727,7 +949,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                 .addGap(6, 6, 6)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btvendcodebrowse)
                     .addComponent(btnew))
@@ -815,10 +1037,10 @@ public class VendMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -841,7 +1063,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -963,7 +1185,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
-                    .addComponent(btedit)
+                    .addComponent(btupdate)
                     .addComponent(btdelete))
                 .addGap(7, 7, 7))
         );
@@ -1126,197 +1348,50 @@ public class VendMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                
-                
-           //   if ( ! tbbuyer.getText().toString().matches("\\d+") ) {
-           //   proceed = false;
-           //  bsmf.MainFrame.show("Invalid credit limit...must be integer");
-          //   }
-              if (OVData.isValidVendor(tbcode.getText())) {
-                  bsmf.MainFrame.show("Vendor Code already in use");
-                  return;
-              } 
-                
-                if (ddaccount.getSelectedItem().toString().isEmpty()) {
-                    bsmf.MainFrame.show("Must assign Account");
-                    return;
-                }
-                if (ddcc.getSelectedItem().toString().isEmpty()) {
-                    bsmf.MainFrame.show("Must assign CostCenter");
-                    return;
-                }
-
-                if (proceed) {
-                    st.executeUpdate("insert into vd_mstr "
-                        + "(vd_addr, vd_name, vd_line1, vd_line2, "
-                        + "vd_line3, vd_city, vd_state, vd_zip, "
-                        + "vd_country, vd_dateadd, vd_datemod, vd_usermod, "
-                        + "vd_group, vd_market, vd_buyer, "
-                        + "vd_shipvia, vd_terms, vd_misc, vd_price_code, "
-                        + "vd_disc_code, vd_tax_code,  "
-                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks "
-                        + " ) "
-                        + " values ( " + "'" + tbcode.getText() + "'" + ","
-                        + "'" + tbname.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
-                        + "'" + tbcity.getText() + "'" + ","
-                        + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbzip.getText() + "'" + ","
-                        + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbdateadded.getText() + "'" + ","
-                        + "'" + tbdatemod.getText() + "'" + ","
-                            + "'" + bsmf.MainFrame.userid + "'" + ","
-                            + "'" + tbgroup.getText() + "'" + ","
-                            + "'" + tbmarket.getText() + "'" + ","
-                            + "'" + tbbuyer.getText() + "'" + ","
-                           + "'" + ddcarrier.getSelectedItem().toString() + "'" + ","
-                           + "'" + ddterms.getSelectedItem() + "'" + ","
-                           + "'" + tbmisc.getText() + "'" + ","
-                            + "'" + tbpricecode.getText() + "'" + ","
-                            + "'" + tbdisccode.getText() + "'" + ","
-                            + "'" + tbtaxcode.getText() + "'" + ","
-                            + "'" + ddaccount.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddbank.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                            + "'" + tbremarks.getText().replace("'", "") + "'"                            
-                        + ")"
-                        + ";");
-        
-                    bsmf.MainFrame.show("Added Vendor Record");
-                    initvars(null);
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Vendor");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+          if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btAddContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddContactActionPerformed
-                         addContact(tbcode.getText());
-                         refreshContactTable(tbcode.getText());
+                         addContact(tbkey.getText());
+                         refreshContactTable(tbkey.getText());
     }//GEN-LAST:event_btAddContactActionPerformed
 
     private void btDeleteContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteContactActionPerformed
           int[] rows = contacttable.getSelectedRows();
         for (int i : rows) {
-           deleteContact(tbcode.getText(), contacttable.getValueAt(i, 0).toString());
+           deleteContact(tbkey.getText(), contacttable.getValueAt(i, 0).toString());
         }
-       refreshContactTable(tbcode.getText());
+       refreshContactTable(tbkey.getText());
        clearAllContacts();
     }//GEN-LAST:event_btDeleteContactActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        boolean canproceed = true;
-        java.util.Date now = new java.util.Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-       
-        
-        if (canproceed) {
-           
-           try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-               st.executeUpdate("update vd_mstr set " + 
-                       " vd_name = " + "'" + tbname.getText() + "'" + "," +
-                       " vd_line1 = " + "'" + tbline1.getText() + "'" + "," +
-                       " vd_line2 = " + "'" + tbline2.getText() + "'" + "," +
-                       " vd_line3 = " + "'" + tbline3.getText() + "'" + "," +
-                       " vd_city = " + "'" + tbcity.getText() + "'" + "," +
-                       " vd_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
-                       " vd_zip = " + "'" + tbzip.getText() + "'" + "," +
-                       " vd_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
-                       " vd_datemod = " + "'" + df.format(now) + "'" + "," +
-                       " vd_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
-                       " vd_group = "  + "'" + tbgroup.getText() + "'" + "," +
-                       " vd_market = " + "'" + tbmarket.getText() + "'" + "," +
-                       " vd_buyer = " + "'" + tbbuyer.getText() + "'" + "," +
-                       " vd_shipvia = " + "'" + ddcarrier.getSelectedItem() + "'" + "," +
-                       " vd_terms = " + "'" + ddterms.getSelectedItem() + "'" + "," +
-                       " vd_misc = " + "'" + tbmisc.getText() + "'" + "," +
-                       " vd_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
-                       " vd_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
-                       " vd_tax_code = " + "'" + tbtaxcode.getText() + "'" + "," +
-                       " vd_ap_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
-                       " vd_ap_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
-                       " vd_bank = " + "'" + ddbank.getSelectedItem() + "'" + "," +
-                       " vd_curr = " + "'" + ddcurr.getSelectedItem() + "'" + "," +        
-                       " vd_remarks = " + "'" + tbremarks.getText() + "'" +                      
-                       " where " + 
-                        " vd_addr = " + "'" + tbcode.getText() + "'" +  ";");
-
-               
-               
-               bsmf.MainFrame.show("Updated Vendor Successfully");
-              
-               initvars(null);
-               
-            } catch (SQLException s) {
-                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Unable to get selected vend code");
-            }
-              } catch (Exception e) {
-            MainFrame.bslog(e);
-        }   
-                
-           
-       } else {
-           bsmf.MainFrame.show("Partially or Completely approved...cannot edit");
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        if (! validateInput("updateRecord")) {
+           return;
        }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
        
-    }//GEN-LAST:event_bteditActionPerformed
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btvendcodebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvendcodebrowseActionPerformed
         reinitpanels("BrowseUtil", true, new String[]{"vendmaint","vd_addr"});
     }//GEN-LAST:event_btvendcodebrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        enableVend();
-        clearVend();
-        disableContact();
-        btedit.setEnabled(false);
-        btdelete.setEnabled(false);
-        btnew.setEnabled(false);
-        btvendcodebrowse.setEnabled(false);
-        btvendnamebrowse.setEnabled(false);
-        btvendzipbrowse.setEnabled(false);
-        
-          if (OVData.isAutoVend()) {
-        tbcode.setText(String.valueOf(OVData.getNextNbr("vendor")));
-        tbcode.setEditable(false);
-        } else {
-              tbcode.requestFocus();
-         }
+       newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btEditContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditContactActionPerformed
         int[] rows = contacttable.getSelectedRows();
         for (int i : rows) {
-            editContact(tbcode.getText(), contacttable.getValueAt(i, 0).toString());
+            editContact(tbkey.getText(), contacttable.getValueAt(i, 0).toString());
         }
-        refreshContactTable(tbcode.getText());
+        refreshContactTable(tbkey.getText());
         clearAllContacts();
     }//GEN-LAST:event_btEditContactActionPerformed
 
@@ -1338,44 +1413,17 @@ public class VendMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btvendzipbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-           boolean proceed = bsmf.MainFrame.warn("This is not advised.  Deleting Vendors with historical transactions may cause issues.");
-           proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from vd_mstr where vd_addr = " + "'" + tbcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + tbcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from vdp_mstr where vdp_vend = " + "'" + tbcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from vdc_det where vdc_code = " + "'" + tbcode.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Vendor Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+          if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void tbcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcodeActionPerformed
-         boolean gotIt = getVend(tbcode.getText());
-        if (gotIt) {
-          tbcode.setEditable(false);
-          tbcode.setForeground(Color.blue);
-        } else {
-           tbcode.setForeground(Color.red); 
-        }
-    }//GEN-LAST:event_tbcodeActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        if (! btadd.isEnabled())
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddContact;
@@ -1383,8 +1431,8 @@ public class VendMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btEditContact;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private javax.swing.JButton btvendcodebrowse;
     private javax.swing.JButton btvendnamebrowse;
     private javax.swing.JButton btvendzipbrowse;
@@ -1439,7 +1487,6 @@ public class VendMaintPanel extends javax.swing.JPanel {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField tbbuyer;
     private javax.swing.JTextField tbcity;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbcontactname;
     private javax.swing.JTextField tbdateadded;
     private javax.swing.JTextField tbdatemod;
@@ -1447,6 +1494,7 @@ public class VendMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbemail;
     private javax.swing.JTextField tbfax;
     private javax.swing.JTextField tbgroup;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbline2;
     private javax.swing.JTextField tbline3;

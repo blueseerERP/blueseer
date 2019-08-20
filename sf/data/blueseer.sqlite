@@ -443,7 +443,8 @@ CREATE TABLE "edi_ctrl" (
   "edic_inarch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_outarch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_batch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edic_archyesno" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "edic_archyesno" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edic_delete" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

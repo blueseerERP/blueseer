@@ -371,7 +371,8 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_inarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_outarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_batch` varchar(200) NOT NULL  DEFAULT '',
-  `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0'
+  `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0',
+  `edic_delete` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,

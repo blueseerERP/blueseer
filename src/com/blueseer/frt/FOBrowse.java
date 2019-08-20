@@ -67,6 +67,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -77,7 +79,15 @@ public class FOBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "FreightNbr", "Carrier", "Status", "Weight"});
+                        new String[]{"Select", "Detail", "FreightNbr", "Carrier", "Status", "Weight"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"FrtNbr", "Shipper", "Name"});
@@ -198,9 +208,12 @@ public class FOBrowse extends javax.swing.JPanel {
             ddwhto.addItem(wh);
         }
         
+        if (ddwhfrom.getItemCount() > 0) {
             ddwhfrom.setSelectedIndex(0);
+        }
+        if (ddwhto.getItemCount() > 0) {
             ddwhto.setSelectedIndex(ddwhto.getItemCount() - 1);
-        
+        }
           
           
     }
@@ -239,7 +252,7 @@ public class FOBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Distribution Order Browse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Order Browse"));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -443,9 +456,9 @@ try {
         
               tablereport.setModel(mymodel);
           //    tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+            //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+        //       tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
@@ -476,7 +489,7 @@ try {
                        while (res.next()) {
                           totqty += res.getDouble(("weight"));
                
-                    mymodel.addRow(new Object[]{"Select", "Detail", res.getString("fo_nbr"),
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,  BlueSeerUtils.clickbasket, res.getString("fo_nbr"),
                                 res.getString("fo_carrier"),
                                 res.getString("fo_status"),
                                 df.format(totqty)

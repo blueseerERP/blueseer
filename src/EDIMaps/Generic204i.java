@@ -122,12 +122,14 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                    e.detailArray.add(e.initDetailArray(a)); 
                    e.setDetLine(linecount, elementArray[1]);
                    e.setDetType(linecount, elementArray[2]);
+                  /*
                    e.setDetWeight(linecount, elementArray[3]);
                    e.setDetWeightUOM(linecount, elementArray[4]);
                    e.setDetBoxes(linecount, elementArray[5]);
                     if ( elementArray[6].toString().equals("PL")  ) {
                     e.setDetUnits(linecount, elementArray[5]);
                     }
+                    */
                    break;    
                   
                case "G62" :
@@ -137,7 +139,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                       e.setDetDelvTime(linecount, elementArray[4]);
                       }
                    } 
-                   if ( elementArray[1].toString().equals("69")) {
+                   if ( elementArray[1].toString().equals("69") || elementArray[1].toString().equals("78")) {
                        e.setDetShipDate(linecount, convertDateFormat("yyyyMMdd", elementArray[2]));
                        if (isSet(elementArray,4)) {
                           e.setDetShipTime(linecount, elementArray[4]);

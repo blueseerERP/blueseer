@@ -1199,7 +1199,6 @@ public class EDI {
     
      public static void createFOMSTRFrom204i(edi204i e, String[] control) {
              control[7] = e.custfo;
-             OVData.writeEDILog(control, "0", "INFO", "Load");
              String fo = OVData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid);  
              for (int j = 0; j < e.getDetCount(); j++ ) {
                OVData.CreateFODDETFrom204i(fo,
@@ -1640,46 +1639,53 @@ public class EDI {
         
         String doctype = "990";
         String map = "";
-        String control[] = null;
+        
         
       
         
-         String ca = OVData.getFreightOrderCarrierAssigned(nbr);
+         String tp = OVData.getFreightOrderCarrierAssigned(nbr);
        
             
         
-        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        map = OVData.getEDIOutMap(tp, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
         
-        String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
-        c[0] = ca;
-        c[1] = doctype;
-        c[2] = map;
-        c[3] = "";
-        c[4] = "";
-        c[5] = "";
-        c[6] = "";
-        c[7] = nbr;
+        c_in[0] = tp;
+        c_in[1] = doctype;
+        c_in[2] = map;
+        c_in[3] = "";
+        c_in[4] = "";
+        c_in[5] = "";
+        c_in[6] = "";
+        c_in[7] = nbr;
         
+       // bsmf.MainFrame.show(tp + "/" + doctype + "/" + map);
+        
+        if (tp.isEmpty()) {
+            OVData.writeEDILog(c_in, "1", "ERROR", "no carrier for this freight order " + tp + " / " + doctype);
+            errorcode = 1;
+            return errorcode;
+        } 
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(control, "1", "ERROR", "no edi_mstr map for " + c + " / " + doctype);
+            OVData.writeEDILog(c_in, "1", "ERROR", "no edi_mstr map for " + tp + " / " + doctype);
             errorcode = 1;
             return errorcode;
         } 
                     try {
-                    Class cls = Class.forName("EDIMaps." + map);
+                    Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class, String.class);
-                    Object envelope = method.invoke(obj, c, nbr, ca, response); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    control = (String[])envelope; 
-                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
-                    OVData.CreateFreightEDIRecs(control, nbr);
+                    Object envelope = method.invoke(obj, c_in, nbr, tp, response); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    String[] c_out = (String[])envelope; 
+                    OVData.writeEDILog(c_out, "1", "INFO", "Export"); 
+                    OVData.CreateFreightEDIRecs(c_out, nbr);
 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + c + " / " + doctype);
+                        OVData.writeEDILog(c_in, "1", "ERROR", "unable to find map class or invocation error for " + tp + " / " + doctype);
                         errorcode = 3;
                         ex.printStackTrace();
                     }
@@ -1765,6 +1771,9 @@ public class EDI {
       public static String[] generateEnvelope(String entity, String doctype, String dir) {
         
         String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
+        
+        //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
+        //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
         String[] defaults = OVData.getEDIOutCustDefaults(entity, doctype, dir);
        
         
@@ -1779,7 +1788,11 @@ public class EDI {
          String ud = Character.toString((char) udint );
          
          
-       //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+       //  if default filename is empty..set as generic
+         if (defaults[10].isEmpty()) {
+             defaults[10] = "generic";
+         }
+         
          String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
         
          //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);

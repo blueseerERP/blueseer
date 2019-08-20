@@ -422,6 +422,75 @@ public class MassLoad extends javax.swing.JPanel {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
             }
     }
+   
+      // Carrier stuff
+    public ArrayList<String> defineCarrier() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("car_code,s,30,mandatory,validated");
+        list.add("car_desc,s,50,optional,unvalidated");
+        list.add("car_scac,s,10,optional,unvalidated");
+        list.add("car_phone,s,15,optional,unvalidated");
+        list.add("car_email,s,100,optional,unvalidated");
+        list.add("car_contact,s,100,optional,unvalidated");
+        list.add("car_type,s,10,mandatory,validated");
+        list.add("car_acct,s,20,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkCarrier(String[] rs, int i) {
+        boolean proceed = true;
+        ArrayList<String> list = defineCarrier();
+        // first check for correct number of fields
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
+                   proceed = false;
+        }
+        
+        if (rs.length == list.size()) {
+            // now check individual fields
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                j++;
+            } 
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processCarrier(File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkCarrier(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (OVData.addCarrier(list)) 
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
     
      // EDI Partner stuff
     public ArrayList<String> defineEDIPartner() {
@@ -1544,7 +1613,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "EDI Partner-Doc Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "EDI Partner-Doc Master", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
