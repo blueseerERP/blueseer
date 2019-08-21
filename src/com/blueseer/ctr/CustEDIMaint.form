@@ -138,21 +138,18 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="ddtpid" alignment="0" max="32767" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="tbmap" min="-2" pref="165" max="-2" attributes="0"/>
-                                              <Component id="tbgs" min="-2" pref="122" max="-2" attributes="0"/>
-                                              <Component id="tbovisa" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                                          </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="tbmap" min="-2" pref="165" max="-2" attributes="0"/>
+                                          <Component id="tbgs" min="-2" pref="122" max="-2" attributes="0"/>
+                                          <Component id="tbovisa" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Component id="tbisaq" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                                   <Component id="tbovgs" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="tbcust" min="-2" pref="122" max="-2" attributes="0"/>
+                                      <Component id="tbkey" min="-2" pref="122" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -167,7 +164,10 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="dddoc" min="-2" pref="120" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="tbisa" alignment="1" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="dddoc" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -183,7 +183,7 @@
                           <Component id="btnew" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbcust" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -199,7 +199,7 @@
                       <EmptySpace min="12" pref="12" max="12" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddtpid" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbisa" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="12" pref="12" max="12" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -244,7 +244,7 @@
                 <Property name="text" type="java.lang.String" value="DocType:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbcust">
+            <Component class="javax.swing.JTextField" name="tbkey">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
@@ -314,16 +314,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="ddtpid">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
-                </Property>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
-            </Component>
             <Component class="javax.swing.JComboBox" name="dddoc">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -344,6 +334,8 @@
                 <Property name="text" type="java.lang.String" value="Outbound"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JTextField" name="tbisa">
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel3">
@@ -351,7 +343,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -365,6 +357,7 @@
                       </Group>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cbfa" min="-2" max="-2" attributes="0"/>
                           <Component id="tbsub" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                           <Component id="tbsegment" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                           <Component id="tbversion" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
@@ -376,7 +369,7 @@
                               <Component id="tbfileprefix" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -440,7 +433,9 @@
                               <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace pref="5" max="32767" attributes="0"/>
+                      <Component id="cbfa" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -509,6 +504,11 @@
             <Component class="javax.swing.JLabel" name="lblsuffix">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Suffix"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbfa">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Functional Acknowledgement?"/>
               </Properties>
             </Component>
           </SubComponents>

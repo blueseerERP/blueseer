@@ -240,25 +240,26 @@ CREATE TABLE IF NOT EXISTS `cmc_det` (
   `cmc_fax` varchar(15)  NOT NULL DEFAULT '',
   `cmc_email` varchar(100)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `cmedi_mstr` (
-  `cme_code` varchar(10) NOT NULL  DEFAULT '',
-  `cme_doc` varchar(30) NOT NULL  DEFAULT '',
-  `cme_isa` varchar(30) NOT NULL  DEFAULT '',
-  `cme_isaqual` varchar(2) NOT NULL  DEFAULT '',
-  `cme_gs` varchar(30) NOT NULL  DEFAULT '',
-  `cme_map` varchar(30) NOT NULL  DEFAULT '',
-  `cme_eledelim` int(11) NOT NULL DEFAULT '0',
-  `cme_segdelim` int(11) NOT NULL DEFAULT '0',
-  `cme_subdelim` int(11) NOT NULL DEFAULT '0',
-  `cme_fileprefix` varchar(30) NOT NULL  DEFAULT '',
-  `cme_filesuffix` varchar(30) NOT NULL  DEFAULT '',
-  `cme_filepath` varchar(100) NOT NULL  DEFAULT '',
-  `cme_version` varchar(100) NOT NULL  DEFAULT '',
-  `cme_ov_isa` varchar(30) NOT NULL  DEFAULT '',
-  `cme_ov_gs` varchar(30) NOT NULL  DEFAULT '',
-  `cme_ov_isaqual` varchar(2) NOT NULL  DEFAULT '',
-  `cme_supplier_code` varchar(30) NOT NULL  DEFAULT '',
-  `cme_dir` tinyint(1) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `edi_mstr` (
+  `edi_id` varchar(30) NOT NULL  DEFAULT '',
+  `edi_doc` varchar(10) NOT NULL  DEFAULT '',
+  `edi_isa` varchar(15) NOT NULL  DEFAULT '',
+  `edi_dir` tinyint(1) NOT NULL  DEFAULT '0',
+  `edi_map` varchar(30) NOT NULL  DEFAULT '',
+  `edi_isaq` varchar(2) NOT NULL  DEFAULT '',
+  `edi_gs` varchar(15) NOT NULL  DEFAULT '',
+  `edi_bsisa` varchar(15) NOT NULL  DEFAULT '',
+  `edi_bsq` varchar(2) NOT NULL  DEFAULT '',
+  `edi_bsgs` varchar(15) NOT NULL  DEFAULT '',
+  `edi_eledelim` int(11) NOT NULL DEFAULT '0',
+  `edi_segdelim` int(11) NOT NULL DEFAULT '0',
+  `edi_subdelim` int(11) NOT NULL DEFAULT '0',
+  `edi_fileprefix` varchar(30) NOT NULL  DEFAULT '',
+  `edi_filesuffix` varchar(30) NOT NULL  DEFAULT '',
+  `edi_filepath` varchar(100) NOT NULL  DEFAULT '',
+  `edi_version` varchar(10) NOT NULL  DEFAULT '',
+  `edi_supcode` varchar(30) NOT NULL  DEFAULT '',
+  `edi_fa_required` tinyint(1) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `cms_det` (
   `cms_code` varchar(10) NOT NULL  DEFAULT '',
   `cms_shipto` varchar(10) NOT NULL  DEFAULT '',
@@ -1760,19 +1761,6 @@ CREATE TABLE IF NOT EXISTS `label_zebra` (
   `lblz_desc` varchar(100) NOT NULL DEFAULT '',
   `lblz_file` varchar(100) NOT NULL DEFAULT '',
   `lblz_type` varchar(10) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `edi_mstr` (
-  `edi_id` varchar(15) NOT NULL DEFAULT '' ,
-  `edi_doctype` varchar(10) NOT NULL DEFAULT '' ,
-  `edi_map` varchar(50) NOT NULL DEFAULT '' ,
-  `edi_fa_required` tinyint(1) NOT NULL DEFAULT '0' ,
-  `edi_desc` varchar(50) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
-CREATE TABLE IF NOT EXISTS `editp_mstr` (
-  `editp_id` varchar(30) NOT NULL DEFAULT '' ,
-  `editp_name` varchar(50) NOT NULL DEFAULT '' ,
-  `editp_contact` varchar(50) NOT NULL DEFAULT '' ,
-  `editp_web` varchar(50) NOT NULL DEFAULT '' ,
-  `editp_helpdesk` varchar(50) NOT NULL DEFAULT '' 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `ov_ctrl` (
   `ov_version` varchar(8) DEFAULT NULL,

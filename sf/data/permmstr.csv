@@ -24,10 +24,6 @@ admin;VendPriceRpt1
 admin;EDIMenu
 admin;EDILog
 admin;EDITransactionLog
-admin;EDITPMaint
-admin;EDITPDocMaint
-admin;EDITPBrowse
-admin;EDITPDocBrowse
 admin;CustEDIMaint
 admin;CustEDIBrowse
 admin;EDILoad

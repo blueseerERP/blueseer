@@ -3384,7 +3384,7 @@ public class OVData {
              } 
              
     
-              public static boolean addCarrier(ArrayList<String> list) {
+    public static boolean addCarrier(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -3439,58 +3439,7 @@ public class OVData {
              } 
     
               
-        public static boolean addEDIPartner(ArrayList<String> list) {
-                 boolean myreturn = true;
-                  try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select editp_id from editp_mstr where " +
-                                           " editp_id = " + "'" + ld[0] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into editp_mstr " 
-                      + "(editp_id, editp_name, editp_contact, editp_web, editp_helpdesk  ) "
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'"
-                             +  ");"
-                           );     
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-    
-        public static boolean addEDIPartnerDoc(ArrayList<String> list) {
+    public static boolean addEDIMstrRecord(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -3508,9 +3457,11 @@ public class OVData {
                     ld = rec.split(":", -1);
                     
                    res =  st.executeQuery("select edi_id from edi_mstr where " +
-                                           " edi_id = " + "'" + ld[0] + "'" +
-                                           " and edi_doctype = " + "'" + ld[1] + "'" +
-                                                   ";");
+                                           " edi_id = " + "'" + ld[0] + "'" + 
+                                           " and edi_doc = " + "'" + ld[1] + "'" +
+                                           " and edi_isa = " + "'" + ld[2] + "'" +
+                                           " and edi_dir = " + "'" + ld[3] + "'" +
+                                           ";");
                     int j = 0;
                     while (res.next()) {
                         j++;
@@ -3519,13 +3470,29 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into edi_mstr " 
-                      + "(edi_id, edi_doctype, edi_map, edi_fa_required, edi_desc  ) "
+                      + "(edi_id, edi_doc, edi_isa, edi_dir, edi_map, edi_isaq, edi_gs, edi_bsisa, edi_bsq, edi_bsgs, " +
+                        " edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, " +
+                        " edi_filesuffix, edi_filepath, edi_version, edi_supcode, edi_fa_required ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
                     "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'"
+                    "'" +  ld[3] + "'" + "," + 
+                    "'" +  ld[4] + "'" + "," +
+                    "'" +  ld[5] + "'" + "," +
+                    "'" +  ld[6] + "'" + "," +
+                    "'" +  ld[7] + "'" + "," +
+                    "'" +  ld[8] + "'" + "," +
+                    "'" +  ld[9] + "'" + "," +
+                    "'" +  ld[10] + "'" + "," +
+                    "'" +  ld[11] + "'" + "," +
+                    "'" +  ld[12] + "'" + "," +
+                    "'" +  ld[13] + "'" + "," +    
+                    "'" +  ld[14] + "'" + "," +
+                    "'" +  ld[15] + "'" + "," +
+                    "'" +  ld[16] + "'" + "," + 
+                    "'" +  ld[17] + "'" + "," +        
+                    "'" +  ld[18] + "'"
                              +  ");"
                            );     
                    }
@@ -3542,7 +3509,7 @@ public class OVData {
         }  
                   return myreturn;
              } 
-     
+    
     
     public static boolean addCustXref(ArrayList<String> list) {
                  boolean myreturn = true;
@@ -4922,12 +4889,12 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from cmedi_mstr where cme_code = " + "'" + entity + "'" + 
-                        " AND cme_doc = " + "'" + doctype + "'" + " AND cme_dir = " + "'" + dir + "'" + ";");
+                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + entity + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" + " AND edi_dir = " + "'" + dir + "'" + ";");
                     while (res.next()) {
-                       delimiters[0] = Character.toString((char) res.getInt("cme_segdelim") );
-                       delimiters[1] = Character.toString((char) res.getInt("cme_eledelim") );
-                       delimiters[2] = Character.toString((char) res.getInt("cme_subdelim") );
+                       delimiters[0] = Character.toString((char) res.getInt("edi_segdelim") );
+                       delimiters[1] = Character.toString((char) res.getInt("edi_eledelim") );
+                       delimiters[2] = Character.toString((char) res.getInt("edi_subdelim") );
                     }
            }
             catch (SQLException s){
@@ -4962,24 +4929,24 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from cmedi_mstr where cme_code = " + "'" + billto + "'" + 
-                        " AND cme_doc = " + "'" + doctype + "'" + " AND cme_dir = " + "'" + dir + "'" + ";");
+                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + billto + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" + " AND edi_dir = " + "'" + dir + "'" + ";");
                     while (res.next()) {
-                       mystring[0] = res.getString("cme_isa");
-                        mystring[1] = res.getString("cme_isaqual");
-                        mystring[2] = res.getString("cme_gs");
-                        mystring[3] = res.getString("cme_ov_isa") ;
-                        mystring[4] = res.getString("cme_ov_isaqual") ;
-                        mystring[5] = res.getString("cme_ov_gs");
-                        mystring[6] = res.getString("cme_eledelim");
-                        mystring[7] = res.getString("cme_segdelim") ;
-                        mystring[8] = res.getString("cme_subdelim") ;
-                        mystring[9] = res.getString("cme_filepath");
-                        mystring[10] = res.getString("cme_fileprefix");
-                        mystring[11] = res.getString("cme_filesuffix");
-                        mystring[12] = res.getString("cme_version");
-                        mystring[13] = res.getString("cme_supplier_code");
-                        mystring[14] = res.getString("cme_dir");
+                       mystring[0] = res.getString("edi_isa");
+                        mystring[1] = res.getString("edi_isaq");
+                        mystring[2] = res.getString("edi_gs");
+                        mystring[3] = res.getString("edi_bsisa") ;
+                        mystring[4] = res.getString("edi_bsq") ;
+                        mystring[5] = res.getString("edi_bsgs");
+                        mystring[6] = res.getString("edi_eledelim");
+                        mystring[7] = res.getString("edi_segdelim") ;
+                        mystring[8] = res.getString("edi_subdelim") ;
+                        mystring[9] = res.getString("edi_filepath");
+                        mystring[10] = res.getString("edi_fileprefix");
+                        mystring[11] = res.getString("edi_filesuffix");
+                        mystring[12] = res.getString("edi_version");
+                        mystring[13] = res.getString("edi_supcode");
+                        mystring[14] = res.getString("edi_dir");
                     }
            }
             catch (SQLException s){
@@ -5007,24 +4974,24 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from cmedi_mstr where cme_code = " + "'" + OVData.getDefaultSite() + "'" + 
-                        " AND cme_doc = " + "'" + "997" + "'" + " AND cme_dir = " + "'" + "0" + "'" + ";");
+                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + OVData.getDefaultSite() + "'" + 
+                        " AND edi_doc = " + "'" + "997" + "'" + " AND edi_dir = " + "'" + "0" + "'" + ";");
                     while (res.next()) {
-                       mystring[0] = res.getString("cme_isa");
-                        mystring[1] = res.getString("cme_isaqual");
-                        mystring[2] = res.getString("cme_gs");
-                        mystring[3] = res.getString("cme_ov_isa") ;
-                        mystring[4] = res.getString("cme_ov_isaqual") ;
-                        mystring[5] = res.getString("cme_ov_gs");
-                        mystring[6] = res.getString("cme_eledelim");
-                        mystring[7] = res.getString("cme_segdelim") ;
-                        mystring[8] = res.getString("cme_subdelim") ;
-                        mystring[9] = res.getString("cme_filepath");
-                        mystring[10] = res.getString("cme_fileprefix");
-                        mystring[11] = res.getString("cme_filesuffix");
-                        mystring[12] = res.getString("cme_version");
-                        mystring[13] = res.getString("cme_supplier_code");
-                        mystring[14] = res.getString("cme_dir");
+                       mystring[0] = res.getString("edi_isa");
+                        mystring[1] = res.getString("edi_isaq");
+                        mystring[2] = res.getString("edi_gs");
+                        mystring[3] = res.getString("edi_bsisa") ;
+                        mystring[4] = res.getString("edi_bsq") ;
+                        mystring[5] = res.getString("edi_bsgs");
+                        mystring[6] = res.getString("edi_eledelim");
+                        mystring[7] = res.getString("edi_segdelim") ;
+                        mystring[8] = res.getString("edi_subdelim") ;
+                        mystring[9] = res.getString("edi_filepath");
+                        mystring[10] = res.getString("edi_fileprefix");
+                        mystring[11] = res.getString("edi_filesuffix");
+                        mystring[12] = res.getString("edi_version");
+                        mystring[13] = res.getString("edi_supcode");
+                        mystring[14] = res.getString("edi_dir");
                     }
            }
             catch (SQLException s){
@@ -5051,12 +5018,12 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select cme_map from cmedi_mstr where cme_code = " + "'" + billto + "'" + 
-                        " AND cme_doc = " + "'" + doctype + "'" + 
-                        " AND cme_dir = " + "'" + dir + "'" +
+                res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + billto + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" + 
+                        " AND edi_dir = " + "'" + dir + "'" +
                                 ";");
                while (res.next()) {
-                   mystring = res.getString("cme_map");
+                   mystring = res.getString("edi_map");
                 }
                
            }
@@ -5082,12 +5049,12 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select cme_filepath from cmedi_mstr where cme_code = " + "'" + billto + "'" + 
-                        " AND cme_doc = " + "'" + doctype + "'" + 
-                        " AND cme_dir = " + "'" + dir + "'" +
+                res = st.executeQuery("select edi_filepath from edi_mstr where edi_id = " + "'" + billto + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" + 
+                        " AND edi_dir = " + "'" + dir + "'" +
                                 ";");
                while (res.next()) {
-                   mystring = res.getString("cme_filepath");
+                   mystring = res.getString("edi_filepath");
                 }
                
            }
@@ -5112,8 +5079,8 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + id + "'" + 
-                        " AND edi_doctype = " + "'" + doctype + "'" + ";");
+                res = st.executeQuery("select edi_map from edi_mstr where edi_isa = " + "'" + id + "'" + 
+                        " AND edi_dir = '1' AND edi_doc = " + "'" + doctype + "'" + ";");
                while (res.next()) {
                    mystring = res.getString("edi_map");
                 }
@@ -5141,7 +5108,7 @@ public class OVData {
                 ResultSet res = null;
 
                 res = st.executeQuery("select edi_fa_required from edi_mstr where edi_id = " + "'" + id + "'" + 
-                        " AND edi_doctype = " + "'" + doctype + "'" + ";");
+                        " AND edi_dir = '1' AND edi_doc = " + "'" + doctype + "'" + ";");
                while (res.next()) {
                    mystring = res.getString("edi_fa_required");
                 }
@@ -5169,9 +5136,9 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select editp_id from editp_mstr order by editp_id; ");
+                res = st.executeQuery("select edi_isa from edi_mstr group by edi_isa order by edi_isa; ");
                while (res.next()) {
-                   mylist.add(res.getString("editp_id"));
+                   mylist.add(res.getString("edi_isa"));
                 }
                
            }
@@ -5198,12 +5165,12 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from cmedi_mstr where cme_isa = " + "'" + isa + "'" + 
-                        " AND cme_doc = " + "'" + doctype + "'" + 
-                                " AND cme_dir = " + "'" + dir + "'" + 
+                      res = st.executeQuery("select * from edi_mstr where edi_isa = " + "'" + isa + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" + 
+                                " AND edi_dir = " + "'" + dir + "'" + 
                                 ";");
                     while (res.next()) {
-                       mystring = res.getString("cme_code");
+                       mystring = res.getString("edi_id");
                     }
            }
             catch (SQLException s){

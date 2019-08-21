@@ -277,25 +277,26 @@ CREATE TABLE "cmc_det" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "cmedi_mstr" (
-  "cme_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_doc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_isa" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_isaqual" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_gs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_map" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_eledelim" int(11) NOT NULL DEFAULT '0',
-  "cme_segdelim" int(11) NOT NULL DEFAULT '0',
-  "cme_subdelim" int(11) NOT NULL DEFAULT '0',
-  "cme_fileprefix" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_filesuffix" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_filepath" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_version" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_ov_isa" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_ov_gs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_ov_isaqual" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_supplier_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cme_dir" tinyint(1) NOT NULL DEFAULT '0');
+CREATE TABLE "edi_mstr" (
+  "edi_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_isa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edi_map" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_isaq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_gs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_bsisa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_bsq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_bsgs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_eledelim" int(11) NOT NULL DEFAULT '0',
+  "edi_segdelim" int(11) NOT NULL DEFAULT '0',
+  "edi_subdelim" int(11) NOT NULL DEFAULT '0',
+  "edi_fileprefix" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_filesuffix" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_filepath" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_version" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_supcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_fa_required" tinyint(1) NOT NULL DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2202,19 +2203,6 @@ CREATE TABLE "label_zebra" (
   "lblz_desc" varchar(100) NOT NULL DEFAULT '',
   "lblz_file" varchar(100) NOT NULL DEFAULT '',
   "lblz_type" varchar(10) NOT NULL DEFAULT ''
-);
-CREATE TABLE "edi_mstr" (
-  "edi_id" varchar(15) DEFAULT '' COLLATE NOCASE,
-  "edi_doctype" varchar(10) DEFAULT '' COLLATE NOCASE,
-  "edi_map" varchar(50) DEFAULT '' COLLATE NOCASE,
-  "edi_fa_required" tinyint(1) DEFAULT '0' COLLATE NOCASE,
-  "edi_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '');
-CREATE TABLE "editp_mstr" (
-  "editp_id" varchar(30) DEFAULT NULL COLLATE NOCASE,
-  "editp_name" varchar(50) DEFAULT NULL COLLATE NOCASE,
-  "editp_contact" varchar(50) DEFAULT NULL COLLATE NOCASE,
-  "editp_web" varchar(50) DEFAULT NULL COLLATE NOCASE,
-  "editp_helpdesk" varchar(50) DEFAULT NULL COLLATE NOCASE
 );
 CREATE TABLE "exp_mstr" (
 "exp_id" varchar(10) DEFAULT '' COLLATE NOCASE,

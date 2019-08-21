@@ -40,8 +40,6 @@ com.blueseer.edi.EDITransactionBrowse,,1
 com.blueseer.edi.EDIMap,,1
 com.blueseer.edi.EDIMapi,,1
 com.blueseer.edi.EDITPBrowse,,1
-com.blueseer.edi.EDITPDocMaintPanel,,1
-com.blueseer.edi.EDITPMaintPanel,,1
 com.blueseer.eng.ECNBrowse,,1
 com.blueseer.eng.ECNMaint,,1
 com.blueseer.eng.OVDevBrowse,,1

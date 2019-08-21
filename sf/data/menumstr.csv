@@ -41,8 +41,6 @@ DeptMaint,,com.blueseer.fgl.DeptMaintPanel,JMenuItem,depm
 EDILoad,,com.blueseer.edi.EDILoadPanel,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDILogBrowse,JMenuItem,ediz
 EDITransactionLog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
-EDITPBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,etpb
-EDITPDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,etdb
 FileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,orlo
 FreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
@@ -157,8 +155,6 @@ GLControl,,com.blueseer.fgl.GLControlPanel,JMenuItem,glcc
 ScrapPerWeek,,com.blueseer.utl.ChartView,JMenuItem,scrpw
 ARMemoMaint,,com.blueseer.far.ARMemoMaint,JMenuItem,armm
 OrdLineBrowse,,com.blueseer.ord.OrderReport2,JMenuItem,orlb
-EDITPMaint,,com.blueseer.edi.EDITPMaintPanel,JMenuItem,edtm
-EDITPDocMaint,,com.blueseer.edi.EDITPDocMaintPanel,JMenuItem,edtdm
 FcstToPlan,,com.blueseer.sch.FcstToPlanPanel,JMenuItem,fc2pl
 ProdEntryByPlan,,com.blueseer.prd.ProdEntryByPlanPanel,JMenuItem,prodp
 LabelFileMaint,,com.blueseer.lbl.LabelMstrPanel,JMenuItem,lblm

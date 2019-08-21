@@ -270,15 +270,11 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("costmaint")) {
                 tablereport.setModel(DTData.getItemBrowseUtil(tbtext.getText(), state, searchfield));
                 }
-                if (callingpanel.equals("editpmaint")) {
-                tablereport.setModel(DTData.getEDITPBrowseUtil(tbtext.getText(), state, searchfield));
-                }
+               
                 if (callingpanel.equals("edicustmaint")) {
                 tablereport.setModel(DTData.getEDICustBrowseUtil(tbtext.getText(), state, searchfield));
                 }
-                if (callingpanel.equals("editpdocmaint")) {
-                tablereport.setModel(DTData.getEDITPDOCBrowseUtil(tbtext.getText(), state, searchfield));
-                }
+               
                 if (callingpanel.equals("taskmaint")) {
                 tablereport.setModel(DTData.getTaskBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -440,16 +436,7 @@ public class Browse extends javax.swing.JPanel {
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("BOMMaint", true, arg);
             }
-            if (callingpanel.equals("editpmaint")) {
-              if (! checkperms("EDITPMaint")) { return; }
-              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
-              reinitpanels("EDITPMaint", true, arg);
-            }
-            if (callingpanel.equals("editpdocmaint")) {
-              if (! checkperms("EDITPDocMaint")) { return; }
-              arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
-              reinitpanels("EDITPDocMaint", true, arg);
-            }
+           
             if (callingpanel.equals("edicustmaint")) {
               if (! checkperms("CustEDIMaint")) { return; }
               arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()};

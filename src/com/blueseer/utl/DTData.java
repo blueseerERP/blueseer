@@ -1736,29 +1736,29 @@ public class DTData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select cme_code, cme_doc, cme_dir, cme_isa, cme_gs, cme_ov_isa, cme_ov_gs, cme_map " +
-                        " FROM  cmedi_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by cme_code, cme_doc ;");
+                    res = st.executeQuery(" select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map " +
+                        " FROM  edi_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by edi_id, edi_doc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("  select cme_code, cme_doc, cme_dir, cme_isa, cme_gs, cme_ov_isa, cme_ov_gs, cme_map " +
-                        " FROM  cmedi_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by cme_code, cme_doc ;");
+                    res = st.executeQuery(" select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map " +
+                        " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by edi_id, edi_doc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("  select cme_code, cme_doc, cme_dir, cme_isa, cme_gs, cme_ov_isa, cme_ov_gs, cme_map  " +
-                        " FROM  cmedi_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by cme_code, cme_doc ;");
+                 res = st.executeQuery("  select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map  " +
+                        " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by edi_id, edi_doc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cme_code"),
-                                   res.getString("cme_doc"),
-                                   res.getString("cme_dir"),
-                                   res.getString("cme_isa"),
-                                   res.getString("cme_gs"),
-                                   res.getString("cme_ov_isa"),
-                                   res.getString("cme_ov_gs"),
-                                   res.getString("cme_map")
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
+                                   res.getString("edi_doc"),
+                                   res.getString("edi_dir"),
+                                   res.getString("edi_isa"),
+                                   res.getString("edi_gs"),
+                                   res.getString("edi_bsisa"),
+                                   res.getString("edi_bsgs"),
+                                   res.getString("edi_map")
                         });
                     }
            }
@@ -3213,15 +3213,15 @@ public class DTData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                
-                  res = st.executeQuery("select * from cmedi_mstr;" );
+                  res = st.executeQuery("select * from edi_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cme_code"),
-                                   res.getString("cme_doc"),
-                                   res.getString("cme_dir"),
-                                   res.getString("cme_map"),
-                                   res.getString("cme_filepath"),
-                                   res.getString("cme_fileprefix"),
-                                   res.getString("cme_filesuffix")
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
+                                   res.getString("edi_doc"),
+                                   res.getString("edi_dir"),
+                                   res.getString("edi_map"),
+                                   res.getString("edi_filepath"),
+                                   res.getString("edi_fileprefix"),
+                                   res.getString("edi_filesuffix")
                                   
                         });
                     }
