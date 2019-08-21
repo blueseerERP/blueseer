@@ -82,7 +82,7 @@ public class GLControlPanel extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String key) {
+    public void initvars(String[] key) {
         getdefault();
     }
     

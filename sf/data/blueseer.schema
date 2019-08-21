@@ -1175,6 +1175,7 @@ CREATE TABLE IF NOT EXISTS `fo_mstr` (
   `fo_custfo` varchar(30) NOT NULL  DEFAULT '',
   `fo_bol` varchar(30) NOT NULL  DEFAULT '',
   `fo_tpid` varchar(30) NOT NULL  DEFAULT '',
+  `fo_weight` varchar(20) NOT NULL  DEFAULT '',
   `fo_carrier` varchar(30) NOT NULL  DEFAULT '',
   `fo_carrier_assigned` varchar(30) NOT NULL  DEFAULT '',
   `fo_carrier_type` varchar(20) NOT NULL  DEFAULT '',

@@ -3335,7 +3335,7 @@ public class OVData {
                   return myreturn;
              }
              
-              public static boolean addGenericCode(ArrayList<String> list) {
+    public static boolean addGenericCode(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
@@ -3493,6 +3493,64 @@ public class OVData {
                     "'" +  ld[16] + "'" + "," + 
                     "'" +  ld[17] + "'" + "," +        
                     "'" +  ld[18] + "'"
+                             +  ");"
+                           );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
+     public static boolean addBOMMstrRecord(ArrayList<String> list) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select ps_parent from pbm_mstr where " +
+                                           " ps_parent = " + "'" + ld[0] + "'" + 
+                                           " AND ps_child = " + "'" + ld[1] + "'" +         
+                                           ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into pbm_mstr " 
+                      + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref ) " 
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[3] + "'" + "," + 
+                    "'" +  ld[4] + "'" + "," +
+                    "'" +  ld[5] + "'" + "," +
+                    "'" +  ld[6] + "'" + "," +
+                    "'" +  ld[7] + "'" + "," +
+                    "'" +  ld[8] + "'" + "," +
+                    "'" +  ld[9] + "'"
                              +  ");"
                            );     
                    }
@@ -19877,7 +19935,7 @@ MainFrame.bslog(e);
         }
       }  
        
-       public static String CreateFOMSTRFrom204i(String[] control, String custfo, String carrier, String equiptype, String remarks, String bol, String cust, String tpid ) {
+       public static String CreateFOMSTRFrom204i(String[] control, String custfo, String carrier, String equiptype, String remarks, String bol, String cust, String tpid, String weight, String ref ) {
            String fo = "";           
            try {
 
@@ -19907,7 +19965,7 @@ MainFrame.bslog(e);
                        if (i == 0) {    
                         fo = String.valueOf(OVData.getNextNbr("fo"));
                         st.executeUpdate("insert into fo_mstr "
-                            + "(fo_nbr, fo_dir, fo_type, fo_tpid, fo_cust, fo_custfo, fo_carrier, fo_carrier_assigned, fo_equipment_type, fo_rmks, fo_bol, fo_date ) "
+                            + "(fo_nbr, fo_dir, fo_type, fo_tpid, fo_cust, fo_custfo, fo_carrier, fo_carrier_assigned, fo_equipment_type, fo_rmks, fo_status, fo_bol, fo_date, fo_weight, fo_ref ) "
                             + " values ( " + "'" + fo + "'" + ","
                             + "'" + "In" + "'" + ","
                             + "'" + "tender" + "'" + ","        
@@ -19918,8 +19976,11 @@ MainFrame.bslog(e);
                             + "'" + carrier + "'" + ","
                             + "'" + equiptype + "'" + ","
                             + "'" + remarks + "'" + ","
+                            + "'" + "Open" + "'" + ","        
                             + "'" + bol + "'" + ","
-                            + "'" + dfdate.format(now) + "'" 
+                            + "'" + dfdate.format(now) + "'" + ","
+                            + "'" + weight + "'" + ","
+                            + "'" + ref + "'"
                             + ")"
                             + ";");
                         

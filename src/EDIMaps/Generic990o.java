@@ -106,7 +106,7 @@ public class Generic990o {
          }
          ArrayList<String> S = new ArrayList();
          S.add("B1" + ed + h[7] + ed + nbr + ed + dfdate.format(now) + ed + yesno + ed + ed + h[8]);
-         S.add("L11" + ed + h[9] + ed + "DO");
+         S.add("L11" + ed + h[9] + ed + "DO" + ed + h[1]);
          hdrsegcount += 2;
          
          for (String s : S) {

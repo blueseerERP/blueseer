@@ -157,17 +157,16 @@ public class MassLoad extends javax.swing.JPanel {
     public boolean checkItemMaster(String[] rs, int i) {
         boolean proceed = true;
         
-        // first check for correct number of fields
-        if (rs.length != 28) {
+        ArrayList<String> list = defineItemMaster();
+        if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
                    proceed = false;
         }
         
        
         
-        if (rs.length == 28) {
-            // now check individual fields
-            ArrayList<String> list = defineItemMaster();
+         if (rs.length == list.size()) {
+            
             String[] ld = null;
             int j = 0;
             for (String rec : list) {
@@ -251,6 +250,98 @@ public class MassLoad extends javax.swing.JPanel {
             }
     }
     
+     // BOM master stuff
+    public ArrayList<String> defineBOMMaster() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("ps_parent,s,18,mandatory,validated");
+        list.add("ps_child,s,18,mandatory,validated");
+        list.add("ps_type,s,10,mandatory,validated (P or M or A)");
+        list.add("ps_qty_per,d,10,mandatory,unvalidated");
+        list.add("ps_desc,s,30,mandatory,validated");
+        list.add("ps_op,s,3,mandatory,validated");
+        list.add("ps_sequence,i,4,optional,unvalidated");
+        list.add("ps_userid,s,8,optional,unvalidated");
+        list.add("ps_misc1,s,30,optional,unvalidated");
+        list.add("ps_ref,s,30,optional,unvalidated");
+        
+        return list;
+    }
+    
+    public boolean checkBOMMaster(String[] rs, int i) {
+        boolean proceed = true;
+        
+       ArrayList<String> list = defineBOMMaster();
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+       
+        if (rs.length == list.size()) {
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+                
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processBOMMaster (File myfile) throws FileNotFoundException, IOException {
+          tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkBOMMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (OVData.addBOMMstrRecord(list)) 
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+    
     
       // Generic Code stuff
     public ArrayList<String> defineGenericCode() {
@@ -264,17 +355,15 @@ public class MassLoad extends javax.swing.JPanel {
     public boolean checkGenericCode(String[] rs, int i) {
         boolean proceed = true;
         
-        // first check for correct number of fields
-        if (rs.length != 3) {
+        ArrayList<String> list = defineGenericCode();
+        if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
                    proceed = false;
         }
         
        
         
-        if (rs.length == 3) {
-            // now check individual fields
-            ArrayList<String> list = defineGenericCode();
+        if (rs.length == list.size()) {
             String[] ld = null;
             int j = 0;
             for (String rec : list) {
@@ -1408,6 +1497,24 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                    }
                }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Master") == 0) {
+                   temp = checkEDIPartner(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+              if (ddtable.getSelectedItem().toString().compareTo("Carrier Master") == 0) {
+                   temp = checkCarrier(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("BOM Master") == 0) {
+                   temp = checkBOMMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
             }
             fsr.close();
             // now we should have a clean file....attempt to load
@@ -1452,6 +1559,12 @@ public class MassLoad extends javax.swing.JPanel {
                }
                if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Master") == 0) {
                   processEDIPartner(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("Carrier Master") == 0) {
+                  processCarrier(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("BOM Master") == 0) {
+                  processBOMMaster(myfile);
                }
               
          }
@@ -1519,6 +1632,9 @@ public class MassLoad extends javax.swing.JPanel {
          if (key.compareTo("Carrier Master") == 0) { 
              list = defineCarrier();
          }
+         if (key.compareTo("BOM Master") == 0) { 
+             list = defineCarrier();
+         }
           if (key.compareTo("EDI Partner Master") == 0) { 
              list = defineEDIPartner();
          }
@@ -1563,7 +1679,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "Carrier Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

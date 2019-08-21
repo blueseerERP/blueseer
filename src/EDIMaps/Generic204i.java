@@ -106,6 +106,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                     // if cancellation...cancel original freight order based on custfo number...if status is not 'InTransit'
                    if (purpose.equals("01")) {
                    OVData.CancelFOFrom204i(custfo);
+                   OVData.writeEDILog(c, "0", "INFO", "204 Cancel");
                    return;
                    }
                
@@ -114,6 +115,12 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                    }
                    break;    
                
+               case "L11" :
+                   if (elementArray[2].toUpperCase().equals("ZI")) {
+                       e.setRef(elementArray[1]);
+                   }
+                   break;    
+                   
                case "S5" :
                    S5 = true;  
                    S5Count++;
@@ -168,7 +175,10 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                     e.setDetAddrContact(linecount, elementArray[2]);
                     e.setDetAddrPhone(linecount, elementArray[4]);
                    break; 
-                   
+               
+               case "L3" :
+                   e.setWeight(elementArray[1]);
+                   break;    
                    
                default :
                    break;

@@ -427,10 +427,10 @@ public class EDILoadPanel extends javax.swing.JPanel {
         return filename;
     }
     
-    public void initvars(String[] arg) throws MalformedURLException, SmbException {
-    tafile.setText("");
+    public void getFiles() {
+         tafile.setText("");
    
-    File folder = new File(inDir);
+   File folder = new File(inDir);
    File[] listOfFiles = folder.listFiles();
    mymodel.setNumRows(0);
    tablereport.setModel(mymodel);
@@ -440,14 +440,6 @@ public class EDILoadPanel extends javax.swing.JPanel {
    tablereport.getColumnModel().getColumn(1).setCellRenderer(checkBoxRenderer); 
    tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer()); 
    boolean toggle = false;
-
-   
-   
-    
- //   NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, null, null);
-  //  NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
- //   SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
- //   SmbFile[] listOfFiles = folder.listFiles();
      if (listOfFiles != null) 
      for (int i = 0; i < listOfFiles.length; i++) {
       if (listOfFiles[i].isFile()) {
@@ -456,8 +448,13 @@ public class EDILoadPanel extends javax.swing.JPanel {
                    toggle
                     });
       } 
-    }
-        
+     }
+     
+     lbcount.setText(String.valueOf(mymodel.getRowCount()));
+    }  
+      
+    public void initvars(String[] arg) throws MalformedURLException, SmbException {
+      getFiles();        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -470,24 +467,22 @@ public class EDILoadPanel extends javax.swing.JPanel {
 
         fc = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
-        btProcess = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         tafile = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
         cbtoggle = new javax.swing.JCheckBox();
+        btProcess = new javax.swing.JButton();
+        btrefresh = new javax.swing.JButton();
         btmanual = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lbcount = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDI Inbound Loading"));
-
-        btProcess.setText("Process");
-        btProcess.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btProcessActionPerformed(evt);
-            }
-        });
 
         tablereport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -511,10 +506,45 @@ public class EDILoadPanel extends javax.swing.JPanel {
         tafile.setRows(5);
         jScrollPane3.setViewportView(tafile);
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         cbtoggle.setText("Load Toggle");
         cbtoggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbtoggleActionPerformed(evt);
+            }
+        });
+
+        btProcess.setText("Run");
+        btProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btProcessActionPerformed(evt);
+            }
+        });
+
+        btrefresh.setText("Refresh List");
+        btrefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrefreshActionPerformed(evt);
             }
         });
 
@@ -525,38 +555,59 @@ public class EDILoadPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Files:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(cbtoggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btrefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btProcess)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btmanual, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbtoggle)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btrefresh)
+                        .addComponent(jLabel1)
+                        .addComponent(lbcount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btProcess)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(btmanual)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btmanual)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cbtoggle))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btProcess)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane3)
-                    .addComponent(btProcess, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbtoggle)
-                    .addComponent(btmanual))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -570,7 +621,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 1) ) {
                      String infile = inDir + "/" + mymodel.getValueAt(i,0).toString();
-                     
+                   //  bsmf.MainFrame.show(String.valueOf(i));
                     // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
                     // EDI.processFile(edifile);
                      EDI.processFileCmdLine(infile,"","","");
@@ -586,17 +637,20 @@ public class EDILoadPanel extends javax.swing.JPanel {
                          if (! inArch.isEmpty() && ! OVData.isEDIDeleteFlag() && OVData.isEDIArchFlag() ) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
                          Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
                           // now remove from list
                          }
                          
-                       mymodel.removeRow(i);   
+                     //  mymodel.removeRow(i);   
                          
                      j++;
                  }
              }
               
             bsmf.MainFrame.show("Processed " + String.valueOf(j) + " files");
+            
+            getFiles();
             
        } catch (IOException ex) {
            ex.printStackTrace();
@@ -643,15 +697,24 @@ public class EDILoadPanel extends javax.swing.JPanel {
         task.execute();  
     }//GEN-LAST:event_btmanualActionPerformed
 
+    private void btrefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrefreshActionPerformed
+        getFiles();
+    }//GEN-LAST:event_btrefreshActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btProcess;
     private javax.swing.JButton btmanual;
+    private javax.swing.JButton btrefresh;
     private javax.swing.JCheckBox cbtoggle;
     private javax.swing.JFileChooser fc;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbcount;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextArea tafile;
     // End of variables declaration//GEN-END:variables

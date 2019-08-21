@@ -1199,7 +1199,7 @@ public class EDI {
     
      public static void createFOMSTRFrom204i(edi204i e, String[] control) {
              control[7] = e.custfo;
-             String fo = OVData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid);  
+             String fo = OVData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid, e.weight, e.ref);  
              for (int j = 0; j < e.getDetCount(); j++ ) {
                OVData.CreateFODDETFrom204i(fo,
                        e.getDetLine(j), 
@@ -1207,7 +1207,7 @@ public class EDI {
                        e.getDetShipper(j),
                        e.getDetDelvDate(j),
                        e.getDetDelvTime(j),
-                        e.getDetShipDate(j),
+                       e.getDetShipDate(j),
                        e.getDetShipTime(j),
                        e.getDetAddrCode(j),
                        e.getDetAddrName(j), 
@@ -2988,6 +2988,7 @@ public class EDI {
     public String shipmethod = "";
     public String fodate = "";
     public String bol = "";
+    public String weight = "";
     
     // Detail fields     
     public ArrayList<String[]> detailArray = new ArrayList<String[]>();
@@ -3187,6 +3188,9 @@ public class EDI {
           public void setBOL(String v) {
            this.bol = v;
         }
+          public void setWeight(String v) {
+           this.weight = v;
+        }  
        
  
         // header getters
@@ -3233,7 +3237,9 @@ public class EDI {
           public String getBOL() {
            return this.bol;
         }
-
+        public String getWeight() {
+           return this.weight;
+        }
         
 
       

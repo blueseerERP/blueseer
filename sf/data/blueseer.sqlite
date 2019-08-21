@@ -1421,6 +1421,7 @@ CREATE TABLE "fo_mstr" (
   "fo_cust" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_custfo" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_tpid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fo_weight" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_carrier" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_carrier_assigned" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',

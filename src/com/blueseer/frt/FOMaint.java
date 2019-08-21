@@ -197,6 +197,8 @@ public class FOMaint extends javax.swing.JPanel {
                     shipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("fo_date")));
                     tbcustfrtnbr.setText(res.getString("fo_custfo"));
                     tbcust.setText(res.getString("fo_cust"));
+                    tbweight.setText(res.getString("fo_weight"));
+                    tbref.setText(res.getString("fo_ref"));
                     tbtpid.setText(res.getString("fo_tpid"));
                     dir = res.getString("fo_dir");
                    
@@ -1136,9 +1138,9 @@ public class FOMaint extends javax.swing.JPanel {
                                             .addComponent(jLabel99, javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel98, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(tbunits, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tbweight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tbweight)
+                                            .addComponent(tbunits)))))
                             .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1146,7 +1148,7 @@ public class FOMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel86)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(36, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1607,7 +1609,7 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelQuotesLayout.setVerticalGroup(
             jPanelQuotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelQuotesLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE))
         );
@@ -1694,7 +1696,7 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelTendersLayout.setVerticalGroup(
             jPanelTendersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTendersLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE))
         );
@@ -2208,7 +2210,7 @@ public class FOMaint extends javax.swing.JPanel {
         tbphone.setText(orddet.getValueAt(row, 12).toString());
         tbemail.setText(orddet.getValueAt(row, 13).toString());
         tbunits.setText(orddet.getValueAt(row, 14).toString());
-        tbweight.setText(orddet.getValueAt(row, 15).toString());
+       // tbweight.setText(orddet.getValueAt(row, 15).toString());
         if (orddet.getValueAt(row, 16).toString().isEmpty() || orddet.getValueAt(row, 16).toString().equals("0000-00-00")) {
          delvdate.setDate(null);   
         } else {
