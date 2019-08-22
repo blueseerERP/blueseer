@@ -113,10 +113,10 @@ public class ChartView extends javax.swing.JPanel {
         initComponents();
     }
 
-     public void initvars(String rpt) {
+     public void initvars(String[] rpt) {
         ChartPanel.setVisible(false);
         CodePanel.setVisible(false);
-        whichreport = rpt;
+        whichreport = rpt[0];
         
          int year = Calendar.getInstance().get(Calendar.YEAR);
                 Calendar cal = Calendar.getInstance();
