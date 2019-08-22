@@ -80,6 +80,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
                     new String[]{"File", "Load?"});
     String inDir = OVData.getEDIInDir();
     String inArch = OVData.getEDIInArch(); 
+    String ErrorDir = OVData.getEDIErrorDir(); 
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -585,10 +586,10 @@ public class EDILoadPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbtoggle)
+                    .addComponent(lbcount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btrefresh)
                         .addComponent(jLabel1)
-                        .addComponent(lbcount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btProcess)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btmanual)
@@ -624,7 +625,18 @@ public class EDILoadPanel extends javax.swing.JPanel {
                    //  bsmf.MainFrame.show(String.valueOf(i));
                     // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
                     // EDI.processFile(edifile);
-                     EDI.processFileCmdLine(infile,"","","");
+                    String[] m = EDI.processFileCmdLine(infile,"","","");
+                    
+                    // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                        bsmf.MainFrame.show(m[1]);
+                        // now move to error folder
+                        Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                         Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                         continue;  // bale from here
+                    }
                     
                      
                          // if delete set in control panel...remove file and continue;

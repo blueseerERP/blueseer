@@ -19047,6 +19047,34 @@ MainFrame.bslog(e);
         
     }
       
+      public static String getEDIErrorDir() {
+       String mystring = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edic_errordir from edi_ctrl ;");
+               while (res.next()) {
+                   mystring = res.getString("edic_errordir");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+      
+      
       public static String getEDIOutArch() {
        String mystring = "";
         try{

@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer.sqlite.win.v42
+OutputBaseFilename=blueseer.sqlite.win.v42.wJRE
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -48,12 +48,13 @@ Source: "C:\bs\blueseer\sf\edi\*"; DestDir: "{app}\edi"; Flags: ignoreversion re
 Source: "C:\bs\blueseer\sf\jasper\*"; DestDir: "{app}\jasper"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\zebra\*"; DestDir: "{app}\zebra"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\images\*"; DestDir: "{app}\images"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\java\jre1.8Custom\*"; DestDir: "{app}\java"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 ;Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}" ; WorkingDir: "{app}";
-Name: "{commonprograms}\{#MyAppName}"; Filename: "{code:GetJavaWExe}"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{code:GetJavaWExe}"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\java\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\java\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 
 [Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
@@ -182,16 +183,16 @@ var
   ErrorCode: Integer;
 begin
  
-  Result := HasJava1Dot7OrNewer;
-  if not Result then
-  begin
-    Result := MsgBox('Unable to find Java in your PATH.  You will need to download BlueSeer with Java(JRE)...would you like to download this Version?', mbConfirmation, MB_YESNO) = idYes;
-    if Result then
-    begin
-    ShellExec(
-       'open', 'https://www.sourceforge.net/projects/blueseer/files/blueseer.sqlite.win.v42.wJRE.exe/download', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-  //    ShellExec(
-  //      'open', 'https://www.java.com/getjava/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-    end;
-  end;
+
+  Result := true;
+//  if not Result then
+//  begin
+//    Result := MsgBox(ExpandConstant('{cm:JavaRequired}'), mbConfirmation, MB_YESNO) = idYes;
+//    if Result then
+//    begin
+//      ShellExec(
+ //       'open', 'https://www.java.com/getjava/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+//    end;
+//  end;
+
 end;

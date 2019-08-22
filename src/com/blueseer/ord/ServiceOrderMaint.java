@@ -1056,12 +1056,18 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
          boolean canproceed = true;
         int line = 0;
+        int qty = 0;
+        double price = 0.00;
         orddet.setModel(myorddetmodel);
         line = getmaxline();
         line++;
+        
+        if (tbqty.getText().isEmpty()) { qty = 0; }
+        if (tbprice.getText().isEmpty()) { price = 0.00; }
+        
         if (canproceed) {
          if (dditem.getSelectedIndex() > 0) {
-          myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), "I", lbdesc.getText(), ordernbr.getText(),  tbqty.getText(), tbprice.getText()});  
+          myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), "I", lbdesc.getText(), ordernbr.getText(),  String.valueOf(qty), String.valueOf(price)});  
          } else {
           myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), "S", "", ordernbr.getText(),  tbhours.getText(), tbprice.getText()});   
          }
@@ -1187,8 +1193,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel {
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
-                        if (orddet.getValueAt(j, 10).toString().equals("close"))
-                            continue;
+                        
                         res = st.executeQuery("Select svd_line from svd_det where svd_nbr = " + "'" + ordernbr.getText() + "'" +
                                 " and svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
                             while (res.next()) {

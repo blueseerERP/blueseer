@@ -153,7 +153,9 @@ public class EDI {
          
     }
     
-    public static void processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static String[] processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
+        
+        String[] m = new String[]{"0",""};
         String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
@@ -166,6 +168,7 @@ public class EDI {
          int start = 0;
          int end = 0;
          int isacount = 0;
+         int isactrl = 0;
          int gscount = 0;
          int stcount = 0;
          int ststart = 0;
@@ -182,8 +185,9 @@ public class EDI {
           char u = 0;
           
           
-           Map<Integer, Object[]> stse_hash = new HashMap<Integer, Object[]>();
            
+           Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
+           ArrayList<Object> docs = new ArrayList<Object>();
           
             for (int i = 0; i < cbuf.length; i++) {
                 
@@ -191,6 +195,10 @@ public class EDI {
                     e = cbuf[i+103];
                     u = cbuf[i+104];
                     s = cbuf[i+105];
+                    // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
+                    if (cbuf[i+106] != 'G' && cbuf[i+107] != 'S' && ! String.format("%02x",(int) cbuf[i+106]).equals("0a")) {
+                        return m = new String[]{"1","malformed envelope"};
+                    }
                     ed_escape = escapeDelimiter(String.valueOf(e));
                     sd_escape = escapeDelimiter(String.valueOf(s));
                     if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
@@ -199,6 +207,8 @@ public class EDI {
                     isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
                     isacount++;
                     String[] isa = new String(cbuf, i, 105).split(ed_escape);
+                    isactrl = Integer.valueOf(isa[13]);
+                    
                      // set control
                     c = initEDIControl();
                     c[0] = isa[6].trim(); // senderid
@@ -226,6 +236,7 @@ public class EDI {
                     
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
+                   
                     stcount++;
                     isaList.add("ST" + ":" + String.valueOf(i));
                     ststart = i;
@@ -239,17 +250,21 @@ public class EDI {
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
                     isaList.add("SE" + ":" + String.valueOf(i));
                     sestart = i;
-                   
-                    stse_hash.put(stcount, new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
-                   //  System.out.println("keyset for docs: " + stse_hash.keySet());
+                    // add to hash if hash doesn't exist or insert into hash
+                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                    // painful reminder that you have to create copy of array at instance in time
+                    ArrayList copydocs = new ArrayList(docs);
+                    stse_hash.put(isacount, copydocs);
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
                     end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
                     // now add to ISAmap
-                 
-                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, stse_hash, c});
+                   HashMap<Integer,ArrayList> mycopy = new HashMap<Integer,ArrayList>(stse_hash);
+                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, mycopy, c});
                     isaList.add("IEA" + ":" + String.valueOf(i));
-                   
+                    stcount = 0;
+                    docs.clear();
+                    stse_hash.remove(isacount);
                     
                 } 
             }
@@ -288,13 +303,14 @@ public class EDI {
         // if type is unknown then bail....otherwise create batch file of infile
          if (editype.isEmpty()) {
            System.out.println("Unknown file type");
+           m = new String[]{"0","Unknown file type"};
          } else {
              if (isOverride.isEmpty()) {
              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath());
              }
          }
          
-         
+       return m;  
     }
     
     public static String getEDIType(char[] cbuf, String filename) {
@@ -796,25 +812,39 @@ public class EDI {
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
         
-        String[] c = (String[]) isa.getValue()[6];
-      //  ArrayList d = (ArrayList) isa.getValue()[5];
-        Map<Integer, Object[]> d = (HashMap<Integer, Object[]>)isa.getValue()[5];
+        // System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
         
-      //  System.out.println("keyset for docs: " + d.keySet());
+        String[] c = (String[]) isa.getValue()[6];
+       // ArrayList d = (ArrayList) isa.getValue()[5];
+        Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
+        
+     //   System.out.println("doc entryset is : " + d.entrySet());
         
         ArrayList<String> falist = new ArrayList<String>();
-     //  System.out.println("isa start/end : " + isa.getValue()[0] + "/" + isa.getValue()[1]); 
-    
-       for (Map.Entry<Integer, Object[]> z : d.entrySet()) {
         
-   // for (Object z : d) {
-            Integer[] k = (Integer[])z.getValue()[0];
-            String doctype = (String)z.getValue()[1];
-            String docid = (String)z.getValue()[2];
+       //for (Object z : d) {
+       for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
+         
+       //    System.out.println("doc May entry key: " + z.getKey());
+           
+         for (Object r : z.getValue()) {
+            Object[] x = (Object[]) r;
+         
+            Integer[] k = (Integer[])x[0];
+            String doctype = (String)x[1];
+            String docid = (String)x[2];
+           
             c[1] = doctype;
             c[6] = docid;
+      
+       //    System.out.println("doc key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + doctype + "/" + docid);
             
-      //      System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+           // Integer[] k = (Integer[])z.getValue()[0];
+           // String doctype = (String)z.getValue()[1];
+           // String docid = (String)z.getValue()[2];
+           
+            
+         //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
         falist.add(docid); // add ST doc id to falist for functional acknowledgement
       //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
        
@@ -879,14 +909,14 @@ public class EDI {
                
             
                
-               
+      } // r         
                
     } // object k
         
      
             // 997
           
-                if (BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[0], c[1]))) {
+                if (c[12].isEmpty() && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[0], c[1]))) {
                    try {
                     String[] _isa = c[13].toString().split(EDI.escapeDelimiter(ed), -1);
                     String[] _gs = c[14].toString().split(EDI.escapeDelimiter(ed), -1);

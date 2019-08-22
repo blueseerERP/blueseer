@@ -112,6 +112,10 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                
                    if (purpose.equals("04")) {
                    origfo = OVData.getFreightOrderNbrFromCustFO(custfo);
+                      if (origfo.isEmpty()) {
+                          OVData.writeEDILog(c, "1", "ERROR", "204 Update Orig Not Found");
+                      }
+                   OVData.writeEDILog(c, "0", "INFO", "204 Update Not Implemented");
                    }
                    break;    
                
