@@ -384,7 +384,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
+                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);

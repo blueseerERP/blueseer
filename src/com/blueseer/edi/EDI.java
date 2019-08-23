@@ -913,17 +913,21 @@ public class EDI {
                
     } // object k
         
-     
+             
+       
             // 997
-          
+            
+            ArrayList<String> falistcopy = new ArrayList<String>(falist);
+            falist.clear();
+            
                 if (c[12].isEmpty() && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[0], c[1]))) {
-                   try {
+                    try {
                     String[] _isa = c[13].toString().split(EDI.escapeDelimiter(ed), -1);
                     String[] _gs = c[14].toString().split(EDI.escapeDelimiter(ed), -1);
                     Class cls = Class.forName("EDIMaps." + "Generic997o");
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    method.invoke(obj, falist, c);
+                    method.invoke(obj, falistcopy, c);
                    // OVData.writeEDILog(control, "INFO", "processing inbound file");
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
