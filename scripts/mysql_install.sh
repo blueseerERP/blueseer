@@ -94,6 +94,8 @@ echo "loading bank_mstr data from csv file....."
 mysql --local-infile -e "load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 echo "loading cm_mstr data from csv file....."
 mysql --local-infile -e "load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
+echo "loading cms_det data from csv file....."
+mysql --local-infile -e "load data local infile 'cmsdet.csv' replace into table cms_det fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 echo "loading ov_mstr data from csv file....."
 mysql --local-infile -e "load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors;" $DB -u $ROOT ;
 echo "loading uom_mstr data from csv file....."

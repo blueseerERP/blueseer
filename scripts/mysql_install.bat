@@ -95,6 +95,8 @@ mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'a
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 @echo "Loading cm_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
+@echo "Loading cms_det class schema...."
+mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'cmsdet.csv' replace into table cms_det fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 @echo "Loading ov_mstr class schema...."
 mysql --defaults-extra-file=my.cnf  --local-infile -e "load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors;" %DB% 
 @echo "Loading cur_mstr class schema...."
