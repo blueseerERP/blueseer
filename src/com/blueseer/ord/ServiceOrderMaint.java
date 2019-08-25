@@ -43,13 +43,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
+import javax.swing.text.JTextComponent;
 
 
 /**
@@ -166,10 +171,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
         if (myobj instanceof JPanel) {
             panel = (JPanel) myobj;
         } else if (myobj instanceof JTabbedPane) {
            tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
         } else {
             return;
         }
@@ -188,6 +196,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 if (component instanceof JTabbedPane) {
                     setPanelComponentState((JTabbedPane) component, b);
                 }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
                 
                 component.setEnabled(b);
             }
@@ -202,6 +213,19 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (component instanceof JPanel) {
                         setPanelComponentState((JPanel) component, b);
                     }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
                     component.setEnabled(b);
                 }
             }
@@ -213,7 +237,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         buttonGroup1.add(rbservice);
         buttonGroup1.add(rbinventory);
        
-       // rbservice.setEnabled(false);
+        
      //   rbinventory.setEnabled(false);
        
         tbkey.setText("");
@@ -266,6 +290,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         setComponentDefaultValues();
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        rbservice.setSelected(true);
         btnew.setEnabled(false);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -327,7 +352,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void initvars(String[] arg) {
+       
        setPanelComponentState(this, false); 
+       
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
@@ -570,7 +597,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     // custom functions
     public void itemChangeEvent(String myitem) {
           
-       //  lbdesc.setText(OVData.getItemDesc(dditem.getSelectedItem().toString()));
+         lbdesc.setText(OVData.getItemDesc(dditem.getSelectedItem().toString()));
          tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(OVData.getItemPOSPrice(dditem.getSelectedItem().toString())),"2"));
      }
      
@@ -784,9 +811,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2 = new javax.swing.JScrollPane();
         serviceitem = new javax.swing.JTextArea();
         tbhours = new javax.swing.JTextField();
-        tbprice1 = new javax.swing.JTextField();
+        tbserviceprice = new javax.swing.JTextField();
         jLabel84 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         panelItem = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -794,6 +822,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         tbprice = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         tbqty = new javax.swing.JTextField();
+        lbdesc = new javax.swing.JLabel();
         totlines = new javax.swing.JTextField();
         tbtotqty = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -920,18 +949,21 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        tbprice1.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbserviceprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tbprice1FocusGained(evt);
+                tbservicepriceFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbprice1FocusLost(evt);
+                tbservicepriceFocusLost(evt);
             }
         });
 
         jLabel84.setText("Hours");
 
         jLabel11.setText("Price");
+
+        jLabel12.setFont(new java.awt.Font("Noto Sans", 2, 12)); // NOI18N
+        jLabel12.setText("Price is Per Hour");
 
         javax.swing.GroupLayout panelServiceLayout = new javax.swing.GroupLayout(panelService);
         panelService.setLayout(panelServiceLayout);
@@ -949,10 +981,12 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelServiceLayout.createSequentialGroup()
-                        .addComponent(tbprice1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(117, 211, Short.MAX_VALUE))
-                    .addGroup(panelServiceLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
+                        .addGroup(panelServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelServiceLayout.createSequentialGroup()
+                                .addComponent(tbserviceprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         panelServiceLayout.setVerticalGroup(
@@ -968,12 +1002,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel84))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbprice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
+                    .addComponent(tbserviceprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel8.setText("InventoryItem");
+        jLabel8.setText("Item");
 
         jLabel3.setText("Price");
 
@@ -1007,21 +1042,23 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         panelItem.setLayout(panelItemLayout);
         panelItemLayout.setHorizontalGroup(
             panelItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelItemLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelItemLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelItemLayout.createSequentialGroup()
-                            .addGap(49, 49, 49)
                             .addComponent(jLabel8)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelItemLayout.createSequentialGroup()
-                            .addContainerGap()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel10)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelItemLayout.createSequentialGroup()
-                        .addContainerGap()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1033,7 +1070,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addContainerGap()
                 .addGroup(panelItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(lbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1163,6 +1201,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         rbservice.setText("Service");
+        rbservice.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rbserviceStateChanged(evt);
+            }
+        });
         rbservice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbserviceActionPerformed(evt);
@@ -1407,28 +1450,56 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         line = getmaxline();
         line++;
         
-        if (tbqty.getText().isEmpty()) { 
-            qty = 0; 
+        if (rbservice.isSelected()) {
+            if (tbhours.getText().isEmpty()) { 
+                qty = 0; 
+            } else {
+                qty = Double.valueOf(tbhours.getText());
+            }
+            if (tbserviceprice.getText().isEmpty()) { 
+                price = 0.00; 
+            } else {
+                price = Double.valueOf(tbserviceprice.getText()); 
+            }
         } else {
-            qty = Double.valueOf(tbqty.getText());
-        }
-        if (tbprice.getText().isEmpty()) { 
-            price = 0.00; 
-        } else {
-            price = Double.valueOf(tbprice.getText()); 
+            
+            if (dditem.getSelectedItem() == null || dditem.getSelectedItem().toString().isEmpty()) {
+                bsmf.MainFrame.show("must choose an item from inventory");
+                return;
+            }
+            if (tbqty.getText().isEmpty()) { 
+                qty = 0; 
+            } else {
+                qty = Double.valueOf(tbqty.getText());
+            }
+            if (tbprice.getText().isEmpty()) { 
+                price = 0.00; 
+            } else {
+                price = Double.valueOf(tbprice.getText()); 
+            }
         }
         
+        
+        
         if (canproceed) {
-         if (dditem.getSelectedIndex() > 0) {
-      //   myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), "I", lbdesc.getText(), tbkey.getText(),  String.valueOf(qty), BlueSeerUtils.bsformat("",String.valueOf(price),"2")});  
+         if (rbservice.isSelected()) {
+           myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), "S", "", 
+              tbkey.getText(),  String.valueOf(qty), 
+              BlueSeerUtils.bsformat("",String.valueOf(price),"2")}); 
          } else {
-          myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), "S", "", tbkey.getText(),  tbhours.getText(), tbprice.getText()});   
+          myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), 
+             "I", lbdesc.getText(), tbkey.getText(),  String.valueOf(qty), 
+             BlueSeerUtils.bsformat("",String.valueOf(price),"2")});
          }
          
          setTotalHours();
          sumlinecount();
          setTotalPrice();
          serviceitem.setText("");
+         tbqty.setText("0");
+         tbhours.setText("0");
+         tbprice.setText("0");
+         tbserviceprice.setText("0");
          dditem.setSelectedIndex(0);
          serviceitem.requestFocus();
         }
@@ -1596,13 +1667,25 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
       
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void tbprice1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbprice1FocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbprice1FocusGained
+    private void tbservicepriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbservicepriceFocusGained
+         if (tbserviceprice.getText().equals("0")) {
+            tbserviceprice.setText("");
+        }
+    }//GEN-LAST:event_tbservicepriceFocusGained
 
-    private void tbprice1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbprice1FocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbprice1FocusLost
+    private void tbservicepriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbservicepriceFocusLost
+                  String x = BlueSeerUtils.bsformat("", tbserviceprice.getText(), "2");
+        if (x.equals("error")) {
+            tbserviceprice.setText("");
+            tbserviceprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbserviceprice.requestFocus();
+        } else {
+            tbserviceprice.setText(x);
+            tbserviceprice.setBackground(Color.white);
+        }
+        setTotalPrice();
+    }//GEN-LAST:event_tbservicepriceFocusLost
 
     private void rbserviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbserviceActionPerformed
         if (rbservice.isSelected()) {
@@ -1624,6 +1707,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             setPanelComponentState(panelItem,false); 
         }
     }//GEN-LAST:event_rbinventoryActionPerformed
+
+    private void rbserviceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbserviceStateChanged
+       if (rbservice.isSelected()) {
+            setPanelComponentState(panelService,true);
+            setPanelComponentState(panelItem,false);
+        } else {
+            setPanelComponentState(panelService,false);
+            setPanelComponentState(panelItem,true); 
+        }
+    }//GEN-LAST:event_rbserviceStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1651,6 +1744,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1678,6 +1772,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JLabel lbdesc;
     private javax.swing.JLabel lblcustname;
     private javax.swing.JLabel lblshipname;
     private javax.swing.JTable orddet;
@@ -1691,8 +1786,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
-    private javax.swing.JTextField tbprice1;
     private javax.swing.JTextField tbqty;
+    private javax.swing.JTextField tbserviceprice;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField totlines;
