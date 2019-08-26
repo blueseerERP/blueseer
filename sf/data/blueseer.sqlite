@@ -1342,7 +1342,9 @@ CREATE TABLE "samlog" (
 CREATE TABLE "order_ctrl" (
   "orc_autosource" tinyint(1) NOT NULL DEFAULT '0',
   "orc_autoinvoice" tinyint(1) NOT NULL DEFAULT '0',
-  "orc_custitem" tinyint(1) NOT NULL DEFAULT '0'
+  "orc_custitem" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_srvm_type" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_srvm_item_default" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "cm_ctrl" (
   "cmc_autocust" tinyint(1) NOT NULL DEFAULT '0'
@@ -2194,7 +2196,11 @@ CREATE TABLE "ov_ctrl" (
 );
 CREATE TABLE "counter" (
   "counter_name" varchar(30) NOT NULL COLLATE NOCASE,
-  "counter_id" int(8) DEFAULT NULL COLLATE NOCASE );
+  "counter_desc" varchar(100) NOT NULL COLLATE NOCASE,
+  "counter_from" int(10) DEFAULT NULL COLLATE NOCASE, 
+  "counter_to" int(10) DEFAULT NULL COLLATE NOCASE, 
+  "counter_id" int(10) DEFAULT NULL COLLATE NOCASE 
+);
 CREATE TABLE "code_mstr" (
   "code_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "code_key" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',

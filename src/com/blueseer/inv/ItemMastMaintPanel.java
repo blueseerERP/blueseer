@@ -932,7 +932,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
 
         jLabel23.setText("Description");
 
-        ddcode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "M", "P" }));
+        ddcode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "M", "P", "S" }));
         ddcode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddcodeActionPerformed(evt);

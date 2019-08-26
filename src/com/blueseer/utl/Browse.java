@@ -359,6 +359,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("panelmaint")) {
                 tablereport.setModel(DTData.getPanelBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("keymaint")) {
+                tablereport.setModel(DTData.getKeyBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("sitemaint")) {
                 tablereport.setModel(DTData.getSiteBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -577,6 +580,11 @@ public class Browse extends javax.swing.JPanel {
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("PanelMaint", true, arg);
             }
+            if (callingpanel.equals("keymaint")) {
+              if (! checkperms("KeyMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("KeyMaint", true, arg);
+            } 
             if (callingpanel.equals("termmaint")) {
               if (! checkperms("TermsMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};

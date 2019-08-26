@@ -220,11 +220,12 @@ Admin,MenuMaint,9,JMenuItem,Menu Maintenance,,,,1,1
 Admin,MenuBrowse,10,JMenuItem,Menu Browse,,1,,1,1
 Admin,GenericCodeMaint,11,JMenuItem,Generic Code Maintenance,,,,1,1
 Admin,GenCodeBrowse,12,JMenuItem,Generic Code Browse,,1,,1,1
-Admin,PrinterMaint,13,JMenuItem,Printer Maintenance,,,,1,1
-Admin,PrinterBrowse,14,JMenuItem,Printer Browse,,1,,1,1
-Admin,ChangeUserid,15,JMenuItem,Change Userid,,,changeUserID,1,1
-Admin,changeDB,16,JMenuItem,Change IP:DB,,,changeIPandDB,1,1
-Admin,SystemControl,17,JMenuItem,System Control,,,,1,1
+Admin,KeyMaint,13,JMenuItem,Key Maintenance,,,,1,1
+Admin,PrinterMaint,14,JMenuItem,Printer Maintenance,,,,1,1
+Admin,PrinterBrowse,15,JMenuItem,Printer Browse,,1,,1,1
+Admin,ChangeUserid,16,JMenuItem,Change Userid,,,changeUserID,1,1
+Admin,changeDB,17,JMenuItem,Change IP:DB,,,changeIPandDB,1,1
+Admin,SystemControl,18,JMenuItem,System Control,,,,1,1
 Help,About,1,JMenuItem,About,,,,1,1
 Help,Update,2,JMenuItem,Update,,,,1,1
 Help,PlantDirectoryMenu,3,JMenuItem,Plant Directory,,1,,1,1

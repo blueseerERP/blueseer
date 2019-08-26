@@ -9428,6 +9428,63 @@ public class OVData {
         
     }   
           
+           public static boolean isSRVMQuoteType() {
+             
+           boolean srvmtype = false;
+            try{
+               Class.forName(driver).newInstance();
+                con = DriverManager.getConnection(url + db, user, pass);
+                try{
+                    Statement st = con.createStatement();
+                    ResultSet res = null;
+
+                    res = st.executeQuery("select orc_srvm_type from order_ctrl;");
+                   while (res.next()) {
+                        srvmtype = res.getBoolean("orc_srvm_type");
+                    }
+
+               }
+                catch (SQLException s){
+                    MainFrame.bslog(s);
+                }
+                con.close();
+            }
+            catch (Exception e){
+                MainFrame.bslog(e);
+            }
+            return srvmtype;
+        
+    }   
+        
+            public static boolean isSRVMItemType() {
+             
+           boolean srvmtype = false;
+            try{
+               Class.forName(driver).newInstance();
+                con = DriverManager.getConnection(url + db, user, pass);
+                try{
+                    Statement st = con.createStatement();
+                    ResultSet res = null;
+
+                    res = st.executeQuery("select orc_srvm_item_default from order_ctrl;");
+                   while (res.next()) {
+                        srvmtype = res.getBoolean("orc_srvm_item_default");
+                    }
+
+               }
+                catch (SQLException s){
+                    MainFrame.bslog(s);
+                }
+                con.close();
+            }
+            catch (Exception e){
+                MainFrame.bslog(e);
+            }
+            return srvmtype;
+        
+    }   
+        
+          
            public static boolean isCustItemOnlySHIP() {
              
            boolean custitemonly = false;
@@ -11274,6 +11331,13 @@ public class OVData {
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
                 
+                // Skip item code "S" when adjusting inventory
+                String itemcode = OVData.getItemCode(part);
+                if (itemcode.equals("S")) {
+                    return false;
+                }
+                
+                
                  double sum = 0.00;
                      
                         // check if in_mstr record exists for this part,loc,site combo
@@ -11386,11 +11450,15 @@ public class OVData {
                         
                         
                         // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                        res2 = st4.executeQuery("select it_item, it_loc " +
+                        res2 = st4.executeQuery("select it_item, it_loc, it_code " +
                               " from  item_mstr  " +
                               " where it_item = " + "'" + part + "'" +";");
                         
                         while (res2.next()) {
+                            // continue if service item
+                            if (res2.getString("it_code").equals("S")) {
+                            continue;
+                            }
                             i++;
                             // if no loc in shipper then grab the item default loc
                             if (loc.isEmpty())
@@ -11400,6 +11468,7 @@ public class OVData {
                         if (i == 0) {
                             continue;
                         }
+                        
                         
                         
                         // check if in_mstr record exists for this part,loc,site combo
@@ -11510,11 +11579,16 @@ public class OVData {
                         
                         
                         // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                        res2 = st4.executeQuery("select it_item, it_loc, it_wh" +
+                        res2 = st4.executeQuery("select it_item, it_loc, it_wh, it_code " +
                               " from  item_mstr  " +
-                              " where it_item = " + "'" + part + "'" +";");
+                              " where it_item = " + "'" + part + "'" + ";");
                         
                         while (res2.next()) {
+                            // if item type 'S' service....then continue
+                            if (res2.getString("it_code").equals("S")) {
+                              continue;
+                            }
+                            
                             i++;
                             // if no loc in shipper then grab the item default loc
                             if (loc.isEmpty())
@@ -11527,6 +11601,7 @@ public class OVData {
                         if (i == 0) {
                             continue;
                         }
+                        
                         
                         
                         // check if in_mstr record exists for this part,loc,site combo

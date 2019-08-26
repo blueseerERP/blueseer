@@ -11,9 +11,10 @@ orderstatus,commit,
 engineer,frank,
 orderstatus,backorder,
 ItemType,FG,Finished Goods
-ItemType,RAW,RAW MATERIAL
+ItemType,RAW,Raw Material
 ItemType,SUB,Sub Assembly
 ItemType,ASSET,Asset
+ItemType,SERVICE,Service
 edidoctype,850,
 edidoctype,810,
 edidoctype,856,

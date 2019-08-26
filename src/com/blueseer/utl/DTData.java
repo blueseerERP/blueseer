@@ -741,6 +741,65 @@ public class DTData {
         
          } 
          
+          public static DefaultTableModel getKeyBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "KeyName", "Desc", "From", "To", "CurrentID"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT counter_name, counter_desc, counter_from, counter_to, counter_id  " +
+                        " FROM  counter where " + myfield + " like " + "'" + str + "%'" +
+                        " order by counter_name ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT counter_name, counter_desc, counter_from, counter_to, counter_id  " +
+                        " FROM  counter where " + myfield + " like " + "'%" + str + "'" +
+                        " order by counter_name ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT counter_name, counter_desc, counter_from, counter_to, counter_id  " +
+                        " FROM  counter where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by counter_name ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("counter_name"),
+                                   res.getString("counter_desc"),
+                                   res.getString("counter_from"),
+                                   res.getString("counter_to"),
+                                   res.getString("counter_id")
+                                   
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+         
+         
          public static DefaultTableModel getSiteBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Site", "Desc", "Line1", "City", "State", "Zip", "Logo"})

@@ -300,7 +300,21 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         btprint.setEnabled(false);
         btnew.setEnabled(false);
         btadd.setEnabled(false); // set disabled until line item in detail
-        rbservice.setSelected(true);
+        ddstatus.setSelectedItem("open");
+        ddstatus.setEnabled(false);
+        if (OVData.isSRVMQuoteType()) {
+            ddtype.setSelectedItem("quote");
+        } else {
+            ddtype.setSelectedItem("order");
+        }
+        if (OVData.isSRVMItemType()) {
+            rbservice.setSelected(true);
+             rbinventory.setSelected(false);
+        } else {
+            rbservice.setSelected(false);
+             rbinventory.setSelected(true);
+        }
+        
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
@@ -367,6 +381,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public void initvars(String[] arg) {
         
        setPanelComponentState(this, false); 
+       setPanelComponentState(this, false); // having to run twice to go deeper into components
        setComponentDefaultValues();
       
         btnew.setEnabled(true);
@@ -1215,6 +1230,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         rbinventory.setText("Inventory");
+        rbinventory.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rbinventoryStateChanged(evt);
+            }
+        });
         rbinventory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbinventoryActionPerformed(evt);
@@ -1471,7 +1491,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-     newAction("serviceorder");
+     newAction("srvm");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1512,12 +1532,14 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         }
         
-        
+        if (qty == 0) {
+            bsmf.MainFrame.show("Warning: qty is zero");
+        }
         
         if (canproceed) {
          if (rbservice.isSelected()) {
-           myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), "S", "", 
-              tbkey.getText(),  String.valueOf(qty), 
+           myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), 
+               "S", "", tbkey.getText(),  String.valueOf(qty), 
               BlueSeerUtils.bsformat("",String.valueOf(price),"2")}); 
          } else {
           myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), 
@@ -1553,6 +1575,23 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
+
+  int[] rows = orddet.getSelectedRows();
+        for (int i : rows) {
+            ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
+        }
+        
+        if (getmaxline() > 0) {
+            btadd.setEnabled(true);
+        } else {
+             btadd.setEnabled(false);
+        }
+       
+         setTotalHours();
+         sumlinecount();
+         setTotalPrice();
+
+
         /*
         int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
@@ -1684,7 +1723,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btinvoiceActionPerformed
 
     private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
-        // TODO add your handling code here:
+         if (tbqty.getText().equals("0")) {
+            tbqty.setText("");
+        }
     }//GEN-LAST:event_tbqtyFocusGained
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
@@ -1753,13 +1794,20 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private void rbserviceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbserviceStateChanged
        
         if (! isLoad) {
-        if (rbservice.isSelected()) {
-            setPanelComponentState(panelService,true);
-            setPanelComponentState(panelItem,false);
-        } 
+            if (rbservice.isSelected()) {
+                setPanelComponentState(panelService,true);
+                setPanelComponentState(panelItem,false);
+            } else {
+                setPanelComponentState(panelService,false);
+                setPanelComponentState(panelItem,true);
+            } 
        }
        
     }//GEN-LAST:event_rbserviceStateChanged
+
+    private void rbinventoryStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbinventoryStateChanged
+        
+    }//GEN-LAST:event_rbinventoryStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

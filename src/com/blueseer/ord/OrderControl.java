@@ -63,6 +63,9 @@ public class OrderControl extends javax.swing.JPanel {
                         i++;
                         cbautosource.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autosource")));
                         cbautoinvoice.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoinvoice")));
+                        cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_custitem")));
+                        cbsrvmtype.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_type")));
+                        cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_item_default")));
                     }
            
             }
@@ -94,6 +97,9 @@ public class OrderControl extends javax.swing.JPanel {
         btupdate = new javax.swing.JButton();
         cbautoinvoice = new javax.swing.JCheckBox();
         cbcustitem = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
+        cbsrvmitemdefault = new javax.swing.JCheckBox();
+        cbsrvmtype = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -112,35 +118,70 @@ public class OrderControl extends javax.swing.JPanel {
 
         cbcustitem.setText("Cust Item Xref Only?");
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Defaults"));
+
+        cbsrvmitemdefault.setText("Service Default Item?");
+
+        cbsrvmtype.setText("Quote Type?");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbsrvmtype)
+                    .addComponent(cbsrvmitemdefault))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cbsrvmtype)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbsrvmitemdefault)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btupdate)
-                    .addComponent(cbautosource))
-                .addGap(25, 25, 25))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbautoinvoice)
-                    .addComponent(cbcustitem))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btupdate))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cbautosource, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(cbautoinvoice, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(cbcustitem))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbautoinvoice)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbcustitem)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(29, 29, 29)
-                .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbautoinvoice)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(cbcustitem)
-                .addGap(18, 18, 18)
                 .addComponent(btupdate)
-                .addGap(21, 21, 21))
+                .addGap(27, 27, 27))
         );
 
         add(jPanel1);
@@ -159,6 +200,8 @@ public class OrderControl extends javax.swing.JPanel {
                 String autosource = "";
                 String autoinvoice = "";
                 String custitemonly = "";
+                String srvmtype = "";
+                String srvmitemdefault = "";
                 
                 if ( cbautosource.isSelected() ) {
                 autosource = "1";    
@@ -178,6 +221,18 @@ public class OrderControl extends javax.swing.JPanel {
                     custitemonly = "0";
                 }
                 
+                if ( cbsrvmtype.isSelected() ) {
+                srvmtype = "1";    
+                } else {
+                    srvmtype = "0";
+                }
+                    
+                if ( cbsrvmitemdefault.isSelected() ) {
+                srvmitemdefault = "1";    
+                } else {
+                    srvmitemdefault = "0";
+                }    
+                
                 
                 res = st.executeQuery("SELECT *  FROM  order_ctrl ;");
                     while (res.next()) {
@@ -185,16 +240,22 @@ public class OrderControl extends javax.swing.JPanel {
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_custitem ) values (" + "'" + autosource + "'" + "," +
+                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_custitem, " +
+                            " orc_srvm_type, orc_srvm_item_default ) values (" + 
+                            "'" + autosource + "'" + "," +
                             "'" + autoinvoice + "'" + "," +
-                            "'" + custitemonly + "'" +   
+                            "'" + custitemonly + "'" + "," + 
+                            "'" + srvmtype + "'" + "," +
+                            "'" + srvmitemdefault + "'" +         
                                     ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
                     st.executeUpdate("update order_ctrl set " 
                             + " orc_autosource = " + "'" + autosource + "'" + "," 
                             + " orc_custitem = " + "'" + custitemonly + "'" + "," 
-                            + " orc_autoinvoice = " + "'" + autoinvoice + "'" +         
+                            + " orc_custitem = " + "'" + custitemonly + "'" + "," 
+                            + " orc_srvm_type = " + "'" + srvmtype + "'" + ","                 
+                            + " orc_srvm_item_default = " + "'" + srvmitemdefault + "'" +         
                             ";");   
                     bsmf.MainFrame.show("Updated Defaults");
                 }
@@ -215,6 +276,9 @@ public class OrderControl extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbautoinvoice;
     private javax.swing.JCheckBox cbautosource;
     private javax.swing.JCheckBox cbcustitem;
+    private javax.swing.JCheckBox cbsrvmitemdefault;
+    private javax.swing.JCheckBox cbsrvmtype;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

@@ -322,10 +322,11 @@
                     <Component class="javax.swing.JComboBox" name="ddcode">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="3">
+                          <StringArray count="4">
                             <StringItem index="0" value="A"/>
                             <StringItem index="1" value="M"/>
                             <StringItem index="2" value="P"/>
+                            <StringItem index="3" value="S"/>
                           </StringArray>
                         </Property>
                       </Properties>

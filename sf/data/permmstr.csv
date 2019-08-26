@@ -196,6 +196,7 @@ admin;SiteBrowse
 admin;UserMaint
 admin;UserPermsMaint
 admin;UserBrowse
+admin;KeyMaint
 admin;PanelMaint
 admin;PanelBrowse
 admin;MenuMaint

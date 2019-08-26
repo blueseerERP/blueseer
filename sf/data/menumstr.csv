@@ -122,6 +122,7 @@ WhereUsedUtility,,com.blueseer.inv.WhereUsedUtility,JMenuItem,where
 CustReport1,,com.blueseer.utl.ReportPanel,JMenuItem,cus2
 MenuMaint,,com.blueseer.adm.MenuMaintPanel,JMenuItem,menu
 PanelMaint,,com.blueseer.adm.PanelMaintPanel,JMenuItem,panel
+KeyMaint,,com.blueseer.adm.KeyMaintPanel,JMenuItem,keym
 MenuBrowse,menu for browsing menu list,com.blueseer.utl.ReportPanel,JMenuItem,menub
 NavCodeBrowse,menu for browsing navcodes,com.blueseer.utl.ReportPanel,JMenuItem,navcodes
 PanelBrowse,used for browsing java jpanels,com.blueseer.utl.ReportPanel,JMenuItem,panelb
