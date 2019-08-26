@@ -95,7 +95,8 @@ public class AboutPanel extends javax.swing.JPanel {
        }
        
        jTextArea2.append("Java Version: " + System.getProperty("java.version") + "\n");   
-       jTextArea2.append("Java VM: " + System.getProperty("java.vm.name") + "\n");   
+       jTextArea2.append("Java VM: " + System.getProperty("java.vm.name") + "\n");
+       jTextArea2.append("Java VM Version: " + System.getProperty("java.vm.version") + "\n");
        jTextArea2.append("Java Runtime Name: " + System.getProperty("java.runtime.name") + "\n");   
        jTextArea2.append("Java Runtime Version: " + System.getProperty("java.runtime.version") + "\n");  
        jTextArea2.append("Java Class Version: " + System.getProperty("java.class.version") + "\n");   

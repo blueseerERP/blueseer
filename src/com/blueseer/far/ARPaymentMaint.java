@@ -923,7 +923,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                          basetaxamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), taxamt_d);
                          }
                         st.executeUpdate("insert into ard_mstr "
-                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr ) "
+                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
                             + " values ( " + "'" + batchnbr.getText() + "'" + ","
                                 + "'" + ddcust.getSelectedItem() + "'" + ","
                             + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
@@ -934,7 +934,9 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                             + "'" + df.format(baseamt_d) + "'"  + ","                
                             + "'" + df.format(basetaxamt_d) + "'" + "," 
                             + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
-                            + "'" + basecurr + "'" 
+                            + "'" + basecurr + "'" + ","
+                            + "'" + aracct + "'" + ","
+                            + "'" + arcc + "'"   
                             + ")"
                             + ";");
                     }

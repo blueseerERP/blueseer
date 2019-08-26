@@ -13318,8 +13318,6 @@ public class OVData {
         }
         
           
-          
-          
         public static boolean glEntryFromARPayment(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -17101,7 +17099,7 @@ public class OVData {
                         + ";");
                          
                       st.executeUpdate("insert into ard_mstr "
-                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr ) "
+                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
                             + " values ( " + "'" + arnbr + "'" + ","
                                 + "'" + cust + "'" + ","
                             + "'" + shipper + "'" + ","
@@ -17112,10 +17110,15 @@ public class OVData {
                             + "'" + df.format(baseamt) + "'"  + ","                
                             + "'" + df.format(basetaxamt) + "'" + "," 
                             + "'" + curr + "'"  + ","
-                            + "'" + basecurr + "'" 
+                            + "'" + basecurr + "'" + ","
+                            + "'" + acct + "'" + ","
+                            + "'" + cc + "'"  
                             + ")"
                             + ";");    
                       
+                      // update AR entry for original invoices with status and open amt  
+                      ARUpdate(arnbr);  
+                      // execute glentry
                       glEntryFromARPayment(arnbr,effdate);
                      
                   } // if type = "P"  

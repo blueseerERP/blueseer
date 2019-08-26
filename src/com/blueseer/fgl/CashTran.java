@@ -681,6 +681,8 @@ public class CashTran extends javax.swing.JPanel {
                     
                 curr = OVData.getDefaultCurrency();
                 String site = OVData.getDefaultSite();   
+                String acct = OVData.getDefaultARAcct();
+                String cc = OVData.getDefaultARCC();
                 String po = tbpo1.getText();
                 if (po.isEmpty()) {
                     po = "cashtran";
@@ -740,8 +742,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(dcdate1.getDate()) + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + OVData.getDefaultARAcct() + "'" + ","
-                        + "'" + OVData.getDefaultARCC() + "'" + ","
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
                         + "'" + "c" + "'"  + ","
                         + "'" + OVData.getDefaultARBank() + "'" + ","
                         + "'" + curr + "'" + ","     
@@ -756,14 +758,16 @@ public class CashTran extends javax.swing.JPanel {
                
                         for (int j = 0; j < detailtable1.getRowCount(); j++) {
                             st.executeUpdate("insert into ard_mstr "
-                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax ) "
+                                + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_acct, ard_cc ) "
                                 + " values ( " + "'" + batchnbr + "'" + ","
                                     + "'" + entity + "'" + ","
                                 + "'" + shipperid + "'" + ","
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + dfdate.format(dcdate1.getDate()) + "'" + ","
                                 + "'" + detailtable1.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + "0" + "'" 
+                                + "'" + "0" + "'" + ","
+                                + "'" + acct + "'" + ","
+                                + "'" + cc + "'"   
                                 + ")"
                                 + ";");
                             

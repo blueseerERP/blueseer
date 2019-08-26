@@ -764,6 +764,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (cbpaid.isSelected())
                     message = OVData.AREntry("P", String.valueOf(shipperid), now);
                     
+                                    
+                    
                     // autopost
                     if (OVData.isAutoPost()) {
                         OVData.PostGL2();

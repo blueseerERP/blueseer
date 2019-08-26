@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -66,7 +67,15 @@ import javax.swing.table.TableColumnModel;
 public class ARTranRpt1 extends javax.swing.JPanel {
  
      MyTableModel modelsummary = new ARTranRpt1.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "ID", "Nbr", "Cust", "Type", "EffDate", "Status", "Ref", "Remarks", "Amt", "Applied", "AmtOpen"});
+                        new String[]{"Detail", "ID", "Nbr", "Cust", "Type", "EffDate", "Status", "Ref", "Remarks", "Amt", "Applied", "AmtOpen"})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0  )       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     MyTableModel2 modeldetail = new ARTranRpt1.MyTableModel2(new Object[][]{},
                         new String[]{"ID", "Cust", "Ref", "Line", "Date", "Acct", "CC", "Amt"});
@@ -240,6 +249,12 @@ public class ARTranRpt1 extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
+        
+        labelcount.setText("0");
+        labelopen.setText("0");
+        labelpaid.setText("0");
+        labelamt.setText("0");
+        
         modelsummary.setRowCount(0);
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -247,14 +262,14 @@ public class ARTranRpt1 extends javax.swing.JPanel {
         dcfrom.setDate(now);
         dcto.setDate(now);
         
-        ddtype.setSelectedItem("ALL");
+        ddtype.setSelectedItem("I");
         
           modelsummary.setNumRows(0);
         modeldetail.setNumRows(0);
         tablesummary.setModel(modelsummary);
         tabledetail.setModel(modeldetail);
         
-         tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARTranRpt1.ButtonRenderer());
+        // tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARTranRpt1.ButtonRenderer());
          tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
          
          detailpanel.setVisible(false);
@@ -284,7 +299,7 @@ public class ARTranRpt1 extends javax.swing.JPanel {
         labelcount = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        labeldollar = new javax.swing.JLabel();
+        labelopen = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
@@ -298,6 +313,10 @@ public class ARTranRpt1 extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         ddtype = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
+        labelamt = new javax.swing.JLabel();
+        labelpaid = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         tablepanel = new javax.swing.JPanel();
         summarypanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -312,9 +331,9 @@ public class ARTranRpt1 extends javax.swing.JPanel {
 
         jLabel7.setText("Count");
 
-        jLabel8.setText("$$");
+        jLabel8.setText("Open:");
 
-        labeldollar.setText("0");
+        labelopen.setText("0");
 
         jLabel3.setText("To Cust");
 
@@ -351,19 +370,17 @@ public class ARTranRpt1 extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddfromcust, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -404,6 +421,14 @@ public class ARTranRpt1 extends javax.swing.JPanel {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        labelamt.setText("0");
+
+        labelpaid.setText("0");
+
+        jLabel1.setText("Paid:");
+
+        jLabel9.setText("Amt:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -411,14 +436,19 @@ public class ARTranRpt1 extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 379, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labeldollar, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                    .addComponent(labelcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(labelopen, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                        .addComponent(labelcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(labelamt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                    .addComponent(labelpaid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -432,9 +462,16 @@ public class ARTranRpt1 extends javax.swing.JPanel {
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labeldollar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(labelamt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelpaid, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelopen, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
@@ -502,12 +539,13 @@ public class ARTranRpt1 extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(613, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(592, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addGap(106, 106, 106)
-                    .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)))
+                    .addGap(123, 123, 123)
+                    .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -525,7 +563,11 @@ public class ARTranRpt1 extends javax.swing.JPanel {
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
         modelsummary.setNumRows(0);
-    
+                labelcount.setText("0");
+                labelopen.setText("0");
+                labelpaid.setText("0");
+                labelamt.setText("0");
+        
 try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -541,14 +583,14 @@ try {
                 DecimalFormat df = new DecimalFormat("#0.00");
                 int i = 0;
                
-                tablesummary.setModel(modelsummary);
+               
                  
              //   Enumeration<TableColumn> en = tablelabel.getColumnModel().getColumns();
               //   while (en.hasMoreElements()) {
              //        TableColumn tc = en.nextElement();
              //        tc.setCellRenderer(new LabelBrowsePanel.SomeRenderer());
              //    }
-                  tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARTranRpt1.ButtonRenderer());
+               //   tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARTranRpt1.ButtonRenderer());
                   tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
                   tablesummary.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -558,7 +600,10 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
               
-                double dol = 0;
+                
+                double openamt = 0.00;
+                double paidamt = 0.00;
+                double amt = 0.00;
                 String fromcust = "";
                 String tocust = "";
                 String fromcode = "";
@@ -595,11 +640,13 @@ try {
                  }
                 
                   while (res.next()) {
-                    dol = dol + (res.getDouble("ar_amt") );
+                    amt = amt + (res.getDouble("ar_amt"));
+                    paidamt = paidamt + (res.getDouble("ar_applied"));
+                    openamt = openamt + (res.getDouble("ar_open_amt"));
                     qty = qty + 0;
                     i++;
                         modelsummary.addRow(new Object[]{
-                                "Detail",
+                                BlueSeerUtils.clickbasket,
                             res.getString("ar_id"),
                             res.getString("ar_nbr"),
                                 res.getString("ar_cust"),
@@ -616,7 +663,9 @@ try {
                  
                
                 labelcount.setText(String.valueOf(i));
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labelopen.setText(String.valueOf(df.format(openamt)));
+                labelpaid.setText(String.valueOf(df.format(paidamt)));
+                labelamt.setText(String.valueOf(df.format(amt)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for AR Report");
@@ -633,7 +682,7 @@ try {
         int row = tablesummary.rowAtPoint(evt.getPoint());
         int col = tablesummary.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            getdetail(tablesummary.getValueAt(row, 1).toString());
+            getdetail(tablesummary.getValueAt(row, 2).toString());
             btdetail.setEnabled(true);
             detailpanel.setVisible(true);
         }
@@ -654,6 +703,7 @@ try {
     private javax.swing.JComboBox ddtocust;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -661,13 +711,16 @@ try {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelamt;
     private javax.swing.JLabel labelcount;
-    private javax.swing.JLabel labeldollar;
+    private javax.swing.JLabel labelopen;
+    private javax.swing.JLabel labelpaid;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
