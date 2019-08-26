@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer.sqlite.win.v42.wJRE
+OutputBaseFilename=blueseer.sqlite.win.v42.wJRE32
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -48,7 +48,7 @@ Source: "C:\bs\blueseer\sf\edi\*"; DestDir: "{app}\edi"; Flags: ignoreversion re
 Source: "C:\bs\blueseer\sf\jasper\*"; DestDir: "{app}\jasper"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\zebra\*"; DestDir: "{app}\zebra"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\images\*"; DestDir: "{app}\images"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\java\jre1.8Custom\*"; DestDir: "{app}\java"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\java\jre1.8Custom32\*"; DestDir: "{app}\java"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

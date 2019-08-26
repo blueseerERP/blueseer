@@ -66,7 +66,7 @@ public class BlueSeerUtils {
     public static  ImageIcon clickcheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/check.png"));
     public static  ImageIcon clicknocheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/nocheck.png"));
     
-    public static String getRecordSuccess = "record found";
+    public static String getRecordSuccess = "record acquired";
     public static String addRecordSuccess = "record added successfully";
     public static String updateRecordSuccess = "record updated successfully";
     public static String deleteRecordSuccess = "record deleted successfully";
@@ -367,7 +367,9 @@ public class BlueSeerUtils {
          if (message[0].equals("1")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.RED); 
          } else if (message[0].equals("2")) {
-            bsmf.MainFrame.messagelabel.setForeground(Color.YELLOW);  
+            bsmf.MainFrame.messagelabel.setForeground(Color.YELLOW); 
+         } else if (message[0].equals("3")) {
+            bsmf.MainFrame.messagelabel.setForeground(Color.BLACK); 
          } else if (message[0].equals("0")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.BLUE);  
          } else {

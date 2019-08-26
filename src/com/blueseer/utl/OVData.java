@@ -13242,6 +13242,9 @@ public class OVData {
         
         }
         
+          
+          
+          
         public static boolean glEntryFromARPayment(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -16827,6 +16830,235 @@ public class OVData {
            return duedate;           
        }
        
+       public static String[] AREntry(String type, String shipper, Date effdate) {
+            String[] m = new String[]{"",""};
+            
+            boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+            DecimalFormat df = new DecimalFormat("#0.00");   
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+            
+           
+           try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                
+                    String cust = "";
+                    String ref = "";
+                    String rmks = "";
+                    String acct = "";
+                    String cc = "";
+                    String terms = "";
+                    String site = "";
+                    String taxcode = "";
+                    String curr = "";
+                    String basecurr = "";
+                    String bank = "";
+                    
+                    Date duedate = new Date();
+                            
+                    double amt = 0.00;
+                    double baseamt = 0.00;
+                    double taxamt = 0.00;
+                    double basetaxamt = 0.00;
+                    
+                    double matltax = 0.00;
+                   
+                   
+                    res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
+                    while (res.next()) {
+                    amt += (res.getInt("shd_qty") * res.getDouble("shd_netprice"));
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getInt("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    }
+                    res.close();
+                    
+
+                    // lets retrieve any summary charges from orders associated with this shipment.
+                    res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" + 
+                            " and shs_type = 'charge' " +               
+                            ";");
+                    while (res.next()) {
+                    amt += res.getDouble("shs_amt");
+                    }
+                    res.close();
+                    
+                   
+                    
+                    
+                    res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                    while (res.next()) {
+                     cust = res.getString("sh_cust");
+                     ref = res.getString("sh_ref");
+                     rmks = res.getString("sh_rmks");
+                     acct = res.getString("sh_ar_acct");
+                     cc = res.getString("sh_ar_cc");
+                     terms = res.getString("sh_cust_terms");
+                     taxcode = res.getString("sh_taxcode");
+                     site = res.getString("sh_site");
+                     curr = res.getString("sh_curr");
+                    }
+                    res.close();
+                    
+                   
+                    
+                    
+                    
+                    
+                    // line matl tax versus order level tax....material Tax will be at line level..
+                    //..summary tax will ONLY be at summary level...it will not be baked into line level
+                    // ...summary level tax cannot be reported at line level
+                    taxamt += OVData.getTaxAmtApplicableByShipper(shipper, amt);  
+                  
+                    
+                    
+                    
+                    duedate = getDueDateFromTerms(effdate, terms);
+                    if (duedate == null) {
+                    System.out.println("Terms Due Date is null for shipper " + shipper);
+                        myerror = true;
+                    }
+                    
+                    bank = OVData.getBankCodeOfCust(cust);
+                    if (bank.isEmpty()) {
+                        bank = OVData.getDefaultARBank();
+                    }
+                    
+                    
+                    // let's handle the currency exchange...if any
+                    basecurr = OVData.getDefaultCurrency();
+                    
+                    
+                    if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                        baseamt = amt;
+                        basetaxamt = taxamt;
+                    } else {
+                        baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
+                        basetaxamt = OVData.getExchangeBaseValue(basecurr, curr, taxamt);
+                    }
+                    
+                  
+                    
+                    if (type.equals("I")) {
+                         st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_duedate, ar_acct, ar_cc, "
+                        + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
+                        + " values ( " + "'" + cust + "'" + ","
+                        + "'" + shipper + "'" + ","
+                        + "'" + df.format(amt + taxamt) + "'" + ","
+                        + "'" + df.format(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + curr + "'" + ","   
+                        + "'" + basecurr + "'" + ","        
+                        + "'" + df.format(taxamt) + "'" + ","
+                        + "'" + df.format(basetaxamt) + "'" + ","        
+                        + "'" + df.format(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + "I" + "'" + ","
+                        + "'" + ref + "'" + ","
+                        + "'" + rmks + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(duedate) + "'" + ","
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + taxcode + "'" + ","
+                        + "'" + bank + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "o" + "'" 
+                        + ")"
+                        + ";");
+                    
+                  
+                    
+                    if (taxamt > 0) {
+                      ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
+                          for (String[] elements : taxelements) {
+                                  st.executeUpdate("insert into art_tax "
+                                + "(art_nbr, art_desc, art_type, art_amt, art_percent ) "
+                                + " values ( " + "'" + shipper + "'" + ","
+                                + "'" + elements[0] + "'" + ","
+                                + "'" + elements[2] + "'" + ","
+                                + "'" + (amt * ( Double.valueOf(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + elements[1] + "'" 
+                                + ")"
+                                + ";");
+                          }
+                    }
+                    
+                  } // if type = "I"
+                    
+                    
+                   if (type.equals("P")) {
+                       String arnbr = (String.valueOf(OVData.getNextNbr("ar")));
+                         st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_duedate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
+                        + " values ( " + "'" + cust + "'" + ","
+                        + "'" + arnbr + "'" + ","
+                        + "'" + df.format(amt + taxamt) + "'" + ","
+                        + "'" + df.format(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + curr + "'" + ","   
+                        + "'" + basecurr + "'" + ","        
+                        + "'" + df.format(taxamt) + "'" + ","
+                        + "'" + df.format(basetaxamt) + "'" + ","        
+                        + "'" + df.format(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + "P" + "'" + ","
+                        + "'" + "cash" + "'" + ","
+                        + "'" + rmks + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","        
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + taxcode + "'" + ","
+                        + "'" + bank + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "c" + "'" 
+                        + ")"
+                        + ";");
+                         
+                      st.executeUpdate("insert into ard_mstr "
+                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr ) "
+                            + " values ( " + "'" + arnbr + "'" + ","
+                                + "'" + cust + "'" + ","
+                            + "'" + shipper + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + dfdate.format(effdate) + "'" + ","
+                            + "'" + df.format(amt) + "'"  + ","
+                            + "'" + df.format(taxamt) + "'"  + ","
+                            + "'" + df.format(baseamt) + "'"  + ","                
+                            + "'" + df.format(basetaxamt) + "'" + "," 
+                            + "'" + curr + "'"  + ","
+                            + "'" + basecurr + "'" 
+                            + ")"
+                            + ";");    
+                      
+                      glEntryFromARPayment(arnbr,effdate);
+                     
+                  } // if type = "P"  
+                    
+         
+            } catch (SQLException s) {
+                myerror = true;
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            myerror = true;
+            MainFrame.bslog(e);
+        }
+           return m;
+       }
+      
+       
        public static boolean AREntry(String shipper, Date effdate) {
             boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
             DecimalFormat df = new DecimalFormat("#0.00");   
@@ -20234,7 +20466,8 @@ MainFrame.bslog(e);
             MainFrame.bslog(e);
         }
       }  
-        
+       
+      
       public static boolean CreateSalesOrderHdr(String[] control, String nbr, String billto, String shipto, String po, String duedate, String orddate, String remarks, String shipvia ) {
           boolean isError = false; 
           
