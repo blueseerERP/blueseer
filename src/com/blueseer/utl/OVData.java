@@ -12999,7 +12999,7 @@ public class OVData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_check"));
                     type.add(thistype);
-                    desc.add("Expensed:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));         
+                    desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));         
                
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     
@@ -14344,7 +14344,7 @@ public class OVData {
          }
         
         
-            public static boolean glEntryFromCheckRun(int batchid, Date effdate, String ctype) {
+        public static boolean glEntryFromCheckRun(int batchid, Date effdate, String ctype) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             Class.forName(driver).newInstance();
@@ -14390,6 +14390,7 @@ public class OVData {
                         thisdesc = "Check Run";
                     }
                     
+                    
                        res = st.executeQuery("select ap_check, ap_ref, ap_site, ap_acct, bk_acct, ap_cc, ap_amt, ap_base_amt, ap_curr, ap_base_curr from ap_mstr inner join bk_mstr on bk_id = ap_bank " +
                                " where (ap_type = 'C' or ap_type = 'E') AND ap_batch = " + "'" + batchid + "'" +";");
                     while (res.next()) {
@@ -14405,6 +14406,7 @@ public class OVData {
                         ref.add(res.getString("ap_check"));
                         type.add(thistype);
                         desc.add(thisdesc);
+                        
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {

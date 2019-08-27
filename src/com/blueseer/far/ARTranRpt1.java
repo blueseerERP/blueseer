@@ -46,7 +46,9 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -256,10 +258,12 @@ public class ARTranRpt1 extends javax.swing.JPanel {
         labelamt.setText("0");
         
         modelsummary.setRowCount(0);
-         java.util.Date now = new java.util.Date();
+        java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        
-        dcfrom.setDate(now);
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.DAY_OF_YEAR, 1);
+        java.util.Date firstday = cal.getTime();
+        dcfrom.setDate(firstday);
         dcto.setDate(now);
         
         ddtype.setSelectedItem("I");

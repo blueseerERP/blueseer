@@ -1849,6 +1849,18 @@ CREATE TABLE "pay_profdet" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "conv_mstr" (
+  "conv_id" INTEGER PRIMARY KEY,
+  "conv_notes" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "conv_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "conv_fromcode" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "conv_tocode" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "conv_fromamt" decimal(14,5) NOT NULL DEFAULT '0',
+  "conv_toamt" decimal(14,5) NOT NULL DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "task_mstr" (
   "task_id" int(8) NOT NULL,
   "task_desc" varchar(50) COLLATE NOCASE DEFAULT '',

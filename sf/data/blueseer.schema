@@ -1859,3 +1859,12 @@ CREATE TABLE `pay_profdet` (
   `paypd_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `paypd_userid` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `conv_mstr` (
+  `conv_id` int PRIMARY KEY AUTO_INCREMENT,
+  `conv_notes` varchar(50) NOT NULL DEFAULT '',
+  `conv_type` varchar(20) NOT NULL DEFAULT '',
+  `conv_fromcode` varchar(20) NOT NULL DEFAULT '',
+  `conv_tocode` varchar(20) NOT NULL DEFAULT '',
+  `conv_fromamt` decimal(14,5) NOT NULL DEFAULT '0',
+  `conv_toamt` decimal(14,5) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
