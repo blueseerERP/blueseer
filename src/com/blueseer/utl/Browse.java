@@ -302,6 +302,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("curmaint")) {
                 tablereport.setModel(DTData.getCurrencyBrowseUtil(tbtext.getText(), state, searchfield));  
                 }
+                if (callingpanel.equals("currencyconvmaint")) {
+                tablereport.setModel(DTData.getCurrencyConvBrowseUtil(tbtext.getText(), state, searchfield));  
+                }
                 if (callingpanel.equals("prodcodemaint")) {
                 tablereport.setModel(DTData.getProdCodeBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -454,6 +457,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("CurrencyMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("CurrencyMaint", true, arg);
+            }
+            if (callingpanel.equals("currencyconvmaint")) {
+              if (! checkperms("CurrencyConvMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("CurrencyConvMaint", true, arg);
             }
              if (callingpanel.equals("domaint")) {
               if (! checkperms("DOMaint")) { return; }

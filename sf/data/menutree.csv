@@ -84,9 +84,10 @@ LedgerSetupMenu,CalendarBrowse,6,JMenuItem,Ledger Calendar Browse,,1,,1,1
 LedgerSetupMenu,BankMaint,7,JMenuItem,Bank Maintenance,,,,1,1
 LedgerSetupMenu,BankBrowse,8,JMenuItem,Bank Browse,,1,,1,1
 LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Currency Maintenance,,,,1,1
-LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Exchange Rate Maintenance,,,,1,1
-LedgerSetupMenu,GLControl,11,JMenuItem,GL Control,,,,1,1
-LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Income Statement Definition,,,,1,1
+LedgerSetupMenu,CurrencyConvMaint,10,JMenuItem,Currency Conversion Maintenance,,,,1,1
+LedgerSetupMenu,ExchangeMaint,11,JMenuItem,Exchange Rate Maintenance,,,,1,1
+LedgerSetupMenu,GLControl,12,JMenuItem,GL Control,,,,1,1
+LedgerSetupMenu,GLIncStmtDef,13,JMenuItem,Income Statement Definition,,,,1,1
 Finance,LedgerReportsMenu,2,JMenu,Ledger Reports,,,,1,1
 LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Account Balance Report,,,,1,1
 LedgerReportsMenu,GLAcctBalSummaryByYear,2,JMenuItem,Account Activity (Year),,,,1,1
@@ -109,7 +110,7 @@ ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
 ARMenu,ARControl,6,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
 Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
-Finance,PayRollMenu,7,JMenu,Payroll Menu,,,,1,1
+Finance,PayRollMenu,8,JMenu,Payroll Menu,,,,1,1
 PayRollMenu,PayRollMaint,1,JMenuItem,Payroll Maintenance,,,,1,1
 PayRollMenu,PayRollBrowse,2,JMenuItem,PayRoll Browse,,1,,1,1
 PayRollMenu,PayProfileMaint,3,JMenuItem,Pay Profile Maintenance,,,,1,1
