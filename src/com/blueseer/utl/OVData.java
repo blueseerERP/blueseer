@@ -6943,7 +6943,7 @@ public class OVData {
     }
           
            public static Double getExchangeBaseValue(String base, String foreign, Double invalue) {
-           Double outvalue = 0.00;
+           Double outvalue = invalue;
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);

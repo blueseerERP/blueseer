@@ -52,7 +52,7 @@ LocationBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,locb
 LocationMaint,,com.blueseer.inv.LocationMaintPanel,JMenuItem,locm
 UOMMaint,,com.blueseer.inv.UOMMaint,JMenuItem,uomm
 CurrencyMaint,,com.blueseer.fgl.CurrencyMaint,JMenuItem,curm
-CurrencyConvMaint,,com.blueseer.fgl.CurrencyConvMaint,JMenuItem,curc
+UOMConvMaint,,com.blueseer.inv.UOMConvMaint,JMenuItem,uomc
 ExchangeMaint,,com.blueseer.fgl.ExchangeMaint,JMenuItem,excm
 OrderControl,,com.blueseer.ord.OrderControl,JMenuItem,ordc
 POControl,,com.blueseer.pur.POControl,JMenuItem,purc

@@ -23,8 +23,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package com.blueseer.fgl;
+package com.blueseer.inv;
 
+import com.blueseer.fgl.*;
 import com.blueseer.adm.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
@@ -48,7 +49,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CurrencyConvMaint extends javax.swing.JPanel    {
+public class UOMConvMaint extends javax.swing.JPanel    {
 
      // global variable declarations
                 boolean isLoad = false;
@@ -57,7 +58,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
         
      
    // NOTE:  This is a two key data table
-    public CurrencyConvMaint() {
+    public UOMConvMaint() {
         initComponents();
     }
 
@@ -273,7 +274,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
 
                     res = st.executeQuery("SELECT conv_fromamt FROM  conv_mstr where conv_fromcode = " + "'" + x[0] + "'" + 
                             " AND conv_tocode = " + "'" + x[1] + "'" + 
-                            " AND conv_type = 'currency' ;");
+                            " AND conv_type = 'uom' ;");
                     while (res.next()) {
                         i++;
                     }
@@ -282,7 +283,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
                             + "(conv_notes, conv_type, conv_fromcode, conv_tocode, conv_fromamt, conv_toamt ) "
                             + " values ( " 
                             + "'" + tanotes.getText().replace("'", "''") + "'" + ","  
-                            + "'" + "currency" + "'" + ","        
+                            + "'" + "uom" + "'" + ","        
                             + "'" + x[0] + "'" + ","
                             + "'" + x[1] + "'" + ","
                             + "'" + key1value.getText().toString() + "'" + ","
@@ -323,7 +324,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
                 
                 res = st.executeQuery("SELECT conv_fromamt FROM  conv_mstr where conv_fromcode = " + "'" + x[0] + "'" + 
                             " AND conv_tocode = " + "'" + x[1] + "'" + 
-                            " AND conv_type = 'currency' ;");
+                            " AND conv_type = 'uom' ;");
                     while (res.next()) {
                         i++;
                     }
@@ -340,7 +341,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
                             + " conv_notes = " + "'" + tanotes.getText().replace("'", "''") + "'"
                             + " where conv_tocode = " + "'" + x[1] + "'"
                             + " AND conv_fromcode = " + "'" + x[0] + "'"           
-                            + " AND conv_type = 'currency' "        
+                            + " AND conv_type = 'uom' "        
                             + ";");
                       m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
@@ -372,7 +373,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
               
                    int i = st.executeUpdate("delete from conv_mstr where conv_fromcode = " + "'" + x[1] + "'" 
                            + " and conv_tocode = " + "'" + x[0] + "'"
-                           + " and conv_type = 'currency' "
+                           + " and conv_type = 'uom' "
                            + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
@@ -470,7 +471,7 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Currency Conversion Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("UOM Conversion Maintenance"));
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -645,12 +646,12 @@ public class CurrencyConvMaint extends javax.swing.JPanel    {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowsekey1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowsekey1ActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"currencyconvmaint","conv_fromcode"});
+        reinitpanels("BrowseUtil", true, new String[]{"uomconvmaint","conv_fromcode"});
         
     }//GEN-LAST:event_btbrowsekey1ActionPerformed
 
     private void btbrowsekey2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowsekey2ActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"currencyconvmaint","conv_tocode"});
+        reinitpanels("BrowseUtil", true, new String[]{"uomconvmaint","conv_tocode"});
     }//GEN-LAST:event_btbrowsekey2ActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

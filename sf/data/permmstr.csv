@@ -241,7 +241,7 @@ admin;TaxMaint
 admin;TaxBrowse
 admin;UOMMaint
 admin;CurrencyMaint
-admin;CurrencyConvMaint
+admin;UOMConvMaint
 admin;ExchangeMaint
 admin;OrderControl
 admin;POControl

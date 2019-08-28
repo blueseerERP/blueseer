@@ -56,6 +56,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
    // global datatablemodel declarations    
                 
+      
                 
     public BankMaintPanel() {
         initComponents();
@@ -64,7 +65,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     
     // interface functions implemented
-  public void executeTask(String x, String[] y) { 
+    public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
@@ -443,11 +444,8 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
       return m;
     }
     
+    
    
-    
-    // custom functions
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

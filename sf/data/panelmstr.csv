@@ -64,7 +64,7 @@ com.blueseer.fgl.PayProfileMaint,,1
 com.blueseer.fgl.CashTran,,1
 com.blueseer.fgl.CashTranBrowse,,1
 com.blueseer.fgl.CurrencyMaint,,1
-com.blueseer.fgl.CurrencyConvMaint,,1
+com.blueseer.inv.UOMConvMaint,,1
 com.blueseer.fgl.DeptMaintPanel,,1
 com.blueseer.fgl.ExchangeMaint,,1
 com.blueseer.fgl.ExpenseMaint,,1
