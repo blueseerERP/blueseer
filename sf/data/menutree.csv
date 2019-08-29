@@ -64,8 +64,9 @@ Order,OrdLineBrowse,6,JMenuItem,Order Line Browse,,1,,1,1
 Order,SchedOrdBrowse,7,JMenuItem,Sched Order Browse,,1,,1,1
 Order,FileOrderLoad,8,JMenuItem,Order Load By CSV File,,,,1,1
 Order,OrderReports,9,JMenu,Reports,,,,1,1
-OrderReports,DiscreteOrderPerWeekUnits,1,JMenuItem,Order Units By Week (BarChart),,1,,1,1
-OrderReports,DiscreteOrderPerWeekDollars,2,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
+OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
 Shipping,ShipConfirm,4,JMenuItem,Shipper Confirm,,,,1,1
 Shipping,ShipUnconfirm,5,JMenuItem,Shipper UnConfirm,,,,1,1

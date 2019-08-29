@@ -81,6 +81,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -117,6 +118,7 @@ public class ChartView extends javax.swing.JPanel {
         ChartPanel.setVisible(false);
         CodePanel.setVisible(false);
         whichreport = rpt[0];
+        mainPanel.setBorder(BorderFactory.createTitledBorder(whichreport));
         
          int year = Calendar.getInstance().get(Calendar.YEAR);
                 Calendar cal = Calendar.getInstance();
@@ -855,6 +857,76 @@ public class ChartView extends javax.swing.JPanel {
             } 
      }  
         
+         public void pcOpenOrdersByCust() {
+         try {
+           
+               
+             
+             
+         cleanUpOldChartFile();
+            
+            
+          
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");            
+                res = st.executeQuery("select so_cust, sum( (sod_ord_qty - sod_shipped_qty) * sod_netprice) as 'sum' from so_mstr " +
+                        " inner join sod_det on sod_nbr = so_nbr " +
+                        " where so_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " AND so_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                        " group by so_cust order by sum desc limit 10  ;");
+             
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                String acct = "";
+                while (res.next()) {
+                    if (res.getString("so_cust") == null || res.getString("so_cust").isEmpty()) {
+                      acct = "Unassigned";
+                    } else {
+                      acct = res.getString("so_cust");   
+                    }
+                    Double amt = res.getDouble("sum");
+                   
+                  dataset.setValue(acct, amt);
+                }
+        JFreeChart chart = ChartFactory.createPieChart("Open Orders Per Customer For DueDate Range", dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+        plot.setLabelGenerator(gen);
+
+        try {
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
+        } catch (IOException e) {
+        System.err.println("Problem occurred creating chart.");
+        }
+        ImageIcon myicon = new ImageIcon(chartfilepath);
+        myicon.getImage().flush();   
+        this.chartlabel.setIcon(myicon);
+        ChartPanel.setVisible(true);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              } catch (SQLException s) {
+               MainFrame.bslog(s);
+                  bsmf.MainFrame.show("sql problem during chart creation");
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+      
     
      // sales
         public void piechart_salesbycust() {
@@ -2151,7 +2223,7 @@ public class ChartView extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
+        mainPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         dcFrom = new com.toedter.calendar.JDateChooser();
@@ -2171,6 +2243,8 @@ public class ChartView extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTextArea1);
 
         setBackground(new java.awt.Color(0, 102, 204));
+
+        mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Chart View"));
 
         jLabel2.setText("From Date");
 
@@ -2268,36 +2342,36 @@ public class ChartView extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(ChartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CodePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ChartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(CodePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        add(jPanel2);
+        add(mainPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btChartActionPerformed
@@ -2392,6 +2466,10 @@ public class ChartView extends javax.swing.JPanel {
             }
             tacodes.setText(str);
             CodePanel.setVisible(true);
+        } // if whichreport
+        
+        if (whichreport.equals("pcOpenOrdersByCust")) {
+            pcOpenOrdersByCust();
         } // if whichreport
         
         if (whichreport.equals("DiscreteOrderPerWeekDollars")) {
@@ -2610,10 +2688,10 @@ public class ChartView extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JTextArea tacodes;
     // End of variables declaration//GEN-END:variables
 }

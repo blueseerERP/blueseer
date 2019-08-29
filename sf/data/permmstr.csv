@@ -242,6 +242,7 @@ admin;TaxBrowse
 admin;UOMMaint
 admin;CurrencyMaint
 admin;UOMConvMaint
+admin;pcOpenOrdersByCust
 admin;ExchangeMaint
 admin;OrderControl
 admin;POControl
