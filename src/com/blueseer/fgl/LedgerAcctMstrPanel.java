@@ -335,7 +335,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                         st.executeUpdate("insert into ac_mstr "
                             + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
                             + "'" + ddtype.getSelectedItem().toString() + "'" + ","
                             + "'" + ddcur.getSelectedItem().toString() + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"        
@@ -370,7 +370,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                 Statement st = bsmf.MainFrame.con.createStatement();
 
                         st.executeUpdate("update ac_mstr set "
-                            + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                            + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
                             + " ac_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
                             + " ac_cur = " + "'" + ddcur.getSelectedItem().toString() + "'" + ","
                             + " ac_display = " + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"         

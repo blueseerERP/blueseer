@@ -1179,7 +1179,7 @@ public class CashTran extends javax.swing.JPanel {
                         st.executeUpdate("insert into ac_mstr "
                             + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
                             + " values ( " + "'" + String.valueOf(acctnbr) + "'" + ","
-                            + "'" + desc.replace("'", "") + "'" + ","
+                            + "'" + desc.replace("'", "").toUpperCase() + "'" + ","
                             + "'" + "E" + "'" + ","
                             + "'" + OVData.getDefaultCurrency() + "'" + ","
                             + "'" + '1' + "'"        
