@@ -702,7 +702,7 @@
                               </Group>
                               <Component id="tbcontactname" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="76" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel23" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel25" alignment="1" min="-2" max="-2" attributes="0"/>
