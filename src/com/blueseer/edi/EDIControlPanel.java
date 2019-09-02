@@ -250,25 +250,25 @@ public class EDIControlPanel extends javax.swing.JPanel {
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into edi_ctrl values (" + "'" + tboutdir.getText() + "'" + ","
-                            + "'" + tbindir.getText() + "'" + "," 
-                            + "'" + tboutscript.getText() + "'" + "," 
-                            + "'" + tbinarch.getText() + "'" + "," 
-                            + "'" + tboutarch.getText() + "'" + ","
-                            + "'" + tbbatch.getText() + "'" + "," 
-                            + "'" + tberrordir.getText() + "'" + ","         
+                    st.executeUpdate("insert into edi_ctrl values (" + "'" + tboutdir.getText().replace("\\","\\\\") + "'" + ","
+                            + "'" + tbindir.getText().replace("\\","\\\\") + "'" + "," 
+                            + "'" + tboutscript.getText().replace("\\","\\\\") + "'" + "," 
+                            + "'" + tbinarch.getText().replace("\\","\\\\") + "'" + "," 
+                            + "'" + tboutarch.getText().replace("\\","\\\\") + "'" + ","
+                            + "'" + tbbatch.getText().replace("\\","\\\\") + "'" + "," 
+                            + "'" + tberrordir.getText().replace("\\","\\\\") + "'" + ","         
                             + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + ","      
                             + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'"        
                             + ") ;");              
                           bsmf.MainFrame.show("Inserting Defaults");
                 } else {
                     st.executeUpdate("update edi_ctrl set " 
-                            + "edic_outdir = " + "'" + tboutdir.getText() + "'" + ","
-                            + "edic_indir = " + "'" + tbindir.getText() + "'" + "," 
-                            + "edic_inarch = " + "'" + tbinarch.getText() + "'" + "," 
-                            + "edic_outarch = " + "'" + tboutarch.getText() + "'" + "," 
-                            + "edic_batch = " + "'" + tbbatch.getText() + "'" + ","   
-                            + "edic_errordir = " + "'" + tberrordir.getText() + "'" + ","            
+                            + "edic_outdir = " + "'" + tboutdir.getText().replace("\\","\\\\") + "'" + ","
+                            + "edic_indir = " + "'" + tbindir.getText().replace("\\","\\\\") + "'" + "," 
+                            + "edic_inarch = " + "'" + tbinarch.getText().replace("\\","\\\\") + "'" + "," 
+                            + "edic_outarch = " + "'" + tboutarch.getText().replace("\\","\\\\") + "'" + "," 
+                            + "edic_batch = " + "'" + tbbatch.getText().replace("\\","\\\\") + "'" + ","   
+                            + "edic_errordir = " + "'" + tberrordir.getText().replace("\\","\\\\") + "'" + ","            
                             + "edic_delete = " + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","         
                             + "edic_archyesno = " + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + "," 
                             + "edic_outftp = " + "'" + tboutscript.getText() + "'" + ";");   
