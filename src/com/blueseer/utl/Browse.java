@@ -106,6 +106,8 @@ public class Browse extends javax.swing.JPanel {
             searchfield = arg[1];
         }
         if (arg != null && arg.length == 3) {
+                callingpanel = arg[0];
+                searchfield = arg[1];
                 tievar = arg[2];
         }
         
@@ -261,6 +263,9 @@ public class Browse extends javax.swing.JPanel {
                 else {
                     state = 0; // match
                 }
+                
+                
+                
                 if (callingpanel.equals("glmaint")) {
                 tablereport.setModel(DTData.getGLTranBrowseUtil(tbtext.getText(), state, searchfield));
                 }

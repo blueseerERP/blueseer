@@ -44,6 +44,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import com.blueseer.utl.IBlueSeer;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 /**
  *
@@ -134,13 +136,16 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
     }
    
-    public void setPanelComponentState(Object myobj, boolean b) {
+   public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
         if (myobj instanceof JPanel) {
             panel = (JPanel) myobj;
         } else if (myobj instanceof JTabbedPane) {
            tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
         } else {
             return;
         }
@@ -159,6 +164,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 if (component instanceof JTabbedPane) {
                     setPanelComponentState((JTabbedPane) component, b);
                 }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
                 
                 component.setEnabled(b);
             }
@@ -172,6 +180,19 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     }
                     if (component instanceof JPanel) {
                         setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
                     }
                     component.setEnabled(b);
                 }

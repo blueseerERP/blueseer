@@ -26,10 +26,13 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.ord.OrderMaintPanel;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +43,13 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 
 
@@ -48,28 +57,33 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CustMaintPanel extends javax.swing.JPanel {
+public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
+    // global variable declarations
+     boolean editmode = false;
+     boolean isLoad = false;
     
+    // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                "ID", "Type", "Name", "Phone", "Fax", "Email"
             });
-    /**
-     * Creates new form CustMaintPanel
-     */
+    
     public CustMaintPanel() {
         initComponents();
     }
 
-     class Task extends SwingWorker<String[], Void> {
-        /*
-         * Main task. Executed in background thread.
-         */
+    // interface functions implemented  
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
           String type = "";
+          String[] key = null;
           
-          public Task(String type) {
+          public Task(String type, String[] key) { 
               this.type = type;
+              this.key = key;
           } 
            
         @Override
@@ -81,14 +95,20 @@ public class CustMaintPanel extends javax.swing.JPanel {
             
              switch(this.type) {
                 case "add":
-                    message = addRecord();
+                    message = addRecord(key);
                     break;
-                case "edit":
-                    message = updateRecord();
+                case "update":
+                    message = updateRecord(key);
                     break;
                 case "delete":
-                    message = deleteRecord();    
+                    message = deleteRecord(key);    
                     break;
+                case "get":
+                    message = getRecord(key);    
+                    break;   
+                case "getShipTo":
+                    message = getShipTo(key);    
+                    break;        
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -96,61 +116,176 @@ public class CustMaintPanel extends javax.swing.JPanel {
             return message;
         }
  
-        /*
-         * Executed in event dispatch thread
-         */
-        public void done() {
+        
+       public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           }  else {
-             initvars(new String[]{tbcustcode.getText()});  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("getShipTo")) {
+           } else {
+             initvars(null);  
            }
            
             
             } catch (Exception e) {
-               MainFrame.bslog(e);
+                MainFrame.bslog(e);
             } 
            
         }
     }  
-     
-     public boolean validateInput(String action) {
-         boolean r = true;
-          if ( tbcustcode.getText().isEmpty()) {
-                  r = false;
-                  bsmf.MainFrame.show("Must provide valid CustCode");
-              }  
-              if (action.equals("add") && OVData.isValidCustomer(tbcustcode.getText())) {
-                  r = false;
-                  bsmf.MainFrame.show("CustCode already in use");
-                 
-              }  
-              
-              if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
-                  r = false;
-                  bsmf.MainFrame.show("Invalid Account Code");
-                  
-              }
-              
-              if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
-                  r = false;
-                  bsmf.MainFrame.show("Invalid CC / Dept Code");
-                  
-              }
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
+   public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
                 
-              if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
-              r = false;
-             bsmf.MainFrame.show("Invalid credit limit...must be integer");
-            
-             }
-              return r;
-     }
-     
-     public String[] addRecord() {
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+        isLoad = true;
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add("Main", mainPanel);
+        jTabbedPane1.add("ShipTo", shiptoPanel);
+        jTabbedPane1.add("Contact", contactPanel); 
+        
+        clearCust();
+        clearShipTo();
+        clearContacts();
+        
+        
+        contactmodel.setRowCount(0);
+        contacttable.setModel(contactmodel);
+        
+        isLoad = false;
+    }
+    
+    public void initvars(String[] arg) {
+       
+        // do this for shipto only and bail
+        if (arg != null && arg.length == 2) {
+            executeTask("getShipTo", arg);
+        } else {
+           setPanelComponentState(mainPanel, false); 
+           setPanelComponentState(shiptoPanel, false); 
+           setPanelComponentState(contactPanel, false); 
+           setPanelComponentState(this, false); 
+
+           setComponentDefaultValues();
+           btnew.setEnabled(true);
+           btcustcodebrowse.setEnabled(true);
+        
+       
+        
+          if (arg != null && arg.length == 1) {
+            executeTask("get", arg);
+          } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+          }
+        }
+        
+    }
+        
+    public void newAction(String x) {
+        setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public String[] addRecord(String[] x) {
      String[] message = new String[2];
      try {
 
@@ -172,7 +307,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         + "cm_disc_code, cm_tax_code, cm_salesperson, "
                         + "cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_remarks, cm_label, cm_ps_jasper, cm_iv_jasper, cm_phone, cm_email "
                         + " ) "
-                        + " values ( " + "'" + tbcustcode.getText() + "'" + ","
+                        + " values ( " + "'" + tbkey.getText() + "'" + ","
                         + "'" + tbname.getText().replace("'", "") + "'" + ","
                         + "'" + tbline1.getText().replace("'", "") + "'" + ","
                         + "'" + tbline2.getText().replace("'", "") + "'" + ","
@@ -212,7 +347,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         st.executeUpdate("insert into cmc_det "
                             + "(cmc_code, cmc_type, cmc_name, cmc_phone, cmc_fax, "
                             + "cmc_email ) "
-                            + " values ( " + "'" + tbcustcode.getText() + "'" + ","
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
                             + "'" + contacttable.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + contacttable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + "'" + contacttable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
@@ -223,7 +358,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
 
                     }
                     if (cbshipto.isSelected())        
-                    addShipTo(tbcustcode.getText());
+                    addShipTo(tbkey.getText(), tbkey.getText()); // cust and ship in cms_det  are the same in this situation
+                    
                      message = new String[]{"0", "Customer has been added"};   
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
@@ -239,8 +375,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
      return message;
      }
     
-     public String[] updateRecord() {
-        String[] message = new String[2];
+    public String[] updateRecord(String[] x) {
+        String[] m = new String[2];
            
            try {
              Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -281,28 +417,28 @@ public class CustMaintPanel extends javax.swing.JPanel {
                        " cm_phone = " + "'" + tbmainphone.getText().replace("'", "") + "'" + "," +
                        " cm_email = " + "'" + tbmainemail.getText().replace("'", "") + "'" +         
                        " where " + 
-                        " cm_code = " + "'" + tbcustcode.getText() + "'" +  ";");
+                        " cm_code = " + "'" + x[0] + "'" +  ";");
 
                               
-               message = new String[]{"0", "Customer has been updated"};   
+               m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
               
-               initvars(null);
-               
-            } catch (SQLException s) {
+             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 message = new String[]{"1", "Unable to update Customer"};   
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
             }
-              } catch (Exception e) {
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
             MainFrame.bslog(e);
-        }   
-           
-      
-        return message;
+        }
+     return m;
      }
      
-     public String[] deleteRecord() {
-        String[] message = new String[2];
-          
+    public String[] deleteRecord(String[] x) {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        
+        if (proceed) {
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -310,75 +446,149 @@ public class CustMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cup_mstr where cup_cust = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cms_det where cms_code = " + "'" + tbcustcode.getText() + "'" + ";");
-                   st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbcustcode.getText() + "'" + ";");
+                   int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from cup_mstr where cup_cust = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from cms_det where cms_code = " + "'" + tbkey.getText() + "'" + ";");
+                   st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
-                        message = new String[]{"0", "Deleted code: " + tbcustcode.getText() };
-                    initvars(null);
+                      m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                    message = new String[]{"1", "Unable to delete code: " + tbcustcode.getText() };
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+                 } catch (SQLException s) {
+                            MainFrame.bslog(s);
+                        m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
+                    }
+                    bsmf.MainFrame.con.close();
+                } catch (Exception e) {
+                    MainFrame.bslog(e);
+                }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled};  
         }
-        
-        return message;
+        return m;
      }
-     
-    public void addShipTo() {
+    
+    public String[] getRecord(String[] x) {
+        String[] m = new String[2];
+        contactmodel.setRowCount(0);
+        clearShipTo();
+        clearContacts();
+        int i = 0;
+        
         try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
+            
+            Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("insert into cms_det "
-                        + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, "
-                        + "cms_line3, cms_city, cms_state, cms_zip, "
-                        + "cms_country "
-                        + " ) "
-                        + " values ( " + "'" + tbcustcode.getText() + "'" + ","
-                        + "'" + tbshipcode.getText() + "'" + ","
-                        + "'" + tbshipname.getText().replace("'", "") + "'" + ","
-                        + "'" + tbshipline1.getText().replace("'", "") + "'" + ","
-                        + "'" + tbshipline2.getText().replace("'", "") + "'" + ","
-                        + "'" + tbshipline3.getText().replace("'", "") + "'" + ","
-                        + "'" + tbshipcity.getText() + "'" + ","
-                        + "'" + ddshipstate.getSelectedItem() + "'" + ","
-                        + "'" + tbshipzip.getText() + "'" + ","
-                        + "'" + ddshipcountry.getSelectedItem() + "'"                           
-                        + ")"
-                        + ";");
-        
-                    if (! cbshipto.isSelected())
-                    bsmf.MainFrame.show("Added Customer Shipto Record");
-                    
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
+              
+                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + x[0] + "'"  + ";");
+                while (res.next()) {
+                 i++;   
+                 tbkey.setForeground(Color.blue);
+                 tbkey.setEditable(false);
+                tbkey.setText(res.getString("cm_code"));
+                tbname.setText(res.getString("cm_name"));
+                tbline1.setText(res.getString("cm_line1"));
+                tbline2.setText(res.getString("cm_line2"));
+                tbline3.setText(res.getString("cm_line3"));
+                tbcity.setText(res.getString("cm_city"));
+                ddstate.setSelectedItem(res.getString("cm_state"));
+                ddcountry.setSelectedItem(res.getString("cm_country"));
+                if (res.getString("cm_country").equals("US")) {
+                    ddcountry.setSelectedItem("USA");
+                } 
+                if (res.getString("cm_country").equals("United States")) {
+                    ddcountry.setSelectedItem("USA");
+                } 
+                 if (res.getString("cm_country").equals("CA")) {
+                    ddcountry.setSelectedItem("Canada");
+                } 
+                tbzip.setText(res.getString("cm_zip"));
+                
+                tbdateadded.setText(res.getString("cm_dateadd"));
+                tbdatemod.setText(res.getString("cm_datemod"));
+                tbgroup.setText(res.getString("cm_group"));
+                tbmarket.setText(res.getString("cm_market"));
+                tbcreditlimit.setText(res.getString("cm_creditlimit"));
+                //if (res.getString("cm_onhold") != null) {
+                cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("cm_onhold")));
+               // }
+                ddcarrier.setSelectedItem(res.getString("cm_carrier"));
+                ddbank.setSelectedItem(res.getString("cm_bank"));
+                ddcurr.setSelectedItem(res.getString("cm_curr"));
+                ddlabel.setSelectedItem(res.getString("cm_label"));
+                tbinvformat.setText(res.getString("cm_iv_jasper"));
+                tbshpformat.setText(res.getString("cm_ps_jasper"));
+                ddfreightterms.setSelectedItem(res.getString("cm_freight_type"));
+                ddterms.setSelectedItem(res.getString("cm_terms"));
+                
+                tbpricecode.setText(res.getString("cm_price_code"));
+                tbdisccode.setText(res.getString("cm_disc_code"));
+                ddtax.setSelectedItem(res.getString("cm_tax_code"));
+                tbsalesrep.setText(res.getString("cm_salesperson"));
+                ddaccount.setSelectedItem(res.getString("cm_ar_acct"));
+                ddcc.setSelectedItem(res.getString("cm_ar_cc"));
+                tbremarks.setText(res.getString("cm_remarks"));
+                tbmainphone.setText(res.getString("cm_phone"));
+                tbmainemail.setText(res.getString("cm_email"));
+                
+                
+                                    
+                }
+                
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+            
+         } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Customer Shipto");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
         }
+     return m;
     }
+        
+    public boolean validateInput(String action) {
+         boolean r = true;
+          if ( tbkey.getText().isEmpty()) {
+                  r = false;
+                  bsmf.MainFrame.show("Must provide valid CustCode");
+              }  
+              if (action.equals("add") && OVData.isValidCustomer(tbkey.getText())) {
+                  r = false;
+                  bsmf.MainFrame.show("CustCode already in use");
+                 
+              }  
+              
+              if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+                  r = false;
+                  bsmf.MainFrame.show("Invalid Account Code");
+                  
+              }
+              
+              if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+                  r = false;
+                  bsmf.MainFrame.show("Invalid CC / Dept Code");
+                  
+              }
+                
+              if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
+              r = false;
+             bsmf.MainFrame.show("Invalid credit limit...must be integer");
+            
+             }
+              return r;
+     }
+     
     
-    public void addShipTo(String cust) {
+    
+    // additional functions 
+    public void addShipTo(String cust, String ship) {
         try {
 
            Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -400,7 +610,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         + "cms_country "
                         + " ) "
                         + " values ( " + "'" + cust + "'" + ","
-                        + "'" + cust + "'" + ","
+                        + "'" + ship + "'" + ","
                         + "'" + tbname.getText().replace("'", "") + "'" + ","
                         + "'" + tbline1.getText().replace("'", "") + "'" + ","
                         + "'" + tbline2.getText().replace("'", "") + "'" + ","
@@ -412,9 +622,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         + ")"
                         + ";");
         
-                    if (! cbshipto.isSelected())
-                    bsmf.MainFrame.show("Added Customer Shipto Record");
-                    
+                    if (jTabbedPane1.getSelectedIndex() == 1)
+                    bsmf.MainFrame.show("Added Customer Shipto Record");                  
                   
                     
                 } // if proceed
@@ -536,49 +745,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
         }
     }
     
-    public void initvars(String[] arg) {
-        
-        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", mainPanel);
-        jTabbedPane1.add("ShipTo", shiptoPanel);
-        jTabbedPane1.add("Contact", contactPanel);
-        
-        
-        clearCust();
-        clearShipTo();
-        disableCust();
-        disableShipTo();
-        disableContact();
-        
-         contactmodel.setRowCount(0);
-        contacttable.setModel(contactmodel);
-       
-     
-      if (arg != null && arg.length > 0) {
-            if (arg.length > 1) {
-              getbillto(arg[0]);
-              getshipto(arg[0], arg[1]);
-              jTabbedPane1.setSelectedIndex(1); 
-              enableShipTo();
-              btshipadd.setEnabled(false);
-              tbshipcode.setEnabled(false);
-            } else {
-              getbillto(arg[0]);  
-              disableShipTo();
-              btshipnew.setEnabled(true);
-              btshiptobrowse.setEnabled(true);
-            }
-        } else {
-              disableCust();
-              disableShipTo();
-              btnew.setEnabled(true);
-              btcustcodebrowse.setEnabled(true);
-          }
-       
-    }
-    
-    public boolean getbillto(String arg) {
-        boolean gotIt = false;
+    public String[] getShipTo(String[] x) {
+        String[] m = new String[2];
+        int i = 0;
         try {
             
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -587,95 +756,10 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
               
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + arg + "'"  + ";");
+                res = st.executeQuery("select * from cms_det where cms_code = " + "'" + x[0] + "'"  + 
+                        " AND cms_shipto = " + "'" + x[1] + "'" + ";");
                 while (res.next()) {
-                 gotIt = true;
-                 tbcustcode.setForeground(Color.blue);
-                 tbcustcode.setEditable(false);
-                tbcustcode.setText(res.getString("cm_code"));
-                tbname.setText(res.getString("cm_name"));
-                tbline1.setText(res.getString("cm_line1"));
-                tbline2.setText(res.getString("cm_line2"));
-                tbline3.setText(res.getString("cm_line3"));
-                tbcity.setText(res.getString("cm_city"));
-                ddstate.setSelectedItem(res.getString("cm_state"));
-                ddcountry.setSelectedItem(res.getString("cm_country"));
-                if (res.getString("cm_country").equals("US")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                if (res.getString("cm_country").equals("United States")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                 if (res.getString("cm_country").equals("CA")) {
-                    ddcountry.setSelectedItem("Canada");
-                } 
-                tbzip.setText(res.getString("cm_zip"));
-                
-                tbdateadded.setText(res.getString("cm_dateadd"));
-                tbdatemod.setText(res.getString("cm_datemod"));
-                tbgroup.setText(res.getString("cm_group"));
-                tbmarket.setText(res.getString("cm_market"));
-                tbcreditlimit.setText(res.getString("cm_creditlimit"));
-                //if (res.getString("cm_onhold") != null) {
-                cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("cm_onhold")));
-               // }
-                ddcarrier.setSelectedItem(res.getString("cm_carrier"));
-                ddbank.setSelectedItem(res.getString("cm_bank"));
-                ddcurr.setSelectedItem(res.getString("cm_curr"));
-                ddlabel.setSelectedItem(res.getString("cm_label"));
-                tbinvformat.setText(res.getString("cm_iv_jasper"));
-                tbshpformat.setText(res.getString("cm_ps_jasper"));
-                ddfreightterms.setSelectedItem(res.getString("cm_freight_type"));
-                ddterms.setSelectedItem(res.getString("cm_terms"));
-                
-                tbpricecode.setText(res.getString("cm_price_code"));
-                tbdisccode.setText(res.getString("cm_disc_code"));
-                ddtax.setSelectedItem(res.getString("cm_tax_code"));
-                tbsalesrep.setText(res.getString("cm_salesperson"));
-                ddaccount.setSelectedItem(res.getString("cm_ar_acct"));
-                ddcc.setSelectedItem(res.getString("cm_ar_cc"));
-                tbremarks.setText(res.getString("cm_remarks"));
-                tbmainphone.setText(res.getString("cm_phone"));
-                tbmainemail.setText(res.getString("cm_email"));
-                
-                
-                                    
-                }
-            
-                
-            if (gotIt) {
-                enableCust();
-                enableContact();
-                refreshContactTable(tbcustcode.getText());    
-                btedit.setEnabled(true);
-                btdelete.setEnabled(true);
-                btadd.setEnabled(false);
-            }    
-            
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem retrieving customer list");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       return gotIt; 
-    }
-    
-     public void getshipto(String cust, String ship) {
-        
-        try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-                res = st.executeQuery("select * from cms_det where cms_code = " + "'" + cust + "'"  + 
-                        " AND cms_shipto = " + "'" + ship + "'" + ";");
-                while (res.next()) {
+                    i++;
                 tbshipcode.setText(res.getString("cms_shipto"));
                 tbshipname.setText(res.getString("cms_name"));
                 tbshipline1.setText(res.getString("cms_line1"));
@@ -697,19 +781,38 @@ public class CustMaintPanel extends javax.swing.JPanel {
               
                 }
             btshipedit.setEnabled(true);
+            btshipnew.setEnabled(true);
+            btshipadd.setEnabled(false);
            
-            } catch (SQLException s) {
+           // set Action if Record found (i > 0)
+           if (i > 0) {
+            btshipedit.setEnabled(true);
+            btshipnew.setEnabled(true);
+            btshipadd.setEnabled(false);
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};;
+           } else {
+            btshipedit.setEnabled(false);
+            btshipnew.setEnabled(true);
+            btshipadd.setEnabled(false);   
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+           }
+                         
+           jTabbedPane1.setSelectedIndex(1);
+                    
+         } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem retrieving shipto list");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
         }
+     return m;
         
     }
     
-     public void refreshContactTable(String cust) {
+    public void refreshContactTable(String cust) {
       contactmodel.setRowCount(0);
        try {
             
@@ -734,9 +837,8 @@ public class CustMaintPanel extends javax.swing.JPanel {
         }
        
      }
-     
-     
-     public void clearShipTo() {
+      
+    public void clearShipTo() {
          tbshipname.setText("");
        tbshipline1.setText("");
        tbshipline2.setText("");
@@ -781,6 +883,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         if (ddtax.getItemCount() > 0)
         ddtax.setSelectedIndex(0);
         
+        cbshipto.setSelected(true);
        
         tbname.setText("");
         tbline1.setText("");
@@ -802,9 +905,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
         tbmainphone.setText("");
         tbmainemail.setText("");
         
-        tbcustcode.setText("");
-        tbcustcode.setEditable(true);
-        tbcustcode.setForeground(Color.black);
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
         
         /* cant add shipcode until billcode has been committed */
         btshipadd.setEnabled(false);
@@ -903,7 +1006,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         
     }
     
-    public void clearAllContacts() {
+    public void clearContacts() {
          tbcontactname.setText("");
         tbphone.setText("");
         tbfax.setText("");
@@ -912,171 +1015,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
          if (ddcontacttype.getItemCount() > 0)
         ddcontacttype.setSelectedIndex(0);
     }
-    
-    public void disableAll() {
-        disableCust();
-        disableShipTo();
-        disableContact();
-    }
-    
-     public void enableAll() {
-        enableCust();
-        enableShipTo();
-        enableContact();
-    }
-     
-    public void disableCust() {
-        // tbcustcode.setEnabled(false);
-        tbdateadded.setEnabled(false);
-        tbdatemod.setEnabled(false);
-        ddcountry.setEnabled(false);
-        ddstate.setEnabled(false);
-        ddterms.setEnabled(false);
-        ddfreightterms.setEnabled(false);
-        ddcarrier.setEnabled(false);
-        tbname.setEnabled(false);
-        tbline1.setEnabled(false);
-        tbline2.setEnabled(false);
-        tbline3.setEnabled(false);
-        tbcity.setEnabled(false);
-        tbzip.setEnabled(false);
-        ddtax.setEnabled(false);
-        tbpricecode.setEnabled(false);
-        tbmarket.setEnabled(false);
-        tbgroup.setEnabled(false);
-        tbdisccode.setEnabled(false);
-        tbcreditlimit.setEnabled(false);
-        tbmainphone.setEnabled(false);
-        tbmainemail.setEnabled(false);
-        
-        tbremarks.setEnabled(false);
-        ddaccount.setEnabled(false);
-        ddcc.setEnabled(false);
-        tbsalesrep.setEnabled(false);
-        ddbank.setEnabled(false);
-        ddlabel.setEnabled(false);
-        cbonhold.setEnabled(false);
-        tbshpformat.setEnabled(false);
-        tbinvformat.setEnabled(false);
-        ddcurr.setEnabled(false);
-       
-        cbshipto.setEnabled(false);
-        
-        btadd.setEnabled(false);
-        btedit.setEnabled(false);  
-        btdelete.setEnabled(false);
-        btcustcodebrowse.setEnabled(false);
-         btcustnamebrowse.setEnabled(true);
-       btcustzipbrowse.setEnabled(false);
-       
-       
-    }
-    
-    public void disableShipTo() {
-            tbshipname.setEnabled(false);
-       tbshipline1.setEnabled(false);
-       tbshipline2.setEnabled(false);
-       tbshipline3.setEnabled(false);
-       tbshipcity.setEnabled(false);
-       tbshipzip.setEnabled(false);
-        btshipadd.setEnabled(false);
-        btshipedit.setEnabled(false);
-        ddshipstate.setEnabled(false);
-        ddshipcountry.setEnabled(false);
-        tbshipcode.setEnabled(false);
-        btshiptobrowse.setEnabled(false);
-        btshipnew.setEnabled(false);
-        
-     
-    }
-    
-    public void enableContact() {
-        tbcontactname.setEnabled(true);
-        tbphone.setEnabled(true);
-        tbfax.setEnabled(true);
-        tbemail.setEnabled(true); 
-        ddcontacttype.setEnabled(true);
-        btaddcontact.setEnabled(true);
-        btdeletecontact.setEnabled(true);
-        bteditcontact.setEnabled(true);
-    }
-    
-    public void disableContact() {
-        tbcontactname.setEnabled(false);
-        ddcontacttype.setEnabled(false);
-        btaddcontact.setEnabled(false);
-        btdeletecontact.setEnabled(false);
-        tbphone.setEnabled(false);
-        tbfax.setEnabled(false);
-        tbemail.setEnabled(false);
-        bteditcontact.setEnabled(false);
-    }
-    
-    
-    public void enableCust() {
-        tbcustcode.setEnabled(true);
-        ddcountry.setEnabled(true);
-        ddstate.setEnabled(true);
-        ddterms.setEnabled(true);
-        ddfreightterms.setEnabled(true);
-        ddcarrier.setEnabled(true);
-        tbname.setEnabled(true);
-        tbline1.setEnabled(true);
-        tbline2.setEnabled(true);
-        tbline3.setEnabled(true);
-        tbcity.setEnabled(true);
-        tbzip.setEnabled(true);
-        ddtax.setEnabled(true);
-        tbpricecode.setEnabled(true);
-        tbmarket.setEnabled(true);
-        tbgroup.setEnabled(true);
-        tbdisccode.setEnabled(true);
-        tbcreditlimit.setEnabled(true);
-        tbmainphone.setEnabled(true);
-        tbmainemail.setEnabled(true);
-        
-        tbremarks.setEnabled(true);
-        ddaccount.setEnabled(true);
-        ddcc.setEnabled(true);
-        tbsalesrep.setEnabled(true);
-        
-        ddbank.setEnabled(true);
-        ddlabel.setEnabled(true);
-        cbonhold.setEnabled(true);
-        tbshpformat.setEnabled(true);
-        tbinvformat.setEnabled(true);
-        ddcurr.setEnabled(true);
-       
-       
-       
-       btadd.setEnabled(true);
-       btedit.setEnabled(true);
-       btdelete.setEnabled(true);
-       btcustnamebrowse.setEnabled(true);
-       btcustzipbrowse.setEnabled(true);
-       btcustcodebrowse.setEnabled(true);
-      
-       
-    }
-    
-  
-    public void enableShipTo() {
-       tbshipname.setEnabled(true);
-       tbshipline1.setEnabled(true);
-       tbshipline2.setEnabled(true);
-       tbshipline3.setEnabled(true);
-       tbshipcity.setEnabled(true);
-       tbshipzip.setEnabled(true);
-        btshipadd.setEnabled(true);
-       btshipedit.setEnabled(true);
-       ddshipstate.setEnabled(true);
-        ddshipcountry.setEnabled(true);
-        tbshipcode.setEnabled(true);
-       
-      
-        btshiptobrowse.setEnabled(true);
-        btshipnew.setEnabled(true);
-    }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1108,7 +1047,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         btcustcodebrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
-        tbcustcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbremarks = new javax.swing.JTextArea();
         jLabel29 = new javax.swing.JLabel();
@@ -1154,7 +1093,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
         jLabel43 = new javax.swing.JLabel();
         ddlabel = new javax.swing.JComboBox();
         btadd = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         cbshipto = new javax.swing.JCheckBox();
         ddaccount = new javax.swing.JComboBox<>();
         ddcc = new javax.swing.JComboBox<>();
@@ -1239,9 +1178,9 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        tbcustcode.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbcustcodeActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -1299,7 +1238,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(tbcustcode, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btcustcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1333,7 +1272,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                             .addComponent(btcustcodebrowse)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
-                                .addComponent(tbcustcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnew))
                         .addGap(12, 12, 12)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1432,10 +1371,10 @@ public class CustMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -1481,7 +1420,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                             .addComponent(ddcc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tbpricecode)
                             .addComponent(tbsalesrep)
-                            .addComponent(ddbank, 0, 133, Short.MAX_VALUE)
+                            .addComponent(ddbank, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tbdateadded, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1495,7 +1434,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbcreditlimit)
-                            .addComponent(ddterms, 0, 170, Short.MAX_VALUE)
+                            .addComponent(ddterms, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tbinvformat)
                             .addComponent(ddfreightterms, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tbdisccode)
@@ -1509,7 +1448,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd)))
                 .addGap(35, 35, 35))
@@ -1593,7 +1532,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
-                    .addComponent(btedit)
+                    .addComponent(btupdate)
                     .addComponent(cbshipto)
                     .addComponent(btdelete))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1900,45 +1839,41 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-           if (! validateInput("add")) {
-             return;
-         }
-        BlueSeerUtils.startTask(new String[]{"","Committing..."});
-        disableAll();
-        Task task = new Task("add");
-        task.execute();   
+         if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btaddcontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddcontactActionPerformed
-                         addContact(tbcustcode.getText());
-                         refreshContactTable(tbcustcode.getText());
+                         addContact(tbkey.getText());
+                         refreshContactTable(tbkey.getText());
     }//GEN-LAST:event_btaddcontactActionPerformed
 
     private void btdeletecontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletecontactActionPerformed
          int[] rows = contacttable.getSelectedRows();
         for (int i : rows) {
-           deleteContact(tbcustcode.getText(), contacttable.getValueAt(i, 0).toString());
+           deleteContact(tbkey.getText(), contacttable.getValueAt(i, 0).toString());
         }
-       refreshContactTable(tbcustcode.getText());
-       clearAllContacts();
+       refreshContactTable(tbkey.getText());
+       clearContacts();
     }//GEN-LAST:event_btdeletecontactActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-          if (!validateInput("edit")) {
-             return;
-         }
-        BlueSeerUtils.startTask(new String[]{"","Committing..."});
-        disableAll();
-        Task task = new Task("edit");
-        task.execute();      
-    }//GEN-LAST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+         if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btshipaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipaddActionPerformed
-       if (OVData.isValidCustShipTo(tbcustcode.getText(),tbshipcode.getText())) {
+       if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
                   bsmf.MainFrame.show("ShipCode already in use");
                   return;
               } 
-        addShipTo();
+        addShipTo(tbkey.getText(),tbshipcode.getText());
     }//GEN-LAST:event_btshipaddActionPerformed
 
     private void btshipeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipeditActionPerformed
@@ -1963,7 +1898,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
                        " cms_state = " + "'" + ddshipstate.getSelectedItem().toString() + "'" + "," +
                        " cms_zip = " + "'" + tbshipzip.getText() + "'" + "," +
                        " cms_country = " + "'" + ddshipcountry.getSelectedItem().toString() + "'" + 
-                       " where cms_code = " + "'" + tbcustcode.getText() + "'" +
+                       " where cms_code = " + "'" + tbkey.getText() + "'" +
                        " AND cms_shipto = " + "'" + tbshipcode.getText() + "'" +
                        ";");
                
@@ -1987,42 +1922,32 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btcustcodebrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        enableCust();
-        clearCust();
-        disableShipTo();
-        disableContact();
-        btedit.setEnabled(false);
-        btdelete.setEnabled(false);
-        btnew.setEnabled(false);
-        btcustcodebrowse.setEnabled(false);
-        btcustnamebrowse.setEnabled(false);
-       btcustzipbrowse.setEnabled(false);
-        cbshipto.setEnabled(true);
-        cbshipto.setSelected(true);
-       
-        
-         if (OVData.isAutoCust()) {
-        tbcustcode.setText(String.valueOf(OVData.getNextNbr("customer")));
-        tbcustcode.setEditable(false);
-        tbcustcode.setForeground(Color.blue);
+        if (OVData.isAutoCust()) {
+          newAction("customer");
         } else {
-              tbcustcode.requestFocus();
+           newAction("");
+           tbkey.requestFocus();
          }
+      
         
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btshiptobrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiptobrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"shiptomaint","cms_code",tbcustcode.getText()}); 
+        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"shiptomaint","cms_shipto",tbkey.getText()}); 
     }//GEN-LAST:event_btshiptobrowseActionPerformed
 
     private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
-       enableShipTo();
         clearShipTo();
          if (OVData.isAutoCust()) {
         tbshipcode.setText(String.valueOf(OVData.getNextNbr("shipto")));
         tbshipcode.setEnabled(false);
+              btshipadd.setEnabled(true);
+              btshipedit.setEnabled(false);
         } else {
               tbshipcode.requestFocus();
+              btshipadd.setEnabled(false);
+              btshipedit.setEnabled(false);
+              
          }
       
     }//GEN-LAST:event_btshipnewActionPerformed
@@ -2030,10 +1955,10 @@ public class CustMaintPanel extends javax.swing.JPanel {
     private void bteditcontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditcontactActionPerformed
         int[] rows = contacttable.getSelectedRows();
         for (int i : rows) {
-           editContact(tbcustcode.getText(), contacttable.getValueAt(i, 0).toString());
+           editContact(tbkey.getText(), contacttable.getValueAt(i, 0).toString());
         }
-       refreshContactTable(tbcustcode.getText());
-       clearAllContacts();
+       refreshContactTable(tbkey.getText());
+       clearContacts();
     }//GEN-LAST:event_bteditcontactActionPerformed
 
     private void contacttableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contacttableMouseClicked
@@ -2048,35 +1973,25 @@ public class CustMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_contacttableMouseClicked
 
     private void btcustnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustnamebrowseActionPerformed
-       bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_name"});
+       reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_name"});
     }//GEN-LAST:event_btcustnamebrowseActionPerformed
 
     private void btcustzipbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustzipbrowseActionPerformed
-       bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_zip"});
+       reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_zip"});
     }//GEN-LAST:event_btcustzipbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-          boolean proceed = false;
-          bsmf.MainFrame.show("This is not advised.  Deleting Customers with historical transactions may cause issues.");
-           proceed = bsmf.MainFrame.warn("Are you sure?");
-           if (proceed) {
-             BlueSeerUtils.startTask(new String[]{"","Committing..."});
-             disableAll();
-             Task task = new Task("delete");
-             task.execute();
-           }
+          if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});  
         
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void tbcustcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcustcodeActionPerformed
-        boolean gotIt = getbillto(tbcustcode.getText());
-        if (gotIt) {
-          tbcustcode.setEditable(false);
-          tbcustcode.setForeground(Color.blue);
-        } else {
-           tbcustcode.setForeground(Color.red); 
-        }
-    }//GEN-LAST:event_tbcustcodeActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -2086,13 +2001,13 @@ public class CustMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btcustzipbrowse;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeletecontact;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton bteditcontact;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btshipadd;
     private javax.swing.JButton btshipedit;
     private javax.swing.JButton btshipnew;
     private javax.swing.JButton btshiptobrowse;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbonhold;
     private javax.swing.JCheckBox cbshipto;
     private javax.swing.JPanel contactPanel;
@@ -2166,7 +2081,6 @@ public class CustMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbcontactname;
     private javax.swing.JTextField tbcreditlimit;
-    private javax.swing.JTextField tbcustcode;
     private javax.swing.JTextField tbdateadded;
     private javax.swing.JTextField tbdatemod;
     private javax.swing.JTextField tbdisccode;
@@ -2174,6 +2088,7 @@ public class CustMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbfax;
     private javax.swing.JTextField tbgroup;
     private javax.swing.JTextField tbinvformat;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbline2;
     private javax.swing.JTextField tbline3;

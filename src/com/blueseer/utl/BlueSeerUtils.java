@@ -66,7 +66,9 @@ public class BlueSeerUtils {
     public static  ImageIcon clickcheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/check.png"));
     public static  ImageIcon clicknocheck = new ImageIcon(BlueSeerUtils.class.getResource("/images/nocheck.png"));
     
-    public static String getRecordSuccess = "record acquired";
+    public static String addRecordInit = "add mode";
+    
+    public static String getRecordSuccess = "update mode";
     public static String addRecordSuccess = "record added successfully";
     public static String updateRecordSuccess = "record updated successfully";
     public static String deleteRecordSuccess = "record deleted successfully";

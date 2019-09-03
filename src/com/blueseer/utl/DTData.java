@@ -892,6 +892,7 @@ public class DTData {
                         " FROM  cm_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by cm_code ;");
                  }
+                 
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cm_code"),
                                    res.getString("cm_name"),
@@ -951,6 +952,7 @@ public class DTData {
                         " FROM  cms_det where cms_code = " + "'" + cust + "'" + " AND "+ myfield + " like " + "'%" + str + "%'" +
                         " order by cms_shipto ;");
                  }
+                
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cms_shipto"),
                                    res.getString("cms_code"),

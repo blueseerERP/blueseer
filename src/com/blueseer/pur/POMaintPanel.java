@@ -109,7 +109,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
   
       
     // interface functions implemented  
-     public void executeTask(String x, String[] y) { 
+    public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
@@ -1746,10 +1746,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_listpriceFocusGained
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-             executeTask("delete", new String[]{tbkey.getText()});
-        }
+       if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

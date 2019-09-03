@@ -93,7 +93,7 @@
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
-                                              <Component id="tbcustcode" min="-2" pref="97" max="-2" attributes="0"/>
+                                              <Component id="tbkey" min="-2" pref="97" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btcustcodebrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
@@ -138,7 +138,7 @@
                                   <Component id="btcustcodebrowse" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="tbcustcode" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="btnew" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -298,9 +298,9 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbcustcode">
+            <Component class="javax.swing.JTextField" name="tbkey">
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcustcodeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -392,7 +392,7 @@
                                   <Component id="ddcc" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbpricecode" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbsalesrep" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ddbank" alignment="0" pref="133" max="32767" attributes="0"/>
+                                  <Component id="ddbank" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbdateadded" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -408,7 +408,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="tbcreditlimit" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ddterms" alignment="0" pref="170" max="32767" attributes="0"/>
+                                  <Component id="ddterms" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbinvformat" alignment="0" max="32767" attributes="0"/>
                                   <Component id="ddfreightterms" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbdisccode" alignment="0" max="32767" attributes="0"/>
@@ -424,7 +424,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                              <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btadd" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -533,7 +533,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbshipto" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -704,12 +704,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btedit">
+            <Component class="javax.swing.JButton" name="btupdate">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edit"/>
+                <Property name="text" type="java.lang.String" value="Update"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbshipto">
