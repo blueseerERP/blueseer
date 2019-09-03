@@ -1098,6 +1098,8 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("vd_bank,s,30,mandatory,validated");
         list.add("vd_curr,s,3,mandatory,validated");
         list.add("vd_misc,s,50,optional,unvalidated");
+        list.add("vd_phone,s,15,optional,unvalidated");
+        list.add("vd_email,s,60,optional,unvalidated");
         return list;
     }
     
@@ -1228,6 +1230,8 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("cm_ps_jasper,s,100,optional,unvalidated");
         list.add("cm_iv_jasper,s,100,optional,unvalidated");
         list.add("cm_label,s,100,optional,unvalidated");
+        list.add("cm_phone,s,15,optional,unvalidated");
+        list.add("cm_email,s,60,optional,unvalidated");
         return list;
     }
     

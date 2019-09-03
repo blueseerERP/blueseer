@@ -3907,7 +3907,7 @@ public class OVData {
                     st.executeUpdate(" insert into vd_mstr " 
                       + "(vd_addr, vd_name, vd_line1, vd_line2, vd_line3, vd_city, vd_state, vd_zip, vd_country, vd_dateadd, vd_datemod, " 
                       +   " vd_usermod, vd_group, vd_market, vd_buyer, vd_terms, vd_shipvia, vd_price_code, vd_disc_code, vd_tax_code, " 
-                      +   " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc ) "
+                      +   " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc, vd_phone, vd_email ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -3935,7 +3935,9 @@ public class OVData {
                             "'" +  ld[20] + "'" + "," +
                             "'" +  ld[21] + "'" + "," +
                             "'" +  ld[22] + "'" + "," +        
-                            "'" +  ld[23] + "'" +                         
+                            "'" +  ld[23] + "'" + "," +
+                            "'" +  ld[24] + "'" + "," +        
+                            "'" +  ld[25] + "'" +        
                             " );"
                            );     
                    }
@@ -4065,7 +4067,7 @@ public class OVData {
                       + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, " 
                       +   " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, " 
                       +   " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, " 
-                      + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label ) "
+                      + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -4099,7 +4101,9 @@ public class OVData {
                             "'" +  ld[26] + "'" + "," +        
                             "'" +  ld[27] + "'" + "," +        
                             "'" +  ld[28] + "'" + "," +        
-                            "'" +  ld[29] + "'" +    
+                            "'" +  ld[29] + "'" + "," + 
+                            "'" +  ld[30] + "'" + "," +        
+                            "'" +  ld[31] + "'" +         
                                     " );"
                            );     
                     

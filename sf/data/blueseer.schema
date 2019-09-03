@@ -230,7 +230,10 @@ CREATE TABLE IF NOT EXISTS `cm_mstr` (
   `cm_ps_jasper` varchar(100) NOT NULL  DEFAULT '',
   `cm_iv_jasper` varchar(100) NOT NULL  DEFAULT '',
   `cm_aliascode` varchar(50) NOT NULL  DEFAULT '',
-  `cm_label` varchar(100) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `cm_label` varchar(100) NOT NULL  DEFAULT '',
+  `cm_phone` varchar(15) NOT NULL  DEFAULT '',
+  `cm_email` varchar(60) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `cmc_det` (
   `cmc_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `cmc_code` varchar(10)  NOT NULL DEFAULT '',
@@ -1628,7 +1631,10 @@ CREATE TABLE IF NOT EXISTS `vd_mstr` (
   `vd_freight_type` varchar(30)  DEFAULT '',
   `vd_bank` varchar(30)  DEFAULT '',
   `vd_curr` varchar(30)  DEFAULT '',
-  `vd_misc` varchar(50) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `vd_misc` varchar(50) NOT NULL DEFAULT '0',
+  `vd_phone` varchar(15)  DEFAULT '',
+  `vd_email` varchar(60)  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `vdc_det` (
   `vdc_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `vdc_code` varchar(10)  NOT NULL DEFAULT '',

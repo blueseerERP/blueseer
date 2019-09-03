@@ -261,7 +261,9 @@ CREATE TABLE "cm_mstr" (
   "cm_ps_jasper" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cm_iv_jasper" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cm_aliascode" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cm_label" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '');
+  "cm_label" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cm_phone" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cm_email" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2045,7 +2047,9 @@ CREATE TABLE "vd_mstr" (
   "vd_freight_type" varchar(30) COLLATE NOCASE DEFAULT '',
   "vd_bank" varchar(30) COLLATE NOCASE DEFAULT '',
   "vd_curr" varchar(3) COLLATE NOCASE DEFAULT '',
-  "vd_misc" varchar(50) NOT NULL DEFAULT '0');
+  "vd_misc" varchar(50) NOT NULL DEFAULT '0',
+  "vd_phone" varchar(15) NOT NULL DEFAULT '0',
+  "vd_email" varchar(60) NOT NULL DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

@@ -212,6 +212,8 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbmarket.setText("");
         tbdisccode.setText("");
         tbbuyer.setText("0");
+        tbmainphone.setText("");
+        tbmainemail.setText("");
         
         tbremarks.setText("");
        
@@ -425,6 +427,8 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 tbremarks.setText(res.getString("vd_remarks"));
                 ddbank.setSelectedItem(res.getString("vd_bank"));
                  ddcurr.setSelectedItem(res.getString("vd_curr"));
+                tbmainphone.setText(res.getString("vd_phone"));
+                tbmainemail.setText(res.getString("vd_email"));
                 
                 }
                // custom get contacts
@@ -470,7 +474,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         + "vd_group, vd_market, vd_buyer, "
                         + "vd_shipvia, vd_terms, vd_misc, vd_price_code, "
                         + "vd_disc_code, vd_tax_code,  "
-                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks "
+                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks, vd_phone, vd_email "
                         + " ) "
                         + " values ( " + "'" + tbkey.getText() + "'" + ","
                         + "'" + tbname.getText().replace("'", "") + "'" + ","
@@ -497,7 +501,9 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + ddcc.getSelectedItem().toString() + "'" + ","
                             + "'" + ddbank.getSelectedItem().toString() + "'" + ","
                             + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                            + "'" + tbremarks.getText().replace("'", "") + "'"                            
+                            + "'" + tbremarks.getText().replace("'", "") + "'"  + ","
+                            + "'" + tbmainphone.getText().replace("'", "") + "'" + ","
+                            + "'" + tbmainemail.getText().replace("'", "") + "'"        
                         + ")"
                         + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -529,19 +535,21 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
               
                st.executeUpdate("update vd_mstr set " + 
-                       " vd_name = " + "'" + tbname.getText() + "'" + "," +
-                       " vd_line1 = " + "'" + tbline1.getText() + "'" + "," +
-                       " vd_line2 = " + "'" + tbline2.getText() + "'" + "," +
-                       " vd_line3 = " + "'" + tbline3.getText() + "'" + "," +
-                       " vd_city = " + "'" + tbcity.getText() + "'" + "," +
+                       " vd_name = " + "'" + tbname.getText().replace("'","") + "'" + "," +
+                       " vd_line1 = " + "'" + tbline1.getText().replace("'","") + "'" + "," +
+                       " vd_line2 = " + "'" + tbline2.getText().replace("'","") + "'" + "," +
+                       " vd_line3 = " + "'" + tbline3.getText().replace("'","") + "'" + "," +
+                       " vd_city = " + "'" + tbcity.getText().replace("'","") + "'" + "," +
                        " vd_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
-                       " vd_zip = " + "'" + tbzip.getText() + "'" + "," +
+                       " vd_zip = " + "'" + tbzip.getText().replace("'","") + "'" + "," +
                        " vd_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
                        " vd_datemod = " + "'" + bsmf.MainFrame.dfdate.format(new java.util.Date()) + "'" + "," +
                        " vd_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
                        " vd_group = "  + "'" + tbgroup.getText() + "'" + "," +
+                       " vd_phone = "  + "'" + tbmainphone.getText().replace("'","") + "'" + "," +
+                       " vd_email = "  + "'" + tbmainemail.getText().replace("'","") + "'" + "," +        
                        " vd_market = " + "'" + tbmarket.getText() + "'" + "," +
-                       " vd_buyer = " + "'" + tbbuyer.getText() + "'" + "," +
+                       " vd_buyer = " + "'" + tbbuyer.getText().replace("'","") + "'" + "," +
                        " vd_shipvia = " + "'" + ddcarrier.getSelectedItem() + "'" + "," +
                        " vd_terms = " + "'" + ddterms.getSelectedItem() + "'" + "," +
                        " vd_misc = " + "'" + tbmisc.getText() + "'" + "," +
@@ -552,7 +560,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                        " vd_ap_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
                        " vd_bank = " + "'" + ddbank.getSelectedItem() + "'" + "," +
                        " vd_curr = " + "'" + ddcurr.getSelectedItem() + "'" + "," +        
-                       " vd_remarks = " + "'" + tbremarks.getText() + "'" +                      
+                       " vd_remarks = " + "'" + tbremarks.getText().replace("'","") + "'" +                      
                        " where " + 
                         " vd_addr = " + "'" + tbkey.getText() + "'" +  ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -786,6 +794,10 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btnew = new javax.swing.JButton();
         btvendnamebrowse = new javax.swing.JButton();
         btvendzipbrowse = new javax.swing.JButton();
+        tbmainphone = new javax.swing.JTextField();
+        tbmainemail = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         tbdatemod = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -901,6 +913,10 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel17.setText("Phone");
+
+        jLabel19.setText("Email");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -908,20 +924,21 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbline3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -940,7 +957,13 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btvendcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew)))
+                        .addComponent(btnew))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbmainphone)
+                            .addComponent(ddcountry, 0, 254, Short.MAX_VALUE)
+                            .addComponent(tbmainemail))))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -989,6 +1012,14 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbmainphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbmainemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1302,7 +1333,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbcontactname))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel23, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -1455,7 +1486,9 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
@@ -1498,6 +1531,8 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbline2;
     private javax.swing.JTextField tbline3;
+    private javax.swing.JTextField tbmainemail;
+    private javax.swing.JTextField tbmainphone;
     private javax.swing.JTextField tbmarket;
     private javax.swing.JTextField tbmisc;
     private javax.swing.JTextField tbname;
