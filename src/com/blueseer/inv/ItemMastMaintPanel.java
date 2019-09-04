@@ -30,8 +30,10 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.IBlueSeer;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
 import java.sql.DriverManager;
@@ -48,6 +50,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -57,28 +65,166 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author vaughnte
  */
-public class ItemMastMaintPanel extends javax.swing.JPanel {
+public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
+    // global variable declarations
+                boolean isLoad = false;
     
-    public boolean isLoad = false;
-    
-    /**
-     * Creates new form ItemMastMaintPanel
-     */
+   // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"type", "date", "tranID", "qty"});
     javax.swing.table.DefaultTableModel locmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Site", "Loc", "WH", "Qty", "Date"});
     javax.swing.table.DefaultTableModel routingmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Op", "Desc", "Mtl", "Lbr", "Bdn", "Ovh", "Svc", "Tot"});
+    
     public ItemMastMaintPanel() {
         initComponents();
         
     }
 
-    public void clearAll() {
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+       
+       jTabbedPane1.removeAll();
+       jTabbedPane1.add("Main", MainPanel);
+       jTabbedPane1.add("Cost/BOM", CostBOMPanel);
+       jTabbedPane1.add("Images", ImagePanel);
+       
+       DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
        jTree1.setModel(new DefaultTreeModel(root));
        transmodel.setNumRows(0);
        locmodel.setNumRows(0);
@@ -88,9 +234,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        imagelabel.setIcon(null);
        
        
-        partnumber.setText("");
-        partnumber.setEditable(true);
-        partnumber.setForeground(Color.black);
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
        revlevel.setText("");
        custrevlevel.setText("");
        tbminordqty.setText("");
@@ -133,9 +279,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        tbovhcost.setText("");
        tbmtlcost.setText("");
        
-       
-       isLoad = true;
-       ddprodcode.removeAllItems();
+        ddprodcode.removeAllItems();
        ddsite.removeAllItems();
        dduom.removeAllItems();
        ddtax.removeAllItems();
@@ -177,180 +321,414 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
        
         ddsite.setSelectedItem(OVData.getDefaultSite());
         ddcode.setSelectedIndex(0);
-        isLoad = false;
-       
-    }
-    public void enableAll() {
         
-        tbqtyoh.setEnabled(true);
-        ddstatus.setEnabled(true);
-        cbaltbom.setEnabled(true);
-        btcurrent.setEnabled(true);
-        tabletrans.setEnabled(true);
-       
-        tablelocqty.setEnabled(true);
-        
-        ddimage.setEnabled(true);
-        btaddimage.setEnabled(true);
-        btdeleteimage.setEnabled(true);
-        
-        comments.setEnabled(true);
-       tbdrawing.setEnabled(true);
-       tbcreatedate.setEnabled(true);
-       tbpurchprice.setEnabled(true);
-         partnumber.setEnabled(true);
-       revlevel.setEnabled(true);
-       custrevlevel.setEnabled(true);
-       tbminordqty.setEnabled(true);
-       tbleadtime.setEnabled(true);
-       tbsafestock.setEnabled(true);
-       tbnetwt.setEnabled(true);
-       tbshipwt.setEnabled(true);
-       tbdesc.setEnabled(true);
-     //  btprintlabel.setEnabled(true);
-       tbgroup.setEnabled(true);
-       tbroutingcode.setEnabled(true);
-       tbsellprice.setEnabled(true);
-       cbplan.setEnabled(true);
-       cbmrp.setEnabled(true);
-       cbschedule.setEnabled(true);
-       tblotsize.setEnabled(true);
-       tbroutingcode.setEnabled(true);
-      tbmtlstd.setEnabled(true);
-      tblbrstd.setEnabled(true);
-      tbbdnstd.setEnabled(true);
-      tbovhstd.setEnabled(true);
-      tboutstd.setEnabled(true);
-      tbtotcoststd.setEnabled(true);
-      tbmtlcur.setEnabled(true);
-      tblbrcur.setEnabled(true);
-      tbbdncur.setEnabled(true);
-      tbovhcur.setEnabled(true);
-      tboutcur.setEnabled(true);
-      tbtotcostcur.setEnabled(true);
-      tboutcost.setEnabled(true);
-       tbovhcost.setEnabled(true);
-       tbmtlcost.setEnabled(true);
-       btadd.setEnabled(true);
-       btedit.setEnabled(true);
-       btdelete.setEnabled(true);
-       btitembrowse.setEnabled(true);
-       btdescbrowse.setEnabled(true);
-       ddprodcode.setEnabled(true);
-       ddcode.setEnabled(true);
-       ddwh.setEnabled(true);
-        ddloc.setEnabled(true);
-       dduom.setEnabled(true);
-       ddtax.setEnabled(true);
-       ddtype.setEnabled(true);
-       ddsite.setEnabled(true);
-    }
-    public void disableAll() {
-       partnumber.setEnabled(false);
-       revlevel.setEnabled(false);
-       custrevlevel.setEnabled(false);
-       tbminordqty.setEnabled(false);
-       tbleadtime.setEnabled(false);
-       tbsafestock.setEnabled(false);
-       tbnetwt.setEnabled(false);
-       tbshipwt.setEnabled(false);
-       tbdesc.setEnabled(false);
-       tbgroup.setEnabled(false);
-       tbcreatedate.setEnabled(false);
-       tbroutingcode.setEnabled(false);
-       tbsellprice.setEnabled(false);
-       cbplan.setEnabled(false);
-       cbmrp.setEnabled(false);
-       cbschedule.setEnabled(false);
-       tblotsize.setEnabled(false);
-       tbroutingcode.setEnabled(false);
-      tbmtlstd.setEnabled(false);
-      tblbrstd.setEnabled(false);
-      btprintlabel.setEnabled(false);
-      tbbdnstd.setEnabled(false);
-      tbovhstd.setEnabled(false);
-      tboutstd.setEnabled(false);
-      tbtotcoststd.setEnabled(false);
-      tbmtlcur.setEnabled(false);
-      tblbrcur.setEnabled(false);
-      tbbdncur.setEnabled(false);
-      tbovhcur.setEnabled(false);
-      tboutcur.setEnabled(false);
-      tbtotcostcur.setEnabled(false);
-      tboutcost.setEnabled(false);
-       tbovhcost.setEnabled(false);
-       tbmtlcost.setEnabled(false);
-       comments.setEnabled(false);
-       tbdrawing.setEnabled(false);
-       tbpurchprice.setEnabled(false);
-       btadd.setEnabled(false);
-       btedit.setEnabled(false);
-       btdelete.setEnabled(false);
-       btitembrowse.setEnabled(false);
-       btdescbrowse.setEnabled(false);
-       ddprodcode.setEnabled(false);
-       ddcode.setEnabled(false);
-       ddwh.setEnabled(false);
-        ddloc.setEnabled(false);
-       dduom.setEnabled(false);
-       ddtax.setEnabled(false);
-       ddtype.setEnabled(false);
-       ddsite.setEnabled(false);  
-        tbqtyoh.setEnabled(false);
-        ddstatus.setEnabled(false);
-        cbaltbom.setEnabled(false);
-        btcurrent.setEnabled(false);
-        tabletrans.setEnabled(false);
-      
-         ddimage.setEnabled(false);
-        btaddimage.setEnabled(false);
-        btdeleteimage.setEnabled(false);
-        
-        
-        tablelocqty.setEnabled(false);
+       isLoad = false;
     }
     
-   public void initvars(String[] arg) {
-      
-        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", MainPanel);
-        jTabbedPane1.add("Cost/BOM", CostBOMPanel);
-        jTabbedPane1.add("Images", ImagePanel);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+                if (ddcode.getSelectedItem() == null || ddcode.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose an item code");
+                    ddcode.requestFocus();
+                    return b;
+                }
+                
+                if (ddprodcode.getSelectedItem() == null || ddprodcode.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a product code");
+                    ddprodcode.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
         
+        setPanelComponentState(this, false); 
+        setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btitembrowse.setEnabled(true);
         
-        
-       
-       
-          clearAll();
-          disableAll();
-          btitembrowse.setEnabled(true);
-          btdescbrowse.setEnabled(true);
-          btnew.setEnabled(true);
-          partnumber.setEnabled(true);
-         
         if (arg != null && arg.length > 0) {
-            boolean hasItem =  getitemmasterinfo(arg[0]);
-             if (hasItem) {
-              partnumber.setEditable(false);
-              partnumber.setForeground(Color.blue);
-             } 
-         }
-  
-        
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
         
    }
-    
-   
-      public boolean getitemmasterinfo(String myid) {
-            boolean hasItem = false;
+        
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                String status = "";
+                String uom = "";
+                String type = "";
+                String code = "";
+                String prodcode = "";
+                DecimalFormat df = new DecimalFormat("0.00000");
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+                    
+                    res = st.executeQuery("SELECT it_item FROM  item_mstr where it_item = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                
+                            if (dduom.getItemCount() > 0)
+                                uom = dduom.getSelectedItem().toString();
+
+                            if (ddcode.getItemCount() > 0)
+                                code = ddcode.getSelectedItem().toString();
+
+                            if (ddtype.getItemCount() > 0)
+                                type = ddtype.getSelectedItem().toString();
+
+                            if (ddstatus.getItemCount() > 0)
+                                status = ddstatus.getSelectedItem().toString();
+
+                            if (ddprodcode.getItemCount() > 0)
+                                prodcode = ddprodcode.getSelectedItem().toString();
+                            double lotsize = 0.00;
+                            if (! tblotsize.getText().isEmpty()) {
+                                lotsize = Double.valueOf(tblotsize.getText());
+                            }
+                            double sellprice = 0.00;
+                            if (! tbsellprice.getText().isEmpty()) {
+                                sellprice = Double.valueOf(tbsellprice.getText());
+                            }
+                            double purprice = 0.00;
+                            if (! tbpurchprice.getText().isEmpty()) {
+                                purprice = Double.valueOf(tbpurchprice.getText());
+                            }
+                              double mtlcost = 0.00;
+                            if (! tbmtlcost.getText().isEmpty()) {
+                                mtlcost = Double.valueOf(tbmtlcost.getText());
+                            }
+                             double ovhcost = 0.00;
+                            if (! tbovhcost.getText().isEmpty()) {
+                                ovhcost = Double.valueOf(tbovhcost.getText());
+                            }
+                             double outcost = 0.00;
+                            if (! tboutcost.getText().isEmpty()) {
+                                outcost = Double.valueOf(tboutcost.getText());
+                            }
+                            double netwgt = 0.00;
+                            if (! tbnetwt.getText().isEmpty()) {
+                                netwgt = Double.valueOf(tbnetwt.getText());
+                            }
+                            double shipwgt = 0.00;
+                            if (! tbshipwt.getText().isEmpty()) {
+                                shipwgt = Double.valueOf(tbshipwt.getText());
+                            }
+                            int leadtime = 0;
+                            if (! tbleadtime.getText().isEmpty()) {
+                                leadtime = Integer.valueOf(tbleadtime.getText());
+                            }
+                            int safestock = 0;
+                            if (! tbsafestock.getText().isEmpty()) {
+                                safestock = Integer.valueOf(tbsafestock.getText());
+                            }
+                            int minordqty = 0;
+                            if (! tbminordqty.getText().isEmpty()) {
+                                minordqty = Integer.valueOf(tbminordqty.getText());
+                            }
+                        st.executeUpdate("insert into item_mstr "
+                            + "(it_item, it_desc, it_lotsize, "
+                            + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
+                            + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
+                            + "it_status, it_uom, it_net_wt, it_ship_wt, "
+                            + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate ) "
+                            + " values ( " + "'" + tbkey.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + lotsize + "'" + ","
+                            + "'" + df.format(sellprice) + "'" + ","
+                            + "'" + df.format(purprice) + "'" + ","
+                            + "'" + df.format(ovhcost) + "'" + ","
+                            + "'" + df.format(outcost) + "'" + ","
+                            + "'" + df.format(mtlcost) + "'" + ","
+                            + "'" + code + "'" + ","
+                            + "'" + type + "'" + ","
+                            + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + prodcode + "'" + ","
+                            + "'" + tbdrawing.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddloc.getSelectedItem().toString() + "'" + ","        
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + comments.getText().toString().replace("'", "") + "'" + ","
+                            + "'" + status + "'" + ","
+                            + "'" + uom + "'" + ","
+                            + "'" + netwgt + "'" + ","
+                            + "'" + shipwgt + "'" + ","
+                            + "'" + leadtime + "'" + ","
+                            + "'" + safestock + "'" + ","
+                            + "'" + minordqty + "'" + ","    
+                            + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
+                            + "'" + tbroutingcode.getText().replace("'", "") + "'" + ","
+                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
+                            + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'"
+                            + ")"
+                            + ";"); 
+                        
+                        // now add item cost record for later use
+                        OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
+                        
+                        
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+   
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+      try {
+            boolean proceed = true;
+            DecimalFormat df = new DecimalFormat("0.00000");
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                   
+                    double lotsize = 0.00;
+                if (! tblotsize.getText().isEmpty()) {
+                    lotsize = Double.valueOf(tblotsize.getText());
+                }
+                double sellprice = 0.00;
+                if (! tbsellprice.getText().isEmpty()) {
+                    sellprice = Double.valueOf(tbsellprice.getText());
+                }
+                double purprice = 0.00;
+                if (! tbpurchprice.getText().isEmpty()) {
+                    purprice = Double.valueOf(tbpurchprice.getText());
+                }
+                 double ovhcost = 0.00;
+                if (! tbovhcost.getText().isEmpty()) {
+                    ovhcost = Double.valueOf(tbovhcost.getText());
+                }
+                 double mtlcost = 0.00;
+                if (! tbmtlcost.getText().isEmpty()) {
+                    mtlcost = Double.valueOf(tbmtlcost.getText());
+                }
+                 double outcost = 0.00;
+                if (! tboutcost.getText().isEmpty()) {
+                    outcost = Double.valueOf(tboutcost.getText());
+                }
+                double netwgt = 0.00;
+                if (! tbnetwt.getText().isEmpty()) {
+                    netwgt = Double.valueOf(tbnetwt.getText());
+                }
+                double shipwgt = 0.00;
+                if (! tbshipwt.getText().isEmpty()) {
+                    shipwgt = Double.valueOf(tbshipwt.getText());
+                }
+                int leadtime = 0;
+                if (! tbleadtime.getText().isEmpty()) {
+                    leadtime = Integer.valueOf(tbleadtime.getText());
+                }
+                int safestock = 0;
+                if (! tbsafestock.getText().isEmpty()) {
+                    safestock = Integer.valueOf(tbsafestock.getText());
+                }
+                int minordqty = 0;
+                if (! tbminordqty.getText().isEmpty()) {
+                    minordqty = Integer.valueOf(tbminordqty.getText());
+                }
+                
+                st.executeUpdate("update item_mstr "
+                        + " set it_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                        + "it_lotsize = " + "'" + lotsize + "'" + ","
+                        + "it_sell_price = " + "'" + df.format(sellprice) + "'" + ","
+                        + "it_pur_price = " + "'" + df.format(purprice) + "'" + ","
+                        + "it_ovh_cost = " + "'" + df.format(ovhcost) + "'" + ","
+                        + "it_out_cost = " + "'" + df.format(outcost) + "'" + ","
+                        + "it_mtl_cost = " + "'" + df.format(mtlcost) + "'" + ","
+                        + "it_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
+                        + "it_code = " + "'" + ddcode.getSelectedItem().toString() + "'" + ","
+                        + "it_group = " + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
+                        + "it_prodline = " + "'" + ddprodcode.getSelectedItem().toString() + "'" + ","
+                        + "it_rev = " + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
+                        + "it_custrev = " + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
+                        + "it_net_wt = " + "'" + netwgt + "'" + ","
+                        + "it_ship_wt = " + "'" + shipwgt + "'" + ","
+                        + "it_loc = " + "'" + ddloc.getSelectedItem().toString() + "'" + ","
+                        + "it_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","        
+                        + "it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "it_wf = " + "'" + tbroutingcode.getText().toString() + "'" + ","  
+                        + "it_leadtime = " + "'" + leadtime + "'" + ","
+                        + "it_safestock = " + "'" + safestock + "'" + ","
+                        + "it_minordqty = " + "'" + minordqty + "'" + ","
+                        + "it_mrp = " + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
+                        + "it_plan = " + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
+                        + "it_sched = " + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
+                        + "it_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
+                        + "it_comments = " + "'" + comments.getText().toString().replace("'", "") + "'" + ","
+                        + "it_uom = " + "'" + dduom.getSelectedItem().toString() + "'" + ","
+                        + "it_taxcode = " + "'" + ddtax.getSelectedItem().toString() + "'"        
+                        + " where it_item = " + "'" + tbkey.getText().toString() + "'"
+                        + ";");
+                
+                    
+                    
+                    
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+    }
+    
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from item_mstr where it_item = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from item_cost where itc_item = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from item_image where iti_item = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from in_mstr where in_part = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from pbm_mstr where ps_child = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from plan_mstr where plan_part = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from pland_mstr where pland_part = " + "'" + x[0] + "'" + ";");
+                   st.executeUpdate("delete from mrp_mstr where mrp_part = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+    
+    public String[] getRecord(String[] x) {
+        String[] m = new String[2];
+       
+        try {
+
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                double mtl = 0.00;
+                 double mtl = 0.00;
                 double lbr = 0.00;
                 double bdn = 0.00;
                 double ovh = 0.00;
@@ -361,7 +739,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 
                     res = st.executeQuery("SELECT * from item_mstr left outer join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = it_site " +
                             " where it_item = " + "'" + 
-                            myid.toString() + "'" + ";");
+                            x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                         
@@ -371,7 +749,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         ovh = res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top");
                         out = res.getDouble("itc_out_low") + res.getDouble("itc_out_top");
                         tot = res.getDouble("itc_total");
-                        partnumber.setText(res.getString("it_item"));
+                        tbkey.setText(res.getString("it_item"));
                         tbdesc.setText(res.getString("it_desc"));
                       ddprodcode.setSelectedItem(res.getString("it_prodline"));
                       ddstatus.setSelectedItem(res.getString("it_status"));
@@ -414,36 +792,31 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                       
                   }
                     if (i > 0) {
-                    hasItem = true;
-                    enableAll();
-                    btadd.setEnabled(false);
-                    bind_tree_op(myid.toString());
+                    bind_tree_op(x[0]);                    
+                    getrecenttrans(x[0]);                    
+                    getlocqty(x[0]);                    
+                    getItemImages(x[0]);
+                    }
                     
-                  //  getroutingcost(myid.toString());
-                    
-                    getrecenttrans(myid.toString());
-                    
-                    getlocqty(myid.toString());
-                    
-                    getItemImages(myid.toString());
-                }
-                    
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
                 
-                
-            }
-            catch (SQLException s) {
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve item master record");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
-           } catch (Exception e) {
+        } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
-    return hasItem;
+      return m;
     }
+    
       
-      
-      public void getItemImages(String item) {
+    // custom functions  
+    public void getItemImages(String item) {
         isLoad = true;
         imagelabel.setIcon(null);
         ArrayList<String> images = new ArrayList();
@@ -463,9 +836,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         }
         
       }
-      
-      
-             public void getrecenttrans(String parentpart) {
+    
+    public void getrecenttrans(String parentpart) {
              
        Double opcost = 0.00;
        Double prevcost = 0.00;
@@ -515,7 +887,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
              
          }
              
-             public void getlocqty(String parentpart) {
+    public void getlocqty(String parentpart) {
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -564,7 +936,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
              
          }
       
-         public void getroutingcost(String parentpart) {
+    public void getroutingcost(String parentpart) {
              
               Double opcost = 0.00;
               Double totcost = 0.00;
@@ -689,11 +1061,11 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
              
          }
       
-         public void getcurrentcost(String parentpart) {
+    public void getcurrentcost(String parentpart) {
                 calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("0.00000"); 
         ArrayList<Double> costlist = new ArrayList<Double>();
-        costlist = cur.getTotalCost(partnumber.getText());
+        costlist = cur.getTotalCost(tbkey.getText());
      tbmtlcur.setText(df.format(costlist.get(0)));
      tblbrcur.setText(df.format(costlist.get(1)));
      tbbdncur.setText(df.format(costlist.get(2)));
@@ -702,7 +1074,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
      tbtotcostcur.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
          }
          
-      public void bind_tree_op(String parentpart) {
+    public void bind_tree_op(String parentpart) {
       //  jTree1.setModel(null);
        
       //  DefaultMutableTreeNode mynode = get_nodes(parentpart);
@@ -721,7 +1093,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         
     }
        
-      public DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
+    public DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
            DecimalFormat df = new DecimalFormat("0.00000");
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
         String[] newpart = mypart.split("___");
@@ -747,7 +1119,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         return mynode;
      }
       
-      public DefaultMutableTreeNode get_nodes_op(String mypart)  {
+    public DefaultMutableTreeNode get_nodes_op(String mypart)  {
         DecimalFormat df = new DecimalFormat("0.00000"); 
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         String[] newpart = mypart.split("___");
@@ -773,6 +1145,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         return mynode;
      }
     
+    
     /**
      * This method is called from within the bsmf.MainFrame.constructor to initialize the form.
      * WARNING: Do NOT modify this code. The bsmf.MainFrame.content of this method is always
@@ -787,7 +1160,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jPanel9 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        partnumber = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         ddstatus = new javax.swing.JComboBox();
         jScrollPane12 = new javax.swing.JScrollPane();
         comments = new javax.swing.JTextArea();
@@ -818,6 +1191,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         ddloc = new javax.swing.JComboBox<>();
         jLabel78 = new javax.swing.JLabel();
         btprintlabel = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         cbmrp = new javax.swing.JCheckBox();
         tbsafestock = new javax.swing.JTextField();
@@ -858,7 +1232,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         tbcreatedate = new javax.swing.JTextField();
         jLabel80 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -908,9 +1282,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Master Data"));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        partnumber.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                partnumberActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -989,6 +1363,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1019,9 +1400,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbgroup)
-                    .addComponent(tblotsize, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                    .addComponent(ddwh, 0, 110, Short.MAX_VALUE)
-                    .addComponent(ddloc, 0, 110, Short.MAX_VALUE)
+                    .addComponent(tblotsize)
+                    .addComponent(ddwh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddprodcode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1034,12 +1415,14 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(partnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btitembrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel63)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1049,7 +1432,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         .addComponent(btdescbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1065,11 +1448,12 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btitembrowse)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(partnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel22)
                         .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel63)
-                        .addComponent(btnew)))
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addGap(16, 16, 16)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1235,10 +1619,10 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -1321,7 +1705,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -1396,7 +1780,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                     .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel79)
                     .addComponent(btadd)
-                    .addComponent(btedit)
+                    .addComponent(btupdate)
                     .addComponent(btdelete))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1794,313 +2178,23 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ddcodeActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-            DecimalFormat df = new DecimalFormat("0.00000");
-            java.util.Date now = new java.util.Date();
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                String status = "";
-                String uom = "";
-                String type = "";
-                String code = "";
-                String prodcode = "";
-                
-                if (dduom.getItemCount() > 0)
-                    uom = dduom.getSelectedItem().toString();
-                
-                if (ddcode.getItemCount() > 0)
-                    code = ddcode.getSelectedItem().toString();
-                
-                if (ddtype.getItemCount() > 0)
-                    type = ddtype.getSelectedItem().toString();
-                
-                if (ddstatus.getItemCount() > 0)
-                    status = ddstatus.getSelectedItem().toString();
-                
-                if (ddprodcode.getItemCount() > 0)
-                    prodcode = ddprodcode.getSelectedItem().toString();
-
-                
-                if (prodcode.isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must select a product code");
-                    ddprodcode.requestFocus();
-                    return;
-                }
-                if (partnumber.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a part number");
-                    partnumber.requestFocus();
-                    return;
-                }
-                
-                if (! tbroutingcode.getText().isEmpty()) {
-                    if (! OVData.isValidRouting(tbroutingcode.getText())) {
-                         proceed = false;
-                         bsmf.MainFrame.show("Must enter a routing number or leave blank");
-                         tbroutingcode.requestFocus();
-                         return;
-                    }
-                }
-               
-                
-                double lotsize = 0.00;
-                if (! tblotsize.getText().isEmpty()) {
-                    lotsize = Double.valueOf(tblotsize.getText());
-                }
-                double sellprice = 0.00;
-                if (! tbsellprice.getText().isEmpty()) {
-                    sellprice = Double.valueOf(tbsellprice.getText());
-                }
-                double purprice = 0.00;
-                if (! tbpurchprice.getText().isEmpty()) {
-                    purprice = Double.valueOf(tbpurchprice.getText());
-                }
-                  double mtlcost = 0.00;
-                if (! tbmtlcost.getText().isEmpty()) {
-                    mtlcost = Double.valueOf(tbmtlcost.getText());
-                }
-                 double ovhcost = 0.00;
-                if (! tbovhcost.getText().isEmpty()) {
-                    ovhcost = Double.valueOf(tbovhcost.getText());
-                }
-                 double outcost = 0.00;
-                if (! tboutcost.getText().isEmpty()) {
-                    outcost = Double.valueOf(tboutcost.getText());
-                }
-                double netwgt = 0.00;
-                if (! tbnetwt.getText().isEmpty()) {
-                    netwgt = Double.valueOf(tbnetwt.getText());
-                }
-                double shipwgt = 0.00;
-                if (! tbshipwt.getText().isEmpty()) {
-                    shipwgt = Double.valueOf(tbshipwt.getText());
-                }
-                int leadtime = 0;
-                if (! tbleadtime.getText().isEmpty()) {
-                    leadtime = Integer.valueOf(tbleadtime.getText());
-                }
-                int safestock = 0;
-                if (! tbsafestock.getText().isEmpty()) {
-                    safestock = Integer.valueOf(tbsafestock.getText());
-                }
-                int minordqty = 0;
-                if (! tbminordqty.getText().isEmpty()) {
-                    minordqty = Integer.valueOf(tbminordqty.getText());
-                }
-               
-                
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT it_item FROM  item_mstr where it_item = " + "'" + partnumber.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into item_mstr "
-                            + "(it_item, it_desc, it_lotsize, "
-                            + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
-                            + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
-                            + "it_status, it_uom, it_net_wt, it_ship_wt, "
-                            + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate ) "
-                            + " values ( " + "'" + partnumber.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + lotsize + "'" + ","
-                            + "'" + df.format(sellprice) + "'" + ","
-                            + "'" + df.format(purprice) + "'" + ","
-                            + "'" + df.format(ovhcost) + "'" + ","
-                            + "'" + df.format(outcost) + "'" + ","
-                            + "'" + df.format(mtlcost) + "'" + ","
-                            + "'" + code + "'" + ","
-                            + "'" + type + "'" + ","
-                            + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + prodcode + "'" + ","
-                            + "'" + tbdrawing.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddloc.getSelectedItem().toString() + "'" + ","        
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + comments.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + status + "'" + ","
-                            + "'" + uom + "'" + ","
-                            + "'" + netwgt + "'" + ","
-                            + "'" + shipwgt + "'" + ","
-                            + "'" + leadtime + "'" + ","
-                            + "'" + safestock + "'" + ","
-                            + "'" + minordqty + "'" + ","    
-                            + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
-                            + "'" + tbroutingcode.getText().replace("'", "") + "'" + ","
-                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
-                            + "'" + dfdate.format(now) + "'"
-                            + ")"
-                            + ";"); 
-                        
-                        // now add item cost record for later use
-                        OVData.addItemCostRec(partnumber.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
-                        
-                        initvars(null);
-                        bsmf.MainFrame.show("Added Part Number");
-                    } else {
-                        bsmf.MainFrame.show("Part Number Already Exists");
-                    }
-
-                    //reinitapmvariables();
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add partnumber");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        try {
-
-            DecimalFormat df = new DecimalFormat("0.00000");
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                // ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                  /*
-                try {
-                    pricevar = Double.parseDouble(tbprice.getText());
-                } catch (NumberFormatException e) {
-                    bsmf.MainFrame.show("Price is non-numeric");
-                    proceed = false;
-                }
-                          */
-                  
-                  
-               
-                
-                double lotsize = 0.00;
-                if (! tblotsize.getText().isEmpty()) {
-                    lotsize = Double.valueOf(tblotsize.getText());
-                }
-                double sellprice = 0.00;
-                if (! tbsellprice.getText().isEmpty()) {
-                    sellprice = Double.valueOf(tbsellprice.getText());
-                }
-                double purprice = 0.00;
-                if (! tbpurchprice.getText().isEmpty()) {
-                    purprice = Double.valueOf(tbpurchprice.getText());
-                }
-                 double ovhcost = 0.00;
-                if (! tbovhcost.getText().isEmpty()) {
-                    ovhcost = Double.valueOf(tbovhcost.getText());
-                }
-                 double mtlcost = 0.00;
-                if (! tbmtlcost.getText().isEmpty()) {
-                    mtlcost = Double.valueOf(tbmtlcost.getText());
-                }
-                 double outcost = 0.00;
-                if (! tboutcost.getText().isEmpty()) {
-                    outcost = Double.valueOf(tboutcost.getText());
-                }
-                double netwgt = 0.00;
-                if (! tbnetwt.getText().isEmpty()) {
-                    netwgt = Double.valueOf(tbnetwt.getText());
-                }
-                double shipwgt = 0.00;
-                if (! tbshipwt.getText().isEmpty()) {
-                    shipwgt = Double.valueOf(tbshipwt.getText());
-                }
-                int leadtime = 0;
-                if (! tbleadtime.getText().isEmpty()) {
-                    leadtime = Integer.valueOf(tbleadtime.getText());
-                }
-                int safestock = 0;
-                if (! tbsafestock.getText().isEmpty()) {
-                    safestock = Integer.valueOf(tbsafestock.getText());
-                }
-                int minordqty = 0;
-                if (! tbminordqty.getText().isEmpty()) {
-                    minordqty = Integer.valueOf(tbminordqty.getText());
-                }
-                
-                
-                 if (! tbroutingcode.getText().isEmpty()) {
-                    if (! OVData.isValidRouting(tbroutingcode.getText())) {
-                         proceed = false;
-                         bsmf.MainFrame.show("Must enter a routing number or leave blank");
-                         tbroutingcode.requestFocus();
-                         return;
-                    }
-                }
-                
-                
-                if (proceed) {
-                    st.executeUpdate("update item_mstr "
-                        + " set it_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "it_lotsize = " + "'" + lotsize + "'" + ","
-                        + "it_sell_price = " + "'" + df.format(sellprice) + "'" + ","
-                        + "it_pur_price = " + "'" + df.format(purprice) + "'" + ","
-                        + "it_ovh_cost = " + "'" + df.format(ovhcost) + "'" + ","
-                        + "it_out_cost = " + "'" + df.format(outcost) + "'" + ","
-                        + "it_mtl_cost = " + "'" + df.format(mtlcost) + "'" + ","
-                        + "it_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                        + "it_code = " + "'" + ddcode.getSelectedItem().toString() + "'" + ","
-                        + "it_group = " + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
-                        + "it_prodline = " + "'" + ddprodcode.getSelectedItem().toString() + "'" + ","
-                        + "it_rev = " + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
-                        + "it_custrev = " + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
-                        + "it_net_wt = " + "'" + netwgt + "'" + ","
-                        + "it_ship_wt = " + "'" + shipwgt + "'" + ","
-                        + "it_loc = " + "'" + ddloc.getSelectedItem().toString() + "'" + ","
-                        + "it_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","        
-                        + "it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "it_wf = " + "'" + tbroutingcode.getText().toString() + "'" + ","  
-                        + "it_leadtime = " + "'" + leadtime + "'" + ","
-                        + "it_safestock = " + "'" + safestock + "'" + ","
-                        + "it_minordqty = " + "'" + minordqty + "'" + ","
-                        + "it_mrp = " + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
-                        + "it_plan = " + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
-                        + "it_sched = " + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
-                        + "it_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + "it_comments = " + "'" + comments.getText().toString().replace("'", "") + "'" + ","
-                        + "it_uom = " + "'" + dduom.getSelectedItem().toString() + "'" + ","
-                        + "it_taxcode = " + "'" + ddtax.getSelectedItem().toString() + "'"        
-                        + " where it_item = " + "'" + partnumber.getText().toString() + "'"
-                        + ";");
-                    bsmf.MainFrame.show("Updated Part Number");
-                    initvars(null);
-                } else {
-                    bsmf.MainFrame.show("Unable to Update");
-                }
-
-                //reinitapmvariables();
-                // btQualProbAdd.setEnabled(false);
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to update item");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btcurrentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcurrentActionPerformed
-       getcurrentcost(partnumber.getText());
+       getcurrentcost(tbkey.getText());
     }//GEN-LAST:event_btcurrentActionPerformed
 
     private void btitembrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btitembrowseActionPerformed
@@ -2116,17 +2210,12 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cbmrpActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-         clearAll();
-        enableAll();
-        btnew.setEnabled(false);
-        btedit.setEnabled(false);
-        btdelete.setEnabled(false);
-        btitembrowse.setEnabled(false);
-        btdescbrowse.setEnabled(false);
         if (OVData.isAutoItem()) {
-        partnumber.setText(String.valueOf(OVData.getNextNbr("item")));
-        partnumber.setEditable(false);
-        }
+          newAction("item");
+        } else {
+           newAction("");
+           tbkey.requestFocus();
+         }
     }//GEN-LAST:event_btnewActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
@@ -2178,9 +2267,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             file = fc.getSelectedFile();
             String SourceDir = file.getAbsolutePath();
             String suffix = FilenameUtils.getExtension(file.getName()); 
-            String newFileName = partnumber.getText() + "_" + dfdate.format(now) + "." + suffix;
+            String newFileName = tbkey.getText() + "_" + dfdate.format(now) + "." + suffix;
             // insert image filename into database
-            OVData.addItemImage(partnumber.getText(), newFileName);
+            OVData.addItemImage(tbkey.getText(), newFileName);
             
             // now lets copy the file over to the appropriate directory  
             file = new File(SourceDir);
@@ -2191,7 +2280,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                  java.nio.file.StandardCopyOption.COPY_ATTRIBUTES,
                  java.nio.file.LinkOption.NOFOLLOW_LINKS);
             
-            getItemImages(partnumber.getText());
+            getItemImages(tbkey.getText());
             
             }
             catch (Exception ex) {
@@ -2216,7 +2305,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from item_image where iti_item = " + "'" + partnumber.getText() + "'" 
+                   int i = st.executeUpdate("delete from item_image where iti_item = " + "'" + tbkey.getText() + "'" 
                            + " AND iti_file = " + "'" + ddimage.getSelectedItem().toString() + "'"
                            + " ;");
                     if (i > 0) {
@@ -2224,7 +2313,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                         java.nio.file.Files.deleteIfExists(new File(ImageDir + ddimage.getSelectedItem().toString()).toPath());
                     bsmf.MainFrame.show("deleted image file " + ddimage.getSelectedItem().toString());
                    
-                    getItemImages(partnumber.getText());
+                    getItemImages(tbkey.getText());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -2251,7 +2340,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
                 int defaultvalue = BlueSeerUtils.boolToInt(cbdefault.isSelected());
               
                    int i = st.executeUpdate("update item_image set iti_default = " + "'" + defaultvalue + "'" + 
-                           " where iti_item = " + "'" + partnumber.getText() + "'" 
+                           " where iti_item = " + "'" + tbkey.getText() + "'" 
                            + " AND iti_file = " + "'" + ddimage.getSelectedItem().toString() + "'"
                            + " ;");
                   
@@ -2267,49 +2356,16 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cbdefaultActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-             boolean proceed = bsmf.MainFrame.warn("This is not advised.  Deleting Items with historical transactions and BOM may cause issues.");
-           proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from item_mstr where it_item = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from item_cost where itc_item = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from item_image where iti_item = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from in_mstr where in_part = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from pbm_mstr where ps_child = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from plan_mstr where plan_part = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from pland_mstr where pland_part = " + "'" + partnumber.getText() + "'" + ";");
-                   st.executeUpdate("delete from mrp_mstr where mrp_part = " + "'" + partnumber.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted item " + partnumber.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Item Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+          if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void partnumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partnumberActionPerformed
-        boolean gotIt = getitemmasterinfo(partnumber.getText());
-        if (gotIt) {
-          partnumber.setEditable(false);
-          partnumber.setForeground(Color.blue);
-        } else {
-           partnumber.setForeground(Color.red); 
-        }
-    }//GEN-LAST:event_partnumberActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void tbsellpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusLost
             String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
@@ -2457,11 +2513,16 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private void btprintlabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintlabelActionPerformed
         String printer = OVData.getDefaultLabelPrinter();
         if (OVData.isValidPrinter(printer)) {
-            OVData.printLabelItem(partnumber.getText(), printer);
+            OVData.printLabelItem(tbkey.getText(), printer);
         } else {
             bsmf.MainFrame.show("no default label printer defined");
         }
     }//GEN-LAST:event_btprintlabelActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2470,14 +2531,15 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JPanel MainPanel;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddimage;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btcurrent;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteimage;
     private javax.swing.JButton btdescbrowse;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btitembrowse;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprintlabel;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbaltbom;
     private javax.swing.JCheckBox cbdefault;
     private javax.swing.JCheckBox cbmrp;
@@ -2552,7 +2614,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTree jTree1;
     private javax.swing.JLabel labelmessage;
-    private javax.swing.JTextField partnumber;
     private javax.swing.JTextField revlevel;
     private javax.swing.JTable tablelocqty;
     private javax.swing.JTable tabletrans;
@@ -2562,6 +2623,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdrawing;
     private javax.swing.JTextField tbgroup;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tblbrcur;
     private javax.swing.JTextField tblbrstd;
     private javax.swing.JTextField tbleadtime;

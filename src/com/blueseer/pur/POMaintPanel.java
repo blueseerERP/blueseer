@@ -336,7 +336,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void initvars(String[] arg) {
        
-       
+       BlueSeerUtils.messagereset();
        setPanelComponentState(panelMain, false); 
        setPanelComponentState(panelDetail, false); 
        setPanelComponentState(panelSchedule, false); 
@@ -352,6 +352,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
           
     }
@@ -359,6 +360,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void newAction(String x) {
         setPanelComponentState(this, true);
         setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
@@ -1000,6 +1002,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btdelete = new javax.swing.JButton();
         ddcurr = new javax.swing.JComboBox<>();
         lbvend = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
         panelSchedule = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablesched = new javax.swing.JTable();
@@ -1137,6 +1140,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1175,8 +1185,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(6, 6, 6)
-                                .addComponent(btnew)))
-                        .addGap(17, 17, 17)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)))
+                        .addGap(7, 7, 7)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel77, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel83, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1219,7 +1231,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(1, 1, 1)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnew)
-                            .addComponent(jLabel81)))
+                            .addComponent(jLabel81)
+                            .addComponent(btclear)))
                     .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btpovendbrowse))
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1753,10 +1766,15 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         executeTask("delete", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btnew;

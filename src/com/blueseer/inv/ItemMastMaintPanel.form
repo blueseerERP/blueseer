@@ -130,9 +130,9 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="tbgroup" max="32767" attributes="0"/>
-                                  <Component id="tblotsize" alignment="0" pref="110" max="32767" attributes="0"/>
-                                  <Component id="ddwh" pref="110" max="32767" attributes="0"/>
-                                  <Component id="ddloc" pref="110" max="32767" attributes="0"/>
+                                  <Component id="tblotsize" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="ddwh" max="32767" attributes="0"/>
+                                  <Component id="ddloc" max="32767" attributes="0"/>
                                   <Component id="ddprodcode" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -148,12 +148,14 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="partnumber" min="-2" pref="125" max="-2" attributes="0"/>
+                                      <Component id="tbkey" min="-2" pref="125" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btitembrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                       <Component id="jLabel63" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="ddstatus" min="-2" max="-2" attributes="0"/>
@@ -167,7 +169,7 @@
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="48" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane12" min="-2" pref="378" max="-2" attributes="0"/>
@@ -186,11 +188,12 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="btitembrowse" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="partnumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="ddstatus" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel63" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
@@ -247,9 +250,9 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JTextField" name="partnumber">
+                    <Component class="javax.swing.JTextField" name="tbkey">
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="partnumberActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="ddstatus">
@@ -451,6 +454,14 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintlabelActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JButton" name="btclear">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Clear"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel4">
@@ -542,7 +553,7 @@
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btadd" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -632,7 +643,7 @@
                                   <Component id="ddtax" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel79" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
@@ -831,12 +842,12 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btedit">
+                    <Component class="javax.swing.JButton" name="btupdate">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Edit"/>
+                        <Property name="text" type="java.lang.String" value="Update"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btdelete">

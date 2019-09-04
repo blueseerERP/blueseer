@@ -147,7 +147,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
     }
     
-   public void setPanelComponentState(Object myobj, boolean b) {
+    public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
@@ -229,7 +229,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void initvars(String[] arg) {
-       
+        
         // do this for shipto only and bail
         if (arg != null && arg.length == 2) {
             executeTask("getShipTo", arg);
@@ -242,7 +242,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            setComponentDefaultValues();
            btnew.setEnabled(true);
            btcustcodebrowse.setEnabled(true);
-        
+           tbkey.requestFocus();
        
         
           if (arg != null && arg.length == 1) {
@@ -1057,6 +1057,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbmainemail = new javax.swing.JTextField();
         jLabel44 = new javax.swing.JLabel();
         jLabel45 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbdatemod = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -1208,6 +1209,13 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel45.setText("Email");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1237,12 +1245,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addComponent(btcustnamebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btcustcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnew))
                                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbline3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1250,7 +1252,15 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btcustzipbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(btcustzipbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btcustcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnew)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btclear)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1273,7 +1283,9 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnew))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnew)
+                                .addComponent(btclear)))
                         .addGap(12, 12, 12)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1993,9 +2005,15 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddcontact;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btcustcodebrowse;
     private javax.swing.JButton btcustnamebrowse;
     private javax.swing.JButton btcustzipbrowse;

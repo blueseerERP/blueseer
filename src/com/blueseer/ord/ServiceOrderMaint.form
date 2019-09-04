@@ -175,10 +175,17 @@
                                                       </Group>
                                                       <EmptySpace pref="303" max="32767" attributes="0"/>
                                                   </Group>
-                                                  <Group type="102" attributes="0">
-                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                          <Component id="createdate" pref="163" max="32767" attributes="0"/>
-                                                          <Component id="duedate" max="32767" attributes="0"/>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <Group type="103" groupAlignment="1" attributes="0">
+                                                          <Group type="102" attributes="0">
+                                                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Component id="ddsite" min="-2" pref="101" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                              <Component id="createdate" pref="163" max="32767" attributes="0"/>
+                                                              <Component id="duedate" max="32767" attributes="0"/>
+                                                          </Group>
                                                       </Group>
                                                       <EmptySpace max="32767" attributes="0"/>
                                                       <Component id="cbpaid" min="-2" max="-2" attributes="0"/>
@@ -186,22 +193,20 @@
                                               </Group>
                                           </Group>
                                           <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Group type="102" attributes="0">
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Group type="102" alignment="0" attributes="0">
                                                       <Component id="tbkey" min="-2" pref="72" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="ddsite" max="32767" attributes="0"/>
+                                                      <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Component id="jPanel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="lblshipname" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="lblshipname" alignment="0" min="-2" pref="245" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace max="32767" attributes="0"/>
+                                              <EmptySpace pref="288" max="32767" attributes="0"/>
                                               <Component id="btquotetoorder" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btinvoice" min="-2" max="-2" attributes="0"/>
@@ -229,6 +234,7 @@
                                       <Component id="btinvoice" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
@@ -913,6 +919,14 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="PaidInFull?"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btclear">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Clear"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

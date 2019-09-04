@@ -369,9 +369,9 @@ public class BlueSeerUtils {
          if (message[0].equals("1")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.RED); 
          } else if (message[0].equals("2")) {
-            bsmf.MainFrame.messagelabel.setForeground(Color.YELLOW); 
+            bsmf.MainFrame.messagelabel.setForeground(Color.decode("#006600")); 
          } else if (message[0].equals("3")) {
-            bsmf.MainFrame.messagelabel.setForeground(Color.BLACK); 
+            bsmf.MainFrame.messagelabel.setForeground(Color.decode("#6600CC")); 
          } else if (message[0].equals("0")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.BLUE);  
          } else {

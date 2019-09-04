@@ -44,8 +44,10 @@ import java.util.regex.Pattern;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 
 /**
@@ -146,10 +148,13 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
         if (myobj instanceof JPanel) {
             panel = (JPanel) myobj;
         } else if (myobj instanceof JTabbedPane) {
            tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
         } else {
             return;
         }
@@ -168,6 +173,9 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 if (component instanceof JTabbedPane) {
                     setPanelComponentState((JTabbedPane) component, b);
                 }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
                 
                 component.setEnabled(b);
             }
@@ -181,6 +189,19 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     }
                     if (component instanceof JPanel) {
                         setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
                     }
                     component.setEnabled(b);
                 }
@@ -304,6 +325,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
@@ -362,6 +384,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void initvars(String[] arg) {
+       
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
@@ -374,6 +397,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
    
@@ -798,6 +822,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbmainemail = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbdatemod = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -917,6 +942,13 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel19.setText("Email");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -957,14 +989,16 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btvendcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew))
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tbmainphone)
                             .addComponent(ddcountry, 0, 254, Short.MAX_VALUE)
                             .addComponent(tbmainemail))))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -975,7 +1009,9 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btvendcodebrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1456,11 +1492,17 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddContact;
     private javax.swing.JButton btDeleteContact;
     private javax.swing.JButton btEditContact;
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;

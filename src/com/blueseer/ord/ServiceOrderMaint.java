@@ -293,6 +293,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btinvoice.setEnabled(false);
@@ -320,7 +321,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
-        BlueSeerUtils.message(new String[]{"3","Adding..."});
+        
     }
     
     public String[] setAction(int i) {
@@ -339,6 +340,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0 || ddstatus.getSelectedItem().toString().compareTo("void") == 0) {
                              setPanelComponentState(this, false);
                              btnew.setEnabled(true);
+                             btbrowse.setEnabled(true);
+                             btclear.setEnabled(true);
                              btprint.setEnabled(true);
                              m = new String[]{BlueSeerUtils.SuccessBit, "Order is closed"};  
                          } else {
@@ -379,7 +382,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void initvars(String[] arg) {
-        
+       
        setPanelComponentState(this, false); 
        setPanelComponentState(this, false); // having to run twice to go deeper into components
        setComponentDefaultValues();
@@ -392,6 +395,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
     
@@ -896,6 +900,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         rbinventory = new javax.swing.JRadioButton();
         rbservice = new javax.swing.JRadioButton();
         cbpaid = new javax.swing.JCheckBox();
+        btclear = new javax.swing.JButton();
 
         jLabel4.setText("jLabel4");
 
@@ -1277,6 +1282,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
         cbpaid.setText("PaidInFull?");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1363,26 +1375,29 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                                     .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 303, Short.MAX_VALUE))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(createdate, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                                                    .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addComponent(jLabel7)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(createdate, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                                                        .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(cbpaid))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnew)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel7)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(btclear))
                                             .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblshipname, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblshipname, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 288, Short.MAX_VALUE)
                                         .addComponent(btquotetoorder)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btinvoice)))
@@ -1401,7 +1416,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                 .addComponent(btquotetoorder)
                                 .addComponent(btinvoice)
                                 .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7))
+                                .addComponent(jLabel7)
+                                .addComponent(btclear))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1811,10 +1827,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }//GEN-LAST:event_rbinventoryStateChanged
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset(); 
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btinvoice;

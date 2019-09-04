@@ -136,7 +136,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
     }
    
-   public void setPanelComponentState(Object myobj, boolean b) {
+    public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
@@ -228,6 +228,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
@@ -288,6 +289,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void initvars(String[] arg) {
+       
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
@@ -298,6 +300,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
     
@@ -498,6 +501,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         ddsite = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -562,6 +566,13 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -597,7 +608,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew)))
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -609,7 +622,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -684,10 +699,16 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;

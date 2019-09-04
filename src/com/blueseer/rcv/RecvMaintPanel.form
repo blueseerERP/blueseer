@@ -86,39 +86,34 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="102" attributes="0">
-                                                  <Component id="ddvend" max="32767" attributes="0"/>
-                                                  <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Group type="103" groupAlignment="1" attributes="0">
-                                                      <Component id="ddloc" alignment="0" max="32767" attributes="0"/>
-                                                      <Component id="ddpart" alignment="0" max="32767" attributes="0"/>
-                                                      <Component id="ddpo" max="32767" attributes="0"/>
-                                                      <Component id="ddwh" alignment="1" max="32767" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel41" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel27" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel29" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel35" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel40" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                          <Component id="ddvend" max="32767" attributes="0"/>
+                                          <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
                                       </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="lblvendpart" min="-2" pref="162" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="jLabel39" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="ddloc" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="ddpart" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="ddpo" max="32767" attributes="0"/>
+                                              <Component id="ddwh" alignment="1" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel41" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel27" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel29" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel35" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel40" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lblvendpart" min="-2" pref="162" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jLabel39" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -131,9 +126,12 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tbqty" alignment="0" max="32767" attributes="0"/>
                               <Component id="tbserial" alignment="0" max="32767" attributes="0"/>
@@ -193,6 +191,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbautovoucher" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -588,6 +587,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
