@@ -336,7 +336,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void initvars(String[] arg) {
        
-       BlueSeerUtils.messagereset();
+       
        setPanelComponentState(panelMain, false); 
        setPanelComponentState(panelDetail, false); 
        setPanelComponentState(panelSchedule, false); 

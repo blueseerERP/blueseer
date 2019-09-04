@@ -321,7 +321,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
 
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
+                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
@@ -379,7 +379,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
                             + "bk_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
                             + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where bk_id = " + "'" + tbkey.getText() + "'"                             
+                            + " where bk_id = " + "'" + x[0] + "'"                             
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);

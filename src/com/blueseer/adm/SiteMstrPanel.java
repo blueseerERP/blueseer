@@ -269,6 +269,13 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
+                 if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
                
         return b;
     }
