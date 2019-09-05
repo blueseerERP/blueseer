@@ -60,8 +60,10 @@ admin;FileOrderLoad
 admin;DiscreteOrderPerWeekUnits
 admin;DiscreteOrderPerWeekDollars
 admin;ShipMaint
+admin;InvoiceMaint
 admin;ShipUnconfirm
-admin;ShipperInvoiceBrowse
+admin;ShipperBrowse
+admin;InvoiceBrowse
 admin;ShipConfirm
 admin;ShipReports
 admin;OrderReports

@@ -27,6 +27,8 @@ SOFTWARE.
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -87,7 +89,15 @@ public class ARAgingView extends javax.swing.JPanel {
                         };
     
     MyTableModel2 modeldetail = new ARAgingView.MyTableModel2(new Object[][]{},
-                        new String[]{"ID", "Desc", "Type", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
+                        new String[]{"Select", "ID", "Desc", "Type", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
    
     
     MyTableModel3 modelpayment = new ARAgingView.MyTableModel3(new Object[][]{},
@@ -129,7 +139,7 @@ public class ARAgingView extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 5 || col == 6 || col == 7 || col == 8 || col == 9)       
+            if (col == 6 || col == 7 || col == 8 || col == 9 || col == 10)       
                 return Double.class;  
             else return String.class;  //other columns accept String values  
              
@@ -231,11 +241,11 @@ public class ARAgingView extends javax.swing.JPanel {
          double total = 0.00;
          DecimalFormat df = new DecimalFormat("#0.00");
         
-          tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+          tabledetail.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         
         try {
 
@@ -307,6 +317,7 @@ public class ARAgingView extends javax.swing.JPanel {
                     qty = qty + 0;
                     i++;
                         modeldetail.addRow(new Object[]{
+                            BlueSeerUtils.clickflag,
                             res.getString("ar_nbr"),
                             res.getString("ar_rmks"),
                             res.getString("ar_type"),
@@ -661,6 +672,11 @@ public class ARAgingView extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabledetail);
 
         detailpanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -1042,6 +1058,17 @@ try {
         }
         }
     }//GEN-LAST:event_btpdfActionPerformed
+
+    private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
+         
+        int row = tabledetail.rowAtPoint(evt.getPoint());
+        int col = tabledetail.columnAtPoint(evt.getPoint());
+           if ( col == 0) {     
+               if (! checkperms("InvoiceMaint")) { return; }
+               String[] args = new String[]{tabledetail.getValueAt(row, 1).toString()};
+               reinitpanels("InvoiceMaint", true, args);
+           }
+    }//GEN-LAST:event_tabledetailMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

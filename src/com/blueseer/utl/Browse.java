@@ -395,6 +395,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("shipmaint")) {
                 tablereport.setModel(DTData.getShipperBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("invoicemaint")) {
+                tablereport.setModel(DTData.getInvoiceBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("vendmaint")) {
                 tablereport.setModel(DTData.getVendBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -658,6 +661,11 @@ public class Browse extends javax.swing.JPanel {
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("ShipMaint", true, arg);
             }
+                     if (callingpanel.equals("invoicemaint")) {
+              if (! checkperms("InvoiceMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("InvoiceMaint", true, arg);
+            }        
                if (callingpanel.equals("shiptomaint")) {
               if (! checkperms("CustMaint")) { return; }
               arg = new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 1).toString()};

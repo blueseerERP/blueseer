@@ -2324,7 +2324,87 @@ public class DTData {
         return mymodel;
         
          } 
+        
+           
+           
+        public static DefaultTableModel getInvoiceBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "InvoiceNbr", "Cust", "Ship", "OrderNbr", "PONbr", "ShipDate", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                   if (dbtype.equals("sqlite"))  {
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by sh_id desc ;");
+                   } else {
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by sh_id desc ;");  
+                   }
+                }
+                if (state == 2) { // ends
+                    if (dbtype.equals("sqlite"))  {
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by sh_id desc ;");
+                   } else {
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by sh_id desc ;");  
+                   }
+                }
+                 if (state == 0) { // match
+                 if (dbtype.equals("sqlite"))  {
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by sh_id desc ;");
+                   } else {
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                        " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by sh_id desc ;");  
+                   }
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("sh_id"),
+                                   res.getString("sh_cust"),
+                                   res.getString("sh_ship"),
+                                   res.getString("sh_so"),
+                                   res.getString("sh_po"),
+                                   res.getString("sh_shipdate"),
+                                   res.getString("sh_status")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
           
+           
           public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Code", "Desc", "SCAC", "Phone", "Email", "Contact", "Acct"})

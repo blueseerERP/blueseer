@@ -88,6 +88,7 @@ ScrapEntry,,com.blueseer.prd.ScrapMaintPanel,JMenuItem,scrp
 ScrapRpt1,,com.blueseer.prd.ScrapReportPanel,JMenuItem,scrr
 ShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,shcf
 ShipMaint,,com.blueseer.shp.ShipMaintPanel,JMenuItem,shpm
+InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
 SiteMaint,,com.blueseer.adm.SiteMstrPanel,JMenuItem,site
 TermsMaint,,com.blueseer.ctr.TermsMaintPanel,JMenuItem,term
 TrainingRpt1,,com.blueseer.hrm.TrainingReport1,JMenuItem,trnr
@@ -132,7 +133,8 @@ FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,frtb
 CarrierBrowse,Carrier Browse,com.blueseer.utl.ReportPanel,JMenuItem,carb
 ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
 BankMaint,,com.blueseer.fgl.BankMaintPanel,JMenuItem,bank
-ShipperInvoiceBrowse,Shipper and Invoice Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
+ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
+InvoiceBrowse,Invoice Browse,com.blueseer.far.InvoiceBrowsePanel,JMenuItem,invb
 AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,addl
 CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,cprb
 noStdCostBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cosn

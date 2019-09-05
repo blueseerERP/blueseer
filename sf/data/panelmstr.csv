@@ -159,7 +159,9 @@ com.blueseer.sch.KanbanMinToPlanPanel,,1
 com.blueseer.sch.MRPBrowse1,,1
 com.blueseer.shp.ShipConfirmPanel,,1
 com.blueseer.shp.ShipMaintPanel,,1
+com.blueseer.far.InvoiceMaint,,1
 com.blueseer.shp.ShipperBrowsePanel,,1
+com.blueseer.far.InvoiceBrowsePanel,,1
 com.blueseer.shp.ShipperControl,,1
 com.blueseer.shp.ShipperDetBrowsePanel,,1
 com.blueseer.shp.ShipUnConfirmPanel,,1

@@ -68,13 +68,14 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieC
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
+Shipping,ShipperBrowse,2,JMenuItem,Shipper Browse ,,1,,1,1
+Shipping,ShipperBrowseDet,3,JMenuItem,Shipper Detail Browse,,1,,1,1
 Shipping,ShipConfirm,4,JMenuItem,Shipper Confirm,,,,1,1
 Shipping,ShipUnconfirm,5,JMenuItem,Shipper UnConfirm,,,,1,1
-Shipping,ShipperInvoiceBrowse,2,JMenuItem,Shipper/Invoice Browse ,,1,,1,1
 Shipping,TransportationMenu,6,JMenu,Transportation Menu,,,,1,1
 Shipping,ShipReports,7,JMenu,Reports,,,,1,1
-ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
 Shipping,ShipperControl,8,JMenuItem,Shipper Control,,,,1,1
+ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
 Finance,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1
 LedgerSetupMenu,AcctBrowse,2,JMenuItem,Account Browse,,1,,1,1
@@ -107,7 +108,9 @@ ARMenu,ARAgingView,4,JMenuItem,AR Aging View,,,,1,1
 APMenu,APAgingView,5,JMenuItem,AP Aging View,,,,1,1
 APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
 ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
-ARMenu,ARControl,6,JMenuItem,AR Control,,,,1,1
+ARMenu,InvoiceMaint,6,JMenuItem,Invoice View / Maintenance,,,,1,1
+ARMenu,InvoiceBrowse,7,JMenuItem,Invoice Browse ,,1,,1,1
+ARMenu,ARControl,8,JMenuItem,AR Control,,,,1,1
 Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
 Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
 Finance,PayRollMenu,8,JMenu,Payroll Menu,,,,1,1
@@ -261,7 +264,6 @@ DOMenu,DOBrowse,2,JMenuItem,Dist Order Browse,,,,1,1
 TransportationMenu,FOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
 TransportationMenu,FOBrowse,2,JMenuItem,Freight Order Browse,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
-Shipping,ShipperBrowseDet,3,JMenuItem,Shipper/Invoice Detail Browse,,1,,1,1
 Engineering,ECNMaint,1,JMenuItem,ECN Maintenance,,,,1,1
 Engineering,ECNBrowse,2,JMenuItem,ECN Browse,,1,,1,1
 Engineering,TaskMaint,3,JMenuItem,Task Maintenance,,,,1,1
