@@ -1,3 +1,3 @@
-FGAssembly,1,Assembly,1000,9999,15.00,1,15.00,0,30.00,Assembly for Pens
-SubAssembly,1,Sub Assembly,1000,9999,15.00,1,15.00,0,30.00,Sub Assembly cartridges
-Packaging,1,Packaging Workcenter,1000,3100,15.00,1,15.00,0,30.00,Packaging
+FGAssembly,Assembly,1000,9999,15.00,1,15.00,0,30.00,Assembly for Pens
+SubAssembly,Sub Assembly,1000,9999,15.00,1,15.00,0,30.00,Sub Assembly cartridges
+Packaging,Packaging Workcenter,1000,3100,15.00,1,15.00,0,30.00,Packaging

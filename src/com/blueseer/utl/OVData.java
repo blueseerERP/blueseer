@@ -10420,7 +10420,7 @@ public class OVData {
 
                 res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
                         " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell and wc_mch = wf_mch " +
+                        " inner join wc_mstr on wc_cell = wf_cell  " +
                         " where it_item = " + "'" + part + "'" + ";");
                while (res.next()) {
                   //  labor += ((res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wf_crewsize"))  );
@@ -10466,7 +10466,7 @@ public class OVData {
 
                 res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
                         " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell and wc_mch = wf_mch " +
+                        " inner join wc_mstr on wc_cell = wf_cell  " +
                         " where it_item = " + "'" + part + "'" + ";");
                while (res.next()) {
                   //  labor += ((res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wf_crewsize"))  );
@@ -10647,7 +10647,6 @@ public class OVData {
              Double stdopcost = 0.0;
              String op = "";
              String cell = "";
-             String mch = "";
              String cc = "";
              String desc = "";
              String stdcost = "";
@@ -10671,9 +10670,9 @@ public class OVData {
                  
                  // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
                 res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
-                        " wc_desc, wc_mch, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
+                        " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
                         " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell and wc_mch = wf_mch " + 
+                        " inner join wc_mstr on wc_cell = wf_cell  " + 
                         " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
                         " where it_item = " + "'" + part + "'" + 
                         " order by wf_op; " );
@@ -10690,7 +10689,6 @@ public class OVData {
                    
                    op = res.getString("wf_op");
                    cell = res.getString("wf_cell");
-                   mch = res.getString("wc_mch");
                    desc = res.getString("wc_desc");
                    cc = res.getString("wc_cc");
                   
@@ -10725,7 +10723,7 @@ public class OVData {
                        part + "," +
                        op + "," +
                        cell + "," +
-                       mch + "," +
+                       "" + "," +   // used to be machine
                        desc + "," +
                        cc + "," +
                        String.valueOf(labor) + "," + 

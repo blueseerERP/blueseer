@@ -29,65 +29,176 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class RoutingMaintPanel extends javax.swing.JPanel {
+public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form RoutingMaintPanel
-     */
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations   
+                
     public RoutingMaintPanel() {
         initComponents();
     }
 
-    
-    public void enableAll() {
-        btadd.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-        tbrouting.setEnabled(true);
-        ddop.setEnabled(true);
-        tbwc.setEnabled(true);
-        tbmch.setEnabled(true);
-        tbopdesc.setEnabled(true);
-        tbrunhoursinverted.setEnabled(true);
-        ddsite.setEnabled(true);
-        tbrunhours.setEnabled(true);
-        tbsetuphours.setEnabled(true);
-        cbmilestone.setEnabled(true); 
+     // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-    public void disableAll() {
-        btadd.setEnabled(false);
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
-        tbrouting.setEnabled(false);
-        ddop.setEnabled(false);
-        tbwc.setEnabled(false);
-        tbmch.setEnabled(false);
-        tbopdesc.setEnabled(false);
-        tbrunhoursinverted.setEnabled(false);
-        ddsite.setEnabled(false);
-        tbrunhours.setEnabled(false);
-        tbsetuphours.setEnabled(false);
-        cbmilestone.setEnabled(false);
-    }
-    
-    public void clearAll() {
-        tbrouting.setText("");
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
         ddop.removeAllItems();
         tbwc.setText("");
-        tbmch.setText("");
         tbopdesc.setText("");
         tbrunhoursinverted.setText("");
        
@@ -101,69 +212,230 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
             ddsite.addItem(code);
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    ddsite.requestFocus();
+                    return b;
+                }
+               
+                if (ddop.getSelectedItem() == null || ddop.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose or assign an operation");
+                    ddop.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbopdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbopdesc.requestFocus();
+                    return b;
+                }
+                
+                if (! OVData.isValidWorkCenter(tbwc.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid WorkCenter");
+                    tbwc.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
     }
     
     public void initvars(String[] arg) {
-          clearAll();
-          disableAll();
-          btbrowse.setEnabled(true);
-          btnew.setEnabled(true);
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
-        if (arg != null && arg.length > 1) {
-            getRoutingAndOp(arg[0],arg[1]);
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
     
-    public void initopvars() {
-        tbwc.setText("");
-        tbmch.setText("");
-        tbopdesc.setText("");
-        tbrunhours.setText("");
-        tbsetuphours.setText("");
-        tbrunhoursinverted.setText("");
-      
-        cbmilestone.setSelected(false);
-    }
-    
-     public void getRouting(String routing) {
-        initvars(null);
-        tbrouting.setText(routing);
-        try {
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
+                boolean proceed = true;
                 int i = 0;
-                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + routing + "'"  + ";");
-                        
-                while (res.next()) {
-                    i++;
-                    ddop.addItem(res.getString("wf_op"));
-                }
-               
-                if (i > 0) {
-                    enableAll();
-                    tbrouting.setEnabled(false);
-                    btadd.setEnabled(false);
-                }
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
 
+                    res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'" + " AND " + 
+                        " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                         st.executeUpdate("insert into wf_mstr "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + "notused" + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
+                            + "'" + tbopdesc.getText() + "'" + ","
+                            + "'" + tbwc.getText() + "'" + ","
+                            + "'" + tbsetuphours.getText() + "'" + ","
+                            + "'" + tbrunhours.getText() + "'" 
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve wf_mstr");
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
+                            + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
+                            + "wf_cell = " + "'" + tbwc.getText() + "'" + ","
+                            + "wf_setup_hours = " + "'" + tbsetuphours.getText() + "'" + ","
+                            + "wf_run_hours = " + "'" + tbrunhours.getText() + "'" + ","
+                            + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
+                            + " where wf_id = " + "'" + x[0] + "'" + " AND "
+                            + " wf_op = " + "'" + x[1] + "'"
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
 
-    }
-    
-      public void getRoutingAndOp(String routing, String op) {
-        
-        getRouting(routing);  // sets the possible operations
-        ddop.setSelectedItem(op);
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from wf_mstr where wf_id = " + "'" + x[0] + "'" + " AND " +
+                           " wf_op = " + "'" + x[1] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -171,12 +443,25 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                int i = 0;
                 double runhours = 0.00;
                 double setuphours = 0.00;
                 DecimalFormat df = new DecimalFormat("#0.00000");
-                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + routing + "'"  + " AND" +
-                        " wf_op = " + "'" + op + "'" +  ";");
+                int i = 0;
+                 if (x == null && x.length < 1) { return new String[]{}; };
+                 
+                 // lets first get all the ops for this routing ID to populate ddop
+                 assignOPs(x[0]);
+                 
+                 
+                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
+                if (x.length == 1) {
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                } else {
+                 res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + 
+                        " and wf_op = " + "'" + x[1] + "'" +
+                        ";");   
+                }
+               
                         
                 while (res.next()) {
                     i++;
@@ -186,31 +471,53 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                     else
                         runhours = 0.00;
                     
-                    if (res.getDouble("wf_setup_hours") > 0)
-                        setuphours = 1 / res.getDouble("wf_setup_hours");
-                    else
-                        setuphours = 0.00;
                     
                     
+                    tbkey.setText(res.getString("wf_id"));
                     tbwc.setText(res.getString("wf_cell"));
-                    tbmch.setText(res.getString("wf_mch"));
                     tbopdesc.setText(res.getString("wf_op_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
+                    ddop.setSelectedItem(res.getString("wf_op"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
                     tbsetuphours.setText(res.getString("wf_setup_hours"));
                     tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
                
-                 if (i > 0) {
-                    enableAll();
-                    tbrouting.setEnabled(false);
-                    btadd.setEnabled(false);
-                }
-
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve wf_mstr");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+    // custom funcs
+    public void assignOPs(String routing) {
+      
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + routing + "'"  + " order by wf_op;");
+                        
+                while (res.next()) {
+                    i++;
+                    ddop.addItem(res.getString("wf_op"));
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -218,7 +525,8 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         }
 
     }
-     
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -228,18 +536,17 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         tbopdesc = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         cbmilestone = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
-        tbmch = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        tbrouting = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         tbwc = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         ddop = new javax.swing.JComboBox();
@@ -254,6 +561,9 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         ddsite = new javax.swing.JComboBox<>();
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setBackground(new java.awt.Color(0, 102, 204));
         setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -261,8 +571,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Routing Maintenance"));
 
         jLabel5.setText("Set Backflush:");
-
-        jLabel8.setText("Machine:");
 
         btdelete.setText("Delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -290,6 +598,12 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Routing ID:");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Operation:");
 
@@ -338,6 +652,13 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -345,7 +666,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -368,7 +688,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(tbwc, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbmch, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(tbrunhoursinverted, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addComponent(tbsetuphours))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
@@ -378,11 +697,13 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(tbrouting, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew)))
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -392,9 +713,11 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
-                        .addComponent(tbrouting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -417,10 +740,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbmch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(tbsetuphours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -441,11 +760,9 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ddopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddopActionPerformed
-        
+        String[] m = new String[2];
         if (ddop != null && ddop.getItemCount() > 0) {
-        initopvars();
         try {
-
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -455,7 +772,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                 double setuphours = 0.00;
                 DecimalFormat df = new DecimalFormat("#0.00000");
                 int i = 0;
-                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbrouting.getText() + "'"  + " AND " +
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'"  + " AND " +
                         " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
                         
                 while (res.next()) {
@@ -465,202 +782,47 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
                         runhours = 1 / res.getDouble("wf_run_hours");
                     else
                         runhours = 0.00;
-                    if (res.getDouble("wf_setup_hours") > 0)
-                        setuphours = 1 / res.getDouble("wf_setup_hours");
-                    else
-                        setuphours = 0.00;
+                    
                     
                     tbwc.setText(res.getString("wf_cell"));
-                    tbmch.setText(res.getString("wf_mch"));
                     tbopdesc.setText(res.getString("wf_op_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
                     tbsetuphours.setText(res.getString("wf_setup_hours"));
                     tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
-                    
-                    
                 }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show("No Routing / Op Record Found");
-
-            } catch (SQLException s) {
+           } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve wf_mstr");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
         }
     }//GEN-LAST:event_ddopActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-             double setup = 0.00;
-            double run = 0.00;
-            double crewsize = 0.00;    
-                // check the site field
-                if (tbwc.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a work cell");
-                    return;
-                }
-                if (! OVData.isValidWorkCenter(tbwc.getText())) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a valid work cell");
-                    return;
-                }
-                
-                
-                if (tbmch.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a machine code");
-                    return;
-                }
-                 if (! tbsetuphours.getText().isEmpty()) {
-                    setup = Double.valueOf(tbsetuphours.getText());
-                }
-                if (! tbrunhours.getText().isEmpty()) {
-                    run = Double.valueOf(tbrunhours.getText());
-                }
-                
-                
-                
-                if (proceed) {
-
-                    res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbrouting.getText() + "'" + " AND " + 
-                        " wf_mch = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into wf_mstr "
-                            + " values ( " + "'" + tbrouting.getText() + "'" + ","
-                            + "'" + "notused" + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
-                            + "'" + tbopdesc.getText() + "'" + ","
-                            + "'" + tbwc.getText() + "'" + ","
-                            + "'" + tbmch.getText() + "'" + ","
-                            + "'" + setup + "'" + ","
-                            + "'" + run + "'" 
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added Routing / Op Record");
-                    } else {
-                        bsmf.MainFrame.show("Routing / Op Already Exists");
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to wf_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-            boolean proceed = true;
-            double setup = 0.00;
-            double run = 0.00;
-            double crewsize = 0.00;
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the code field
-                if (tbwc.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a work cell");
-                    return;
-                }
-                 if (! OVData.isValidWorkCenter(tbwc.getText())) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a valid work cell");
-                    return;
-                }
-                if (tbmch.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a machine code");
-                    return;
-                }
-                
-                if (! tbsetuphours.getText().isEmpty()) {
-                    setup = Double.valueOf(tbsetuphours.getText());
-                }
-                if (! tbrunhours.getText().isEmpty()) {
-                    run = Double.valueOf(tbrunhours.getText());
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
-                            + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
-                            + "wf_cell = " + "'" + tbwc.getText() + "'" + ","
-                            + "wf_mch = " + "'" + tbmch.getText() + "'" + ","
-                            + "wf_setup_hours = " + "'" + setup + "'" + ","
-                            + "wf_run_hours = " + "'" + run + "'" + ","
-                            + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
-                            + " where wf_id = " + "'" + tbrouting.getText() + "'" + " AND "
-                            + " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'"
-                            + ";");
-                    bsmf.MainFrame.show("Updated Routing/Op Record");
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating wf_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from wf_mstr where wf_id = " + "'" + tbrouting.getText() + "'" + " AND " +
-                           " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted Routing/Op " + tbrouting.getText() + "/" + ddop.getSelectedItem().toString());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Routing/Op Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
@@ -692,12 +854,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        enableAll();
-        clearAll();
-        btupdate.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        tbwc.requestFocus();
+        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbsetuphoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetuphoursFocusLost
@@ -716,16 +873,27 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbsetuphoursFocusLost
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+       BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbmilestone;
     private javax.swing.JComboBox ddop;
     private javax.swing.JComboBox<String> ddsite;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
@@ -734,12 +902,10 @@ public class RoutingMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbmch;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbopdesc;
-    private javax.swing.JTextField tbrouting;
     private javax.swing.JTextField tbrunhours;
     private javax.swing.JTextField tbrunhoursinverted;
     private javax.swing.JTextField tbsetuphours;

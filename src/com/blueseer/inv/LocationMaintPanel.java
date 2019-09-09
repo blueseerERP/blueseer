@@ -29,62 +29,175 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.IBlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class LocationMaintPanel extends javax.swing.JPanel {
+public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form LocationMaintPanel
-     */
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations    
+                
+                
     public LocationMaintPanel() {
         initComponents();
     }
 
-    public void getLocationCode(String mykey) {
-        initvars(null);
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                res = st.executeQuery("select * from loc_mstr where loc_loc = " + "'" + mykey + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbloc.setText(mykey);
-                    tbdesc.setText(res.getString("loc_desc"));
-                    cbactive.setSelected(res.getBoolean("loc_active"));
-                    ddsite.setSelectedItem(res.getString("loc_site"));
-                    ddwh.setSelectedItem(res.getString("loc_wh"));
-                }
-               
-                if (i > 0) {
-                   enableAll();
-                   btadd.setEnabled(false);
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve loc_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
     
-    public void clearAll() {
-         tbloc.setText("");
+     // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
         tbdesc.setText("");
          cbactive.setSelected(false);
          
@@ -102,49 +215,250 @@ public class LocationMaintPanel extends javax.swing.JPanel {
         for (String code : mylist) {
             ddsite.addItem(code);
         }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-         
+       ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+       isLoad = false;
     }
     
-    public void enableAll() {
-        tbloc.setEnabled(true);
-        tbdesc.setEnabled(true);
-         cbactive.setEnabled(true);
-         ddsite.setEnabled(true);
-         ddwh.setEnabled(true);
-         btadd.setEnabled(true);
-         btdelete.setEnabled(true);
-         btupdate.setEnabled(true);
-         btnew.setEnabled(true);
-         btbrowse.setEnabled(true);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
     }
     
-    public void disableAll() {
-        tbloc.setEnabled(false);
-        tbdesc.setEnabled(false);
-         cbactive.setEnabled(false);
-         ddsite.setEnabled(false);
-         ddwh.setEnabled(false);
-         btadd.setEnabled(false);
-         btdelete.setEnabled(false);
-         btupdate.setEnabled(false);
-         btnew.setEnabled(false);
-         btbrowse.setEnabled(false);
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+                if (ddwh.getSelectedItem() == null || ddwh.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a warehouse");
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
     }
     
     public void initvars(String[] arg) {
-        
-        clearAll();
-        disableAll();
-        
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
         btnew.setEnabled(true);
         btbrowse.setEnabled(true);
         
-         if (arg != null && arg.length > 0) {
-            getLocationCode(arg[0]);
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
     
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT loc_loc FROM  loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into loc_mstr "
+                            + "(loc_loc, loc_desc, loc_site, loc_wh, loc_active ) "
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    st.executeUpdate("update loc_mstr set loc_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "loc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "loc_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","
+                            + "loc_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + " where loc_loc = " + "'" + tbkey.getText() + "'"                             
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("select * from loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbkey.setText(x[0]);
+                    tbdesc.setText(res.getString("loc_desc"));
+                    cbactive.setSelected(res.getBoolean("loc_active"));
+                    ddsite.setSelectedItem(res.getString("loc_site"));
+                    ddwh.setSelectedItem(res.getString("loc_wh"));
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+    
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -160,7 +474,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
         cbactive = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
         tbdesc = new javax.swing.JTextField();
-        tbloc = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -169,6 +483,7 @@ public class LocationMaintPanel extends javax.swing.JPanel {
         ddsite = new javax.swing.JComboBox<>();
         ddwh = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -189,6 +504,12 @@ public class LocationMaintPanel extends javax.swing.JPanel {
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
+            }
+        });
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -219,6 +540,13 @@ public class LocationMaintPanel extends javax.swing.JPanel {
 
         jLabel4.setText("WareHouse:");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -246,11 +574,13 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(cbactive)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(tbloc, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnew))
+                                    .addComponent(btnew)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btclear))
                                 .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addContainerGap())
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -263,10 +593,12 @@ public class LocationMaintPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,116 +625,27 @@ public class LocationMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbloc.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a Location code");
-                   
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT loc_loc FROM  loc_mstr where loc_loc = " + "'" + tbloc.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into loc_mstr "
-                            + "(loc_loc, loc_desc, loc_site, loc_wh, loc_active ) "
-                            + " values ( " + "'" + tbloc.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added Location Record");
-                    } else {
-                        bsmf.MainFrame.show("Location Record Already Exists");
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to loc_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the code field
-                if (tbloc.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a location code");
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update loc_mstr set loc_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "loc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "loc_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "loc_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where loc_loc = " + "'" + tbloc.getText() + "'"                             
-                            + ";");
-                    bsmf.MainFrame.show("Updated Location");
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating loc_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from loc_mstr where loc_loc = " + "'" + tbloc.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbloc.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Location Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+       if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -410,17 +653,23 @@ public class LocationMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       enableAll();
-       clearAll();
-       btupdate.setEnabled(false);
-       btdelete.setEnabled(false);
-       
+       newAction("");
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
@@ -433,6 +682,6 @@ public class LocationMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbdesc;
-    private javax.swing.JTextField tbloc;
+    private javax.swing.JTextField tbkey;
     // End of variables declaration//GEN-END:variables
 }

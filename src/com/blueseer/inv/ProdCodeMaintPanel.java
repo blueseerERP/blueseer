@@ -29,252 +29,178 @@ package com.blueseer.inv;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class ProdCodeMaintPanel extends javax.swing.JPanel {
+public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form ProdCodeMaintPanel
-     */
+   // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations    s new form ProdCodeMaintPanel
+     
+                
+                
     public ProdCodeMaintPanel() {
         initComponents();
     }
 
     
-    public boolean checkAccts() {
-        boolean proceed = true;
-         if (! OVData.isValidGLAcct(tbinvacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Inv Acct Nbr!");
-                   tbinvacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbinvdescrepancyacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Inv Desc Acct Nbr!");
-                   tbinvdescrepancyacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbwipacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Wip Acct Nbr!");
-                   tbwipacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbwipvaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Wip Var Acct Nbr!");
-                   tbwipvaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbscrapacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Scrap Acct Nbr!");
-                   tbscrapacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbinvchangeacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Inv Change Acct Nbr!");
-                   tbinvchangeacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbsalesacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Sales Acct Nbr!");
-                   tbsalesacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbsalesdiscacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Acct Nbr!");
-                   tbsalesdiscacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcogsmtlacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cogs Mtl Acct Nbr!");
-                   tbcogsmtlacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcogslbracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cogs Lbr Acct Nbr!");
-                   tbcogslbracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcogsbdnacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cogs Bdn Acct Nbr!");
-                   tbcogsbdnacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcogsovhacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cogs Ovh Acct Nbr!");
-                   tbcogsovhacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcogsoutacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cogs Outside Acct Nbr!");
-                   tbcogsoutacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbpurchacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Purch Acct Nbr!");
-                   tbpurchacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbporcptacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid PO Rcpts Acct Nbr!");
-                   tbporcptacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbpoovhacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid PO Ovh Acct Nbr!");
-                   tbpoovhacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbpopricevaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid PO Price Var Acct Nbr!");
-                   tbpopricevaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbapusageacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid AP Usage Acct Nbr!");
-                   tbapusageacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbapratevaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid AP Rate Var Acct Nbr!");
-                   tbapratevaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbjobstockacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid job stock Acct Nbr!");
-                   tbjobstockacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbmtlusagevaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Mtl Usage Var Acct Nbr!");
-                   tbmtlusagevaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbmtlratevaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Mtl Rate Var Acct Nbr!");
-                   tbmtlratevaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbmixedvaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Mixed Var Acct Nbr!");
-                   tbmixedvaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tbcopacct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Cost Of Production Acct Nbr!");
-                   tbcopacct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tboutusgvaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Outsie Usage Var Acct Nbr!");
-                   tboutusgvaracct.requestFocus();
-                   return proceed;
-                }
-         if (! OVData.isValidGLAcct(tboutratevaracct.getText().toString())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Invalid Outside Rate Var Acct Nbr!");
-                   tboutratevaracct.requestFocus();
-                   return proceed;
-                }
-         
-         
-        return proceed;
-    }
-    
-    public void getProdCode(String arg) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-
-                    res = st.executeQuery("SELECT * FROM  pl_mstr where pl_line = " + "'" + arg + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                         tbnbr.setText(res.getString("pl_line"));
-                         tbdesc.setText(res.getString("pl_desc"));
-                         tbinvacct.setText(res.getString("pl_inventory"));
-                         tbinvdescrepancyacct.setText(res.getString("pl_inv_discr"));
-                         tbscrapacct.setText(res.getString("pl_scrap"));
-                         tbwipacct.setText(res.getString("pl_wip"));
-                         tbwipvaracct.setText(res.getString("pl_wip_var"));
-                         tbinvchangeacct.setText(res.getString("pl_inv_change"));
-                         tbsalesacct.setText(res.getString("pl_sales"));
-                         tbsalesdiscacct.setText(res.getString("pl_sales_disc"));
-                         tbcogsmtlacct.setText(res.getString("pl_cogs_mtl"));
-                         tbcogslbracct.setText(res.getString("pl_cogs_lbr"));
-                         tbcogsbdnacct.setText(res.getString("pl_cogs_bdn"));
-                         tbcogsovhacct.setText(res.getString("pl_cogs_ovh"));
-                         tbcogsoutacct.setText(res.getString("pl_cogs_out"));
-                         tbpurchacct.setText(res.getString("pl_purchases"));
-                         tbporcptacct.setText(res.getString("pl_po_rcpt"));
-                         tbpoovhacct.setText(res.getString("pl_po_ovh"));
-                         tbpopricevaracct.setText(res.getString("pl_po_pricevar"));
-                         tbapusageacct.setText(res.getString("pl_ap_usage"));
-                         tbapratevaracct.setText(res.getString("pl_ap_ratevar"));
-                         tbjobstockacct.setText(res.getString("pl_job_stock"));
-                         tbmtlusagevaracct.setText(res.getString("pl_mtl_usagevar"));
-                         tbmtlratevaracct.setText(res.getString("pl_mtl_ratevar"));
-                         tbmixedvaracct.setText(res.getString("pl_mix_var"));
-                         tbcopacct.setText(res.getString("pl_cop"));
-                         tboutusgvaracct.setText(res.getString("pl_out_usagevar"));
-                         tboutratevaracct.setText(res.getString("pl_out_ratevar"));
-                         
-                       
-                         
-                    }
-                  if (i > 0) {
-                    enableAll();
-                    tbnbr.setEnabled(false);
-                    btadd.setEnabled(false);
-                }
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Get Prod Code");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            return message;
         }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-    public void clearAll() {
-        tbnbr.setText("");
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
          tbdesc.setText("");
          tbinvacct.setText("");
          tbinvdescrepancyacct.setText("");
@@ -303,91 +229,473 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
          tboutusgvaracct.setText("");
          tboutratevaracct.setText("");
          tbtbd.setText("");
+        
+       isLoad = false;
     }
     
-    public void enableAll() {
-         btadd.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-        tbnbr.setEnabled(true);
-         tbdesc.setEnabled(true);
-         tbinvacct.setEnabled(true);
-         tbinvdescrepancyacct.setEnabled(true);
-         tbscrapacct.setEnabled(true);
-         tbwipacct.setEnabled(true);
-         tbwipvaracct.setEnabled(true);
-         tbinvchangeacct.setEnabled(true);
-         tbsalesacct.setEnabled(true);
-         tbsalesdiscacct.setEnabled(true);
-         tbcogsmtlacct.setEnabled(true);
-         tbcogslbracct.setEnabled(true);
-         tbcogsbdnacct.setEnabled(true);
-         tbcogsovhacct.setEnabled(true);
-         tbcogsoutacct.setEnabled(true);
-         tbpurchacct.setEnabled(true);
-         tbporcptacct.setEnabled(true);
-         tbpoovhacct.setEnabled(true);
-         tbpopricevaracct.setEnabled(true);
-         tbapusageacct.setEnabled(true);
-         tbapratevaracct.setEnabled(true);
-         tbjobstockacct.setEnabled(true);
-         tbmtlusagevaracct.setEnabled(true);
-         tbmtlratevaracct.setEnabled(true);
-         tbmixedvaracct.setEnabled(true);
-         tbcopacct.setEnabled(true);
-         tboutusgvaracct.setEnabled(true);
-         tboutratevaracct.setEnabled(true);
-         tbtbd.setEnabled(true);
-    }
-    
-    public void disableAll() {
-        btadd.setEnabled(false);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        tbnbr.setEnabled(false);
-         tbdesc.setEnabled(false);
-         tbinvacct.setEnabled(false);
-         tbinvdescrepancyacct.setEnabled(false);
-         tbscrapacct.setEnabled(false);
-         tbwipacct.setEnabled(false);
-         tbwipvaracct.setEnabled(false);
-         tbinvchangeacct.setEnabled(false);
-         tbsalesacct.setEnabled(false);
-         tbsalesdiscacct.setEnabled(false);
-         tbcogsmtlacct.setEnabled(false);
-         tbcogslbracct.setEnabled(false);
-         tbcogsbdnacct.setEnabled(false);
-         tbcogsovhacct.setEnabled(false);
-         tbcogsoutacct.setEnabled(false);
-         tbpurchacct.setEnabled(false);
-         tbporcptacct.setEnabled(false);
-         tbpoovhacct.setEnabled(false);
-         tbpopricevaracct.setEnabled(false);
-         tbapusageacct.setEnabled(false);
-         tbapratevaracct.setEnabled(false);
-         tbjobstockacct.setEnabled(false);
-         tbmtlusagevaracct.setEnabled(false);
-         tbmtlratevaracct.setEnabled(false);
-         tbmixedvaracct.setEnabled(false);
-         tbcopacct.setEnabled(false);
-         tboutusgvaracct.setEnabled(false);
-         tboutratevaracct.setEnabled(false);
-         tbtbd.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+        
+                        
+        
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (! OVData.isValidGLAcct(tbinvacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Inv Acct Nbr!");
+                   tbinvacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbinvdescrepancyacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Inv Desc Acct Nbr!");
+                   tbinvdescrepancyacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbwipacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Wip Acct Nbr!");
+                   tbwipacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbwipvaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Wip Var Acct Nbr!");
+                   tbwipvaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbscrapacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Scrap Acct Nbr!");
+                   tbscrapacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbinvchangeacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Inv Change Acct Nbr!");
+                   tbinvchangeacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbsalesacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Sales Acct Nbr!");
+                   tbsalesacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbsalesdiscacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Acct Nbr!");
+                   tbsalesdiscacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcogsmtlacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cogs Mtl Acct Nbr!");
+                   tbcogsmtlacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcogslbracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cogs Lbr Acct Nbr!");
+                   tbcogslbracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcogsbdnacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cogs Bdn Acct Nbr!");
+                   tbcogsbdnacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcogsovhacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cogs Ovh Acct Nbr!");
+                   tbcogsovhacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcogsoutacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cogs Outside Acct Nbr!");
+                   tbcogsoutacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbpurchacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Purch Acct Nbr!");
+                   tbpurchacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbporcptacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid PO Rcpts Acct Nbr!");
+                   tbporcptacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbpoovhacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid PO Ovh Acct Nbr!");
+                   tbpoovhacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbpopricevaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid PO Price Var Acct Nbr!");
+                   tbpopricevaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbapusageacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid AP Usage Acct Nbr!");
+                   tbapusageacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbapratevaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid AP Rate Var Acct Nbr!");
+                   tbapratevaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbjobstockacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid job stock Acct Nbr!");
+                   tbjobstockacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbmtlusagevaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Mtl Usage Var Acct Nbr!");
+                   tbmtlusagevaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbmtlratevaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Mtl Rate Var Acct Nbr!");
+                   tbmtlratevaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbmixedvaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Mixed Var Acct Nbr!");
+                   tbmixedvaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tbcopacct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Cost Of Production Acct Nbr!");
+                   tbcopacct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tboutusgvaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Outsie Usage Var Acct Nbr!");
+                   tboutusgvaracct.requestFocus();
+                   return b;
+                }
+         if (! OVData.isValidGLAcct(tboutratevaracct.getText().toString())) {
+                   b = false;
+                   bsmf.MainFrame.show("Invalid Outside Rate Var Acct Nbr!");
+                   tboutratevaracct.requestFocus();
+                   return b;
+                }
+                
+                
+               
+        return b;
     }
     
     public void initvars(String[] arg) {
-         
-         
-        clearAll();
-          disableAll();
-          btbrowse.setEnabled(true);
-          btnew.setEnabled(true);
-         
-         if (arg != null && arg.length > 0) {
-             getProdCode(arg[0]);
-         }
        
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
     }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT pl_line FROM  pl_mstr where pl_line = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into pl_mstr "
+                            + "(pl_line, pl_desc, pl_inventory, pl_inv_discr, "
+                            + "pl_scrap, pl_wip, pl_wip_var, pl_inv_change, pl_sales, pl_sales_disc, "
+                            + "pl_cogs_mtl, pl_cogs_lbr, pl_cogs_bdn, pl_cogs_ovh, pl_cogs_out, "
+                            + "pl_purchases, pl_po_rcpt, pl_po_ovh, pl_po_pricevar, pl_ap_usage, pl_ap_ratevar, "
+                            + "pl_job_stock, pl_mtl_usagevar, pl_mtl_ratevar, pl_mix_var, pl_cop, pl_out_usagevar, pl_out_ratevar )"
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + tbinvacct.getText().toString() + "'" + ","
+                            + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
+                            + "'" + tbscrapacct.getText().toString() + "'" + ","
+                            + "'" + tbwipacct.getText().toString() + "'" + ","
+                            + "'" + tbwipvaracct.getText().toString() + "'" + ","
+                            + "'" + tbinvchangeacct.getText().toString() + "'" + ","
+                            + "'" + tbsalesacct.getText().toString() + "'" + ","
+                            + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
+                            + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
+                            + "'" + tbcogslbracct.getText().toString() + "'" + ","
+                            + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
+                            + "'" + tbcogsovhacct.getText().toString() + "'" + ","
+                            + "'" + tbcogsoutacct.getText().toString() + "'" + ","
+                            + "'" + tbpurchacct.getText().toString() + "'" + ","
+                            + "'" + tbporcptacct.getText().toString() + "'" + ","
+                            + "'" + tbpoovhacct.getText().toString() + "'" + ","
+                            + "'" + tbpopricevaracct.getText().toString() + "'" + ","
+                            + "'" + tbapusageacct.getText().toString() + "'" + ","
+                            + "'" + tbapratevaracct.getText().toString() + "'" + ","
+                            + "'" + tbjobstockacct.getText().toString() + "'" + ","
+                            + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
+                            + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
+                            + "'" + tbmixedvaracct.getText().toString() + "'" + ","
+                            + "'" + tbcopacct.getText().toString() + "'" + ","
+                            + "'" + tboutusgvaracct.getText().toString() + "'" + ","
+                            + "'" + tboutratevaracct.getText().toString() + "'"
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    st.executeUpdate("update pl_mstr set "
+                            + "pl_desc = " + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "pl_inventory = " + "'" + tbinvacct.getText().toString() + "'" + ","
+                            + "pl_inv_discr = " + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
+                            + "pl_scrap = " + "'" + tbscrapacct.getText().toString() + "'" + ","
+                            + "pl_wip = " + "'" + tbwipacct.getText().toString() + "'" + ","
+                            + "pl_wip_var = " + "'" + tbwipvaracct.getText().toString() + "'" + ","
+                            + "pl_inv_change = " + "'" + tbinvchangeacct.getText().toString() + "'" + ","
+                            + "pl_sales = " + "'" + tbsalesacct.getText().toString() + "'" + ","
+                            + "pl_sales_disc = " + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
+                            + "pl_cogs_mtl = " + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
+                            + "pl_cogs_lbr = " + "'" + tbcogslbracct.getText().toString() + "'" + ","
+                            + "pl_cogs_bdn = " + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
+                            + "pl_cogs_ovh = " + "'" + tbcogsovhacct.getText().toString() + "'" + ","
+                            + "pl_cogs_out = " + "'" + tbcogsoutacct.getText().toString() + "'" + ","
+                            + "pl_purchases = " + "'" + tbpurchacct.getText().toString() + "'" + ","
+                            + "pl_po_rcpt = " + "'" + tbporcptacct.getText().toString() + "'" + ","
+                            + "pl_po_ovh = " + "'" + tbpoovhacct.getText().toString() + "'" + ","
+                            + "pl_po_pricevar = " + "'" + tbpopricevaracct.getText().toString() + "'" + ","
+                            + "pl_ap_usage = " + "'" + tbapusageacct.getText().toString() + "'" + ","
+                            + "pl_ap_ratevar = " + "'" + tbapratevaracct.getText().toString() + "'" + ","
+                            + "pl_job_stock = " + "'" + tbjobstockacct.getText().toString() + "'" + ","
+                            + "pl_mtl_usagevar = " + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
+                            + "pl_mtl_ratevar = " + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
+                            + "pl_mix_var = " + "'" + tbmixedvaracct.getText().toString() + "'" + ","
+                            + "pl_cop = " + "'" + tbcopacct.getText().toString() + "'" + ","
+                            + "pl_out_usagevar = " + "'" + tboutusgvaracct.getText().toString() + "'" + ","
+                            + "pl_out_ratevar = " + "'" + tboutratevaracct.getText().toString() + "'"
+                            + " where pl_line = " + "'" + tbkey.getText().toString() + "'"
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from pl_mstr where pl_line = " + "'" + tbkey.getText() + "'" +  ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("SELECT * FROM  pl_mstr where pl_line = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                         tbkey.setText(res.getString("pl_line"));
+                         tbdesc.setText(res.getString("pl_desc"));
+                         tbinvacct.setText(res.getString("pl_inventory"));
+                         tbinvdescrepancyacct.setText(res.getString("pl_inv_discr"));
+                         tbscrapacct.setText(res.getString("pl_scrap"));
+                         tbwipacct.setText(res.getString("pl_wip"));
+                         tbwipvaracct.setText(res.getString("pl_wip_var"));
+                         tbinvchangeacct.setText(res.getString("pl_inv_change"));
+                         tbsalesacct.setText(res.getString("pl_sales"));
+                         tbsalesdiscacct.setText(res.getString("pl_sales_disc"));
+                         tbcogsmtlacct.setText(res.getString("pl_cogs_mtl"));
+                         tbcogslbracct.setText(res.getString("pl_cogs_lbr"));
+                         tbcogsbdnacct.setText(res.getString("pl_cogs_bdn"));
+                         tbcogsovhacct.setText(res.getString("pl_cogs_ovh"));
+                         tbcogsoutacct.setText(res.getString("pl_cogs_out"));
+                         tbpurchacct.setText(res.getString("pl_purchases"));
+                         tbporcptacct.setText(res.getString("pl_po_rcpt"));
+                         tbpoovhacct.setText(res.getString("pl_po_ovh"));
+                         tbpopricevaracct.setText(res.getString("pl_po_pricevar"));
+                         tbapusageacct.setText(res.getString("pl_ap_usage"));
+                         tbapratevaracct.setText(res.getString("pl_ap_ratevar"));
+                         tbjobstockacct.setText(res.getString("pl_job_stock"));
+                         tbmtlusagevaracct.setText(res.getString("pl_mtl_usagevar"));
+                         tbmtlratevaracct.setText(res.getString("pl_mtl_ratevar"));
+                         tbmixedvaracct.setText(res.getString("pl_mix_var"));
+                         tbcopacct.setText(res.getString("pl_cop"));
+                         tboutusgvaracct.setText(res.getString("pl_out_usagevar"));
+                         tboutratevaracct.setText(res.getString("pl_out_ratevar"));
+                    }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+    // custom funcs
+    
+    
+    
+   
     /**
      * This method is called from within the bsmf.MainFrame.constructor to initialize the form.
      * WARNING: Do NOT modify this code. The bsmf.MainFrame.content of this method is always
@@ -413,7 +721,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
         jLabel72 = new javax.swing.JLabel();
         jLabel70 = new javax.swing.JLabel();
         tbscrapacct = new javax.swing.JTextField();
-        tbnbr = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel74 = new javax.swing.JLabel();
         jLabel67 = new javax.swing.JLabel();
         jLabel68 = new javax.swing.JLabel();
@@ -461,6 +769,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -472,7 +781,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
 
         jLabel66.setText("ProdCode");
 
-        btupdate.setText("Edit");
+        btupdate.setText("Update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -493,6 +802,12 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
         jLabel72.setText("Inventory Change Acct");
 
         jLabel70.setText("Wip Acct");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel74.setText("Sales Discount Acct");
 
@@ -559,6 +874,13 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -601,7 +923,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel66)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel94)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -609,6 +931,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btadd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdate))
@@ -630,9 +955,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel67)
-                                .addGap(9, 9, 9)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -655,8 +980,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel91, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel90, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel89, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel88, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btdelete, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(jLabel88, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbapratevaracct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -668,7 +992,11 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                                     .addComponent(tboutusgvaracct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tboutratevaracct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbtbd, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel67)
+                                .addGap(9, 9, 9)
+                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -679,9 +1007,10 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel67)
-                        .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel66)
-                        .addComponent(btnew))
+                        .addComponent(btnew)
+                        .addComponent(btclear))
                     .addComponent(btbrowse))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -787,162 +1116,19 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                
-                if (tbnbr.getText().length() > 4) {
-                    bsmf.MainFrame.show("ProdLine Code Must be 4 chars or less");
-                    return;
-                }
-                
-                
-               proceed = checkAccts();
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT pl_line FROM  pl_mstr where pl_line = " + "'" + tbnbr.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-
-                    if (i == 0) {
-                        st.executeUpdate("insert into pl_mstr "
-                            + "(pl_line, pl_desc, pl_inventory, pl_inv_discr, "
-                            + "pl_scrap, pl_wip, pl_wip_var, pl_inv_change, pl_sales, pl_sales_disc, "
-                            + "pl_cogs_mtl, pl_cogs_lbr, pl_cogs_bdn, pl_cogs_ovh, pl_cogs_out, "
-                            + "pl_purchases, pl_po_rcpt, pl_po_ovh, pl_po_pricevar, pl_ap_usage, pl_ap_ratevar, "
-                            + "pl_job_stock, pl_mtl_usagevar, pl_mtl_ratevar, pl_mix_var, pl_cop, pl_out_usagevar, pl_out_ratevar )"
-                            + " values ( " + "'" + tbnbr.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbinvacct.getText().toString() + "'" + ","
-                            + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
-                            + "'" + tbscrapacct.getText().toString() + "'" + ","
-                            + "'" + tbwipacct.getText().toString() + "'" + ","
-                            + "'" + tbwipvaracct.getText().toString() + "'" + ","
-                            + "'" + tbinvchangeacct.getText().toString() + "'" + ","
-                            + "'" + tbsalesacct.getText().toString() + "'" + ","
-                            + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
-                            + "'" + tbcogslbracct.getText().toString() + "'" + ","
-                            + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsovhacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsoutacct.getText().toString() + "'" + ","
-                            + "'" + tbpurchacct.getText().toString() + "'" + ","
-                            + "'" + tbporcptacct.getText().toString() + "'" + ","
-                            + "'" + tbpoovhacct.getText().toString() + "'" + ","
-                            + "'" + tbpopricevaracct.getText().toString() + "'" + ","
-                            + "'" + tbapusageacct.getText().toString() + "'" + ","
-                            + "'" + tbapratevaracct.getText().toString() + "'" + ","
-                            + "'" + tbjobstockacct.getText().toString() + "'" + ","
-                            + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
-                            + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
-                            + "'" + tbmixedvaracct.getText().toString() + "'" + ","
-                            + "'" + tbcopacct.getText().toString() + "'" + ","
-                            + "'" + tboutusgvaracct.getText().toString() + "'" + ","
-                            + "'" + tboutratevaracct.getText().toString() + "'"
-                            + ")"
-                            + ";");
-
-                        bsmf.MainFrame.show("Added Prod Code Record");
-                        initvars(null);
-                    } else {
-                    bsmf.MainFrame.show("Prod Code already exists");
-                }
-                    
-                } // if proceed
-                
-            } 
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add Prod Code");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                
-                if (tbnbr.getText().length() > 4) {
-                    bsmf.MainFrame.show("ProdLine Code Must be 4 chars or less");
-                    return;
-                }
-                
-                proceed = checkAccts();
-                
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT pl_line FROM  pl_mstr where pl_line = " + "'" + tbnbr.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-
-                    if (i > 0) {
-                        st.executeUpdate("update pl_mstr set "
-                            + "pl_desc = " + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "pl_inventory = " + "'" + tbinvacct.getText().toString() + "'" + ","
-                            + "pl_inv_discr = " + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
-                            + "pl_scrap = " + "'" + tbscrapacct.getText().toString() + "'" + ","
-                            + "pl_wip = " + "'" + tbwipacct.getText().toString() + "'" + ","
-                            + "pl_wip_var = " + "'" + tbwipvaracct.getText().toString() + "'" + ","
-                            + "pl_inv_change = " + "'" + tbinvchangeacct.getText().toString() + "'" + ","
-                            + "pl_sales = " + "'" + tbsalesacct.getText().toString() + "'" + ","
-                            + "pl_sales_disc = " + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
-                            + "pl_cogs_mtl = " + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
-                            + "pl_cogs_lbr = " + "'" + tbcogslbracct.getText().toString() + "'" + ","
-                            + "pl_cogs_bdn = " + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
-                            + "pl_cogs_ovh = " + "'" + tbcogsovhacct.getText().toString() + "'" + ","
-                            + "pl_cogs_out = " + "'" + tbcogsoutacct.getText().toString() + "'" + ","
-                            + "pl_purchases = " + "'" + tbpurchacct.getText().toString() + "'" + ","
-                            + "pl_po_rcpt = " + "'" + tbporcptacct.getText().toString() + "'" + ","
-                            + "pl_po_ovh = " + "'" + tbpoovhacct.getText().toString() + "'" + ","
-                            + "pl_po_pricevar = " + "'" + tbpopricevaracct.getText().toString() + "'" + ","
-                            + "pl_ap_usage = " + "'" + tbapusageacct.getText().toString() + "'" + ","
-                            + "pl_ap_ratevar = " + "'" + tbapratevaracct.getText().toString() + "'" + ","
-                            + "pl_job_stock = " + "'" + tbjobstockacct.getText().toString() + "'" + ","
-                            + "pl_mtl_usagevar = " + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
-                            + "pl_mtl_ratevar = " + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
-                            + "pl_mix_var = " + "'" + tbmixedvaracct.getText().toString() + "'" + ","
-                            + "pl_cop = " + "'" + tbcopacct.getText().toString() + "'" + ","
-                            + "pl_out_usagevar = " + "'" + tboutusgvaracct.getText().toString() + "'" + ","
-                            + "pl_out_ratevar = " + "'" + tboutratevaracct.getText().toString() + "'"
-                            + " where pl_line = " + "'" + tbnbr.getText().toString() + "'"
-                            + ";");
-
-                        bsmf.MainFrame.show("Updated Prod Code Record");
-                        initvars(null);
-                    }
-
-                } 
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Edit Prod Code");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+          if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -950,44 +1136,31 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        enableAll();
-        clearAll();
-        btupdate.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        tbnbr.requestFocus();
+        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from pl_mstr where pl_line = " + "'" + tbnbr.getText() + "'" +  ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted Product Code " + tbnbr.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete ProductCode Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
@@ -1034,10 +1207,10 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbinvchangeacct;
     private javax.swing.JTextField tbinvdescrepancyacct;
     private javax.swing.JTextField tbjobstockacct;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbmixedvaracct;
     private javax.swing.JTextField tbmtlratevaracct;
     private javax.swing.JTextField tbmtlusagevaracct;
-    private javax.swing.JTextField tbnbr;
     private javax.swing.JTextField tboutratevaracct;
     private javax.swing.JTextField tboutusgvaracct;
     private javax.swing.JTextField tbpoovhacct;

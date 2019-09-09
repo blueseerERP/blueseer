@@ -16,7 +16,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,44,0,0,1,-112"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,102,0,0,1,-96"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
@@ -48,43 +48,44 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="tbwh" min="-2" pref="123" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="tbname" min="-2" pref="218" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="ddsite" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tbaddr2" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="tbaddr1" max="32767" attributes="0"/>
-                                  <Component id="tbcity" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="tbzip" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddstate" alignment="0" max="32767" attributes="0"/>
-                      </Group>
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="ddcountry" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                  <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="tbkey" min="-2" pref="123" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnew" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="tbname" min="-2" pref="218" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="ddsite" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="tbaddr2" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tbaddr1" max="32767" attributes="0"/>
+                                      <Component id="tbcity" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="tbzip" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddstate" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="ddcountry" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                              <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -96,11 +97,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbwh" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -163,7 +167,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Name"/>
+            <Property name="text" type="java.lang.String" value="Desc"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
@@ -176,7 +180,10 @@
         </Component>
         <Component class="javax.swing.JTextField" name="tbname">
         </Component>
-        <Component class="javax.swing.JTextField" name="tbwh">
+        <Component class="javax.swing.JTextField" name="tbkey">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>
@@ -188,7 +195,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="WH ID"/>
+            <Property name="text" type="java.lang.String" value="Code"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
@@ -275,6 +282,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Country"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

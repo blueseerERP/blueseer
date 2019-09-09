@@ -53,10 +53,10 @@ import javax.swing.JViewport;
  */
 public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    // global variable declarations
+ // global variable declarations
                 boolean isLoad = false;
     
-   // global datatablemodel declarations    
+   // global datatablemodel declarations       
                 
       
                 
@@ -270,6 +270,13 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show("must enter a description");
@@ -277,12 +284,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a code");
-                    tbkey.requestFocus();
-                    return b;
-                }
+                
                 
                
         return b;

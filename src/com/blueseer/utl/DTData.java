@@ -1041,7 +1041,7 @@ public class DTData {
         
           public static DefaultTableModel getWorkCenterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Cell", "Machine", "Desc", "Dept/CC", "RunRate", "SetupRate", "BurdenRate"})
+                      new String[]{"select", "Cell",  "Desc", "Dept/CC", "RunRate", "SetupRate", "BurdenRate"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1059,23 +1059,22 @@ public class DTData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 if (state == 1) { // begins
-                    res = st.executeQuery(" SELECT wc_cell, wc_mch, wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
+                    res = st.executeQuery(" SELECT wc_cell,  wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
                         " FROM  wc_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by wc_cell, wc_mch ;");
+                        " order by wc_cell ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT SELECT wc_cell, wc_mch, wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
+                    res = st.executeQuery("SELECT SELECT wc_cell,  wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
                         " FROM  wc_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by wc_cell, wc_mch ;");
+                        " order by wc_cell ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT SELECT wc_cell, wc_mch, wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
+                 res = st.executeQuery("SELECT SELECT wc_cell,  wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
                         " FROM  wc_mstr where "+ myfield + " like " + "'%" + str + "%'" +
-                        " order by wc_cell, wc_mch ;");
+                        " order by wc_cell ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wc_cell"),
-                                   res.getString("wc_mch"),
                                    res.getString("wc_desc"),
                                    res.getString("wc_cc"),
                                    res.getString("wc_run_rate"),
@@ -4050,7 +4049,7 @@ public class DTData {
           public static DefaultTableModel getWorkCellAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{"select","Cell", "Machine", "Desc", "Site", "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
+           new String[]{"select","Cell", "Desc", "Site", "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4073,7 +4072,6 @@ public class DTData {
                         
                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
                             res.getString("wc_cell"),
-                                res.getString("wc_mch"),
                                 res.getString("wc_desc").replace(",", ""),
                                 res.getString("wc_site"),
                                 res.getString("wc_cc"),
@@ -4481,7 +4479,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           public static DefaultTableModel getRoutingsAll() {
               
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RoutingID", "Operation", "Operation Desc", "Site", "Reportable", "Work Cell", "Machine", "SetupHours", "RunHours"})
+                      new String[]{"select", "RoutingID", "Operation", "Operation Desc", "Site", "Reportable", "Work Cell", "SetupHours", "RunHours"})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4507,7 +4505,6 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                                 res.getString("wf_site"),
                                 res.getString("wf_assert"),
                                 res.getString("wf_cell"),
-                                res.getString("wf_mch"),
                                 res.getString("wf_setup_hours"),
                                 res.getString("wf_run_hours")
                         });

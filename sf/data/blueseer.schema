@@ -1682,7 +1682,6 @@ CREATE TABLE IF NOT EXISTS `vpr_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `wc_mstr` (
   `wc_cell` varchar(20) NOT NULL,
-  `wc_mch` varchar(20)  NOT NULL DEFAULT '',
   `wc_desc` varchar(100)  NOT NULL DEFAULT '',
   `wc_site` varchar(10)  NOT NULL DEFAULT '',
   `wc_cc` varchar(10)  NOT NULL DEFAULT '',
@@ -1701,7 +1700,6 @@ CREATE TABLE IF NOT EXISTS `wf_mstr` (
   `wf_assert` tinyint(1)  NOT NULL DEFAULT '0',
   `wf_op_desc` varchar(100)  NOT NULL DEFAULT '',
   `wf_cell` varchar(20)  NOT NULL DEFAULT '',
-  `wf_mch` varchar(20)  NOT NULL DEFAULT '',
   `wf_setup_hours` decimal(13,5) NOT NULL DEFAULT '0.00000',
   `wf_run_hours` decimal(13,5) NOT NULL DEFAULT '0.00000') ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `panel_mstr` (

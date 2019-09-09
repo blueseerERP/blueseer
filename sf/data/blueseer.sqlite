@@ -2112,7 +2112,6 @@ CREATE TABLE "vpr_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "wc_mstr" (
   "wc_cell" varchar(20) NOT NULL,
-  "wc_mch" varchar(20) COLLATE NOCASE DEFAULT '',
   "wc_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wc_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "wc_cc" varchar(10) COLLATE NOCASE DEFAULT '',
@@ -2134,7 +2133,6 @@ CREATE TABLE "wf_mstr" (
   "wf_assert" tinyint(1) COLLATE NOCASE DEFAULT '0',
   "wf_op_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wf_cell" varchar(20) COLLATE NOCASE DEFAULT '',
-  "wf_mch" varchar(20) COLLATE NOCASE DEFAULT '',
   "wf_setup_hours" decimal(13,5) NOT NULL DEFAULT '0.00000',
   "wf_run_hours" decimal(13,5) NOT NULL DEFAULT '0.00000');
 /*!40101 SET character_set_client = @saved_cs_client */;
