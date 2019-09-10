@@ -154,62 +154,37 @@ public class OVData {
    
    
    
-   public static void updatecounter(String countername, int counterid) {
+    public static void updatecounter(String countername, int counterid) {
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass); 
-       
-       try {
+            con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
+       try {
             st.executeUpdate("update counter c set c.counter_id = " + "'" + counterid + "'" + "where c.counter_name = " + "'" + countername.toString() + "';");
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
+        } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
     }
-    
-       
-      public static boolean checkIfRecordExists(String mytable, String myfield1, String mykey1) {
-        boolean proceed = true;
-      try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-        res = st.executeQuery("SELECT * FROM " + mytable + " where " + myfield1 + " = " + "'" + mykey1 + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                if (i > 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Record already exists");
-                }   
-        } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return proceed;
-    } 
-       
-      public static boolean isUserDefined(String myuser) {
+
+
+   
+    public static boolean isUserDefined(String myuser) {
        boolean myvalue = false;
        int i = 0;
-                   
+
        try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-               
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id = " + "'" + myuser.toString() + "'" + ";");
                     while (res.next()) {
                         i++;
@@ -220,29 +195,33 @@ public class OVData {
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        
-       
+
+
        return myvalue;
     }
-        
-        
-             public static boolean isAcctNumberValid(String acct) {
+
+    public static boolean isAcctNumberValid(String acct) {
        boolean myvalue = false;
        int i = 0;
-                    
-            
+
+
        try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-               
-                Statement st = con.createStatement();
-                ResultSet res = null;
+
+                
                 res = st.executeQuery("SELECT ac_id FROM ac_mstr where ac_id = " +
                         "'" + acct.toString() + "'" + ";");
                     while (res.next()) {
@@ -254,28 +233,33 @@ public class OVData {
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        
-       
+
+
        return myvalue;
     }     
-             
-              public static boolean isCostCenterValid(String cc) {
+
+    public static boolean isCostCenterValid(String cc) {
        boolean myvalue = false;
        int i = 0;
-                    
-            
+
+
        try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-               
-                Statement st = con.createStatement();
-                ResultSet res = null;
+
+                
                 res = st.executeQuery("SELECT dept_id FROM dept_mstr where dept_id = " +
                         "'" + cc.toString() + "'" + ";");
                     while (res.next()) {
@@ -287,39 +271,44 @@ public class OVData {
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        
-       
+
+
        return myvalue;
     }     
+
       
-      
-      public static ArrayList getusermstrlist() {
+    public static ArrayList getusermstrlist() {
         ArrayList myarray = new ArrayList();
       
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            
                 res = st.executeQuery("select user_id from user_mstr order by user_id;");
                while (res.next()) {
                     myarray.add(res.getString("user_id"));
-                    
-                    
                 }
-               
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -329,15 +318,14 @@ public class OVData {
     }
      
       
-       public static int getNextPO() {
+    public static int getNextPO() {
        int mypo = 0;
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                res = st.executeQuery("select max(counter_id) as 'num' from counter where counter_name = 'po';");
                 while (res.next()) {
 
@@ -345,14 +333,17 @@ public class OVData {
                     mypo = nextnumber;
                     nextnumber++;
                     OVData.updatecounter("po", nextnumber);
-                   
                 }
                
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -361,14 +352,15 @@ public class OVData {
         
     }
        
-           public static int getNextNbr(String countername) {
+    public static int getNextNbr(String countername) {
        int nbr = 0;
         try{
            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 con.setAutoCommit(false);
                 if (dbtype.equals("sqlite")) {
                res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
@@ -389,7 +381,11 @@ public class OVData {
             catch (SQLException s){
                  MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -398,14 +394,15 @@ public class OVData {
         
     }
       
-       public static void copyUserPerms(String fromuser, String touser) {
+    public static void copyUserPerms(String fromuser, String touser) {
          try {
 
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 boolean canadd = false;
@@ -442,26 +439,30 @@ public class OVData {
 
                 } else {
                     bsmf.MainFrame.show("Copy user From does not exist");
-                }
-            } // if proceed
+                } // if proceed
+            } 
             catch (SQLException s) {
                 MainFrame.bslog(s);
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
        }
        
-       public static boolean copySite(String fromsite, String tosite) {
+    public static boolean copySite(String fromsite, String tosite) {
          boolean r = true;
            try {
-
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 boolean canadd = false;
@@ -509,7 +510,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 r = false;
             }
-            con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
         } catch (Exception e) {
             MainFrame.bslog(e);
             r = false;
@@ -517,8 +522,9 @@ public class OVData {
            return r; 
        }
        
-       
-        public static String addMenuToUser(String menu, String thisuser) {
+    
+    /* stopped here */   
+    public static String addMenuToUser(String menu, String thisuser) {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {
             Class.forName(driver).newInstance();

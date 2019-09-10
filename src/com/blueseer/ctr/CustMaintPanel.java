@@ -290,11 +290,11 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      try {
 
            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Statement st = bsmf.MainFrame.con.createStatement();
+           ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                
@@ -367,8 +367,11 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                  message = new String[]{"1", "Customer cannot be added"};   
-            }
-            bsmf.MainFrame.con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+         }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -379,11 +382,11 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         String[] m = new String[2];
            
            try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Statement st = bsmf.MainFrame.con.createStatement();
+           ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
                st.executeUpdate("update cm_mstr set " + 
                        " cm_name = " + "'" + tbname.getText().replace("'", "") + "'" + "," +
                        " cm_line1 = " + "'" + tbline1.getText().replace("'", "") + "'" + "," +
@@ -425,8 +428,11 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
              } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
-            }
-            bsmf.MainFrame.con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+         }
         } catch (Exception e) {
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
             MainFrame.bslog(e);
@@ -441,10 +447,12 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Statement st = bsmf.MainFrame.con.createStatement();
+           ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
+                
               
                    int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbkey.getText() + "'" + ";");
                    st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbkey.getText() + "'" + ";");
@@ -457,8 +465,11 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                  } catch (SQLException s) {
                             MainFrame.bslog(s);
                         m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
-                    }
-                    bsmf.MainFrame.con.close();
+                 } finally {
+                   if (res != null) res.close();
+                   if (st != null) st.close();
+                   if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+                 }
                 } catch (Exception e) {
                     MainFrame.bslog(e);
                 }
@@ -474,20 +485,16 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         clearShipTo();
         clearContacts();
         int i = 0;
-        
+         
         try {
-            
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
                 res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + x[0] + "'"  + ";");
                 while (res.next()) {
                  i++;   
-                 tbkey.setForeground(Color.blue);
-                 tbkey.setEditable(false);
                 tbkey.setText(res.getString("cm_code"));
                 tbname.setText(res.getString("cm_name"));
                 tbline1.setText(res.getString("cm_line1"));
@@ -533,9 +540,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 tbremarks.setText(res.getString("cm_remarks"));
                 tbmainphone.setText(res.getString("cm_phone"));
                 tbmainemail.setText(res.getString("cm_email"));
-                
-                
-                                    
                 }
                 
                 // set Action if Record found (i > 0)
@@ -544,12 +548,15 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
+         } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+         }
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
-        }
+        } 
      return m;
     }
         
