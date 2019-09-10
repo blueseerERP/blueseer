@@ -53,10 +53,10 @@ import javax.swing.JViewport;
  */
 public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
- // global variable declarations
+    // global variable declarations
                 boolean isLoad = false;
     
-   // global datatablemodel declarations       
+    // global datatablemodel declarations       
                 
       
                 

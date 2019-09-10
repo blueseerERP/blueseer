@@ -1551,7 +1551,7 @@ public class DTData {
         
          } 
                   
-          public static DefaultTableModel getGenCodeBrowseUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getGenCodeBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "GenCode", "GenKey", "GenValue"})
                 {
@@ -1605,11 +1605,122 @@ public class DTData {
         return mymodel;
         
          } 
-         
+        
+        
+        public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Cust", "CustItem", "Item"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by cup_cust, cup_citem ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by cup_cust, cup_citem ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by cup_cust, cup_citem ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cup_cust"),
+                                   res.getString("cup_citem"),
+                                   res.getString("cup_item")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+        
+        public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Vend", "VendItem", "Item"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select vdp_vend, vdp_vitem, vdp_item " +
+                        " FROM  vdp_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by vdp_vend, vdp_vitem ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select vdp_vend, vdp_vitem, vdp_item " +
+                        " FROM  vdp_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by vdp_vend, vdp_vitem ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select vdp_vend, vdp_vitem, vdp_item " +
+                        " FROM  vdp_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by vdp_vend, vdp_vitem ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vdp_vend"),
+                                   res.getString("vdp_vitem"),
+                                   res.getString("vdp_item")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+        
         
           
           
-            public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "ProfileCode", "Desc", "UserID"})
                 {

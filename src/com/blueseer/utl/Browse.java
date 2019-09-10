@@ -286,8 +286,14 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("taxmaint")) {
                 tablereport.setModel(DTData.getTaxBrowseUtil(tbtext.getText(), state, searchfield));
                 }
-                 if (callingpanel.equals("gencodemaint")) {
+                if (callingpanel.equals("gencodemaint")) {
                 tablereport.setModel(DTData.getGenCodeBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
+                if (callingpanel.equals("custxrefmaint")) {
+                tablereport.setModel(DTData.getCustXrefBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
+                if (callingpanel.equals("vendxrefmaint")) {
+                tablereport.setModel(DTData.getVendXrefBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
                 if (callingpanel.equals("payprofilemaint")) {
                 tablereport.setModel(DTData.getPayProfileBrowseUtil(tbtext.getText(), state, searchfield)); 
@@ -560,6 +566,16 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("GenericCodeMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
               reinitpanels("GenericCodeMaint", true, arg);
+            }
+            if (callingpanel.equals("custxrefmaint")) {
+              if (! checkperms("CustXrefMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("CustXrefMaint", true, arg);
+            }
+            if (callingpanel.equals("vendxrefmaint")) {
+              if (! checkperms("VemdXrefMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("VendXrefMaint", true, arg);
             }
             if (callingpanel.equals("deptccmaint")) {
               if (! checkperms("DeptMaint")) { return; }

@@ -766,6 +766,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Invoice View"));
 
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
         jLabel24.setText("Invoice Nbr:");
 
         btclear.setText("Clear");
@@ -1168,7 +1174,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(5, 5, 5)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
@@ -1221,6 +1226,10 @@ public class InvoiceMaint extends javax.swing.JPanel {
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
         reinitpanels("BrowseUtil", true, new String[]{"invoicemaint","sh_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btPrintInv;

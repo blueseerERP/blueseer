@@ -30,7 +30,10 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -40,6 +43,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -47,124 +57,432 @@ import javax.swing.DefaultComboBoxModel;
  */
 
 
-public class TaxMaint extends javax.swing.JPanel {
+public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
 
+    // global variable declarations
+                boolean isLoad = false;
     
+    // global datatablemodel declarations       
      javax.swing.table.DefaultTableModel taxmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Element", "Percent", "Type", "Enabled"
             });
     
-    /**
-     * Creates new form ClockControl
-     */
+    
     public TaxMaint() {
         initComponents();
     }
 
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-     public void getTax(String code) {
-         try {
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        taxmodel.setRowCount(0);
+           tabletax.setModel(taxmodel);
+           tbkey.setText("");
+           tbdesc.setText("");
+           tbtaxelement.setText("");
+           tbtaxpercent.setText("");
+           cbenabled.setSelected(false);
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+               
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tabletax.getRowCount() < 1) {
+                    b = false;
+                    bsmf.MainFrame.show("must have at least one tax element in table");
+                    tbtaxelement.requestFocus();
+                    return b;
+                }
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                
+                boolean proceed = true;
                 int i = 0;
-                    res = st.executeQuery("SELECT * FROM  tax_mstr where tax_code = " + "'" + code + "'" + ";");
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT tax_code FROM  tax_mstr where tax_code = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
-                        tbdesc.setText(res.getString("tax_desc"));
-                        tbtaxcode.setText(res.getString("tax_code"));
                     }
-                    res = st.executeQuery("SELECT * FROM  taxd_mstr where " +
-                            " taxd_parentcode = " + "'" + code + "'" + ";");
-                    while (res.next()) {
-                     taxmodel.addRow(new Object[]{res.getString("taxd_desc"), res.getString("taxd_percent"), res.getString("taxd_type"), res.getBoolean("taxd_enabled")});   
+                    if (i == 0) {
+                        st.executeUpdate("insert into tax_mstr (tax_code, tax_desc) values (" + 
+                            "'" + tbkey.getText() + "'" + "," +
+                            "'" + tbdesc.getText() + "'"  + 
+                            ")" + ";");     
+                
+              
+                 for (int j = 0; j < tabletax.getRowCount(); j++) {
+                st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
+                        + "'" + tbkey.getText() + "'" + ","
+                        + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
+                        + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
+                        + " );" );
+                 }
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
                     }
-           
-                    if (i > 0) {
-                        enableAll();
-                        btbrowse.setEnabled(false);
-                        btnew.setEnabled(false);
-                        btadd.setEnabled(false);
-                        tbtaxcode.setEnabled(false);
-                    }
-                    
-            }
-            catch (SQLException s) {
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve task master record");
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
-     }
-    
-     public void clearAll() {
-           taxmodel.setRowCount(0);
-           tabletax.setModel(taxmodel);
-           tbtaxcode.setText("");
-           tbdesc.setText("");
-           tbtaxelement.setText("");
-           tbtaxpercent.setText("");
-           cbenabled.setSelected(false);
-           
+     
+     return m;
      }
      
-     public void enableAll() {
-         tabletax.setEnabled(true);
-         tbtaxcode.setEnabled(true);
-         tbdesc.setEnabled(true);
-         tbtaxelement.setEnabled(true);
-         tbtaxpercent.setEnabled(true);
-         cbenabled.setEnabled(true);
-         btbrowse.setEnabled(true);
-         btedit.setEnabled(true);
-         btnew.setEnabled(true);
-         btadd.setEnabled(true);
-         btdelete.setEnabled(true);
-         btaddelement.setEnabled(true);
-         btdeleteelement.setEnabled(true);
-         ddtype.setEnabled(true);
-     }
-    
-        public void disableAll() {
-         tabletax.setEnabled(false);
-         tbtaxcode.setEnabled(false);
-         tbdesc.setEnabled(false);
-         tbtaxelement.setEnabled(false);
-         cbenabled.setEnabled(false);
-         btbrowse.setEnabled(false);
-         btedit.setEnabled(false);
-         btnew.setEnabled(false);
-         btadd.setEnabled(false);
-         tbtaxpercent.setEnabled(false);
-         btaddelement.setEnabled(false);
-         btdeleteelement.setEnabled(false);
-         btdelete.setEnabled(false);
-         ddtype.setEnabled(false);
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                       st.executeUpdate("update tax_mstr set " + 
+                           "tax_desc = " + "'" + tbdesc.getText() + "'" + 
+                           " where tax_code = " + "'" + tbkey.getText() + "'" +
+                             ";");     
+                
+                       //  now lets delete all stored actions of this master task...then add back from table
+                        st.executeUpdate("delete from taxd_mstr where taxd_parentcode = " + "'" + tbkey.getText() + "'" + ";");
+
+                         for (int j = 0; j < tabletax.getRowCount(); j++) {
+                        st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
+                                + "'" + tbkey.getText() + "'" + ","
+                                + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
+                                + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
+                                + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
+                                + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
+                                + " );" );
+                         }
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
      }
      
-    public void initvars(String[] arg) {
-          
-           clearAll();
-           disableAll();
-           
-          
-           
-           if (arg != null && arg.length > 0) {
-             getTax(arg[0]);
-           } else {
-               disableAll();
-               btbrowse.setEnabled(true);
-               btnew.setEnabled(true);
-           }
-           
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+              
+                   int k = 0;
+                    res = st.executeQuery("SELECT cm_code FROM  cm_mstr where cm_tax_code = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        k++;
+                    }
+                    if (k > 0) {
+                        bsmf.MainFrame.show("Cannot delete tax code until removed from all customers");
+                        return new String[] {BlueSeerUtils.ErrorBit, "Cannot delete record"};
+                    }
+                    
+                    int i = st.executeUpdate("delete from tax_mstr where tax_code = " + "'" + tbkey.getText() + "'" + ";");
+                    int j = st.executeUpdate("delete from taxd_mstr where taxd_parentcode = " + "'" + tbkey.getText() + "'" + ";");
+                    if (i > 0 && j > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("SELECT * FROM  tax_mstr where tax_code = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                        tbdesc.setText(res.getString("tax_desc"));
+                        tbkey.setText(res.getString("tax_code"));
+                    }
+                    res = st.executeQuery("SELECT * FROM  taxd_mstr where " +
+                            " taxd_parentcode = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                     taxmodel.addRow(new Object[]{res.getString("taxd_desc"), res.getString("taxd_percent"), res.getString("taxd_type"), res.getBoolean("taxd_enabled")});   
+                    }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
     }
+    
+   
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -175,7 +493,7 @@ public class TaxMaint extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -192,9 +510,10 @@ public class TaxMaint extends javax.swing.JPanel {
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        tbtaxcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         tbdesc = new javax.swing.JTextField();
         btbrowse = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
 
@@ -202,10 +521,10 @@ public class TaxMaint extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tax Maintenance"));
 
-        btedit.setText("Edit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -316,10 +635,23 @@ public class TaxMaint extends javax.swing.JPanel {
 
         jLabel6.setText("Desc");
 
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btbrowseActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
             }
         });
 
@@ -335,11 +667,13 @@ public class TaxMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(tbdesc))
                 .addGap(38, 38, 38))
@@ -351,9 +685,11 @@ public class TaxMaint extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(tbtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -388,7 +724,7 @@ public class TaxMaint extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd)))
                 .addContainerGap(22, Short.MAX_VALUE))
@@ -402,7 +738,7 @@ public class TaxMaint extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btedit)
+                    .addComponent(btupdate)
                     .addComponent(btadd)
                     .addComponent(btdelete))
                 .addContainerGap())
@@ -411,60 +747,16 @@ public class TaxMaint extends javax.swing.JPanel {
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
-                int i = 0;
-                    
-                       st.executeUpdate("update tax_mstr set " + 
-                           "tax_desc = " + "'" + tbdesc.getText() + "'" + 
-                           " where tax_code = " + "'" + tbtaxcode.getText() + "'" +
-                             ";");     
-                
-               //  now lets delete all stored actions of this master task...then add back from table
-                st.executeUpdate("delete from taxd_mstr where taxd_parentcode = " + "'" + tbtaxcode.getText() + "'" + ";");
-                       
-                 for (int j = 0; j < tabletax.getRowCount(); j++) {
-                st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
-                        + "'" + tbtaxcode.getText() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
-                        + " );" );
-                 }
-              
-                 bsmf.MainFrame.show("Updated Tax Master");
-                 initvars(null);
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating tax master");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       
-    }//GEN-LAST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});  
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-      
-      tbtaxcode.setText("");
-      tbtaxcode.requestFocus();
-      enableAll();
-      btbrowse.setEnabled(false);
-      btedit.setEnabled(false);
-      btnew.setEnabled(false);
-     
-      
+      newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddelementActionPerformed
@@ -493,49 +785,11 @@ public class TaxMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeleteelementActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-            
-        if (tbtaxcode.getText().isEmpty()) {
-            bsmf.MainFrame.show("Must enter a tax code");
-            return;
-        }
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-          
-                int i = 0;
-                    
-                    st.executeUpdate("insert into tax_mstr (tax_code, tax_desc) values (" + 
-                            "'" + tbtaxcode.getText() + "'" + "," +
-                            "'" + tbdesc.getText() + "'"  + 
-                            ")" + ";");     
-                
-              
-                 for (int j = 0; j < tabletax.getRowCount(); j++) {
-                st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
-                        + "'" + tbtaxcode.getText() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
-                        + " );" );
-                 }
-              
-                bsmf.MainFrame.show("Added Master Tax Record");
-                 initvars(null);
-                 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);                  
-                bsmf.MainFrame.show("Problem adding master tax");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -543,54 +797,32 @@ public class TaxMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        
-        
-        
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-            try {
-
-                Class.forName(bsmf.MainFrame.driver).newInstance();
-                bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-                ResultSet res = null;
-                try {
-                    Statement st = bsmf.MainFrame.con.createStatement();
-                    int k = 0;
-                    res = st.executeQuery("SELECT cm_code FROM  cm_mstr where cm_tax_code = " + "'" + tbtaxcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        k++;
-                    }
-                    if (k > 0) {
-                        bsmf.MainFrame.show("Cannot delete tax code until removed from all customers");
-                        return;
-                    }
-                    
-                    int i = st.executeUpdate("delete from tax_mstr where tax_code = " + "'" + tbtaxcode.getText() + "'" + ";");
-                    int j = st.executeUpdate("delete from taxd_mstr where taxd_parentcode = " + "'" + tbtaxcode.getText() + "'" + ";");
-                    if (i > 0 && j > 0) {
-                        bsmf.MainFrame.show("deleted tax code " + tbtaxcode.getText());
-                        initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                    bsmf.MainFrame.show("Unable to Delete Tax Code Record");
-                }
-                bsmf.MainFrame.con.close();
-            } catch (Exception e) {
-                MainFrame.bslog(e);
-            }
-        }
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+         executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddelement;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteelement;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JLabel jLabel3;
@@ -604,7 +836,7 @@ public class TaxMaint extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabletax;
     private javax.swing.JTextField tbdesc;
-    private javax.swing.JTextField tbtaxcode;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbtaxelement;
     private javax.swing.JTextField tbtaxpercent;
     // End of variables declaration//GEN-END:variables

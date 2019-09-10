@@ -27,8 +27,12 @@ SOFTWARE.
 package com.blueseer.vdr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,24 +40,396 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class VendXrefMaintPanel extends javax.swing.JPanel {
+public class VendXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form CustXrefMaintPanel
-     */
+   // global variable declarations
+                boolean isLoad = false;
+    
+    // global datatablemodel declarations       
+                
     public VendXrefMaintPanel() {
         initComponents();
     }
 
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
+    public void setComponentDefaultValues() {
+       isLoad = true;
+         ArrayList myvend = OVData.getvendmstrlist();
+        ddvend.removeAllItems();
+        for (int i = 0; i < myvend.size(); i++) {
+            ddvend.addItem(myvend.get(i));
+        }
+        ArrayList mypart = OVData.getItemMasterRawlist();
+        ddpart.removeAllItems();
+        for (int i = 0; i < mypart.size(); i++) {
+            ddpart.addItem(mypart.get(i));
+        }
+         if (ddvend.getItemCount()> 0) {        
+         ddvend.setSelectedIndex(0);
+         }
+        if (ddpart.getItemCount() > 0) { 
+        ddpart.setSelectedIndex(0);
+        }
+         tbkey.setText("");
+        skunbr.setText("");
+        upcnbr.setText("");
+        misc.setText("");
+     
+        
+       isLoad = false;
+    }
     
-       public void getXref(String vend, String vendpart) {
-        initvars(null);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a vendor");
+                    ddvend.requestFocus();
+                    return b;
+                }
+               
+                if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose an internal item");
+                    ddpart.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        btvendbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + 
+                      "'" + tbkey.getText().toString() + "'" +
+                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
+                      ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into vdp_mstr "
+                        + "(vdp_vend, vdp_item, vdp_vitem, vdp_sku, vdp_upc, vdp_misc, vdp_userid"
+                        + " ) "
+                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
+                        + "'" + ddpart.getSelectedItem() + "'" + ","
+                        + "'" + tbkey.getText() + "'" + ","
+                        + "'" + skunbr.getText() + "'" + ","
+                        + "'" + upcnbr.getText() + "'" + ","
+                        + "'" + misc.getText() + "'"  + ","
+                        + "'" + bsmf.MainFrame.userid.toString() + "'"
+                        + ")"
+                        + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    st.executeUpdate("update vdp_mstr set "
+                            + " vdp_item = " + "'" + ddpart.getSelectedItem() + "'" + ","
+                            + " vdp_sku = "  + "'" + skunbr.getText() + "'" + ","
+                            + " vdp_upc = "  + "'" + upcnbr.getText() + "'" + ","
+                            + " vdp_misc = "  + "'" + misc.getText() + "'"  + ","
+                            + " vdp_userid = "  + "'" + bsmf.MainFrame.userid.toString() + "'"
+                            + " where vdp_vend = " + "'" + ddvend.getSelectedItem() + "'" 
+                            + " and vdp_vitem = " + "'" + tbkey.getText() + "'"
+                        + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   int i = st.executeUpdate("delete from vdp_mstr where vdp_vitem = " + 
+                      "'" + tbkey.getText().toString() + "'" +
+                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
+                      ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -62,15 +438,21 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("SELECT * FROM  vdp_mstr left outer join vd_mstr on vd_addr = vdp_vend where " +
-                    " vdp_vend = " + "'" + vend + "'" + 
-                    " AND vdp_vitem = " + "'" + vendpart + "'" + ";") ;
-                        
+                if (x == null && x.length < 1) { return new String[]{}; };
+                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
+                if (x.length == 1) {
+                res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                } 
+                if (x.length == 2) {
+                 res = st.executeQuery("SELECT * FROM  vdp_mstr left outer join vd_mstr on vd_addr = vdp_vend where " +
+                    " vdp_vend = " + "'" + x[0] + "'" + 
+                    " AND vdp_vitem = " + "'" + x[1] + "'" + ";") ;
+                }  
                 while (res.next()) {
                     i++;
                     ddvend.setSelectedItem(res.getString("vdp_vend"));
                      ddpart.setSelectedItem(res.getString("vdp_item"));
-                     venditem.setText(res.getString("vdp_vitem"));
+                     tbkey.setText(res.getString("vdp_vitem"));
                     skunbr.setText(res.getString("vdp_sku"));
                     upcnbr.setText(res.getString("vdp_upc"));
                     misc.setText(res.getString("vdp_misc"));
@@ -82,64 +464,23 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                    
                 }
                
-                if (i == 0)
-                    bsmf.MainFrame.show("No Vendor Cross Reference found for " + vend + " / " + vendpart);
-
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve cup_mstr");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
-
+      return m;
     }
     
     
     
-    public void initvars(String[] arg) {
-        ArrayList myvend = OVData.getvendmstrlist();
-        ddvend.removeAllItems();
-        for (int i = 0; i < myvend.size(); i++) {
-            ddvend.addItem(myvend.get(i));
-        }
-        ArrayList mypart = OVData.getItemMasterRawlist();
-        ddpart.removeAllItems();
-        for (int i = 0; i < mypart.size(); i++) {
-            ddpart.addItem(mypart.get(i));
-        }
-         venditem.setText("");
-        skunbr.setText("");
-        upcnbr.setText("");
-        misc.setText("");
-        ddvend.setEnabled(true);
-        venditem.setEnabled(true);
-         lblexists.setText("");
-         lblexists.setForeground(Color.black);
-         
-            
-         if (arg != null && arg.length > 1) {
-            getXref(arg[0], arg[1]);
-        }
-         
-    }
-    
-     public void reinitvars() {
-        ddvend.setSelectedIndex(0);
-        ddpart.setSelectedIndex(0);
-        venditem.setText("");
-        skunbr.setText("");
-        upcnbr.setText("");
-        misc.setText("");
-        btadd.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-         ddvend.setEnabled(true);
-        venditem.setEnabled(true);
-         lblexists.setText("");
-         lblexists.setForeground(Color.black);
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,9 +504,12 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
         ddvend = new javax.swing.JComboBox();
         btdelete = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        venditem = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btupdate = new javax.swing.JButton();
-        lblexists = new javax.swing.JLabel();
+        btbrowse = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
+        btvendbrowse = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -197,12 +541,9 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Misc");
 
-        venditem.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                venditemFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                venditemFocusLost(evt);
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -213,52 +554,98 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        btvendbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btvendbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btvendbrowseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(misc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddvend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(upcnbr, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(skunbr, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ddpart, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(venditem)
-                    .addComponent(lblexists, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(39, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btupdate)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btadd)
-                .addGap(47, 47, 47))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(ddvend, javax.swing.GroupLayout.Alignment.LEADING, 0, 143, Short.MAX_VALUE)
+                            .addComponent(tbkey, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btclear))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btvendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btupdate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btadd))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(misc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(upcnbr, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(skunbr, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(ddpart, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap(100, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2))
+                    .addComponent(btbrowse)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(venditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblexists, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3))
+                    .addComponent(btvendbrowse))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -279,194 +666,66 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-           
-              res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + 
-                      "'" + venditem.getText().toString() + "'" +
-                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
-                      ";");
-               while (res.next()) {
-                i++;
-                if (i == 1) 
-                    bsmf.MainFrame.show("Record already exists");
-                    proceed = false;           
-               }
-             
-                if (proceed) {
-                    st.executeUpdate("insert into vdp_mstr "
-                        + "(vdp_vend, vdp_item, vdp_vitem, vdp_sku, vdp_upc, vdp_misc, vdp_userid"
-                        + " ) "
-                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
-                        + "'" + ddpart.getSelectedItem() + "'" + ","
-                        + "'" + venditem.getText() + "'" + ","
-                        + "'" + skunbr.getText() + "'" + ","
-                        + "'" + upcnbr.getText() + "'" + ","
-                        + "'" + misc.getText() + "'"  + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'"
-                        + ")"
-                        + ";");
-
-                    
-        
-                    bsmf.MainFrame.show("Added Vend Xref Record");
-                    reinitvars();
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Vend Xref Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
-    private void venditemFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_venditemFocusLost
-       if (! venditem.getText().isEmpty())
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-           
-              res = st.executeQuery("select * from vdp_mstr where vdp_vitem = " + 
-                      "'" + venditem.getText().toString() + "'" +
-                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
-                      ";");
-               while (res.next()) {
-                i++;
-                if (i == 1) 
-                  //  bsmf.MainFrame.show("Record exists");
-                    lblexists.setText("Record Exists");
-                   lblexists.setForeground(Color.red);
-                    btadd.setEnabled(false);
-                    ddpart.setSelectedItem(res.getString("vdp_item"));
-                    skunbr.setText(res.getString("vdp_sku"));
-                    upcnbr.setText(res.getString("vdp_upc"));
-                    misc.setText(res.getString("vdp_misc"));
-               }
-             
-               if (i == 0) {
-                   // bsmf.MainFrame.show("Adding New Record");
-                   lblexists.setText("Adding New Record");
-                   lblexists.setForeground(Color.BLUE);
-                   
-                    btupdate.setEnabled(false);
-                    btdelete.setEnabled(false);
-                    ddvend.setEnabled(false);
-                    venditem.setEnabled(false);
-               }
-               
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Vend Xref Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_venditemFocusLost
-
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-           
-              st.executeUpdate("delete from vdp_mstr where vdp_vitem = " + 
-                      "'" + venditem.getText().toString() + "'" +
-                      " and vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" +
-                      ";");
-              bsmf.MainFrame.show("Record deleted");
-              reinitvars();
-             
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Delete Vend Xref Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-           
-               
-                    st.executeUpdate("update vdp_mstr set "
-                            + " vdp_item = " + "'" + ddpart.getSelectedItem() + "'" + ","
-                            + " vdp_sku = "  + "'" + skunbr.getText() + "'" + ","
-                            + " vdp_upc = "  + "'" + upcnbr.getText() + "'" + ","
-                            + " vdp_misc = "  + "'" + misc.getText() + "'"  + ","
-                            + " vdp_userid = "  + "'" + bsmf.MainFrame.userid.toString() + "'"
-                            + " where vdp_vend = " + "'" + ddvend.getSelectedItem() + "'" 
-                            + " and vdp_vitem = " + "'" + venditem.getText() + "'"
-                        + ";");
-        
-                    bsmf.MainFrame.show("Updated Vend Xref Record");
-                    reinitvars();
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Update Vend Xref Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void venditemFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_venditemFocusGained
-                    btupdate.setEnabled(true);
-                    btadd.setEnabled(true);
-                    btdelete.setEnabled(true);
-                    ddvend.setEnabled(true);
-                    venditem.setEnabled(true);
-                   lblexists.setText("");
-                   lblexists.setForeground(Color.black);
-    }//GEN-LAST:event_venditemFocusGained
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"vendxrefmaint","vdp_vitem"});
+    }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void btvendbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvendbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"vendxrefmaint","vdp_vend"});
+    }//GEN-LAST:event_btvendbrowseActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btvendbrowse;
     private javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox ddvend;
     private javax.swing.JLabel jLabel1;
@@ -476,10 +735,9 @@ public class VendXrefMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblexists;
     private javax.swing.JTextField misc;
     private javax.swing.JTextField skunbr;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField upcnbr;
-    private javax.swing.JTextField venditem;
     // End of variables declaration//GEN-END:variables
 }

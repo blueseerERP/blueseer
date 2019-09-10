@@ -141,7 +141,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
     }  
       
-       BlueSeerUtils.startTask(new String[]{"","Running..."});
+      // BlueSeerUtils.startTask(new String[]{"","Running..."});
        Task z = new Task(x, y); 
        z.execute(); 
        

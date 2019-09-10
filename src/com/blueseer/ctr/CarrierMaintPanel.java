@@ -29,127 +29,176 @@ package com.blueseer.ctr;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class CarrierMaintPanel extends javax.swing.JPanel {
+public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
+    // global variable declarations
+                boolean isLoad = false;
     
+   // global datatablemodel declarations  
      DefaultListModel mymodel = new DefaultListModel() ;
     
-    /**
-     * Creates new form CarrierMaintPanel
-     */
     public CarrierMaintPanel() {
         initComponents();
     }
 
-    public void getCarrierCode(String mycode) {
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                res = st.executeQuery("select * from car_mstr where car_code = " + "'" + mycode + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("car_desc"));
-                    tbacct.setText(res.getString("car_acct"));
-                    tbscaccode.setText(res.getString("car_scac"));
-                    tbphone.setText(res.getString("car_phone"));
-                    tbcontact.setText(res.getString("car_contact"));
-                    tbcode.setText(res.getString("car_code"));
-                    if (res.getString("car_type").equals("group")) {
-                        rbgroup.setSelected(true);
-                        rbcarrier.setSelected(false);
-                    } else {
-                        rbgroup.setSelected(false);
-                        rbcarrier.setSelected(true);
-                    }
-                }
-                
-                if (rbgroup.isSelected()) {
-                   
-                 mymodel.removeAllElements();
-                ArrayList mylist = OVData.getScacsOfGroup(mycode);
-                for (int j = 0; j < mylist.size(); j++) {
-                 mymodel.addElement(mylist.get(j));
-                }
-                }
-                
-               
-                 if (i > 0) {
-                    enableAll();
-                    tbcode.setEnabled(false);
-                    btadd.setEnabled(false);
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve car_mstr");
+     // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            return message;
         }
-
-    }
-    
-    public void enableAll() {
-        tbcode.setEnabled(true);
-        tbdesc.setEnabled(true);
-        tbphone.setEnabled(true);
-        tbcontact.setEnabled(true);
-        tbacct.setEnabled(true); 
-        tbscaccode.setEnabled(true);
-        btnew.setEnabled(true);
-        btadd.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-        btbrowse.setEnabled(true);
-        ddcarrier.setEnabled(true);
-        btaddgroup.setEnabled(true);
-        btdeletegroup.setEnabled(true);
-        carrierlist.setEnabled(true);
-        rbgroup.setEnabled(true);
-        rbcarrier.setEnabled(true);
+ 
         
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-    public void disableAll() {
-        tbcode.setEnabled(false);
-        tbdesc.setEnabled(false);
-        tbphone.setEnabled(false);
-        tbcontact.setEnabled(false);
-        tbacct.setEnabled(false); 
-        tbscaccode.setEnabled(false);
-        btnew.setEnabled(false);
-        btadd.setEnabled(false);
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
-        btbrowse.setEnabled(false);
-        ddcarrier.setEnabled(false);
-        btaddgroup.setEnabled(false);
-        btdeletegroup.setEnabled(false);
-        carrierlist.setEnabled(false);
-        rbgroup.setEnabled(false);
-        rbcarrier.setEnabled(false);
-    }
-    
-    public void clearAll() {
-      tbcode.setText("");
+    public void setComponentDefaultValues() {
+       isLoad = true;
+         tbkey.setText("");
         tbdesc.setText("");
         tbphone.setText("");
         tbcontact.setText("");
@@ -162,25 +211,300 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
         for (int i = 0; i < mylist.size(); i++) {
             ddcarrier.addItem(mylist.get(i));
         }
-       
         
-        
+       isLoad = false;
     }
     
-      public void initvars(String[] arg) {
-        buttonGroup1.add(rbcarrier);
-        buttonGroup1.add(rbgroup);
-        carrierlist.setModel(mymodel);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+               
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
-          clearAll();
-          disableAll();
-          btbrowse.setEnabled(true);
-          btnew.setEnabled(true);
-          
         if (arg != null && arg.length > 0) {
-            getCarrierCode(arg[0]);
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                String cartype = "";
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT car_code FROM  car_mstr where car_code = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        if (rbgroup.isSelected()) {
+                           cartype = "group";
+                        } else {
+                           cartype = "carrier";
+                        }
+                        st.executeUpdate("insert into car_mstr "
+                            + "(car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact) " 
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + tbscaccode.getText().toString() + "'" + ","
+                            + "'" + tbacct.getText().toString() + "'" + ","
+                            + "'" + tbphone.getText().toString() + "'" + ","
+                            + "'" + cartype + "'" + ","
+                            + "'" + tbcontact.getText().toString() + "'"
+                            + ")"
+                            + ";");
+                        
+                        if (rbgroup.isSelected()) {
+                           for (int j = 0; j < mymodel.getSize(); j++) {
+                           st.executeUpdate("insert into car_det "
+                            + "(card_code, card_carrier ) "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + mymodel.getElementAt(j) + "'" 
+                            + ")"
+                            + ";");
+                           }
+                        }
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    String cartype = "";
+                    if (rbgroup.isSelected()) {
+                        cartype = "group";
+                    } else {
+                        cartype = "carrier";
+                    }
+                     st.executeUpdate("update car_mstr set car_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "car_acct = " + "'" + tbacct.getText() + "'" + ","
+                            + "car_scac = " + "'" + tbscaccode.getText() + "'" + ","
+                            + "car_contact = " + "'" + tbcontact.getText() + "'" + ","
+                            + "car_type = " + "'" + cartype + "'" + ","
+                            + "car_phone = " + "'" + tbphone.getText() + "'"
+                            + " where car_code = " + "'" + tbkey.getText() + "'"                             
+                            + ";");
+                    
+                    
+                     // erase all assigned carriers to group if this is a group type
+                      if (rbgroup.isSelected()) {
+                      st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
+                    
+                       for (int j = 0; j < mymodel.getSize(); j++) {
+                        st.executeUpdate("insert into car_det "
+                            + "(card_code, card_carrier ) "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + mymodel.getElementAt(j) + "'" 
+                            + ")"
+                            + ";");
+                       }
+                      }
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from car_mstr where car_code = " + "'" + tbkey.getText() + "'" + ";");
+                   if (rbgroup.isSelected()) {
+                       st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
+                   }
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+               res = st.executeQuery("select * from car_mstr where car_code = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbdesc.setText(res.getString("car_desc"));
+                    tbacct.setText(res.getString("car_acct"));
+                    tbscaccode.setText(res.getString("car_scac"));
+                    tbphone.setText(res.getString("car_phone"));
+                    tbcontact.setText(res.getString("car_contact"));
+                    tbkey.setText(res.getString("car_code"));
+                    if (res.getString("car_type").equals("group")) {
+                        rbgroup.setSelected(true);
+                        rbcarrier.setSelected(false);
+                    } else {
+                        rbgroup.setSelected(false);
+                        rbcarrier.setSelected(true);
+                    }
+                }
+                
+                if (rbgroup.isSelected()) {
+                   
+                 mymodel.removeAllElements();
+                ArrayList mylist = OVData.getScacsOfGroup(x[0]);
+                for (int j = 0; j < mylist.size(); j++) {
+                 mymodel.addElement(mylist.get(j));
+                }
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+    
+  
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -205,7 +529,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         tbcontact = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         btbrowse = new javax.swing.JButton();
         tbscaccode = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -217,6 +541,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
         ddcarrier = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         carrierlist = new javax.swing.JList<>();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -242,7 +567,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
 
         jLabel3.setText("AcctNbr:");
 
-        btupdate.setText("edit");
+        btupdate.setText("update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -252,6 +577,12 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
         jLabel4.setText("ContactName:");
 
         jLabel5.setText("Phone:");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +620,13 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
 
         jScrollPane2.setViewportView(carrierlist);
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -297,12 +635,14 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                 .addGap(59, 59, 59)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnew)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear)
+                .addGap(0, 80, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btadd)
@@ -334,13 +674,13 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                             .addComponent(btdeletegroup)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(rbcarrier)
                                 .addGap(18, 18, 18)
                                 .addComponent(rbgroup))
-                            .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 79, Short.MAX_VALUE)))
+                            .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -349,10 +689,12 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbcarrier)
@@ -398,166 +740,27 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                String cartype = "";
-                
-                // check the site field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a carrier / scac code");
-                }
-                
-                if (rbgroup.isSelected()) {
-                    cartype = "group";
-                } else {
-                    cartype = "carrier";
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT car_code FROM  car_mstr where car_code = " + "'" + tbcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into car_mstr "
-                            + "(car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact) " 
-                            + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbscaccode.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + tbphone.getText().toString() + "'" + ","
-                            + "'" + cartype + "'" + ","
-                            + "'" + tbcontact.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                        
-                        if (rbgroup.isSelected()) {
-                           for (int j = 0; j < mymodel.getSize(); j++) {
-                           st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbcode.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                           }
-                        }
-                        
-                        
-                        bsmf.MainFrame.show("Added Carrier Master");
-                    } else {
-                        bsmf.MainFrame.show("Carrier Record Already Exists");
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to car_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the site field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a site code");
-                }
-                
-                String cartype = "";
-                 if (rbgroup.isSelected()) {
-                    cartype = "group";
-                } else {
-                    cartype = "carrier";
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update car_mstr set car_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "car_acct = " + "'" + tbacct.getText() + "'" + ","
-                            + "car_scac = " + "'" + tbscaccode.getText() + "'" + ","
-                            + "car_contact = " + "'" + tbcontact.getText() + "'" + ","
-                            + "car_type = " + "'" + cartype + "'" + ","
-                            + "car_phone = " + "'" + tbphone.getText() + "'"
-                            + " where car_code = " + "'" + tbcode.getText() + "'"                             
-                            + ";");
-                    
-                    
-                     // erase all assigned carriers to group if this is a group type
-                      if (rbgroup.isSelected()) {
-                      st.executeUpdate("delete from car_det where card_code = " + "'" + tbcode.getText() + "'" + ";");
-                    
-                       for (int j = 0; j < mymodel.getSize(); j++) {
-                        st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbcode.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                       }
-                      }
-                    
-                    
-                    
-                    bsmf.MainFrame.show("Updated Carrier");
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating car_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-          try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from car_mstr where car_code = " + "'" + tbcode.getText() + "'" + ";");
-                   if (rbgroup.isSelected()) {
-                       st.executeUpdate("delete from car_det where card_code = " + "'" + tbcode.getText() + "'" + ";");
-                   }
-                   
-                   
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbcode.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Carrier Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});     
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -565,12 +768,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        enableAll();
-        clearAll();
-        btupdate.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        tbcode.requestFocus();
+         newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddgroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddgroupActionPerformed
@@ -584,11 +782,21 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
        mymodel.removeElement(carrierlist.getSelectedValue());  
     }//GEN-LAST:event_btdeletegroupActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddgroup;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeletegroup;
     private javax.swing.JButton btnew;
@@ -607,9 +815,9 @@ public class CarrierMaintPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton rbcarrier;
     private javax.swing.JRadioButton rbgroup;
     private javax.swing.JTextField tbacct;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbcontact;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbphone;
     private javax.swing.JTextField tbscaccode;
     // End of variables declaration//GEN-END:variables
