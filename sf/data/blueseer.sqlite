@@ -532,6 +532,7 @@ CREATE TABLE "eeo_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "emp_mstr" (
   "emp_nbr" int(8) NOT NULL,
+  "emp_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "emp_lname" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_fname" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_mname" varchar(30) COLLATE NOCASE DEFAULT '',

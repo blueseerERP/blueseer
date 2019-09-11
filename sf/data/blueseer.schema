@@ -446,6 +446,7 @@ CREATE TABLE IF NOT EXISTS `eeo_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `emp_mstr` (
   `emp_nbr` int(8) NOT NULL DEFAULT '0',
+  `emp_site` varchar(10)  NOT NULL DEFAULT '',
   `emp_lname` varchar(30)  NOT NULL DEFAULT '',
   `emp_fname` varchar(30)  NOT NULL DEFAULT '',
   `emp_mname` varchar(30)  NOT NULL DEFAULT '',

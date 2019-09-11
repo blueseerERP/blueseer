@@ -9,6 +9,7 @@ ediout,edi out file range,10000,90000,100042
 edifile,edifile range,1,100000,1
 expensenumber,expensenumber range,1000000,9000000,1000007
 expenseaccount,expense acct range,99000000,99999999,99000000
+rexpense,recur expense range,10000,90000,10007
 gl,gl transaction range,10000000,90000000,10000018
 label,label range,10000000,90000000,10000159
 order,sales order range,10000,49999,10000

@@ -123,9 +123,7 @@ public class AboutPanel extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
         
-       
-        
-        if (arg[0].equals("SysInfo")) {
+        if (arg != null && arg.length > 0 && arg[0].equals("SysInfo")) {
             getSysInfo();
         } else {
             jTextArea2.setText(currenttext);

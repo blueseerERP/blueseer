@@ -313,15 +313,12 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
 
                     res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
@@ -345,14 +342,14 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                        m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
                     }
 
-                   initvars(null);
-                   
-                } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
@@ -368,12 +365,8 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             boolean proceed = true;
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
                     st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
                             + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
                             + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
@@ -384,14 +377,15 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + " where bk_id = " + "'" + x[0] + "'"                             
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
+               
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
@@ -408,19 +402,21 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
                    int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
@@ -438,9 +434,10 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
@@ -461,8 +458,11 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  

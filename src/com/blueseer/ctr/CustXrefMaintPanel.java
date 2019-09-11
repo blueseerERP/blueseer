@@ -443,7 +443,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                if (x == null && x.length < 1) { return new String[]{}; };
+                if (x == null || x.length < 1) { return new String[]{}; };
                 // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
                 if (x.length == 1) {
                 res = st.executeQuery("select * from cup_mstr where cup_citem = " + "'" + x[0] + "'"  + " limit 1 ;"); 

@@ -26,6 +26,8 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,6 +40,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
@@ -45,14 +53,423 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author vaughnte
  */
-public class UserMaintPanel extends javax.swing.JPanel {
+public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form UserMaintPanel
-     */
+    
+    // global variable declarations
+                boolean isLoad = false;
+    
+    // global datatablemodel declarations      
 
+    public UserMaintPanel() {
+        initComponents();
+    }            
+     
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+          tbkey.setText("");
+        tbUMLastName.setText("");
+        tbUMFirstName.setText("");
+        tbpassword.setText("");
+        tbUMDept.setText("");
+        tarmks.setText("");
+        tbemail.setText("");
+        tbphone.setText("");
+        tbcell.setText("");
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbpassword.getPassword().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a password");
+                    tbpassword.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
 
-     class ButtonRenderer extends JButton implements TableCellRenderer {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        String passwd = new String(tbpassword.getPassword());
+                    st.executeUpdate("insert into user_mstr "
+                        + "(user_id, user_site, user_lname, user_fname,"
+                        + "user_mname, user_email, user_phone, user_cell, user_rmks, user_passwd) "
+                        + "values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbUMLastName.getText() + "'" + ","        
+                        + "'" + tbUMFirstName.getText() + "'" + ","
+                        + null + ","
+                        + "'" + tbemail.getText() + "'" + ","
+                            + "'" + tbphone.getText() + "'" + ","
+                            + "'" + tbcell.getText() + "'" + ","
+                            + "'" + tarmks.getText() + "'" + ","
+                        + "'" + passwd + "'"
+                        + ")"
+                        + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                    String passwd = new String(tbpassword.getPassword().toString().replace("'", "''"));
+                        st.executeUpdate("update user_mstr set "
+                                + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                                + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
+                                + "user_fname = " + "'" + tbUMFirstName.getText().toString() + "'" + ","
+                                + "user_email = " + "'" + tbemail.getText().toString() + "'" + ","
+                                + "user_phone = " + "'" + tbphone.getText().toString() + "'" + ","
+                                + "user_cell = " + "'" + tbcell.getText().toString() + "'" + ","
+                                + "user_passwd = " + "'" + passwd + "'" + ","
+                                + "user_rmks = " + "'" + tarmks.getText().toString().replace("'", "''")  + "'"
+                                + " where user_id = " + "'" + tbkey.getText().toString() + "'"
+                                + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    initvars(null);
+                } 
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from user_mstr where user_id = " + "'" + tbkey.getText() + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("SELECT * FROM  user_mstr where user_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                        tbUMLastName.setText(res.getString("user_lname"));
+                        tbUMFirstName.setText(res.getString("user_fname"));
+                        tbkey.setText(res.getString("user_id"));
+                        tbemail.setText(res.getString("user_email"));
+                        tbphone.setText(res.getString("user_phone"));
+                        tbcell.setText(res.getString("user_cell"));
+                        tarmks.setText(res.getString("user_rmks"));
+                        tbpassword.setText(res.getString("user_passwd"));
+                        ddsite.setSelectedItem(res.getString("user_site"));
+                    }
+
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+    // custom funcs and classes
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -72,130 +489,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
         }
     }
 
-    
-     public void disableAll() {
-          tbUMuserid.setEnabled(false);
-        tbUMLastName.setEnabled(false);
-        tbUMFirstName.setEnabled(false);
-        tbpassword.setEnabled(false);
-        tbUMDept.setEnabled(false);
-        tarmks.setEnabled(false);
-        tbemail.setEnabled(false);
-        tbphone.setEnabled(false);
-        tbcell.setEnabled(false);
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
-        btadd.setEnabled(false);
-        btbrowseUser.setEnabled(false);
-        btbrowseLastName.setEnabled(false);
-        btnew.setEnabled(false);  
-         ddsite.setEnabled(false);
-     }
-     
-     public void enableAll() {
-         tbUMuserid.setEnabled(true);
-        tbUMLastName.setEnabled(true);
-        tbUMFirstName.setEnabled(true);
-        tbpassword.setEnabled(true);
-        tbUMDept.setEnabled(true);
-        tarmks.setEnabled(true);
-        tbemail.setEnabled(true);
-        tbphone.setEnabled(true);
-        tbcell.setEnabled(true);
-        btupdate.setEnabled(true);
-        btdelete.setEnabled(true);
-        btadd.setEnabled(true);
-        btbrowseUser.setEnabled(true);
-        btbrowseLastName.setEnabled(false);
-        btnew.setEnabled(true);
-        ddsite.setEnabled(true);
-     }
-     
-     public void clearAll() {
-          tbUMuserid.setText("");
-        tbUMLastName.setText("");
-        tbUMFirstName.setText("");
-        tbpassword.setText("");
-        tbUMDept.setText("");
-        tarmks.setText("");
-        tbemail.setText("");
-        tbphone.setText("");
-        tbcell.setText("");
-        ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-     }
-     
-     public void initvars(String[] arg) {
-        
-        clearAll();
-       
-               
-         if (arg != null && arg.length > 0) {
-            getuserinfo(arg[0]);
-            enableAll();
-            btadd.setEnabled(false);
-            tbUMuserid.setEnabled(false);
-        } else {
-              disableAll();
-              btnew.setEnabled(true);
-              btbrowseUser.setEnabled(true);
-              btbrowseLastName.setEnabled(true);
-          }
-        
-    }
-    
-    
-     
-     
-     public void getuserinfo(String user) {
-         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
-                int i = 0;
-                    res = st.executeQuery("SELECT * FROM  user_mstr where user_id = " + "'" + user + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                        tbUMLastName.setText(res.getString("user_lname"));
-                        tbUMFirstName.setText(res.getString("user_fname"));
-                        tbUMuserid.setText(res.getString("user_id"));
-                        tbemail.setText(res.getString("user_email"));
-                        tbphone.setText(res.getString("user_phone"));
-                        tbcell.setText(res.getString("user_cell"));
-                        tarmks.setText(res.getString("user_rmks"));
-                        tbpassword.setText(res.getString("user_passwd"));
-                        ddsite.setSelectedItem(res.getString("user_site"));
-                       
-                    }
-
-                 if (i == 0) {
-                    bsmf.MainFrame.show("USERID does not exists");
-                 } else {
-                     btupdate.setEnabled(true);
-                     btdelete.setEnabled(true);
-                 }
-           
-            }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve userid");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-     }
-     
-     
-           class SomeRenderer extends DefaultTableCellRenderer {
+    class SomeRenderer extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -217,12 +511,6 @@ public class UserMaintPanel extends javax.swing.JPanel {
     }
     }
     
-    public UserMaintPanel() {
-        initComponents();
-        
-
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -235,7 +523,7 @@ public class UserMaintPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
-        tbUMuserid = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel46 = new javax.swing.JLabel();
         tbUMLastName = new javax.swing.JTextField();
         tbUMFirstName = new javax.swing.JTextField();
@@ -257,10 +545,11 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btdelete = new javax.swing.JButton();
         tbpassword = new javax.swing.JPasswordField();
         btnew = new javax.swing.JButton();
-        btbrowseUser = new javax.swing.JButton();
+        btbrowse = new javax.swing.JButton();
         btbrowseLastName = new javax.swing.JButton();
         ddsite = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -277,6 +566,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
+            }
+        });
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -318,10 +613,10 @@ public class UserMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btbrowseUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowseUser.addActionListener(new java.awt.event.ActionListener() {
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseUserActionPerformed(evt);
+                btbrowseActionPerformed(evt);
             }
         });
 
@@ -333,6 +628,13 @@ public class UserMaintPanel extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Default Site");
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -356,12 +658,12 @@ public class UserMaintPanel extends javax.swing.JPanel {
                             .addComponent(tbUMFirstName, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(tbemail)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 39, Short.MAX_VALUE)
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel46)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbUMuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(47, 47, 47)
@@ -391,12 +693,14 @@ public class UserMaintPanel extends javax.swing.JPanel {
                                     .addComponent(tbpassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btbrowseLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btbrowseUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew))
-                    .addComponent(btbrowseLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,15 +709,16 @@ public class UserMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbUMuserid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel46)
-                            .addComponent(btnew))
+                            .addComponent(btnew)
+                            .addComponent(btclear))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbUMLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel47)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btbrowseUser)
+                        .addComponent(btbrowse)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btbrowseLastName)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -457,150 +762,55 @@ public class UserMaintPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    String passwd = new String(tbpassword.getPassword());
-                    st.executeUpdate("insert into user_mstr "
-                        + "(user_id, user_site, user_lname, user_fname,"
-                        + "user_mname, user_email, user_phone, user_cell, user_rmks, user_passwd) "
-                        + "values ( " + "'" + tbUMuserid.getText().toString() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbUMLastName.getText() + "'" + ","        
-                        + "'" + tbUMFirstName.getText() + "'" + ","
-                        + null + ","
-                        + "'" + tbemail.getText() + "'" + ","
-                            + "'" + tbphone.getText() + "'" + ","
-                            + "'" + tbcell.getText() + "'" + ","
-                            + "'" + tarmks.getText() + "'" + ","
-                        + "'" + passwd + "'"
-                        + ")"
-                        + ";");
-
-                   
-                    bsmf.MainFrame.show("Added UserID Record");
-                    
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Add User Mstr");
-            }
-            bsmf.MainFrame.con.close();
-            initvars(null);
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-
-                if (proceed) {
-
-
-
-                    res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id = " + "'" + tbUMuserid.getText().toString() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-
-                    if (i > 0) {
-                        String passwd = new String(tbpassword.getPassword().toString().replace("'", "''"));
-                        st.executeUpdate("update user_mstr set "
-                                + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                                + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
-                                + "user_fname = " + "'" + tbUMFirstName.getText().toString() + "'" + ","
-                                + "user_email = " + "'" + tbemail.getText().toString() + "'" + ","
-                                + "user_phone = " + "'" + tbphone.getText().toString() + "'" + ","
-                                + "user_cell = " + "'" + tbcell.getText().toString() + "'" + ","
-                                + "user_passwd = " + "'" + passwd + "'" + ","
-                                + "user_rmks = " + "'" + tarmks.getText().toString().replace("'", "''")  + "'"
-                                + " where user_id = " + "'" + tbUMuserid.getText().toString() + "'"
-                                + ";");
-
-                        bsmf.MainFrame.show("Updated UserID Record");
-                    }
-
-                } else {
-                    bsmf.MainFrame.show("USERID does not exists");
-                }
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Edit UserMstr");
-            }
-            bsmf.MainFrame.con.close();
-            initvars(null);
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()}); 
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from user_mstr where user_id = " + "'" + tbUMuserid.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("User Deleted: " + tbUMuserid.getText());
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete User ID");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+      if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});     
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btbrowseUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseUserActionPerformed
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
         bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"usermaint","user_id"});
-    }//GEN-LAST:event_btbrowseUserActionPerformed
+    }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-                enableAll();
-                clearAll();
-                btnew.setEnabled(false);
-                btbrowseUser.setEnabled(false);
-                btupdate.setEnabled(false);
-                btdelete.setEnabled(false);
+               newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btbrowseLastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseLastNameActionPerformed
         bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"usermaint","user_lname"});
     }//GEN-LAST:event_btbrowseLastNameActionPerformed
 
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btbrowseLastName;
-    private javax.swing.JButton btbrowseUser;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
@@ -622,9 +832,9 @@ public class UserMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbUMDept;
     private javax.swing.JTextField tbUMFirstName;
     private javax.swing.JTextField tbUMLastName;
-    private javax.swing.JTextField tbUMuserid;
     private javax.swing.JTextField tbcell;
     private javax.swing.JTextField tbemail;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JPasswordField tbpassword;
     private javax.swing.JTextField tbphone;
     // End of variables declaration//GEN-END:variables

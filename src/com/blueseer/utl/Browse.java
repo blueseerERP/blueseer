@@ -295,6 +295,12 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("vendxrefmaint")) {
                 tablereport.setModel(DTData.getVendXrefBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
+                if (callingpanel.equals("vendpricemaint")) {
+                tablereport.setModel(DTData.getVendPriceBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
+                if (callingpanel.equals("custpricemaint")) {
+                tablereport.setModel(DTData.getCustPriceBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
                 if (callingpanel.equals("payprofilemaint")) {
                 tablereport.setModel(DTData.getPayProfileBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
@@ -573,9 +579,19 @@ public class Browse extends javax.swing.JPanel {
               reinitpanels("CustXrefMaint", true, arg);
             }
             if (callingpanel.equals("vendxrefmaint")) {
-              if (! checkperms("VemdXrefMaint")) { return; }
+              if (! checkperms("VendXrefMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
               reinitpanels("VendXrefMaint", true, arg);
+            }
+            if (callingpanel.equals("vendpricemaint")) {
+              if (! checkperms("VendPriceMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString(), tablereport.getValueAt(row, 4).toString()};
+              reinitpanels("VendPriceMaint", true, arg);
+            }
+            if (callingpanel.equals("custpricemaint")) {
+              if (! checkperms("CustPriceMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString(), tablereport.getValueAt(row, 4).toString()};
+              reinitpanels("CustPriceMaint", true, arg);
             }
             if (callingpanel.equals("deptccmaint")) {
               if (! checkperms("DeptMaint")) { return; }
