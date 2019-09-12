@@ -55,6 +55,8 @@ public class Browse extends javax.swing.JPanel {
     String searchfield = "";
     String tievar = "";
 
+    
+    
     /**
      * Creates new form CustXrefRpt1
      */
@@ -97,8 +99,9 @@ public class Browse extends javax.swing.JPanel {
         tbtext.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.red);
-        DefaultTableModel dtm = (DefaultTableModel) tablereport.getModel();
-        dtm.setRowCount(0);
+        
+        
+        closeTable();
         
         
         if (arg != null && arg.length == 2) {
@@ -113,6 +116,13 @@ public class Browse extends javax.swing.JPanel {
         
         
     }
+      
+     public void closeTable() {
+         DefaultTableModel dtm = (DefaultTableModel) tablereport.getModel();
+         dtm.setRowCount(0);
+     }
+      
+      
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -713,6 +723,7 @@ public class Browse extends javax.swing.JPanel {
               arg = new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
               reinitpanels("WorkCellMaint", true, arg);
             }
+          closeTable();
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

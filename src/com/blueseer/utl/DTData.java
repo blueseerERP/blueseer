@@ -86,12 +86,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                
                   // adjust wk for first three fields
                   wk = wk + 3;
@@ -119,9 +119,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -159,10 +161,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                   // adjust wk for first three fields
                   wk = wk + 3;
                   
@@ -184,9 +185,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -211,12 +214,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                
                   res = st.executeQuery("select * from shift_mstr;" );
                     while (res.next()) {
@@ -227,9 +230,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -255,12 +260,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                
                   res = st.executeQuery("select clc_code, clc_desc, case when clc_payable = '1' then 'yes' else 'no' end as 'payable', " +
                           " case when clc_syscode = '1' then 'yes' else 'no' end as 'syscode' " +
@@ -273,9 +278,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -300,13 +307,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                  res = st.executeQuery("SELECT * FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr where t.code_id = '66';"  );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("t.recid"),
@@ -327,9 +333,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -354,13 +362,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                 
                 
                  res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, sum(in_qoh) as 'sum', it_safestock  " +
@@ -380,9 +387,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -412,11 +421,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                
                 
                  res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, it_site, it_prodline, it_rev, it_code, it_wf  " +
                         " FROM  item_mstr  " +
@@ -438,9 +445,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -465,10 +474,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_userid " +
                         " FROM  gl_tran where " + myfield + " like " + "'" + str + "%'" +
@@ -500,9 +508,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -527,10 +537,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, it_site, it_prodline  " +
                         " FROM  item_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -559,9 +568,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -586,10 +597,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT vd_addr, vd_name, vd_line1, vd_city, vd_state, vd_zip, vd_country  " +
                         " FROM  vd_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -618,9 +628,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -645,10 +657,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT ac_id, ac_desc, ac_type, ac_cur  " +
                         " FROM  ac_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -674,9 +685,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -701,10 +714,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT panel_id, panel_desc, panel_core  " +
                         " FROM  panel_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -729,9 +741,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -756,10 +770,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT counter_name, counter_desc, counter_from, counter_to, counter_id  " +
                         " FROM  counter where " + myfield + " like " + "'" + str + "%'" +
@@ -787,9 +800,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -815,10 +830,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT site_site, site_desc, site_line1, site_city, site_state, site_zip, site_logo  " +
                         " FROM  site_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -847,9 +861,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -873,10 +889,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT cm_code, cm_name, cm_line1, cm_city, cm_state, cm_zip, cm_country  " +
                         " FROM  cm_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -906,9 +921,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -933,10 +950,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT cms_shipto, cms_code, cms_name, cms_line1, cms_city, cms_state, cms_zip, cms_country  " +
                         " FROM  cms_det where cms_code = " + "'" + cust + "'" + " AND " + myfield + " like " + "'" + str + "%'" +
@@ -967,9 +983,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -994,10 +1012,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT wf_id, wf_op, wf_desc, wf_cell, wf_op_desc, wf_run_hours, wf_setup_hours, wf_assert  " +
                         " FROM  wf_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1027,9 +1044,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1054,10 +1073,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT wc_cell,  wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate  " +
                         " FROM  wc_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1085,9 +1103,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1112,10 +1132,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT shf_id, shf_desc " +
                         " FROM  shift_mstr  where " + myfield + " like " + "'" + str + "%'" +
@@ -1139,9 +1158,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1167,10 +1188,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT uom_id, uom_desc " +
                         " FROM  uom_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1194,9 +1214,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1222,10 +1244,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT * " +
                         " FROM  prt_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1253,9 +1274,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1282,10 +1305,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT cur_id, cur_desc " +
                         " FROM  cur_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1309,9 +1331,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1336,10 +1360,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT conv_fromcode, conv_tocode, conv_fromamt, conv_toamt, conv_type, conv_notes " +
                         " FROM  conv_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1368,9 +1391,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1397,10 +1422,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT ecn_nbr, ecn_mstrtask, task_desc, ecn_poc, ecn_status " +
                         " FROM  ecn_mstr inner join task_mstr on task_mstr.task_id = ecn_mstr.ecn_mstrtask  where " + myfield + " like " + "'" + str + "%'" +
@@ -1427,9 +1451,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1451,13 +1477,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select task_id, task_desc, task_class, task_creator, task_status " +
                         " FROM  task_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1484,9 +1509,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1511,10 +1538,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select tax_code, tax_desc, tax_userid " +
                         " FROM  tax_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1539,9 +1565,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1563,13 +1591,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select code_code, code_key, code_value " +
                         " FROM  code_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1594,9 +1621,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1622,10 +1651,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
                         " FROM  cup_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1650,9 +1678,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1677,10 +1707,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select vdp_vend, vdp_vitem, vdp_item " +
                         " FROM  vdp_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1705,9 +1734,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1732,10 +1763,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select vpr_vend, vpr_item, vpr_uom, vpr_curr, vpr_price " +
                         " FROM  vpr_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1762,9 +1792,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1786,13 +1818,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select cpr_cust, cpr_item, cpr_uom, cpr_curr, cpr_price " +
                         " FROM  cpr_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1819,9 +1850,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1844,13 +1877,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select payp_code, payp_desc, payp_userid " +
                         " FROM  pay_profile where " + myfield + " like " + "'" + str + "%'" +
@@ -1875,9 +1907,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1902,10 +1936,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select * " +
                         " FROM  pay_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1934,9 +1967,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1959,13 +1994,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select editp_id, editp_name, editp_contact, editp_web, editp_helpdesk " +
                         " FROM  editp_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -1992,9 +2026,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2016,13 +2052,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select edi_id, edi_doctype, edi_desc, edi_map " +
                         " FROM  edi_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2048,9 +2083,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2075,10 +2112,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map " +
                         " FROM  edi_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2108,9 +2144,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2132,13 +2170,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent, cut_discstart, cut_duestart " +
                         " FROM  cust_term where " + myfield + " like " + "'" + str + "%'" +
@@ -2167,9 +2204,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2191,13 +2230,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, so_status " +
                         " FROM  so_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2226,9 +2264,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+                } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2253,10 +2293,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select po_nbr, po_vend, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
                         " FROM  po_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2285,9 +2324,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+                } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2309,13 +2350,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select do_nbr, do_wh_from, do_wh_to, do_ref, do_shipdate, do_recvdate, do_status " +
                         " FROM  do_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2344,9 +2384,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+                 } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2368,13 +2410,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select sv_nbr, sv_cust, sv_po, sv_due_date, sv_type, sv_status " +
                         " FROM  sv_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2402,9 +2443,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2427,13 +2470,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select fo_nbr, fo_carrier, fo_status " +
                         " FROM  fo_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2458,9 +2500,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2482,13 +2526,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                    if (dbtype.equals("sqlite"))  {
                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
@@ -2535,9 +2578,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2561,13 +2606,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                    if (dbtype.equals("sqlite"))  {
                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
@@ -2614,9 +2658,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2639,13 +2685,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_acct " +
                         " FROM  car_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2674,9 +2719,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2698,13 +2745,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT pl_line, pl_desc, pl_inventory, pl_sales, pl_po_rcpt, pl_scrap " +
                         " FROM  pl_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2732,9 +2778,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2756,13 +2804,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT loc_loc, loc_desc, loc_site, loc_active " +
                         " FROM  loc_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2788,9 +2835,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2812,13 +2861,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_chgdir, ftp_indir, ftp_outdir, ftp_delete " +
                         " FROM  ftp_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2849,9 +2897,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2873,13 +2923,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT wh_id, wh_site, wh_name, wh_addr1, wh_city, wh_state, wh_zip " +
                         " FROM  wh_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2908,9 +2957,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2934,13 +2985,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT bk_id, bk_desc, bk_acct, bk_cur, bk_active " +
                         " FROM  bk_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -2967,9 +3017,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2992,13 +3044,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+     try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select vod_id, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty " +
                         " FROM  vod_mstr inner join ap_mstr on vod_id = ap_nbr where " + myfield + " like " + "'" + str + "%'" +
@@ -3027,9 +3078,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3051,13 +3104,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select ar_nbr, ar_cust, ar_effdate, ar_amt " +
                         " FROM  ar_mstr  where " + myfield + " like " + "'" + str + "%'" +
@@ -3083,9 +3135,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3107,13 +3161,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select ap_nbr, ap_vend, ap_effdate, ap_amt " +
                         " FROM  ap_mstr  where " + myfield + " like " + "'" + str + "%'" +
@@ -3139,9 +3192,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3164,13 +3219,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_part, rvd_date, rvd_qty " +
                         " FROM  recv_det inner join recv_mstr on rv_id = rvd_id where " + myfield + " like " + "'" + str + "%'" +
@@ -3199,9 +3253,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3223,13 +3279,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" SELECT dept_id, dept_desc, dept_lbr_acct, dept_bdn_acct, dept_cop_acct " +
                         " FROM  dept_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -3256,9 +3311,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3280,13 +3337,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery(" select glc_year, glc_per, glc_start, glc_end, glc_status " +
                         " FROM  gl_cal where " + myfield + " like " + "'" + str + "%'" +
@@ -3313,9 +3369,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3337,13 +3395,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT emp_nbr, emp_lname, emp_fname, emp_status, emp_startdate, emp_type, emp_phone " +
                         " FROM  emp_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -3372,9 +3429,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3397,13 +3456,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                      res = st.executeQuery("SELECT tothrs, recid, t.emp_nbr as 't_emp_nbr', emp_lname, emp_fname, emp_dept, code_id, indate, intime, " +
                            " intime_adj, outdate, outtime, outtime_adj FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
@@ -3444,9 +3502,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3472,10 +3532,9 @@ public class DTData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT user_id, user_lname, user_fname " +
                         " FROM  user_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -3500,9 +3559,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3524,13 +3585,12 @@ public class DTData {
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT menu_id, menu_desc, menu_panel, menu_type " +
                         " FROM  menu_mstr where " + myfield + " like " + "'" + str + "%'" +
@@ -3556,9 +3616,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3583,13 +3645,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                   res = st.executeQuery("select * from prt_mstr;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("prt_id"),
@@ -3603,9 +3664,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3630,12 +3693,12 @@ public class DTData {
                         }; 
              
               
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                
                   res = st.executeQuery("select * from edi_mstr;" );
                     while (res.next()) {
@@ -3652,9 +3715,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3679,13 +3744,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                   res = st.executeQuery("select * from label_zebra;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("lblz_code"),
@@ -3697,9 +3761,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3745,13 +3811,12 @@ public class DTData {
                         }; 
              
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                   // adjust wk for first three fields
                   wk = wk + 3;
                   
@@ -3780,9 +3845,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3799,12 +3866,12 @@ public class DTData {
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{"CallID", "Name", "Phone", "Date", "Type", "Desc"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT call_id, call_name, call_phone, call_date, call_type, call_desc FROM  call_mstr where call_date >= '2013-01-01' order by abs(call_id) desc;");
 
@@ -3822,8 +3889,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3839,12 +3909,12 @@ public class DTData {
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{"LastName", "FirstName", "Phone", "Cell", "Email"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT * FROM  user_mstr order by user_lname;");
 
@@ -3862,8 +3932,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3879,12 +3952,12 @@ public class DTData {
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{"Menu", "Desc", "NavCode", "Type", "JavaClass"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT * from menu_mstr order by menu_id;");
 
@@ -3902,8 +3975,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3930,12 +4006,12 @@ public class DTData {
                       }  
                         };
              
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                res = st.executeQuery("SELECT * FROM req_task inner join req_mstr where reqt_owner =  " +
                         "'" + bsmf.MainFrame.userid + "'" + " AND reqt_status = 'pending' AND reqt_id = req_id " +
@@ -3959,8 +4035,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3986,12 +4065,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+           try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
              res = st.executeQuery("SELECT * FROM req_mstr order by req_id desc;");
 
@@ -4009,8 +4088,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+          } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4034,13 +4116,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
              res = st.executeQuery("SELECT * FROM ac_mstr order by ac_id;");
 
                 while (res.next()) {
@@ -4057,8 +4138,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4074,13 +4158,12 @@ public class DTData {
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Item", "WorkFlowID", "Operation", "Component"});
            
-            try{
+         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
               res = st.executeQuery("SELECT it_item, it_wf, ps_op, ps_child FROM item_mstr " +
                         " inner join pbm_mstr on ps_parent = it_item " +
                         " where it_code = 'M' order by it_item ;");
@@ -4098,8 +4181,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4126,12 +4212,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+           try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT it_item, it_desc, it_code, it_prodline, it_group, it_loc, it_wh, " +
                         " it_createdate, it_sell_price, it_pur_price, it_rev from item_mstr order by it_item; ") ;
@@ -4154,8 +4240,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4180,12 +4269,12 @@ public class DTData {
                       }  
                         }; 
            
-            try{
+           try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                 res = st.executeQuery("SELECT * FROM emp_mstr order by emp_nbr;");
 
@@ -4208,8 +4297,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4233,13 +4325,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
 
                 res = st.executeQuery("SELECT code_code, code_key, code_value " +
                         "from code_mstr order by code_code ;");
@@ -4257,8 +4348,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4282,13 +4376,12 @@ public class DTData {
                       }  
                         }; 
            
-            try{
+           try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
 
                   res = st.executeQuery("select * from wc_mstr;");
                     while (res.next()) {
@@ -4310,8 +4403,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4337,12 +4433,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT * FROM  req_mstr inner join req_task on reqt_id = req_id where req_status = 'pending' and reqt_status = 'pending' order by req_id desc;");
 
@@ -4389,12 +4485,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
               res = st.executeQuery("SELECT * FROM req_mstr where req_status = 'approved' order by req_id desc;");
 
@@ -4413,8 +4509,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4430,14 +4529,12 @@ public class DTData {
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                        new String[]{"UserID", "LastName", "FirstName", "Phone", "Cell", "Email"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-            
 
                res = st.executeQuery("SELECT * FROM  user_mstr order by user_lname desc;");
 
@@ -4456,8 +4553,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4481,14 +4581,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+        try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-            
 
               res = st.executeQuery("SELECT * FROM  pl_mstr order by pl_line;");
 
@@ -4502,8 +4600,11 @@ public class DTData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4527,14 +4628,12 @@ public class DTData {
                       }  
                         };
            
-            try{
+         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-            
 res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
                 while (res.next()) {
@@ -4550,8 +4649,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4569,13 +4671,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Shipper", "Cust", "PartNbr", "PONbr", "Qty", "Price", "DateShipped"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("SELECT * FROM  ship_mstr inner join ship_det on shdet_id = ship_id order by ship_id;");
 
                 while (res.next()) {
@@ -4589,8 +4690,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4606,14 +4710,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{"Order", "Cust", "PartNbr", "Description", "PONbr", "QtyOrd", "QtySHipped"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-
             
                 res = st.executeQuery("SELECT sod_nbr, so_cust, sod_part, ifnull(it_desc,'') as 'description', sod_po, sod_ord_qty, sod_shipped_qty FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
                         " left outer join item_mstr on it_item = sod_part " +
@@ -4633,8 +4735,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4650,14 +4755,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                        new String[]{"TableName", "ColumnName", "ColumnType"});
            
-            try{
+          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-            
                if (dbtype.equals("sqlite")) {
                   res = st.executeQuery("select m.name as tablename, p.name as columnname, p.type as columntype from sqlite_master m left outer join pragma_table_info((m.name)) p on m.name <> p.name order by tablename, columnname;"); 
                    while (res.next()) {
@@ -4712,13 +4815,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from wf_mstr;");
                     while (res.next()) {
@@ -4735,9 +4837,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4759,13 +4863,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from loc_mstr;");
                     while (res.next()) {
@@ -4778,9 +4881,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4802,13 +4907,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from wh_mstr;");
                     while (res.next()) {
@@ -4823,9 +4927,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4847,13 +4953,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from dept_mstr;");
                     while (res.next()) {
@@ -4867,9 +4972,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4891,14 +4998,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from bk_mstr;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bk_id"),
@@ -4911,9 +5016,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4927,14 +5034,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"ID", "Acct", "AcctDesc", "CC", "Type", "Ref", "Desc", "EffDate", "EntDate", "Amt"}); 
            
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                        res = st.executeQuery("SELECT glt_id, glt_acct, glt_cc, glt_ref, glt_effdate, glt_entdate, glt_amt, glt_desc, glt_type, ac_desc " +
                         "from gl_tran inner join ac_mstr on ac_id = glt_acct order by glt_id desc ;");
                                
@@ -4955,9 +5060,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -4981,13 +5088,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
            
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-             
                    double amount = 0.00;
                    
                        res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
@@ -5022,9 +5128,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5039,14 +5147,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"ARNbr", "Cust", "InvoiceNbr", "CheckNbr", "DateApplied", "Amount"}); 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                        res = st.executeQuery("select ar_cust, ar_effdate, ar_id, ard_amt, ar_ref, ard_ref from ar_mstr inner join ard_mstr on ard_id = ar_nbr where ar_type = 'P'; ");
                                
                     while (res.next()) {
@@ -5061,9 +5167,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5085,14 +5193,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from menu_mstr order by menu_id;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("menu_id"),
@@ -5103,9 +5209,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5127,13 +5235,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from panel_mstr order by panel_id;");
                     while (res.next()) {
@@ -5144,9 +5251,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5168,14 +5277,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from cust_term;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cut_code"),
@@ -5185,9 +5292,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5209,13 +5318,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from frt_mstr;");
                     while (res.next()) {
@@ -5227,9 +5335,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5251,14 +5361,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from car_mstr;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
@@ -5273,9 +5381,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5297,14 +5407,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from tax_mstr inner join taxd_mstr on taxd_parentcode = tax_code ;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("tax_code"),
@@ -5317,9 +5425,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5341,13 +5451,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from pay_profile inner join pay_profdet on paypd_parentcode = payp_code ;");
                     while (res.next()) {
@@ -5363,9 +5472,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5388,14 +5499,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{  
                   res = st.executeQuery("select * from site_mstr;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
@@ -5408,9 +5517,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5433,14 +5544,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from gl_cal;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glc_year"),
@@ -5453,9 +5562,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5469,14 +5580,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"Part", "Desc", "Type"}); 
              
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{     
                       res = st.executeQuery("select it_item, it_desc, it_code from item_mstr where it_item not in (select itc_item from item_cost where itc_item = it_item) order by it_item;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {res.getString("it_item"),
@@ -5487,9 +5596,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+               } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5512,13 +5623,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
              
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
                    
                       res = st.executeQuery("select * from editp_mstr order by editp_id;");
                     while (res.next()) {
@@ -5532,9 +5642,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5560,11 +5672,9 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
                       res = st.executeQuery("select * from edi_mstr order by edi_id;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
@@ -5577,9 +5687,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5601,14 +5713,12 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
             
-        try{
+      try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                   
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{     
                     res = st.executeQuery("SELECT cm_code, cm_market, cm_name, cm_line1, cm_city, cm_state, cm_zip " +
                         "from cm_mstr order by cm_code ;");
 
@@ -5627,9 +5737,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5652,12 +5764,13 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -5683,9 +5796,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5708,12 +5823,13 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -5739,9 +5855,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5763,12 +5881,13 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       }  
                         }; 
               
-        try{
+       try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -5798,9 +5917,11 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);

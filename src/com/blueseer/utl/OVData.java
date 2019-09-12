@@ -12988,7 +12988,12 @@ public class OVData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_check"));
                     type.add(thistype);
-                    desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));         
+                    if (res.getString("ap_ref").isEmpty()) {
+                       desc.add(res.getString("vod_part")); 
+                    } else {
+                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));
+                    }
+                             
                
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     
