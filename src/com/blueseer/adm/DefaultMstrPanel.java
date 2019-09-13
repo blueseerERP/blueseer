@@ -53,13 +53,17 @@ import javax.swing.SwingWorker;
  */
 public class DefaultMstrPanel extends javax.swing.JPanel implements IBlueSeerc {
 
-   // global variable declarations
-                boolean isLoad = false;
+   
                 
     public DefaultMstrPanel() {
         initComponents();
     }
 
+    
+    // global variable declarations
+                boolean isLoad = false;
+    
+    
     // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
@@ -161,6 +165,7 @@ public class DefaultMstrPanel extends javax.swing.JPanel implements IBlueSeerc {
             ResultSet res = null;
             try {
                 
+                    
                 
                     int i = 0;
                     res = st.executeQuery("SELECT *  FROM  ov_mstr;");
@@ -183,8 +188,9 @@ public class DefaultMstrPanel extends javax.swing.JPanel implements IBlueSeerc {
                             " ov_currency = " + "'" + tbcurrency.getText() + "'" + "," +
                             " ov_labelprinter = " + "'" + tblabelprinter.getText() + "'"           
                             + ";");  
-                    }
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    }
+                    
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);

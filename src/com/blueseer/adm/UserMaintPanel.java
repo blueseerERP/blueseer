@@ -366,7 +366,7 @@ public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    String passwd = new String(tbpassword.getPassword().toString().replace("'", "''"));
+                    String passwd = new String(tbpassword.getPassword()).replace("'", "''");
                         st.executeUpdate("update user_mstr set "
                                 + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                                 + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
@@ -378,6 +378,7 @@ public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 + "user_rmks = " + "'" + tarmks.getText().toString().replace("'", "''")  + "'"
                                 + " where user_id = " + "'" + tbkey.getText().toString() + "'"
                                 + ";");
+                        
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
                 } 

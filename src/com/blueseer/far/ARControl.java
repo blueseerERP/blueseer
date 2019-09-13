@@ -26,35 +26,233 @@ SOFTWARE.
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeerc;
+import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class ARControl extends javax.swing.JPanel {
+public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
 
-    /**
-     * Creates new form EDIControlPanel
-     */
     public ARControl() {
         initComponents();
     }
 
+    // global variable declarations
+                boolean isLoad = false;
     
-     public void getdefault() {
+    
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+          
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+      
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        
+       isLoad = false;
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) { 
+        boolean b = true;
+                                
+                if (tbbank.getText().isEmpty() || ! OVData.isValidBank(tbbank.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid bank");
+                    tbbank.requestFocus();
+                    return b;
+                }
+                if (tbaracct.getText().isEmpty() || ! OVData.isValidGLAcct(tbaracct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid AR acct");
+                    tbaracct.requestFocus();
+                    return b;
+                }
+                if (tbsalesacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbsalesacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid Sales acct");
+                    tbsalesacct.requestFocus();
+                    return b;
+                }
+                if (tbasset.getText().isEmpty() || ! OVData.isValidGLAcct(tbasset.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid Asset acct");
+                    tbasset.requestFocus();
+                    return b;
+                }
+                if (tbfederaltax.getText().isEmpty() || ! OVData.isValidGLAcct(tbfederaltax.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid Federal Tax acct");
+                    tbfederaltax.requestFocus();
+                    return b;
+                }
+                if (tbstatetax.getText().isEmpty() || ! OVData.isValidGLAcct(tbstatetax.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid State Tax acct");
+                    tbstatetax.requestFocus();
+                    return b;
+                }
+                if (tblocaltax.getText().isEmpty() || ! OVData.isValidGLAcct(tblocaltax.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid Local Tax acct");
+                    tblocaltax.requestFocus();
+                    return b;
+                }
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+            setComponentDefaultValues();
+            executeTask("get", null);
+    }
+    
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+           
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                    
+                
+                    int i = 0;
+                    res = st.executeQuery("SELECT *  FROM  ar_ctrl ;");
+                    while (res.next()) {
+                        i++;
+                    }
+                     if (i == 0) {
+
+                    st.executeUpdate("insert into ar_ctrl values (" + "'" + tbbank.getText() + "'" + ","
+                            + "'" + tbaracct.getText() + "'" + "," 
+                            + "'" + tbarcc.getText() + "'" + ","
+                            + "'" + tbsalesacct.getText() + "'" + ","
+                            + "'" + tbsalescc.getText() + "'"
+                            + ")" + ";");            
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                } else {
+                    st.executeUpdate("update ar_ctrl set " 
+                            + " arc_bank = " + "'" + tbbank.getText() + "'" + ","
+                            + " arc_default_acct = " + "'" + tbaracct.getText() + "'" + "," 
+                            + " arc_default_cc = " + "'" + tbarcc.getText() + "'" + "," 
+                            + " arc_sales_acct = " + "'" + tbsalesacct.getText() + "'" + ","
+                            + " arc_sales_cc = " + "'" + tbsalescc.getText() + "'" + ","
+                            + " arc_asset_acct = " + "'" + tbasset.getText() + "'" + ","
+                            + " arc_asset_cc = " + "'" + tbassetcc.getText() + "'" + ","        
+                            + " arc_fedtax_acct = " + "'" + tbfederaltax.getText() + "'" + ","
+                            + " arc_fedtax_cc = " + "'" + tbfederalcc.getText() + "'" + ","
+                            + " arc_statetax_acct = " + "'" + tbstatetax.getText() + "'" + ","
+                            + " arc_statetax_cc = " + "'" + tbstatecc.getText() + "'" + ","
+                            + " arc_localtax_acct = " + "'" + tblocaltax.getText() + "'" + ","
+                            + " arc_localtax_cc = " + "'" + tblocalcc.getText() + "'" + ","
+                            + " arc_othertax_acct = " + "'" + tbothertax.getText() + "'" + ","
+                            + " arc_othertax_cc = " + "'" + tbothercc.getText() + "'" +
+                            ";");   
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                }
+                    
+                    
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
+                
                 res = st.executeQuery("select * from ar_ctrl;");
                 while (res.next()) {
                     i++;
@@ -67,23 +265,28 @@ public class ARControl extends javax.swing.JPanel {
                     tbassetcc.setText(res.getString("arc_asset_cc"));
                 }
                
-                if (i == 0)
-                    bsmf.MainFrame.show("No AR Ctrl Record found");
-
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve ar_ctrl");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
-
+      return m;
     }
     
-    public void initvars(String[] key) {
-        getdefault();
-    }
+    
+    
+   
+  
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -291,58 +494,10 @@ public class ARControl extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                res = st.executeQuery("SELECT *  FROM  ar_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                if (i == 0) {
-                    
-                    st.executeUpdate("insert into ar_ctrl values (" + "'" + tbbank.getText() + "'" + ","
-                            + "'" + tbaracct.getText() + "'" + "," 
-                            + "'" + tbarcc.getText() + "'" + ","
-                            + "'" + tbsalesacct.getText() + "'" + ","
-                            + "'" + tbsalescc.getText() + "'"
-                            + ")" + ";");              
-                          bsmf.MainFrame.show("Inserting Defaults");
-                } else {
-                    st.executeUpdate("update ar_ctrl set " 
-                            + " arc_bank = " + "'" + tbbank.getText() + "'" + ","
-                            + " arc_default_acct = " + "'" + tbaracct.getText() + "'" + "," 
-                            + " arc_default_cc = " + "'" + tbarcc.getText() + "'" + "," 
-                            + " arc_sales_acct = " + "'" + tbsalesacct.getText() + "'" + ","
-                            + " arc_sales_cc = " + "'" + tbsalescc.getText() + "'" + ","
-                            + " arc_asset_acct = " + "'" + tbasset.getText() + "'" + ","
-                            + " arc_asset_cc = " + "'" + tbassetcc.getText() + "'" + ","        
-                            + " arc_fedtax_acct = " + "'" + tbfederaltax.getText() + "'" + ","
-                            + " arc_fedtax_cc = " + "'" + tbfederalcc.getText() + "'" + ","
-                            + " arc_statetax_acct = " + "'" + tbstatetax.getText() + "'" + ","
-                            + " arc_statetax_cc = " + "'" + tbstatecc.getText() + "'" + ","
-                            + " arc_localtax_acct = " + "'" + tblocaltax.getText() + "'" + ","
-                            + " arc_localtax_cc = " + "'" + tblocalcc.getText() + "'" + ","
-                            + " arc_othertax_acct = " + "'" + tbothertax.getText() + "'" + ","
-                            + " arc_othertax_cc = " + "'" + tbothercc.getText() + "'" +
-                            ";");   
-                    bsmf.MainFrame.show("Updated Defaults");
-                }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating ar_ctrl");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        executeTask("update", null);
     }//GEN-LAST:event_btupdateActionPerformed
 
 

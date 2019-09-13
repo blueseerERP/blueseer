@@ -28,10 +28,12 @@ package com.blueseer.pur;
 import bsmf.MainFrame;
 import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeerc;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -39,7 +41,7 @@ import java.sql.Statement;
  */
 
 
-public class POControl extends javax.swing.JPanel {
+public class POControl extends javax.swing.JPanel implements IBlueSeerc {
 
     /**
      * Creates new form ClockControl
@@ -48,38 +50,186 @@ public class POControl extends javax.swing.JPanel {
         initComponents();
     }
 
+    // global variable declarations
+                boolean isLoad = false;
     
-     public void getcontrol() {
-         try {
+    
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+          
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+      
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        
+       isLoad = false;
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) { 
+        boolean b = true;
+                                
+               // nothing here
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+            setComponentDefaultValues();
+            executeTask("get", null);
+    }
+    
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+           
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                String venditemonly = "";
+                   if ( cbvenditem.isSelected() ) {
+                venditemonly = "1";    
+                } else {
+                    venditemonly = "0";
+                }
+                
+                    int i = 0;
+                    res = st.executeQuery("SELECT *  FROM  po_ctrl ;");
+                    while (res.next()) {
+                        i++;
+                    }
+                     if (i == 0) {
+
+                   st.executeUpdate("insert into po_ctrl (poc_venditem ) values (" + "'" + venditemonly + "'" + 
+                                    ")" + ";");              
+                          bsmf.MainFrame.show("Inserting Defaults");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                } else {
+                    st.executeUpdate("update po_ctrl set " 
+                            + " poc_venditem = " + "'" + venditemonly + "'" +         
+                            ";");   
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                }
+                    
+                    
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 int i = 0;
-                    res = st.executeQuery("SELECT * FROM  po_ctrl ;");
+                
+                res = st.executeQuery("SELECT * FROM  po_ctrl ;");
                     while (res.next()) {
                         i++;
                         cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("poc_venditem")));
                     }
-           
-            }
-            catch (SQLException s) {
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve po_ctrl");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
-     }
-    
-    
-    public void initvars(String[] arg) {
-           getcontrol();
+      return m;
     }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,52 +283,10 @@ public class POControl extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                String venditemonly = "";
-                
-                
-                
-               
-                
-                   if ( cbvenditem.isSelected() ) {
-                venditemonly = "1";    
-                } else {
-                    venditemonly = "0";
-                }
-                
-                
-                res = st.executeQuery("SELECT *  FROM  po_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                if (i == 0) {
-                    
-                    st.executeUpdate("insert into po_ctrl (poc_venditem ) values (" + "'" + venditemonly + "'" + 
-                                    ")" + ";");              
-                          bsmf.MainFrame.show("Inserting Defaults");
-                } else {
-                    st.executeUpdate("update po_ctrl set " 
-                            + " poc_venditem = " + "'" + venditemonly + "'" +         
-                            ";");   
-                    bsmf.MainFrame.show("Updated Defaults");
-                }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating po_ctrl");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("updateRecord")) {
+           return;
+       }
+        executeTask("update", null);
     }//GEN-LAST:event_btupdateActionPerformed
 
 

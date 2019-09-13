@@ -490,8 +490,7 @@ public class OVData {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 r = false;
-            }
-            finally {
+            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
                if (con != null) con.close();
@@ -504,15 +503,15 @@ public class OVData {
        }
        
     
-    /* stopped here */   
     public static String addMenuToUser(String menu, String thisuser) {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                
                 boolean canadd = true;
@@ -539,8 +538,11 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                  mystring = "2";
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
              mystring = "2";
@@ -553,9 +555,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] permlist = null;
                 String newperms = "";
@@ -594,8 +597,11 @@ public class OVData {
             catch (SQLException s) {
                MainFrame.bslog(s);
                mystring = "2";
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             mystring = "2";
@@ -608,9 +614,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
               
                 boolean candelete = false;
@@ -643,8 +650,11 @@ public class OVData {
             catch (SQLException s) {
                MainFrame.bslog(s);
                mystring = "2";
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             mystring = "2";
@@ -657,9 +667,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] permlist = null;
                 
@@ -675,8 +686,11 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -686,9 +700,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] permlist = null;
                 String newperms = "";
@@ -721,8 +736,11 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -730,11 +748,12 @@ public class OVData {
        
         public static void addMenu(String menu, String desc) {
          try {
-            Class.forName(driver).newInstance();
+           Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                     res = st.executeQuery("SELECT menu_id FROM menu_mstr where menu_id = " + "'" + menu + "'" + ";");
                     while (res.next()) {
@@ -752,8 +771,11 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -763,9 +785,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                     res = st.executeQuery("SELECT iti_file FROM item_image where iti_item = " + "'" + item + "'" 
                             + " AND iti_file = " + "'" + file + "'"
@@ -788,8 +811,11 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -800,9 +826,10 @@ public class OVData {
          try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 DecimalFormat df = new DecimalFormat("0.00000");
                 int i = 0;
                     res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + part + "'" +
@@ -827,8 +854,11 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -841,9 +871,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select menu_id from menu_mstr order by menu_id ;");
                while (res.next()) {
@@ -854,8 +885,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -872,8 +906,10 @@ public class OVData {
             try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
+                
                            st.executeUpdate(
                                  " update menu_tree set mt_visible = '0' "  +
                                  " where mt_child = " + "'" + child + "'" + ";" );
@@ -881,8 +917,11 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -894,8 +933,10 @@ public class OVData {
             try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
+                
                            st.executeUpdate(
                                  " update menu_tree set mt_visible = '1' "  +
                                  " where mt_child = " + "'" + child + "'" + ";" );
@@ -903,8 +944,11 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -961,9 +1005,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select mt_child, mt_index from menu_tree where mt_par = " + "'" + parent + "'" + 
                            "  " + " order by mt_index ;");
@@ -1058,8 +1103,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1077,10 +1125,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'" + 
                            " and mt_visible = '1' " + " order by mt_index ;");
                while (res.next()) {
@@ -1099,8 +1147,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1117,10 +1168,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'" + 
                            " order by mt_index ;");
                while (res.next()) {
@@ -1139,8 +1190,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1156,10 +1210,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select panel_id, panel_core, ov_custom from panel_mstr inner join ov_ctrl;");
                while (res.next()) {
                    if (res.getInt("panel_core") == 1) {
@@ -1173,8 +1227,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1193,10 +1250,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 ArrayList<String> users = new ArrayList();
                 
                  String[] permlist = null;
@@ -1209,8 +1266,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1224,10 +1284,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 ArrayList<String> users = new ArrayList();
                 
                  String[] menulist = null;
@@ -1242,8 +1302,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1253,7 +1316,7 @@ public class OVData {
     } 
       
        
-   
+   /* stopped here */
    
       
       /* vendor related functions */
