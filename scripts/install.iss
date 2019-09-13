@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer.sqlite.win.v42
+OutputBaseFilename=blueseer.sqlite.win.v43
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -189,7 +189,7 @@ begin
     if Result then
     begin
     ShellExec(
-       'open', 'https://www.sourceforge.net/projects/blueseer/files/blueseer.sqlite.win.v42.wJRE.exe/download', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+       'open', 'https://www.sourceforge.net/projects/blueseer/files/blueseer.sqlite.win.v43.wJRE.exe/download', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
   //    ShellExec(
   //      'open', 'https://www.java.com/getjava/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
     end;

@@ -265,6 +265,7 @@ admin;WareHouseMaint
 admin;WareHouseBrowse
 admin;InventoryCtrl
 admin;MassLoad
+admin;PayRollMenu
 admin;PayRollMaint
 admin;PayRollBrowse
 admin;PayProfileMaint
