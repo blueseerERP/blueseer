@@ -1325,9 +1325,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select bk_id from bk_mstr order by bk_id;");
                while (res.next()) {
@@ -1353,10 +1354,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr;");
                while (res.next()) {
                     myarray.add(res.getString("vd_addr"));
@@ -1381,10 +1382,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select vd_addr from vd_mstr " +
                         " where vd_addr >= " + "'" + from + "'" + 
                         " and vd_addr <= " + "'" + to + "'" +
@@ -1413,10 +1414,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select cut_code from cust_term order by cut_code;");
                while (res.next()) {
                     myarray.add(res.getString("cut_code"));
@@ -1443,9 +1444,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select cm_code from cm_mstr order by cm_code ;");
                while (res.next()) {
@@ -1470,9 +1472,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select cm_code from cm_mstr " +
                         " where cm_code >= " + "'" + from + "'" +
@@ -1500,10 +1503,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select cms_shipto from cms_det order by cms_shipto ;");
                while (res.next()) {
                     myarray.add(res.getString("cms_shipto"));
@@ -1527,10 +1530,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" + " order by cms_shipto;");
                while (res.next()) {
                     myarray.add(res.getString("cms_shipto"));
@@ -1555,10 +1558,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select cms_code from cms_det where cms_shipto = " + "'" + shipto + "'" + " order by cms_shipto;");
                while (res.next()) {
                     mystring = res.getString("cms_code");
@@ -1582,10 +1585,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select panel_id from panel_mstr ;");
                while (res.next()) {
                     myarray.add(res.getString("panel_id"));
@@ -1610,10 +1613,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select car_code from car_mstr order by car_code;");
                while (res.next()) {
                     myarray.add(res.getString("car_code"));
@@ -1666,10 +1668,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select car_code from car_mstr where car_type = 'group' order by car_code;");
                while (res.next()) {
                     myarray.add(res.getString("car_code"));
@@ -1694,10 +1696,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + code + "'" + " order by card_carrier;" );
                while (res.next()) {
                     myarray.add(res.getString("card_carrier"));
@@ -1722,10 +1724,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select frt_code from frt_mstr order by frt_code;");
                while (res.next()) {
                     myarray.add(res.getString("frt_code"));
@@ -1733,7 +1735,7 @@ public class OVData {
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get freight terms");
+                MainFrame.bslog(s);
             }
             con.close();
         }
@@ -1744,14 +1746,15 @@ public class OVData {
         
     }
           
-             public static ArrayList getcusttermslist() {
+        public static ArrayList getcusttermslist() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
                while (res.next()) {
@@ -1778,9 +1781,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select tax_code from tax_mstr order by tax_code  ;");
                while (res.next()) {
@@ -1808,10 +1812,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
@@ -1841,10 +1845,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+              
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " where tax_code = " + "'" + taxcode + "'" +
@@ -1875,9 +1879,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select taxd_id, taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
@@ -1910,10 +1915,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
@@ -1942,10 +1947,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " where tax_code = " + "'" + taxcode + "'" +
@@ -1973,10 +1978,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select shs_amt from shs_det where shs_type = 'charge' and shs_nbr = " + "'" + shipper + "'" + ";");
                while (res.next()) {
                    amt += res.getDouble("shs_amt");
@@ -2002,10 +2007,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join item_mstr on it_taxcode = tax_code and it_item = " + "'" + item + "'" +
@@ -2041,10 +2046,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
@@ -2079,10 +2084,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " where tax_code  = " + "'" + taxcode + "'" +
@@ -2117,10 +2122,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join so_mstr on so_taxcode = tax_code and so_nbr = " + "'" + order + "'" +
@@ -2156,10 +2161,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
                         " inner join tax_mstr on tax_code = taxd_parentcode " +
                         " inner join ship_mstr on sh_taxcode = tax_code and sh_id = " + "'" + shipper + "'" +
@@ -2195,10 +2200,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
                 // to 'other'
                 // if 'other' is undefined....it will return a blank.
@@ -2247,10 +2252,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
                 // to 'other'
                 // if 'other' is undefined....it will return a blank.
@@ -2297,10 +2302,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+              
                 res = st.executeQuery("select vd_name from vd_mstr order by vd_name;");
                while (res.next()) {
                     myarray.add(res.getString("vd_name").replace("'", ""));
@@ -2326,11 +2331,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
+               res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
                while (res.next()) {
                     myarray.add(res.getString("emp_nbr"));
                     
@@ -2355,10 +2359,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select cur_id from cur_mstr ;");
                while (res.next()) {
                     myarray.add(res.getString("cur_id"));
@@ -2383,10 +2387,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select dept_id from dept_mstr ;");
                while (res.next()) {
                     myarray.add(res.getString("dept_id"));
@@ -2412,10 +2416,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select week(indate) as 'myweek', date_add(indate, interval (8 - dayofweek(indate)) % 7 day) as 'sun' from time_clock where indate >= " +
                         "'" + mydate + "'" + " group by week(indate) ;");
                while (res.next()) {
@@ -2441,9 +2445,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                  res = st.executeQuery("select c.myweek as 'myweek', date(c.mydate,'-6 days') as 'sun' from (select strftime('%W',date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days')) as 'myweek'," +
                          " date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days') as 'mydate' from mock_mstr where mock_nbr <= " + "'" + days + "'" +
@@ -2474,9 +2479,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                 
                  } else {
@@ -2505,9 +2511,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                  res = st.executeQuery("with recursive dates(date) as ( values ( " +
                        "'" + fromdate + "'" +  " ) union all select date(date, '+7 day') from dates " +
@@ -2538,10 +2544,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select dept_id, dept_desc from dept_mstr ;");
                while (res.next()) {
                     myarray.add(res.getString("dept_id") + " = " + res.getString("dept_desc"));
@@ -2563,14 +2569,14 @@ public class OVData {
         
         public static ArrayList getpsmstrcomp(String mypart) {
        ArrayList myarray = new ArrayList();
-       String mystring = "";
+       
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select ps_child from pbm_mstr " +
                         " where ps_parent = " + "'" + mypart.toString() + "'" +
                         " AND ps_op <> '0' ;" );
@@ -2594,14 +2600,14 @@ public class OVData {
         public static ArrayList getzerolevelpsmstr() {
        ArrayList<String> myarray = new ArrayList<String>();
        ArrayList<String> mylist = new ArrayList<String>();
-       String mystring = "";
+       
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
+                 int i = 0;
                  res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';" );
                  while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -2634,13 +2640,14 @@ public class OVData {
            public static void setzerolevelpsmstr() {
        ArrayList<String> myarray = new ArrayList<String>();
        ArrayList<String> mylist = new ArrayList<String>();
-       String mystring = "";
+       
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
                 // let's first reset all levels to -1
                 st.executeUpdate( " update item_mstr set it_level = '-1'; " );
@@ -2682,9 +2689,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                  res = st.executeQuery("select ps_child from pbm_mstr inner join item_mstr on it_item = ps_parent where it_level = " + "'" + level + "'" + ";" );
                  while (res.next()) {
@@ -2713,8 +2721,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try{
-                Statement st = con.createStatement();
+                
            
                          for (Object myitem : list) {
                            st.executeUpdate(
@@ -2740,8 +2749,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try{
-                Statement st = con.createStatement();
+                
           // insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type) select ps_child, sum(mrp_qty) as sum, mrp_date, 'demand' from mrp_mstr
           // inner join pbm_mstr  on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent 
           // where it_level = '0' group by ps_child, mrp_date order by ps_child, mrp_date;
@@ -2773,8 +2783,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try{
-                Statement st = con.createStatement();
+                
                 st.executeUpdate(
                " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) " +
                " select sod_part, sod_ord_qty, sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det " +
@@ -2797,8 +2808,9 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try{
-                Statement st = con.createStatement();
+                
                 st.executeUpdate(" delete from mrp_mstr where mrp_site = " + "'" + site + "'" +
                         " AND mrp_part >= " + "'" + fromitem + "'" +
                         " AND mrp_part <= " + "'" + toitem + "'" + ";" );
@@ -2814,6 +2826,7 @@ public class OVData {
         
         
     }
+      // stopped here
         
        // BOM Tree by Operation 
       
