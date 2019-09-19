@@ -27,140 +27,177 @@ package com.blueseer.hrm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.OVData;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class ShiftMaintenance extends javax.swing.JPanel {
+public class ShiftMaintenance extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form ShiftMaintenance
-     */
+     // global variable declarations
+                boolean isLoad = false;
+    
+    // global datatablemodel declarations     
+    
+    
     public ShiftMaintenance() {
         initComponents();
     }
 
-      public void getShiftCode(String mykey) {
-       // initvars(null);
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                res = st.executeQuery("select * from shift_mstr where shf_id = " + "'" + mykey + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbcode.setText(mykey);
-                    tbdesc.setText(res.getString("shf_desc"));
-                    ddmonin.setSelectedItem(res.getString("shf_mon_intime").substring(0, 5));
-                    ddmonout.setSelectedItem(res.getString("shf_mon_outtime").substring(0, 5));
-                    ddtuein.setSelectedItem(res.getString("shf_tue_intime").substring(0, 5));
-                    ddtueout.setSelectedItem(res.getString("shf_tue_outtime").substring(0, 5));
-                    ddwedin.setSelectedItem(res.getString("shf_wed_intime").substring(0, 5));
-                    ddwedout.setSelectedItem(res.getString("shf_wed_outtime").substring(0, 5));
-                    ddthuin.setSelectedItem(res.getString("shf_thu_intime").substring(0, 5));
-                    ddthuout.setSelectedItem(res.getString("shf_thu_outtime").substring(0, 5));
-                    ddfriin.setSelectedItem(res.getString("shf_fri_intime").substring(0, 5));
-                    ddfriout.setSelectedItem(res.getString("shf_fri_outtime").substring(0, 5));
-                    ddsatin.setSelectedItem(res.getString("shf_sat_intime").substring(0, 5));
-                    ddsatout.setSelectedItem(res.getString("shf_sat_outtime").substring(0, 5));
-                    ddsunin.setSelectedItem(res.getString("shf_sun_intime").substring(0, 5));
-                    ddsatout.setSelectedItem(res.getString("shf_sun_outtime").substring(0, 5));
-                }
-
-            if (i > 0) {
-                    enableAll();
-                    btadd.setEnabled(false);
-                }
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
             
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve shift_mstr");
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            return message;
         }
-
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
-    
-    
-    public ArrayList setddtimelist() {
-        ArrayList<String> time = new ArrayList<String>();
-        String minutes = "";
-        String hours = "";
-        for (int i = 0; i < 24 ; i++) {
-            hours = String.format("%02d", i);
-            for (int j = 0; j < 12; j++) {
-                minutes = String.format("%02d", (j * 5));
-                time.add(hours + ":" + minutes);
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
             }
         }
-        time.add("24:00");
-        return time;
-    }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
-    
-    public void enableAll() {
-        ddmonin.setEnabled(true);
-        ddmonout.setEnabled(true);
-        ddtuein.setEnabled(true);
-        ddtueout.setEnabled(true);
-        ddwedin.setEnabled(true);
-        ddwedout.setEnabled(true);
-        ddthuin.setEnabled(true);
-        ddthuout.setEnabled(true);
-        ddfriin.setEnabled(true);
-        ddfriout.setEnabled(true);
-        ddsatin.setEnabled(true);
-        ddsatout.setEnabled(true);
-        ddsunin.setEnabled(true);
-        ddsunout.setEnabled(true);
-        btnew.setEnabled(true);
-        btadd.setEnabled(true);
-        btdelete.setEnabled(true);
-        btupdate.setEnabled(true);
-        btbrowse.setEnabled(true);
-        tbdesc.setEnabled(true);
-        tbcode.setEnabled(true);
-        
-    }
-    public void disableAll() {
-       ddmonin.setEnabled(false);
-        ddmonout.setEnabled(false);
-        ddtuein.setEnabled(false);
-        ddtueout.setEnabled(false);
-        ddwedin.setEnabled(false);
-        ddwedout.setEnabled(false);
-        ddthuin.setEnabled(false);
-        ddthuout.setEnabled(false);
-        ddfriin.setEnabled(false);
-        ddfriout.setEnabled(false);
-        ddsatin.setEnabled(false);
-        ddsatout.setEnabled(false);
-        ddsunin.setEnabled(false);
-        ddsunout.setEnabled(false);
-        btnew.setEnabled(false);
-        btadd.setEnabled(false);
-        btdelete.setEnabled(false);
-        btupdate.setEnabled(false);
-        btbrowse.setEnabled(false); 
-         tbdesc.setEnabled(false);
-        tbcode.setEnabled(false);
-    }
-    public void clearAll() {
-        
+    public void setComponentDefaultValues() {
+       isLoad = true;
         tbdesc.setText("");
-        tbcode.setText("");
+        tbkey.setText("");
         
          java.util.Date now = new java.util.Date();
         
@@ -195,21 +232,292 @@ public class ShiftMaintenance extends javax.swing.JPanel {
         ddsatin.setSelectedItem("00:00");
         ddsatout.setSelectedItem("00:00");
         ddsunin.setSelectedItem("00:00");
-        ddsunout.setSelectedItem("00:00");
+        ddsunout.setSelectedItem("00:00"); 
+        
+       isLoad = false;
     }
     
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
     
-     public void initvars(String[] arg) {
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+               
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
        
-         clearAll();
-          disableAll();
-          btbrowse.setEnabled(true);
-          btnew.setEnabled(true);
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            getShiftCode(arg[0]);
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
     }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                boolean proceed = true;
+                int i = 0;
+
+                    res = st.executeQuery("SELECT shf_id FROM  shift_mstr where shf_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into shift_mstr "
+                            + "(shf_id, shf_desc, shf_mon_intime, shf_mon_outtime, shf_tue_intime, shf_tue_outtime, "
+                            + " shf_wed_intime, shf_wed_outtime, shf_thu_intime, shf_thu_outtime, shf_fri_intime, shf_fri_outtime, "
+                            + " shf_sat_intime, shf_sat_outtime, shf_sun_intime, shf_sun_outtime ) "
+                            + " values ( " + "'" + x[0] + "'" + ","
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                                + "'" + ddmonin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddmonout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddtuein.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddtueout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddwedin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddwedout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddthuin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddthuout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddfriin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddfriout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddsatin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddsatout.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddsunin.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddsunout.getSelectedItem().toString() + "'"
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                    st.executeUpdate("update shift_mstr set shf_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "shf_mon_intime = " + "'" + ddmonin.getSelectedItem().toString() + "'" + ","
+                            + "shf_mon_outtime = " + "'" + ddmonout.getSelectedItem().toString() + "'" + ","
+                            + "shf_tue_intime = " + "'" + ddtuein.getSelectedItem().toString() + "'" + ","
+                            + "shf_tue_outtime = " + "'" + ddtueout.getSelectedItem().toString() + "'" + ","
+                            + "shf_wed_intime = " + "'" + ddwedin.getSelectedItem().toString() + "'" + ","
+                            + "shf_wed_outtime = " + "'" + ddwedout.getSelectedItem().toString() + "'" + ","
+                            + "shf_thu_intime = " + "'" + ddthuin.getSelectedItem().toString() + "'" + ","
+                            + "shf_thu_outtime = " + "'" + ddthuout.getSelectedItem().toString() + "'" + ","
+                            + "shf_fri_intime = " + "'" + ddfriin.getSelectedItem().toString() + "'" + ","
+                            + "shf_fri_outtime = " + "'" + ddfriout.getSelectedItem().toString() + "'" + ","
+                            + "shf_sat_intime = " + "'" + ddsatin.getSelectedItem().toString() + "'" + ","
+                            + "shf_sat_outtime = " + "'" + ddsatout.getSelectedItem().toString() + "'" + ","
+                            + "shf_sun_intime = " + "'" + ddsunin.getSelectedItem().toString() + "'" + ","
+                            + "shf_sun_outtime = " + "'" + ddsunout.getSelectedItem().toString() + "'" 
+                            + " where shf_id = " + "'" + tbkey.getText() + "'"                             
+                            + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+               
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                   int i = st.executeUpdate("delete from shift_mstr where shf_id = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+               res = st.executeQuery("select * from shift_mstr where shf_id = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbkey.setText(x[0]);
+                    tbdesc.setText(res.getString("shf_desc"));
+                    ddmonin.setSelectedItem(res.getString("shf_mon_intime").substring(0, 5));
+                    ddmonout.setSelectedItem(res.getString("shf_mon_outtime").substring(0, 5));
+                    ddtuein.setSelectedItem(res.getString("shf_tue_intime").substring(0, 5));
+                    ddtueout.setSelectedItem(res.getString("shf_tue_outtime").substring(0, 5));
+                    ddwedin.setSelectedItem(res.getString("shf_wed_intime").substring(0, 5));
+                    ddwedout.setSelectedItem(res.getString("shf_wed_outtime").substring(0, 5));
+                    ddthuin.setSelectedItem(res.getString("shf_thu_intime").substring(0, 5));
+                    ddthuout.setSelectedItem(res.getString("shf_thu_outtime").substring(0, 5));
+                    ddfriin.setSelectedItem(res.getString("shf_fri_intime").substring(0, 5));
+                    ddfriout.setSelectedItem(res.getString("shf_fri_outtime").substring(0, 5));
+                    ddsatin.setSelectedItem(res.getString("shf_sat_intime").substring(0, 5));
+                    ddsatout.setSelectedItem(res.getString("shf_sat_outtime").substring(0, 5));
+                    ddsunin.setSelectedItem(res.getString("shf_sun_intime").substring(0, 5));
+                    ddsatout.setSelectedItem(res.getString("shf_sun_outtime").substring(0, 5));
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+   
+    // custom func
+    public ArrayList setddtimelist() {
+        ArrayList<String> time = new ArrayList<String>();
+        String minutes = "";
+        String hours = "";
+        for (int i = 0; i < 24 ; i++) {
+            hours = String.format("%02d", i);
+            for (int j = 0; j < 12; j++) {
+                minutes = String.format("%02d", (j * 5));
+                time.add(hours + ":" + minutes);
+            }
+        }
+        time.add("24:00");
+        return time;
+    }
+    
+  
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -225,7 +533,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         btupdate = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -251,6 +559,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -271,6 +580,12 @@ public class ShiftMaintenance extends javax.swing.JPanel {
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
+            }
+        });
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -303,6 +618,18 @@ public class ShiftMaintenance extends javax.swing.JPanel {
         });
 
         btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -369,11 +696,13 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnew))
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
@@ -383,10 +712,12 @@ public class ShiftMaintenance extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addComponent(btbrowse)
-                    .addComponent(btnew))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -430,113 +761,19 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a shift code");
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT shf_id FROM  shift_mstr where shf_id = " + "'" + tbcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into shift_mstr "
-                            + "(shf_id, shf_desc, shf_mon_intime, shf_mon_outtime, shf_tue_intime, shf_tue_outtime, "
-                            + " shf_wed_intime, shf_wed_outtime, shf_thu_intime, shf_thu_outtime, shf_fri_intime, shf_fri_outtime, "
-                            + " shf_sat_intime, shf_sat_outtime, shf_sun_intime, shf_sun_outtime ) "
-                            + " values ( " + "'" + tbcode.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                                + "'" + ddmonin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddmonout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddtuein.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddtueout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddwedin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddwedout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddthuin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddthuout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddfriin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddfriout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddsatin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddsatout.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddsunin.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddsunout.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added Shift Record");
-                    } else {
-                        bsmf.MainFrame.show("Shift Record Already Exists");
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to shift_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()}); 
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                // check the code field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a code");
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update shift_mstr set shf_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "shf_mon_intime = " + "'" + ddmonin.getSelectedItem().toString() + "'" + ","
-                            + "shf_mon_outtime = " + "'" + ddmonout.getSelectedItem().toString() + "'" + ","
-                            + "shf_tue_intime = " + "'" + ddtuein.getSelectedItem().toString() + "'" + ","
-                            + "shf_tue_outtime = " + "'" + ddtueout.getSelectedItem().toString() + "'" + ","
-                            + "shf_wed_intime = " + "'" + ddwedin.getSelectedItem().toString() + "'" + ","
-                            + "shf_wed_outtime = " + "'" + ddwedout.getSelectedItem().toString() + "'" + ","
-                            + "shf_thu_intime = " + "'" + ddthuin.getSelectedItem().toString() + "'" + ","
-                            + "shf_thu_outtime = " + "'" + ddthuout.getSelectedItem().toString() + "'" + ","
-                            + "shf_fri_intime = " + "'" + ddfriin.getSelectedItem().toString() + "'" + ","
-                            + "shf_fri_outtime = " + "'" + ddfriout.getSelectedItem().toString() + "'" + ","
-                            + "shf_sat_intime = " + "'" + ddsatin.getSelectedItem().toString() + "'" + ","
-                            + "shf_sat_outtime = " + "'" + ddsatout.getSelectedItem().toString() + "'" + ","
-                            + "shf_sun_intime = " + "'" + ddsunin.getSelectedItem().toString() + "'" + ","
-                            + "shf_sun_outtime = " + "'" + ddsunout.getSelectedItem().toString() + "'" 
-                            + " where shf_id = " + "'" + tbcode.getText() + "'"                             
-                            + ";");
-                    bsmf.MainFrame.show("Updated Shift Code");
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating shift_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()}); 
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
@@ -544,17 +781,31 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-         clearAll();
-        enableAll();
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
-        btbrowse.setEnabled(false);
+        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+         BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+         executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+         if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
+    }//GEN-LAST:event_btdeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
@@ -582,7 +833,7 @@ public class ShiftMaintenance extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
     // End of variables declaration//GEN-END:variables
 }

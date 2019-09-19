@@ -192,7 +192,7 @@ Quality,QPRMaint,1,JMenuItem,QPR Maintenance,,,,1,1
 Quality,QPRBrowse,2,JMenuItem,QPR Browse,,1,,1,1
 HR,EmployeeMaster,1,JMenuItem,Employee Maintenance,,,,1,1
 HR,EmpBrowse,2,JMenuItem,Employee Browse,,1,,1,1
-HR,ShiftMaintenance,3,JMenuItem,Shift Maintenance,,1,,1,1
+HR,ShiftMaintenance,3,JMenuItem,Shift Maintenance,,,,1,1
 HR,ShiftBrowse,4,JMenuItem,Shift Browse,,1,,1,1
 HR,HRTrainingMenu,5,JMenu,Training Menu,,,,1,1
 HRTrainingMenu,TrainingMaint,1,JMenuItem,Training Maintenance,,,,1,1

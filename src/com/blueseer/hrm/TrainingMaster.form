@@ -63,7 +63,7 @@
                                       </Group>
                                       <Component id="enddate" pref="199" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="9" max="32767" attributes="0"/>
                                   <Component id="btaddempid" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButton1" min="-2" pref="68" max="-2" attributes="0"/>
@@ -85,37 +85,54 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="location" min="-2" pref="255" max="-2" attributes="0"/>
-                      <Component id="instructor" min="-2" pref="255" max="-2" attributes="0"/>
-                      <Component id="coursenum" min="-2" pref="255" max="-2" attributes="0"/>
-                      <Component id="tbhours" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
-                      <Component id="trainingdesc" min="-2" pref="491" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="tbkey" min="-2" pref="127" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="tblocation" min="-2" pref="255" max="-2" attributes="0"/>
+                              <Component id="tbinstructor" min="-2" pref="255" max="-2" attributes="0"/>
+                              <Component id="tbhours" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
+                              <Component id="tbdesc" alignment="0" min="-2" pref="511" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="0" pref="76" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btbrowse" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnew" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel49" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="trainingdesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbdesc" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel46" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tbinstructor" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="instructor" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="coursenum" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel49" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="location" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tblocation" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel53" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -130,15 +147,15 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="enddate" min="-2" pref="36" max="-2" attributes="0"/>
-                      <Component id="jLabel51" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="enddate" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel51" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="ddempid" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel52" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btaddempid" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="jButton1" alignment="3" pref="0" max="32767" attributes="0"/>
+                      <Component id="jButton1" alignment="3" pref="34" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="103" max="-2" attributes="0"/>
@@ -147,7 +164,7 @@
                       <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel54" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
+                  <EmptySpace pref="68" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -167,16 +184,19 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="trainingdesc">
+        <Component class="javax.swing.JTextField" name="tbdesc">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel46">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Training Description"/>
+            <Property name="text" type="java.lang.String" value="Description"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="instructor">
+        <Component class="javax.swing.JTextField" name="tbinstructor">
         </Component>
-        <Component class="javax.swing.JTextField" name="coursenum">
+        <Component class="javax.swing.JTextField" name="tbkey">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel47">
           <Properties>
@@ -185,7 +205,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel49">
           <Properties>
-            <Property name="text" type="java.lang.String" value="CourseNum (optional)"/>
+            <Property name="text" type="java.lang.String" value="Code"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel50">
@@ -270,7 +290,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="location">
+        <Component class="javax.swing.JTextField" name="tblocation">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel53">
           <Properties>
@@ -319,6 +339,32 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnew">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="New"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btbrowse">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/lookup.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

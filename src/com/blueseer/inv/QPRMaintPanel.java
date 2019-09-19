@@ -27,8 +27,12 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.print.PageFormat;
@@ -41,60 +45,494 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class QPRMaintPanel extends javax.swing.JPanel {
+public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-String sitename = "";
-String siteaddr = "";
-String sitephone = "";
-String sitecitystatezip = "";
-String sqename = "";
-String sqephone = "";
-String sqefax = "";
-String sqeemail = "";
+    // global variable declarations
+            boolean isLoad = false;
+            String sitename = "";
+            String siteaddr = "";
+            String sitephone = "";
+            String sitecitystatezip = "";
+            String sqename = "";
+            String sqephone = "";
+            String sqefax = "";
+            String sqeemail = "";
     
-    
-    /**
-     * Creates new form QPRMaintPanel
-     */
-    public QPRMaintPanel() {
-        
-        initComponents();
-        
-        this.initvars(null);
-        
-    }
+    // global datatablemodel declarations       
 
-    
-      public void getQPR(String arg) {
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
           
-          try {
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
+        tbQtyRejected.setText("0");
+        tbNumSuspectCont.setText("0");
+        tbTotalQty.setText("0");
+        tbChargeBack.setText("0.00");
+        tbkey.setText("");
+        tbOriginator.setText("");
+        tbSuppName.setText("");
+        tbSuppNbr.setText("");
+        cbQPR.setSelected(false);
+        cbInforOnly.setSelected(false);
+        cbSendSupp.setSelected(false);
+        cbSort.setSelected(false);
+        cbRework.setSelected(false);
+        cbScrapped.setSelected(false);
+        cbDeviation.setSelected(false);
+        cbLine.setSelected(false);
+        cbReceiving.setSelected(false);
+        cbCustomer.setSelected(false);
+        cbEngineering.setSelected(false);
+        cbOther.setSelected(false);
+        tbOtherReason.setText("");
+        cbInternal.setSelected(false);
+        cbExternal.setSelected(false);
+        tbDept.setText("");
+        tbDeviationNbr.setText("");
+        tbPartNumber.setText("");
+        tbPartDesc.setText("");
+        taIssue.setText("");
+        taHistory.setText("");
+        taComments.setText(""); 
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (taComments.getText().length() > 400) {
+                    b = false;
+                    bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
+                    taComments.requestFocus();
+                    return b;
+                }
+                
+                if (taIssue.getText().length() > 400) {
+                    b = false;
+                    bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
+                    taIssue.requestFocus();
+                    return b;
+                }
+               
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+               
+                int i = 0;
+
+                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into qual_mstr "
+                        + "(qual_id, qual_userid, qual_date_crt,"
+                        + "qual_date_upd, qual_date_cls, qual_originator,"
+                        + "qual_vend, qual_vend_name, qual_vend_contact, "
+                        + "qual_qpr, qual_infor, qual_sendsupp, qual_sort,"
+                        + "qual_rework, qual_scrap, qual_dev, qual_dev_nbr,"
+                        + "qual_src_line, qual_line_dept, qual_src_recv,"
+                        + "qual_src_cust, qual_src_eng, qual_src_oth,"
+                        + "qual_src_oth_desc, qual_int_sup, qual_ext_sup,"
+                        + "qual_part, qual_part_desc, qual_qty_rej, qual_qty_susp,"
+                        + "qual_qty_tot_def, qual_desc_iss, qual_desc_fin_hist,"
+                        + "qual_desc_sqe_comt, qual_tot_charge, qual_dec1, qual_date1, qual_int1) "
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + tbOriginator.getText() + "'" + ","
+                        + "'" + dfdate.format(dccreate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(dccreate.getDate()) + "'" + ","
+                        + "'" + "" + "'" + "," // close date
+                        + "'" + tbOriginator.getText() + "'" + ","
+                        + "'" + tbSuppNbr.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbSuppName.getText().replace("'", "''") + "'" + ","
+                        + null + "," + // qual_vendor_bsmf.MainFrame.contact
+                        "'" + BlueSeerUtils.boolToInt(cbQPR.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbInforOnly.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbSendSupp.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbSort.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbRework.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbScrapped.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbDeviation.isSelected()) + "'" + ","
+                        + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbLine.isSelected()) + "'" + ","
+                        + "'" + tbDept.getText().replace("'", "''") + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbReceiving.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbCustomer.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbEngineering.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbOther.isSelected()) + "'" + ","
+                        + "'" + tbOtherReason.getText().replace("'", "''") + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbInternal.isSelected()) + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(cbExternal.isSelected()) + "'" + ","
+                        + "'" + tbPartNumber.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbPartDesc.getText().replace("'", "''") + "'" + ","
+                        + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
+                        + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
+                        + "'" + Integer.parseInt(tbTotalQty.getText().toString()) + "'" + ","
+                        + "'" + taIssue.getText().replace("'", "''") + "'" + ","
+                        + "'" + taHistory.getText().replace("'", "''") + "'" + ","
+                        + "'" + taComments.getText().replace("'", "''") + "'" + ","
+                        + "'" + Float.parseFloat(tbChargeBack.getText().replace("'", "''").toString()) + "'" + ","
+                        + null + "," + null + "," + null
+                        + ")"
+                        + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            String closedate = "";
+            if (dcclose.getDate() != null) {
+                closedate = dfdate.format(dcclose.getDate());
+            }
+            try {
+                    st.executeUpdate("update qual_mstr "
+                        + "set qual_qpr = " + "'" + BlueSeerUtils.boolToInt(cbQPR.isSelected()) + "'" + ","
+                        + "qual_infor = " + "'" + BlueSeerUtils.boolToInt(cbInforOnly.isSelected()) + "'" + ","
+                        + "qual_date_upd = " + "'" + dfdate.format(dcupdate.getDate()) + "'" + ","
+                        + "qual_date_cls = " + "'" + closedate + "'" + ","
+                        + "qual_sendsupp = " + "'" + BlueSeerUtils.boolToInt(cbSendSupp.isSelected()) + "'" + ","
+                        + "qual_sort = " + "'" + BlueSeerUtils.boolToInt(cbSort.isSelected()) + "'" + ","
+                        + "qual_rework = " + "'" + BlueSeerUtils.boolToInt(cbRework.isSelected()) + "'" + ","
+                        + "qual_scrap = " + "'" + BlueSeerUtils.boolToInt(cbScrapped.isSelected()) + "'" + ","
+                        + "qual_dev = " + "'" + BlueSeerUtils.boolToInt(cbDeviation.isSelected()) + "'" + ","
+                        + "qual_src_line = " + "'" + BlueSeerUtils.boolToInt(cbLine.isSelected()) + "'" + ","
+                        + "qual_src_recv = " + "'" + BlueSeerUtils.boolToInt(cbReceiving.isSelected()) + "'" + ","
+                        + "qual_src_cust = " + "'" + BlueSeerUtils.boolToInt(cbCustomer.isSelected()) + "'" + ","
+                        + "qual_src_eng = " + "'" + BlueSeerUtils.boolToInt(cbEngineering.isSelected()) + "'" + ","
+                        + "qual_src_oth = " + "'" + BlueSeerUtils.boolToInt(cbOther.isSelected()) + "'" + ","
+                        + "qual_src_oth_desc = " + "'" + tbOtherReason.getText() + "'" + ","
+                        + "qual_int_sup = " + "'" + BlueSeerUtils.boolToInt(cbInternal.isSelected()) + "'" + ","
+                        + "qual_ext_sup = " + "'" + BlueSeerUtils.boolToInt(cbExternal.isSelected()) + "'" + ","
+                        + "qual_vend_name = " + "'" + tbSuppName.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_vend = " + "'" + tbSuppNbr.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_line_dept = " + "'" + tbDept.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_dev_nbr = " + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_part = " + "'" + tbPartNumber.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_part_desc = " + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_qty_rej = " + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
+                        + "qual_qty_susp = " + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
+                        + "qual_qty_tot_def = " + "'" + Integer.parseInt(tbTotalQty.getText().toString()) + "'" + ","
+                        + "qual_tot_charge = " + "'" + Float.parseFloat(tbChargeBack.getText().toString()) + "'" + ","
+                        + "qual_desc_iss = " + "'" + taIssue.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_desc_fin_hist = " + "'" + taHistory.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_desc_sqe_comt = " + "'" + taComments.getText().replace("'", "\\'") + "'"
+                        + " where qual_id = " + "'" + tbkey.getText().replace("'", "\\'").toString() + "'"
+                        + " ;");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+               
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
             try {
+                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
 
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select * from qual_mstr where qual_id = " + "'" + arg + "'");
-
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
                 int i = 0;
+                res = st.executeQuery("select * from qual_mstr where qual_id = " + "'" + x[0] + "'");
                 while (res.next()) {
                     i++;
-                    // int nextnumber = Integer.valueOf(res.getString("num"));
-                    // nextnumber++;
-
-                    tbDateCreate.setText(res.getString("qual_date_crt"));
-                    tbDateUpdate.setText(res.getString("qual_date_upd"));
-                    tbDateClosed.setText(res.getString("qual_date_cls"));
+                    dccreate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_crt")));
+                    dcupdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_upd")));
+                    if (! res.getString("qual_date_cls").isEmpty()) {
+                    dcclose.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_cls")));
+                    }
                     tbQtyRejected.setText(res.getString("qual_qty_rej"));
                     tbNumSuspectCont.setText(res.getString("qual_qty_susp"));
                     tbTotalQty.setText(res.getString("qual_qty_tot_def"));
@@ -124,88 +562,76 @@ String sqeemail = "";
                     taIssue.setText(res.getString("qual_desc_iss"));
                     taHistory.setText(res.getString("qual_desc_fin_hist"));
                     taComments.setText(res.getString("qual_desc_sqe_comt"));
-                    tbComplaintNbr.setText(arg);
+                    tbkey.setText(x[0]);
                     // jcbsupervisor_empmast.setSelectedIndex(0);
                 }
-
-                if (i == 0) {
-                    bsmf.MainFrame.show("No Record Found");
-                    initvars(null);
-                } else {
-                    tbComplaintNbr.setEnabled(false);
-                    btQualProbAdd.setEnabled(false);
-                    tbDateUpdate.setEnabled(false);
-                    tbDateCreate.setEnabled(false);
-                    tbOriginator.setEnabled(false);
-
-                    jButtonNewComplaint.setEnabled(false);
-                    if (!tbDateClosed.getText().isEmpty()) {
-                        btQualProbUpdate.setEnabled(false);
-                        tbDateClosed.setEnabled(false);
-                    }
-                }
-              
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    
+   
+    public QPRMaintPanel() {
+        
+        initComponents();
+        
+        this.initvars(null);
+        
+    }
+
+    
+    // custom funcs
+    public void getSiteAddress(String site) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                                
+                res = st.executeQuery("select * from site_mstr where site_site = " + "'" + site + "'" +";");
+                while (res.next()) {
+                    i++;
+                   sitename = res.getString("site_desc");
+                   siteaddr = res.getString("site_line1");
+                   sitephone = res.getString("site_phone");
+                   sitecitystatezip = res.getString("site_city") + ", " + res.getString("site_state") + " " + res.getString("site_zip");
+                   sqename = res.getString("site_sqename");
+                   sqephone = res.getString("site_sqephone");
+                   sqefax = res.getString("site_sqefax");
+                   sqeemail = res.getString("site_sqeemail");
+                  
+                }
+               
+                if (i == 0)
+                    bsmf.MainFrame.show("No Address Record found for site " + site );
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-          
-          
-      }
-    
-      public void initvars(String[] arg) {
-        tbQtyRejected.setText("0");
-        tbNumSuspectCont.setText("0");
-        tbTotalQty.setText("0");
-        tbChargeBack.setText("0.00");
-        btget.setEnabled(true);
-        jButtonNewComplaint.setEnabled(true);
-        btQualProbAdd.setEnabled(true);
-        btQualProbUpdate.setEnabled(true);
-        tbComplaintNbr.setText("");
-        tbComplaintNbr.setEnabled(true);
-        tbOriginator.setText("");
-        tbDateUpdate.setText("");
-        tbDateUpdate.setEnabled(true);
-        tbDateCreate.setText("");
-        tbDateCreate.setEnabled(true);
-        tbDateClosed.setText("");
-        tbSuppName.setText("");
-        tbSuppNbr.setText("");
-        cbQPR.setSelected(false);
-        cbInforOnly.setSelected(false);
-        cbSendSupp.setSelected(false);
-        cbSort.setSelected(false);
-        cbRework.setSelected(false);
-        cbScrapped.setSelected(false);
-        cbDeviation.setSelected(false);
-        cbLine.setSelected(false);
-        cbReceiving.setSelected(false);
-        cbCustomer.setSelected(false);
-        cbEngineering.setSelected(false);
-        cbOther.setSelected(false);
-        tbOtherReason.setText("");
-        cbInternal.setSelected(false);
-        cbExternal.setSelected(false);
-        tbDept.setText("");
-        tbDeviationNbr.setText("");
-        tbPartNumber.setText("");
-        tbPartDesc.setText("");
-        taIssue.setText("");
-        taHistory.setText("");
-        taComments.setText("");
-        this.revalidate();
-        
-        
-        if (arg != null && arg.length > 0) {
-            getQPR(arg[0]);
-        }
     }
-    
     
     
     /**
@@ -218,11 +644,9 @@ String sqeemail = "";
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btget = new javax.swing.JButton();
-        tbComplaintNbr = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButtonNewComplaint = new javax.swing.JButton();
-        tbDateCreate = new javax.swing.JTextField();
+        btnew = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         tbOriginator = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -256,8 +680,6 @@ String sqeemail = "";
         tbTotalQty = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        tbDateUpdate = new javax.swing.JTextField();
-        tbDateClosed = new javax.swing.JTextField();
         tbSuppName = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -274,28 +696,33 @@ String sqeemail = "";
         taComments = new javax.swing.JTextArea();
         tbChargeBack = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        btQualProbAdd = new javax.swing.JButton();
-        btQualProbUpdate = new javax.swing.JButton();
-        btPrintQPR = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        btprint = new javax.swing.JButton();
         tbSuppNbr = new javax.swing.JTextField();
+        btdelete = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
+        btbrowse = new javax.swing.JButton();
+        dccreate = new com.toedter.calendar.JDateChooser();
+        dcupdate = new com.toedter.calendar.JDateChooser();
+        dcclose = new com.toedter.calendar.JDateChooser();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Quality Problem Report (QPR)"));
 
-        btget.setText("Get");
-        btget.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
         jLabel1.setText("Complaint#");
 
-        jButtonNewComplaint.setText("New");
-        jButtonNewComplaint.addActionListener(new java.awt.event.ActionListener() {
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNewComplaintActionPerformed(evt);
+                btnewActionPerformed(evt);
             }
         });
 
@@ -376,26 +803,53 @@ String sqeemail = "";
 
         jLabel19.setText("Total ChargeBack for QPR");
 
-        btQualProbAdd.setText("Add");
-        btQualProbAdd.addActionListener(new java.awt.event.ActionListener() {
+        btadd.setText("Add");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btQualProbAddActionPerformed(evt);
+                btaddActionPerformed(evt);
             }
         });
 
-        btQualProbUpdate.setText("Update");
-        btQualProbUpdate.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btQualProbUpdateActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
-        btPrintQPR.setText("Print");
-        btPrintQPR.addActionListener(new java.awt.event.ActionListener() {
+        btprint.setText("Print");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPrintQPRActionPerformed(evt);
+                btprintActionPerformed(evt);
             }
         });
+
+        btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
+        dccreate.setDateFormatString("yyyy-MM-dd");
+
+        dcupdate.setDateFormatString("yyyy-MM-dd");
+
+        dcclose.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -463,64 +917,65 @@ String sqeemail = "";
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(cbInternal)
-                                                                .addGap(172, 172, 172))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                        .addComponent(jLabel1)
-                                                                        .addGap(65, 65, 65))
-                                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                        .addComponent(tbComplaintNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                                                                .addComponent(btget)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButtonNewComplaint)
-                                                                .addGap(49, 49, 49)))
-                                                        .addGap(0, 0, Short.MAX_VALUE)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel2)
-                                                            .addComponent(jLabel12))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                            .addComponent(tbDateUpdate)
-                                                            .addComponent(tbDateCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addGap(221, 221, 221)
-                                                        .addComponent(jLabel13)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(tbSuppNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(221, 221, 221)
+                                                .addComponent(jLabel13)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(tbSuppNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(90, 90, 90))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(cbScrapped)
+                                                    .addComponent(cbExternal)
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                                         .addComponent(cbDeviation)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(tbDeviationNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addComponent(cbScrapped)
-                                                    .addComponent(cbExternal))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel14)
+                                                        .addComponent(tbDeviationNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addComponent(cbInternal)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jLabel1)
+                                                                .addGap(60, 60, 60))
+                                                            .addComponent(tbkey, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btnew)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btclear)
+                                                        .addGap(29, 29, 29)))
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel2)
+                                                    .addComponent(jLabel12))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(tbDateClosed, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(dccreate, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(dcupdate, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(23, 23, 23)))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jLabel3)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(tbOriginator, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                                .addComponent(tbOriginator, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel14)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(dcclose, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                         .addGap(1, 1, 1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btPrintQPR)
-                        .addGap(18, 18, 18)
-                        .addComponent(btQualProbUpdate)
+                        .addComponent(btprint)
+                        .addGap(139, 139, 139)
+                        .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btQualProbAdd))
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btadd))
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane3)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -534,32 +989,36 @@ String sqeemail = "";
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(4, 4, 4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btclear, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btbrowse, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dccreate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbkey, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnew, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tbOriginator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btget)
-                                .addComponent(jButtonNewComplaint))
-                            .addComponent(jLabel1)
-                            .addComponent(tbComplaintNbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cbInternal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbExternal)
                         .addGap(1, 1, 1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbOriginator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(tbDateCreate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbDateClosed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14)
-                            .addComponent(tbDateUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel14)
+                                        .addComponent(jLabel12))
+                                    .addComponent(dcclose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(dcupdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbSuppName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -567,48 +1026,6 @@ String sqeemail = "";
                             .addComponent(jLabel13)
                             .addComponent(tbSuppNbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel5)
-                                .addGap(1, 1, 1)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbDept, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cbLine)
-                                        .addComponent(jLabel6)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbReceiving)
-                                .addGap(3, 3, 3)
-                                .addComponent(cbCustomer)
-                                .addGap(6, 6, 6)
-                                .addComponent(cbEngineering)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(cbOther)
-                                    .addComponent(tbOtherReason, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(cbQPR)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbInforOnly)
-                                .addGap(25, 25, 25)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbSendSupp)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbSort)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbRework)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbScrapped)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(cbDeviation)
-                                    .addComponent(tbDeviationNbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel16))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -633,8 +1050,50 @@ String sqeemail = "";
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbChargeBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel19))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel19)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(cbQPR)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbInforOnly)
+                                .addGap(25, 25, 25)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbSendSupp)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbSort)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbRework)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbScrapped))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5)
+                                .addGap(1, 1, 1)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbDept, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(cbLine)
+                                        .addComponent(jLabel6)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbReceiving)
+                                .addGap(3, 3, 3)
+                                .addComponent(cbCustomer)
+                                .addGap(6, 6, 6)
+                                .addComponent(cbEngineering)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cbOther)
+                                    .addComponent(tbOtherReason, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbDeviation)
+                            .addComponent(tbDeviationNbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel16)))
+                .addGap(7, 7, 7)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel17)
@@ -646,331 +1105,37 @@ String sqeemail = "";
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btQualProbAdd)
-                    .addComponent(btQualProbUpdate)
-                    .addComponent(btPrintQPR))
+                    .addComponent(btadd)
+                    .addComponent(btupdate)
+                    .addComponent(btprint)
+                    .addComponent(btdelete))
                 .addContainerGap())
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-         getQPR(tbComplaintNbr.getText());
-    }//GEN-LAST:event_btgetActionPerformed
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("quality");
+    }//GEN-LAST:event_btnewActionPerformed
 
-    private void jButtonNewComplaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewComplaintActionPerformed
-        try {
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+    if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btaddActionPerformed
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select max(counter_id) as 'num' from counter where counter_name = 'quality';");
-                while (res.next()) {
-
-                    int nextnumber = Integer.valueOf(res.getString("num"));
-                    nextnumber++;
-                    OVData.updatecounter("quality", nextnumber);
-                    tbComplaintNbr.setText(String.format("%d", nextnumber).toString());
-                    tbComplaintNbr.setEnabled(false);
-                    // jcbsupervisor_empmast.setSelectedIndex(0);
-                }
-                jButtonNewComplaint.setEnabled(false);
-                btget.setEnabled(false);
-                btQualProbUpdate.setEnabled(false);
-                java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String clockdate = dfdate.format(now);
-                String clocktime = dftime.format(now);
-                tbDateCreate.setText(clockdate);
-                tbDateCreate.setEnabled(false);
-                tbDateUpdate.setText(clockdate);
-                tbDateUpdate.setEnabled(false);
-                tbOriginator.setText(bsmf.MainFrame.userid.toString());
-                tbOriginator.setEnabled(false);
-
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_jButtonNewComplaintActionPerformed
-
-    private void btQualProbAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btQualProbAddActionPerformed
-
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (!BlueSeerUtils.isParsableToInt(tbQtyRejected.getText())) {
-                    bsmf.MainFrame.show("Not Parseable");
-                    proceed = false;
-                }
-                if (tbQtyRejected.getText().isEmpty()) {
-                    tbQtyRejected.setText("0");
-                }
-
-                String createdate = tbDateCreate.getText();
-                String closedate = tbDateClosed.getText();
-                Pattern p = Pattern.compile("[2]\\d\\d\\d\\d\\d\\d\\d");
-                Matcher m;
-                if (createdate != null) {
-                    m = p.matcher(createdate);
-                    if (!m.find()) {
-                        bsmf.MainFrame.show("Invalid Create date");
-                        proceed = false;
-                    }
-                }
-
-                p = Pattern.compile("[2]\\d\\d\\d\\d\\d\\d\\d");
-                if (closedate != null && (!closedate.isEmpty())) {
-                    m = p.matcher(closedate);
-                    if (!m.find()) {
-                        bsmf.MainFrame.show("Invalid Close date");
-                        proceed = false;
-                    }
-                }
-
-                if (taComments.getText().length() > 400) {
-                        bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
-                        proceed = false;
-                }
-                
-                 if (taIssue.getText().length() > 400) {
-                        bsmf.MainFrame.show("Issues cannot be greater than 400 chars");
-                        proceed = false;
-                }
-                
-                
-                if (proceed) {
-                    st.executeUpdate("insert into qual_mstr "
-                        + "(qual_id, qual_userid, qual_date_crt,"
-                        + "qual_date_upd, qual_date_cls, qual_originator,"
-                        + "qual_vend, qual_vend_name, qual_vend_contact, "
-                        + "qual_qpr, qual_infor, qual_sendsupp, qual_sort,"
-                        + "qual_rework, qual_scrap, qual_dev, qual_dev_nbr,"
-                        + "qual_src_line, qual_line_dept, qual_src_recv,"
-                        + "qual_src_cust, qual_src_eng, qual_src_oth,"
-                        + "qual_src_oth_desc, qual_int_sup, qual_ext_sup,"
-                        + "qual_part, qual_part_desc, qual_qty_rej, qual_qty_susp,"
-                        + "qual_qty_tot_def, qual_desc_iss, qual_desc_fin_hist,"
-                        + "qual_desc_sqe_comt, qual_tot_charge, qual_dec1, qual_date1, qual_int1) "
-                        + " values ( " + "'" + tbComplaintNbr.getText().toString() + "'" + ","
-                        + "'" + tbOriginator.getText() + "'" + ","
-                        + "'" + tbDateCreate.getText() + "'" + ","
-                        + "'" + tbDateUpdate.getText() + "'" + ","
-                        + "'" + tbDateClosed.getText() + "'" + ","
-                        + "'" + tbOriginator.getText() + "'" + ","
-                        + "'" + tbSuppNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + tbSuppName.getText().replace("'", "\\'") + "'" + ","
-                        + null + "," + // qual_vendor_bsmf.MainFrame.contact
-                        "'" + BlueSeerUtils.boolToInt(cbQPR.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbInforOnly.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbSendSupp.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbSort.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbRework.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbScrapped.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbDeviation.isSelected()) + "'" + ","
-                        + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbLine.isSelected()) + "'" + ","
-                        + "'" + tbDept.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbReceiving.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbCustomer.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbEngineering.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbOther.isSelected()) + "'" + ","
-                        + "'" + tbOtherReason.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbInternal.isSelected()) + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbExternal.isSelected()) + "'" + ","
-                        + "'" + tbPartNumber.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
-                        + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
-                        + "'" + Integer.parseInt(tbTotalQty.getText().toString()) + "'" + ","
-                        + "'" + taIssue.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + taHistory.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + taComments.getText().replace("'", "\\'") + "'" + ","
-                        + "'" + Float.parseFloat(tbChargeBack.getText().replace("'", "\\'").toString()) + "'" + ","
-                        + null + "," + null + "," + null
-                        + ")"
-                        + ";");
-                    bsmf.MainFrame.show("Added Quality Record");
-                    initvars(null);
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btQualProbAddActionPerformed
-
-    private void btQualProbUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btQualProbUpdateActionPerformed
-        btQualProbAdd.setEnabled(false);
-
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (!BlueSeerUtils.isParsableToInt(tbQtyRejected.getText())) {
-                    bsmf.MainFrame.show("Not Parseable");
-                    proceed = false;
-                }
-                if (tbQtyRejected.getText().isEmpty()) {
-                    tbQtyRejected.setText("0");
-                }
-
-                String createdate = tbDateCreate.getText();
-                String closedate = tbDateClosed.getText();
-                Pattern p = Pattern.compile("[2]\\d\\d\\d\\d\\d\\d\\d");
-                Matcher m;
-                if (createdate != null) {
-                    m = p.matcher(createdate);
-                    if (!m.find()) {
-                        bsmf.MainFrame.show("Invalid Create date");
-                        proceed = false;
-                    }
-                }
-
-                p = Pattern.compile("[2]\\d\\d\\d\\d\\d\\d\\d");
-                if (closedate != null && (!closedate.isEmpty())) {
-                    m = p.matcher(closedate);
-                    if (!m.find()) {
-                        bsmf.MainFrame.show("Invalid Close date");
-                        proceed = false;
-                    }
-                }
-                
-                
-                if (taComments.getText().length() > 400) {
-                        bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
-                        proceed = false;
-                }
-                
-                 if (taIssue.getText().length() > 400) {
-                        bsmf.MainFrame.show("Issues cannot be greater than 400 chars");
-                        proceed = false;
-                }
-
-                java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String clockdate = dfdate.format(now);
-
-                if (proceed) {
-                    st.executeUpdate("update qual_mstr "
-                        + "set qual_qpr = " + "'" + BlueSeerUtils.boolToInt(cbQPR.isSelected()) + "'" + ","
-                        + "qual_infor = " + "'" + BlueSeerUtils.boolToInt(cbInforOnly.isSelected()) + "'" + ","
-                        + "qual_date_upd = " + "'" + clockdate.toString() + "'" + ","
-                        + "qual_date_cls = " + "'" + closedate.toString() + "'" + ","
-                        + "qual_sendsupp = " + "'" + BlueSeerUtils.boolToInt(cbSendSupp.isSelected()) + "'" + ","
-                        + "qual_sort = " + "'" + BlueSeerUtils.boolToInt(cbSort.isSelected()) + "'" + ","
-                        + "qual_rework = " + "'" + BlueSeerUtils.boolToInt(cbRework.isSelected()) + "'" + ","
-                        + "qual_scrap = " + "'" + BlueSeerUtils.boolToInt(cbScrapped.isSelected()) + "'" + ","
-                        + "qual_dev = " + "'" + BlueSeerUtils.boolToInt(cbDeviation.isSelected()) + "'" + ","
-                        + "qual_src_line = " + "'" + BlueSeerUtils.boolToInt(cbLine.isSelected()) + "'" + ","
-                        + "qual_src_recv = " + "'" + BlueSeerUtils.boolToInt(cbReceiving.isSelected()) + "'" + ","
-                        + "qual_src_cust = " + "'" + BlueSeerUtils.boolToInt(cbCustomer.isSelected()) + "'" + ","
-                        + "qual_src_eng = " + "'" + BlueSeerUtils.boolToInt(cbEngineering.isSelected()) + "'" + ","
-                        + "qual_src_oth = " + "'" + BlueSeerUtils.boolToInt(cbOther.isSelected()) + "'" + ","
-                        + "qual_src_oth_desc = " + "'" + tbOtherReason.getText() + "'" + ","
-                        + "qual_int_sup = " + "'" + BlueSeerUtils.boolToInt(cbInternal.isSelected()) + "'" + ","
-                        + "qual_ext_sup = " + "'" + BlueSeerUtils.boolToInt(cbExternal.isSelected()) + "'" + ","
-                        + "qual_vend_name = " + "'" + tbSuppName.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_vend = " + "'" + tbSuppNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_line_dept = " + "'" + tbDept.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_dev_nbr = " + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_part = " + "'" + tbPartNumber.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_part_desc = " + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_qty_rej = " + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
-                        + "qual_qty_susp = " + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
-                        + "qual_qty_tot_def = " + "'" + Integer.parseInt(tbTotalQty.getText().toString()) + "'" + ","
-                        + "qual_tot_charge = " + "'" + Float.parseFloat(tbChargeBack.getText().toString()) + "'" + ","
-                        + "qual_desc_iss = " + "'" + taIssue.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_desc_fin_hist = " + "'" + taHistory.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_desc_sqe_comt = " + "'" + taComments.getText().replace("'", "\\'") + "'"
-                        + " where qual_id = " + "'" + tbComplaintNbr.getText().replace("'", "\\'").toString() + "'"
-                        + " ;");
-                    bsmf.MainFrame.show("Updated Quality Record");
-
-                    initvars(null);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btQualProbUpdateActionPerformed
-
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
     
-     public void getSiteAddress(String site) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                                
-                res = st.executeQuery("select * from site_mstr where site_site = " + "'" + site + "'" +";");
-                while (res.next()) {
-                    i++;
-                   sitename = res.getString("site_desc");
-                   siteaddr = res.getString("site_line1");
-                   sitephone = res.getString("site_phone");
-                   sitecitystatezip = res.getString("site_city") + ", " + res.getString("site_state") + " " + res.getString("site_zip");
-                   sqename = res.getString("site_sqename");
-                   sqephone = res.getString("site_sqephone");
-                   sqefax = res.getString("site_sqefax");
-                   sqeemail = res.getString("site_sqeemail");
-                  
-                }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    
-    
-    
-    private void btPrintQPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintQPRActionPerformed
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
         
         
@@ -998,7 +1163,7 @@ String sqeemail = "";
                     pg.drawString(sitecitystatezip, 50, 70);
 
                     pg.drawString("Complaint #: ", 500, 50);
-                    pg.drawString(tbComplaintNbr.getText(), 505, 70);
+                    pg.drawString(tbkey.getText(), 505, 70);
                     pg.draw3DRect(500, 55, 60, 20, rootPaneCheckingEnabled);
 
                     pg.setFont(new Font("TimesRoman", Font.BOLD, 18));
@@ -1006,7 +1171,7 @@ String sqeemail = "";
 
                     pg.setFont(new Font("TimesRoman", Font.PLAIN, 12));
                     pg.drawString("Date", 50, 110);
-                    pg.drawString(tbDateCreate.getText(), 55, 138);
+                    pg.drawString(bsmf.MainFrame.dfdate.format(dccreate.getDate()), 55, 138);
                     pg.drawString("Originator", 140, 110);
                     pg.drawString(tbOriginator.getText(), 145, 138);
                     pg.drawString("Supplier", 260, 110);
@@ -1143,13 +1308,16 @@ String sqeemail = "";
                     } else
                         pg.drawString(taComments.getText(), 54, 650); 
                     
-
+                    String closedate = "";
+                    if (dcclose.getDate() != null) {
+                        closedate = bsmf.MainFrame.dfdate.format(dcclose.getDate());
+                    }
                     pg.drawString("Date Last Updated: ", 350, 700);
                     pg.draw3DRect(350, 705, 60, 15, rootPaneCheckingEnabled);
-                    pg.drawString(tbDateUpdate.getText(), 355, 717);
+                    pg.drawString(bsmf.MainFrame.dfdate.format(dcupdate.getDate()), 355, 717);
                     pg.drawString("Date Closed: ", 450, 700);
                     pg.draw3DRect(450, 705, 60, 15, rootPaneCheckingEnabled);
-                    pg.drawString(tbDateClosed.getText(), 455, 717);
+                    pg.drawString(closedate, 455, 717);
 
                     pg.drawString("14.1-1       Revised: 11/29/2012 ", 50, 725);
 
@@ -1174,14 +1342,38 @@ String sqeemail = "";
         } catch (PrinterException pe) {
             MainFrame.bslog(pe);
         }// TODO add your handling code here:
-    }//GEN-LAST:event_btPrintQPRActionPerformed
+    }//GEN-LAST:event_btprintActionPerformed
+
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"qualitymaint","qual_id"});
+    }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
+    }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btPrintQPR;
-    private javax.swing.JButton btQualProbAdd;
-    private javax.swing.JButton btQualProbUpdate;
-    private javax.swing.JButton btget;
+    private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
+    private javax.swing.JButton btprint;
+    private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbCustomer;
     private javax.swing.JCheckBox cbDeviation;
     private javax.swing.JCheckBox cbEngineering;
@@ -1196,7 +1388,9 @@ String sqeemail = "";
     private javax.swing.JCheckBox cbScrapped;
     private javax.swing.JCheckBox cbSendSupp;
     private javax.swing.JCheckBox cbSort;
-    private javax.swing.JButton jButtonNewComplaint;
+    private com.toedter.calendar.JDateChooser dcclose;
+    private com.toedter.calendar.JDateChooser dccreate;
+    private com.toedter.calendar.JDateChooser dcupdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1224,10 +1418,6 @@ String sqeemail = "";
     private javax.swing.JTextArea taHistory;
     private javax.swing.JTextArea taIssue;
     private javax.swing.JTextField tbChargeBack;
-    private javax.swing.JTextField tbComplaintNbr;
-    private javax.swing.JTextField tbDateClosed;
-    private javax.swing.JTextField tbDateCreate;
-    private javax.swing.JTextField tbDateUpdate;
     private javax.swing.JTextField tbDept;
     private javax.swing.JTextField tbDeviationNbr;
     private javax.swing.JTextField tbNumSuspectCont;
@@ -1239,5 +1429,6 @@ String sqeemail = "";
     private javax.swing.JTextField tbSuppName;
     private javax.swing.JTextField tbSuppNbr;
     private javax.swing.JTextField tbTotalQty;
+    private javax.swing.JTextField tbkey;
     // End of variables declaration//GEN-END:variables
 }

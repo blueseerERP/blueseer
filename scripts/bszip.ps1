@@ -1,6 +1,6 @@
-rm blueseer.patch.ver.4.2.zip
-compress-archive -path ..\dist\blueseer.jar -destinationpath blueseer.patch.ver.4.2.zip
-compress-archive -update -path .patch -destinationpath blueseer.patch.ver.4.2.zip
+rm blueseer.patch.ver.4.3.zip
+compress-archive -path ..\dist\blueseer.jar -destinationpath blueseer.patch.ver.4.3.zip
+compress-archive -update -path .patch -destinationpath blueseer.patch.ver.4.3.zip
 
 rm blueseer.mysql.win.v43.zip
 compress-archive -path ..\sf\zebra -destinationpath blueseer.mysql.win.v43.zip

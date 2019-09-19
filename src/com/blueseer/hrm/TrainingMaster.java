@@ -47,29 +47,38 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class TrainingMaster extends javax.swing.JPanel {
+public class TrainingMaster extends javax.swing.JPanel implements IBlueSeer {
 
     
-    String trid = "";
-    /**
-     * Creates new form UserMaintPanel
-     */
-     javax.swing.table.DefaultTableModel empmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    
+   
+      // global variable declarations
+                boolean isLoad = false;
+                String trid = "";
+    
+    // global datatablemodel declarations 
+    javax.swing.table.DefaultTableModel empmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
                    "EmpID", "LastName", "FirstName"
                    });
     
-    
-  
-     
-           class SomeRenderer extends DefaultTableCellRenderer {
+    class SomeRenderer extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -93,13 +102,146 @@ public class TrainingMaster extends javax.swing.JPanel {
     
     public TrainingMaster() {
         initComponents();
-        
-
     }
-
-    public void initvars(String[] arg) {
+    
+    
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
-        java.util.Date now = new java.util.Date();
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbdesc.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbdesc.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbdesc.setText("");
+          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
         startdate.setDate(now);
@@ -109,12 +251,11 @@ public class TrainingMaster extends javax.swing.JPanel {
         ddempid.setEnabled(true);
         emptable.setEnabled(true);
         
-        location.setText("");
-        instructor.setText("");
-        trainingdesc.setText("");
+        tblocation.setText("");
+        tbinstructor.setText("");
         comments.setText("");
         tbhours.setText("");
-        coursenum.setText("");
+        tbkey.setText("");
                
         empmodel.setRowCount(0);
          emptable.setModel(empmodel);
@@ -124,53 +265,282 @@ public class TrainingMaster extends javax.swing.JPanel {
         mylist = OVData.getempmstrlist();
         for (String emp : mylist) {
             ddempid.addItem(emp);
-        }
+        } 
         
-          if (arg != null && arg.length > 0) {
-        getemptraininfo(arg[0]);
-        }
-    }  
+       isLoad = false;
+    }
     
-    public void getemptraininfo(String myid) {
-            try {
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a description");
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbinstructor.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter an instructor");
+                    tbinstructor.requestFocus();
+                    return b;
+                }
+                
+                if (tblocation.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a location");
+                    tblocation.requestFocus();
+                    return b;
+                }
+                
+                if (tbhours.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter hours");
+                    tbhours.requestFocus();
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
+                boolean proceed = true;
                 int i = 0;
-                    res = st.executeQuery("SELECT empid, emp_lname, emp_fname, coursenum, instructor, startdate, enddate, location, title, hours, comments " +
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+
+                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        for (i = 0; i < emptable.getRowCount(); i++) {
+                    st.executeUpdate("insert into emp_train "
+                        + "(empid, coursenum, instructor,"
+                        + "startdate, enddate, location, title, hours, comments) "
+                        + "values ( " + "'" + emptable.getValueAt(i, 0) + "'" + ","
+                        + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + tbinstructor.getText().toString().replace("'", "") + "'" + ","
+                        + "'" + dfdate.format(startdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(enddate.getDate()) + "'" + ","
+                        + "'" + tblocation.getText().toString().replace("'", "") + "'" + ","
+                        + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                        + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
+                        + "'" + comments.getText().toString().replace("'", "") + "'"
+                        + ")"
+                        + ";");
+                    }
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+         
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                    for (int i = 0; i < emptable.getRowCount(); i++) {
+                    st.executeUpdate("update emp_train "
+                        + " set coursenum = " +  "'" + tbkey.getText().toString() + "'" + ","
+                        + " instructor = " + "'" + tbinstructor.getText().toString().replace("'", "") + "'" + ","
+                        + "startdate = " +  "'" + dfdate.format(startdate.getDate()) + "'" + ","
+                        + "enddate = " +  "'" + dfdate.format(enddate.getDate()) + "'" + ","
+                        + "location = " + "'" + tblocation.getText().toString().replace("'", "") + "'" + ","
+                        + "title = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
+                        + "hours = " + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
+                        + "comments = " + "'" + comments.getText().toString().replace("'", "") + "'"
+                        + " where emptrid = " + "'" + trid + "'"
+                        + ";");
+                    }
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+               
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                   int i =  st.executeUpdate("delete FROM  emp_train where emptrid = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                res = st.executeQuery("SELECT empid, emp_lname, emp_fname, coursenum, instructor, startdate, enddate, location, title, hours, comments " +
                             " from emp_train inner join emp_mstr on empid = emp_nbr where emptrid = " + "'" + 
-                            myid.toString() + "'" + ";");
+                            x[0] + "'" + ";");
                     while (res.next()) {
                       ddempid.setSelectedItem(res.getString("empid"));
-                      trainingdesc.setText(res.getString("title"));
-                      instructor.setText(res.getString("instructor"));
-                      coursenum.setText(res.getString("coursenum"));
-                      location.setText(res.getString("location"));
+                      tbdesc.setText(res.getString("title"));
+                      tbinstructor.setText(res.getString("instructor"));
+                      tbkey.setText(res.getString("coursenum"));
+                      tblocation.setText(res.getString("location"));
                       tbhours.setText(res.getString("hours"));
                       comments.setText(res.getString("comments"));
                       startdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("startdate")));
                       enddate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("enddate")));
-                      trid = myid;
+                      trid = x[0];
                       empmodel.addRow(new Object[]{res.getInt("empid"), res.getString("emp_lname"), res.getString("emp_fname")}); 
                     }
-                    if (i > 0) {
-                    
-                    emptable.setEnabled(false);
-                    btadd.setEnabled(false);
-                    ddempid.setEnabled(false);
-                    }
-            }
-            catch (SQLException s) {
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve emp_train");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
-           } catch (Exception e) {
+        } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
+      return m;
     }
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,10 +552,10 @@ public class TrainingMaster extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         btadd = new javax.swing.JButton();
-        trainingdesc = new javax.swing.JTextField();
+        tbdesc = new javax.swing.JTextField();
         jLabel46 = new javax.swing.JLabel();
-        instructor = new javax.swing.JTextField();
-        coursenum = new javax.swing.JTextField();
+        tbinstructor = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel47 = new javax.swing.JLabel();
         jLabel49 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
@@ -201,7 +571,7 @@ public class TrainingMaster extends javax.swing.JPanel {
         btaddempid = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         emptable = new javax.swing.JTable();
-        location = new javax.swing.JTextField();
+        tblocation = new javax.swing.JTextField();
         jLabel53 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         comments = new javax.swing.JTextArea();
@@ -209,6 +579,9 @@ public class TrainingMaster extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
+        btbrowse = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -221,11 +594,17 @@ public class TrainingMaster extends javax.swing.JPanel {
             }
         });
 
-        jLabel46.setText("Training Description");
+        jLabel46.setText("Description");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel47.setText("Instructor");
 
-        jLabel49.setText("CourseNum (optional)");
+        jLabel49.setText("Code");
 
         jLabel50.setText("StartDate");
 
@@ -307,6 +686,27 @@ public class TrainingMaster extends javax.swing.JPanel {
             }
         });
 
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -337,7 +737,7 @@ public class TrainingMaster extends javax.swing.JPanel {
                                         .addComponent(ddempid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(38, 38, 38))
                                     .addComponent(enddate, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                                 .addComponent(btaddempid)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -353,31 +753,44 @@ public class TrainingMaster extends javax.swing.JPanel {
                     .addComponent(jLabel53))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(instructor, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(coursenum, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(trainingdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 76, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tblocation, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbinstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbhours, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btbrowse, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnew, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel49)
+                        .addComponent(btclear)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(trainingdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel46))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(instructor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbinstructor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel47))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(coursenum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel49))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tblocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel53))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -389,21 +802,21 @@ public class TrainingMaster extends javax.swing.JPanel {
                     .addComponent(startdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(enddate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel51, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 18, 18)
+                    .addComponent(enddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel51))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddempid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel52)
                     .addComponent(btaddempid, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel54))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
@@ -415,80 +828,11 @@ public class TrainingMaster extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-      DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                
-                 Pattern p = Pattern.compile("\\d\\.\\d\\d");
-                 Matcher m = p.matcher(tbhours.getText());
-                 if (!m.find() || tbhours.getText() == null) {
-                 bsmf.MainFrame.show("Invalid hours need x.xx format");
-                 proceed = false;
-                 }
-                
-                 if (trainingdesc.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Training Desc cannot be blank");
-                 proceed = false;
-                 }
-                 
-                 if (instructor.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Instructor cannot be blank");
-                 proceed = false;
-                 }
-                 
-                 if (tbhours.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Hours cannot be blank...must be format x.xx");
-                 proceed = false;
-                 }
-                 
-                 if (location.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Instructor cannot be blank");
-                 proceed = false;
-                 }
-                 
-                
-                if (proceed) {
-                    
-                    for (i = 0; i < emptable.getRowCount(); i++) {
-                    
-                    st.executeUpdate("insert into emp_train "
-                        + "(empid, coursenum, instructor,"
-                        + "startdate, enddate, location, title, hours, comments) "
-                        + "values ( " + "'" + emptable.getValueAt(i, 0) + "'" + ","
-                        + "'" + coursenum.getText().toString() + "'" + ","
-                        + "'" + instructor.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + dfdate.format(startdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(enddate.getDate()) + "'" + ","
-                        + "'" + location.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + trainingdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
-                        + "'" + comments.getText().toString().replace("'", "") + "'"
-                        + ")"
-                        + ";");
-                    }
-
-                    initvars(null);
-                    bsmf.MainFrame.show("Added Training Records");
-                    
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Add Training Records");
-            }
-            bsmf.MainFrame.con.close();
-            
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+     if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btaddempidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddempidActionPerformed
@@ -543,119 +887,50 @@ public class TrainingMaster extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            if (! trid.isEmpty())
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-               
-                    st.executeUpdate("delete FROM  emp_train where emptrid = " + "'" + 
-                            trid.toString() + "'" + ";");
-             bsmf.MainFrame.show("Deleted Record");    
-             initvars(null);
-            }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to delete emp_train record");
-            }
-            bsmf.MainFrame.con.close();
-           } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        
-       try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                
-                 Pattern p = Pattern.compile("\\d\\.\\d\\d");
-                 Matcher m = p.matcher(tbhours.getText());
-                 if (!m.find() || tbhours.getText() == null) {
-                 bsmf.MainFrame.show("Invalid hours need x.xx format");
-                 proceed = false;
-                 }
-                
-                 if (trid.isEmpty()) {
-                     bsmf.MainFrame.show("Cannot Update..no Record to Update");
-                 proceed = false;
-                 }
-                 
-                 if (trainingdesc.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Training Desc cannot be blank");
-                 proceed = false;
-                 }
-                 
-                 if (instructor.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Instructor cannot be blank");
-                 proceed = false;
-                 }
-                 
-                 if (tbhours.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Hours cannot be blank...must be format x.xx");
-                 proceed = false;
-                 }
-                 
-                 if (location.getText().isEmpty()) {
-                     bsmf.MainFrame.show("Instructor cannot be blank");
-                 proceed = false;
-                 }
-                 
-                
-                if (proceed) {
-                    
-                    for (i = 0; i < emptable.getRowCount(); i++) {
-                    
-                    st.executeUpdate("update emp_train "
-                        + " set coursenum = " +  "'" + coursenum.getText().toString() + "'" + ","
-                        + " instructor = " + "'" + instructor.getText().toString().replace("'", "") + "'" + ","
-                        + "startdate = " +  "'" + dfdate.format(startdate.getDate()) + "'" + ","
-                        + "enddate = " +  "'" + dfdate.format(enddate.getDate()) + "'" + ","
-                        + "location = " + "'" + location.getText().toString().replace("'", "") + "'" + ","
-                        + "title = " + "'" + trainingdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "hours = " + "'" + tbhours.getText().toString().replace("'", "") + "'" + ","
-                        + "comments = " + "'" + comments.getText().toString().replace("'", "") + "'"
-                        + " where emptrid = " + "'" + trid + "'"
-                        + ";");
-                    }
-
-                    initvars(null);
-                    bsmf.MainFrame.show("Updated Training Record");
-                    
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Update Training Records");
-            }
-            bsmf.MainFrame.con.close();
-            
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+      if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
+
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"trainingmaint","coursenum"}); 
+    }//GEN-LAST:event_btbrowseActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddempid;
+    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JTextArea comments;
-    private javax.swing.JTextField coursenum;
     private javax.swing.JComboBox ddempid;
     private javax.swing.JTable emptable;
     private com.toedter.calendar.JDateChooser enddate;
-    private javax.swing.JTextField instructor;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel46;
@@ -670,10 +945,12 @@ public class TrainingMaster extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextField location;
     private com.toedter.calendar.JDateChooser startdate;
     private javax.swing.JTextArea taUMperms1;
+    private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbhours;
-    private javax.swing.JTextField trainingdesc;
+    private javax.swing.JTextField tbinstructor;
+    private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tblocation;
     // End of variables declaration//GEN-END:variables
 }
