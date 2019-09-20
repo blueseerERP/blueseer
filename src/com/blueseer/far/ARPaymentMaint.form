@@ -49,7 +49,9 @@
                           <Component id="btdeleteitem" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                          <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btadd" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -74,11 +76,13 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="batchnbr" min="-2" pref="77" max="-2" attributes="0"/>
+                                              <Component id="tbkey" min="-2" pref="77" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                               <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -90,6 +94,7 @@
                                               <Component id="lbcust" min="-2" pref="147" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
                                               <EmptySpace max="32767" attributes="0"/>
@@ -149,8 +154,9 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="batchnbr" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -216,7 +222,8 @@
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
@@ -224,7 +231,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="batchnbr">
+        <Component class="javax.swing.JTextField" name="tbkey">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel24">
           <Properties>
@@ -260,7 +270,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="text" type="java.lang.String" value="Add"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
@@ -305,12 +315,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteitemActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btedit">
+        <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Uncommit"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
           </Events>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dcdate">
@@ -431,6 +441,22 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="ActualAmt"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btdelete">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

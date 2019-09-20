@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "BlueSeer"
-#define MyAppVersion "4.2"
+#define MyAppVersion "4.3"
 #define MyAppPublisher "VCSCode"
 #define MyAppURL "http://www.blueseer.com/"
 #define MyAppExeName "javaw"

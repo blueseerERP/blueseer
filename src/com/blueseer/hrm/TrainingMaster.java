@@ -376,13 +376,10 @@ public class TrainingMaster extends javax.swing.JPanel implements IBlueSeer {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
+                    
+                 
                         for (i = 0; i < emptable.getRowCount(); i++) {
-                    st.executeUpdate("insert into emp_train "
+                        st.executeUpdate("insert into emp_train "
                         + "(empid, coursenum, instructor,"
                         + "startdate, enddate, location, title, hours, comments) "
                         + "values ( " + "'" + emptable.getValueAt(i, 0) + "'" + ","
@@ -398,9 +395,7 @@ public class TrainingMaster extends javax.swing.JPanel implements IBlueSeer {
                         + ";");
                     }
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
+                  
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

@@ -1316,7 +1316,7 @@ public class OVData {
     } 
       
        
-   /* stopped here */
+  
    
       
       /* vendor related functions */
@@ -1339,8 +1339,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Bank list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1367,8 +1370,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vend list");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1398,8 +1404,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1427,8 +1436,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Terms Master");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1457,8 +1469,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1488,8 +1503,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1515,8 +1533,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1543,8 +1564,11 @@ public class OVData {
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get cms_det list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1570,8 +1594,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1598,8 +1625,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Panels Master");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1625,8 +1655,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1640,9 +1673,10 @@ public class OVData {
         try{
             Class.forName(bsmf.MainFrame.driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
                while (res.next()) {
@@ -1653,8 +1687,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1681,8 +1718,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1709,8 +1749,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1736,8 +1779,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1766,8 +1812,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Terms Master");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1796,8 +1845,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1829,8 +1881,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1862,8 +1917,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1898,8 +1956,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master info for item");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1931,8 +1992,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1963,8 +2027,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1989,8 +2056,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2029,8 +2099,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e){
             MainFrame.bslog(e);
         }
@@ -2068,8 +2141,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e){
             MainFrame.bslog(e);
         }
@@ -2106,9 +2182,12 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
-        } catch (Exception e){
+        } catch (Exception e){ 
             MainFrame.bslog(e);
         }
         return taxamt;
@@ -2144,8 +2223,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e){
             MainFrame.bslog(e);
         }
@@ -2183,8 +2265,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e){
             MainFrame.bslog(e);
         }
@@ -2235,8 +2320,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax default account info");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2287,8 +2375,11 @@ public class OVData {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show("SQL cannot get Tax default CC info");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2315,8 +2406,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2343,8 +2437,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get EmpMstr");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2372,8 +2469,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2400,8 +2500,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2429,8 +2532,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2464,8 +2570,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2496,8 +2605,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2529,8 +2641,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2557,8 +2672,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2587,8 +2705,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2627,8 +2748,11 @@ public class OVData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2674,8 +2798,11 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2706,8 +2833,11 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2734,8 +2864,10 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2768,8 +2900,10 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2793,8 +2927,10 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2817,8 +2953,10 @@ public class OVData {
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+           } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2826,12 +2964,12 @@ public class OVData {
         
         
     }
-      // stopped here
-        
-       // BOM Tree by Operation 
-      
+     
        
-        public static class MenuInfo {
+        
+        
+    // BOM Tree by Operation 
+    public static class MenuInfo {
         public String menuname;
         public String menuvisible;
  
@@ -2846,9 +2984,7 @@ public class OVData {
         }
     }
         
-        
-        
-      public static DefaultMutableTreeNode getMenusAsTree(String mymenu, String myvisible)  {  
+    public static DefaultMutableTreeNode getMenusAsTree(String mymenu, String myvisible)  {  
       MenuInfo parent = new MenuInfo(mymenu,myvisible);
       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(parent);
       ArrayList<String> mychildren = new ArrayList<String>();
@@ -2874,7 +3010,7 @@ public class OVData {
        return mynode;
       }
       
-      public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart)  {  
+    public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
@@ -2890,7 +3026,7 @@ public class OVData {
        return mynode;
       }
       
-      public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
@@ -2921,7 +3057,7 @@ public class OVData {
         return mynode;
      }
       
-        public static DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
            DecimalFormat df = new DecimalFormat("#.####");
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
         String[] newpart = mypart.split("___");
@@ -2947,7 +3083,7 @@ public class OVData {
         return mynode;
      }
       
-      public static DefaultMutableTreeNode get_nodes_without_op(String mypart)  {
+    public static DefaultMutableTreeNode get_nodes_without_op(String mypart)  {
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         ArrayList<String> mylist = new ArrayList<String>();
         ArrayList<String> myops = new ArrayList<String>();
@@ -2971,7 +3107,7 @@ public class OVData {
         return mynode;
      }
       
-      public static DefaultMutableTreeNode get_op_nodes(String mypart)  {  
+    public static DefaultMutableTreeNode get_op_nodes(String mypart)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
        ArrayList<String> myops = new ArrayList<String>();
         myops = OVData.getItemRoutingOPs(mypart);
@@ -2986,7 +3122,7 @@ public class OVData {
        return mynode;
       }
        
-       public static DefaultMutableTreeNode get_nodes_by_op(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op(String root, String mypart, String myop)  {
         DecimalFormat df = new DecimalFormat("#.####"); 
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
@@ -3017,7 +3153,7 @@ public class OVData {
         return mynode;
      }
        
-         public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
             myroot = myop;
@@ -3046,7 +3182,7 @@ public class OVData {
         }
         return mynode;
      }
-       // END of BOM Tree by Operation 
+    // END of BOM Tree by Operation 
        
      
             
@@ -3056,9 +3192,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr " +
                         " inner join item_mstr on it_item = ps_child " +
@@ -3079,8 +3216,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3095,10 +3235,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select ps_child, ps_type from pbm_mstr where ps_parent = " + "'" + mypart + "'" + ";");
                while (res.next()) {
                   myarray.add(res.getString("ps_child") + "," + res.getString("ps_type")) ;
@@ -3107,8 +3247,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistCompOpOnly");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3123,10 +3266,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_op from pbm_mstr " +
                         " where ps_parent = " + "'" + mypart.toString() + "';" );
                while (res.next()) {
@@ -3141,8 +3284,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistwithop");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3157,10 +3303,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr " +
                         " inner join item_mstr on it_item = ps_child " +
                         " where ps_parent = " + "'" + mypart.toString() + "'" +
@@ -3179,8 +3325,11 @@ public class OVData {
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3195,11 +3344,10 @@ public class OVData {
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr " +
+                        res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr " +
                         " inner join item_mstr on it_item = ps_child " +
                         " inner join  item_cost on itc_item = it_item and itc_set = 'standard' " +
                         " where ps_parent = " + "'" + mypart.toString() + "'" +
@@ -3219,9 +3367,11 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -3231,18 +3381,19 @@ public class OVData {
     }
         
             
-             public static boolean addItemMaster(ArrayList<String> list) {
+    public static boolean addItemMaster(ArrayList<String> list) {
                  boolean myreturn = true;
                  
                  java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
-                  try {
+       try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
                 String[] ld = null;
                DecimalFormat df = new DecimalFormat("0.00000");
@@ -3310,8 +3461,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+          } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3319,14 +3473,14 @@ public class OVData {
              }
              
              
-              public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost, String date) {
+    public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost, String date) {
                  boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String[] ld = null;
                DecimalFormat df = new DecimalFormat("0.00000");
@@ -3390,8 +3544,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3403,9 +3560,9 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String[] ld = null;
                              
@@ -3438,8 +3595,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3452,9 +3612,10 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] ld = null;
                              
@@ -3493,8 +3654,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3507,9 +3671,9 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String[] ld = null;
                              
@@ -3565,8 +3729,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3578,9 +3745,10 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] ld = null;
                              
@@ -3623,8 +3791,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3637,9 +3808,10 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] ld = null;
                              
@@ -3678,8 +3850,11 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -3691,9 +3866,10 @@ public class OVData {
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String[] ld = null;
                              
@@ -3732,14 +3908,19 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
-             
+           
+    
+    /* stopped here */
                
     public static boolean addInvAdjustments(ArrayList<String> list) {
                    boolean myreturn = true;

@@ -28,6 +28,7 @@ package com.blueseer.far;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -81,14 +82,23 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 
 /**
  *
  * @author vaughnte
  */
-public class ARPaymentMaint extends javax.swing.JPanel {
+public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
 
+    // global variable declarations
+                boolean isLoad = false;
                 String terms = "";
                 String aracct = "";
                 String arcc = "";
@@ -99,9 +109,9 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 double rcvamt = 0.00;
                 String curr = "";
                 
-                boolean isInit = false;
-                
-                  javax.swing.table.DefaultTableModel referencemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    
+    // global datatablemodel declarations 
+    javax.swing.table.DefaultTableModel referencemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen", "Tax", "Curr"});
     javax.swing.table.DefaultTableModel armodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -110,10 +120,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             });
                 
                 
-                
-    /**
-     * Creates new form ShipMaintPanel
-     */
+  
     public ARPaymentMaint() {
         initComponents();
       
@@ -122,9 +129,142 @@ public class ARPaymentMaint extends javax.swing.JPanel {
        
     }
    
-    
-    public void clearAll() {
+    // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
          terms = "";
          aracct = "";
          arcc = "";
@@ -136,9 +276,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         lbcust.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.blue);
-        
-        batchnbr.setText(""); 
-        
+                
         tbrmks.setText("");
         tbcontrolamt.setText("0");
         tbcontrolamt.setBackground(Color.white);
@@ -154,11 +292,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
        
         
         java.util.Date now = new java.util.Date();
-        dcdate.setEnabled(true);
         dcdate.setDate(now);
-        
-        
-        isInit = true;
+              
         ddcust.removeAllItems();
         ArrayList mycust = OVData.getcustmstrlist();
         for (int i = 0; i < mycust.size(); i++) {
@@ -181,114 +316,339 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         }
         ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
         
-        isInit = false;
-       
         
-        
+       isLoad = false;
     }
     
-    public void enableAll() {
-        ddcust.setEnabled(true);
-        ddsite.setEnabled(true);
-        ddcurr.setEnabled(true);
-        batchnbr.setEnabled(true);
-        tbrmks.setEnabled(true);
-        tbcontrolamt.setEnabled(true);
-        tbcheck.setEnabled(true);
-        tbactualamt.setEnabled(true);
-        tbrefamt.setEnabled(true);
-        referencedet.setEnabled(true);
-        ardet.setEnabled(true);
-        
-        btadditem.setEnabled(true);
-        btdeleteitem.setEnabled(true);
-        btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        btadd.setEnabled(true);
-        btedit.setEnabled(true);  
-        btaddall.setEnabled(true);
-        
-        dcdate.setEnabled(true);
-    }
-    
-    public void disableAll() {
-         ddcust.setEnabled(false);
-        ddsite.setEnabled(false);
-        ddcurr.setEnabled(false);
-        batchnbr.setEnabled(false);
-        tbrmks.setEnabled(false);
-        tbcontrolamt.setEnabled(false);
-        tbactualamt.setEditable(false);
-        tbcheck.setEnabled(false);
-        tbactualamt.setEnabled(false);
-        tbrefamt.setEnabled(false);
-        tbrefamt.setEditable(false);
-        referencedet.setEnabled(false);
-        ardet.setEnabled(false);
-        
-        btadditem.setEnabled(false);
-        btdeleteitem.setEnabled(false);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
         btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        btadd.setEnabled(false);
-        btedit.setEnabled(false);
-        btaddall.setEnabled(false);
-        
-        dcdate.setEnabled(false); 
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
     }
     
-    public boolean isValidInput() {
-        boolean myreturn = true;
-       
-        return myreturn;
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+                   
+                   DecimalFormat df = new DecimalFormat("#0.00");
+                   tbactualamt.setText(df.format(actamt));
+                   tbcontrolamt.setText(df.format(actamt));
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a currency");
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                   
+                 if (tbcheck.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Check Number cannot be blank.");
+                    tbcheck.requestFocus();
+                    return b;
+                }
+                if (arbank.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no Bank assigned for this cust");
+                    return b;
+                }
+                if (arcc.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no Cost Center assigned for this cust");
+                    return b;
+                }
+                if (aracct.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no AR Account assigned for this cust");
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
     }
     
     public void initvars(String[] arg) {
-        
-        
-         clearAll();
-         disableAll();
-         btnew.setEnabled(true);
-         btbrowse.setEnabled(true);
        
-         if (arg != null && arg.length > 0) {
-            getBatch(arg[0]);
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
-        
-        
-       
-        
-        // ddcust.setEnabled(false); 
-        
     }
     
-    public void getBatch(String batch) {
-         try {
-            DecimalFormat df = new DecimalFormat("#0.00");  
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
-            int d = 0;
-            boolean gotIt = false;
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
+               
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                DecimalFormat df = new DecimalFormat("#0.00");   
+               
+                
+                String basecurr = OVData.getDefaultCurrency();
+                
+                if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                  baseamt = actamt;  
+                } else {
+                  baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
+                }
 
-                actamt = 0.00;
-                res = st.executeQuery("select * from ar_mstr where ar_nbr = " + "'" + batch + "'" + ";");
+                    res = st.executeQuery("SELECT ar_nbr FROM  ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_type, ar_curr, ar_base_curr, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_status, ar_bank, ar_site ) "
+                        + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
+                        + "'" + tbkey.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + df.format(baseamt) + "'" + ","
+                        + "'" + "P" + "'" + ","
+                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
+                        + "'" + basecurr + "'" + ","
+                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + aracct + "'" + ","
+                        + "'" + arcc + "'" + ","
+                        + "'" + "c" + "'"  + ","
+                        + "'" + arbank + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'"
+                        + ")"
+                        + ";");
+                        
+                        // now add detail
+                        double amt_d = 0;
+                        double taxamt_d = 0;
+                        double baseamt_d = 0;
+                        double basetaxamt_d = 0;
+               // "Reference", "Type", "Date", "Amount"
+                    for (int j = 0; j < ardet.getRowCount(); j++) {
+                        amt_d = Double.valueOf(ardet.getValueAt(j, 1).toString());
+                        taxamt_d = Double.valueOf(ardet.getValueAt(j, 2).toString());
+                         if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                         baseamt_d = amt_d;
+                         basetaxamt_d = taxamt_d;
+                         } else {
+                         baseamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), amt_d);
+                         basetaxamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), taxamt_d);
+                         }
+                        st.executeUpdate("insert into ard_mstr "
+                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                                + "'" + ddcust.getSelectedItem() + "'" + ","
+                            + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + (j + 1) + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + df.format(amt_d) + "'"  + ","
+                            + "'" + df.format(taxamt_d) + "'"  + ","
+                            + "'" + df.format(baseamt_d) + "'"  + ","                
+                            + "'" + df.format(basetaxamt_d) + "'" + "," 
+                            + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
+                            + "'" + basecurr + "'" + ","
+                            + "'" + aracct + "'" + ","
+                            + "'" + arcc + "'"   
+                            + ")"
+                            + ";");
+                    }
+                    
+                     // update AR entry for original invoices with status and open amt  
+                     boolean error = OVData.ARUpdate(tbkey.getText());
+                    
+                    /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
+                    /* done */
+                    
+                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
+     /*
+     try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                
+                
+                
+                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
+                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
+                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
+                            + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
+                            + "bk_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
+                            + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + " where bk_id = " + "'" + x[0] + "'"                             
+                            + ";");
+                
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+               
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     */
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+       
+        m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
+        /*
+         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                   int i = st.executeUpdate("delete from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+        */
+        
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                int d = 0;
+                res = st.executeQuery("select * from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                   // "Reference", "AmountToApply", "TaxAmount", "Curr"
-                     batchnbr.setText(res.getString("ar_nbr"));
+                  i++;
+                     tbkey.setText(res.getString("ar_nbr"));
                      dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_effdate")));
                      tbcheck.setText(res.getString("ar_ref"));
                      tbrmks.setText(res.getString("ar_rmks"));
                      ddcust.setSelectedItem(res.getString("ar_cust"));
                      ddsite.setSelectedItem(res.getString("ar_site"));
                      ddcurr.setSelectedItem(res.getString("ar_curr"));
-                     gotIt = true;
                 }
                 
-                res = st.executeQuery("select * from ard_mstr where ard_id = " + "'" + batch + "'" + ";");
+                res = st.executeQuery("select * from ard_mstr where ard_id = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                   // "Reference", "AmountToApply", "TaxAmount", "Curr"
                      armodel.addRow(new Object[] { res.getString("ard_ref"),
@@ -301,46 +661,38 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                   actamt += res.getDouble("ard_amt");
                 d++;
                 }
-                
-                 if (gotIt) {
-                tbactualamt.setText(df.format(actamt));
-                tbcontrolamt.setText(df.format(actamt));
-                lbmessage.setText("Batch has been committed");
-                enableAll();
-                btadd.setEnabled(false);
-                } else {
-                 lbmessage.setText("Unable to find batch");   
-                }
-                
-                
-             
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve AR Batch");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
+      return m;
     }
     
     
-  
-     
-      
-      public void setcustvariables(String cust) {
-        
+    // custom funcs      
+    public void setcustvariables(String cust) {
         try {
-     
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             int i = 0;
             int d = 0;
             String uniqpo = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
 
 
                 res = st.executeQuery("select cm_ar_acct, cm_ar_cc, cm_terms, cm_bank from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
@@ -355,25 +707,29 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("cannot retrieve from cm_mstr");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
       
-      public void getreferences(String cust) {
+    public void getreferences(String cust) {
         referencemodel.setRowCount(0);
         try {
             DecimalFormat df = new DecimalFormat("#0.00");  
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             int i = 0;
             int d = 0;
             String uniqpo = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
 
                 rcvamt = 0.00;
                 res = st.executeQuery("select * from ar_mstr where ar_cust = " + "'" + cust + "'" +
@@ -399,21 +755,24 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot Get AR / Memo References");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
-
            
- public void setstatus(javax.swing.JTable mytable) throws SQLException {
+    public void setstatus(javax.swing.JTable mytable) throws SQLException {
             
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
              ResultSet res = null;
              Statement st = bsmf.MainFrame.con.createStatement();
+             
              String sonbr = null;
+             int i = 0;
              int qty = 0;
              boolean iscomplete = true;
              String sodstatus = "";
@@ -461,7 +820,11 @@ public class ARPaymentMaint extends javax.swing.JPanel {
              } catch (SQLException s) {
                  MainFrame.bslog(s);
                  bsmf.MainFrame.show("Unable to update sod_det");
-             }
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
               // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
               
                 
@@ -471,6 +834,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             
          }
     }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -482,7 +847,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        batchnbr = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         tbcontrolamt = new javax.swing.JTextField();
@@ -493,7 +858,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         ardet = new javax.swing.JTable();
         ddcust = new javax.swing.JComboBox();
         btdeleteitem = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         dcdate = new com.toedter.calendar.JDateChooser();
         jLabel27 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
@@ -515,12 +880,20 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         lbmessage = new javax.swing.JLabel();
         lbcust = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
+        btdelete = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Payment Maintenance"));
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel24.setText("Batch Nbr");
 
@@ -549,7 +922,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             }
         });
 
-        btadd.setText("Commit");
+        btadd.setText("Add");
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -582,10 +955,10 @@ public class ARPaymentMaint extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Uncommit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
@@ -646,6 +1019,20 @@ public class ARPaymentMaint extends javax.swing.JPanel {
 
         jLabel5.setText("ActualAmt");
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -658,7 +1045,9 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteitem))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btedit)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -680,11 +1069,13 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(26, 26, 26)
                                             .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnew))
+                                            .addComponent(btnew)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btclear))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -692,6 +1083,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                                                 .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE))
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(lbcust, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -734,8 +1126,9 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnew)
-                                .addComponent(batchnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel24))
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel24)
+                                .addComponent(btclear))
                             .addComponent(btbrowse))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -787,7 +1180,8 @@ public class ARPaymentMaint extends javax.swing.JPanel {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
-                    .addComponent(btedit))
+                    .addComponent(btupdate)
+                    .addComponent(btdelete))
                 .addGap(35, 35, 35))
         );
 
@@ -795,17 +1189,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-                
-        enableAll();
-        clearAll();
-        btedit.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        batchnbr.setText(String.valueOf(OVData.getNextNbr("ar")));
-        batchnbr.setEnabled(false);
-               
-               
-        
+        newAction("ar");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -840,129 +1224,11 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        
-    
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                boolean error = false;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
-                setcustvariables(ddcust.getSelectedItem().toString());
-                   
-                 if (tbcheck.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Check Number cannot be blank.");
-                    return;
-                }
-                if (arbank.isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("There is no Bank assigned for this cust");
-                }
-                if (arcc.isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("There is no Cost Center assigned for this cust");
-                }
-                if (aracct.isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("There is no AR Account assigned for this cust");
-                }
-                
-                String basecurr = OVData.getDefaultCurrency();
-                
-                if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
-                  baseamt = actamt;  
-                } else {
-                  baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
-                }
-                    if (proceed) {
-                                        
-                      st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_type, ar_curr, ar_base_curr, ar_ref, ar_rmks, "
-                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_site ) "
-                        + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + batchnbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + df.format(baseamt) + "'" + ","
-                        + "'" + "P" + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
-                        + "'" + basecurr + "'" + ","
-                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","
-                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + "c" + "'"  + ","
-                        + "'" + arbank + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                double amt_d = 0;
-                double taxamt_d = 0;
-                double baseamt_d = 0;
-                double basetaxamt_d = 0;
-               // "Reference", "Type", "Date", "Amount"
-                    for (int j = 0; j < ardet.getRowCount(); j++) {
-                        amt_d = Double.valueOf(ardet.getValueAt(j, 1).toString());
-                        taxamt_d = Double.valueOf(ardet.getValueAt(j, 2).toString());
-                         if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
-                         baseamt_d = amt_d;
-                         basetaxamt_d = taxamt_d;
-                         } else {
-                         baseamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), amt_d);
-                         basetaxamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), taxamt_d);
-                         }
-                        st.executeUpdate("insert into ard_mstr "
-                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
-                            + " values ( " + "'" + batchnbr.getText() + "'" + ","
-                                + "'" + ddcust.getSelectedItem() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + (j + 1) + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + df.format(amt_d) + "'"  + ","
-                            + "'" + df.format(taxamt_d) + "'"  + ","
-                            + "'" + df.format(baseamt_d) + "'"  + ","                
-                            + "'" + df.format(basetaxamt_d) + "'" + "," 
-                            + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
-                            + "'" + basecurr + "'" + ","
-                            + "'" + aracct + "'" + ","
-                            + "'" + arcc + "'"   
-                            + ")"
-                            + ";");
-                    }
-                    
-                  // update AR entry for original invoices with status and open amt  
-                     error = OVData.ARUpdate(batchnbr.getText());
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromARPayment(batchnbr.getText(), dcdate.getDate());
-                    if (error) {
-                        bsmf.MainFrame.show("An error occurred");
-                    } else {
-                    bsmf.MainFrame.show("AR Payment Complete");
-                    initvars(null);
-                    }
-               
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot insert into ard_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -970,76 +1236,31 @@ public class ARPaymentMaint extends javax.swing.JPanel {
         referencemodel.setRowCount(0);
         armodel.setRowCount(0);
         lbcust.setText("");
-        if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isInit) {
+        if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isLoad) {
         ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
         lbcust.setText(OVData.getCustName(ddcust.getSelectedItem().toString()));
         getreferences(ddcust.getSelectedItem().toString());
+        setcustvariables(ddcust.getSelectedItem().toString());
         }
     }//GEN-LAST:event_ddcustActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = ardet.getSelectedRows();
-        DecimalFormat df = new DecimalFormat("#0.00");  
         for (int i : rows) {
             bsmf.MainFrame.show("Removing row " + i);
              actamt -= Double.valueOf(ardet.getModel().getValueAt(i,1).toString());
             ((javax.swing.table.DefaultTableModel) ardet.getModel()).removeRow(i);
         }
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(String.valueOf(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                bsmf.MainFrame.show("This rollback functionality has not been implemented yet");
-        /*
-                if (proceed) {
-                    st.executeUpdate("update recv_mstr set recv_po = " + "'" + ddrefs.getSelectedItem().toString() + "'" + ","
-                        + "recv_create_date = " + "'" + tbcontrolamt.getText() + "'" + ","
-                        + "recv_recv_date = " + "'" + dfdate.format(dcdate.getDate()) + "'"
-                        + " where recv_id = " + "'" + batchnbr.getText().toString() + "'"
-                        + ";");
-                    // delete the sod_det records and add back.
-                    st.executeUpdate("delete from recv_det where rvdet_id = " + "'" + batchnbr.getText() + "'"  );
-                    for (int j = 0; j < ardet.getRowCount(); j++) {
-                        st.executeUpdate("insert into recv_det "
-                            + "(rvdet_id, rvdet_part, rvdet_so, rvdet_recv_qty,"
-                            + "rvdet_recv_price, rvdet_po, rvdet_create_date,"
-                            + "rvdet_rvdet_date, rvdet_char1, rvdet_char2, rvdet_char3) "
-                            + " values ( " + "'" + batchnbr.getText() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + tbcontrolamt.getText() + "'" + ","
-                            + "'" + tbcontrolamt.getText() + "'" + ","
-                            + null + "," + null + "," + null
-                            + ")"
-                            + ";");
-                    }
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Edited Shipper Record");
-                    reinitreceivervariables("");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-                */
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
           DecimalFormat df = new DecimalFormat("#0.00");  
@@ -1066,7 +1287,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddsiteActionPerformed
 
     private void ddcurrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcurrActionPerformed
-        if (ddcust.getSelectedItem() != null &&  ddcurr.getSelectedItem() != null && ! isInit ) {
+        if (ddcust.getSelectedItem() != null &&  ddcurr.getSelectedItem() != null && ! isLoad ) {
         curr = ddcurr.getSelectedItem().toString();
         getreferences(ddcust.getSelectedItem().toString());
         }
@@ -1108,16 +1329,34 @@ public class ARPaymentMaint extends javax.swing.JPanel {
        
     }//GEN-LAST:event_tbcontrolamtFocusLost
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+         if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});   
+    }//GEN-LAST:event_btdeleteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ardet;
-    private javax.swing.JTextField batchnbr;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteitem;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcust;
@@ -1142,6 +1381,7 @@ public class ARPaymentMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbcheck;
     private javax.swing.JTextField tbcontrolamt;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbrefamt;
     private javax.swing.JTextField tbrmks;
     // End of variables declaration//GEN-END:variables

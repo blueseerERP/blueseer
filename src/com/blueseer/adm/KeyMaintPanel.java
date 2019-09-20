@@ -297,7 +297,7 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
 
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + tbkey.getText() + "'" + ";");
+                    res = st.executeQuery("SELECT counter_name FROM  counter where counter_name = " + "'" + tbkey.getText() + "'" + ";");
                     while (res.next()) {
                         i++;
                     }

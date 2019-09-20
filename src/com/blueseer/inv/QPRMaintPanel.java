@@ -339,7 +339,7 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
                 int i = 0;
 
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
+                    res = st.executeQuery("SELECT qual_id FROM  qual_mstr where qual_id = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
@@ -1012,8 +1012,8 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel14)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel12))
                                     .addComponent(dcclose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
