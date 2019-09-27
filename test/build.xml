@@ -6,7 +6,7 @@
     <property name="sf.dir" location="../sf" />
     <property name="build.dir" location="../build" />
     <property name="dist.dir" location="../dist" />
-    <property name="test.dir" location="../scripts/test" />
+    <property name="test.dir" location="../test/scratch" />
     <property name="lib.dir" location="../lib" />
     <property name="classpath.property" 
 	    value="dist/" />
@@ -89,7 +89,7 @@
 	    <fileset dir="../lib" includes="*.jar"/>
     </path>
     <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="test">
+    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="scratch">
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
