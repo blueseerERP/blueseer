@@ -1,7 +1,0 @@
-sftp blueseer@frs.sourceforge.net
-cd /home/pfs/project/blueseer/blueseer_source_v42/com  
-lcd src
-put -r com
-
-
-
