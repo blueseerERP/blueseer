@@ -1,4 +1,5 @@
 build
+build.xml
 dist
 scripts/test
 nbproject/private
