@@ -155,6 +155,7 @@ public class EDI {
     
     public static String[] processFileCmdLine(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
         
+        
         String[] m = new String[]{"0",""};
         String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
@@ -812,7 +813,7 @@ public class EDI {
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
         
-        // System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
+       //  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
         
         String[] c = (String[]) isa.getValue()[6];
        // ArrayList d = (ArrayList) isa.getValue()[5];
