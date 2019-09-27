@@ -5,3 +5,4 @@ scripts
 scripts/test
 nbproject/private
 scripts/.patch
+!test/build.xml
