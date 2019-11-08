@@ -299,6 +299,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("gencodemaint")) {
                 tablereport.setModel(DTData.getGenCodeBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
+                if (callingpanel.equals("fctmaint")) {
+                tablereport.setModel(DTData.getFctMstrBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
                 if (callingpanel.equals("custxrefmaint")) {
                 tablereport.setModel(DTData.getCustXrefBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
@@ -582,6 +585,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("GenericCodeMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString()};
               reinitpanels("GenericCodeMaint", true, arg);
+            }
+            if (callingpanel.equals("fctmaint")) {
+              if (! checkperms("ForecastMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()};
+              reinitpanels("ForecastMaint", true, arg);
             }
             if (callingpanel.equals("custxrefmaint")) {
               if (! checkperms("CustXrefMaint")) { return; }

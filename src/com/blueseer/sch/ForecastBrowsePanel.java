@@ -442,13 +442,15 @@ public class ForecastBrowsePanel extends javax.swing.JPanel {
             frompart = bsmf.MainFrame.lowchar;
         if (topart.isEmpty())
             topart = bsmf.MainFrame.hichar;
+        
+      // bsmf.MainFrame.show("forecast week: " + OVData.getForecastWeek(now)) ;
        javax.swing.table.DefaultTableModel mymodel = DTData.getForecast13weeksByPart(frompart, topart, OVData.getForecastWeek(now));
     
         tablelabel.setModel(mymodel);
         //TableReport.setName("forecast");
         //TableReport.getColumnModel().getColumn(0).setCellRenderer(new BlueRenderer());
         
-         tablelabel.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+      //   tablelabel.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablelabel.getColumnModel().getColumn(0).setMaxWidth(100);
          
          

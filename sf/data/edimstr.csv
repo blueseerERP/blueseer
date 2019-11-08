@@ -1,7 +1,2 @@
-acme,850,Generic850i,1,Generic 850 for Acme
-acme,945,Generic945i,1,Generic 945 for Acme
-acme,990,Generic990i,1,Generic 990 for Acme
-acme,214,Generic214i,1,Generic 214 for Acme
-acme,220,Generic220i,1,Generic 220 for Acme
-acme,204,Generic204i,1,Generic 204 for Acme
-acme,219,Generic219i,1,Generic 219 for Acme
+acme,850,acme,1,EDIMaps.Generic850i,ZZ,acme,blueseer,ZZ,blueseer,42,10,62,generic,txt,edi/out,004010,,0
+acme,810,acme,0,EDIMaps.Generic810o,ZZ,acme,blueseer,ZZ,blueseer,42,10,62,generic,txt,edi/out,004010,,0

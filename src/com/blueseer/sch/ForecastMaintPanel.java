@@ -26,7 +26,12 @@ SOFTWARE.
 package com.blueseer.sch;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.DriverManager;
@@ -41,21 +46,704 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class ForecastMaintPanel extends javax.swing.JPanel {
+public class ForecastMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
-    /**
-     * Creates new form ForecastMaintPanel
-     */
+     // global variable declarations
+                boolean isLoad = false;
+                boolean isNew = false;
+    
+    // global datatablemodel declarations       
+                
+    
     public ForecastMaintPanel() {
         initComponents();
     }
 
+    
+     // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       
+         java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dfyear = new SimpleDateFormat("yyyy");
+        DateFormat dfperiod = new SimpleDateFormat("M");
+        
+        isLoad = true;
+        isNew = false;
+       
+         tbkey.setText("");
+        tbqty1.setText("0");
+        tbqty2.setText("0");
+        tbqty3.setText("0");
+        tbqty4.setText("0");
+        tbqty5.setText("0");
+        tbqty6.setText("0");
+        tbqty7.setText("0");
+        tbqty8.setText("0");
+        tbqty9.setText("0");
+        tbqty10.setText("0");
+        tbqty11.setText("0");
+        tbqty12.setText("0");
+        tbqty13.setText("0");
+        tbqty14.setText("0");
+        tbqty15.setText("0");
+        tbqty16.setText("0");
+        tbqty17.setText("0");
+        tbqty18.setText("0");
+        tbqty19.setText("0");
+        tbqty20.setText("0");
+        tbqty21.setText("0");
+        tbqty22.setText("0");
+        tbqty23.setText("0");
+        tbqty24.setText("0");
+        tbqty25.setText("0");
+        tbqty26.setText("0");
+        tbqty27.setText("0");
+        tbqty28.setText("0");
+        tbqty29.setText("0");
+        tbqty30.setText("0");
+        tbqty31.setText("0");
+        tbqty32.setText("0");
+        tbqty33.setText("0");
+        tbqty34.setText("0");
+        tbqty35.setText("0");
+        tbqty36.setText("0");
+        tbqty37.setText("0");
+        tbqty38.setText("0");
+        tbqty39.setText("0");
+        tbqty40.setText("0");
+        tbqty41.setText("0");
+        tbqty42.setText("0");
+        tbqty43.setText("0");
+        tbqty44.setText("0");
+        tbqty45.setText("0");
+        tbqty46.setText("0");
+        tbqty47.setText("0");
+        tbqty48.setText("0");
+        tbqty49.setText("0");
+        tbqty50.setText("0");
+        tbqty51.setText("0");
+        tbqty52.setText("0");
+        
+        
+         ddsite.removeAllItems();
+        ArrayList<String> site = OVData.getSiteList();
+        for (int i = 0; i < site.size(); i++) {
+            ddsite.addItem(site.get(i));
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+      
+        
+        if (ddyear.getItemCount() == 0) {
+        for (int i = 1967 ; i < 2222; i++) {
+            ddyear.addItem(String.valueOf(i));
+        }
+        ddyear.setSelectedItem(dfyear.format(now));
+        
+        ddyear.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == 1) {
+                    ArrayList<String> fctdates = OVData.getForecastDates(ddyear.getSelectedItem().toString());
+                  if (! fctdates.isEmpty()) {
+                  setForecastDates(fctdates);
+                  if (! isNew)
+                  executeTask("get", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});
+                  }
+                    //JOptionPane.showMessageDialog(box, e.getItem());
+                   // System.out.println(e.getItem());
+                }
+            }
+        });
+        }
+        
+        ArrayList<String> fctdates = OVData.getForecastDates(ddyear.getSelectedItem().toString());
+        if (! fctdates.isEmpty()) {
+           setForecastDates(fctdates);
+       }
+        
+      
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        isNew = true;
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   ddsite.setEnabled(false);
+                   ddyear.setEnabled(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+        
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter an item");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                 if (! OVData.isValidItem(tbkey.getText()) && x.equals("addRecord")) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a valid item from item master");
+                    tbkey.requestFocus();
+                    return b;
+                }
+        
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a site");
+                    return b;
+                }
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
+        
+         // this is a three key data record
+        if (arg != null && arg.length > 2) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+            ddsite.setEnabled(true);
+            ddsite.setEditable(true);
+            ddyear.setEnabled(true);
+            ddyear.setEditable(true);
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                 java.util.Date now = new java.util.Date();
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                boolean proceed = true;
+                int i = 0;
+
+                    res = st.executeQuery("SELECT fct_part FROM  fct_mstr where fct_part = " + "'" + tbkey.getText() + "'" +
+                            " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
+                            " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                       st.executeUpdate("insert into fct_mstr "
+                            + "(fct_part, fct_site, fct_year,"
+                            + "fct_wkqty1, fct_wkqty2, fct_wkqty3, fct_wkqty4, fct_wkqty5, fct_wkqty6, fct_wkqty7, fct_wkqty8, fct_wkqty9, fct_wkqty10, "
+                                + "fct_wkqty11, fct_wkqty12, fct_wkqty13, fct_wkqty14, fct_wkqty15, fct_wkqty16, fct_wkqty17, fct_wkqty18, fct_wkqty19, fct_wkqty20, "
+                                + "fct_wkqty21, fct_wkqty22, fct_wkqty23, fct_wkqty24, fct_wkqty25, fct_wkqty26, fct_wkqty27, fct_wkqty28, fct_wkqty29, fct_wkqty30, "
+                                + "fct_wkqty31, fct_wkqty32, fct_wkqty33, fct_wkqty34, fct_wkqty35, fct_wkqty36, fct_wkqty37, fct_wkqty38, fct_wkqty39, fct_wkqty40, "
+                            + "fct_wkqty41, fct_wkqty42, fct_wkqty43, fct_wkqty44, fct_wkqty45, fct_wkqty46, fct_wkqty47, fct_wkqty48, fct_wkqty49, fct_wkqty50, "
+                              + "fct_wkqty51, fct_wkqty52, fct_crt_userid, fct_chg_userid, fct_crt_date, fct_chg_date ) "
+                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddyear.getSelectedItem().toString() + "'" + ","
+                                + "'" + tbqty1.getText() + "'" + ","
+                                + "'" + tbqty2.getText() + "'" + ","
+                                + "'" + tbqty3.getText() + "'" + ","
+                                + "'" + tbqty4.getText() + "'" + ","
+                                + "'" + tbqty5.getText() + "'" + ","
+                                + "'" + tbqty6.getText() + "'" + ","
+                                + "'" + tbqty7.getText() + "'" + ","
+                                + "'" + tbqty8.getText() + "'" + ","
+                                + "'" + tbqty9.getText() + "'" + ","
+                                + "'" + tbqty10.getText() + "'" + ","
+                                + "'" + tbqty11.getText() + "'" + ","
+                                + "'" + tbqty12.getText() + "'" + ","
+                                + "'" + tbqty13.getText() + "'" + ","
+                                + "'" + tbqty14.getText() + "'" + ","
+                                + "'" + tbqty15.getText() + "'" + ","
+                                + "'" + tbqty16.getText() + "'" + ","
+                                + "'" + tbqty17.getText() + "'" + ","
+                                + "'" + tbqty18.getText() + "'" + ","
+                                + "'" + tbqty19.getText() + "'" + ","
+                                + "'" + tbqty20.getText() + "'" + ","
+                                + "'" + tbqty21.getText() + "'" + ","
+                                + "'" + tbqty22.getText() + "'" + ","
+                                + "'" + tbqty23.getText() + "'" + ","
+                                + "'" + tbqty24.getText() + "'" + ","
+                                + "'" + tbqty25.getText() + "'" + ","
+                                + "'" + tbqty26.getText() + "'" + ","
+                                + "'" + tbqty27.getText() + "'" + ","
+                                + "'" + tbqty28.getText() + "'" + ","
+                                + "'" + tbqty29.getText() + "'" + ","
+                                + "'" + tbqty30.getText() + "'" + ","
+                                + "'" + tbqty31.getText() + "'" + ","
+                                + "'" + tbqty32.getText() + "'" + ","
+                                + "'" + tbqty33.getText() + "'" + ","
+                                + "'" + tbqty34.getText() + "'" + ","
+                                + "'" + tbqty35.getText() + "'" + ","
+                                + "'" + tbqty36.getText() + "'" + ","
+                                + "'" + tbqty37.getText() + "'" + ","
+                                + "'" + tbqty38.getText() + "'" + ","
+                                + "'" + tbqty39.getText() + "'" + ","
+                                + "'" + tbqty40.getText() + "'" + ","
+                                + "'" + tbqty41.getText() + "'" + ","
+                                + "'" + tbqty42.getText() + "'" + ","
+                                + "'" + tbqty43.getText() + "'" + ","
+                                + "'" + tbqty44.getText() + "'" + ","
+                                + "'" + tbqty45.getText() + "'" + ","
+                                + "'" + tbqty46.getText() + "'" + ","
+                                + "'" + tbqty47.getText() + "'" + ","
+                                + "'" + tbqty48.getText() + "'" + ","
+                                + "'" + tbqty49.getText() + "'" + ","
+                                + "'" + tbqty50.getText() + "'" + ","
+                                + "'" + tbqty51.getText() + "'" + ","
+                                + "'" + tbqty52.getText() + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + dfdate.format(now) + "'" + ","
+                                + "'" + dfdate.format(now) + "'"
+                            + ")"
+                            + ";");
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                     st.executeUpdate("update fct_mstr "
+                            + "set " + "fct_chg_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +
+                                " fct_chg_date = " + "'" + dfdate.format(now) + "'" + "," +
+                                " fct_wkqty1 = " + "'" + tbqty1.getText() + "'" + "," +
+                                " fct_wkqty2 = " + "'" + tbqty2.getText() + "'" + "," +
+                                " fct_wkqty3 = " + "'" + tbqty3.getText() + "'" + "," +
+                                " fct_wkqty4 = " + "'" + tbqty4.getText() + "'" + "," +
+                                " fct_wkqty5 = " + "'" + tbqty5.getText() + "'" + "," +
+                                " fct_wkqty6 = " + "'" + tbqty6.getText() + "'" + "," +
+                                " fct_wkqty7 = " + "'" + tbqty7.getText() + "'" + "," +
+                                " fct_wkqty8 = " + "'" + tbqty8.getText() + "'" + "," +
+                                " fct_wkqty9 = " + "'" + tbqty9.getText() + "'" + "," +
+                                " fct_wkqty10 = " + "'" + tbqty10.getText() + "'" + "," +
+                                " fct_wkqty11 = " + "'" + tbqty11.getText() + "'" + "," +
+                                " fct_wkqty12 = " + "'" + tbqty12.getText() + "'" + "," +
+                                " fct_wkqty13 = " + "'" + tbqty13.getText() + "'" + "," +
+                                " fct_wkqty14 = " + "'" + tbqty14.getText() + "'" + "," +
+                                " fct_wkqty15 = " + "'" + tbqty15.getText() + "'" + "," +
+                                " fct_wkqty16 = " + "'" + tbqty16.getText() + "'" + "," +
+                                " fct_wkqty17 = " + "'" + tbqty17.getText() + "'" + "," +
+                                " fct_wkqty18 = " + "'" + tbqty18.getText() + "'" + "," +
+                                " fct_wkqty19 = " + "'" + tbqty19.getText() + "'" + "," +
+                                " fct_wkqty20 = " + "'" + tbqty20.getText() + "'" + "," +
+                                " fct_wkqty21 = " + "'" + tbqty21.getText() + "'" + "," +
+                                " fct_wkqty22 = " + "'" + tbqty22.getText() + "'" + "," +
+                                " fct_wkqty23 = " + "'" + tbqty23.getText() + "'" + "," +
+                                " fct_wkqty24 = " + "'" + tbqty24.getText() + "'" + "," +
+                                " fct_wkqty25 = " + "'" + tbqty25.getText() + "'" + "," +
+                                " fct_wkqty26 = " + "'" + tbqty26.getText() + "'" + "," +
+                                " fct_wkqty27 = " + "'" + tbqty27.getText() + "'" + "," +
+                                " fct_wkqty28 = " + "'" + tbqty28.getText() + "'" + "," +
+                                " fct_wkqty29 = " + "'" + tbqty29.getText() + "'" + "," +
+                                " fct_wkqty30 = " + "'" + tbqty30.getText() + "'" + "," +
+                                " fct_wkqty31 = " + "'" + tbqty31.getText() + "'" + "," +
+                                " fct_wkqty32 = " + "'" + tbqty32.getText() + "'" + "," +
+                                " fct_wkqty33 = " + "'" + tbqty33.getText() + "'" + "," +
+                                " fct_wkqty34 = " + "'" + tbqty34.getText() + "'" + "," +
+                                " fct_wkqty35 = " + "'" + tbqty35.getText() + "'" + "," +
+                                " fct_wkqty36 = " + "'" + tbqty36.getText() + "'" + "," +
+                                " fct_wkqty37 = " + "'" + tbqty37.getText() + "'" + "," +
+                                " fct_wkqty38 = " + "'" + tbqty38.getText() + "'" + "," +
+                                " fct_wkqty39 = " + "'" + tbqty39.getText() + "'" + "," +
+                                " fct_wkqty40 = " + "'" + tbqty40.getText() + "'" + "," +
+                                " fct_wkqty41 = " + "'" + tbqty41.getText() + "'" + "," +
+                                " fct_wkqty42 = " + "'" + tbqty42.getText() + "'" + "," +
+                                " fct_wkqty43 = " + "'" + tbqty43.getText() + "'" + "," +
+                                " fct_wkqty44 = " + "'" + tbqty44.getText() + "'" + "," +
+                                " fct_wkqty45 = " + "'" + tbqty45.getText() + "'" + "," +
+                                " fct_wkqty46 = " + "'" + tbqty46.getText() + "'" + "," +
+                                " fct_wkqty47 = " + "'" + tbqty47.getText() + "'" + "," +
+                                " fct_wkqty48 = " + "'" + tbqty48.getText() + "'" + "," +
+                                " fct_wkqty49 = " + "'" + tbqty49.getText() + "'" + "," +
+                                " fct_wkqty50 = " + "'" + tbqty50.getText() + "'" + "," +
+                                " fct_wkqty51 = " + "'" + tbqty51.getText() + "'" + "," +
+                                " fct_wkqty52 = " + "'" + tbqty52.getText() + "'" + 
+                             " where fct_part = " + "'" + tbkey.getText() + "'" +
+                              " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
+                              " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'"
+                            + ";");
+                      
+                        st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbkey.getText() + "'"
+                             + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
+                                + " AND plan_is_sched = '0' " 
+                                + ";");
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+               
+         
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            try {
+                
+                
+                int i = st.executeUpdate("delete from fct_mstr where fct_part = " + "'" + tbkey.getText() + "'" +
+                          " AND fct_site =  " + "'" + ddsite.getSelectedItem().toString() + "'" +
+                           " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" +  ";");
+                 st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbkey.getText() + "'"
+                             + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
+                                + " AND plan_is_sched = '0' " 
+                                + ";");
+                    if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    } else {
+                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+           
+                
+                // bsmf.MainFrame.show(x[0] + "/" + x[1] + "/" + x[2]);
+                
+                 int i = 0;
+                if (x == null && x.length < 2) { return new String[]{}; };
+                // three key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with all three keys
+                if (x[1] == null || x[2] == null) {
+                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_part = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                } else {
+                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_part = " + "'" + x[0] + "'" +
+                            " AND fct_site = " + "'" + x[1] + "'" + 
+                            " AND fct_year = " + "'" + x[2] + "'" + ";");
+                }
+                while (res.next()) {
+                    i++;
+                    tbkey.setText(x[0]);
+                    ddsite.setSelectedItem(res.getString("fct_site"));
+                    ddyear.setSelectedItem(res.getString("fct_year"));
+                     tbqty1.setText(res.getString("fct_wkqty1"));
+        tbqty2.setText(res.getString("fct_wkqty2"));
+        tbqty3.setText(res.getString("fct_wkqty3"));
+        tbqty4.setText(res.getString("fct_wkqty4"));
+        tbqty5.setText(res.getString("fct_wkqty5"));
+        tbqty6.setText(res.getString("fct_wkqty6"));
+        tbqty7.setText(res.getString("fct_wkqty7"));
+        tbqty8.setText(res.getString("fct_wkqty8"));
+        tbqty9.setText(res.getString("fct_wkqty9"));
+        tbqty10.setText(res.getString("fct_wkqty10"));
+        tbqty11.setText(res.getString("fct_wkqty11"));
+        tbqty12.setText(res.getString("fct_wkqty12"));
+        tbqty13.setText(res.getString("fct_wkqty13"));
+        tbqty14.setText(res.getString("fct_wkqty14"));
+        tbqty15.setText(res.getString("fct_wkqty15"));
+        tbqty16.setText(res.getString("fct_wkqty16"));
+        tbqty17.setText(res.getString("fct_wkqty17"));
+        tbqty18.setText(res.getString("fct_wkqty18"));
+        tbqty19.setText(res.getString("fct_wkqty19"));
+        tbqty20.setText(res.getString("fct_wkqty20"));
+        tbqty21.setText(res.getString("fct_wkqty21"));
+        tbqty22.setText(res.getString("fct_wkqty22"));
+        tbqty23.setText(res.getString("fct_wkqty23"));
+        tbqty24.setText(res.getString("fct_wkqty24"));
+        tbqty25.setText(res.getString("fct_wkqty25"));
+        tbqty26.setText(res.getString("fct_wkqty26"));
+        tbqty27.setText(res.getString("fct_wkqty27"));
+        tbqty28.setText(res.getString("fct_wkqty28"));
+        tbqty29.setText(res.getString("fct_wkqty29"));
+        tbqty30.setText(res.getString("fct_wkqty30"));
+        tbqty31.setText(res.getString("fct_wkqty31"));
+        tbqty32.setText(res.getString("fct_wkqty32"));
+        tbqty33.setText(res.getString("fct_wkqty33"));
+        tbqty34.setText(res.getString("fct_wkqty34"));
+        tbqty35.setText(res.getString("fct_wkqty35"));
+        tbqty36.setText(res.getString("fct_wkqty36"));
+        tbqty37.setText(res.getString("fct_wkqty37"));
+        tbqty38.setText(res.getString("fct_wkqty38"));
+        tbqty39.setText(res.getString("fct_wkqty39"));
+        tbqty40.setText(res.getString("fct_wkqty40"));
+        tbqty41.setText(res.getString("fct_wkqty41"));
+        tbqty42.setText(res.getString("fct_wkqty42"));
+        tbqty43.setText(res.getString("fct_wkqty43"));
+        tbqty44.setText(res.getString("fct_wkqty44"));
+        tbqty45.setText(res.getString("fct_wkqty45"));
+        tbqty46.setText(res.getString("fct_wkqty46"));
+        tbqty47.setText(res.getString("fct_wkqty47"));
+        tbqty48.setText(res.getString("fct_wkqty48"));
+        tbqty49.setText(res.getString("fct_wkqty49"));
+        tbqty50.setText(res.getString("fct_wkqty50"));
+        tbqty51.setText(res.getString("fct_wkqty51"));
+        tbqty52.setText(res.getString("fct_wkqty52"));
+        
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        } 
+      return m;
+    }
+    
+    
+   // custom funcs
     public void setForecastDates(ArrayList dates) {
         DateFormat df = new SimpleDateFormat("MM/dd/yy");
         if (dates.isEmpty())
@@ -117,196 +805,6 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
         
     }
     
-    public void getForecast(String part, String year, String site)  {
-        initvars(null);
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_part = " + "'" + part + "'" +
-                            " AND fct_site = " + "'" + site + "'" + 
-                            " AND fct_year = " + "'" + year + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbpart.setText(part);
-                    ddsite.setSelectedItem(res.getString("fct_site"));
-                    ddyear.setSelectedItem(res.getString("fct_year"));
-                     tbqty1.setText(res.getString("fct_wkqty1"));
-        tbqty2.setText(res.getString("fct_wkqty2"));
-        tbqty3.setText(res.getString("fct_wkqty3"));
-        tbqty4.setText(res.getString("fct_wkqty4"));
-        tbqty5.setText(res.getString("fct_wkqty5"));
-        tbqty6.setText(res.getString("fct_wkqty6"));
-        tbqty7.setText(res.getString("fct_wkqty7"));
-        tbqty8.setText(res.getString("fct_wkqty8"));
-        tbqty9.setText(res.getString("fct_wkqty9"));
-        tbqty10.setText(res.getString("fct_wkqty10"));
-        tbqty11.setText(res.getString("fct_wkqty11"));
-        tbqty12.setText(res.getString("fct_wkqty12"));
-        tbqty13.setText(res.getString("fct_wkqty13"));
-        tbqty14.setText(res.getString("fct_wkqty14"));
-        tbqty15.setText(res.getString("fct_wkqty15"));
-        tbqty16.setText(res.getString("fct_wkqty16"));
-        tbqty17.setText(res.getString("fct_wkqty17"));
-        tbqty18.setText(res.getString("fct_wkqty18"));
-        tbqty19.setText(res.getString("fct_wkqty19"));
-        tbqty20.setText(res.getString("fct_wkqty20"));
-        tbqty21.setText(res.getString("fct_wkqty21"));
-        tbqty22.setText(res.getString("fct_wkqty22"));
-        tbqty23.setText(res.getString("fct_wkqty23"));
-        tbqty24.setText(res.getString("fct_wkqty24"));
-        tbqty25.setText(res.getString("fct_wkqty25"));
-        tbqty26.setText(res.getString("fct_wkqty26"));
-        tbqty27.setText(res.getString("fct_wkqty27"));
-        tbqty28.setText(res.getString("fct_wkqty28"));
-        tbqty29.setText(res.getString("fct_wkqty29"));
-        tbqty30.setText(res.getString("fct_wkqty30"));
-        tbqty31.setText(res.getString("fct_wkqty31"));
-        tbqty32.setText(res.getString("fct_wkqty32"));
-        tbqty33.setText(res.getString("fct_wkqty33"));
-        tbqty34.setText(res.getString("fct_wkqty34"));
-        tbqty35.setText(res.getString("fct_wkqty35"));
-        tbqty36.setText(res.getString("fct_wkqty36"));
-        tbqty37.setText(res.getString("fct_wkqty37"));
-        tbqty38.setText(res.getString("fct_wkqty38"));
-        tbqty39.setText(res.getString("fct_wkqty39"));
-        tbqty40.setText(res.getString("fct_wkqty40"));
-        tbqty41.setText(res.getString("fct_wkqty41"));
-        tbqty42.setText(res.getString("fct_wkqty42"));
-        tbqty43.setText(res.getString("fct_wkqty43"));
-        tbqty44.setText(res.getString("fct_wkqty44"));
-        tbqty45.setText(res.getString("fct_wkqty45"));
-        tbqty46.setText(res.getString("fct_wkqty46"));
-        tbqty47.setText(res.getString("fct_wkqty47"));
-        tbqty48.setText(res.getString("fct_wkqty48"));
-        tbqty49.setText(res.getString("fct_wkqty49"));
-        tbqty50.setText(res.getString("fct_wkqty50"));
-        tbqty51.setText(res.getString("fct_wkqty51"));
-        tbqty52.setText(res.getString("fct_wkqty52"));
-        
-                }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show("No Forecast Record found" );
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve fct_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
-    
-    public void initvars(String key)  {
-        
-        String[] keys = key.split(",",-1);
-        
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat dfyear = new SimpleDateFormat("yyyy");
-        DateFormat dfperiod = new SimpleDateFormat("M");
-        
-        tbpart.setText("");
-        tbqty1.setText("0");
-        tbqty2.setText("0");
-        tbqty3.setText("0");
-        tbqty4.setText("0");
-        tbqty5.setText("0");
-        tbqty6.setText("0");
-        tbqty7.setText("0");
-        tbqty8.setText("0");
-        tbqty9.setText("0");
-        tbqty10.setText("0");
-        tbqty11.setText("0");
-        tbqty12.setText("0");
-        tbqty13.setText("0");
-        tbqty14.setText("0");
-        tbqty15.setText("0");
-        tbqty16.setText("0");
-        tbqty17.setText("0");
-        tbqty18.setText("0");
-        tbqty19.setText("0");
-        tbqty20.setText("0");
-        tbqty21.setText("0");
-        tbqty22.setText("0");
-        tbqty23.setText("0");
-        tbqty24.setText("0");
-        tbqty25.setText("0");
-        tbqty26.setText("0");
-        tbqty27.setText("0");
-        tbqty28.setText("0");
-        tbqty29.setText("0");
-        tbqty30.setText("0");
-        tbqty31.setText("0");
-        tbqty32.setText("0");
-        tbqty33.setText("0");
-        tbqty34.setText("0");
-        tbqty35.setText("0");
-        tbqty36.setText("0");
-        tbqty37.setText("0");
-        tbqty38.setText("0");
-        tbqty39.setText("0");
-        tbqty40.setText("0");
-        tbqty41.setText("0");
-        tbqty42.setText("0");
-        tbqty43.setText("0");
-        tbqty44.setText("0");
-        tbqty45.setText("0");
-        tbqty46.setText("0");
-        tbqty47.setText("0");
-        tbqty48.setText("0");
-        tbqty49.setText("0");
-        tbqty50.setText("0");
-        tbqty51.setText("0");
-        tbqty52.setText("0");
-        
-        
-           ddsite.removeAllItems();
-       ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-        if (ddyear.getItemCount() == 0) {
-        for (int i = 1967 ; i < 2222; i++) {
-            ddyear.addItem(String.valueOf(i));
-        }
-        ddyear.setSelectedItem(dfyear.format(now));
-        
-        ddyear.addItemListener(new ItemListener() {
-
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == 1) {
-                    ArrayList<String> fctdates = OVData.getForecastDates(ddyear.getSelectedItem().toString());
-                  if (! fctdates.isEmpty()) {
-                  setForecastDates(fctdates);
-                  }
-                    //JOptionPane.showMessageDialog(box, e.getItem());
-                   // System.out.println(e.getItem());
-                }
-            }
-        });
-        }
-        
-        ArrayList<String> fctdates = OVData.getForecastDates(ddyear.getSelectedItem().toString());
-        if (! fctdates.isEmpty()) {
-           setForecastDates(fctdates);
-       }
-        
-        
-        if (! key.isEmpty()) {
-            getForecast(keys[0], keys[1], keys[2]);
-        }
-       
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -319,16 +817,18 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
 
         jPanel7 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        tbadd = new javax.swing.JButton();
-        tbedit = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         ddsite = new javax.swing.JComboBox();
         ddyear = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
-        tbpart = new javax.swing.JTextField();
-        tbdelete = new javax.swing.JButton();
+        tbkey = new javax.swing.JTextField();
+        btdelete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        tbget = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btbrowse = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         tbqty6 = new javax.swing.JTextField();
@@ -443,39 +943,59 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Forecast Maintenance"));
 
-        tbadd.setText("Add");
-        tbadd.addActionListener(new java.awt.event.ActionListener() {
+        btadd.setText("Add");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbaddActionPerformed(evt);
+                btaddActionPerformed(evt);
             }
         });
 
-        tbedit.setText("Edit");
-        tbedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Edit");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbeditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Year");
 
-        tbdelete.setText("Delete");
-        tbdelete.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbdeleteActionPerformed(evt);
+                tbkeyActionPerformed(evt);
+            }
+        });
+
+        btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Site");
 
-        tbget.setText("Get");
-        tbget.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("Part");
+
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbgetActionPerformed(evt);
+                btbrowseActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Part");
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -483,48 +1003,58 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
-                        .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbkey, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                                    .addComponent(ddyear, 0, 123, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew))
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tbget)
-                .addGap(29, 29, 29)
-                .addComponent(tbadd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbedit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbdelete)
-                .addContainerGap())
+                        .addComponent(btadd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelete)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(btnew)
+                        .addComponent(btclear))
+                    .addComponent(btbrowse))
+                .addGap(7, 7, 7)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbget)
-                    .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(tbadd)
-                    .addComponent(tbedit)
-                    .addComponent(tbdelete))
+                    .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(btadd)
+                    .addComponent(btupdate)
+                    .addComponent(btdelete))
                 .addContainerGap())
         );
 
@@ -1096,273 +1626,56 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
         add(jPanel7);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbaddActionPerformed
-        try {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbpart.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter an item number");
-                }
-                
-                 res = st.executeQuery("SELECT it_item FROM  item_mstr where it_item = " + "'" + tbpart.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                if (i == 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Item not in item master");
-                }
-                
-                
-                i = 0;
-                
-                if (proceed) {
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+      if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});
+    }//GEN-LAST:event_btaddActionPerformed
 
-                    res = st.executeQuery("SELECT fct_part FROM  fct_mstr where fct_part = " + "'" + tbpart.getText() + "'" +
-                            " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
-                            " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into fct_mstr "
-                            + "(fct_part, fct_site, fct_year,"
-                            + "fct_wkqty1, fct_wkqty2, fct_wkqty3, fct_wkqty4, fct_wkqty5, fct_wkqty6, fct_wkqty7, fct_wkqty8, fct_wkqty9, fct_wkqty10, "
-                                + "fct_wkqty11, fct_wkqty12, fct_wkqty13, fct_wkqty14, fct_wkqty15, fct_wkqty16, fct_wkqty17, fct_wkqty18, fct_wkqty19, fct_wkqty20, "
-                                + "fct_wkqty21, fct_wkqty22, fct_wkqty23, fct_wkqty24, fct_wkqty25, fct_wkqty26, fct_wkqty27, fct_wkqty28, fct_wkqty29, fct_wkqty30, "
-                                + "fct_wkqty31, fct_wkqty32, fct_wkqty33, fct_wkqty34, fct_wkqty35, fct_wkqty36, fct_wkqty37, fct_wkqty38, fct_wkqty39, fct_wkqty40, "
-                            + "fct_wkqty41, fct_wkqty42, fct_wkqty43, fct_wkqty44, fct_wkqty45, fct_wkqty46, fct_wkqty47, fct_wkqty48, fct_wkqty49, fct_wkqty50, "
-                              + "fct_wkqty51, fct_wkqty52, fct_crt_userid, fct_chg_userid, fct_crt_date, fct_chg_date ) "
-                            + " values ( " + "'" + tbpart.getText().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddyear.getSelectedItem().toString() + "'" + ","
-                                + "'" + tbqty1.getText() + "'" + ","
-                                + "'" + tbqty2.getText() + "'" + ","
-                                + "'" + tbqty3.getText() + "'" + ","
-                                + "'" + tbqty4.getText() + "'" + ","
-                                + "'" + tbqty5.getText() + "'" + ","
-                                + "'" + tbqty6.getText() + "'" + ","
-                                + "'" + tbqty7.getText() + "'" + ","
-                                + "'" + tbqty8.getText() + "'" + ","
-                                + "'" + tbqty9.getText() + "'" + ","
-                                + "'" + tbqty10.getText() + "'" + ","
-                                + "'" + tbqty11.getText() + "'" + ","
-                                + "'" + tbqty12.getText() + "'" + ","
-                                + "'" + tbqty13.getText() + "'" + ","
-                                + "'" + tbqty14.getText() + "'" + ","
-                                + "'" + tbqty15.getText() + "'" + ","
-                                + "'" + tbqty16.getText() + "'" + ","
-                                + "'" + tbqty17.getText() + "'" + ","
-                                + "'" + tbqty18.getText() + "'" + ","
-                                + "'" + tbqty19.getText() + "'" + ","
-                                + "'" + tbqty20.getText() + "'" + ","
-                                + "'" + tbqty21.getText() + "'" + ","
-                                + "'" + tbqty22.getText() + "'" + ","
-                                + "'" + tbqty23.getText() + "'" + ","
-                                + "'" + tbqty24.getText() + "'" + ","
-                                + "'" + tbqty25.getText() + "'" + ","
-                                + "'" + tbqty26.getText() + "'" + ","
-                                + "'" + tbqty27.getText() + "'" + ","
-                                + "'" + tbqty28.getText() + "'" + ","
-                                + "'" + tbqty29.getText() + "'" + ","
-                                + "'" + tbqty30.getText() + "'" + ","
-                                + "'" + tbqty31.getText() + "'" + ","
-                                + "'" + tbqty32.getText() + "'" + ","
-                                + "'" + tbqty33.getText() + "'" + ","
-                                + "'" + tbqty34.getText() + "'" + ","
-                                + "'" + tbqty35.getText() + "'" + ","
-                                + "'" + tbqty36.getText() + "'" + ","
-                                + "'" + tbqty37.getText() + "'" + ","
-                                + "'" + tbqty38.getText() + "'" + ","
-                                + "'" + tbqty39.getText() + "'" + ","
-                                + "'" + tbqty40.getText() + "'" + ","
-                                + "'" + tbqty41.getText() + "'" + ","
-                                + "'" + tbqty42.getText() + "'" + ","
-                                + "'" + tbqty43.getText() + "'" + ","
-                                + "'" + tbqty44.getText() + "'" + ","
-                                + "'" + tbqty45.getText() + "'" + ","
-                                + "'" + tbqty46.getText() + "'" + ","
-                                + "'" + tbqty47.getText() + "'" + ","
-                                + "'" + tbqty48.getText() + "'" + ","
-                                + "'" + tbqty49.getText() + "'" + ","
-                                + "'" + tbqty50.getText() + "'" + ","
-                                + "'" + tbqty51.getText() + "'" + ","
-                                + "'" + tbqty52.getText() + "'" + ","
-                                + "'" + bsmf.MainFrame.userid + "'" + ","
-                                + "'" + bsmf.MainFrame.userid + "'" + ","
-                                + "'" + dfdate.format(now) + "'" + ","
-                                + "'" + dfdate.format(now) + "'"
-                            + ")"
-                            + ";");
-                      bsmf.MainFrame.show("Added Forecast Record");
-                      initvars(null);
-                    } else {
-                        bsmf.MainFrame.show("Forecast Record Already Exists");
-                    }
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+        if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});   
+     
+    }//GEN-LAST:event_btdeleteActionPerformed
 
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to fct_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_tbaddActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+       if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});
+    }//GEN-LAST:event_btupdateActionPerformed
 
-    private void tbgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbgetActionPerformed
-       
-       getForecast(tbpart.getText(), ddyear.getSelectedItem().toString(), ddsite.getSelectedItem().toString());
-    }//GEN-LAST:event_tbgetActionPerformed
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"fctmaint","fct_part"});
+    }//GEN-LAST:event_btbrowseActionPerformed
 
-    private void tbdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbdeleteActionPerformed
-          boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-        
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from fct_mstr where fct_part = " + "'" + tbpart.getText() + "'" +
-                          " AND fct_site =  " + "'" + ddsite.getSelectedItem().toString() + "'" +
-                           " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" +  ";");
-                    if (i > 0) {
-                        // now delete any planned orders that has not been scheduled
-                         st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbpart.getText() + "'"
-                             + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
-                                + " AND plan_is_sched = '0' " 
-                                + ";");
-                        
-                    bsmf.MainFrame.show("deleted forecast record");
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Forecast Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
-    }//GEN-LAST:event_tbdeleteActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
-    private void tbeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbeditActionPerformed
-        try {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbpart.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a Part Number");
-                }
-                
-                
-                if (proceed) {
-                        st.executeUpdate("update fct_mstr "
-                            + "set " + "fct_chg_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +
-                                " fct_chg_date = " + "'" + dfdate.format(now) + "'" + "," +
-                                " fct_wkqty1 = " + "'" + tbqty1.getText() + "'" + "," +
-                                " fct_wkqty2 = " + "'" + tbqty2.getText() + "'" + "," +
-                                " fct_wkqty3 = " + "'" + tbqty3.getText() + "'" + "," +
-                                " fct_wkqty4 = " + "'" + tbqty4.getText() + "'" + "," +
-                                " fct_wkqty5 = " + "'" + tbqty5.getText() + "'" + "," +
-                                " fct_wkqty6 = " + "'" + tbqty6.getText() + "'" + "," +
-                                " fct_wkqty7 = " + "'" + tbqty7.getText() + "'" + "," +
-                                " fct_wkqty8 = " + "'" + tbqty8.getText() + "'" + "," +
-                                " fct_wkqty9 = " + "'" + tbqty9.getText() + "'" + "," +
-                                " fct_wkqty10 = " + "'" + tbqty10.getText() + "'" + "," +
-                                " fct_wkqty11 = " + "'" + tbqty11.getText() + "'" + "," +
-                                " fct_wkqty12 = " + "'" + tbqty12.getText() + "'" + "," +
-                                " fct_wkqty13 = " + "'" + tbqty13.getText() + "'" + "," +
-                                " fct_wkqty14 = " + "'" + tbqty14.getText() + "'" + "," +
-                                " fct_wkqty15 = " + "'" + tbqty15.getText() + "'" + "," +
-                                " fct_wkqty16 = " + "'" + tbqty16.getText() + "'" + "," +
-                                " fct_wkqty17 = " + "'" + tbqty17.getText() + "'" + "," +
-                                " fct_wkqty18 = " + "'" + tbqty18.getText() + "'" + "," +
-                                " fct_wkqty19 = " + "'" + tbqty19.getText() + "'" + "," +
-                                " fct_wkqty20 = " + "'" + tbqty20.getText() + "'" + "," +
-                                " fct_wkqty21 = " + "'" + tbqty21.getText() + "'" + "," +
-                                " fct_wkqty22 = " + "'" + tbqty22.getText() + "'" + "," +
-                                " fct_wkqty23 = " + "'" + tbqty23.getText() + "'" + "," +
-                                " fct_wkqty24 = " + "'" + tbqty24.getText() + "'" + "," +
-                                " fct_wkqty25 = " + "'" + tbqty25.getText() + "'" + "," +
-                                " fct_wkqty26 = " + "'" + tbqty26.getText() + "'" + "," +
-                                " fct_wkqty27 = " + "'" + tbqty27.getText() + "'" + "," +
-                                " fct_wkqty28 = " + "'" + tbqty28.getText() + "'" + "," +
-                                " fct_wkqty29 = " + "'" + tbqty29.getText() + "'" + "," +
-                                " fct_wkqty30 = " + "'" + tbqty30.getText() + "'" + "," +
-                                " fct_wkqty31 = " + "'" + tbqty31.getText() + "'" + "," +
-                                " fct_wkqty32 = " + "'" + tbqty32.getText() + "'" + "," +
-                                " fct_wkqty33 = " + "'" + tbqty33.getText() + "'" + "," +
-                                " fct_wkqty34 = " + "'" + tbqty34.getText() + "'" + "," +
-                                " fct_wkqty35 = " + "'" + tbqty35.getText() + "'" + "," +
-                                " fct_wkqty36 = " + "'" + tbqty36.getText() + "'" + "," +
-                                " fct_wkqty37 = " + "'" + tbqty37.getText() + "'" + "," +
-                                " fct_wkqty38 = " + "'" + tbqty38.getText() + "'" + "," +
-                                " fct_wkqty39 = " + "'" + tbqty39.getText() + "'" + "," +
-                                " fct_wkqty40 = " + "'" + tbqty40.getText() + "'" + "," +
-                                " fct_wkqty41 = " + "'" + tbqty41.getText() + "'" + "," +
-                                " fct_wkqty42 = " + "'" + tbqty42.getText() + "'" + "," +
-                                " fct_wkqty43 = " + "'" + tbqty43.getText() + "'" + "," +
-                                " fct_wkqty44 = " + "'" + tbqty44.getText() + "'" + "," +
-                                " fct_wkqty45 = " + "'" + tbqty45.getText() + "'" + "," +
-                                " fct_wkqty46 = " + "'" + tbqty46.getText() + "'" + "," +
-                                " fct_wkqty47 = " + "'" + tbqty47.getText() + "'" + "," +
-                                " fct_wkqty48 = " + "'" + tbqty48.getText() + "'" + "," +
-                                " fct_wkqty49 = " + "'" + tbqty49.getText() + "'" + "," +
-                                " fct_wkqty50 = " + "'" + tbqty50.getText() + "'" + "," +
-                                " fct_wkqty51 = " + "'" + tbqty51.getText() + "'" + "," +
-                                " fct_wkqty52 = " + "'" + tbqty52.getText() + "'" + 
-                             " where fct_part = " + "'" + tbpart.getText() + "'" +
-                              " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-                              " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'"
-                            + ";");
-                      
-                        st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbpart.getText() + "'"
-                             + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
-                                + " AND plan_is_sched = '0' " 
-                                + ";");
-                        
-                      bsmf.MainFrame.show("Updated Forecast Record");
-                      initvars(null);
-                    } 
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Edit to fct_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_tbeditActionPerformed
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdelete;
+    private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddyear;
     private javax.swing.JLabel jLabel1;
@@ -1427,11 +1740,7 @@ public class ForecastMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbl7;
     private javax.swing.JLabel lbl8;
     private javax.swing.JLabel lbl9;
-    private javax.swing.JButton tbadd;
-    private javax.swing.JButton tbdelete;
-    private javax.swing.JButton tbedit;
-    private javax.swing.JButton tbget;
-    private javax.swing.JTextField tbpart;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbqty1;
     private javax.swing.JTextField tbqty10;
     private javax.swing.JTextField tbqty11;

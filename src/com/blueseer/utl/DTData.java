@@ -41,6 +41,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.ImageIcon;
@@ -1634,6 +1635,63 @@ public class DTData {
         return mymodel;
         
          } 
+        
+         public static DefaultTableModel getFctMstrBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Item", "Site", "Year"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+       try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select fct_part, fct_site, fct_year " +
+                        " FROM  fct_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by fct_part ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("  select fct_part, fct_site, fct_year " +
+                        " FROM  fct_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by fct_part ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select fct_part, fct_site, fct_year " +
+                        " FROM  fct_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by fct_part ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                                   res.getString("fct_site"),
+                                   res.getString("fct_year")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+        
         
         
         public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield) {
@@ -3776,31 +3834,11 @@ public class DTData {
          }
       
       
-    public static DefaultTableModel getForecast13weeksByPart(String frompart, String topart, int wk) {
-         Calendar cal = Calendar.getInstance();
-        cal.getTime();
-       
+       public static DefaultTableModel getForecastAll() {
         
-        
-        ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        DateFormat df = new SimpleDateFormat("MM/dd");
-        // week dates are base 0
-        String wk1 = df.format(dates.get(wk - 1));
-        String wk2 = df.format(dates.get(wk));
-        String wk3 = df.format(dates.get(wk + 1));
-        String wk4 = df.format(dates.get(wk + 2));
-        String wk5 = df.format(dates.get(wk + 3));
-        String wk6 = df.format(dates.get(wk + 4));
-        String wk7 = df.format(dates.get(wk + 5));
-        String wk8 = df.format(dates.get(wk + 6));
-        String wk9 = df.format(dates.get(wk + 7));
-        String wk10 = df.format(dates.get(wk + 8));
-        String wk11 = df.format(dates.get(wk + 9));
-        String wk12 = df.format(dates.get(wk + 10));
-        String wk13 = df.format(dates.get(wk + 11));
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"PlanOrders", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 })
+                      new String[]{"select", "Item", "Site", "Year", "Wk1", "Wk2", "Wk3"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3817,29 +3855,114 @@ public class DTData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                  // adjust wk for first three fields
-                  wk = wk + 3;
+                  res = st.executeQuery("select * from fct_mstr;" );
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                                   res.getString("fct_site"),
+                                   res.getString("fct_year"),
+                                   res.getString("fct_wkqty1"),
+                                   res.getString("fct_wkqty2"),
+                                   res.getString("fct_wkqty3")
+                                   
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         }
+      
+      
+    public static DefaultTableModel getForecast13weeksByPart(String frompart, String topart, int wk) {
+         Calendar cal = Calendar.getInstance();
+        cal.getTime();
+       
+        
+        
+        ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+        
+        String thisyear = String.valueOf(cal.get(Calendar.YEAR));
+        
+        DateFormat df = new SimpleDateFormat("MM/dd");
+        // week dates are base 0
+        String wk1 = df.format(dates.get(wk - 1));
+        String wk2 = df.format(dates.get(wk));
+        String wk3 = df.format(dates.get(wk + 1));
+        String wk4 = df.format(dates.get(wk + 2));
+        String wk5 = df.format(dates.get(wk + 3));
+        String wk6 = df.format(dates.get(wk + 4));
+        String wk7 = df.format(dates.get(wk + 5));
+        String wk8 = df.format(dates.get(wk + 6));
+        String wk9 = df.format(dates.get(wk + 7));
+        String wk10 = df.format(dates.get(wk + 8));
+        String wk11 = df.format(dates.get(wk + 9));
+        String wk12 = df.format(dates.get(wk + 10));
+        String wk13 = df.format(dates.get(wk + 11));
+        
+        
+       
+        
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"Select", "Part", "Year", "Site", wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 })
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+             
+              
+       try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Integer[] values = new Integer[13];
+            try{
+                  
                   
                   res = st.executeQuery("select * from fct_mstr where fct_part >= " + "'" + frompart + "'" +
-                          " AND fct_part <= " + "'" + topart + "'" + ";" );
+                                       " AND fct_part <= " + "'" + topart + "'" + 
+                                       " AND fct_year = " + "'" + thisyear + "'" + 
+                                       ";" );
                     while (res.next()) {
-                       
+                        values = new Integer[]{0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        for (int k = 0 ; k < 13; k++) {
+                             if ((wk + k) > 52) { continue;}
+                          values[k] = res.getInt("fct_wkqty" + (wk + k));
+                        }
+                        
+                                                
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
-                                   res.getInt(wk),
-                                   res.getInt(wk + 1),
-                                   res.getInt(wk + 2),
-                                   res.getInt(wk + 3),
-                                   res.getInt(wk + 4),
-                                   res.getInt(wk + 5),
-                                   res.getInt(wk + 6),
-                                   res.getInt(wk + 7),
-                                   res.getInt(wk + 8),
-                                   res.getInt(wk + 9),
-                                   res.getInt(wk + 10),
-                                   res.getInt(wk + 11),
-                                   res.getInt(wk + 12)
+                                   values[0],
+                                   values[1],
+                                   values[2],
+                                   values[3],
+                                   values[4],
+                                   values[5],
+                                   values[6],
+                                   values[7],
+                                   values[8],
+                                   values[9],
+                                   values[10],
+                                   values[11],
+                                   values[12]
+                                   
                         });
                     }
            }

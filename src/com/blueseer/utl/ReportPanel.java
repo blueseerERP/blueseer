@@ -237,7 +237,8 @@ public int[] mywidth;
              mymodel = DTData.getSitesAll();
         }
          if (arg[0].equals("ForecastBrowse")) {
-             mymodel = DTData.getForecast13weeks(OVData.getForecastWeek(now));
+            // mymodel = DTData.getForecast13weeks(OVData.getForecastWeek(now));
+            mymodel = DTData.getForecastAll();
         }
         if (arg[0].equals("PrinterBrowse")) {
              mymodel = DTData.getPrintersAll();

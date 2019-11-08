@@ -22689,11 +22689,12 @@ MainFrame.bslog(e);
                         fctdates.add(cal.getTime());
                     }
                 } else {
-                    bsmf.MainFrame.show("No gl_cal record for year " + year);
+                   // bsmf.MainFrame.show("No gl_cal record for year " + year);
                 }
                     
 
             } catch (SQLException s) {
+                s.printStackTrace();
                 bsmf.MainFrame.show("Unable to retrieve fct_mstr");
             }
             bsmf.MainFrame.con.close();
