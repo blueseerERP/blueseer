@@ -49,7 +49,7 @@ public class DemdToPlanPanel extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String args) {
+    public void initvars(String[] args) {
         
         
         

@@ -48,7 +48,7 @@ public class FcstToPlanPanel extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String args) {
+    public void initvars(String[] args) {
         tbfrompart.setText("");
          tbtopart.setText("");
           tbfromsite.setText("");

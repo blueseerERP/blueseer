@@ -1547,37 +1547,41 @@ public class EDI {
         
         map = OVData.getEDIOutMap(w, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
         
-         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
-        c[0] = w;
-        c[1] = doctype;
-        c[2] = map;
-        c[3] = "";
-        c[4] = "";
-        c[5] = "";
-        c[6] = "";
-        c[7] = nbr;
-        
+        c_in[0] = w;
+        c_in[1] = doctype;
+        c_in[2] = map;
+        c_in[3] = "";
+        c_in[4] = "";
+        c_in[5] = "";
+        c_in[6] = "";
+        c_in[7] = nbr;
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + w + " / " + doctype);
+            OVData.writeEDILog(c_in, "1", "ERROR", "no edi_mstr map for " + w + " / " + doctype);
             errorcode = 1;
                    continue;
         } 
-                    try {
-                    Class cls = Class.forName("EDIMaps." + map);
+                   
+                      try {
+                    Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
-                     Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
-                    Object envelope = method.invoke(obj, c, nbr, w); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    control = (String[])envelope; 
-                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
+                    Object envelope = method.invoke(obj, c_in, nbr, w); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    String[] c_out = (String[])envelope; 
+                    OVData.writeEDILog(c_out, "1", "INFO", "Export"); 
+                    
+
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class or invocation error for " + w + " / " + doctype);
+                        OVData.writeEDILog(c_in, "1", "ERROR", "unable to find map class or invocation error for " + w + " / " + doctype);
                         errorcode = 3;
                         ex.printStackTrace();
                     }
+                    
+                    
            
         }  // each warehouse to receive 940
         
