@@ -827,7 +827,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
         DecimalFormat df = new DecimalFormat("#0.00000");
-        if (Double.valueOf(tbrunhoursinverted.getText()) > 0)
+        if (! tbrunhoursinverted.getText().isEmpty() && Double.valueOf(tbrunhoursinverted.getText()) > 0)
         tbrunhours.setText(df.format(1 / Double.valueOf(tbrunhoursinverted.getText())));
         else
             tbrunhours.setText("0.00");

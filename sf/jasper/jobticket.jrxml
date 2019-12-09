@@ -45,7 +45,8 @@
      plan_date_create,
      plan_order,
      plan_line,
-     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell,wf_run_hours
+     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell, 
+     case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate
 FROM
      plan_mstr
 inner join item_mstr on it_item = plan_part
@@ -98,7 +99,7 @@ order by wf_op;]]>
 	<field name="wf_cell" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="wf_run_hours" class="java.lang.Double"/>
+	<field name="runrate" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -357,7 +358,7 @@ order by wf_op;]]>
 			</subreport>
 			<textField>
 				<reportElement x="261" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
-				<textFieldExpression><![CDATA[new BigDecimal(1 / $F{wf_run_hours}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new BigDecimal($F{runrate}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
