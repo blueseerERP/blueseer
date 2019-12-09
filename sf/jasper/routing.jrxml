@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="part" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -10,25 +13,37 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref from pbm_mstr left outer join item_mstr on it_item = ps_child where ps_parent = $P{part} and ps_op = $P{op};]]>
+		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref, it_uom from pbm_mstr left outer join item_mstr on it_item = ps_child where ps_parent = $P{part} and ps_op = $P{op};]]>
 	</queryString>
 	<field name="ps_child" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="it_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="ps_qty_per" class="java.math.BigDecimal">
+	<field name="ps_qty_per" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_qty_per"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="ps_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="it_uom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_uom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="12" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="83" height="12" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
 				<textElement>
@@ -37,21 +52,28 @@
 				<textFieldExpression><![CDATA[$F{ps_child}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="100" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<reportElement x="91" y="0" width="100" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="228" y="0" width="83" height="12" uuid="31e0f31c-3421-4ce5-b2f5-029e138baea2"/>
+				<reportElement x="202" y="0" width="40" height="12" uuid="31e0f31c-3421-4ce5-b2f5-029e138baea2"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ps_qty_per}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="363" y="0" width="83" height="12" uuid="376bf610-50f0-44c2-ba89-11ccb31a88cc"/>
+				<reportElement x="251" y="0" width="51" height="12" uuid="376bf610-50f0-44c2-ba89-11ccb31a88cc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{it_uom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="313" y="0" width="83" height="12" uuid="33c9150a-5d40-4723-b5e4-6ab617c9ec07"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>

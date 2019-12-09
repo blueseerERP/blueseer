@@ -45,7 +45,7 @@
      plan_date_create,
      plan_order,
      plan_line,
-     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell
+     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell,wf_run_hours
 FROM
      plan_mstr
 inner join item_mstr on it_item = plan_part
@@ -98,6 +98,7 @@ order by wf_op;]]>
 	<field name="wf_cell" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="wf_run_hours" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -282,7 +283,7 @@ order by wf_op;]]>
 				<text><![CDATA[Operation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="223" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<reportElement x="200" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -312,6 +313,13 @@ order by wf_op;]]>
 				</textElement>
 				<text><![CDATA[Desc]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="261" y="0" width="69" height="20" uuid="59ff2ff0-ead4-4f1e-aa83-8550c4b43b60"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rate(per/hr)]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -321,11 +329,11 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{wf_op}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="0" width="72" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<reportElement x="200" y="0" width="58" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{wf_cell}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="91" y="0" width="132" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<reportElement x="91" y="0" width="106" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
 				<textFieldExpression><![CDATA[$F{wf_desc}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -347,6 +355,10 @@ order by wf_op;]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>
 			</subreport>
+			<textField>
+				<reportElement x="261" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
+				<textFieldExpression><![CDATA[new BigDecimal(1 / $F{wf_run_hours}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>

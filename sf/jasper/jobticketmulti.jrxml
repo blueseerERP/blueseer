@@ -39,7 +39,7 @@
      plan_date_create,
      plan_order,
      plan_line,
-     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell
+     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell,wf_run_hours
 FROM
      plan_mstr
 inner join item_mstr on it_item = plan_part
@@ -92,6 +92,7 @@ where plan_nbr >= $P{fromjob} and
 	<field name="wf_cell" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="wf_run_hours" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -269,7 +270,7 @@ where plan_nbr >= $P{fromjob} and
 				<text><![CDATA[Operation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="223" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<reportElement x="199" y="0" width="51" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -299,6 +300,13 @@ where plan_nbr >= $P{fromjob} and
 				</textElement>
 				<text><![CDATA[Desc]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="270" y="0" width="51" height="20" uuid="19961a5c-55d6-4ffc-bb02-1f88a5aa8a95"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -308,11 +316,11 @@ where plan_nbr >= $P{fromjob} and
 				<textFieldExpression><![CDATA[$F{wf_op}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="0" width="72" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<reportElement x="197" y="0" width="53" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{wf_cell}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="91" y="0" width="132" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<reportElement x="91" y="0" width="100" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
 				<textFieldExpression><![CDATA[$F{wf_desc}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -334,6 +342,10 @@ where plan_nbr >= $P{fromjob} and
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>
 			</subreport>
+			<textField>
+				<reportElement x="270" y="0" width="70" height="20" uuid="6e4e5a49-f8a9-4898-99e2-74ce8acc1a88"/>
+				<textFieldExpression><![CDATA[$F{wf_run_hours}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
