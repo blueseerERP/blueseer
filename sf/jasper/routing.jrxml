@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -13,7 +13,9 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref, it_uom from pbm_mstr left outer join item_mstr on it_item = ps_child where ps_parent = $P{part} and ps_op = $P{op};]]>
+		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref, it_uom from pbm_mstr 
+left outer join item_mstr on it_item = ps_child 
+where ps_parent = $P{part} and ps_op = $P{op};]]>
 	</queryString>
 	<field name="ps_child" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>

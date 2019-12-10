@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -257,6 +258,13 @@
 			<textField>
 				<reportElement x="52" y="58" width="515" height="20" uuid="c52e1fc5-3b06-441d-a7ee-1dd1eae49c23"/>
 				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="30" width="100" height="12" uuid="af83f83c-8d0b-43c6-a082-39e6fc567464"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
