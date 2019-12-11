@@ -2748,8 +2748,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 return;
             } else {
             bsmf.MainFrame.show("Removing row " + i);
-            ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             linetax.remove(orddet.getValueAt(i, 0));
+            ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             }
         }
         
