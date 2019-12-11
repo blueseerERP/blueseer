@@ -2746,7 +2746,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             if (orddet.getValueAt(i, 10).toString().equals("close") || orddet.getValueAt(i, 10).toString().equals("partial")) {
                 bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
                 return;
-                            } else {
+            } else {
             bsmf.MainFrame.show("Removing row " + i);
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             linetax.remove(orddet.getValueAt(i, 0));
