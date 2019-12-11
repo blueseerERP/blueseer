@@ -300,7 +300,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
         
         
-         venditemonly = OVData.isCustItemOnly();
+         venditemonly = OVData.isVendItemOnly();
         if (! venditemonly) {
             ddpart.removeAllItems();
             ArrayList<String> items = OVData.getItemMasterAlllist();
