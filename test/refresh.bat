@@ -1,10 +1,10 @@
 @echo off
 
-@echo "Installing BlueSeer.... "
+@echo "Installing BlueSeer to test\scratch.... "
 @echo ""
 @echo ""
 
-cd %~dp0
+cd %~dp0\scratch
 
 set "DB=bsdb"
 
@@ -17,7 +17,8 @@ set "DB=bsdb"
 @echo PORT=3306>>bsconfig
 @echo DRIVER=org.sqlite.JDBC>>bsconfig
 
-copy ..\.patch %~dp0\
+if exist ..\.patch copy ..\.patch %~dp0\scratch
+
 cd data
 
 if exist bsdb.db del bsdb.db
