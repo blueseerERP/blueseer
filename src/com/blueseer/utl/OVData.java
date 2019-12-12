@@ -549,909 +549,953 @@ public class OVData {
         }  
          return mystring;
        }
-        
-         public static String sampleStringJoin(String menu, String thisuser) {
-             String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
-         try {
+     
+    public static String sampleStringJoin(String menu, String thisuser) {
+        String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
+
                 int i = 0;
                 String[] permlist = null;
                 String newperms = "";
                 boolean candelete = false;
-                
-                
+
                 ArrayList<String> users = new ArrayList();
                 ArrayList<String> perms = new ArrayList();
-                   
-                      
-                            res = st.executeQuery("SELECT user_perms FROM  user_mstr where user_id = " + "'" + thisuser + "'" + ";");
-                            while (res.next()) {
-                                permlist = res.getString("user_perms").split(",");
-                            }
-                            for (String myperm : permlist) {
-                                if (myperm.toLowerCase().equals(menu.toLowerCase())) {
-                                    candelete = true;
-                                } else {
-                                  newperms += myperm + ",";  
-                                }
-                            }
-                            if (candelete) {
-                                st.executeUpdate("update user_mstr set "
-                                + "user_perms = " + "'" + newperms.substring(0, newperms.length() - 1) + "'"
-                                + " where user_id = " + "'" + thisuser + "'"
-                                + ";");
-                                
-                                 mystring = "0";
-                            } else {
-                                
-                                mystring = "1";
-                            }
-                    
+
+                res = st.executeQuery("SELECT user_perms FROM  user_mstr where user_id = " + "'" + thisuser + "'" + ";");
+                while (res.next()) {
+                    permlist = res.getString("user_perms").split(",");
+                }
+                for (String myperm : permlist) {
+                    if (myperm.toLowerCase().equals(menu.toLowerCase())) {
+                        candelete = true;
+                    } else {
+                        newperms += myperm + ",";
+                    }
+                }
+                if (candelete) {
+                    st.executeUpdate("update user_mstr set "
+                            + "user_perms = " + "'" + newperms.substring(0, newperms.length() - 1) + "'"
+                            + " where user_id = " + "'" + thisuser + "'"
+                            + ";");
+
+                    mystring = "0";
+                } else {
+
+                    mystring = "1";
+                }
 
             } // if proceed
             catch (SQLException s) {
-               MainFrame.bslog(s);
-               mystring = "2";
+                MainFrame.bslog(s);
+                mystring = "2";
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
             mystring = "2";
-        }  
-         return  mystring;
-       }
-         
-          public static String deleteMenuToUser(String menu, String thisuser) {
-             String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
-         try {
+        }
+        return mystring;
+    }
+
+    public static String deleteMenuToUser(String menu, String thisuser) {
+        String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-               
+
                 int i = 0;
-              
+
                 boolean candelete = false;
-                
-                
+
                 ArrayList<String> users = new ArrayList();
                 ArrayList<String> perms = new ArrayList();
-                   
-                      
-                             res = st.executeQuery("SELECT perm_menu FROM  perm_mstr where perm_user = " + "'" + thisuser + "'" + 
-                                             " AND perm_menu = " + "'" + menu + "'" + ";");
-                            while (res.next()) {
-                                candelete = true;
-                            }
-                           
-                            if (candelete) {
-                                st.executeUpdate("delete from perm_mstr where "
-                                + " perm_menu = " + "'" + menu + "'"
-                                + " and perm_user = " + "'" + thisuser + "'"
-                                + ";");
-                                
-                                 mystring = "0";
-                            } else {
-                                
-                                mystring = "1";
-                            }
-                    
+
+                res = st.executeQuery("SELECT perm_menu FROM  perm_mstr where perm_user = " + "'" + thisuser + "'"
+                        + " AND perm_menu = " + "'" + menu + "'" + ";");
+                while (res.next()) {
+                    candelete = true;
+                }
+
+                if (candelete) {
+                    st.executeUpdate("delete from perm_mstr where "
+                            + " perm_menu = " + "'" + menu + "'"
+                            + " and perm_user = " + "'" + thisuser + "'"
+                            + ";");
+
+                    mystring = "0";
+                } else {
+
+                    mystring = "1";
+                }
 
             } // if proceed
             catch (SQLException s) {
-               MainFrame.bslog(s);
-               mystring = "2";
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                MainFrame.bslog(s);
+                mystring = "2";
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
             mystring = "2";
-        }  
-         return  mystring;
-       }
-         
-         
-         public static void deleteMenuToAllUsers(String menu) {
-         try {
+        }
+        return mystring;
+    }
+
+    public static void deleteMenuToAllUsers(String menu) {
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
+
                 int i = 0;
                 String[] permlist = null;
-                
-                
+
                 ArrayList<String> users = new ArrayList();
                 ArrayList<String> perms = new ArrayList();
-                            
-                                st.executeUpdate("delete from perm_mstr where "
-                                + " perm_menu = " + "'" + menu + "'"
-                                + " and perm_user <> 'admin' "
-                                + ";");
+
+                st.executeUpdate("delete from perm_mstr where "
+                        + " perm_menu = " + "'" + menu + "'"
+                        + " and perm_user <> 'admin' "
+                        + ";");
 
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }  
-       }
-       
-       public static void addMenuToAllUsers(String menu) {
-         try {
+        }
+    }
+
+    public static void addMenuToAllUsers(String menu) {
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
+
                 int i = 0;
                 String[] permlist = null;
                 String newperms = "";
                 boolean canadd = true;
-                
-                
+
                 ArrayList<String> users = new ArrayList();
-                
-                 res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id <> 'admin' ;");
+
+                res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id <> 'admin' ;");
+                while (res.next()) {
+                    users.add(res.getString("user_id"));
+                }
+
+                for (String user : users) {
+                    canadd = true;
+                    res = st.executeQuery("SELECT perm_user FROM  perm_mstr where perm_user = "
+                            + "'" + user + "'"
+                            + " and perm_menu = " + "'" + menu + "'" + ";");
                     while (res.next()) {
-                        users.add(res.getString("user_id"));
+                        canadd = false;
                     }
-                    
-                   for (String user : users) {
-                       canadd = true;
-                            res = st.executeQuery("SELECT perm_user FROM  perm_mstr where perm_user = " + 
-                                    "'" + user + "'" + 
-                                    " and perm_menu = " + "'" + menu + "'" + ";");
-                            while (res.next()) {
-                               canadd = false;
-                            }
-                            if (canadd) {
-                                 st.executeUpdate("insert into perm_mstr values ( "
-                                +  "'" + user + "'" + ","
-                                +  "'" + menu + "'" + ")"
+                    if (canadd) {
+                        st.executeUpdate("insert into perm_mstr values ( "
+                                + "'" + user + "'" + ","
+                                + "'" + menu + "'" + ")"
                                 + ";");
-                            }
-                   } 
+                    }
+                }
 
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }  
-       }
-       
-        public static void addMenu(String menu, String desc) {
-         try {
-           Class.forName(driver).newInstance();
+        }
+    }
+
+    public static void addMenu(String menu, String desc) {
+        try {
+            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
-                int i = 0;
-                    res = st.executeQuery("SELECT menu_id FROM menu_mstr where menu_id = " + "'" + menu + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
 
-                    if (i > 0) {
-                        bsmf.MainFrame.show("Menu already exists");
-                    } else {
+                int i = 0;
+                res = st.executeQuery("SELECT menu_id FROM menu_mstr where menu_id = " + "'" + menu + "'" + ";");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i > 0) {
+                    bsmf.MainFrame.show("Menu already exists");
+                } else {
                     st.executeUpdate("insert into menu_mstr values ( "
-                                + "'" + menu + "'" + "," + "'" + desc + "'" + ")" 
-                                + ";");
-                        bsmf.MainFrame.show("Added Menu");
+                            + "'" + menu + "'" + "," + "'" + desc + "'" + ")"
+                            + ";");
+                    bsmf.MainFrame.show("Added Menu");
                 }
             } // if proceed
             catch (SQLException s) {
-               MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-       }
-        
-         public static void addItemImage(String item, String file) {
-         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                    res = st.executeQuery("SELECT iti_file FROM item_image where iti_item = " + "'" + item + "'" 
-                            + " AND iti_file = " + "'" + file + "'"
-                            + " ;");
-                    while (res.next()) {
-                        i++;
-                    }
-
-                    if (i > 0) {
-                        bsmf.MainFrame.show("Filename already exists");
-                    } else {
-                    st.executeUpdate("insert into item_image (iti_item, iti_site, iti_order, iti_file) values ( "
-                                + "'" + item + "'" + "," 
-                                + "'" + "" + "'" + "," 
-                                + "'" + "0" + "'" + ","         
-                                + "'" + file + "'" + ")" 
-                                + ";");
-                        bsmf.MainFrame.show("Added Item Image");
-                }
-            } // if proceed
-            catch (SQLException s) {
-               MainFrame.bslog(s);
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }  
-       }
-        
-             
-          public static void addItemCostRec(String part, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
-         try {
+        }
+    }
+
+    public static void addItemImage(String item, String file) {
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
+
+                int i = 0;
+                res = st.executeQuery("SELECT iti_file FROM item_image where iti_item = " + "'" + item + "'"
+                        + " AND iti_file = " + "'" + file + "'"
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i > 0) {
+                    bsmf.MainFrame.show("Filename already exists");
+                } else {
+                    st.executeUpdate("insert into item_image (iti_item, iti_site, iti_order, iti_file) values ( "
+                            + "'" + item + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + file + "'" + ")"
+                            + ";");
+                    bsmf.MainFrame.show("Added Item Image");
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    public static void addItemCostRec(String part, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
                 DecimalFormat df = new DecimalFormat("0.00000");
                 int i = 0;
-                    res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + part + "'" +
-                            " AND itc_set = " + "'" + set + "'" + 
-                            " AND itc_site = " + "'" + site + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
+                res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + part + "'"
+                        + " AND itc_set = " + "'" + set + "'"
+                        + " AND itc_site = " + "'" + site + "'" + ";");
+                while (res.next()) {
+                    i++;
+                }
 
-                    if (i == 0) {
+                if (i == 0) {
                     st.executeUpdate("insert into item_cost (itc_item, itc_set, itc_site, itc_mtl_top, itc_ovh_top, itc_out_top, itc_total) values ( "
-                                + "'" + part + "'" + "," 
-                                + "'" + set + "'" + "," 
-                                + "'" + site + "'" + "," 
-                                + "'" + df.format(mtl) + "'" + ","
-                                + "'" + df.format(ovh) + "'" + ","
-                                + "'" + df.format(out) + "'" + ","
-                                + "'" + df.format(tot) + "'" 
-                                + ")" 
-                                + ";");
+                            + "'" + part + "'" + ","
+                            + "'" + set + "'" + ","
+                            + "'" + site + "'" + ","
+                            + "'" + df.format(mtl) + "'" + ","
+                            + "'" + df.format(ovh) + "'" + ","
+                            + "'" + df.format(out) + "'" + ","
+                            + "'" + df.format(tot) + "'"
+                            + ")"
+                            + ";");
                 }
             } // if proceed
             catch (SQLException s) {
-               MainFrame.bslog(s);
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }  
-       }
-        
-       
-       
-         public static ArrayList getmenulist() {
-       ArrayList myarray = new ArrayList();
-        try{
+        }
+    }
+
+    public static ArrayList getmenulist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
                 res = st.executeQuery("select menu_id from menu_mstr order by menu_id ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("menu_id"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
-    } 
-       
-         
-        
-                
-                
-       public static void disablemenu(String child) {
-            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                           st.executeUpdate(
-                                 " update menu_tree set mt_visible = '0' "  +
-                                 " where mt_child = " + "'" + child + "'" + ";" );
-              
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-       }         
-                
-        public static void enablemenu(String child) {
-            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                           st.executeUpdate(
-                                 " update menu_tree set mt_visible = '1' "  +
-                                 " where mt_child = " + "'" + child + "'" + ";" );
-              
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-       }         
-       
-          public static void enablemenutree(String menu)  {  
-      
-             enablemenu(menu);
-      ArrayList<String> mychildren = new ArrayList<String>();
-        mychildren = OVData.getMenuTreeAll(menu);
-        
-        for ( String myvalue : mychildren) {
-             String[] recs = myvalue.split(",",-1);
-           if (recs[1].toString().compareTo("JMenuItem") == 0) {
-               enablemenu(recs[0].toString());
-           } else {
-            enablemenutree(recs[0].toString());
-           }
-           
-        }
-       
-       
-      }       
-       
-         public static void disablemenutree(String menu)  {  
-      
-             disablemenu(menu);
-      ArrayList<String> mychildren = new ArrayList<String>();
-        mychildren = OVData.getMenuTreeAll(menu);
-        
-        for ( String myvalue : mychildren) {
-             String[] recs = myvalue.split(",",-1);
-           if (recs[1].toString().compareTo("JMenuItem") == 0) {
-               disablemenu(recs[0].toString());
-           } else {
-            disablemenutree(recs[0].toString());
-           }
-           
-        }
-       
-       
-      }       
-           
-         
-          public static void indexMenuChildren(String parent, String child, int newindex, int oldindex)  {  
-      
-              HashMap<String, Integer> mymap = new HashMap<String, Integer>();
-              TreeMap<Integer, String> newmap = new TreeMap<Integer, String>();
-              boolean addone = false;
-              newmap.put(newindex, child); 
-             
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
 
-                res = st.executeQuery("select mt_child, mt_index from menu_tree where mt_par = " + "'" + parent + "'" + 
-                           "  " + " order by mt_index ;");
-               while (res.next()) {
+    }
+
+    public static void disablemenu(String child) {
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                st.executeUpdate(
+                        " update menu_tree set mt_visible = '0' "
+                        + " where mt_child = " + "'" + child + "'" + ";");
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+
+    public static void enablemenu(String child) {
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                st.executeUpdate(
+                        " update menu_tree set mt_visible = '1' "
+                        + " where mt_child = " + "'" + child + "'" + ";");
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+
+    public static void enablemenutree(String menu) {
+
+        enablemenu(menu);
+        ArrayList<String> mychildren = new ArrayList<String>();
+        mychildren = OVData.getMenuTreeAll(menu);
+
+        for (String myvalue : mychildren) {
+            String[] recs = myvalue.split(",", -1);
+            if (recs[1].toString().compareTo("JMenuItem") == 0) {
+                enablemenu(recs[0].toString());
+            } else {
+                enablemenutree(recs[0].toString());
+            }
+
+        }
+
+    }
+
+    public static void disablemenutree(String menu) {
+
+        disablemenu(menu);
+        ArrayList<String> mychildren = new ArrayList<String>();
+        mychildren = OVData.getMenuTreeAll(menu);
+
+        for (String myvalue : mychildren) {
+            String[] recs = myvalue.split(",", -1);
+            if (recs[1].toString().compareTo("JMenuItem") == 0) {
+                disablemenu(recs[0].toString());
+            } else {
+                disablemenutree(recs[0].toString());
+            }
+
+        }
+
+    }
+
+    public static void indexMenuChildren(String parent, String child, int newindex, int oldindex) {
+
+        HashMap<String, Integer> mymap = new HashMap<String, Integer>();
+        TreeMap<Integer, String> newmap = new TreeMap<Integer, String>();
+        boolean addone = false;
+        newmap.put(newindex, child);
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select mt_child, mt_index from menu_tree where mt_par = " + "'" + parent + "'"
+                        + "  " + " order by mt_index ;");
+                while (res.next()) {
                     mymap.put(res.getString("mt_child"), res.getInt("mt_index"));
                 }
-               
-               
-               // if new index is less than old
-               if (newindex < oldindex) {
-                  JLOOP:
-                  for (int j = 1 ; j <= mymap.size(); j++) {
-                       // for any indexes less than childindex..maintain index
-                    MYMAPLOOP:
-                    for (Entry<String, Integer> entry : mymap.entrySet()) {
-                      String key = entry.getKey();
-                      int myint = entry.getValue();
-                        if (key.compareTo(child) == 0) {
-                            continue MYMAPLOOP;
-                        }
-                        if (myint >= newindex && myint <= oldindex) {
-                            addone = true;
-                        }
-                        if (myint > oldindex) {
-                            addone = false;
-                        }
-                        if (myint < newindex && myint == j) {
-                            newmap.put(j, key);
-                            continue JLOOP;
-                        }
-                        if (myint >= newindex && myint == j ) {
-                            if (addone)
-                            newmap.put(j+1, key);
-                            else
-                            newmap.put(j, key);    
-                            continue JLOOP;
-                        }
-                    }
-                  }
-               } 
-                  boolean subtractone = false;
-                  // if new index is greater than old
-                  if (newindex > oldindex) {
-                  JLOOP:
-                  for (int j = 1 ; j <= mymap.size(); j++) {
-                       // for any indexes less than childindex..maintain index
-                    MYMAPLOOP:
-                    for (Entry<String, Integer> entry : mymap.entrySet()) {
-                      String key = entry.getKey();
-                      int myint = entry.getValue();
-                        if (key.compareTo(child) == 0) {
-                            continue MYMAPLOOP;
-                        }
-                        if (myint <= newindex && myint >= oldindex) {
-                            subtractone = true;
-                        }
-                        if (myint > newindex) {
-                            subtractone = false;
-                        }
-                        if (myint < oldindex && myint == j) {
-                            newmap.put(j, key);
-                            continue JLOOP;
-                        }
-                        if (myint >= oldindex && myint == j ) {
-                            if (subtractone)
-                            newmap.put(j-1, key);
-                            else
-                            newmap.put(j, key);    
-                            continue JLOOP;
+
+                // if new index is less than old
+                if (newindex < oldindex) {
+                    JLOOP:
+                    for (int j = 1; j <= mymap.size(); j++) {
+                        // for any indexes less than childindex..maintain index
+                        MYMAPLOOP:
+                        for (Entry<String, Integer> entry : mymap.entrySet()) {
+                            String key = entry.getKey();
+                            int myint = entry.getValue();
+                            if (key.compareTo(child) == 0) {
+                                continue MYMAPLOOP;
+                            }
+                            if (myint >= newindex && myint <= oldindex) {
+                                addone = true;
+                            }
+                            if (myint > oldindex) {
+                                addone = false;
+                            }
+                            if (myint < newindex && myint == j) {
+                                newmap.put(j, key);
+                                continue JLOOP;
+                            }
+                            if (myint >= newindex && myint == j) {
+                                if (addone) {
+                                    newmap.put(j + 1, key);
+                                } else {
+                                    newmap.put(j, key);
+                                }
+                                continue JLOOP;
+                            }
                         }
                     }
-                  }
-               } 
-                  
-                  
-                  
-                  
-                  // OK ...now we have newmap assigned with appropriate indexing
-                 
-                  for (Entry<Integer, String> entry : newmap.entrySet()) {
-                      String value = entry.getValue();
-                      int myint = entry.getKey();
-                       st.executeUpdate(
-                                 " update menu_tree set mt_index = "  + "'" + myint + "'" +
-                                 " where mt_par = " + "'" + parent + "'" +
-                                 " and mt_child = " + "'" + value + "'" + ";" );
-                  }
-                  
-                  
-                  
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-    
-       
-       
-      }       
-         
-        
-          
-          
-          public static ArrayList getmenutree(String parent) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'" + 
-                           " and mt_visible = '1' " + " order by mt_index ;");
-               while (res.next()) {
-                    myarray.add(res.getString("mt_child") + "," + 
-                                res.getString("mt_type") + "," +
-                            res.getString("mt_label") + "," +
-                            res.getString("mt_icon") + "," +
-                            res.getString("mt_initvar") + "," +
-                            res.getString("mt_func") + "," +
-                            res.getString("mt_visible") + "," +
-                            res.getString("mt_enable") 
-                            );
-                    
                 }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    } 
-         
-          
-          
-          
-          public static ArrayList getMenuTreeAll(String parent) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'" + 
-                           " order by mt_index ;");
-               while (res.next()) {
-                    myarray.add(res.getString("mt_child") + "," + 
-                                res.getString("mt_type") + "," +
-                            res.getString("mt_label") + "," +
-                            res.getString("mt_icon") + "," +
-                            res.getString("mt_initvar") + "," +
-                            res.getString("mt_func") + "," +
-                            res.getString("mt_visible") + "," +
-                            res.getString("mt_enable")
-                            );
-                    
+                boolean subtractone = false;
+                // if new index is greater than old
+                if (newindex > oldindex) {
+                    JLOOP:
+                    for (int j = 1; j <= mymap.size(); j++) {
+                        // for any indexes less than childindex..maintain index
+                        MYMAPLOOP:
+                        for (Entry<String, Integer> entry : mymap.entrySet()) {
+                            String key = entry.getKey();
+                            int myint = entry.getValue();
+                            if (key.compareTo(child) == 0) {
+                                continue MYMAPLOOP;
+                            }
+                            if (myint <= newindex && myint >= oldindex) {
+                                subtractone = true;
+                            }
+                            if (myint > newindex) {
+                                subtractone = false;
+                            }
+                            if (myint < oldindex && myint == j) {
+                                newmap.put(j, key);
+                                continue JLOOP;
+                            }
+                            if (myint >= oldindex && myint == j) {
+                                if (subtractone) {
+                                    newmap.put(j - 1, key);
+                                } else {
+                                    newmap.put(j, key);
+                                }
+                                continue JLOOP;
+                            }
+                        }
+                    }
                 }
-               
-           }
-            catch (SQLException s){
+
+                // OK ...now we have newmap assigned with appropriate indexing
+                for (Entry<Integer, String> entry : newmap.entrySet()) {
+                    String value = entry.getValue();
+                    int myint = entry.getKey();
+                    st.executeUpdate(
+                            " update menu_tree set mt_index = " + "'" + myint + "'"
+                            + " where mt_par = " + "'" + parent + "'"
+                            + " and mt_child = " + "'" + value + "'" + ";");
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    } 
-          
-        
-       
-        public static ArrayList getpanellist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select panel_id, panel_core, ov_custom from panel_mstr inner join ov_ctrl;");
-               while (res.next()) {
-                   if (res.getInt("panel_core") == 1) {
-                    myarray.add(res.getString("panel_id"));
-                   }
-                   if (res.getInt("ov_custom") == 1 && res.getInt("panel_core") == 0) {
-                    myarray.add(res.getString("panel_id"));
-                   }
+                if (res != null) {
+                    res.close();
                 }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        return myarray;
-        
-    } 
-        
-         
-       
-         
-         
-         
-        public static ArrayList getUsersOfMenusList(String menu) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    }
+
+    public static ArrayList getmenutree(String parent) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                ArrayList<String> users = new ArrayList();
-                
-                 String[] permlist = null;
-                 res = st.executeQuery("SELECT perm_user FROM  perm_mstr where " +
-                             " perm_menu = " + "'" + menu + "'" + ";");
-                    while (res.next()) {
-                        myarray.add(res.getString("perm_user"));
+            try {
+
+                res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'"
+                        + " and mt_visible = '1' " + " order by mt_index ;");
+                while (res.next()) {
+                    myarray.add(res.getString("mt_child") + ","
+                            + res.getString("mt_type") + ","
+                            + res.getString("mt_label") + ","
+                            + res.getString("mt_icon") + ","
+                            + res.getString("mt_initvar") + ","
+                            + res.getString("mt_func") + ","
+                            + res.getString("mt_visible") + ","
+                            + res.getString("mt_enable")
+                    );
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getMenuTreeAll(String parent) {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select mt_child, mt_type, mt_label, mt_icon, mt_initvar, mt_func, mt_visible, mt_enable from menu_tree where mt_par = " + "'" + parent + "'"
+                        + " order by mt_index ;");
+                while (res.next()) {
+                    myarray.add(res.getString("mt_child") + ","
+                            + res.getString("mt_type") + ","
+                            + res.getString("mt_label") + ","
+                            + res.getString("mt_icon") + ","
+                            + res.getString("mt_initvar") + ","
+                            + res.getString("mt_func") + ","
+                            + res.getString("mt_visible") + ","
+                            + res.getString("mt_enable")
+                    );
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getpanellist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select panel_id, panel_core, ov_custom from panel_mstr inner join ov_ctrl;");
+                while (res.next()) {
+                    if (res.getInt("panel_core") == 1) {
+                        myarray.add(res.getString("panel_id"));
                     }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    } 
-        
-         public static ArrayList getMenusOfUsersList(String myuser) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                ArrayList<String> users = new ArrayList();
-                
-                 String[] menulist = null;
-                 
-                            res = st.executeQuery("SELECT perm_menu FROM  perm_mstr where perm_user = " + "'" + myuser + "'" + " order by perm_menu ;");
-                            while (res.next()) {
-                                myarray.add(res.getString("perm_menu"));
-                            }
-                            
-                    
-               
-           }
-            catch (SQLException s){
+                    if (res.getInt("ov_custom") == 1 && res.getInt("panel_core") == 0) {
+                        myarray.add(res.getString("panel_id"));
+                    }
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
-    } 
-      
-       
-  
-   
-      
-      /* vendor related functions */
-        public static ArrayList getbanklist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    }
+
+    public static ArrayList getUsersOfMenusList(String menu) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
+                ArrayList<String> users = new ArrayList();
+
+                String[] permlist = null;
+                res = st.executeQuery("SELECT perm_user FROM  perm_mstr where "
+                        + " perm_menu = " + "'" + menu + "'" + ";");
+                while (res.next()) {
+                    myarray.add(res.getString("perm_user"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getMenusOfUsersList(String myuser) {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                ArrayList<String> users = new ArrayList();
+
+                String[] menulist = null;
+
+                res = st.executeQuery("SELECT perm_menu FROM  perm_mstr where perm_user = " + "'" + myuser + "'" + " order by perm_menu ;");
+                while (res.next()) {
+                    myarray.add(res.getString("perm_menu"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    /* vendor related functions */
+    public static ArrayList getbanklist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select bk_id from bk_mstr order by bk_id;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("bk_id"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Bank list");
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("SQL cannot get Bank list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
-       public static ArrayList getvendmstrlist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getvendmstrlist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("vd_addr"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vend list");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vend list");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
-        public static ArrayList getvendmstrlistBetween(String from, String to) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getvendmstrlistBetween(String from, String to) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select vd_addr from vd_mstr " +
-                        " where vd_addr >= " + "'" + from + "'" + 
-                        " and vd_addr <= " + "'" + to + "'" +
-                        " order by vd_addr;");
-               while (res.next()) {
+            try {
+
+                res = st.executeQuery("select vd_addr from vd_mstr "
+                        + " where vd_addr >= " + "'" + from + "'"
+                        + " and vd_addr <= " + "'" + to + "'"
+                        + " order by vd_addr;");
+                while (res.next()) {
                     myarray.add(res.getString("vd_addr"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-       
-       
-       public static ArrayList getvendtermslist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getvendtermslist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select cut_code from cust_term order by cut_code;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("cut_code"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Terms Master");
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("SQL cannot get Terms Master");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
+
     
     /* Customer Related functions */
-     public static ArrayList getcustmstrlist() {
+    public static ArrayList getcustmstrlist() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -1481,1491 +1525,1632 @@ public class OVData {
         return myarray;
         
     }
-     
-      public static ArrayList getcustmstrlistBetween(String from, String to) {
-       ArrayList myarray = new ArrayList();
-        try{
+    
+    public static ArrayList getcustmstrlistBetween(String from, String to) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
-                res = st.executeQuery("select cm_code from cm_mstr " +
-                        " where cm_code >= " + "'" + from + "'" +
-                        " and cm_code <= " + "'" + to + "'" +
-                        " order by cm_code ;");
-               while (res.next()) {
+                res = st.executeQuery("select cm_code from cm_mstr "
+                        + " where cm_code >= " + "'" + from + "'"
+                        + " and cm_code <= " + "'" + to + "'"
+                        + " order by cm_code ;");
+                while (res.next()) {
                     myarray.add(res.getString("cm_code"));
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Cust list");
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-      public static ArrayList getCustShipToListAll() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getCustShipToListAll() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
+            try {
+
                 res = st.executeQuery("select cms_shipto from cms_det order by cms_shipto ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("cms_shipto"));
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Cust list");
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-        public static ArrayList getcustshipmstrlist(String cust) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getcustshipmstrlist(String cust) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" + " order by cms_shipto;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("cms_shipto"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get cms_det list");
+
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("SQL cannot get cms_det list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-        public static String getcustBillTo(String shipto) {
-       String mystring = "";
-        try{
+
+    public static String getcustBillTo(String shipto) {
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
+            try {
+
                 res = st.executeQuery("select cms_code from cms_det where cms_shipto = " + "'" + shipto + "'" + " order by cms_shipto;");
-               while (res.next()) {
+                while (res.next()) {
                     mystring = res.getString("cms_code");
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return mystring;
-        
+
     }
-        
-      public static ArrayList getpanelslist() {
-       ArrayList myarray = new ArrayList();
-        try{
+ 
+    public static ArrayList getpanelslist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select panel_id from panel_mstr ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("panel_id"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Panels Master");
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Panels Master");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-      public static ArrayList getScacAll() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getScacAll() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
+            try {
                 res = st.executeQuery("select car_code from car_mstr order by car_code;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("car_code"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
-       public static ArrayList getScacCarrierOnly() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getScacCarrierOnly() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
                 res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("car_code"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-      
-        public static ArrayList getScacGroupOnly() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select car_code from car_mstr where car_type = 'group' order by car_code;");
-               while (res.next()) {
-                    myarray.add(res.getString("car_code"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-         public static ArrayList getScacsOfGroup(String code) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + code + "'" + " order by card_carrier;" );
-               while (res.next()) {
-                    myarray.add(res.getString("card_carrier"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
-          public static ArrayList getfreighttermslist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getScacGroupOnly() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
+                res = st.executeQuery("select car_code from car_mstr where car_type = 'group' order by car_code;");
+                while (res.next()) {
+                    myarray.add(res.getString("car_code"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getScacsOfGroup(String code) {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + code + "'" + " order by card_carrier;");
+                while (res.next()) {
+                    myarray.add(res.getString("card_carrier"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getfreighttermslist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
                 res = st.executeQuery("select frt_code from frt_mstr order by frt_code;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("frt_code"));
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-          
-        public static ArrayList getcusttermslist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getcusttermslist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
                 res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("cut_code"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Terms Master");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Terms Master");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-        public static ArrayList gettaxcodelist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList gettaxcodelist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
                 res = st.executeQuery("select tax_code from tax_mstr order by tax_code  ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("tax_code"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-        
-        public static ArrayList<String[]> getTaxPercentElementsApplicableByCust(String cust) {
-           
-            ArrayList<String[]> myarray = new ArrayList<String[]>();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   String[] elements = {res.getString("taxd_desc"),  res.getString("taxd_percent"), res.getString("taxd_type")};
-                   myarray.add(elements);
-               }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-        
-        public static ArrayList<String[]> getTaxPercentElementsApplicableByTaxCode(String taxcode) {
-            
-             ArrayList<String[]> myarray = new ArrayList<String[]>();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-              
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " where tax_code = " + "'" + taxcode + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                  String[] elements = {res.getString("taxd_desc"),  res.getString("taxd_percent"), res.getString("taxd_type")};
-                   myarray.add(elements);
-               }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-        
-        public static ArrayList<String[]> getTaxPercentElementsApplicableByItem(String item) {
-            
-            ArrayList<String[]> myarray = new ArrayList();
-          
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
 
-                res = st.executeQuery("select taxd_id, taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join item_mstr on it_taxcode = tax_code " +
-                        " where it_item = " + "'" + item + "'" +
-                        " order by taxd_id ;");
-               while (res.next()) {
-                   String[] elements = {res.getString("taxd_desc"),  res.getString("taxd_percent"), res.getString("taxd_type")};
-                   myarray.add(elements);
-               }
-               
-           }
-            catch (SQLException s){
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master info for item");
+                bsmf.MainFrame.show("SQL cannot get Tax Master");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
-        
-        public static double getTaxPercentApplicableByCust(String cust) {
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static ArrayList<String[]> getTaxPercentElementsApplicableByCust(String cust) {
+
+        ArrayList<String[]> myarray = new ArrayList<String[]>();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    String[] elements = {res.getString("taxd_desc"), res.getString("taxd_percent"), res.getString("taxd_type")};
+                    myarray.add(elements);
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        return taxpercent;
-        
+        return myarray;
+
     }
-        
-        public static double getTaxPercentApplicableByTaxCode(String taxcode) {
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static ArrayList<String[]> getTaxPercentElementsApplicableByTaxCode(String taxcode) {
+
+        ArrayList<String[]> myarray = new ArrayList<String[]>();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " where tax_code = " + "'" + taxcode + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " where tax_code = " + "'" + taxcode + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    String[] elements = {res.getString("taxd_desc"), res.getString("taxd_percent"), res.getString("taxd_type")};
+                    myarray.add(elements);
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        return taxpercent;
-        
+        return myarray;
+
     }
-        
-       public static double getShipperTrailerCharges(String shipper) {
-            double amt = 0.00;      
-        try{
+
+    public static ArrayList<String[]> getTaxPercentElementsApplicableByItem(String item) {
+
+        ArrayList<String[]> myarray = new ArrayList();
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
+                res = st.executeQuery("select taxd_id, taxd_parentcode, taxd_desc, taxd_percent, taxd_type from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join item_mstr on it_taxcode = tax_code "
+                        + " where it_item = " + "'" + item + "'"
+                        + " order by taxd_id ;");
+                while (res.next()) {
+                    String[] elements = {res.getString("taxd_desc"), res.getString("taxd_percent"), res.getString("taxd_type")};
+                    myarray.add(elements);
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Tax Master info for item");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static double getTaxPercentApplicableByCust(String cust) {
+        double taxpercent = 0.00;
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return taxpercent;
+
+    }
+
+    public static double getTaxPercentApplicableByTaxCode(String taxcode) {
+        double taxpercent = 0.00;
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " where tax_code = " + "'" + taxcode + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return taxpercent;
+
+    }
+
+    public static double getShipperTrailerCharges(String shipper) {
+        double amt = 0.00;
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
                 res = st.executeQuery("select shs_amt from shs_det where shs_type = 'charge' and shs_nbr = " + "'" + shipper + "'" + ";");
-               while (res.next()) {
-                   amt += res.getDouble("shs_amt");
-               }
-           }
-            catch (SQLException s){
+                while (res.next()) {
+                    amt += res.getDouble("shs_amt");
+                }
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return amt;
-        
+
     }
-        
-       
-         public static double getTaxAmtApplicableByItem(String item, double amt) {
-            double taxamt = 0.00;
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static double getTaxAmtApplicableByItem(String item, double amt) {
+        double taxamt = 0.00;
+        double taxpercent = 0.00;
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join item_mstr on it_taxcode = tax_code and it_item = " + "'" + item + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-               if (taxpercent > 0 ) {
-                   taxamt = (amt * (taxpercent / 100) );
-               } else {
-                   taxamt = 0;
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join item_mstr on it_taxcode = tax_code and it_item = " + "'" + item + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+                if (taxpercent > 0) {
+                    taxamt = (amt * (taxpercent / 100));
+                } else {
+                    taxamt = 0;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return taxamt;
-        
+
     }
-        
-       
-        public static double getTaxAmtApplicableByCust(String cust, double amt) {
-            double taxamt = 0.00;
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static double getTaxAmtApplicableByCust(String cust, double amt) {
+        double taxamt = 0.00;
+        double taxpercent = 0.00;
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-               if (taxpercent > 0 ) {
-                   taxamt = (amt * (taxpercent / 100) );
-               } else {
-                   taxamt = 0;
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+                if (taxpercent > 0) {
+                    taxamt = (amt * (taxpercent / 100));
+                } else {
+                    taxamt = 0;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return taxamt;
-        
+
     }
-        
-        public static double getTaxAmtApplicableByTaxCode(String taxcode, double amt) {
-            double taxamt = 0.00;
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static double getTaxAmtApplicableByTaxCode(String taxcode, double amt) {
+        double taxamt = 0.00;
+        double taxpercent = 0.00;
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " where tax_code  = " + "'" + taxcode + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-               if (taxpercent > 0 ) {
-                   taxamt = (amt * (taxpercent / 100) );
-               } else {
-                   taxamt = 0;
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " where tax_code  = " + "'" + taxcode + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+                if (taxpercent > 0) {
+                    taxamt = (amt * (taxpercent / 100));
+                } else {
+                    taxamt = 0;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        } catch (Exception e){ 
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return taxamt;
-        
+
     }
-        
-        public static double getTaxAmtApplicableByOrder(String order, double amt) {
-            double taxamt = 0.00;
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static double getTaxAmtApplicableByOrder(String order, double amt) {
+        double taxamt = 0.00;
+        double taxpercent = 0.00;
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join so_mstr on so_taxcode = tax_code and so_nbr = " + "'" + order + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-               if (taxpercent > 0 ) {
-                   taxamt = (amt * (taxpercent / 100) );
-               } else {
-                   taxamt = 0;
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join so_mstr on so_taxcode = tax_code and so_nbr = " + "'" + order + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+                if (taxpercent > 0) {
+                    taxamt = (amt * (taxpercent / 100));
+                } else {
+                    taxamt = 0;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return taxamt;
-        
+
     }
-        
-        
-        public static double getTaxAmtApplicableByShipper(String shipper, double amt) {
-            double taxamt = 0.00;
-            double taxpercent = 0.00;
-      
-        try{
+
+    public static double getTaxAmtApplicableByShipper(String shipper, double amt) {
+        double taxamt = 0.00;
+        double taxpercent = 0.00;
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr " +
-                        " inner join tax_mstr on tax_code = taxd_parentcode " +
-                        " inner join ship_mstr on sh_taxcode = tax_code and sh_id = " + "'" + shipper + "'" +
-                        " order by tax_code ;");
-               while (res.next()) {
-                   taxpercent += res.getDouble("taxd_percent");
-               }
-               
-               if (taxpercent > 0 ) {
-                   taxamt = (amt * (taxpercent / 100) );
-               } else {
-                   taxamt = 0;
-               }
-               
-           }
-            catch (SQLException s){
+            try {
+
+                res = st.executeQuery("select taxd_parentcode, taxd_desc, taxd_percent from taxd_mstr "
+                        + " inner join tax_mstr on tax_code = taxd_parentcode "
+                        + " inner join ship_mstr on sh_taxcode = tax_code and sh_id = " + "'" + shipper + "'"
+                        + " order by tax_code ;");
+                while (res.next()) {
+                    taxpercent += res.getDouble("taxd_percent");
+                }
+
+                if (taxpercent > 0) {
+                    taxamt = (amt * (taxpercent / 100));
+                } else {
+                    taxamt = 0;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return taxamt;
-        
+
     }
-        
-         
-        public static String getDefaultTaxAcctByType(String type) {
-            String acct = "";
-            String other = "";
-       
-        try{
+
+    public static String getDefaultTaxAcctByType(String type) {
+        String acct = "";
+        String other = "";
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
                 // to 'other'
                 // if 'other' is undefined....it will return a blank.
                 res = st.executeQuery("select * from ar_ctrl;");
-               while (res.next()) {
-                   other = res.getString("arc_othertax_acct");
-                   
-                   if (type.toUpperCase().equals("FEDERAL") && ! res.getString("arc_fedtax_acct").isEmpty()) {
-                       acct = res.getString("arc_fedtax_acct");
-                   }
-                   if (type.toUpperCase().equals("STATE") && ! res.getString("arc_statetax_acct").isEmpty()) {
-                       acct = res.getString("arc_statetax_acct");
-                   }
-                   if (type.toUpperCase().equals("LOCAL") && ! res.getString("arc_localtax_acct").isEmpty()) {
-                       acct = res.getString("arc_localtax_acct");
-                   }
-                   if (type.toUpperCase().equals("OTHER") && ! res.getString("arc_othertax_acct").isEmpty()) {
-                       acct = res.getString("arc_othertax_acct");
-                   }
-               }
-              
-               
-               // default to 'other' if no account is defined
-               if (acct.isEmpty()) {
-                       acct = other;
-               }
-                              
-           }
-            catch (SQLException s){
+                while (res.next()) {
+                    other = res.getString("arc_othertax_acct");
+
+                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_acct").isEmpty()) {
+                        acct = res.getString("arc_fedtax_acct");
+                    }
+                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_acct").isEmpty()) {
+                        acct = res.getString("arc_statetax_acct");
+                    }
+                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_acct").isEmpty()) {
+                        acct = res.getString("arc_localtax_acct");
+                    }
+                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_acct").isEmpty()) {
+                        acct = res.getString("arc_othertax_acct");
+                    }
+                }
+
+                // default to 'other' if no account is defined
+                if (acct.isEmpty()) {
+                    acct = other;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax default account info");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                bsmf.MainFrame.show("SQL cannot get Tax default account info");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return acct;
-        
+
     }
-        
-        public static String getDefaultTaxCCByType(String type) {
-            String cc = "";
-            String other = "";
-       
-        try{
+
+    public static String getDefaultTaxCCByType(String type) {
+        String cc = "";
+        String other = "";
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
                 // to 'other'
                 // if 'other' is undefined....it will return a blank.
                 res = st.executeQuery("select * from ar_ctrl;");
-               while (res.next()) {
-                   other = res.getString("arc_othertax_cc");
-                   
-                   if (type.toUpperCase().equals("FEDERAL") && ! res.getString("arc_fedtax_cc").isEmpty()) {
-                       cc = res.getString("arc_fedtax_cc");
-                   }
-                   if (type.toUpperCase().equals("STATE") && ! res.getString("arc_statetax_cc").isEmpty()) {
-                       cc = res.getString("arc_statetax_cc");
-                   }
-                   if (type.toUpperCase().equals("LOCAL") && ! res.getString("arc_localtax_cc").isEmpty()) {
-                       cc = res.getString("arc_localtax_cc");
-                   }
-                   if (type.toUpperCase().equals("OTHER") && ! res.getString("arc_othertax_cc").isEmpty()) {
-                       cc = res.getString("arc_othertax_cc");
-                   }
-               }
-              
-               
-               // default to 'other' if no account is defined
-               if (cc.isEmpty()) {
-                       cc = other;
-               }
-                              
-           }
-            catch (SQLException s){
+                while (res.next()) {
+                    other = res.getString("arc_othertax_cc");
+
+                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_cc").isEmpty()) {
+                        cc = res.getString("arc_fedtax_cc");
+                    }
+                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_cc").isEmpty()) {
+                        cc = res.getString("arc_statetax_cc");
+                    }
+                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_cc").isEmpty()) {
+                        cc = res.getString("arc_localtax_cc");
+                    }
+                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_cc").isEmpty()) {
+                        cc = res.getString("arc_othertax_cc");
+                    }
+                }
+
+                // default to 'other' if no account is defined
+                if (cc.isEmpty()) {
+                    cc = other;
+                }
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Tax default CC info");
+                bsmf.MainFrame.show("SQL cannot get Tax default CC info");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return cc;
-        
+
     }
-        
-        public static ArrayList getvendnamelist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getvendnamelist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-              
+            try {
+
                 res = st.executeQuery("select vd_name from vd_mstr order by vd_name;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("vd_name").replace("'", ""));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
-        
-          public static ArrayList getempmstrlist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getempmstrlist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
-               while (res.next()) {
+            try {
+                res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
+                while (res.next()) {
                     myarray.add(res.getString("emp_nbr"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get EmpMstr");
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get EmpMstr");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
-    }  
-        
-      
-           public static ArrayList getCurrlist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    }
+
+    public static ArrayList getCurrlist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
+            try {
+
                 res = st.executeQuery("select cur_id from cur_mstr ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("cur_id"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-          
-        public static ArrayList getdeptidlist() {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getdeptidlist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select dept_id from dept_mstr ;");
-               while (res.next()) {
+                while (res.next()) {
                     myarray.add(res.getString("dept_id"));
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
-        
-         public static ArrayList getWeekNbrByDateTimeClock(String mydate) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getWeekNbrByDateTimeClock(String mydate) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select week(indate) as 'myweek', date_add(indate, interval (8 - dayofweek(indate)) % 7 day) as 'sun' from time_clock where indate >= " +
-                        "'" + mydate + "'" + " group by week(indate) ;");
-               while (res.next()) {
+            try {
+
+                res = st.executeQuery("select week(indate) as 'myweek', date_add(indate, interval (8 - dayofweek(indate)) % 7 day) as 'sun' from time_clock where indate >= "
+                        + "'" + mydate + "'" + " group by week(indate) ;");
+                while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-     
-         
-          public static ArrayList getWeekNbrByDate(String mydate, String days) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getWeekNbrByDate(String mydate, String days) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                 res = st.executeQuery("select c.myweek as 'myweek', date(c.mydate,'-6 days') as 'sun' from (select strftime('%W',date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days')) as 'myweek'," +
-                         " date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days') as 'mydate' from mock_mstr where mock_nbr <= " + "'" + days + "'" +
-                         " group by myweek) as 'c' ;");
-                 } else {
-                res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= " +
-                        "'" + mydate + "'" + " group by week(tr_eff_date) ;");
-                 }
-               while (res.next()) {
+            try {
+
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                    res = st.executeQuery("select c.myweek as 'myweek', date(c.mydate,'-6 days') as 'sun' from (select strftime('%W',date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days')) as 'myweek',"
+                            + " date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days') as 'mydate' from mock_mstr where mock_nbr <= " + "'" + days + "'"
+                            + " group by myweek) as 'c' ;");
+                } else {
+                    res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
+                            + "'" + mydate + "'" + " group by week(tr_eff_date) ;");
+                }
+                while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-         
-           public static ArrayList getWeekNbrByDate(String mydate) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getWeekNbrByDate(String mydate) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
-                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                
-                 } else {
-                res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= " +
-                        "'" + mydate + "'" + " group by week(tr_eff_date) ;");
-                 }
-               while (res.next()) {
+            try {
+
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+
+                } else {
+                    res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
+                            + "'" + mydate + "'" + " group by week(tr_eff_date) ;");
+                }
+                while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-          
-           public static ArrayList getWeekNbrByFromDateToDate(String fromdate, String todate) {
-       ArrayList myarray = new ArrayList();
-        try{
+
+    public static ArrayList getWeekNbrByFromDateToDate(String fromdate, String todate) {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                 res = st.executeQuery("with recursive dates(date) as ( values ( " +
-                       "'" + fromdate + "'" +  " ) union all select date(date, '+7 day') from dates " +
-                       " where date < date( " + "'" + todate + "'" + ") ) select date, strftime('%W',date) + 1 as 'myweek' from dates ; "); 
-                 } else {
-                res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= " +
-                        "'" + fromdate + "'" + " group by week(tr_eff_date) ;");
-                 }
-               while (res.next()) {
+            try {
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                    res = st.executeQuery("with recursive dates(date) as ( values ( "
+                            + "'" + fromdate + "'" + " ) union all select date(date, '+7 day') from dates "
+                            + " where date < date( " + "'" + todate + "'" + ") ) select date, strftime('%W',date) + 1 as 'myweek' from dates ; ");
+                } else {
+                    res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
+                            + "'" + fromdate + "'" + " group by week(tr_eff_date) ;");
+                }
+                while (res.next()) {
                     myarray.add(res.getString("myweek"));
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-          
-           public static ArrayList getdeptanddesclist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select dept_id, dept_desc from dept_mstr ;");
-               while (res.next()) {
-                    myarray.add(res.getString("dept_id") + " = " + res.getString("dept_desc"));
-                                        
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
-        public static ArrayList getpsmstrcomp(String mypart) {
-       ArrayList myarray = new ArrayList();
-       
-        try{
+
+    public static ArrayList getdeptanddesclist() {
+        ArrayList myarray = new ArrayList();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select ps_child from pbm_mstr " +
-                        " where ps_parent = " + "'" + mypart.toString() + "'" +
-                        " AND ps_op <> '0' ;" );
-               while (res.next()) {
+            try {
+
+                res = st.executeQuery("select dept_id, dept_desc from dept_mstr ;");
+                while (res.next()) {
+                    myarray.add(res.getString("dept_id") + " = " + res.getString("dept_desc"));
+
+                }
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getpsmstrcomp(String mypart) {
+        ArrayList myarray = new ArrayList();
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_child from pbm_mstr "
+                        + " where ps_parent = " + "'" + mypart.toString() + "'"
+                        + " AND ps_op <> '0' ;");
+                while (res.next()) {
                     myarray.add(res.getString("ps_child"));
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-           
-        public static ArrayList getzerolevelpsmstr() {
-       ArrayList<String> myarray = new ArrayList<String>();
-       ArrayList<String> mylist = new ArrayList<String>();
-       
-        try{
+
+    public static ArrayList getzerolevelpsmstr() {
+        ArrayList<String> myarray = new ArrayList<String>();
+        ArrayList<String> mylist = new ArrayList<String>();
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                 int i = 0;
-                 res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';" );
-                 while (res.next()) {
+            try {
+                int i = 0;
+                res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';");
+                while (res.next()) {
                     myarray.add(res.getString("it_item"));
                 }
-                         for (String myitem : myarray) {
-                             i = 0;
-                        res = st.executeQuery("select ps_child from pbm_mstr " +
-                                " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;" );
-                       while (res.next()) {
-                           i++;
-                        }
-                           if (i == 0) {
-                           mylist.add(myitem);
-                           }
-                       }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                for (String myitem : myarray) {
+                    i = 0;
+                    res = st.executeQuery("select ps_child from pbm_mstr "
+                            + " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        mylist.add(myitem);
+                    }
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return mylist;
-        
+
     }
-        
-           public static void setzerolevelpsmstr() {
-       ArrayList<String> myarray = new ArrayList<String>();
-       ArrayList<String> mylist = new ArrayList<String>();
-       
-        try{
+
+    public static void setzerolevelpsmstr() {
+        ArrayList<String> myarray = new ArrayList<String>();
+        ArrayList<String> mylist = new ArrayList<String>();
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
+            try {
+
                 int i = 0;
                 // let's first reset all levels to -1
-                st.executeUpdate( " update item_mstr set it_level = '-1'; " );
-                          
-                 res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';" );
-                 while (res.next()) {
+                st.executeUpdate(" update item_mstr set it_level = '-1'; ");
+
+                res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';");
+                while (res.next()) {
                     myarray.add(res.getString("it_item"));
                 }
-                         for (String myitem : myarray) {
-                             i = 0;
-                        res = st.executeQuery("select ps_child from pbm_mstr " +
-                                " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;" );
-                       while (res.next()) {
-                           i++;
-                        }
-                           if (i == 0) {
-                           mylist.add(myitem);
-                           st.executeUpdate(
-                                 " update item_mstr set it_level = " + "'" + '0' + "'" +
-                                 " where it_item = " + "'" + myitem + "'" + ";" );
-                           }
-                       }
-              
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+                for (String myitem : myarray) {
+                    i = 0;
+                    res = st.executeQuery("select ps_child from pbm_mstr "
+                            + " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        mylist.add(myitem);
+                        st.executeUpdate(
+                                " update item_mstr set it_level = " + "'" + '0' + "'"
+                                + " where it_item = " + "'" + myitem + "'" + ";");
+                    }
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        
-        
+
     }
-           
-            public static ArrayList getNextLevelpsmstr(int level) {
-       ArrayList<String> myarray = new ArrayList<String>();
-        try{
+
+    public static ArrayList getNextLevelpsmstr(int level) {
+        ArrayList<String> myarray = new ArrayList<String>();
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 int i = 0;
-                 res = st.executeQuery("select ps_child from pbm_mstr inner join item_mstr on it_item = ps_parent where it_level = " + "'" + level + "'" + ";" );
-                 while (res.next()) {
+                res = st.executeQuery("select ps_child from pbm_mstr inner join item_mstr on it_item = ps_parent where it_level = " + "'" + level + "'" + ";");
+                while (res.next()) {
                     myarray.add(res.getString("ps_child"));
                 }
-                 // convert to hashset to remove duplicates and then convert back to ArrayList
-                 HashSet s = new HashSet();
-                 s.addAll(myarray);
-                 myarray.clear();
-                 myarray.addAll(s);
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+                // convert to hashset to remove duplicates and then convert back to ArrayList
+                HashSet s = new HashSet();
+                s.addAll(myarray);
+                myarray.clear();
+                myarray.addAll(s);
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        
+
         return myarray;
     }
-        
-          public static void updateItemlevel(ArrayList list, int level) {
-       
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try{
-                
-           
-                         for (Object myitem : list) {
-                           st.executeUpdate(
-                                 " update item_mstr set it_level = " + "'" + level + "'" +
-                                 " where it_item = " + "'" + myitem + "'" + ";" );
-                       }
-              
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
-    }
-          
-        public static void createMRPByLevel(int level, String site, String fromitem, String toitem) {
-         
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try{
-                
-          // insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type) select ps_child, sum(mrp_qty) as sum, mrp_date, 'demand' from mrp_mstr
-          // inner join pbm_mstr  on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent 
-          // where it_level = '0' group by ps_child, mrp_date order by ps_child, mrp_date;
 
-           
-                st.executeUpdate(
-                "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) " +
-                        " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr " +
-                " inner join pbm_mstr on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent " +
-                " where it_mrp = '1' and it_level = " + "'" + level + "'" + 
-                " AND ps_child >= " + "'" + fromitem + "'" + 
-                " AND ps_child <= " + "'" + toitem + "'" +
-                " group by ps_child, mrp_date order by ps_child, mrp_date; ");
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
-    }
-         
-        public static void createMRPZeroLevel(String site) {
-       
-        try{
+    public static void updateItemlevel(ArrayList list, int level) {
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-            try{
-                
-                st.executeUpdate(
-               " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) " +
-               " select sod_part, sod_ord_qty, sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det " +
-               " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' and sod_site = " + "'" + site + "'" + ";" );
+            try {
+
+                for (Object myitem : list) {
+                    st.executeUpdate(
+                            " update item_mstr set it_level = " + "'" + level + "'"
+                            + " where it_item = " + "'" + myitem + "'" + ";");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        
-        
+
     }
-        
-        public static void deleteAllMRP(String site, String fromitem, String toitem) {
-       
-        try{
+
+    public static void createMRPByLevel(int level, String site, String fromitem, String toitem) {
+
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-            try{
-                
-                st.executeUpdate(" delete from mrp_mstr where mrp_site = " + "'" + site + "'" +
-                        " AND mrp_part >= " + "'" + fromitem + "'" +
-                        " AND mrp_part <= " + "'" + toitem + "'" + ";" );
+            try {
+
+                // insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type) select ps_child, sum(mrp_qty) as sum, mrp_date, 'demand' from mrp_mstr
+                // inner join pbm_mstr  on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent 
+                // where it_level = '0' group by ps_child, mrp_date order by ps_child, mrp_date;
+                st.executeUpdate(
+                        "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                        + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr "
+                        + " inner join pbm_mstr on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent "
+                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
+                        + " AND ps_child >= " + "'" + fromitem + "'"
+                        + " AND ps_child <= " + "'" + toitem + "'"
+                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        
-        
+
     }
-     
-       
+
+    public static void createMRPZeroLevel(String site) {
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            try {
+
+                st.executeUpdate(
+                        " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
+                        + " select sod_part, sod_ord_qty, sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
+                        + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' and sod_site = " + "'" + site + "'" + ";");
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+
+    public static void deleteAllMRP(String site, String fromitem, String toitem) {
+
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            try {
+
+                st.executeUpdate(" delete from mrp_mstr where mrp_site = " + "'" + site + "'"
+                        + " AND mrp_part >= " + "'" + fromitem + "'"
+                        + " AND mrp_part <= " + "'" + toitem + "'" + ";");
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+
+
         
         
     // BOM Tree by Operation 
@@ -3183,203 +3368,220 @@ public class OVData {
         return mynode;
      }
     // END of BOM Tree by Operation 
-       
-     
-            
-          public static ArrayList getpsmstrlist(String mypart) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
+    
+    public static ArrayList getpsmstrlist(String mypart) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
 
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_child " +
-                        " inner join  item_cost on itc_item = it_item and itc_set = 'standard' " +
-                        " where ps_parent = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   mystring = res.getString("ps_parent") + "," +
-                              res.getString("ps_child") + "," +
-                              res.getString("ps_type") + "," +
-                              res.getString("ps_qty_per") + "," +
-                              res.getString("it_desc") + "," +
-                              res.getString("itc_total");
-                           
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
+                        + " where ps_parent = " + "'" + mypart.toString() + "';");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc") + ","
+                            + res.getString("itc_total");
+
                     myarray.add(mystring);
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-          
-           public static ArrayList getPsMstrCompOpOnly(String mypart) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
+
+    public static ArrayList getPsMstrCompOpOnly(String mypart) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                
+            try {
+
                 res = st.executeQuery("select ps_child, ps_type from pbm_mstr where ps_parent = " + "'" + mypart + "'" + ";");
-               while (res.next()) {
-                  myarray.add(res.getString("ps_child") + "," + res.getString("ps_type")) ;
+                while (res.next()) {
+                    myarray.add(res.getString("ps_child") + "," + res.getString("ps_type"));
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistCompOpOnly");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistCompOpOnly");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-       
-           public static ArrayList getpsmstrlistwithOp(String mypart) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
+
+    public static ArrayList getpsmstrlistwithOp(String mypart) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_op from pbm_mstr " +
-                        " where ps_parent = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   mystring = res.getString("ps_parent") + "," +
-                              res.getString("ps_child") + "," +
-                              res.getString("ps_type") + "," +
-                              res.getString("ps_op");
+            try {
+
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_op from pbm_mstr "
+                        + " where ps_parent = " + "'" + mypart.toString() + "';");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_op");
                     myarray.add(mystring);
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistwithop");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistwithop");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-          
-        public static ArrayList getpsmstrlistbyop(String mypart, String myop) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
+
+    public static ArrayList getpsmstrlistbyop(String mypart, String myop) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-               
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_child " +
-                        " where ps_parent = " + "'" + mypart.toString() + "'" +
-                        " and ps_op = " + "'" + myop.toString() + "'" + ";" );
-               while (res.next()) {
-                   mystring = res.getString("ps_parent") + "," +
-                              res.getString("ps_child") + "," +
-                              res.getString("ps_type") + "," +
-                              res.getString("ps_qty_per") + "," +
-                              res.getString("it_desc");
-                           
+            try {
+
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " where ps_parent = " + "'" + mypart.toString() + "'"
+                        + " and ps_op = " + "'" + myop.toString() + "'" + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc");
+
                     myarray.add(mystring);
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+            } catch (SQLException s) {
+                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
-         public static ArrayList getpsmstrlistbyopWCost(String mypart, String myop) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
+
+    public static ArrayList getpsmstrlistbyopWCost(String mypart, String myop) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                        res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_child " +
-                        " inner join  item_cost on itc_item = it_item and itc_set = 'standard' " +
-                        " where ps_parent = " + "'" + mypart.toString() + "'" +
-                        " and ps_op = " + "'" + myop.toString() + "'" + ";" );
-               while (res.next()) {
-                   mystring = res.getString("ps_parent") + "," +
-                              res.getString("ps_child") + "," +
-                              res.getString("ps_type") + "," +
-                              res.getString("ps_qty_per") + "," +
-                              res.getString("it_desc") + "," +
-                              res.getString("itc_total");
-                           
+            try {
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
+                        + " where ps_parent = " + "'" + mypart.toString() + "'"
+                        + " and ps_op = " + "'" + myop.toString() + "'" + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc") + ","
+                            + res.getString("itc_total");
+
                     myarray.add(mystring);
-                    
+
                 }
-               
-           }
-            catch (SQLException s){
+
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-        
+
             
     public static boolean addItemMaster(ArrayList<String> list) {
                  boolean myreturn = true;
@@ -3740,69 +3942,73 @@ public class OVData {
                   return myreturn;
              } 
     
-     public static boolean addBOMMstrRecord(ArrayList<String> list) {
-                 boolean myreturn = true;
-                  try {
+    public static boolean addBOMMstrRecord(ArrayList<String> list) {
+        boolean myreturn = true;
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
+
                 int i = 0;
                 String[] ld = null;
-                             
-                               
+
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
                     ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select ps_parent from pbm_mstr where " +
-                                           " ps_parent = " + "'" + ld[0] + "'" + 
-                                           " AND ps_child = " + "'" + ld[1] + "'" +         
-                                           ";");
+
+                    res = st.executeQuery("select ps_parent from pbm_mstr where "
+                            + " ps_parent = " + "'" + ld[0] + "'"
+                            + " AND ps_child = " + "'" + ld[1] + "'"
+                            + ";");
                     int j = 0;
                     while (res.next()) {
                         j++;
                     }
-                    
-                    
+
                     if (j == 0) {
-                    st.executeUpdate(" insert into pbm_mstr " 
-                      + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref ) " 
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                    "'" +  ld[3] + "'" + "," + 
-                    "'" +  ld[4] + "'" + "," +
-                    "'" +  ld[5] + "'" + "," +
-                    "'" +  ld[6] + "'" + "," +
-                    "'" +  ld[7] + "'" + "," +
-                    "'" +  ld[8] + "'" + "," +
-                    "'" +  ld[9] + "'"
-                             +  ");"
-                           );     
-                   }
-                }    
+                        st.executeUpdate(" insert into pbm_mstr "
+                                + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'"
+                                + ");"
+                        );
+                    }
+                }
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-    
-    
+        }
+        return myreturn;
+    }
+
+
     public static boolean addCustXref(ArrayList<String> list) {
                  boolean myreturn = true;
                   try {
@@ -3920,7 +4126,7 @@ public class OVData {
              } 
            
     
-    /* stopped here */
+   
                
     public static boolean addInvAdjustments(ArrayList<String> list) {
                    boolean myreturn = true;
@@ -3934,7 +4140,7 @@ public class OVData {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             try {
-                Statement st = con.createStatement();
+                Statement st = con.createStatement(); 
                 ResultSet res = null;
                 int i = 0;
                 double qty = 0;
@@ -4007,14 +4213,15 @@ public class OVData {
                   return myreturn;
              } 
              
-              public static boolean addCustPriceList(ArrayList<String> list) {
+    public static boolean addCustPriceList(ArrayList<String> list) {
                   boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
                 String[] ld = null;
                              
@@ -4057,22 +4264,26 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
               
-               public static boolean addVendPriceList(ArrayList<String> list) {
+    public static boolean addVendPriceList(ArrayList<String> list) {
                    boolean myreturn = true;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
                 String[] ld = null;
                              
@@ -4114,505 +4325,548 @@ public class OVData {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = false;
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
                   return myreturn;
              } 
               
-                public static boolean addVendMstr(ArrayList<String> list) {
-                    boolean myreturn = true;
-                  try {
+    public static boolean addVendMstr(ArrayList<String> list) {
+        boolean myreturn = true;
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select vd_addr from vd_mstr where " +
-                                    " vd_addr = " + "'" + ld[0] + "'"  + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into vd_mstr " 
-                      + "(vd_addr, vd_name, vd_line1, vd_line2, vd_line3, vd_city, vd_state, vd_zip, vd_country, vd_dateadd, vd_datemod, " 
-                      +   " vd_usermod, vd_group, vd_market, vd_buyer, vd_terms, vd_shipvia, vd_price_code, vd_disc_code, vd_tax_code, " 
-                      +   " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc, vd_phone, vd_email ) "
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" + "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + "," +
-                            "'" +  bsmf.MainFrame.userid + "'" + "," +
-                            "'" +  ld[9] + "'" + "," +  
-                            "'" +  ld[10] + "'" + "," +  
-                            "'" +  ld[11] + "'" + "," +  
-                            "'" +  ld[12] + "'" + "," +  
-                            "'" +  ld[13] + "'" + "," +
-                            "'" +  ld[14] + "'" + "," +
-                            "'" +  ld[15] + "'" + "," +
-                            "'" +  ld[16] + "'" + "," +
-                            "'" +  ld[17] + "'" + "," +
-                            "'" +  ld[18] + "'" + "," +
-                            "'" +  ld[19] + "'" + "," +
-                            "'" +  ld[20] + "'" + "," +
-                            "'" +  ld[21] + "'" + "," +
-                            "'" +  ld[22] + "'" + "," +        
-                            "'" +  ld[23] + "'" + "," +
-                            "'" +  ld[24] + "'" + "," +        
-                            "'" +  ld[25] + "'" +        
-                            " );"
-                           );     
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-                
-                  public static boolean addCustMstr(ArrayList<String> list) {
-                      boolean myreturn = true;
-                  try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select cm_code from cm_mstr where " +
-                                    " cm_code = " + "'" + ld[0] + "'"  + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into cm_mstr " 
-                      + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, " 
-                      +   " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, " 
-                      +   " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, " 
-                      + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label ) "
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" + "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +  "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +  "," +
-                            "'" +  bsmf.MainFrame.userid + "'" + "," +
-                            "'" +  ld[9] + "'" + "," +  
-                            "'" +  ld[10] + "'" + "," +  
-                            "'" +  ld[11] + "'" + "," +  
-                            "'" +  ld[12] + "'" + "," +  
-                            "'" +  ld[13] + "'" + "," +
-                            "'" +  ld[14] + "'" + "," +
-                            "'" +  ld[15] + "'" + "," +
-                            "'" +  ld[16] + "'" + "," +
-                            "'" +  ld[17] + "'" + "," +
-                            "'" +  ld[18] + "'" + "," +
-                            "'" +  ld[19] + "'" + "," +
-                            "'" +  ld[20] + "'" + "," +
-                            "'" +  ld[21] + "'" + "," +
-                            "'" +  ld[22] + "'" + "," +  
-                            "'" +  ld[23] + "'" + "," + 
-                            "'" +  ld[24] + "'" + "," + 
-                            "'" +  ld[25] + "'" + "," + 
-                            "'" +  ld[26] + "'" + "," +        
-                            "'" +  ld[27] + "'" + "," +       
-                            "'" +  ld[28] + "'" + "," +        
-                            "'" +  ld[29] + "'" +    
-                                    " );"
-                           );     
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-                  
-                   public static boolean addCustMstrWShipTo(ArrayList<String> list) {
-                      boolean myreturn = true;
-                  try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select cm_code from cm_mstr where " +
-                                    " cm_code = " + "'" + ld[0] + "'"  + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into cm_mstr " 
-                      + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, " 
-                      +   " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, " 
-                      +   " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, " 
-                      + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" + "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +  "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +  "," +
-                            "'" +  bsmf.MainFrame.userid + "'" + "," +
-                            "'" +  ld[9] + "'" + "," +  
-                            "'" +  ld[10] + "'" + "," +  
-                            "'" +  ld[11] + "'" + "," +  
-                            "'" +  ld[12] + "'" + "," +  
-                            "'" +  ld[13] + "'" + "," +
-                            "'" +  ld[14] + "'" + "," +
-                            "'" +  ld[15] + "'" + "," +
-                            "'" +  ld[16] + "'" + "," +
-                            "'" +  ld[17] + "'" + "," +
-                            "'" +  ld[18] + "'" + "," +
-                            "'" +  ld[19] + "'" + "," +
-                            "'" +  ld[20] + "'" + "," +
-                            "'" +  ld[21] + "'" + "," +
-                            "'" +  ld[22] + "'" + "," +  
-                            "'" +  ld[23] + "'" + "," + 
-                            "'" +  ld[24] + "'" + "," + 
-                            "'" +  ld[25] + "'" + "," + 
-                            "'" +  ld[26] + "'" + "," +        
-                            "'" +  ld[27] + "'" + "," +        
-                            "'" +  ld[28] + "'" + "," +        
-                            "'" +  ld[29] + "'" + "," + 
-                            "'" +  ld[30] + "'" + "," +        
-                            "'" +  ld[31] + "'" +         
-                                    " );"
-                           );     
-                    
-                    // now add default shipto with same shipcode as billcode
-                    st.executeUpdate(" insert into cms_det " 
-                      + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) " 
-                     + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" +    
-                                    " );"
-                           );     
-                    
-                    
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-                  
-             public static boolean addCustShipToMstr(ArrayList<String> list) {
-                         boolean myreturn = true;
-                  try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-                    
-                   res =  st.executeQuery("select cms_code from cms_det where " +
-                                    " cms_code = " + "'" + ld[0] + "'" + " AND cms_shipto = " + "'" + ld[1] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into cms_det " 
-                      + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode, cms_contact, cms_phone, cms_email, cms_misc ) " 
-                     + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                            "'" +  ld[3] + "'" + "," +  
-                            "'" +  ld[4] + "'" + "," +  
-                            "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
-                            "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" + "," +
-                            "'" +  ld[9] + "'" + "," +  
-                            "'" +  ld[10] + "'" + "," +
-                            "'" +  ld[11] + "'" + "," +
-                            "'" +  ld[12] + "'" + "," +
-                            "'" +  ld[13] + "'" + "," +
-                            "'" +  ld[14] + "'" +         
-                                    " );"
-                           );     
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-               
-       
-         public static ArrayList getpsmstrparents(String mypart) {
-       ArrayList myarray = new ArrayList();
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                
-               
-                
-                res = st.executeQuery("select ps_parent from pbm_mstr " +
-                          " where ps_child = " + "'" + mypart.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   mystring = res.getString("ps_parent");
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select vd_addr from vd_mstr where "
+                            + " vd_addr = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into vd_mstr "
+                                + "(vd_addr, vd_name, vd_line1, vd_line2, vd_line3, vd_city, vd_state, vd_zip, vd_country, vd_dateadd, vd_datemod, "
+                                + " vd_usermod, vd_group, vd_market, vd_buyer, vd_terms, vd_shipvia, vd_price_code, vd_disc_code, vd_tax_code, "
+                                + " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc, vd_phone, vd_email ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'" + ","
+                                + "'" + ld[18] + "'" + ","
+                                + "'" + ld[19] + "'" + ","
+                                + "'" + ld[20] + "'" + ","
+                                + "'" + ld[21] + "'" + ","
+                                + "'" + ld[22] + "'" + ","
+                                + "'" + ld[23] + "'" + ","
+                                + "'" + ld[24] + "'" + ","
+                                + "'" + ld[25] + "'"
+                                + " );"
+                        );
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
+    public static boolean addCustMstr(ArrayList<String> list) {
+        boolean myreturn = true;
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, "
+                                + " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
+                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'" + ","
+                                + "'" + ld[18] + "'" + ","
+                                + "'" + ld[19] + "'" + ","
+                                + "'" + ld[20] + "'" + ","
+                                + "'" + ld[21] + "'" + ","
+                                + "'" + ld[22] + "'" + ","
+                                + "'" + ld[23] + "'" + ","
+                                + "'" + ld[24] + "'" + ","
+                                + "'" + ld[25] + "'" + ","
+                                + "'" + ld[26] + "'" + ","
+                                + "'" + ld[27] + "'" + ","
+                                + "'" + ld[28] + "'" + ","
+                                + "'" + ld[29] + "'"
+                                + " );"
+                        );
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
+    public static boolean addCustMstrWShipTo(ArrayList<String> list) {
+        boolean myreturn = true;
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, "
+                                + " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
+                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'" + ","
+                                + "'" + ld[18] + "'" + ","
+                                + "'" + ld[19] + "'" + ","
+                                + "'" + ld[20] + "'" + ","
+                                + "'" + ld[21] + "'" + ","
+                                + "'" + ld[22] + "'" + ","
+                                + "'" + ld[23] + "'" + ","
+                                + "'" + ld[24] + "'" + ","
+                                + "'" + ld[25] + "'" + ","
+                                + "'" + ld[26] + "'" + ","
+                                + "'" + ld[27] + "'" + ","
+                                + "'" + ld[28] + "'" + ","
+                                + "'" + ld[29] + "'" + ","
+                                + "'" + ld[30] + "'" + ","
+                                + "'" + ld[31] + "'"
+                                + " );"
+                        );
+
+                        // now add default shipto with same shipcode as billcode
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'"
+                                + " );"
+                        );
+
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
+    public static boolean addCustShipToMstr(ArrayList<String> list) {
+        boolean myreturn = true;
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cms_code from cms_det where "
+                            + " cms_code = " + "'" + ld[0] + "'" + " AND cms_shipto = " + "'" + ld[1] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode, cms_contact, cms_phone, cms_email, cms_misc ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'"
+                                + " );"
+                        );
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
+    public static ArrayList getpsmstrparents(String mypart) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent from pbm_mstr "
+                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                while (res.next()) {
+                    mystring = res.getString("ps_parent");
                     myarray.add(mystring);
                 }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot retrieve pbm_mstr");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            con.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-         
-               public static ArrayList getpsmstrparents2(String mypart) {
-                   
-                 
-       ArrayList<String> myarray1 = new ArrayList<String>();
-       ArrayList<String> myarray2 = new ArrayList<String>();
-       ArrayList<String> myarray3 = new ArrayList<String>();
-       ArrayList<String> myarray4 = new ArrayList<String>();
-       ArrayList<String> myarray5 = new ArrayList<String>();
-       
-       ArrayList fg = new ArrayList();
-       String mystring = "";
-        try{
+
+    public static ArrayList getpsmstrparents2(String mypart) {
+
+        ArrayList<String> myarray1 = new ArrayList<String>();
+        ArrayList<String> myarray2 = new ArrayList<String>();
+        ArrayList<String> myarray3 = new ArrayList<String>();
+        ArrayList<String> myarray4 = new ArrayList<String>();
+        ArrayList<String> myarray5 = new ArrayList<String>();
+
+        ArrayList fg = new ArrayList();
+        String mystring = "";
+        try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
-                
-               
-                
-               res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + mypart.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } else {
-                    myarray1.add(res.getString("ps_parent").toString());
-                   }
+                res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                        + " inner join item_mstr on it_item = ps_parent "
+                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                while (res.next()) {
+                    if (res.getString("it_type").compareTo("FG") == 0) {
+                        fg.add(res.getString("ps_parent").toString());
+                    } else {
+                        myarray1.add(res.getString("ps_parent").toString());
+                    }
                 }
-           //    bsmf.MainFrame.show("firstpass=" + String.valueOf(myarray1.size()));
-             // let's loop through first parent level and see if more parents
-                for ( String myvalue : myarray1) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + myvalue.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } else {
-                    myarray2.add(res.getString("ps_parent").toString());
-                   }
-                } 
+                //    bsmf.MainFrame.show("firstpass=" + String.valueOf(myarray1.size()));
+                // let's loop through first parent level and see if more parents
+                for (String myvalue : myarray1) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray2.add(res.getString("ps_parent").toString());
+                        }
+                    }
                 }
-            //    bsmf.MainFrame.show("array1" + String.valueOf(myarray1.size()));
+                //    bsmf.MainFrame.show("array1" + String.valueOf(myarray1.size()));
                 myarray1.clear();
-               // let's loop through second parent level and see if more parents
-                for ( String myvalue : myarray2) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + myvalue.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } else {
-                    myarray3.add(res.getString("ps_parent").toString());
-                   }
-                } 
+                // let's loop through second parent level and see if more parents
+                for (String myvalue : myarray2) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray3.add(res.getString("ps_parent").toString());
+                        }
+                    }
                 }
-             //   bsmf.MainFrame.show("array2" + String.valueOf(myarray2.size()));
-                myarray2.clear(); 
+                //   bsmf.MainFrame.show("array2" + String.valueOf(myarray2.size()));
+                myarray2.clear();
                 // let's loop through third parent level and see if more parents
-                for ( String myvalue : myarray3) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + myvalue.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } else {
-                    myarray4.add(res.getString("ps_parent").toString());
-                   }
-                } 
+                for (String myvalue : myarray3) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray4.add(res.getString("ps_parent").toString());
+                        }
+                    }
                 }
-          //      bsmf.MainFrame.show("array3" + String.valueOf(myarray3.size()));
-                myarray3.clear(); 
+                //      bsmf.MainFrame.show("array3" + String.valueOf(myarray3.size()));
+                myarray3.clear();
                 // let's loop through fourth parent level and see if more parents
-                for ( String myvalue : myarray4) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + myvalue.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } else {
-                    myarray5.add(res.getString("ps_parent").toString());
-                   }
-                } 
+                for (String myvalue : myarray4) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray5.add(res.getString("ps_parent").toString());
+                        }
+                    }
                 }
-      //          bsmf.MainFrame.show("array4" + String.valueOf(myarray4.size()));
-                myarray4.clear(); 
+                //          bsmf.MainFrame.show("array4" + String.valueOf(myarray4.size()));
+                myarray4.clear();
                 // let's loop through fifth parent level and see if more parents
-                for ( String myvalue : myarray5) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr " +
-                        " inner join item_mstr on it_item = ps_parent " +
-                          " where ps_child = " + "'" + myvalue.toString() + "';" );
-               // res = st.executeQuery("select ps_parent from pbm_mstr " +
-              //            " where ps_child = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                   if (res.getString("it_type").compareTo("FG") == 0) {
-                       fg.add(res.getString("ps_parent").toString());
-                   } 
-                } 
+                for (String myvalue : myarray5) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        }
+                    }
                 }
-                myarray5.clear(); 
-                
-                
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+                myarray5.clear();
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot retrieve pbmmstr");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            con.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return fg;
-        
+
     }
-     
+
+        
+               /* stop here */
+               
        public static void wip_to_fg(String part, String site, Double cost, String date, String ref, String type, String desc) {
             try{
                    
