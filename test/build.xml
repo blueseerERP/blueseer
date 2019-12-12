@@ -58,8 +58,8 @@
 	 <copy todir="${test.dir}" overwrite="true">
          <fileset dir="${sf.dir}"/>
          </copy>
-	<copy file="refresh.bat" todir="${test.dir}" overwrite="true"/>
-	<exec dir="${test.dir}" executable="cmd">
+	 <!--	<copy file="refresh.bat" todir="${test.dir}" overwrite="true"/> -->
+	<exec executable="cmd">
 		<arg line="/c refresh.bat"/>
 	</exec>
 </target>
