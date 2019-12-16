@@ -421,7 +421,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
 
     }
     
-    public void initvars(String myid) {
+    public void initvars(String[] arg) {
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         tbrequestor.setText("");
@@ -470,9 +470,9 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         
         
         
-        if (! myid.isEmpty()) {
+       if (arg != null && arg.length > 0) {
            enableall_onGet();
-        getreqmstrinfo(myid.toString());
+        getreqmstrinfo(arg[0].toString());
         btPurchReqAdd.setEnabled(false);
         jScrollPane2.setVisible(true);
         } else {
