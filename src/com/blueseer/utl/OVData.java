@@ -16915,6 +16915,11 @@ public class OVData {
                 double amt = 0.00;
                 double newamt = 0.00;
                 
+                if (dbtype.equals("sqlite")) {
+                 st.executeUpdate("begin transaction;");
+                } else {
+                 st.executeUpdate("start transaction;");  
+                }
                
                 res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, glt_amt, glt_base_amt, glc_per, glc_year from gl_tran inner join gl_cal on glc_start <= glt_effdate and glc_end >= glt_effdate ;");
                while (res.next()) {
@@ -16974,6 +16979,8 @@ public class OVData {
                
                }
                
+                 st.executeUpdate("commit;");
+               
                OVData.glCopyTranToHist(gltran);
                
             } catch (SQLException s) {
@@ -16996,6 +17003,12 @@ public class OVData {
                 ResultSet res = null;
                 boolean proceed = true;
                
+                 if (dbtype.equals("sqlite")) {
+                 st.executeUpdate("begin transaction;");
+                } else {
+                 st.executeUpdate("start transaction;");  
+                }
+               
                for (int tran : trans) {
                        st.executeUpdate("insert into gl_hist "
                         + "(glh_ref, glh_effdate, glh_entdate, glh_acct, "
@@ -17010,6 +17023,10 @@ public class OVData {
                         + " where glt_id = " + "'" + tran + "'" 
                         + ";");
                }
+              
+                 st.executeUpdate("commit;");
+               
+               
             } catch (SQLException s) {
                MainFrame.bslog(s);
             }
