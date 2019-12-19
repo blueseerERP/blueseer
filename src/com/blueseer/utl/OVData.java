@@ -12376,8 +12376,6 @@ public class OVData {
                                 + ";");
                         }
                         
-                        
-                          
                 
                     }
            }
@@ -14195,8 +14193,8 @@ public class OVData {
                     String thisref = "";
                 
                 
-                    String apacct = "";
-                    String apcc = "";
+                    String unvouchacct = "";
+                    String unvouchcc = "";
                     
                     String part = "";
                     int qty = 0;
@@ -14211,10 +14209,10 @@ public class OVData {
                     double variancetot = 0;
                     double price = 0;
                    
-                       res = st.executeQuery("select rv_ap_acct, rv_ap_cc from recv_mstr where rv_id = " + "'" + receiver + "'" +";");
+                       res = st.executeQuery("select poc_rcpt_acct, poc_rcpt_cc from po_ctrl;");
                     while (res.next()) {
-                        apacct = res.getString("rv_ap_acct");
-                        apcc = res.getString("rv_ap_cc");
+                        unvouchacct = res.getString("poc_rcpt_acct");
+                        unvouchcc = res.getString("poc_rcpt_cc"); // not used at this time
                     }
                     
                       res = st.executeQuery("select rvd_part, rvd_qty, rvd_loc, rvd_site, rvd_id, rvd_netprice, rvd_po, po_curr from recv_det inner join po_mstr on rvd_po = po_nbr where rvd_id = " + "'" + receiver + "'" +";");
@@ -14245,11 +14243,10 @@ public class OVData {
                           variance = thiscost - (OVData.getExchangeBaseValue(basecurr, curr, price));
                       }
                     variancetot = variance * qty;                    
-                    
-                    
-                        
-                        // material COGS
-                    acct_cr.add(nres.getString("pl_po_rcpt"));
+                  
+                     
+                        // material cost
+                    acct_cr.add(unvouchacct);
                     acct_dr.add(nres.getString("pl_inventory"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
@@ -14266,7 +14263,7 @@ public class OVData {
           
                     // ppv 
                     acct_cr.add(nres.getString("pl_po_pricevar"));
-                    acct_dr.add(nres.getString("pl_po_rcpt"));
+                    acct_dr.add(unvouchacct);
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
                     cost.add(variancetot);
@@ -14278,8 +14275,8 @@ public class OVData {
                     type.add(thistype);
                     desc.add(thisdesc);   
           
-                    // overhead COGS
-                    acct_cr.add(nres.getString("pl_po_rcpt"));
+                    // overhead cost
+                    acct_cr.add(unvouchacct);
                     acct_dr.add(nres.getString("pl_po_ovh"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));

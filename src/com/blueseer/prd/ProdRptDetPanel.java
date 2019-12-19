@@ -59,6 +59,8 @@ import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.OVData;
+import java.util.ArrayList;
 
 /**
  *
@@ -119,6 +121,9 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
          java.util.Date now = new java.util.Date();
          dcFrom.setDate(now);
          dcTo.setDate(now);
+        
+        ddtype.setSelectedIndex(0);
+         
          
     }
     /**
@@ -145,7 +150,7 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
         toCell = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablescrap = new javax.swing.JTable();
+        tableprod = new javax.swing.JTable();
         btexport = new javax.swing.JButton();
         labelcount = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -153,6 +158,8 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         labeldollar = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        ddtype = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -179,8 +186,8 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
 
         jLabel6.setText("To Cell");
 
-        tablescrap.setAutoCreateRowSorter(true);
-        tablescrap.setModel(new javax.swing.table.DefaultTableModel(
+        tableprod.setAutoCreateRowSorter(true);
+        tableprod.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -191,12 +198,12 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tablescrap.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableprod.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablescrapMouseClicked(evt);
+                tableprodMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tablescrap);
+        jScrollPane1.setViewportView(tableprod);
 
         btexport.setText("Export");
         btexport.addActionListener(new java.awt.event.ActionListener() {
@@ -217,6 +224,10 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
         labeldollar.setText("0");
 
         jLabel9.setText("$");
+
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ALL", "ISS-WIP", "RCT-FG" }));
+
+        jLabel10.setText("TranType");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -250,18 +261,9 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(toCell, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btRun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btexport)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 432, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
@@ -270,7 +272,20 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labeldollar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(labeldollar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btexport)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(36, 36, 36))
         );
         jPanel1Layout.setVerticalGroup(
@@ -292,20 +307,19 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel4)
                                 .addComponent(toPart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(fromCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(toCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fromCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btRun)
-                                .addComponent(btexport))
-                            .addGap(54, 54, 54)))
+                                .addComponent(btexport)
+                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(toCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel7)
@@ -318,7 +332,7 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(labeldollar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -390,16 +404,16 @@ try {
                    
                 ProdRptDetPanel.MyTableModel mymodel = new ProdRptDetPanel.MyTableModel(new Object[][]{},
                         new String[]{"Part", "P/M", "Qty", "Cost", "Operation", "EffDate",  "Cell",  "Export?", "Userid"});
-                tablescrap.setModel(mymodel);
-                tablescrap.getColumnModel().getColumn(0).setCellRenderer(new ProdRptDetPanel.SomeRenderer());  
+                tableprod.setModel(mymodel);
+                tableprod.getColumnModel().getColumn(0).setCellRenderer(new ProdRptDetPanel.SomeRenderer());  
                 
                 // TableColumnModel tcm = tablescrap.getColumnModel();
                // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
                 
                  
                  
-                 
-                 res = st.executeQuery("SELECT tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                  if (ddtype.getSelectedItem().toString().equals("ALL")) {    
+                   res = st.executeQuery("SELECT tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
                          " tr_timestamp, tr_export, tr_userid, tr_pack, tr_pack_date " +
                         " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
@@ -413,6 +427,22 @@ try {
                         " AND tr_actcell <= " + "'" + tocell + "'" + 
                         " AND ( tr_type = 'ISS-WIP' or tr_type = 'RCT-FG') " + 
                         " order by tr_id desc ;");    
+                  } else {
+                      res = st.executeQuery("SELECT tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                        " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
+                         " tr_timestamp, tr_export, tr_userid, tr_pack, tr_pack_date " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
+                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
+                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' and itc_site = it_site " +
+                        " where  tr_eff_date   >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
+                        " AND  tr_eff_date   <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
+                        " AND tr_part >= " + "'" + frompart + "'" + 
+                        " AND tr_part <= " + "'" + topart + "'" + 
+                         " AND tr_actcell >= " + "'" + fromcell + "'" + 
+                        " AND tr_actcell <= " + "'" + tocell + "'" + 
+                        " AND tr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + 
+                        " order by tr_id desc ;");    
+                  }
                 
                 while (res.next()) {
                     i++;
@@ -557,14 +587,14 @@ try {
         }
     }//GEN-LAST:event_btexportActionPerformed
 
-    private void tablescrapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablescrapMouseClicked
-        int row = tablescrap.rowAtPoint(evt.getPoint());
-        int col = tablescrap.columnAtPoint(evt.getPoint());
+    private void tableprodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableprodMouseClicked
+        int row = tableprod.rowAtPoint(evt.getPoint());
+        int col = tableprod.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-              if (! checkperms("MenuItemMastMaint")) { return; }
-                bsmf.MainFrame.reinitpanels("MenuItemMastMaint", true, new String[]{tablescrap.getValueAt(row, col).toString()});
+              if (! checkperms("ItemMaint")) { return; }
+                bsmf.MainFrame.reinitpanels("ItemMaint", true, new String[]{tableprod.getValueAt(row, col).toString()});
         }
-    }//GEN-LAST:event_tablescrapMouseClicked
+    }//GEN-LAST:event_tableprodMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -572,9 +602,11 @@ try {
     private javax.swing.JButton btexport;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JTextField fromCell;
     private javax.swing.JTextField fromPart;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -588,7 +620,7 @@ try {
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labeldollar;
     private javax.swing.JLabel labelqty;
-    private javax.swing.JTable tablescrap;
+    private javax.swing.JTable tableprod;
     private javax.swing.JTextField toCell;
     private javax.swing.JTextField toPart;
     // End of variables declaration//GEN-END:variables

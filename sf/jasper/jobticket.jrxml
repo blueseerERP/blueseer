@@ -56,7 +56,8 @@ FROM
 inner join item_mstr on it_item = plan_part
 left outer join wf_mstr on wf_id = it_wf 
 left outer join so_mstr on so_nbr = plan_order
-left outer join sod_det on sod_nbr = so_nbr
+left outer join sod_det on sod_nbr = so_nbr and
+                                            sod_part = it_item
 where plan_nbr = $P{myid}
 order by wf_op;]]>
 	</queryString>
@@ -69,7 +70,7 @@ order by wf_op;]]>
 	<field name="plan_qty_req" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="plan_qty_sched" class="java.lang.Integer">
+	<field name="plan_qty_sched" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="plan_date_due" class="java.lang.String">
@@ -120,7 +121,9 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="19" y="2" width="160" height="20" uuid="fc8ba0bd-5b6b-4e28-a5ff-dc21bdcad188"/>
+				<reportElement x="19" y="2" width="160" height="15" uuid="fc8ba0bd-5b6b-4e28-a5ff-dc21bdcad188">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$P{REPORT_TITLE}.toString()]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -163,7 +166,7 @@ order by wf_op;]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Job#:]]></text>
+				<text><![CDATA[Job/Lot#:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="91" y="11" width="100" height="20" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
@@ -181,7 +184,7 @@ order by wf_op;]]>
 				<text><![CDATA[Part No:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="300" y="5" width="100" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<reportElement x="300" y="5" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -387,6 +390,9 @@ order by wf_op;]]>
 				</subreportParameter>
 				<subreportParameter name="part">
 					<subreportParameterExpression><![CDATA[$F{plan_part}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="qty">
+					<subreportParameterExpression><![CDATA[$F{plan_qty_sched}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>

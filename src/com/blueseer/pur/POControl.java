@@ -163,13 +163,17 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
                     }
                      if (i == 0) {
 
-                   st.executeUpdate("insert into po_ctrl (poc_venditem ) values (" + "'" + venditemonly + "'" + 
+                   st.executeUpdate("insert into po_ctrl (poc_venditem, poc_rcpt_acct, poc_rcpt_cc ) values (" + "'" + venditemonly + "'" + "," +
+                                    "'" + tbacct.getText() + "'" + "," +
+                                    "'" + tbcc.getText() + "'" +
                                     ")" + ";");              
                           bsmf.MainFrame.show("Inserting Defaults");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                 } else {
                     st.executeUpdate("update po_ctrl set " 
-                            + " poc_venditem = " + "'" + venditemonly + "'" +         
+                            + " poc_venditem = " + "'" + venditemonly + "'" + "," 
+                            + " poc_rcpt_acct = " + "'" + tbacct.getText() + "'" + "," 
+                            + " poc_rcpt_cc = " + "'" + tbcc.getText() + "'" +                                    
                             ";");   
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                 }
@@ -208,6 +212,8 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
                     while (res.next()) {
                         i++;
                         cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("poc_venditem")));
+                        tbacct.setText(res.getString("poc_rcpt_acct"));
+                        tbcc.setText(res.getString("poc_rcpt_cc"));
                     }
                
                 // set Action if Record found (i > 0)
@@ -242,6 +248,10 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
         jPanel1 = new javax.swing.JPanel();
         btupdate = new javax.swing.JButton();
         cbvenditem = new javax.swing.JCheckBox();
+        tbacct = new javax.swing.JTextField();
+        tbcc = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -256,25 +266,44 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
 
         cbvenditem.setText("Vend Item Xref Only?");
 
+        jLabel1.setText("Default PO Rct Acct");
+
+        jLabel2.setText("Default PO Rct CC");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addGap(25, 25, 25))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbvenditem)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbvenditem)
+                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addGap(22, 22, 22)
                 .addComponent(cbvenditem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addGap(21, 21, 21))
         );
@@ -293,6 +322,10 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbvenditem;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tbacct;
+    private javax.swing.JTextField tbcc;
     // End of variables declaration//GEN-END:variables
 }

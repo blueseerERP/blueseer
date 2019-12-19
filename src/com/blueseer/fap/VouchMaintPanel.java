@@ -254,7 +254,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
     
     javax.swing.table.DefaultTableModel receivermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine"
+                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
             });
     javax.swing.table.DefaultTableModel vouchermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -334,13 +334,14 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 ResultSet res = null;
 
                 rcvamt = 0.00;
-                res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + myreceiver + "'" + ";");
+                res = st.executeQuery("select * from recv_det inner join recv_mstr on rv_id = rvd_id where rvd_id = " + "'" + myreceiver + "'" + ";");
                 while (res.next()) {
-                    // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot"
+                    // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
                   receivermodel.addRow(new Object[]{res.getString("rvd_part"), res.getString("rvd_po"), 
                       res.getString("rvd_poline"), (res.getInt("rvd_qty") - res.getInt("rvd_voqty")), res.getString("rvd_listprice"),
                    res.getString("rvd_disc"), res.getString("rvd_netprice"), res.getString("rvd_loc"),
-                  res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_id"), res.getString("rvd_rline")});
+                  res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_id"), res.getString("rvd_rline"),
+                  res.getString("rv_ap_acct"), res.getString("rv_ap_cc")});
                   rcvamt += res.getDouble("rvd_netprice") * res.getDouble("rvd_qty");
                
                 d++;
@@ -821,7 +822,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         DecimalFormat df = new DecimalFormat("#0.00");
        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
-       // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
+       // receiverdet  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
         if (ddtype.getSelectedItem().toString().equals(("Receipt"))) {
         int[] rows = receiverdet.getSelectedRows();
@@ -836,8 +837,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                                                   receiverdet.getModel().getValueAt(i, 6),
                                                   receiverdet.getModel().getValueAt(i, 10),
                                                   receiverdet.getModel().getValueAt(i, 11),
-                                                  "",
-                                                  ""
+                                                  receiverdet.getModel().getValueAt(i, 12),
+                                                  receiverdet.getModel().getValueAt(i, 13)
                                                   });
             }
         } else {
@@ -936,8 +937,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                             + "'" + voucherdet.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                             + "'" + tbinvoice.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + tbcc.getText().toString() + "'"
+                            + "'" + voucherdet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + voucherdet.getValueAt(j, 8).toString() + "'" 
                             + ")"
                             + ";");
                       
@@ -1159,7 +1160,9 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                                               receiverdet.getModel().getValueAt(i, 3),
                                               receiverdet.getModel().getValueAt(i, 6),
                                               receiverdet.getModel().getValueAt(i, 10),
-                                              receiverdet.getModel().getValueAt(i, 11)
+                                              receiverdet.getModel().getValueAt(i, 11),
+                                              receiverdet.getModel().getValueAt(i, 12),
+                                              receiverdet.getModel().getValueAt(i, 13)
                                               });
         }
         tbactualamt.setText(df.format(actamt));

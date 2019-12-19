@@ -734,7 +734,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
 
-
+                // here we define apacct as the 'unvouchered receipt' account to be credited (-)...we debit the account once vouchered and credit APTRADE 
                 res = st.executeQuery("select vd_terms, poc_rcpt_acct, poc_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;

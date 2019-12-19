@@ -12,6 +12,7 @@
 	<parameter name="op" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="qty" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref, it_uom from pbm_mstr 
 left outer join item_mstr on it_item = ps_child 
@@ -27,7 +28,7 @@ where ps_parent = $P{part} and ps_op = $P{op};]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="ps_qty_per" class="java.lang.String">
+	<field name="ps_qty_per" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="ps_qty_per"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -74,8 +75,15 @@ where ps_parent = $P{part} and ps_op = $P{op};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{it_uom}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.000">
 				<reportElement x="313" y="0" width="83" height="12" uuid="33c9150a-5d40-4723-b5e4-6ab617c9ec07"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{ps_qty_per}.doubleValue() * $P{qty}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="0" width="51" height="12" uuid="b9522713-cdc5-4fc4-acb7-18f8d3a62f10"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
