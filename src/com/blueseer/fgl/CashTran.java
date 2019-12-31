@@ -1534,7 +1534,10 @@ public class CashTran extends javax.swing.JPanel {
             ddrexpentity.setSelectedIndex(0);
             
         ddrexpsite.removeAllItems();
-        ddrexpsite.addItem(OVData.getDefaultSite());
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddrexpsite.addItem(code);
+        }
         
             
          ArrayList accts = new ArrayList();
