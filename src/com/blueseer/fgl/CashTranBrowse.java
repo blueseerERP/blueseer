@@ -189,10 +189,12 @@ public class CashTranBrowse extends javax.swing.JPanel {
                   
                 res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
                         " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
                         " inner join ac_mstr on ac_id = posd_acct  " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type = 'expense' " +
+                        " AND ap_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
                         " group by posd_acct order by posd_acct desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -259,9 +261,11 @@ public class CashTranBrowse extends javax.swing.JPanel {
                  
                   
                 res = st.executeQuery("select pos_type, sum(pos_totamt) as 'sum' from pos_mstr  " +
+                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type <> 'expense' " +
+                         " AND ap_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +               
                         " group by pos_type order by pos_type desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -397,7 +401,12 @@ public class CashTranBrowse extends javax.swing.JPanel {
         
         
        
-      
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
                     
                     
                     
@@ -438,6 +447,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
         dcto = new com.toedter.calendar.JDateChooser();
         tbcsv = new javax.swing.JButton();
         cbchart = new javax.swing.JCheckBox();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         saleslessexp = new javax.swing.JLabel();
@@ -551,19 +562,18 @@ public class CashTranBrowse extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setText("Site:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                .addGap(459, 459, 459))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
@@ -576,8 +586,14 @@ public class CashTranBrowse extends javax.swing.JPanel {
                         .addComponent(tbcsv)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbchart))
-                    .addComponent(dcto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 292, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                        .addGap(167, 167, 167)))
+                .addGap(18, 250, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -596,7 +612,11 @@ public class CashTranBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)))
                 .addContainerGap())
         );
 
@@ -764,8 +784,10 @@ try {
                       
                   // now lets get the pos_mstr records    
                   res = st.executeQuery("select pos_nbr, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
+                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
                         " where pos_entrydate >= " + "'" + fromdate + "'" + 
                         " and pos_entrydate <= " + "'" + todate + "'" +
+                        " and ap_site <= " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                         " order by pos_nbr desc;");
                 
                 
@@ -893,10 +915,12 @@ try {
     private javax.swing.JLabel datelabel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;

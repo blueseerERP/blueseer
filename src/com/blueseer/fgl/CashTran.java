@@ -1014,8 +1014,7 @@ public class CashTran extends javax.swing.JPanel {
                 DecimalFormat df = new DecimalFormat("#0.00");   
                 setvendorvariables(ddentityExpense.getSelectedItem().toString());
                     
-                curr = OVData.getDefaultCurrency();
-                String site = OVData.getDefaultSite();   
+               
                 String po = tbexpensePO.getText();
                 if (po.isEmpty()) {
                     po = "cashtran";
@@ -1033,10 +1032,10 @@ public class CashTran extends javax.swing.JPanel {
                          // "History", "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?", "dummyyesno"
                        st.executeUpdate("insert into ap_mstr "
                         + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_curr, ap_acct, ap_cc, "
                         + "ap_terms, ap_status, ap_bank ) "
                         + " values ( " + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
-                              + "'" + site + "'" + ","
+                              + "'" + recurexpensetable.getValueAt(z, 2).toString() + "'" + ","
                         + "'" + key + "'" + ","
                         + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + ","
                         + "'" + "V" + "'" + ","
@@ -1045,6 +1044,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + curr + "'" + ","
                         + "'" + apacct + "'" + ","
                         + "'" + apcc + "'" + ","
                         + "'" + terms + "'" + ","
@@ -1664,13 +1664,14 @@ public class CashTran extends javax.swing.JPanel {
                 ResultSet res = null;
 
 
-                res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
+                res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;
                    apacct = res.getString("vd_ap_acct");
                    apcc = res.getString("vd_ap_cc");
                    terms = res.getString("vd_terms");
                    apbank = res.getString("vd_bank");
+                   curr = res.getString("vd_curr");
                 }
 
             } catch (SQLException s) {
