@@ -1450,7 +1450,13 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btvendcodebrowseActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       newAction("vendor");
+        if (OVData.isAutoVend()) {
+          newAction("vendor");
+        } else {
+           newAction("");
+           tbkey.requestFocus();
+         }
+      
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btEditContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditContactActionPerformed

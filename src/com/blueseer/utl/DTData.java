@@ -1000,7 +1000,7 @@ public class DTData {
         
          public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RoutingID", "Operation", "RoutDesc", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"})
+                      new String[]{"select", "RoutingID", "Operation", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1034,9 +1034,8 @@ public class DTData {
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
                                    res.getString("wf_op"),
-                                   res.getString("wf_desc"),
                                    res.getString("wf_cell"),
-                                   res.getString("wf_op_desc"),
+                                   res.getString("wf_desc"),
                                    res.getString("wf_run_hours"),
                                    res.getString("wf_setup_hours"),
                                    res.getString("wf_assert")
@@ -4949,7 +4948,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
                                    res.getString("wf_op"),
-                                res.getString("wf_op_desc").replace(",", ""),
+                                res.getString("wf_desc").replace(",", ""),
                                 res.getString("wf_site"),
                                 res.getString("wf_assert"),
                                 res.getString("wf_cell"),

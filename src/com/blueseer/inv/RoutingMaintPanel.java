@@ -331,7 +331,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     if (i == 0) {
                          st.executeUpdate("insert into wf_mstr "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + "notused" + "'" + ","
+                            + "'" + tbopdesc.getText() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                             + "'" + ddop.getSelectedItem().toString() + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
@@ -376,6 +376,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
                     st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
+                            + "wf_op_desc = " + "'" + tbopdesc.getText() + "'" + "," 
                             + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
                             + "wf_cell = " + "'" + tbwc.getText() + "'" + ","
                             + "wf_setup_hours = " + "'" + tbsetuphours.getText() + "'" + ","
@@ -475,7 +476,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     tbkey.setText(res.getString("wf_id"));
                     tbwc.setText(res.getString("wf_cell"));
-                    tbopdesc.setText(res.getString("wf_op_desc"));
+                    tbopdesc.setText(res.getString("wf_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     ddop.setSelectedItem(res.getString("wf_op"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
@@ -785,7 +786,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     
                     tbwc.setText(res.getString("wf_cell"));
-                    tbopdesc.setText(res.getString("wf_op_desc"));
+                    tbopdesc.setText(res.getString("wf_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
                     tbsetuphours.setText(res.getString("wf_setup_hours"));
