@@ -109,7 +109,7 @@ public class AboutPanel extends javax.swing.JPanel {
             fsr = new BufferedReader(new FileReader(new File(".patch")));
             String line = "";
             while ((line = fsr.readLine()) != null) {
-               jTextArea2.append("Git Hash: " + line);
+               jTextArea2.append("Patch: " + line);
             }
             fsr.close();
         } catch (FileNotFoundException ex) {
