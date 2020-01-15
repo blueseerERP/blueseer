@@ -98,9 +98,15 @@ public class ProdSchedPanel extends javax.swing.JPanel {
                {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 13 || col == 14 || col == 15  )       
+                        if (col == 13 || col == 14 || col == 15  ) {      
                             return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
+                        } else if (col == 6 || col == 7 || col == 8) {
+                            return Integer.class;
+                        } else if (col == 4) {
+                            return Boolean.class;    
+                        } else {
+                            return String.class;
+                        }  //other columns accept String values  
                       }  
                         };
       
@@ -908,7 +914,7 @@ try {
                  
                  if (cbsched.isSelected()) {
                  res = st.executeQuery("SELECT plan_nbr, plan_type, plan_part, plan_qty_req, plan_qty_comp, "
-                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, plan_is_sched, plan_cell, plan_order, plan_line " +
+                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, ifnull(plan_is_sched,0) plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_due >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
                         " AND plan_date_due <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
@@ -920,7 +926,7 @@ try {
                         " order by plan_part, plan_date_due;");    
                  } else {
                      res = st.executeQuery("SELECT plan_nbr, plan_part, plan_type, plan_qty_req, plan_qty_comp, "
-                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, plan_is_sched, plan_cell, plan_order, plan_line " +
+                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, ifnull(plan_is_sched,0) plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_due >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
                         " AND plan_date_due <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
@@ -947,6 +953,8 @@ try {
                     if (res.getString("plan_status").equals("0")) { status = "open"; }
                     if (res.getString("plan_status").equals("1")) { status = "closed"; }
                     if (res.getString("plan_status").equals("-1")) { status = "voided"; }
+                    
+                                 
                     
                     mymodel.addRow(new Object[]{
                                 res.getString("plan_nbr"),

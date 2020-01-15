@@ -75,6 +75,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
 
     
+                  
         // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
@@ -206,8 +207,10 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     component.setEnabled(b);
                 }
             }
+            
+            overrideComponentState();
     } 
-    
+        
     public void setComponentDefaultValues() {
        isLoad = true;
        
@@ -219,6 +222,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         tbdateadded.setText(df.format(now));
         tbdatemod.setText(df.format(now));
+       
         tbkey.setText("");
         tbkey.setForeground(Color.black);
         tbkey.setEditable(true);
@@ -355,29 +359,31 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      
     public boolean validateInput(String x) {
         boolean b = true;
-         if (OVData.isValidVendor(tbkey.getText()) &&  x.equals("addRecord")) {
+                if (OVData.isValidVendor(tbkey.getText()) &&  x.equals("addRecord")) {
                   b = false;
                   BlueSeerUtils.message(new String[] {"1", "vendor code already in use"});
                   return b;
-              } 
-                
-                if (ddaccount.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must assign an account"});
-                    return b;
-                }
-                if (ddcc.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                   BlueSeerUtils.message(new String[] {"1", "must assign a cost center"});
-                    return b;
-                }       
-        
+                } 
+         
                 if (tbkey.getText().isEmpty()) {
                     b = false;
                     BlueSeerUtils.message(new String[] {"1", "must enter a vendor code"});
                     tbkey.requestFocus();
                     return b;
                 }
+                
+                if (ddaccount.getSelectedItem().toString().isEmpty() || ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "must assign a valid AP account"});
+                    return b;
+                }
+                if (ddcc.getSelectedItem().toString().isEmpty() || ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+                    b = false;
+                   BlueSeerUtils.message(new String[] {"1", "must assign a valid cost center"});
+                    return b;
+                }       
+        
+               
                 
                
         return b;
@@ -639,7 +645,12 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     
     // custom functions
-     public void addContact(String vend) {
+    public void overrideComponentState() {
+         tbdateadded.setEditable(false);
+         tbdatemod.setEditable(false);
+    }
+    
+    public void addContact(String vend) {
         try {
 
            Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1059,9 +1070,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tbdatemod.setEnabled(false);
-
-        jLabel10.setText("DateAdded");
+        jLabel10.setText("DateAdd");
 
         jLabel13.setText("Group");
 
@@ -1223,18 +1232,18 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel31)
                     .addComponent(tbdisccode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18))
+                .addGap(6, 6, 6)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel20))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel28)
                             .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbsalesrep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel26))

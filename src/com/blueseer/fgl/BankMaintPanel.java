@@ -263,6 +263,12 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     bsmf.MainFrame.show("must choose a site");
                     return b;
                 }
+                
+                if (tbacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose a valid account");
+                    return b;
+                }
                
                 if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
                     b = false;

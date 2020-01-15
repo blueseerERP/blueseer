@@ -1297,7 +1297,9 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select po_nbr from po_mstr where po_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
+                res = st.executeQuery("select po_nbr from po_mstr where po_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + 
+                        " AND po_status <> 'closed' " + 
+                        ";");
                 while (res.next()) {
                     ddpo.addItem(res.getString("po_nbr"));
                 }

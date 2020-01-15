@@ -208,6 +208,8 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     component.setEnabled(b);
                 }
             }
+            
+            overrideComponentState();
     } 
     
     public void setComponentDefaultValues() {
@@ -595,6 +597,12 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     
     // additional functions 
+     public void overrideComponentState() {
+         tbdateadded.setEditable(false);
+         tbdatemod.setEditable(false);
+    }
+    
+    
     public void addShipTo(String cust, String ship) {
         try {
 
