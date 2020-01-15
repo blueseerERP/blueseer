@@ -154,18 +154,19 @@ public class ProdSchedPanel extends javax.swing.JPanel {
           }  
          
        boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             // plan is closed
             if (mytable.getModel().getValueAt(rowIndex, 12).equals("closed")) {   // 1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
-            }
-            // plan is voided
-            if (mytable.getModel().getValueAt(rowIndex, 12).equals("voided")) {   // -1
+            } else if (mytable.getModel().getValueAt(rowIndex, 12).equals("voided")) {   // -1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
+            } else {
+               canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false};  
             }
+            
             return canEdit[columnIndex];
         }
      //     public Class getColumnClass(int col) {  
@@ -1141,8 +1142,9 @@ try {
                         boolean isGood = OVData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
                         mytable.getValueAt(row, 6).toString(),
                         mytable.getValueAt(row, 5).toString(),
+                        mytable.getValueAt(row, 9).toString(),
                         mytable.getValueAt(row,12).toString() 
-                         );
+                         );  
                            if (! isGood) {
                                bsmf.MainFrame.show("Unable to update");
                            } else {

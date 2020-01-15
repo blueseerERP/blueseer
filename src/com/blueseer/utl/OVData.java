@@ -21420,7 +21420,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-      public static boolean updatePlanOrder(String order, String schedqty, String cell, String status) {
+      public static boolean updatePlanOrder(String order, String schedqty, String cell, String scheddate, String status) {
           boolean myreturn = false;  
           try {
 
@@ -21445,6 +21445,7 @@ MainFrame.bslog(e);
                         st.executeUpdate("update plan_mstr set "
                             + "plan_cell =  " + "'" + cell + "'" + ","
                             + "plan_qty_sched =  " + "'" + schedqty + "'" + ","
+                            + "plan_date_sched =  " + "'" + scheddate + "'" + ","        
                             + "plan_status = " + "'" + status + "'"
                             + " where plan_nbr = " + "'" + order + "'" 
                             + ";");
