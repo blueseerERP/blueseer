@@ -44,3 +44,4 @@ load data local infile 'usrmstr.csv' replace into table user_mstr fields termina
 load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ';' ignore 0 Lines; show errors; 
 load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ';' ignore 0 Lines; show errors; 
 load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ';' ignore 0 Lines; show errors; 
+
