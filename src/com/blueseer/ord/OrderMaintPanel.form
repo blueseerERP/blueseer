@@ -155,8 +155,12 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="btinvoice" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btprint" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="451" max="-2" attributes="0"/>
+                                  <Component id="btprintinvoice" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btprintps" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="247" max="-2" attributes="0"/>
+                                  <Component id="btprintorder" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
@@ -223,7 +227,9 @@
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btinvoice" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btprintorder" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btprintinvoice" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btprintps" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               </Group>
@@ -381,7 +387,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="107" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -732,7 +738,7 @@
                                   <Component id="tbphone" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                                   <Component id="tbmisc1" min="-2" pref="120" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="130" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -931,12 +937,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btinvoiceActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btprint">
+        <Component class="javax.swing.JButton" name="btprintorder">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Print"/>
+            <Property name="text" type="java.lang.String" value="Print Order"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintorderActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblstatus">
@@ -947,6 +953,22 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btprintinvoice">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print Invoice"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintinvoiceActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btprintps">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print PackingSlip"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintpsActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

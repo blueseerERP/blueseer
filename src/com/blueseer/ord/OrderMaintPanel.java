@@ -190,6 +190,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
+           } else if (this.type.equals("add") && message[0].equals("0")) {
+             initvars(key);
+           } else if (this.type.equals("update") && message[0].equals("0")) {
+             initvars(key);    
            } else {
              initvars(null);  
            }
@@ -434,6 +438,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btinvoice.setEnabled(false);
+        btprintinvoice.setEnabled(false);
+        btprintorder.setEnabled(false);
+        btprintps.setEnabled(false);
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
@@ -466,13 +474,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                              btnew.setEnabled(true);
                              btordnbrbrowse.setEnabled(true);
                              btclear.setEnabled(true);
-                             btprint.setEnabled(true);
+                             btprintinvoice.setEnabled(true);
+                             btprintps.setEnabled(true);
+                             btprintorder.setEnabled(true);
                     } else {
                              
                              lblstatus.setText("Order has not been shipped.");
                              lblstatus.setForeground(Color.red);
                               setPanelComponentState(this, true);
                               btadd.setEnabled(false);
+                              btprintinvoice.setEnabled(false);
+                              btprintps.setEnabled(false);
                     }
                     
                     if (cbblanket.isSelected())
@@ -1353,7 +1365,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
         btnew.setEnabled(true);
         btupdate.setEnabled(false);
-        btprint.setEnabled(true);
+        btprintorder.setEnabled(true);
         btinvoice.setEnabled(false);
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
@@ -1554,9 +1566,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbshiptocode = new javax.swing.JTextField();
         btaddshipto = new javax.swing.JButton();
         btinvoice = new javax.swing.JButton();
-        btprint = new javax.swing.JButton();
+        btprintorder = new javax.swing.JButton();
         lblstatus = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btprintinvoice = new javax.swing.JButton();
+        btprintps = new javax.swing.JButton();
         jPanelLines = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btadditem = new javax.swing.JButton();
@@ -1818,7 +1832,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btordduebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btorddatebrowse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1983,7 +1997,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbmisc1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 130, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btaddshipto)))
@@ -2060,10 +2074,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btprint.setText("Print");
-        btprint.addActionListener(new java.awt.event.ActionListener() {
+        btprintorder.setText("Print Order");
+        btprintorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btprintActionPerformed(evt);
+                btprintorderActionPerformed(evt);
             }
         });
 
@@ -2071,6 +2085,20 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        btprintinvoice.setText("Print Invoice");
+        btprintinvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintinvoiceActionPerformed(evt);
+            }
+        });
+
+        btprintps.setText("Print PackingSlip");
+        btprintps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintpsActionPerformed(evt);
             }
         });
 
@@ -2119,8 +2147,12 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(btinvoice)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btprint)
-                                .addGap(451, 451, 451)
+                                .addComponent(btprintinvoice)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btprintps)
+                                .addGap(247, 247, 247)
+                                .addComponent(btprintorder)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupdate)
@@ -2170,7 +2202,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btinvoice)
-                    .addComponent(btprint))
+                    .addComponent(btprintorder)
+                    .addComponent(btprintinvoice)
+                    .addComponent(btprintps))
                 .addGap(13, 13, 13))
         );
 
@@ -3083,9 +3117,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          }
     }//GEN-LAST:event_btinvoiceActionPerformed
 
-    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+    private void btprintorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintorderActionPerformed
         OVData.printCustomerOrder(tbkey.getText());
-    }//GEN-LAST:event_btprintActionPerformed
+    }//GEN-LAST:event_btprintorderActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
        executeTask("get", new String[]{tbkey.getText()});
@@ -3102,6 +3136,15 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btprintinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintinvoiceActionPerformed
+        OVData.printInvoiceByOrder(tbkey.getText());
+      
+    }//GEN-LAST:event_btprintinvoiceActionPerformed
+
+    private void btprintpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintpsActionPerformed
+        OVData.printShipperByOrder(tbkey.getText());
+    }//GEN-LAST:event_btprintpsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -3116,7 +3159,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btordduebrowse;
     private javax.swing.JButton btordnbrbrowse;
     private javax.swing.JButton btordpobrowse;
-    private javax.swing.JButton btprint;
+    private javax.swing.JButton btprintinvoice;
+    private javax.swing.JButton btprintorder;
+    private javax.swing.JButton btprintps;
     private javax.swing.JButton btsacadd;
     private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
