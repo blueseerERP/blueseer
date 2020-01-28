@@ -43,6 +43,7 @@ import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.DTData;
 import java.util.Enumeration;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
@@ -54,30 +55,22 @@ import javax.swing.table.TableColumn;
  */
 public class ItemMastSearch extends javax.swing.JPanel {
 
+      
     
-       class MyTableModel extends DefaultTableModel {  
-  
-    public MyTableModel(Object rowData[][], Object columnNames[]) {  
-         super(rowData, columnNames);  
-      }  
-     
-    @Override  
-      public Class getColumnClass(int col) {  
-        if (col == 0)       //second column accepts only Integer values  
-            return Integer.class;  
-        else return String.class;  //other columns accept String values  
-    }  
-  
-    @Override  
-      public boolean isCellEditable(int row, int col) {  
-        if (col == 0)       //first column will be uneditable  
-            return false;  
-        else return true;  
-      }  
-    }    
+     class renderer1 extends DefaultTableCellRenderer {
         
-        
-     class SomeRenderer extends DefaultTableCellRenderer {
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+            c.setBackground(table.getBackground());
+            c.setForeground(table.getForeground());
+        return c;
+    }
+    }
+    
+     class renderer2 extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -90,8 +83,8 @@ public class ItemMastSearch extends javax.swing.JPanel {
         int stock = (int)table.getModel().getValueAt(table.convertRowIndexToModel(row), 7);
         
         
-        if (qoh < stock) {
-              c.setBackground(Color.blue);
+        if (qoh < stock && column == 7) {
+              c.setBackground(Color.RED);
             c.setForeground(Color.WHITE);
         } else {
             c.setBackground(table.getBackground());
@@ -304,32 +297,44 @@ public class ItemMastSearch extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 
                 // IF index = 0
+                // Report1
                 if (ddreport.getSelectedIndex() == 0) {
                 tablereport.setModel(DTData.getItemInfoAll());
-                 //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-            //    tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                  while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (tc.getIdentifier().toString().equals("select") || 
+                             tc.getIdentifier().toString().equals("Print") ) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new ItemMastSearch.renderer1());
+                 }
                 } // if index = 0
                 
                 
                 // IF index = 1
+                // Report2
                 if (ddreport.getSelectedIndex() == 1) {
                 tablereport.setModel(DTData.getQOHvsSSAll());
-                
-                 //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-             //   tablereport.getColumn("select").setCellRenderer(new ButtonRenderer());
                 tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                
-                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
+                Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     tc.setCellRenderer(new SomeRenderer());
+                     if (tc.getIdentifier().toString().equals("select") || 
+                             tc.getIdentifier().toString().equals("Print") ) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new ItemMastSearch.renderer2());
                  }
-                
                 } // if index = 1
 
+                
+                 
+                
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("problem with sql query");
@@ -348,8 +353,8 @@ public class ItemMastSearch extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-              if (! checkperms("MenuItemMastMaint")) { return; }
-           reinitpanels("MenuItemMastMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+              if (! checkperms("ItemMaint")) { return; }
+           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
