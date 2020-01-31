@@ -55,7 +55,6 @@ import javax.swing.table.TableColumn;
  */
 public class ItemMastSearch extends javax.swing.JPanel {
 
-      
     
      class renderer1 extends DefaultTableCellRenderer {
         

@@ -2953,7 +2953,7 @@ public class OVData {
                 // let's first reset all levels to -1
                 st.executeUpdate(" update item_mstr set it_level = '-1'; ");
 
-                res = st.executeQuery("select it_item from item_mstr where it_item <> '' and it_code = 'M';");
+                res = st.executeQuery("select it_item from item_mstr where it_item <> '' and (it_code = 'M' or it_code = 'A') ;");
                 while (res.next()) {
                     myarray.add(res.getString("it_item"));
                 }

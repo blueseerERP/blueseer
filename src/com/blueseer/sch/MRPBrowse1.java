@@ -344,6 +344,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         
         buttonGroup1.add(rbclassm);
         buttonGroup1.add(rbclassp);
+        buttonGroup1.add(rbclassa);
         
          tabletrans.setModel(modeltrans);
          tabledetail.setModel(modelorder);
@@ -354,6 +355,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         
         rbclassm.setSelected(true);
         rbclassp.setSelected(false);
+        rbclassa.setSelected(false);
         
         tbfrompart.setText("");
         tbtopart.setText("");
@@ -582,6 +584,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         rbclassm = new javax.swing.JRadioButton();
         rbclassp = new javax.swing.JRadioButton();
+        rbclassa = new javax.swing.JRadioButton();
         PanelReport = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
@@ -603,9 +606,9 @@ public class MRPBrowse1 extends javax.swing.JPanel {
 
         ddweek.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Week1", "Week2", "Week3", "Week4", "Week5", "Week6", "Week7", "Week8", "Week9", "Week10", "Week11", "Week12", "Week13" }));
 
-        jLabel1.setText("From Part:");
+        jLabel1.setText("From:");
 
-        jLabel2.setText("To Part:");
+        jLabel2.setText("To:");
 
         btdetail.setText("Hide Detail");
         btdetail.addActionListener(new java.awt.event.ActionListener() {
@@ -654,45 +657,21 @@ public class MRPBrowse1 extends javax.swing.JPanel {
 
         rbclassp.setText("Class P");
 
+        rbclassa.setText("Class A");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(42, 42, 42)
-                            .addComponent(jLabel1)
-                            .addGap(112, 112, 112))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tbfrompart, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbtopart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btsearch, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tbtype, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btdetail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tbqtyoh, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbcost, javax.swing.GroupLayout.Alignment.LEADING)))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(rbclassp)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                                 .addComponent(jLabel3))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(rbclassm)
@@ -700,9 +679,33 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(ddweek, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbclassa)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel4)
+                                                    .addComponent(jLabel5))
+                                                .addGap(7, 7, 7)))
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbtopart, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btsearch)
+                                    .addComponent(tbtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btdetail)
+                                    .addComponent(tbqtyoh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -717,13 +720,15 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(rbclassp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(rbclassa)
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbtopart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbtopart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btsearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -741,7 +746,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
         );
 
         tablereport.setModel(new javax.swing.table.DefaultTableModel(
@@ -766,7 +771,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         PanelReport.setLayout(PanelReportLayout);
         PanelReportLayout.setHorizontalGroup(
             PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         PanelReportLayout.setVerticalGroup(
             PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -908,6 +913,8 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 String classcode = "";
                 if (rbclassm.isSelected()) {
                     classcode = "M";
+                } else  if (rbclassa.isSelected()) {
+                    classcode = "A";
                 } else {
                     classcode = "P";
                 }
@@ -1045,8 +1052,8 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         res.getString("G")
                     });
                     
-                    // Now lets get the planning info if class 'M' otherwise purchase info if class 'P'
-                    
+                    // Now lets get the planning info if class 'M' otherwise purchase info if class 'P' or 'A'
+                                   
                     if (res.getString("it_code").toUpperCase().compareTo("M") == 0) {
                    
                         
@@ -1115,7 +1122,85 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                     qoh6 = qoh5 - Double.valueOf(res.getString("F"));
                     qoh7 = qoh6 - Double.valueOf(res.getString("G")); 
                    }
+                 
+                 } else if (res.getString("it_code").toUpperCase().compareTo("A") == 0) {
+                     // if class A
+                 
+                            res2 = st2.executeQuery("select it_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
+               " (case when sum(A) is not null then sum(A) else '0' end) as A, " +
+               " (case when sum(B) is not null then sum(B) else '0' end) as B, " +
+               " (case when sum(C) is not null then sum(C) else '0' end) as C, " +
+               " (case when sum(D) is not null then sum(D) else '0' end) as D, " +
+               " (case when sum(E) is not null then sum(E) else '0' end) as E, " +
+               " (case when sum(F) is not null then sum(F) else '0' end) as F, " +
+               " (case when sum(G) is not null then sum(G) else '0' end) as G " +
+               " from item_mstr left outer join ( " +
+               " select pod_part, " +
+               " (case when pod_due_date = " + "'" + d1 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as A, " +
+               " (case when pod_due_date = " + "'" + d2 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as B, " + 
+               " (case when pod_due_date = " + "'" + d3 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as C, " +
+               " (case when pod_due_date = " + "'" + d4 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as D, " +
+               " (case when pod_due_date = " + "'" + d5 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as E, " +
+               " (case when pod_due_date = " + "'" + d6 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as F, " +
+               " (case when pod_due_date = " + "'" + d7 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as G " +
+               " from pod_mstr " +
+               " where pod_due_date >= " + "'" + startdate + "'" + " AND" +
+               " pod_due_date <= " + "'" + enddate + "'" + " AND" +
+               " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
+               " ) s on s.pod_part = it_item" +
+               " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
+               " where it_item = " + "'" + thispart + "'" + " group by pod_part ; ");
                     
+                   z = 0;         
+                   while (res2.next()) {
+                       z++;
+                    mymodel.addRow(new Object[]{
+                        BlueSeerUtils.clickflag, res2.getString("it_item"),
+                        "PURCH",
+                        res2.getString("A"),
+                        res2.getString("B"),
+                        res2.getString("C"),
+                        res2.getString("D"),
+                        res2.getString("E"),
+                        res2.getString("F"),
+                        res2.getString("G")
+                    });
+                    
+                    qoh1 = qoh + Double.valueOf(res2.getString("A")) - Double.valueOf(res.getString("A"));
+                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(res.getString("B"));
+                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(res.getString("C"));
+                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(res.getString("D"));
+                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(res.getString("E"));
+                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(res.getString("F"));
+                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(res.getString("G"));
+                    
+                   } 
+                   
+                     // if no plan records then create dummy zero 'PURCH' record
+                   if (z == 0) {
+                      mymodel.addRow(new Object[]{
+                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
+                        "PURCH",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0"
+                    });
+                    
+                    qoh1 = qoh - Double.valueOf(res.getString("A"));
+                    qoh2 = qoh1 - Double.valueOf(res.getString("B"));
+                    qoh3 = qoh2 - Double.valueOf(res.getString("C"));
+                    qoh4 = qoh3 - Double.valueOf(res.getString("D"));
+                    qoh5 = qoh4 - Double.valueOf(res.getString("E"));
+                    qoh6 = qoh5 - Double.valueOf(res.getString("F"));
+                    qoh7 = qoh6 - Double.valueOf(res.getString("G")); 
+                   }
+                   
+                         
+                   
                  }  else { 
                    // if class P
                  
@@ -1283,6 +1368,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JRadioButton rbclassa;
     private javax.swing.JRadioButton rbclassm;
     private javax.swing.JRadioButton rbclassp;
     private javax.swing.JTable tabledetail;
