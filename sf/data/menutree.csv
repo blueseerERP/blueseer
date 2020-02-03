@@ -175,6 +175,7 @@ InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Location Transfer,,,,1,1
 InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Inventory Adjustment,,,,1,1
 Inventory,InventoryReportsMenu,13,JMenu,Inventory Reports,,,,1,1
 InventoryReportsMenu,TransBrowse,1,JMenuItem,Transaction Browse,,1,,1,1
+InventoryReportsMenu,RetailReorderRpt,2,JMenuItem,Retail Reorder Report,,1,,1,1
 Inventory,ScheduleMenu,14,JMenu,Schedule Menu,,,,1,1
 ScheduleMenu,ProdSchedMaint,1,JMenuItem,Scheduler,,,,1,1
 ScheduleMenu,ProdSchedRpt1,2,JMenuItem,Scheduled Plan Report,,1,,1,1

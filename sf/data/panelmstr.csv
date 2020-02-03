@@ -143,6 +143,7 @@ com.blueseer.prd.ScrapMaintPanel,,1
 com.blueseer.prd.ScrapReportPanel,,1
 com.blueseer.prd.TesterViewPanel,,1
 com.blueseer.prd.TransBrowsePanel,,1
+com.blueseer.sch.RetailReorderRpt,,1
 com.blueseer.pur.POBrowse,,1
 com.blueseer.pur.POMaintPanel,,1
 com.blueseer.pur.ReqControl,,1

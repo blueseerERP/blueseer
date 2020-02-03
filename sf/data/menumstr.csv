@@ -150,6 +150,7 @@ PrinterBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prntb
 LabelsContGeneric,,com.blueseer.lbl.LabelContPanel,JMenuItem,lblg
 LabelBrowse,,com.blueseer.lbl.LabelBrowsePanel,JMenuItem,lblb
 TransBrowse,,com.blueseer.prd.TransBrowsePanel,JMenuItem,tran
+RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
 CustEDIMaint,,com.blueseer.ctr.CustEDIMaint,JMenuItem,edcm
 CustEDIBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edcmb
 EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
