@@ -73,11 +73,15 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         };
     MyTableModelDetail modelorder = new MyTableModelDetail(new Object[][]{},
                         new String[]{"Part", "Order", "Type","Status", "DueDate", "Qty"});
-     javax.swing.table.DefaultTableModel modeltrans = new javax.swing.table.DefaultTableModel(new Object[][]{},
+     
+    
+    javax.swing.table.DefaultTableModel modeltrans = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"type", "date", "qty"});
     
     String startdate = "";
     String enddate = "";
+    String cumstartdate = "";
+    String cumenddate = "";
     /**
      * Creates new form MRPBrowse1
      */
@@ -521,7 +525,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
      double amt6 = Double.valueOf((String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 8).toString());  
      double amt7 = Double.valueOf((String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 9).toString());  
      String calctype = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 2).toString(); 
-     if (amt1 <= 0 && column == 3 && calctype.compareTo("QOH") == 0) {
+        if (amt1 <= 0 && column == 3 && calctype.compareTo("QOH") == 0) {
              c.setBackground(Color.RED);
             c.setForeground(Color.WHITE);
         } else if (amt2 <= 0 && column == 4 && calctype.compareTo("QOH") == 0 ) {
@@ -545,6 +549,10 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         } else {
              c.setBackground(table.getBackground());
             c.setForeground(table.getForeground());
+        }
+        if (column == 1 && row % 3 == 0) {
+            c.setBackground(Color.BLUE);
+            c.setForeground(Color.WHITE);  
         }
      
         
@@ -857,12 +865,28 @@ public class MRPBrowse1 extends javax.swing.JPanel {
           topart = tbtopart.getText(); 
        }
        
+       String classcode = "";
+                if (rbclassm.isSelected()) {
+                    classcode = "M";
+                } else  if (rbclassa.isSelected()) {
+                    classcode = "A";
+                } else {
+                    classcode = "P";
+                }
+       
        
         tbtype.setText("");
         tbcost.setText("");
         tbqtyoh.setText("");
         
         mymodel.setNumRows(0);
+        
+        
+        
+        
+        
+        ArrayList<String> items = OVData.getItemRangeByClass(ddsite.getSelectedItem().toString(), frompart, topart, classcode);
+        
         
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -909,15 +933,12 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 double qoh6 = 0;
                 double qoh7 = 0;
                 double gain = 0;
+                double cumqoh = 0;
+                double cumplan = 0;
+                double cumreplenish = 0;
+                double cumdemand = 0;
                 
-                String classcode = "";
-                if (rbclassm.isSelected()) {
-                    classcode = "M";
-                } else  if (rbclassa.isSelected()) {
-                    classcode = "A";
-                } else {
-                    classcode = "P";
-                }
+                
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat hf = new SimpleDateFormat("EEE-MM-dd");
@@ -927,6 +948,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 
                 if (ddweek.getSelectedItem().equals("Week1")) {
                 cal.set(Calendar.DAY_OF_WEEK, startday);
+                cumstartdate = dfdate.format(cal.getTime());
                 }
                 
                 if (ddweek.getSelectedItem().equals("Week2")) {
@@ -980,28 +1002,49 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 cal.set(Calendar.DAY_OF_WEEK, startday);
                 }
                 
+                
+                // go back one day to get cumenddate
+                cal.add(Calendar.DATE,-1);
+                cumenddate = dfdate.format(cal.getTime());
+                
+                // now jump back to true startdate...day 1 of week x
+                cal.add(Calendar.DATE,1);
                 startdate = dfdate.format(cal.getTime());
                 String d1 = dfdate.format(cal.getTime());
                 String d1h = hf.format(cal.getTime());
+                
+                // now day 2 of week x  
                 cal.add(Calendar.DATE,1);
                 String d2 = dfdate.format(cal.getTime());
                 String d2h = hf.format(cal.getTime());
+                
+                // now day 3 of week x
                 cal.add(Calendar.DATE,1);
                 String d3 = dfdate.format(cal.getTime());
                 String d3h = hf.format(cal.getTime());
+                
+                // now day 4 of week x
                 cal.add(Calendar.DATE,1);
                 String d4 = dfdate.format(cal.getTime());
                 String d4h = hf.format(cal.getTime());
+                
+                // now day 5 of week x
                 cal.add(Calendar.DATE,1);
                 String d5 = dfdate.format(cal.getTime());
                 String d5h = hf.format(cal.getTime());
+                
+                // now day 6 of week x
                 cal.add(Calendar.DATE,1);
                 String d6 = dfdate.format(cal.getTime());
                 String d6h = hf.format(cal.getTime());
+                
+                // now day 7 of week x
                 cal.add(Calendar.DATE,1);
                 String d7 = dfdate.format(cal.getTime());
                 String d7h = hf.format(cal.getTime());
                 enddate = dfdate.format(cal.getTime());
+                
+                
                 
                 tablereport.getColumnModel().getColumn(3).setHeaderValue(d1h);
                 tablereport.getColumnModel().getColumn(4).setHeaderValue(d2h);
@@ -1013,9 +1056,77 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 
                 tablereport.getTableHeader().repaint();
                 
-              
-                
-               res = st.executeQuery("select mrp_part, it_code, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
+               
+               String qa = "";
+               String qb = "";
+               String qc = "";
+               String qd = "";
+               String qe = "";
+               String qf = "";
+               String qg = "";
+               
+               for (String item : items )  {
+               
+                   
+                qa = "0";
+                qb = "0";
+                qc = "0";
+                qd = "0";
+                qe = "0";
+                qf = "0";
+                qg = "0";
+               qoh = OVData.getItemQOHTotal(item, ddsite.getSelectedItem().toString());
+               cumqoh = qoh;
+               cumplan = 0;
+               cumdemand = 0;
+               cumreplenish = 0;
+               
+               // lets get cumaltive (if now week 1)
+               if (! ddweek.getSelectedItem().equals("Week1")) {
+                    res = st.executeQuery("select mrp_part, ifnull(sum(mrp_qty),0) as cumqty  " +
+                             " from mrp_mstr where mrp_date >= " + "'" + cumstartdate + "'" + " AND" +
+                             " mrp_date <= " + "'" + cumenddate + "'" + " AND" +
+                             " mrp_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
+                             " mrp_part = " + "'" + item + "'" + "  " +
+                             " group by mrp_part ; ");
+                    while (res.next()) {
+                        cumdemand = res.getDouble("cumqty");
+                    }
+                    res.close();
+               } 
+               
+               // lets get cumalative PLAN records (if now week 1)
+               if (! ddweek.getSelectedItem().equals("Week1")) {
+                    res = st.executeQuery("select plan_part, ifnull(sum(plan_qty_sched),0) as cumqty  " +
+                             " from plan_mstr where plan_date_due >= " + "'" + cumstartdate + "'" + " AND" +
+                             " plan_date_due <= " + "'" + cumenddate + "'" + " AND" +
+                             " plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
+                             " plan_status = '0' AND" +
+                             " plan_part = " + "'" + item + "'" +
+                             " group by plan_part ; ");
+                    while (res.next()) {
+                        cumplan = res.getDouble("cumqty");
+                    }
+                    res.close();
+               }
+               
+                // lets get cumalative PURCHASE/REPLENISHMENT records (if now week 1)
+               if (! ddweek.getSelectedItem().equals("Week1")) {
+                    res = st.executeQuery("select pod_part, ifnull(sum(pod_ord_qty - pod_rcvd_qty),0) as cumqty  " +
+                             " from pod_mstr " +
+                             " where pod_due_date >= " + "'" + cumstartdate + "'" + " AND" +
+                             " pod_due_date <= " + "'" + cumenddate + "'" + " AND" +
+                             " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
+                             " pod_part = " + "'" + item + "'" +
+                             " group by pod_part ; ");
+                          while (res.next()) {
+                            cumreplenish = res.getDouble("cumqty");
+                          }
+                          res.close();
+               }
+               
+               
+               res = st.executeQuery("select mrp_part,  " +
                " sum(A) as A, sum(B) as B, sum(C) as C, sum(D) as D, sum(E) as E, sum(F) as F, sum(G) as G from " +
                " ( select mrp_part, (case when mrp_date = " + "'" + d1 + "'" + " then mrp_qty else '0' end) as A, " +
                " (case when mrp_date = " + "'" + d2 + "'" + " then mrp_qty else '0' end) as B, " + 
@@ -1027,35 +1138,36 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                " from mrp_mstr where mrp_date >= " + "'" + startdate + "'" + " AND" +
                " mrp_date <= " + "'" + enddate + "'" + " AND" +
                " mrp_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
-               " mrp_part >= " + "'" + frompart + "'" + " AND" +
-               " mrp_part <= " + "'" + topart + "'" + " ) s " +
-               " inner join item_mstr on it_item = mrp_part and it_code = " + "'" + classcode + "'" +
-               " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
+               " mrp_part = " + "'" + item + "'" + " ) s " +
                        " group by mrp_part ; ");
                
-              
-            
+             
                 while (res.next()) {
                     i++;
-                    qoh =  res.getDouble("in_qoh");
-                    thispart = res.getString("mrp_part");
-             
-                    mymodel.addRow(new Object[]{
-                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
+                    qa = res.getString("A");
+                    qb = res.getString("B");
+                    qc = res.getString("C");
+                    qd = res.getString("D");
+                    qe = res.getString("E");
+                    qf = res.getString("F");
+                    qg = res.getString("G");
+                } 
+                
+                 mymodel.addRow(new Object[]{
+                        BlueSeerUtils.clickflag, item,
                         "DEMAND",
-                        res.getString("A"),
-                        res.getString("B"),
-                        res.getString("C"),
-                        res.getString("D"),
-                        res.getString("E"),
-                        res.getString("F"),
-                        res.getString("G")
+                        qa,
+                        qb,
+                        qc,
+                        qd,
+                        qe,
+                        qf,
+                        qg
                     });
-                    
+                
                     // Now lets get the planning info if class 'M' otherwise purchase info if class 'P' or 'A'
                                    
-                    if (res.getString("it_code").toUpperCase().compareTo("M") == 0) {
-                   
+                    if (classcode.toUpperCase().compareTo("M") == 0) {
                         
                         res2 = st2.executeQuery("select plan_part, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
                " sum(A) as A, sum(B) as B, sum(C) as C, sum(D) as D, sum(E) as E, sum(F) as F, sum(G) as G from " +
@@ -1070,7 +1182,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                " plan_date_due <= " + "'" + enddate + "'" + " AND" +
                " plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
                " plan_status = '0' AND" +
-               " plan_part = " + "'" + thispart + "'" + " ) s " +
+               " plan_part = " + "'" + item + "'" + " ) s " +
                " inner join item_mstr on it_item = plan_part " +
                " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
                        " group by plan_part ; ");
@@ -1090,13 +1202,13 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         res2.getString("G")
                     });
                     
-                    qoh1 = qoh + Double.valueOf(res2.getString("A")) - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(res.getString("G"));
+                    qoh1 = cumqoh - cumdemand + cumplan + Double.valueOf(res2.getString("A")) - Double.valueOf(qa);
+                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(qb);
+                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(qc);
+                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(qd);
+                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(qe);
+                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(qf);
+                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(qg);
                     
                    } 
                    
@@ -1114,19 +1226,21 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         "0"
                     });
                     
-                    qoh1 = qoh - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 - Double.valueOf(res.getString("G")); 
+                    qoh1 = cumqoh - cumdemand + cumplan - Double.valueOf(qa);
+                    qoh2 = qoh1 - Double.valueOf(qb);
+                    qoh3 = qoh2 - Double.valueOf(qc);
+                    qoh4 = qoh3 - Double.valueOf(qd);
+                    qoh5 = qoh4 - Double.valueOf(qe);
+                    qoh6 = qoh5 - Double.valueOf(qf);
+                    qoh7 = qoh6 - Double.valueOf(qg); 
                    }
                  
-                 } else if (res.getString("it_code").toUpperCase().compareTo("A") == 0) {
+                 } 
+                    
+                if (classcode.toUpperCase().compareTo("A") == 0) {
                      // if class A
                  
-                            res2 = st2.executeQuery("select it_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
+               res2 = st2.executeQuery("select it_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
                " (case when sum(A) is not null then sum(A) else '0' end) as A, " +
                " (case when sum(B) is not null then sum(B) else '0' end) as B, " +
                " (case when sum(C) is not null then sum(C) else '0' end) as C, " +
@@ -1149,7 +1263,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                " ) s on s.pod_part = it_item" +
                " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + thispart + "'" + " group by pod_part ; ");
+               " where it_item = " + "'" + item + "'" + " group by pod_part ; ");
                     
                    z = 0;         
                    while (res2.next()) {
@@ -1165,14 +1279,14 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         res2.getString("F"),
                         res2.getString("G")
                     });
-                    
-                    qoh1 = qoh + Double.valueOf(res2.getString("A")) - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(res.getString("G"));
+                  //  MainFrame.show("X" + "/" + item + "/" + cumqoh + "/" + cumreplenish + "/" + qa);
+                    qoh1 = cumqoh - cumdemand + cumreplenish + Double.valueOf(res2.getString("A")) - Double.valueOf(qa);
+                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(qb);
+                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(qc);
+                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(qd);
+                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(qe);
+                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(qf);
+                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(qg);
                     
                    } 
                    
@@ -1190,21 +1304,21 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         "0"
                     });
                     
-                    qoh1 = qoh - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 - Double.valueOf(res.getString("G")); 
+                    qoh1 = cumqoh - cumdemand + cumreplenish - Double.valueOf(qa);
+                    qoh2 = qoh1 - Double.valueOf(qb);
+                    qoh3 = qoh2 - Double.valueOf(qc);
+                    qoh4 = qoh3 - Double.valueOf(qd);
+                    qoh5 = qoh4 - Double.valueOf(qe);
+                    qoh6 = qoh5 - Double.valueOf(qf);
+                    qoh7 = qoh6 - Double.valueOf(qg); 
                    }
                    
-                         
+                 }       
                    
-                 }  else { 
+                 if (classcode.toUpperCase().compareTo("P") == 0) {
                    // if class P
                  
-                            res2 = st2.executeQuery("select it_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
+               res2 = st2.executeQuery("select it_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
                " (case when sum(A) is not null then sum(A) else '0' end) as A, " +
                " (case when sum(B) is not null then sum(B) else '0' end) as B, " +
                " (case when sum(C) is not null then sum(C) else '0' end) as C, " +
@@ -1227,7 +1341,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                " ) s on s.pod_part = it_item" +
                " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + thispart + "'" + " group by pod_part ; ");
+               " where it_item = " + "'" + item + "'" + " group by pod_part ; ");
                     
                    z = 0;         
                    while (res2.next()) {
@@ -1244,13 +1358,13 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         res2.getString("G")
                     });
                     
-                    qoh1 = qoh + Double.valueOf(res2.getString("A")) - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(res.getString("G"));
+                    qoh1 = cumqoh - cumdemand + cumreplenish + Double.valueOf(res2.getString("A")) - Double.valueOf(qa);
+                    qoh2 = qoh1 + Double.valueOf(res2.getString("B")) - Double.valueOf(qb);
+                    qoh3 = qoh2 + Double.valueOf(res2.getString("C")) - Double.valueOf(qc);
+                    qoh4 = qoh3 + Double.valueOf(res2.getString("D")) - Double.valueOf(qd);
+                    qoh5 = qoh4 + Double.valueOf(res2.getString("E")) - Double.valueOf(qe);
+                    qoh6 = qoh5 + Double.valueOf(res2.getString("F")) - Double.valueOf(qf);
+                    qoh7 = qoh6 + Double.valueOf(res2.getString("G")) - Double.valueOf(qg);
                     
                    } 
                    
@@ -1268,13 +1382,13 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         "0"
                     });
                     
-                    qoh1 = qoh - Double.valueOf(res.getString("A"));
-                    qoh2 = qoh1 - Double.valueOf(res.getString("B"));
-                    qoh3 = qoh2 - Double.valueOf(res.getString("C"));
-                    qoh4 = qoh3 - Double.valueOf(res.getString("D"));
-                    qoh5 = qoh4 - Double.valueOf(res.getString("E"));
-                    qoh6 = qoh5 - Double.valueOf(res.getString("F"));
-                    qoh7 = qoh6 - Double.valueOf(res.getString("G")); 
+                    qoh1 = cumqoh - cumdemand + cumreplenish - Double.valueOf(qa);
+                    qoh2 = qoh1 - Double.valueOf(qb);
+                    qoh3 = qoh2 - Double.valueOf(qc);
+                    qoh4 = qoh3 - Double.valueOf(qd);
+                    qoh5 = qoh4 - Double.valueOf(qe);
+                    qoh6 = qoh5 - Double.valueOf(qf);
+                    qoh7 = qoh6 - Double.valueOf(qg); 
                    }
                    
                    
@@ -1282,7 +1396,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                  }  // end if class P
                     
                     mymodel.addRow(new Object[]{
-                       "", res.getString("mrp_part"),
+                       "", item,
                         "QOH",
                         qoh1,
                         qoh2,
@@ -1292,9 +1406,9 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                         qoh6,
                         qoh7
                     });
-                }
+               
                 
-        
+               } // for items
   
             } catch (SQLException s) {
                 MainFrame.bslog(s);

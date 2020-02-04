@@ -3105,8 +3105,10 @@ public class OVData {
 
                 st.executeUpdate(
                         " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
-                        + " select sod_part, sod_ord_qty, sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
-                        + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' and sod_site = " + "'" + site + "'" + ";");
+                        + " select sod_part, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
+                        + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' " 
+                        + " and sod_status <> 'close' "        
+                        + " and sod_site = " + "'" + site + "'" + ";");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -9810,7 +9812,7 @@ public class OVData {
         
     }
          
-          public static ArrayList getItemMasterAlllist() {
+        public static ArrayList getItemMasterAlllist() {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -9839,7 +9841,7 @@ public class OVData {
         
     }
          
-            public static ArrayList getItemRange(String site, String fromitem, String toitem) {
+        public static ArrayList getItemRange(String site, String fromitem, String toitem) {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -9870,7 +9872,41 @@ public class OVData {
         
     }
          
+         
+        public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
+                        " and it_item <= " + "'" + toitem + "'" + 
+                        " and it_code = " + "'" + classcode + "'" +        
+                        " and it_site = " + "'" + site + "'" + " order by it_item ;");
+               while (res.next()) {
+                    myarray.add(res.getString("it_item"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+         
           
+        
           
             public static boolean isVendItemOnly() {
              
@@ -15953,7 +15989,7 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                
-                res = st.executeQuery("select so_nbr from so_mstr where so_status = 'open' or so_status = 'backorder' ;");
+                res = st.executeQuery("select so_nbr from so_mstr where so_status = 'open' or so_status = 'commit' or so_status = 'backorder' ;");
                        while (res.next()) {
                           mylist.add(res.getString(("so_nbr")));
                        }
@@ -18736,7 +18772,7 @@ public class OVData {
 
                        
                        if (complete) {
-                        st.executeUpdate( "update so_mstr set so_status = 'close' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update so_mstr set so_status  = 'close' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");

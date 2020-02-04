@@ -86,7 +86,7 @@ import javax.swing.ImageIcon;
 public class RetailReorderRpt extends javax.swing.JPanel {
  
      DefaultTableModel summarymodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Item", "Desc", "BuyPrice", "SellPrice", "LeadTime", "QOH", "POQty", "Demand", "SafetyStock",  "Status"})
+                        new String[]{"Select", "Item", "Desc", "BuyPrice", "SellPrice", "LeadTime", "QOH", "AQOH", "UQOH", "POQty", "Demand", "SafetyStock",  "Status"})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -94,7 +94,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                             return ImageIcon.class;
                         } else if (col == 3 || col == 4) {
                             return Double.class;
-                        } else if (col == 5 || col == 6 || col == 7 || col == 8 || col == 9) {
+                        } else if (col == 5 || col == 6 || col == 7 || col == 8 || col == 9 || col == 10 || col == 11) {
                             return Integer.class;    
                         } else return String.class;  //other columns accept String values  
                       }  
@@ -164,18 +164,21 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 10);  // 8 = status column
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 12);  // 8 = status column
         
         c.setBackground(table.getBackground());
         c.setForeground(table.getForeground());
         
-        if (column == 10) {
+        if (column == 12) {
              if ("urgent".equals(status)) {
                 c.setBackground(Color.red);
                 c.setForeground(Color.WHITE);
-            } else if ("warning".equals(status) || "insufficient".equals(status)) {
-                c.setBackground(Color.yellow);
+            } else if ("insufficient".equals(status)) {
+                c.setBackground(Color.ORANGE);
                 c.setForeground(Color.BLACK);
+            } else if ("safetystock".equals(status)) {
+                c.setBackground(Color.YELLOW);
+                c.setForeground(Color.BLACK);    
             } else {
                 c.setBackground(table.getBackground());
                 c.setForeground(table.getForeground());
@@ -208,7 +211,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         replenishmodel.setNumRows(0);
         
         int days = 0;
-        if (! tbdays.getText().isEmpty()) {
+        if (! tbdays.getText().isEmpty() && cboverride.isSelected()) {
             days = Integer.valueOf(tbdays.getText());
         } else {
             days = leadtime;
@@ -230,7 +233,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
                         " inner join cm_mstr on cm_code = so_cust " +
                         " where sod_part = " + "'" + item + "'" +
-                        " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
+                    //    " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
                         " AND so_status <> 'close' " +           
@@ -253,7 +256,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         " FROM  pod_mstr inner join po_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " where pod_part = " + "'" + item + "'" +
-                        " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
+                     //   " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND pod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
                         " AND po_status <> 'close' " +           
@@ -591,6 +594,7 @@ try {
                 ResultSet res = null;
 
                  int ordqty = 0;
+                 int allqty = 0;
                  int purqty = 0;
                  int qoh = 0;
                  int leadtime = 0;
@@ -655,6 +659,7 @@ try {
                     
                     // reset 
                     ordqty = 0;
+                    allqty = 0;
                     purqty = 0;
                     qoh = 0;
                     leadtime = 0;
@@ -672,17 +677,19 @@ try {
                     caldate.add(Calendar.DATE, leadtime);   //  per lead time of item
                     
                     // get demand
-                     res = st.executeQuery("SELECT  " +
-                        " sum(sod_ord_qty - sod_shipped_qty) as totqty " +
+                     res = st.executeQuery("SELECT  " +  
+                        " sum(sod_ord_qty - sod_shipped_qty) as totqty, " +
+                        " sum(case when so_char1 = 'c' then (sod_ord_qty - sod_shipped_qty) end) as allqty " +
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
                         " where sod_part = " + "'" + s[0] + "'" +
-                        " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
+                       // " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
                         " AND so_status <> 'close' " +           
                         " group by sod_part ;"); 
                      while (res.next()) {
                          ordqty = res.getInt("totqty");
+                         allqty = res.getInt("allqty");
                      }
                      
                      // get replenishment
@@ -690,7 +697,7 @@ try {
                         " sum(pod_ord_qty - pod_rcvd_qty) as totqty " +
                         " FROM  pod_mstr inner join po_mstr on pod_nbr = po_nbr " +
                         " where pod_part = " + "'" + s[0] + "'" +
-                        " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
+                     //   " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND pod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +    
                         " AND po_status <> 'close' " +         
@@ -709,18 +716,21 @@ try {
                     qoh = res.getInt("totqty");
                 }
                 
+                int aqoh = allqty;
+                int uqoh = qoh - aqoh;
+                
                 // now let's do the math
                 String status = "good";
                // if ( (qoh - ordqty + purqty) < safestock ) {status = "warning";}
                // if ( (qoh - ordqty) < safestock ) {status = "order";}
                 
                // probably a switch statement is needed here 
-                if ((qoh + purqty) < ordqty) {status = "urgent";}
-                if (((qoh + purqty) < ordqty) && ((qoh + purqty) >= safestock) ) {status = "insufficient";}
+                if ((uqoh + purqty) < ordqty) {status = "urgent";}
+                if (((uqoh + purqty) < ordqty) && ((uqoh + purqty) >= safestock) ) {status = "insufficient";}
                 
                 // if QOH is less than safety stock....trump all other concerns
-                if ((qoh + purqty) < safestock) {status = "urgent";}
-                if (((qoh + purqty) >= ordqty) && ((qoh + purqty) < safestock) ) {status = "warning";}
+                if ((uqoh + purqty) < safestock) {status = "urgent";}
+                if (((uqoh + purqty) >= ordqty) && ((uqoh + purqty) < safestock) ) {status = "safetystock";}
                 
                 
                  i++;
@@ -733,6 +743,8 @@ try {
                                 Double.valueOf(s[3]),
                                 Integer.valueOf(s[4]),
                                 qoh,
+                                aqoh,
+                                uqoh,
                                 purqty,
                                 ordqty,
                                 Integer.valueOf(s[5]),
@@ -826,11 +838,27 @@ try {
     }//GEN-LAST:event_tbdaysFocusLost
 
     private void tabledemandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledemandMouseClicked
-        // TODO add your handling code here:
+         int row = tabledemand.rowAtPoint(evt.getPoint());
+        int col = tabledemand.columnAtPoint(evt.getPoint());
+      
+        if ( col == 0) {
+             if (! checkperms("OrderMaint")) { return; }
+              String[] arg = new String[] {tabledemand.getValueAt(row, 1).toString()};
+              reinitpanels("OrderMaint", true, arg);
+        }
+       
     }//GEN-LAST:event_tabledemandMouseClicked
 
     private void tablereplenishMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereplenishMouseClicked
-        // TODO add your handling code here:
+        int row = tablereplenish.rowAtPoint(evt.getPoint());
+        int col = tablereplenish.columnAtPoint(evt.getPoint());
+      
+        if ( col == 0) {
+             if (! checkperms("POMaintMenu")) { return; }
+              String[] arg = new String[] {tablereplenish.getValueAt(row, 1).toString()};
+              reinitpanels("POMaintMenu", true, arg);
+        }
+       
     }//GEN-LAST:event_tablereplenishMouseClicked
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
