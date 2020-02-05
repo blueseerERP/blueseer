@@ -56,7 +56,7 @@
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="btRun" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tbprint" min="-2" max="-2" attributes="0"/>
+                          <Component id="btpdf" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btcsv" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btpdf" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btcsv" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cboverride" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbdays" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -167,12 +167,12 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="tbprint">
+        <Component class="javax.swing.JButton" name="btpdf">
           <Properties>
             <Property name="text" type="java.lang.String" value="PDF"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbprintActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpdfActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddsite">

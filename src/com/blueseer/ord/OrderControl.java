@@ -151,6 +151,14 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 String custitemonly = "";
                 String srvmtype = "";
                 String srvmitemdefault = "";
+                String autoallocate = "";
+                
+                
+                if ( cballocate.isSelected() ) {
+                autoallocate = "1";    
+                } else {
+                    autoallocate = "0";
+                }
                 
                 if ( cbautosource.isSelected() ) {
                 autosource = "1";    
@@ -189,10 +197,11 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                     }
                      if (i == 0) {
 
-                   st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_custitem, " +
+                   st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_autoallocate, orc_custitem, " +
                             " orc_srvm_type, orc_srvm_item_default ) values (" + 
                             "'" + autosource + "'" + "," +
                             "'" + autoinvoice + "'" + "," +
+                            "'" + autoallocate + "'" + "," +        
                             "'" + custitemonly + "'" + "," + 
                             "'" + srvmtype + "'" + "," +
                             "'" + srvmitemdefault + "'" +         
@@ -202,7 +211,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 } else {
                      st.executeUpdate("update order_ctrl set " 
                             + " orc_autosource = " + "'" + autosource + "'" + "," 
-                            + " orc_custitem = " + "'" + custitemonly + "'" + "," 
+                            + " orc_autoinvoice = " + "'" + autoinvoice + "'" + "," 
+                            + " orc_autoallocate = " + "'" + autoallocate + "'" + ","         
                             + " orc_custitem = " + "'" + custitemonly + "'" + "," 
                             + " orc_srvm_type = " + "'" + srvmtype + "'" + ","                 
                             + " orc_srvm_item_default = " + "'" + srvmitemdefault + "'" +         
@@ -248,6 +258,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_custitem")));
                         cbsrvmtype.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_type")));
                         cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_item_default")));
+                        cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoallocate")));
                     }
                
                 // set Action if Record found (i > 0)
@@ -289,6 +300,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         jPanel2 = new javax.swing.JPanel();
         cbsrvmitemdefault = new javax.swing.JCheckBox();
         cbsrvmtype = new javax.swing.JCheckBox();
+        cballocate = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -334,17 +346,20 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addContainerGap())
         );
 
+        cballocate.setText("Auto Allocate?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cballocate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btupdate))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(cbautosource, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -368,8 +383,13 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addComponent(cbcustitem)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(29, 29, 29)
-                .addComponent(btupdate)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(btupdate))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cballocate)))
                 .addGap(27, 27, 27))
         );
 
@@ -386,6 +406,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cballocate;
     private javax.swing.JCheckBox cbautoinvoice;
     private javax.swing.JCheckBox cbautosource;
     private javax.swing.JCheckBox cbcustitem;

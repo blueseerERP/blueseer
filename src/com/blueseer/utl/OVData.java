@@ -10136,6 +10136,35 @@ public class OVData {
         
     }  
          
+      public static boolean isOrderAutoAllocate() {
+             
+       boolean autoallocate = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select orc_autoallocate from order_ctrl;");
+               while (res.next()) {
+                    autoallocate = res.getBoolean("orc_autoallocate");
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return autoallocate;
+        
+    }       
+         
+         
        public static boolean isAutoCust() {
              
        boolean autocust = false;

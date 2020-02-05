@@ -74,6 +74,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 String curr = "";
                 String basecurr = OVData.getDefaultCurrency();
                 boolean custitemonly = true;
+                boolean autoallocate = false;
+                
                 DecimalFormat df = new DecimalFormat("#0.0000");
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
@@ -328,7 +330,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         custnumber.setForeground(Color.black);
         custnumber.setEditable(false);
         
-        
+        autoallocate = OVData.isOrderAutoAllocate();
+        cbisallocated.setSelected(autoallocate);
         
         // lets check order control for custitemonly versus any item from item master to be filled into ddpart
         custitemonly = OVData.isCustItemOnly();

@@ -1111,6 +1111,7 @@ CREATE TABLE IF NOT EXISTS `samlog` (
 CREATE TABLE IF NOT EXISTS `order_ctrl` (
   `orc_autosource` tinyint(1) NOT NULL DEFAULT '0',
   `orc_autoinvoice` tinyint(1) NOT NULL DEFAULT '0',
+  `orc_autoallocate` tinyint(1) NOT NULL DEFAULT '0',
   `orc_custitem` tinyint(1) NOT NULL DEFAULT '0',
   `orc_srvm_type` tinyint(1) NOT NULL DEFAULT '0',
   `orc_srvm_item_default` tinyint(1) NOT NULL DEFAULT '0'

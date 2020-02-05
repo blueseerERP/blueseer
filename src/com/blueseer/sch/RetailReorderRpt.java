@@ -363,7 +363,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         cboverride = new javax.swing.JCheckBox();
         ddfromitem = new javax.swing.JComboBox();
         ddtoitem = new javax.swing.JComboBox();
-        tbprint = new javax.swing.JButton();
+        btpdf = new javax.swing.JButton();
         ddsite = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         btcsv = new javax.swing.JButton();
@@ -400,10 +400,10 @@ public class RetailReorderRpt extends javax.swing.JPanel {
 
         cboverride.setText("Override?");
 
-        tbprint.setText("PDF");
-        tbprint.addActionListener(new java.awt.event.ActionListener() {
+        btpdf.setText("PDF");
+        btpdf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbprintActionPerformed(evt);
+                btpdfActionPerformed(evt);
             }
         });
 
@@ -521,7 +521,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         .addGap(23, 23, 23)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbprint)
+                        .addComponent(btpdf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -548,7 +548,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
-                        .addComponent(tbprint)
+                        .addComponent(btpdf)
                         .addComponent(btcsv)
                         .addComponent(cboverride)
                         .addComponent(tbdays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -640,7 +640,10 @@ try {
                 //calfrom.add(Calendar.DATE, -365);
                  
                  res = st.executeQuery("SELECT it_item, it_desc, it_sell_price, it_pur_price, it_leadtime, it_safestock " +
-                        " FROM  item_mstr where it_code = 'A' " +
+                        " FROM  item_mstr where it_code = 'A' AND " +
+                        " it_item >= " + "'" + ddfromitem.getSelectedItem().toString() + "'" + " AND " +
+                        " it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'"  +  " AND " +
+                        " it_status = 'ACTIVE' " +
                          " order by it_item;"); 
                  
                   while (res.next()) {
@@ -784,8 +787,9 @@ try {
         
     }//GEN-LAST:event_tablesummaryMouseClicked
 
-    private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
-     
+    private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
+     MainFrame.show("Not yet supported");
+        /*
         if (tablesummary != null && summarymodel.getRowCount() > 0) {
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -817,7 +821,8 @@ try {
             MainFrame.bslog(e);
         }
         }
-    }//GEN-LAST:event_tbprintActionPerformed
+*/
+    }//GEN-LAST:event_btpdfActionPerformed
 
     private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
        if (tablesummary != null && summarymodel.getRowCount() > 0)
@@ -873,6 +878,7 @@ try {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcsv;
     private javax.swing.JButton btdetail;
+    private javax.swing.JButton btpdf;
     private javax.swing.JCheckBox cboverride;
     private javax.swing.JComboBox ddfromitem;
     private javax.swing.JComboBox ddsite;
@@ -895,6 +901,5 @@ try {
     private javax.swing.JTable tablereplenish;
     private javax.swing.JTable tablesummary;
     private javax.swing.JTextField tbdays;
-    private javax.swing.JButton tbprint;
     // End of variables declaration//GEN-END:variables
 }
