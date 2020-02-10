@@ -274,6 +274,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.black);
         
+         cbisallocated.setForeground(Color.black);
+         cbisallocated.setText("Allocation?");
         
         ArrayList<String> mylist = new ArrayList<String>();
          jPanelSched.setVisible(false);
@@ -640,42 +642,50 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                            ordertype = "DISCRETE";
                        }
                        
-                        String isallocated = "";
-                        if (cbisallocated.isSelected()) {
-                          isallocated = "c";
-                        }
                        
-                         // insert order
-                         st.executeUpdate("insert into so_mstr "
-                        + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
-                        + " so_create_date, so_userid, so_status, so_char1, "
-                        + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
-                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + ddship.getSelectedItem() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","
-                        + "'" + uniqwh + "'" + ","
-                        + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'" + ","
-                        + "'" + bsmf.MainFrame.userid + "'" + ","
-                        + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + "'" + isallocated + "'" + ","        
-                        + "'" + terms + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + remarks.getText().replace("'", "") + "'" + "," 
-                        + "'" + ordertype + "'" + ","
-                        + "'" + ddtax.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                         
+                       
+                        
+                        
+                         int invqty = 0;
+                         int allqty = 0;
+                         int qohunall = 0;
+                         int allocationvalue = 0;
+                         boolean completeAllocation = true;
                         for (int j = 0; j < orddet.getRowCount(); j++) {
+                            // get total inventory for line item
+                            // get allocated on current 'open' orders
+                             // now get QOH
+                                    res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
+                                    " FROM  in_mstr  " +
+                                    " where in_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
+                                    " group by in_part ;");
+
+                                    while (res.next()) {
+                                    invqty = res.getInt("totqty");
+                                    }
+                                    
+                                    res = st.executeQuery("SELECT  sum(case when sod_char1 = '' then 0 else (sod_char1 - sod_shipped_qty) end) as allqty  " +
+                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
+                                    " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
+                                    " AND so_status <> 'close' " + 
+                                    " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +          
+                                    " group by sod_part ;");
+
+                                    while (res.next()) {
+                                    allqty = res.getInt("allqty");
+                                    }
+                                    
+                                 qohunall = invqty - allqty; 
+                                 
+                                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
+                                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
+                                 } else {
+                                     allocationvalue = qohunall;
+                                     completeAllocation = false;
+                                 }
+                            
                             st.executeUpdate("insert into sod_det "
-                                + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
+                                + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_char1, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
                                 + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
                                 + " values ( " 
                                 + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
@@ -684,6 +694,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 + "'" + orddet.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
                                 + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
                                 + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                                + "'" + allocationvalue + "'" + ","  // sod_char1 is allocated
                                 + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
@@ -715,6 +726,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                               }
                         } 
                         
+                        
+                        
+                        
+                        
+                        
                         // now add applied discounts and summary charges
                      for (int j = 0; j < sactable.getRowCount(); j++) {
                         st.executeUpdate("insert into sos_det "
@@ -744,6 +760,44 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                       
                               }
                           }
+                     
+                      String isallocated = "";
+                        if (cbisallocated.isSelected()) {
+                          isallocated = "c";
+                          if (! completeAllocation) {
+                              isallocated = "p";
+                          }
+                        }
+                        
+                      // insert order header
+                         st.executeUpdate("insert into so_mstr "
+                        + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
+                        + " so_create_date, so_userid, so_status, so_char1, "
+                        + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + ddcust.getSelectedItem() + "'" + ","
+                        + "'" + ddship.getSelectedItem() + "'" + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
+                        + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","
+                        + "'" + uniqwh + "'" + ","
+                        + "'" + ponbr.getText().replace("'", "") + "'" + ","
+                        + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
+                        + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                        + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
+                        + "'" + isallocated + "'" + ","        
+                        + "'" + terms + "'" + ","
+                        + "'" + aracct + "'" + ","
+                        + "'" + arcc + "'" + ","
+                        + "'" + remarks.getText().replace("'", "") + "'" + "," 
+                        + "'" + ordertype + "'" + ","
+                        + "'" + ddtax.getSelectedItem().toString() + "'"
+                        + ")"
+                        + ";");
+                     
+                     
                      
                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                    
@@ -785,34 +839,75 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    String isallocated = "";
-                    if (cbisallocated.isSelected()) {
-                        isallocated = "c";
-                    }
-                    st.executeUpdate("update so_mstr "
-                        + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
-                        + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + " so_char1 = " + "'" + isallocated + "'" + ","        
-                        + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
-                        + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
-                        + " so_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + " so_ord_date = " + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" 
-                        + " where so_nbr = " + "'" + tbkey.getText().toString() + "'"
-                        + ";");
+                    
+                   
                     
                      // if available sod_det line item...then update....else insert
+                     
+                     
+                      int invqty = 0;
+                         int allqty = 0;
+                         int qohunall = 0;
+                         int allocationvalue = 0;
+                         boolean completeAllocation = true;   
+                     
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
                         if (orddet.getValueAt(j, 10).toString().equals("close"))
                             continue;
+                        
+                        
+                        
                         res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
                                 " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
                             while (res.next()) {
                             i++;
                             }
                             if (i > 0) {
+                                
+                                invqty = 0;
+                                allqty = 0;
+                                qohunall = 0;
+                                allocationvalue = 0;
+                                
+                                
+                               // get total inventory for line item
+                            // get allocated on current 'open' orders
+                             // now get QOH
+                        
+                                    res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
+                                    " FROM  in_mstr  " +
+                                    " where in_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
+                                    " group by in_part ;");
+
+                                    while (res.next()) {
+                                    invqty = res.getInt("totqty");
+                                    }
+                                    
+                                    res = st.executeQuery("SELECT  sum(case when sod_char1 = '' then 0 else (sod_char1 - sod_shipped_qty) end) as allqty  " +
+                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
+                                    " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
+                                    " AND so_status <> 'close' " + 
+                                    " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +   
+                                    " AND so_nbr <> " + "'" + tbkey.getText() + "'" +
+                                    " group by sod_part ;");
+
+                                    while (res.next()) {
+                                    allqty = res.getInt("allqty");
+                                    }
+                                    
+                                 qohunall = invqty - allqty; 
+                                 
+                                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
+                                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
+                                 } else {
+                                     allocationvalue = qohunall;
+                                     completeAllocation = false;
+                                 }  
+                                
+                                
+                                
                               st.executeUpdate("update sod_det set "
                             + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
@@ -870,6 +965,29 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + ";");
 
                     }
+                     
+                     
+                     // now update the order
+                     String isallocated = "";
+                        if (cbisallocated.isSelected()) {
+                          isallocated = "c";
+                          if (! completeAllocation) {
+                              isallocated = "p";
+                          }
+                        }
+                      st.executeUpdate("update so_mstr "
+                        + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
+                        + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
+                        + " so_char1 = " + "'" + isallocated + "'" + ","        
+                        + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
+                        + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
+                        + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
+                        + " so_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
+                        + " so_ord_date = " + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" 
+                        + " where so_nbr = " + "'" + tbkey.getText().toString() + "'"
+                        + ";");
+                     
+                     
                     
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
@@ -954,8 +1072,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     if (res.getString("so_char1").equals("c")) {
                         cbisallocated.setSelected(true);
+                        cbisallocated.setForeground(Color.black);
+                        cbisallocated.setText("Allocation?");
+                    } 
+                    else if (res.getString("so_char1").equals("p")) {
+                        cbisallocated.setSelected(true);
+                        cbisallocated.setForeground(Color.red);
+                        cbisallocated.setText("Allocation? (partial)");
                     } else {
                         cbisallocated.setSelected(false);
+                        cbisallocated.setForeground(Color.black);
+                        cbisallocated.setText("Allocation?");
                     }
                     
                     if (res.getString("so_type").compareTo("BLANKET") == 0) {
@@ -1798,7 +1925,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel98.setText("Currency");
 
-        cbisallocated.setText("is Allocated?");
+        cbisallocated.setText("Allocation?");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1858,7 +1985,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(btordduebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btorddatebrowse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(cbissourced))))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

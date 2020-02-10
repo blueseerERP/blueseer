@@ -86,15 +86,13 @@ import javax.swing.ImageIcon;
 public class RetailReorderRpt extends javax.swing.JPanel {
  
      DefaultTableModel summarymodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Item", "Desc", "BuyPrice", "SellPrice", "LeadTime", "QOH", "AQOH", "UQOH", "POQty", "Demand", "SafetyStock",  "Status"})
+                        new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "AQOH", "UQOH", "POQty", "Demand", "FcstQty", "SafetyStock",  "Status", "NextPODate"})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0) {      
                             return ImageIcon.class;
-                        } else if (col == 3 || col == 4) {
-                            return Double.class;
-                        } else if (col == 5 || col == 6 || col == 7 || col == 8 || col == 9 || col == 10 || col == 11) {
+                        } else if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7 || col == 8 || col == 9 || col == 10) {
                             return Integer.class;    
                         } else return String.class;  //other columns accept String values  
                       }  
@@ -164,12 +162,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 12);  // 8 = status column
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 11);  // 8 = status column
         
         c.setBackground(table.getBackground());
         c.setForeground(table.getForeground());
         
-        if (column == 12) {
+        if (column == 11) {
              if ("urgent".equals(status)) {
                 c.setBackground(Color.red);
                 c.setForeground(Color.WHITE);
@@ -318,8 +316,8 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         tabledemand.getColumnModel().getColumn(0).setMaxWidth(100);
         tablereplenish.getColumnModel().getColumn(0).setMaxWidth(100);
          
-        tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-        tablesummary.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+     //   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+     //   tablesummary.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         
         tablesummary.getTableHeader().setReorderingAllowed(false);
          
@@ -584,20 +582,26 @@ public class RetailReorderRpt extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    
-try {
+     java.util.Date now = new java.util.Date();
+     int wk = OVData.getForecastWeek(now);
+     
+     try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                 int ordqty = 0;
-                 int allqty = 0;
-                 int purqty = 0;
-                 int qoh = 0;
-                 int leadtime = 0;
+                 double ordqty = 0;
+                 double allqty = 0;
+                 double purqty = 0;
+                 double qoh = 0;
+                 double leadtime = 0;
+                 String recommendDate = "";
+                 double recommendQty = 0;
+                 Integer[] values = new Integer[13];
+                 double diff = 0.0;
+                 
                 DecimalFormat df = new DecimalFormat("#0.00");
                 int i = 0;
                 int days = 0;
@@ -635,7 +639,7 @@ try {
                  ArrayList<String[]> finallist = new ArrayList<String[]>();
                 
                 // let's start with all items of type 'A'...and collect all Demand and Replenishment orders through timeline of 'leadtime' of the item
-                java.util.Date now = new java.util.Date();
+                
                // Calendar calfrom = Calendar.getInstance();
                 //calfrom.add(Calendar.DATE, -365);
                  
@@ -666,6 +670,9 @@ try {
                     purqty = 0;
                     qoh = 0;
                     leadtime = 0;
+                    recommendDate = "";
+                    recommendQty = 0;
+                    diff = 0.0;
                      
                     if (cboverride.isSelected()) {
                         leadtime = days;
@@ -677,12 +684,12 @@ try {
                    
                     
                     Calendar caldate = Calendar.getInstance();
-                    caldate.add(Calendar.DATE, leadtime);   //  per lead time of item
+                    caldate.add(Calendar.DATE, (int) leadtime);   //  per lead time of item
                     
                     // get demand
                      res = st.executeQuery("SELECT  " +  
                         " sum(sod_ord_qty - sod_shipped_qty) as totqty, " +
-                        " sum(case when so_char1 = 'c' then (sod_ord_qty - sod_shipped_qty) end) as allqty " +
+                        " sum(case when sod_char1 <> '' then (sod_char1 - sod_shipped_qty) end) as allqty " +
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
                         " where sod_part = " + "'" + s[0] + "'" +
                        // " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
@@ -719,8 +726,11 @@ try {
                     qoh = res.getInt("totqty");
                 }
                 
-                int aqoh = allqty;
-                int uqoh = qoh - aqoh;
+                double aqoh = allqty;
+                double uqoh = qoh - aqoh;
+                if (uqoh < 0) {
+                    uqoh = 0;
+                }
                 
                 // now let's do the math
                 String status = "good";
@@ -736,22 +746,66 @@ try {
                 if (((uqoh + purqty) >= ordqty) && ((uqoh + purqty) < safestock) ) {status = "safetystock";}
                 
                 
+                // now lets get forecast quantities
+                Calendar cal = Calendar.getInstance();
+                cal.getTime();
+                String thisyear = String.valueOf(cal.get(Calendar.YEAR));
+                
+                 res = st.executeQuery("select * from fct_mstr where fct_part = " + "'" + s[0] + "'" +
+                                       " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
+                                       " AND fct_year = " + "'" + thisyear + "'" + 
+                                       ";" );
+                 int fctsum = 0;
+                 double rdays = 0;
+                 int fctleadtime = ( (int) leadtime / 7) + 1;
+                 while (res.next()) {
+                    values = new Integer[]{0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        for (int k = 0 ; k < fctleadtime + 1; k++) {
+                             if ((wk + k) > 52) { continue;}
+                             fctsum += res.getInt("fct_wkqty" + (wk + k));
+                         // values[k] = res.getInt("fct_wkqty" + (wk + k));
+                        }
+                }
+                if (fctsum == 0) {
+                    diff = -1;
+                    rdays = 0;
+                } else {
+                diff = (fctsum - (uqoh + purqty)) / fctsum;
+                rdays = diff * leadtime;
+                rdays = leadtime - rdays;
+                }
+               
+              //  MainFrame.show(diff + "/" + rdays + "/" + fctsum + "/" + uqoh + "/" + purqty + "/" + ordqty + "/" + leadtime);
+                cal.add(Calendar.DATE, (int) rdays);
+                if (diff < 0) {
+                recommendDate = "None";    
+                } else {
+                recommendDate = dfdate.format(cal.getTime());
+                }
+                // if leadtime expected quantities less demand is less than leadtime forecasted quantites then order
+                // diff = forecastqty -  ( (uqoh + purqty) - demand )  ...then order diff * 
+                // dayToOrder = now + (diff * leadtime) / forecastqty)
+                //   7 week demand is 100 pcs   14.2 per week
+                //   50 pcs per week forecasted
+                //   170 QOH
+                //        350  -  (350 + 0) - 280) = 70...70 is good enough for another 5.6 weeks
+                
                  i++;
                      
                      summarymodel.addRow(new Object[]{
                             BlueSeerUtils.clickbasket,
                                 s[0],
                                 s[1],
-                                Double.valueOf(s[2]),
-                                Double.valueOf(s[3]),
                                 Integer.valueOf(s[4]),
                                 qoh,
                                 aqoh,
                                 uqoh,
                                 purqty,
                                 ordqty,
+                                fctsum,
                                 Integer.valueOf(s[5]),
-                                status
+                                status,
+                                recommendDate
                             });
                      
                  }         

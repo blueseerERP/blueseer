@@ -655,7 +655,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbisallocated">
               <Properties>
-                <Property name="text" type="java.lang.String" value="is Allocated?"/>
+                <Property name="text" type="java.lang.String" value="Allocation?"/>
               </Properties>
             </Component>
           </SubComponents>
