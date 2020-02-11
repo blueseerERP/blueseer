@@ -664,7 +664,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     invqty = res.getInt("totqty");
                                     }
                                     
-                                    res = st.executeQuery("SELECT  sum(case when sod_char1 = '' then 0 else (sod_char1 - sod_shipped_qty) end) as allqty  " +
+                                    res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
                                     " AND so_status <> 'close' " + 
@@ -685,7 +685,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                  }
                             
                             st.executeUpdate("insert into sod_det "
-                                + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_char1, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
+                                + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_all_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
                                 + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
                                 + " values ( " 
                                 + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
@@ -694,7 +694,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 + "'" + orddet.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
                                 + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
                                 + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                                + "'" + allocationvalue + "'" + ","  // sod_char1 is allocated
+                                + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
                                 + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
@@ -772,7 +772,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                       // insert order header
                          st.executeUpdate("insert into so_mstr "
                         + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
-                        + " so_create_date, so_userid, so_status, so_char1, "
+                        + " so_create_date, so_userid, so_status, so_isallocated, "
                         + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
                         + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                         + "'" + ddcust.getSelectedItem() + "'" + ","
@@ -859,23 +859,15 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         
                         
                         
-                        res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
-                                " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
-                            while (res.next()) {
-                            i++;
-                            }
-                            if (i > 0) {
-                                
+                           // get total inventory for line item
+                            // get allocated on current 'open' orders
+                             // now get QOH
+                        
                                 invqty = 0;
                                 allqty = 0;
                                 qohunall = 0;
                                 allocationvalue = 0;
                                 
-                                
-                               // get total inventory for line item
-                            // get allocated on current 'open' orders
-                             // now get QOH
-                        
                                     res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
                                     " FROM  in_mstr  " +
                                     " where in_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
@@ -885,7 +877,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     invqty = res.getInt("totqty");
                                     }
                                     
-                                    res = st.executeQuery("SELECT  sum(case when sod_char1 = '' then 0 else (sod_char1 - sod_shipped_qty) end) as allqty  " +
+                                    res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
                                     " AND so_status <> 'close' " + 
@@ -905,14 +897,21 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                      allocationvalue = qohunall;
                                      completeAllocation = false;
                                  }  
-                                
-                                
-                                
+                        
+                        
+                        
+                        res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
+                                " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
+                            while (res.next()) {
+                            i++;
+                            }
+                            if (i > 0) {                                
                               st.executeUpdate("update sod_det set "
                             + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                             + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
                             + " sod_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
                             + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " sod_all_qty = " + "'" + allocationvalue + "'" + ","        
                             + " sod_listprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                             + " sod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + " sod_wh = " + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
@@ -925,7 +924,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + ";");
                             } else {
                              st.executeUpdate("insert into sod_det "
-                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
+                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_all_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
                             + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_site) "
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
@@ -934,6 +933,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
                             + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
@@ -978,7 +978,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                       st.executeUpdate("update so_mstr "
                         + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
                         + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + " so_char1 = " + "'" + isallocated + "'" + ","        
+                        + " so_isallocated = " + "'" + isallocated + "'" + ","        
                         + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
                         + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
                         + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
@@ -1070,12 +1070,12 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_due_date")));
                     orddate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_ord_date")));
                     
-                    if (res.getString("so_char1").equals("c")) {
+                    if (res.getString("so_isallocated").equals("c")) {
                         cbisallocated.setSelected(true);
                         cbisallocated.setForeground(Color.black);
                         cbisallocated.setText("Allocation?");
                     } 
-                    else if (res.getString("so_char1").equals("p")) {
+                    else if (res.getString("so_isallocated").equals("p")) {
                         cbisallocated.setSelected(true);
                         cbisallocated.setForeground(Color.red);
                         cbisallocated.setText("Allocation? (partial)");
@@ -2876,7 +2876,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             canproceed = false;
         }
         
-       
+        // check unallocated qty
+        if (OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(part,ddsite.getSelectedItem().toString(),tbkey.getText())) {
+             bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
+            canproceed = false;
+        }
         
         
         
@@ -3129,8 +3133,18 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     private void ddlocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddlocActionPerformed
        if (ddwh.getSelectedItem() != null && ddloc.getSelectedItem() != null && ddpart.getSelectedItem() != null && ! isLoad) {
-           String prefix = "Qty Avail=";
-           double qty = OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
+           
+           double qty = 0.0;
+           String prefix = "";
+           if (OVData.isOrderAutoAllocate()) {
+               prefix = "QOH Unallocated=";
+           qty = OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
+           
+           } else {
+            prefix = "QOH Available=";
+           qty = OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
+          
+           }
            String sqty = String.valueOf(qty);
            lbqtyavailable.setText(prefix + sqty);
            if (! qtyshipped.getText().isEmpty()) {

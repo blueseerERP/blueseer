@@ -1348,7 +1348,8 @@ CREATE TABLE "order_ctrl" (
   "orc_autoallocate" tinyint(1) NOT NULL DEFAULT '0',
   "orc_custitem" tinyint(1) NOT NULL DEFAULT '0',
   "orc_srvm_type" tinyint(1) NOT NULL DEFAULT '0',
-  "orc_srvm_item_default" tinyint(1) NOT NULL DEFAULT '0'
+  "orc_srvm_item_default" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_exceedqohu" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "cm_ctrl" (
   "cmc_autocust" tinyint(1) NOT NULL DEFAULT '0'
@@ -1687,7 +1688,8 @@ CREATE TABLE "so_mstr" (
   "so_onhold" tinyint(1) NOT NULL DEFAULT '0',
   "so_taxcode" varchar(10) COLLATE NOCASE DEFAULT '',
   "so_wh" varchar(10) COLLATE NOCASE DEFAULT '',
-  "so_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '');
+  "so_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1708,8 +1710,8 @@ CREATE TABLE "sod_det" (
   "sod_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_custpart" varchar(30) COLLATE NOCASE DEFAULT '',
-  "sod_ord_qty" int(8) COLLATE NOCASE DEFAULT '',
-  "sod_shipped_qty" int(8) COLLATE NOCASE DEFAULT '',
+  "sod_ord_qty" int(8) COLLATE NOCASE DEFAULT '0',
+  "sod_shipped_qty" int(8) COLLATE NOCASE DEFAULT '0',
   "sod_po" varchar(30) COLLATE NOCASE DEFAULT '',
   "sod_ord_date" date COLLATE NOCASE DEFAULT '',
   "sod_due_date" date COLLATE NOCASE DEFAULT '',
@@ -1726,7 +1728,8 @@ CREATE TABLE "sod_det" (
   "sod_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_wh" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "sod_loc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT ''
+  "sod_loc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_all_qty" int(8) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

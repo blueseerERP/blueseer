@@ -1114,7 +1114,8 @@ CREATE TABLE IF NOT EXISTS `order_ctrl` (
   `orc_autoallocate` tinyint(1) NOT NULL DEFAULT '0',
   `orc_custitem` tinyint(1) NOT NULL DEFAULT '0',
   `orc_srvm_type` tinyint(1) NOT NULL DEFAULT '0',
-  `orc_srvm_item_default` tinyint(1) NOT NULL DEFAULT '0'
+  `orc_srvm_item_default` tinyint(1) NOT NULL DEFAULT '0',
+  `orc_exceedqohu` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `cm_ctrl` (
   `cmc_autocust` tinyint(1) NOT NULL DEFAULT '0'
@@ -1413,7 +1414,9 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_onhold` tinyint(1) NOT NULL DEFAULT '0',
   `so_taxcode` varchar(10)  NOT NULL DEFAULT '',
   `so_wh` varchar(10)  NOT NULL DEFAULT '',
-  `so_site` varchar(10) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `so_site` varchar(10) NOT NULL  DEFAULT '',
+  `so_isallocated` varchar(1) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `so_tax` (
   `sot_nbr` varchar(8) NOT NULL,
   `sot_desc` varchar(20) NOT NULL DEFAULT '',
@@ -1461,7 +1464,9 @@ CREATE TABLE IF NOT EXISTS `sod_det` (
   `sod_desc` varchar(50)  NOT NULL DEFAULT '',
   `sod_site` varchar(10)  NOT NULL DEFAULT '',
   `sod_wh` varchar(10)  NOT NULL DEFAULT '',
-  `sod_loc` varchar(20) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `sod_loc` varchar(20) NOT NULL  DEFAULT '',
+  `sod_all_qty` int(8) NOT NULL  DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `sod_tax` (
   `sodt_nbr` varchar(8) NOT NULL,
   `sodt_line` int(4) NOT NULL DEFAULT '0',

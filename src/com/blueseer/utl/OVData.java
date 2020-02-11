@@ -9042,6 +9042,52 @@ public class OVData {
         return cost;
         
     }
+       
+       
+      public static Double getItemQOHUnallocated(String item, String site, String currentorder) {
+           Double qohu = 0.00;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+               res = st.executeQuery("select in_qoh from in_mstr where "
+                                + " in_part = " + "'" + item + "'" 
+                                + " and in_site = " + "'" + site + "'"
+                                + ";");
+                   while (res.next()) {
+                    qohu += res.getDouble("in_qoh");                    
+                    }
+               
+                res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
+                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
+                                    " where sod_part = " + "'" + item + "'" + 
+                                    " AND so_status <> 'close' " + 
+                                    " AND so_site = " + "'" + site + "'" +   
+                                    " AND so_nbr <> " + "'" + currentorder + "'" +
+                                    " group by sod_part ;");
+
+                    while (res.next()) {
+                    qohu -= res.getInt("allqty");
+                    }
+               
+               
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return qohu;
+        
+    }   
+       
          
       public static Double getItemQtyByWarehouse(String item, String site, String wh) {
            Double cost = 0.00;
@@ -10163,7 +10209,36 @@ public class OVData {
         return autoallocate;
         
     }       
-         
+     
+        public static boolean isOrderExceedQOHU() {
+             
+       boolean exceedqohu = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select orc_exceedqohu from order_ctrl;");
+               while (res.next()) {
+                    exceedqohu = res.getBoolean("orc_exceedqohu");
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return exceedqohu;
+        
+    }       
+     
+      
          
        public static boolean isAutoCust() {
              

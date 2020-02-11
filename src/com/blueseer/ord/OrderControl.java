@@ -152,8 +152,15 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 String srvmtype = "";
                 String srvmitemdefault = "";
                 String autoallocate = "";
+                String exceedQOHU = "";
                 
                 
+                
+                if ( cbexceedQOHU.isSelected() ) {
+                exceedQOHU = "1";    
+                } else {
+                    exceedQOHU = "0";
+                }
                 if ( cballocate.isSelected() ) {
                 autoallocate = "1";    
                 } else {
@@ -198,13 +205,14 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                      if (i == 0) {
 
                    st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_autoallocate, orc_custitem, " +
-                            " orc_srvm_type, orc_srvm_item_default ) values (" + 
+                            " orc_srvm_type, orc_srvm_item_default, orc_exceedqohu ) values (" + 
                             "'" + autosource + "'" + "," +
                             "'" + autoinvoice + "'" + "," +
                             "'" + autoallocate + "'" + "," +        
                             "'" + custitemonly + "'" + "," + 
                             "'" + srvmtype + "'" + "," +
-                            "'" + srvmitemdefault + "'" +         
+                            "'" + srvmitemdefault + "'" +  "," +   
+                            "'" + exceedQOHU + "'" +           
                                     ")" + ";");                   
                           bsmf.MainFrame.show("Inserting Defaults");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -215,7 +223,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                             + " orc_autoallocate = " + "'" + autoallocate + "'" + ","         
                             + " orc_custitem = " + "'" + custitemonly + "'" + "," 
                             + " orc_srvm_type = " + "'" + srvmtype + "'" + ","                 
-                            + " orc_srvm_item_default = " + "'" + srvmitemdefault + "'" +         
+                            + " orc_srvm_item_default = " + "'" + srvmitemdefault + "'" + ","   
+                            + " orc_exceedqohu = " + "'" + exceedQOHU + "'" +        
                             ";");   
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                 }
@@ -259,6 +268,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         cbsrvmtype.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_type")));
                         cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_item_default")));
                         cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoallocate")));
+                        cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_exceedqohu")));
                     }
                
                 // set Action if Record found (i > 0)
@@ -301,6 +311,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         cbsrvmitemdefault = new javax.swing.JCheckBox();
         cbsrvmtype = new javax.swing.JCheckBox();
         cballocate = new javax.swing.JCheckBox();
+        cbexceedQOHU = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -348,26 +359,27 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
 
         cballocate.setText("Auto Allocate?");
 
+        cbexceedQOHU.setText("Exceed QOHU?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cballocate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btupdate))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbautosource, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(cbautoinvoice, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(cbcustitem))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cballocate)
+                    .addComponent(cbexceedQOHU)
+                    .addComponent(cbautosource)
+                    .addComponent(cbautoinvoice)
+                    .addComponent(cbcustitem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btupdate)
+                .addGap(50, 50, 50))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,22 +387,22 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btupdate)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbautoinvoice)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbcustitem)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(btupdate))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cballocate)))
-                .addGap(27, 27, 27))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cballocate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbexceedQOHU)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         add(jPanel1);
@@ -410,6 +422,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbautoinvoice;
     private javax.swing.JCheckBox cbautosource;
     private javax.swing.JCheckBox cbcustitem;
+    private javax.swing.JCheckBox cbexceedQOHU;
     private javax.swing.JCheckBox cbsrvmitemdefault;
     private javax.swing.JCheckBox cbsrvmtype;
     private javax.swing.JPanel jPanel1;
