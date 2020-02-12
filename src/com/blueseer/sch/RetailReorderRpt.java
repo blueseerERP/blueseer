@@ -86,14 +86,14 @@ import javax.swing.ImageIcon;
 public class RetailReorderRpt extends javax.swing.JPanel {
  
      DefaultTableModel summarymodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "DemandAlloc", "UQOH", "POQty", "DemandUnAlloc", "FcstQty", "SafetyStock",  "Status", "NextPODate"})
+                        new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "UQOH", "SafetyStock", "POQty", "DemandUnAllocated", "FwdQty", "FcstQty", "Status", "Ratio"})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0) {      
                             return ImageIcon.class;
                         } else if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7 || col == 8 || col == 9 || col == 10) {
-                            return Integer.class;    
+                            return Integer.class;  
                         } else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -163,9 +163,20 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 value, isSelected, hasFocus, row, column);
         
         String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 11);  // 8 = status column
+        Double diff = (Integer) table.getModel().getValueAt(table.convertRowIndexToModel(row), 6) - (Double) table.getModel().getValueAt(table.convertRowIndexToModel(row), 5);
         
         c.setBackground(table.getBackground());
         c.setForeground(table.getForeground());
+        
+        if (column == 5 || column == 6) {
+            if (diff > 0) {
+              c.setBackground(Color.ORANGE);
+              c.setForeground(Color.BLACK);    
+            }   else {
+              c.setBackground(table.getBackground());
+              c.setForeground(table.getForeground());  
+            } 
+        }
         
         if (column == 11) {
              if ("urgent".equals(status)) {
@@ -174,6 +185,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
             } else if ("safe".equals(status)) {
                 c.setBackground(Color.YELLOW);
                 c.setForeground(Color.BLACK);    
+            } else if ("safe / warning".equals(status)) {
+                c.setBackground(Color.YELLOW);
+                c.setForeground(Color.BLACK);      
+            } else if ("warning".equals(status)) {
+                c.setBackground(Color.ORANGE);
+                c.setForeground(Color.BLACK);           
             } else {
                 c.setBackground(table.getBackground());
                 c.setForeground(table.getForeground());
@@ -588,12 +605,14 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                 double ordqty = 0;
+                 double fwdqty = 0;
                  double allqty = 0;
                  double purqty = 0;
+                 double uallqty = 0;
                  double qoh = 0;
                  double leadtime = 0;
                  String recommendDate = "";
+                 String forecastratio = "";
                  double recommendQty = 0;
                  Integer[] values = new Integer[13];
                  double diff = 0.0;
@@ -615,6 +634,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                
                // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
               //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+          //     tablesummary.getColumnModel().getColumn(12).setCellRenderer(BlueSeerUtils.NumberRenderer.getPercentRenderer());
                 Enumeration<TableColumn> en = tablesummary.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
@@ -624,8 +644,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                      }
                      tc.setCellRenderer(new RetailReorderRpt.SomeRenderer());
                  }
-                // TableColumnModel tcm = tablescrap.getColumnModel();
-               // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
+              
              
                
                
@@ -661,12 +680,14 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                  for (String[] s : mylist) {
                     
                     // reset 
-                    ordqty = 0;
+                    fwdqty = 0;
                     allqty = 0;
+                    uallqty = 0;
                     purqty = 0;
                     qoh = 0;
                     leadtime = 0;
                     recommendDate = "";
+                    forecastratio = "";
                     recommendQty = 0;
                     diff = 0.0;
                      
@@ -684,8 +705,9 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                     
                     // get unallocated demand
                      res = st.executeQuery("SELECT  " +  
-                        " sum(sod_ord_qty - sod_all_qty - sod_shipped_qty) as totqty, " +
-                        " sum(case when sod_all_qty <> '0' then (sod_all_qty - sod_shipped_qty) end) as allqty " +
+                        " sum(case when sod_due_date >= " + "'" + dfdate.format(now) + "'" +  " then sod_ord_qty end) as fwdqty, " +
+                        " sum(sod_ord_qty - sod_all_qty - sod_shipped_qty) as uallqty, " +     
+                        " sum(case when sod_all_qty <> '0' then sod_all_qty end) as allqty " +
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
                         " where sod_part = " + "'" + s[0] + "'" +
                        // " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
@@ -694,8 +716,9 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         " AND so_status <> 'close' " +           
                         " group by sod_part ;"); 
                      while (res.next()) {
-                         ordqty = res.getInt("totqty");
+                         fwdqty = res.getInt("fwdqty");
                          allqty = res.getInt("allqty");
+                         uallqty = res.getInt("uallqty");
                      }
                      
                      // get replenishment
@@ -751,17 +774,20 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                          // values[k] = res.getInt("fct_wkqty" + (wk + k));
                         }
                 }
-                if (ordqty == 0) {
+                 /*
+                if (fwdqty == 0) {
                     rdays = leadtime;
                 } else {
-                rdays = leadtime - ((1 - (fctsum / ordqty)) * leadtime);
+                rdays = leadtime - ((fwdqty / fctsum) * leadtime);
                 }
-                
+               
                 if (rdays < 1) {
                     rdays = 0;
                 }
+                */
+                forecastratio = String.valueOf((fwdqty / fctsum) * 100);
                
-              //  MainFrame.show(diff + "/" + rdays + "/" + fctsum + "/" + uqoh + "/" + purqty + "/" + ordqty + "/" + leadtime);
+              //  MainFrame.show(diff + "/" + rdays + "/" + fctsum + "/" + uqoh + "/" + purqty + "/" + fwdqty + "/" + leadtime);
               // if leadtime expected quantities less demand is less than leadtime forecasted quantites then order
                 // diff = forecastqty -  ( (uqoh + purqty) - demand )  ...then order diff * 
                 // dayToOrder = now + (diff * leadtime) / forecastqty)
@@ -769,19 +795,29 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 //   50 pcs per week forecasted
                 //   170 QOH
                 //        350  -  (350 + 0) - 280) = 70...70 is good enough for another 5.6 weeks
+              
+                /*
                 cal.add(Calendar.DATE, (int) rdays);
                 if (fctsum == 0) {  // if no forecast
                 recommendDate = "No Forecast";    
                 } else {
                 recommendDate = dfdate.format(cal.getTime());
                 }
-                
+                */
                   // now let's do the status...and override recommendDate if necessary 
                   // only 3 possibilities...start with 'good'...then flow through the logic...triggering exceptions if they occurr...otherwise 'good'.
                 String status = "good";
                 
-                if (uqoh < ordqty) {
-                    status = "safe";
+                if (uqoh < safestock) {
+                    status = "warning";
+                }
+                
+                if (uqoh < uallqty) {
+                    if (status.equals("warning")) {
+                        status = "safe / warning";
+                    } else {
+                        status = "safe";
+                    }
                         // check if any POs are on the horizon to meet the order due dates
                         // foreach order that has unallocated demand check if sum of PO quantities come before order due date
                         res = st.executeQuery("select s.sod_nbr, s.sod_due_date, s.sod_ord_qty, s.sod_all_qty, " +
@@ -791,7 +827,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                             " AND (sod_ord_qty - sod_all_qty) > 0 " +
                             ";");
                     while (res.next()) {
-                      if (res.getInt("coverqty") == 0) {
+                      if (res.getInt("coverqty") < (res.getInt("sod_ord_qty") - res.getInt("sod_all_qty"))) {
                           status = "urgent"; recommendDate = dfdate.format(now);
                       }
                     }
@@ -801,21 +837,22 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 
                 
                  i++;
-                     
+                 String myratio = df.format(Double.valueOf(forecastratio)) + "%";
+                     // new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "UQOH", "SafetyStock", "POQty", "DemandUnAllocated", "FwdQty", "FcstQty", "Status", "Ratio"})
                      summarymodel.addRow(new Object[]{
                             BlueSeerUtils.clickbasket,
                                 s[0],
                                 s[1],
                                 Integer.valueOf(s[4]),
                                 qoh,
-                                aqoh,
                                 uqoh,
+                                safestock,
                                 purqty,
-                                ordqty,
+                                uallqty,
+                                fwdqty,
                                 fctsum,
-                                Integer.valueOf(s[5]),
                                 status,
-                                recommendDate
+                                myratio
                             });
                      
                  }         

@@ -2877,7 +2877,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
         
         // check unallocated qty
-        if (OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(part,ddsite.getSelectedItem().toString(),tbkey.getText())) {
+        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(part,ddsite.getSelectedItem().toString(),tbkey.getText())) {
              bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
             canproceed = false;
         }
