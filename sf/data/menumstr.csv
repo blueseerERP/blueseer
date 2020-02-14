@@ -135,7 +135,7 @@ ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
 BankMaint,,com.blueseer.fgl.BankMaintPanel,JMenuItem,bank
 ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
 InvoiceBrowse,Invoice Browse,com.blueseer.far.InvoiceBrowsePanel,JMenuItem,invb
-AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,addl
+AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,lbla
 CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,cprb
 noStdCostBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cosn
 BankBrowse,Browse Bank Menu,com.blueseer.utl.ReportPanel,JMenuItem,bankb
@@ -147,7 +147,7 @@ forecast13weeks,,com.blueseer.sch.ForecastBrowsePanel,JMenuItem,fore13
 ForecastBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,foreb
 PrinterMaint,,com.blueseer.adm.PrinterMaintPanel,JMenuItem,prnt
 PrinterBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prntb
-LabelsContGeneric,,com.blueseer.lbl.LabelContPanel,JMenuItem,lblg
+LabelsContGeneric,,com.blueseer.lbl.LabelContPanel,JMenuItem,lblc
 LabelBrowse,,com.blueseer.lbl.LabelBrowsePanel,JMenuItem,lblb
 TransBrowse,,com.blueseer.prd.TransBrowsePanel,JMenuItem,tran
 RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor

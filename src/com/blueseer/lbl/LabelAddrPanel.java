@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.lbl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.con;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -74,9 +75,10 @@ String sitecitystatezip = "";
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                                 
                 res = st.executeQuery("select * from site_mstr where site_site = " + "'" + site + "'" +";");
@@ -92,11 +94,15 @@ String sitecitystatezip = "";
                 if (i == 0)
                     bsmf.MainFrame.show("No Address Record found for site " + site );
 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+            } catch (SQLException s){
+                 MainFrame.bslog(s);
+                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
             }
-            bsmf.MainFrame.con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -107,9 +113,10 @@ String sitecitystatezip = "";
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+               
                 int i = 0;
                                 
                 res = st.executeQuery("select * from cms_det where cms_code = " + "'" + billto + "'" +
@@ -129,11 +136,18 @@ String sitecitystatezip = "";
                 if (i == 0)
                     bsmf.MainFrame.show("No Address Record found for billto/shipto " + billto + "/" + shipto );
 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve cms_det");
+            
+            } catch (SQLException s){
+                 MainFrame.bslog(s);
+                 bsmf.MainFrame.show("Unable to retrieve cms_det");
             }
-            bsmf.MainFrame.con.close();
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+            
+            
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -181,7 +195,7 @@ String sitecitystatezip = "";
         ddprinter = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         ddbillto = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        btGetShipToList = new javax.swing.JButton();
         ddshipto = new javax.swing.JComboBox();
         lbladdr = new javax.swing.JLabel();
 
@@ -202,10 +216,10 @@ String sitecitystatezip = "";
 
         jLabel2.setText("Printer:");
 
-        jButton1.setText("Get ShipTo List");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btGetShipToList.setText("Get ShipTo List");
+        btGetShipToList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btGetShipToListActionPerformed(evt);
             }
         });
 
@@ -238,7 +252,7 @@ String sitecitystatezip = "";
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ddprinter, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(btGetShipToList, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(jLabel3)
@@ -259,7 +273,7 @@ String sitecitystatezip = "";
                     .addComponent(ddbillto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btGetShipToList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -280,115 +294,76 @@ String sitecitystatezip = "";
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
 
-        if (ddprinter.getSelectedItem() == null) {
-            bsmf.MainFrame.show("No Selected Zebra Printer");
-            return;
-        }
-        
-        try {
+            if (ddprinter.getSelectedItem() == null) {
+                 bsmf.MainFrame.show("No Selected Zebra Printer");
+                 return;
+            }
 
-Socket soc = null;
-DataOutputStream dos = null;
-String ZPLPrinterIPAddress = OVData.getPrinterIP(ddprinter.getSelectedItem().toString());
-int ZPLPrinterPort = 9100;
-            
-            
-  //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
- //           PrintStream ps = new PrintStream(fos);
+            try {
 
-BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
-String line = "";
-String concatline = "";
+            Socket soc = null;
+            DataOutputStream dos = null;
+            String ZPLPrinterIPAddress = OVData.getPrinterIP(ddprinter.getSelectedItem().toString());
+            int ZPLPrinterPort = 9100;
 
-while ((line = fsr.readLine()) != null) {
-    concatline += line;
-}
-fsr.close();
-// fos.write(concatline.getBytes());
+            BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
+            String line = "";
+            String concatline = "";
 
-java.util.Date now = new java.util.Date();
-DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
+            while ((line = fsr.readLine()) != null) {
+                concatline += line;
+            }
+            fsr.close();
 
-concatline = concatline.replace("$ADDRNAME", shipname);
-concatline = concatline.replace("$ADDRLINE1", shipline1);
-concatline = concatline.replace("$ADDRLINE2", shipline2);
-concatline = concatline.replace("$ADDRCITY", shipcity);
-concatline = concatline.replace("$ADDRSTATE", shipstate);
-concatline = concatline.replace("$ADDRZIP", shipzip);
+            java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
 
-concatline = concatline.replace("$SITENAME", sitename);
-concatline = concatline.replace("$SITEADDR", siteaddr);
-concatline = concatline.replace("$SITEPHONE", sitephone);
-concatline = concatline.replace("$SITECSZ", sitecitystatezip);
+            concatline = concatline.replace("$ADDRNAME", shipname);
+            concatline = concatline.replace("$ADDRLINE1", shipline1);
+            concatline = concatline.replace("$ADDRLINE2", shipline2);
+            concatline = concatline.replace("$ADDRCITY", shipcity);
+            concatline = concatline.replace("$ADDRSTATE", shipstate);
+            concatline = concatline.replace("$ADDRZIP", shipzip);
 
-concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
+            concatline = concatline.replace("$SITENAME", sitename);
+            concatline = concatline.replace("$SITEADDR", siteaddr);
+            concatline = concatline.replace("$SITEPHONE", sitephone);
+            concatline = concatline.replace("$SITECSZ", sitecitystatezip);
 
+            concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
 
- String commands = "^XA~TA000~JSN^LT0^MMT^MCY^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4^MD0^JUS^LRN^CI0^XZ" +
-"^XA^LL1218" +
-"^BY2,3,106^FT406,949^B3B,N,,N,N" +
-"^FD661400C01000^FS" +
-"^FT585,970^A0B,65,60^FH\\^FDPC3332^FS" +
-"^FT168,1198^A0B,133,122^FH\\^FD661400C01000^FS" +
-"^FT578,1094^A0B,28,28^FH\\^FDPART:^FS" +
-"^PQ1,0,1,Y^XZ";
+             soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
+                    dos= new DataOutputStream(soc.getOutputStream());
+                    dos.writeBytes(concatline);
 
+             dos.close();
+             soc.close();
 
- soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
-        dos= new DataOutputStream(soc.getOutputStream());
-        dos.writeBytes(concatline);
-
- dos.close();
- soc.close();
- 
-
- //ps.println(commands);
- //                   ps.print("\f");
- //                   ps.close();
-
-
-/*
-try {
-        
-        Process p = Runtime.getRuntime().exec("sleep 5");
-    }
-    catch (Exception ex) {
-        ex.printStackTrace();
-    }
-*/
-
-
-//printer.println(concatline);
-//printer.flush();
-
-// close and free the device
-// printer.close();
-//fos.close();
-} catch (Exception e) {
-MainFrame.bslog(e);
-}
+            } catch (Exception e) {
+            MainFrame.bslog(e);
+            }
     }//GEN-LAST:event_btprintActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btGetShipToListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGetShipToListActionPerformed
          ddshipto.removeAllItems();
         ArrayList mycusts = OVData.getcustshipmstrlist(ddbillto.getSelectedItem().toString());
         for (int i = 0; i < mycusts.size(); i++) {
             ddshipto.addItem(mycusts.get(i));
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btGetShipToListActionPerformed
 
     private void ddshiptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshiptoActionPerformed
-       if (ddshipto.getSelectedItem() != null)
+       if (ddshipto.getSelectedItem() != null && ddbillto.getSelectedItem() != null)
         getShiptoInfo(ddbillto.getSelectedItem().toString(), ddshipto.getSelectedItem().toString());
     }//GEN-LAST:event_ddshiptoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btGetShipToList;
     private javax.swing.JButton btprint;
     private javax.swing.JComboBox ddbillto;
     private javax.swing.JComboBox ddprinter;
     private javax.swing.JComboBox ddshipto;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
