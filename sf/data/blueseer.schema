@@ -926,7 +926,8 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_due_date` date  DEFAULT NULL,
   `pod_status` varchar(30)  NOT NULL DEFAULT '',
   `pod_site` varchar(10)  NOT NULL DEFAULT '',
-  `pod_ord_date` date  DEFAULT NULL
+  `pod_ord_date` date  DEFAULT NULL,
+  `pod_uom` varchar(3)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `pos_ctrl` (
   `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',
@@ -1029,7 +1030,8 @@ CREATE TABLE IF NOT EXISTS `recv_det` (
   `rvd_status` tinyint(1) DEFAULT '0',
   `rvd_rline` int(8) DEFAULT '0',
   `rvd_voqty` decimal(14,5) NOT NULL DEFAULT '0.00000',
-  `rvd_cost` decimal(14,5) NOT NULL DEFAULT '0.00000'
+  `rvd_cost` decimal(14,5) NOT NULL DEFAULT '0.00000',
+  `rvd_uom` varchar(3) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `recv_mstr` (
   `rv_id` varchar(8) NOT NULL  DEFAULT '',
@@ -1154,7 +1156,8 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_cumqty` int(11) NOT NULL DEFAULT '0',
   `shd_ref` varchar(30) NOT NULL  DEFAULT '',
   `shd_sku` varchar(30) NOT NULL  DEFAULT '',
-  `shd_desc` varchar(50) NOT NULL  DEFAULT ''
+  `shd_desc` varchar(50) NOT NULL  DEFAULT '',
+  `shd_uom` varchar(3) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_id` int(11) NOT NULL  DEFAULT '0',
@@ -1595,7 +1598,10 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_pack` varchar(30)  DEFAULT '',
   `tr_curr` varchar(3)  DEFAULT '',
   `tr_pack_date` date  DEFAULT NULL,
-  `tr_assy_date` date  DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tr_assy_date` date  DEFAULT NULL,
+  `tr_uom` varchar(3)  DEFAULT NULL,
+  `tr_base_qty` decimal(14,5)  DEFAULT '0.00000' 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',
   `user_site` varchar(10)  DEFAULT '',

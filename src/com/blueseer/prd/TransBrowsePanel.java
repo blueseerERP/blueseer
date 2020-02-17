@@ -73,7 +73,7 @@ import static bsmf.MainFrame.user;
 public class TransBrowsePanel extends javax.swing.JPanel {
  
      MyTableModel mymodel = new TransBrowsePanel.MyTableModel(new Object[][]{},
-                        new String[]{"Nbr", "Part", "Type", "Qty", "Op", "EffDate", "TimeStamp", "Ref", "Serial", "Program", "Userid", "Cost", "WH", "LOC"});
+                        new String[]{"Nbr", "Part", "Type", "Qty", "UOM", "BaseQty", "Op", "EffDate", "TimeStamp", "Ref", "Serial", "Program", "Userid", "Cost", "WH", "LOC"});
     
     // tr_id, tr_part, tr_type, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid
     /**
@@ -380,7 +380,7 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                  if (ddtype.getSelectedItem().toString().equals("ALL")) {    
-                 res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
+                 res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
                         " FROM  tran_mstr  " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcfrom.getDate())  + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
@@ -388,7 +388,7 @@ try {
                         " AND tr_part <= " + "'" + topart + "'" + 
                          " order by tr_ent_date desc ;");    
                  } else {
-                    res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
+                    res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
                         " FROM  tran_mstr  " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcfrom.getDate())  + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
@@ -406,7 +406,9 @@ try {
                                 res.getString("tr_id"),
                                 res.getString("tr_part"),
                                 res.getString("tr_type"),
-                                res.getInt("tr_qty"),
+                                res.getDouble("tr_qty"),
+                                res.getString("tr_uom"),
+                                res.getDouble("tr_base_qty"),
                                 res.getString("tr_op"),
                                 res.getString("tr_eff_date"),
                                 res.getString("tr_timestamp"),
@@ -416,8 +418,7 @@ try {
                                 res.getString("tr_userid"),
                                 res.getString("tr_cost"),
                                 res.getString("tr_wh"),
-                                res.getString("tr_loc")
-                                
+                                res.getString("tr_loc")        
                             });
                 }
                

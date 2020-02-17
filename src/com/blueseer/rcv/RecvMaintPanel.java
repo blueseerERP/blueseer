@@ -66,11 +66,11 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations            
                 javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
             })
                         {
                boolean[] canEdit = new boolean[]{
-               false, false, false, true, false, false, false, true, true, true, true, true
+               false, false, false, true, false, false, false, false, true, true, true, true, true
                };       
            @Override  
            public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -260,6 +260,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbqtyord.setForeground(Color.blue);
         tbqtyord.setText("");
         
+        tbuom.setEditable(false);
+        tbuom.setForeground(Color.blue);
+        tbuom.setText("");
+        
         tbline.setEditable(false);
         tbline.setForeground(Color.blue);
         tbline.setText("");
@@ -400,9 +404,9 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 while (res.next()) {
                     
-                  //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                  //  "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                   myrecvdetmodel.addRow(new Object[]{res.getString("rvd_part"), res.getString("rvd_po"), 
-                      res.getString("rvd_poline"), res.getString("rvd_qty"), res.getString("rvd_listprice"),
+                      res.getString("rvd_poline"), res.getString("rvd_qty"), res.getString("rvd_uom"), res.getString("rvd_listprice"),
                    res.getString("rvd_disc"), res.getString("rvd_netprice"), res.getString("rvd_loc"), res.getString("rvd_wh"),
                   res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_cost")});
                 }
@@ -465,10 +469,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
                
            
-                 //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                 //  "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                     for (int j = 0; j < rvdet.getRowCount(); j++) {
                         st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
+                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_uom, "
                             + "rvd_listprice, rvd_disc, rvd_netprice,  "
                             + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
@@ -478,13 +482,14 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","        
                             + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                             + "'" + tbpackingslip.getText() + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" 
@@ -494,7 +499,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         tempmodel.addRow(new Object[] {tbkey.getText(), String.valueOf(j+ 1),
                            rvdet.getValueAt(j, 0).toString(),
                            rvdet.getValueAt(j, 3).toString(),
-                           rvdet.getValueAt(j, 6).toString()
+                           rvdet.getValueAt(j, 7).toString()
                         });
                         
                     } 
@@ -585,7 +590,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     // delete the recv_det records and add back.
                     st.executeUpdate("delete from recv_det where rvd_id = " + "'" + tbkey.getText() + "'"  );
                     
-                   // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                   // "Part", "PO", "Line", "Qty", "uom" "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                     for (int j = 0; j < rvdet.getRowCount(); j++) {
                         st.executeUpdate("insert into recv_det "
                             + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
@@ -598,13 +603,14 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","        
                             + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
                             + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + rvdet.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                             + "'" + tbpackingslip.getText() + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" 
@@ -815,6 +821,8 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         cbautovoucher = new javax.swing.JCheckBox();
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        tbuom = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -965,6 +973,8 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel1.setText("uom");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -980,35 +990,6 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel30, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel33))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbqtyrcvd, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel34)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbqtyord, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                            .addComponent(tbline))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel26)
-                                    .addComponent(jLabel28))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(btadditem)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdeleteitem)))
-                        .addGap(11, 11, 11))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -1057,7 +1038,38 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbpackingslip, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel33))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbqtyrcvd, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel34))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbuom)
+                            .addComponent(tbqtyord, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                            .addComponent(tbline))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26)
+                                    .addComponent(jLabel28))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(btadditem)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdeleteitem)))
+                        .addGap(11, 11, 11))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(jLabel24)
@@ -1157,21 +1169,25 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                             .addComponent(tbqtyord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel34)
                                             .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel28))))
-                                .addGap(33, 33, 33)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btdeleteitem)
-                                    .addComponent(btadditem))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btadd)
-                                    .addComponent(btupdate)
-                                    .addComponent(btdelete)))
+                                            .addComponent(jLabel28)))))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel31))))
+                                .addComponent(jLabel31)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbuom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btdeleteitem)
+                            .addComponent(btadditem))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btadd)
+                            .addComponent(btupdate)
+                            .addComponent(btdelete)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1191,10 +1207,10 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
           
           boolean proceed = validateInput("addItem"); 
                 
-       //   "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, cost
+       //   "Part", "PO", "line", "Qty", uom,  listprice, disc, netprice, loc, serial, lot, cost
             if (proceed)
             myrecvdetmodel.addRow(new Object[]{ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
-                tbline.getText(), tbqty.getText(), tbprice.getText(), "0", 
+                tbline.getText(), tbqty.getText(), tbuom.getText(), tbprice.getText(), "0", 
                 tbprice.getText(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), 
                 tbserial.getText(), tblot.getText(), tbcost.getText()});
        
@@ -1223,6 +1239,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     duedate.setText("");
                     tbqtyrcvd.setText("");
                     tbqtyord.setText("");
+                    tbuom.setText("");
                     orddate.setText("");
                     tbqty.setText("0");
                     tbserial.setText("");
@@ -1244,7 +1261,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
                     // at this time you cannot have the same item on the PO more than once
                 
-                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
+                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_uom, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr " +
                        " left outer join item_mstr on it_item = pod_part " +
                        " left outer join item_cost on itc_item = pod_part and itc_set = 'standard' and itc_site = po_site " + 
@@ -1264,6 +1281,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     duedate.setText(res.getString("pod_due_date"));
                     tbqtyrcvd.setText(res.getString("pod_rcvd_qty"));
                     tbqtyord.setText(res.getString("pod_ord_qty"));
+                    tbuom.setText(res.getString("pod_uom"));
                     orddate.setText(res.getString("pod_ord_date"));
                 }
                 if (tbcost.getText().isEmpty()) {
@@ -1434,6 +1452,7 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox ddvend;
     private javax.swing.JComboBox<String> ddwh;
     private javax.swing.JTextField duedate;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
@@ -1468,5 +1487,6 @@ public class RecvMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbqtyord;
     private javax.swing.JTextField tbqtyrcvd;
     private javax.swing.JTextField tbserial;
+    private javax.swing.JTextField tbuom;
     // End of variables declaration//GEN-END:variables
 }

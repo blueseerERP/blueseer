@@ -1200,6 +1200,7 @@ public class EDI {
                        e.so,
                        e.getDetPO(j), 
                        e.getDetQtyShp(j),
+                       e.getDetUOM(j),
                        e.getDetListPrice(j), 
                        e.getDetDisc(j), 
                        e.getDetNetPrice(j),

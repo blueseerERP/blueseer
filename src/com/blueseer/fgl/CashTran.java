@@ -712,7 +712,7 @@ public class CashTran extends javax.swing.JPanel {
                              
                     
                          for (int j = 0; j < detailtable1.getRowCount(); j++) {
-                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable1.getValueAt(j, 1).toString(), "", "", "", "", "1", 
+                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable1.getValueAt(j, 1).toString(), "", "", "", "", "1", "EA", 
                                      detailtable1.getValueAt(j, 3).toString(), "0", detailtable1.getValueAt(j, 3).toString(), dfdate.format(now), 
                                      detailtable1.getValueAt(j, 4).toString(), detailtable1.getValueAt(j, 0).toString(), site, "", "", "0");
                          }

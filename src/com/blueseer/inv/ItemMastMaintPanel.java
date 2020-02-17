@@ -859,7 +859,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
 
-               res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_qty  " +
+               res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_base_qty  " +
                         " FROM  tran_mstr  " +
                         " where tr_part = " + "'" + parentpart.toString() + "'" + 
                         " order by tr_eff_date desc limit 25 ;");
@@ -870,7 +870,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                                 res.getString("tr_type"),
                                 res.getString("tr_eff_date"),
                                 res.getInt("tr_id"),
-                                res.getDouble("tr_qty")
+                                res.getDouble("tr_base_qty")
                             });
               
                 }

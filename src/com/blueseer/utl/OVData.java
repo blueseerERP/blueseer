@@ -6192,8 +6192,9 @@ public class OVData {
     }
          
          
+    
          
-         public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
+    public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
        
        // type is either 'c' for customer price or 'v' for vendor price      
              
@@ -6284,8 +6285,108 @@ public class OVData {
         return TypeAndPrice;
         
     }
-         
-          public static Double getPartPriceFromCust(String cust, String part, String uom, String curr) {
+    
+    public static Boolean isValidCustPriceRecordExists(String entity, String part, String uom, String curr) {
+       
+       // type is either 'c' for customer price or 'v' for vendor price      
+             
+       boolean isValid = false;
+       String pricecode = "";
+      
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                // customer based pricing
+               
+                    res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
+                     while (res.next()) {
+                       pricecode = res.getString("cm_price_code");
+                    }     
+                      // if there is no pricecode....it defaults to billto
+                     if (! pricecode.isEmpty()) {
+                         entity = pricecode;
+                     }
+
+                    res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
+                                          " AND cpr_item = " + "'" + part + "'" +
+                                          " AND cpr_uom = " + "'" + uom + "'" +
+                                          " AND cpr_curr = " + "'" + curr + "'" +
+                                          " AND cpr_type = 'LIST' "+ ";");
+                   while (res.next()) {
+                       isValid = true;
+                   }
+                
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isValid;
+        
+    }
+    
+    
+     public static Boolean isValidVendPriceRecordExists(String entity, String part, String uom, String curr) {
+       
+       // type is either 'c' for customer price or 'v' for vendor price      
+             
+       boolean isValid = false;
+       String pricecode = "";
+      
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                // customer based pricing
+               
+                    res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + entity + "'" + ";");
+                 while (res.next()) {
+                   pricecode = res.getString("vd_price_code");
+                }       
+                      // if there is no pricecode....it defaults to billto
+                     if (! pricecode.isEmpty()) {
+                         entity = pricecode;
+                     }
+
+                    res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
+                                      " AND vpr_item = " + "'" + part + "'" +
+                                      " AND vpr_uom = " + "'" + uom + "'" +
+                                      " AND vpr_curr = " + "'" + curr + "'" +        
+                                      " AND vpr_type = 'LIST' "+ ";");
+                   while (res.next()) {
+                       isValid = true;
+                   }
+                
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isValid;
+        
+    }
+    
+    
+    
+    
+    public static Double getPartPriceFromCust(String cust, String part, String uom, String curr) {
        Double price = 0.00;
        String pricecode = "";
       
@@ -7776,6 +7877,140 @@ public class OVData {
         
     }  
         
+       public static Boolean isBaseUOMOfItem(String mypart, String mysite, String uom) {
+           boolean isBase = false;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
+                                      " AND it_site = " + "'" + mysite + "'" + ";" ); 
+               while (res.next()) {
+                   if (res.getString("it_uom").toUpperCase().equals(uom.toUpperCase())) {
+                       isBase = true;
+                   }                
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isBase; 
+        
+    }      
+        
+        
+          public static Double getUOMBaseQty(String item, String site, String order_uom, Double order_qty) {
+           Double baseqty = order_qty;  // initialize with inbound qty
+           String baseuom = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
+                // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
+               
+                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
+                                      " AND it_site = " + "'" + site + "'" + ";" ); 
+               while (res.next()) {
+                baseuom = res.getString("it_uom");                    
+                }
+                int z = 0;
+                if (! baseuom.equals(order_uom)) {
+                    res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                            " conv_fromcode = " + "'" + baseuom + "'" +
+                            " AND conv_tocode = " + "'" + order_uom + "'" + ";" ); 
+                    while (res.next()) {
+                        z++;
+                        baseqty = order_qty * ( res.getDouble("conv_fromamt") / res.getDouble("conv_toamt"));                    
+                    }
+                        if (z == 0) {
+                            // try reverse
+                            res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                                " conv_fromcode = " + "'" + order_uom + "'" +
+                                " AND conv_tocode = " + "'" + baseuom + "'" + ";" ); 
+                            while (res.next()) {
+                            baseqty = order_qty * ( res.getDouble("conv_toamt") / res.getDouble("conv_fromamt"));                    
+                            }
+                        }
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return baseqty;
+        
+    }  
+        
+          
+    public static Boolean isValidUOMConversion(String item, String site, String order_uom) {
+           boolean isValid = false;
+           String baseuom = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
+                // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
+               
+                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
+                                      " AND it_site = " + "'" + site + "'" + ";" ); 
+               while (res.next()) {
+                baseuom = res.getString("it_uom");                    
+                }
+                int z = 0;
+                if (! baseuom.equals(order_uom)) {
+                    res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                            " conv_fromcode = " + "'" + baseuom + "'" +
+                            " AND conv_tocode = " + "'" + order_uom + "'" + ";" ); 
+                    while (res.next()) {
+                        z++;
+                        isValid = true;
+                    }
+                    if (z == 0) {
+                        // try reverse
+                        res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                            " conv_fromcode = " + "'" + order_uom + "'" +
+                            " AND conv_tocode = " + "'" + baseuom + "'" + ";" ); 
+                        while (res.next()) {
+                        isValid = true;              
+                        }
+                    }
+                } else {
+                    isValid = true;
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isValid;
+        
+    }        
+          
         
         public static String getProdLineInvAcct(String prodline) {
            String myitem = null;
@@ -12195,6 +12430,8 @@ public class OVData {
                    
                     String part = "";
                     double qty = 0;
+                    String uom = "";
+                    double baseqty = 0;
                     String loc = "";
                     String wh = "";
                     String site = "";
@@ -12203,7 +12440,7 @@ public class OVData {
                   
                     
                    
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_site " +
+                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site " +
                               " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                               " where shd_id = " + "'" + shipper + "'" +";");
                       
@@ -12213,9 +12450,11 @@ public class OVData {
                         i = 0;
                         part = res.getString("shd_part");
                         qty = res.getDouble("shd_qty");
+                        uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                         
                         // lets determine if this is a legitimate item or a misc item...do not inventory misc items
@@ -12263,7 +12502,7 @@ public class OVData {
                         
                         
                         if (z == 0) {
-                         sum = (-1 * qty);
+                         sum = (-1 * baseqty);
                          st3.executeUpdate("insert into in_mstr "
                                 + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
                                 + " values ( " 
@@ -12278,7 +12517,7 @@ public class OVData {
                      
                         }  else {
                            // nres.first();
-                            sum = qoh - qty;
+                            sum = qoh - baseqty;
                              st3.executeUpdate("update in_mstr "
                                 + " set in_qoh = " + "'" + sum + "'" + "," +
                                   " in_date = " + "'" + mydate + "'"
@@ -12330,6 +12569,8 @@ public class OVData {
                    
                     String part = "";
                     double qty = 0;
+                    double baseqty = 0;
+                    String uom = "";
                     String loc = "";
                     String wh = "";
                     String site = "";
@@ -12351,9 +12592,11 @@ public class OVData {
                         loc = res.getString("shd_loc");
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
+                        uom = res.getString("shd_uom");
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                         // reverse quantity
-                        qty = -1 * qty;
+                        baseqty = -1 * baseqty;
                         
                         // lets determine if this is a legitimate item or a misc item...do not inventory misc items
                         res2 = st4.executeQuery("select it_item, it_loc, it_wh " +
@@ -12394,7 +12637,7 @@ public class OVData {
                         
                         
                         if (z == 0) {
-                         sum = (-1 * qty);
+                         sum = (-1 * baseqty);
                          st3.executeUpdate("insert into in_mstr "
                                 + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
                                 + " values ( " 
@@ -12409,7 +12652,7 @@ public class OVData {
                      
                         }  else {
                            // nres.first();
-                            sum = qoh - qty;
+                            sum = qoh - baseqty;
                              st3.executeUpdate("update in_mstr "
                                 + " set in_qoh = " + "'" + sum + "'" + "," +
                                   " in_date = " + "'" + mydate + "'"
@@ -12456,11 +12699,13 @@ public class OVData {
                 
                    
                     String part = "";
-                    double qty = 0;
+                    double qty = 0.00;
+                    double baseqty = 0.00;
                     String loc = "";
                     String wh = "";
                     String site = "";
-                    double sum = 0;
+                    double sum = 0.00;
+                    String uom = "";
                   
                     
                    
@@ -12471,6 +12716,8 @@ public class OVData {
                         loc = res.getString("rvd_loc");
                         wh = res.getString("rvd_wh");
                         site = res.getString("rvd_site");
+                        uom = res.getString("rvd_uom"); 
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                         // check if in_mstr record exists for this part,loc,site combo
                         // if not add it
@@ -12490,7 +12737,7 @@ public class OVData {
                         
                         
                         if (z == 0) {
-                         sum = qty;
+                         sum = baseqty;
                          st3.executeUpdate("insert into in_mstr "
                                 + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
                                 + " values ( " 
@@ -12505,7 +12752,7 @@ public class OVData {
                      
                         }  else {
                            // nres.first();
-                            sum = qoh + qty;
+                            sum = qoh + baseqty;
                              st3.executeUpdate("update in_mstr "
                                 + " set in_qoh = " + "'" + sum + "'" + "," +
                                   " in_date = " + "'" + mydate + "'"
@@ -12607,7 +12854,9 @@ public class OVData {
                     String jobnbr = "";
                     String serial = "";
                     String part = "";
-                    int qty = 0;
+                    String uom = "";
+                    double qty = 0.00;
+                    double baseqty = 0.00;
                     double price = 0.00;
                     double cost = 0.00;
                     String loc = "";
@@ -12644,9 +12893,11 @@ public class OVData {
                         serial = res.getString("rvd_serial");
                         price = res.getDouble("rvd_netprice");
                         cost = res.getDouble("itc_total");
+                        uom = res.getString("rvd_uom");
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -12654,6 +12905,8 @@ public class OVData {
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + qty + "'" + ","
+                                + "'" + baseqty + "'" + ","
+                                + "'" + uom + "'" + ","        
                                 + "'" + mydate + "'" + ","
                                 + "'" + dfdate.format(effdate) + "'" + ","
                                 + "'" + "" + "'" + ","
@@ -12718,7 +12971,9 @@ public class OVData {
                     String jobnbr = "";
                     String serial = "";
                     String part = "";
-                    int qty = 0;
+                    String uom = "";
+                    double qty = 0;
+                    double baseqty = 0;
                     double price = 0.00;
                     double cost = 0.00;
                     String loc = "";
@@ -12745,6 +13000,7 @@ public class OVData {
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         part = res.getString("shd_part");
+                        uom = res.getString("shd_uom");
                         qty = res.getInt("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
@@ -12753,9 +13009,10 @@ public class OVData {
                         loc = res.getString("shd_loc");
                         jobnbr = res.getString("shd_jobnbr");
                         serial = res.getString("shd_serial");
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -12763,6 +13020,8 @@ public class OVData {
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + qty + "'" + ","
+                                + "'" + baseqty + "'" + ","
+                                + "'" + uom + "'" + ","        
                                 + "'" + mydate + "'" + ","
                                 + "'" + dfdate.format(effdate) + "'" + ","
                                 + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
@@ -12827,7 +13086,8 @@ public class OVData {
                     String jobnbr = "";
                     String serial = "";
                     String part = "";
-                    int qty = 0;
+                    double qty = 0;
+                    double baseqty = 0;  // UOM conversion not applicable 
                     double price = 0.00;
                     double cost = 0.00;
                     String loc = "";
@@ -12837,6 +13097,7 @@ public class OVData {
                     String site = OVData.getDefaultSite();
                     String lot = "";
                     String terms = "";
+                    String uom = "";
                     
                     
                    
@@ -12849,8 +13110,12 @@ public class OVData {
                         } else {
                         qty = res.getInt("posd_qty");    
                         }
+                        baseqty = qty;
+                        uom = OVData.getUOMFromItemSite(part, site);  //always base uom for POS program
+                        
+                        
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -12858,6 +13123,8 @@ public class OVData {
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + qty + "'" + ","
+                                + "'" + baseqty + "'" + ","
+                                + "'" + uom + "'" + ","        
                                 + "'" + mydate + "'" + ","
                                 + "'" + dfdate.format(effdate) + "'" + ","
                                 + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
@@ -12922,7 +13189,9 @@ public class OVData {
                     String jobnbr = "";
                     String serial = "";
                     String part = "";
-                    int qty = 0;
+                    String uom = "";
+                    double qty = 0.0;
+                    double baseqty = 0.0;
                     double price = 0.00;
                     double cost = 0.00;
                     String loc = "";
@@ -12949,6 +13218,7 @@ public class OVData {
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         part = res.getString("shd_part");
+                        uom = res.getString("shd_uom");
                         qty = res.getInt("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
@@ -12957,13 +13227,13 @@ public class OVData {
                         loc = res.getString("shd_loc");
                         jobnbr = res.getString("shd_jobnbr");
                         serial = res.getString("shd_serial");
-                        
+                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         // reverse qty
                         qty = -1 * qty;
                         
                         
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -12971,6 +13241,8 @@ public class OVData {
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + qty + "'" + ","
+                                + "'" + baseqty + "'" + ","
+                                + "'" + uom + "'" + ","        
                                 + "'" + mydate + "'" + ","
                                 + "'" + dfdate.format(effdate) + "'" + ","
                                 + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
@@ -13071,6 +13343,10 @@ public class OVData {
                 String _assydate = "";
                 String _program = "";
                 
+                // added later
+                Double _baseqty = 0.00;
+                String _uom = "";
+                
           for (int i = 0; i < mytable.getRowCount(); i++) {
               
               _part = mytable.getValueAt(i, 0).toString();
@@ -13092,7 +13368,9 @@ public class OVData {
                _assydate = mytable.getValueAt(i, 15).toString();
                _assydate = mytable.getValueAt(i, 15).toString();
                _program = mytable.getValueAt(i,16).toString();
-               
+               // defaults to baseqty
+               _baseqty = _qty;
+               _uom = OVData.getUOMFromItemSite(_part, _site);
               
               if (_remarks.length() > 200) {
                   _remarks = _remarks.substring(1,200);
@@ -13134,12 +13412,14 @@ public class OVData {
                  
               if (dbtype.equals("sqlite")) {    
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_cost, tr_eff_date, tr_loc, tr_wh, "
+                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
                         + "'" + _qty + "'" + ","
+                        + "'" + _baseqty + "'" + ","
+                        + "'" + _uom + "'" + ","        
                         + "'" + opcost + "'" + ","
                         + "'" + _date + "'" + ","
                         + "'" + _loc + "'" + ","
@@ -13161,12 +13441,14 @@ public class OVData {
                         + ";");
               } else {
                   st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_cost, tr_eff_date, tr_loc, tr_wh, "
+                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
                         + "'" + _qty + "'" + ","
+                        + "'" + _baseqty + "'" + ","
+                        + "'" + _uom + "'" + ","        
                         + "'" + opcost + "'" + ","
                         + "'" + _date + "'" + ","
                         + "'" + _loc + "'" + ","
@@ -13216,12 +13498,14 @@ public class OVData {
                   /* let's first load the tran_hist */
               if (dbtype.equals("sqlite")) {         
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
                         + "'" + _qty + "'" + ","
+                        + "'" + _baseqty + "'" + ","
+                        + "'" + _uom + "'" + ","                
                         + "'" + opcost + "'" + ","
                         + "'" + _date + "'" + ","
                         + "'" + _loc + "'" + ","
@@ -13242,12 +13526,14 @@ public class OVData {
                         + ";");
               } else {
                  st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
                         + "'" + _qty + "'" + ","
+                        + "'" + _baseqty + "'" + ","
+                        + "'" + _uom + "'" + ","                
                         + "'" + opcost + "'" + ","
                         + "'" + _date + "'" + ","
                         + "'" + _loc + "'" + ","
@@ -13285,13 +13571,15 @@ public class OVData {
                   /* let's first load the tran_hist */
                   
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
                         + "'" + opcost + "'" + ","
                         + "'" + _qty + "'" + ","
+                        + "'" + _baseqty + "'" + ","
+                        + "'" + _uom + "'" + ","                
                         + "'" + _date + "'" + ","
                         + "'" + _loc + "'" + ","
                         + "'" + _serial + "'" + ","
@@ -13351,15 +13639,16 @@ public class OVData {
             try{
                 Statement st2 = con.createStatement();
                 
+                // NOTE:  all inventory transactions done at base uom level
                 
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
-                   
+                String uom = OVData.getUOMFromItemSite(part, site);
                                            
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_op, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, tr_wh, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -13367,6 +13656,8 @@ public class OVData {
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + qty + "'" + ","
+                                + "'" + qty + "'" + "," // baseqty = qty for inventory movement
+                                + "'" + uom + "'" + "," // always base uom for inventory movement 
                                 + "'" + op + "'" + ","
                                 + "'" + mydate + "'" + ","
                                 + "'" + dfdate.format(effdate) + "'" + ","
@@ -14215,7 +14506,7 @@ public class OVData {
        
         
          
-           public static boolean voidGLEntryFromPOS(String batchnbr, Date effdate) {
+        public static boolean voidGLEntryFromPOS(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             Class.forName(driver).newInstance();
@@ -14502,7 +14793,9 @@ public class OVData {
                    
                     
                     String part = "";
-                    int qty = 0;
+                    double qty = 0;
+                    double baseqty = 0.0;
+                    String uom = "";
                     String loc = "";
                     double netprice = 0.00;
                     double basenetprice = 0.00;
@@ -14529,8 +14822,10 @@ public class OVData {
                     while (res.next()) {
                         part = res.getString("shd_part");
                         qty = res.getInt("shd_qty");
+                        uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
+                        baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
                         
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         netprice = res.getDouble("shd_netprice");   
@@ -14564,8 +14859,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_mtl"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * qty));
+                    cost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14577,8 +14872,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_lbr"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * qty));
+                    cost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14589,8 +14884,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_bdn"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * qty));
+                    cost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14602,8 +14897,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_ovh"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * qty));
+                    cost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14614,8 +14909,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_out"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * qty));
+                    cost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14765,8 +15060,10 @@ public class OVData {
                     String cust = "";
                     String arcc = "";
                     String part = "";
-                    int qty = 0;
+                    double qty = 0;
+                    double baseqty = 0;
                     String loc = "";
+                    String uom = "";
                     int i = 0;
                     
                     double totamt = 0.00;
@@ -14797,9 +15094,10 @@ public class OVData {
                         qty = res.getInt("shd_qty");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
-                        
+                        baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
                         // reverse quantity
                         qty = -1 * qty;
+                        baseqty = -1 * baseqty;
                         
                         
                         
@@ -14836,8 +15134,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_mtl"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * qty));
+                    cost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14848,8 +15146,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_lbr"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * qty));
+                    cost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_lbr_top") + nres.getDouble("itc_lbr_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14861,8 +15159,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_bdn"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * qty));
+                    cost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_bdn_top") + nres.getDouble("itc_bdn_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14874,8 +15172,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_ovh"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * qty));
+                    cost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -14886,8 +15184,8 @@ public class OVData {
                     acct_dr.add(nres.getString("pl_cogs_out"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * qty));
-                    basecost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * qty));
+                    cost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * baseqty));
+                    basecost.add(((nres.getDouble("itc_out_top") + nres.getDouble("itc_out_low")) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -20848,7 +21146,7 @@ MainFrame.bslog(e);
           return isError;
       } 
        
-       public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
+       public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String uom, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
            try {
 
          Class.forName(driver).newInstance();
@@ -20864,7 +21162,7 @@ MainFrame.bslog(e);
 
                 if (proceed) {
                         st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty,"
+                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
                             + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + line + "'" + ","
@@ -20873,6 +21171,7 @@ MainFrame.bslog(e);
                             + "'" + shipdate + "'" + ","        
                             + "'" + po + "'" + ","
                             + "'" + qty + "'" + ","
+                            + "'" + uom + "'" + ","        
                             + "'" + netprice + "'" + ","
                             + "'" + listprice + "'" + ","
                             + "'" + discpercent + "'" + ","
@@ -20895,7 +21194,7 @@ MainFrame.bslog(e);
       
         public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
           
-          // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
+          // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
             try {
          Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -20908,7 +21207,7 @@ MainFrame.bslog(e);
                 if (proceed) {
                     for (int j = 0; j < dettable.getRowCount(); j++) {
                         st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty,"
+                            + "(shd_id, shd_line, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
                             + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + shippernbr + "'" + ","
                             + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","
@@ -20919,12 +21218,13 @@ MainFrame.bslog(e);
                             + "'" + shipdate + "'" + ","        
                             + "'" + dettable.getValueAt(j, 5).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 7).toString() + "'" + ","        
                             + "'" + dettable.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 11).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 14).toString() + "'" + ","        
+                            + "'" + dettable.getValueAt(j, 14).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 15).toString() + "'" + ","        
                             + "'" + site + "'"
                             + ")"
                             + ";");
