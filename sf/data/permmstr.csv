@@ -110,6 +110,7 @@ admin;APMenu
 admin;VouchMaintPanel
 admin;PaymentMaint
 admin;ExpenseMaint
+admin;IncomeMaint
 admin;ProdCodeMaint
 admin;ProdCodeBrowse
 admin;LocationMaint

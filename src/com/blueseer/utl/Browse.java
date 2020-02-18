@@ -365,6 +365,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("expensemaint")) {
                 tablereport.setModel(DTData.getExpenseBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("incomemaint")) {
+                tablereport.setModel(DTData.getGLTranBrowseUtil(tbtext.getText(), state, searchfield));
+                }
                 if (callingpanel.equals("calendarmaint")) {
                 tablereport.setModel(DTData.getCalendarBrowseUtil(tbtext.getText(), state, searchfield));
                 }
@@ -464,6 +467,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("GLTranMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 2).toString()};
               reinitpanels("GLTranMaint", true, arg);
+            }
+            if (callingpanel.equals("incomemaint")) {
+              if (! checkperms("IncomeMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 2).toString()};
+              reinitpanels("IncomeMaint", true, arg);
             }
             if (callingpanel.equals("costmaint")) {
               if (! checkperms("CostRoll")) { return; }

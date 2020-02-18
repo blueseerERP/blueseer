@@ -54,7 +54,6 @@ com.blueseer.fap.VoucherBrowse,,1
 com.blueseer.fap.VouchMaintPanel,,1
 com.blueseer.far.ARAgingView,,1
 com.blueseer.far.ARControl,,1
-com.blueseer.far.ARMaintPanel,,1
 com.blueseer.far.ARMemoMaint,,1
 com.blueseer.far.ARPaymentMaint,,1
 com.blueseer.far.ARTranRpt1,,1
@@ -68,6 +67,7 @@ com.blueseer.inv.UOMConvMaint,,1
 com.blueseer.fgl.DeptMaintPanel,,1
 com.blueseer.fgl.ExchangeMaint,,1
 com.blueseer.fgl.ExpenseMaint,,1
+com.blueseer.fgl.IncomeMaint,,1
 com.blueseer.fgl.GLAcctBalRpt1,,1
 com.blueseer.fgl.GLAcctBalRpt2,,1
 com.blueseer.fgl.GLAcctBalRpt3,,1

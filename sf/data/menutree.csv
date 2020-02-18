@@ -100,20 +100,22 @@ LedgerReportsMenu,IncomeStatement1,7,JMenuItem,Income Statement,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,8,JMenuItem,Income Statement(Year),,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
-Finance,ARMenu,5,JMenu,Accounts Receivable Menu,,,,1,1
+Finance,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1
+Finance,IncomeMaint,5,JMenuItem,Income Maintenance,,,,1,1
+Finance,ARMenu,7,JMenu,Accounts Receivable Menu,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Payment Maintenance,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Payment Browse,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Memo Maintenance,,,,1,1
 ARMenu,ARAgingView,4,JMenuItem,AR Aging View,,,,1,1
-APMenu,APAgingView,5,JMenuItem,AP Aging View,,,,1,1
-APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
+APMenu,APAgingView,4,JMenuItem,AP Aging View,,,,1,1
+APMenu,APControl,5,JMenuItem,AP Control,,,,1,1
 ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
 ARMenu,InvoiceMaint,6,JMenuItem,Invoice View / Maintenance,,,,1,1
 ARMenu,InvoiceBrowse,7,JMenuItem,Invoice Browse ,,1,,1,1
 ARMenu,ARControl,8,JMenuItem,AR Control,,,,1,1
-Finance,APMenu,6,JMenu,Accounts Payable Menu,,,,1,1
-Finance,CashTransactionMenu,7,JMenu,Quick Cash Menu,,,,1,1
-Finance,PayRollMenu,8,JMenu,Payroll Menu,,,,1,1
+Finance,APMenu,8,JMenu,Accounts Payable Menu,,,,1,1
+Finance,CashTransactionMenu,9,JMenu,Quick Cash Menu,,,,1,1
+Finance,PayRollMenu,10,JMenu,Payroll Menu,,,,1,1
 PayRollMenu,PayRollMaint,1,JMenuItem,Payroll Maintenance,,,,1,1
 PayRollMenu,PayRollBrowse,2,JMenuItem,PayRoll Browse,,1,,1,1
 PayRollMenu,PayProfileMaint,3,JMenuItem,Pay Profile Maintenance,,,,1,1
@@ -124,7 +126,6 @@ CashTransactionMenu,CashTranBrowse,2,JMenuItem,Quick Cash Browse,,,,1,1
 APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1
 APMenu,VoucherBrowse,2,JMenuItem,Voucher Browse,,,,1,1
 APMenu,PaymentMaint,3,JMenuItem,Payment Maintenance,,,,1,1
-APMenu,ExpenseMaint,4,JMenuItem,Expense Maintenance,,,,1,1
 Inventory,ProdCodeMaint,1,JMenuItem,Product Code Maintenance,,,,1,1
 Inventory,ProdCodeBrowse,2,JMenuItem,Product Code Browse,,1,,1,1
 Inventory,WareHouseMaint,3,JMenuItem,Warehouse Maintenance,,,,1,1

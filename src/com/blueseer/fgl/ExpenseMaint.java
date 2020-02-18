@@ -26,8 +26,10 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -81,14 +83,23 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 
 /**
  *
  * @author vaughnte
  */
-public class ExpenseMaint extends javax.swing.JPanel {
-
+public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
+                
+                 // global variable declarations
+                boolean isLoad = false;
                 String terms = "";
                 String apacct = "";
                 String apcc = "";
@@ -97,7 +108,10 @@ public class ExpenseMaint extends javax.swing.JPanel {
                 double control = 0.00;
                 double rcvamt = 0.00;
                 int voucherline = 0;
-                boolean isInit = false;
+               
+    
+    // global datatablemodel declarations       
+                
                 
                  javax.swing.table.DefaultTableModel expensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -115,8 +129,143 @@ public class ExpenseMaint extends javax.swing.JPanel {
        
     }
    
-     public void clearAll() {
+      // interface functions implemented
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
         
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
+      
          terms = "";
          apacct = "";
          apcc = "";
@@ -128,8 +277,6 @@ public class ExpenseMaint extends javax.swing.JPanel {
         lbvendor.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.blue);
-        
-        expensenbr.setText(""); 
         
         tbrmks.setText("");
         tbcontrolamt.setText("0");
@@ -151,8 +298,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
         dcdate.setEnabled(true);
         dcdate.setDate(now);
         
-        
-        isInit = true;
+       
         ddvend.removeAllItems();
         ArrayList myvend = OVData.getvendmstrlist();
         for (int i = 0; i < myvend.size(); i++) {
@@ -180,124 +326,255 @@ public class ExpenseMaint extends javax.swing.JPanel {
             ddcc.addItem(code);
         }
       
-        
-        isInit = false;
-       
-        
-        
+       isLoad = false;
     }
     
-      public void enableAll() {
-        ddvend.setEnabled(true);
-        ddsite.setEnabled(true);
-        ddacct.setEnabled(true);
-        ddcc.setEnabled(true);
-        expensenbr.setEnabled(true);
-        tbrmks.setEnabled(true);
-        tbcontrolamt.setEnabled(true);
-        tbcheck.setEnabled(true);
-        tbactualamt.setEnabled(true);
-        expensedet.setEnabled(true);
-        
-        tbref.setEnabled(true);
-        tbitemservice.setEnabled(true);
-        tbqty.setEnabled(true);
-        tbprice.setEnabled(true);
-        
-        btadditem.setEnabled(true);
-        btdeleteitem.setEnabled(true);
-        btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        btadd.setEnabled(true);
-        btedit.setEnabled(true);  
-       
-        
-        dcdate.setEnabled(true);
-    }
-      
-       public void disableAll() {
-         ddvend.setEnabled(false);
-        ddsite.setEnabled(false);
-        ddacct.setEnabled(false);
-        ddcc.setEnabled(false);
-        expensenbr.setEnabled(false);
-        tbrmks.setEnabled(false);
-        tbcontrolamt.setEnabled(false);
-        tbactualamt.setEditable(false);
-        tbcheck.setEnabled(false);
-        tbactualamt.setEnabled(false);
-       
-        expensedet.setEnabled(false);
-       
-        tbref.setEnabled(false);
-        tbitemservice.setEnabled(false);
-        tbqty.setEnabled(false);
-        tbprice.setEnabled(false);
-        
-        btadditem.setEnabled(false);
-        btdeleteitem.setEnabled(false);
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
         btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        btadd.setEnabled(false);
-        btedit.setEnabled(false);
-        
-        
-        dcdate.setEnabled(false); 
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
     }
     
-    public boolean isValidInput() {
-        boolean myreturn = true;
-       
-        return myreturn;
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        DecimalFormat df = new DecimalFormat("#0.00");
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+                   tbactualamt.setText(df.format(actamt));
+                   tbcontrolamt.setText(df.format(actamt));
+                   lbmessage.setText("Batch has been committed");
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
     }
     
-    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must enter a code");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must Have a Vendor");
+                    return b;
+                }
+                
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must Have a Site");
+                    return b;
+                }
+                
+                if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
+                    b = false;
+                    bsmf.MainFrame.show("Period is closed");
+                    return b;
+                }
+                
+                 if (apbank.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no Bank assigned for this vend");
+                    return b;
+                }
+                if (apcc.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no Cost Center assigned for this vend");
+                    return b;
+                }
+                if (apacct.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("There is no AP Account assigned for this vend");
+                    return b;
+                }
+                 if ( control != actamt || control == 0.00 || actamt == 0.00 ) {
+                    b = false;
+                    bsmf.MainFrame.show("control amount does not match actual amount");
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
     
     public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
-       
-         clearAll();
-         disableAll();
-         btnew.setEnabled(true);
-         btbrowse.setEnabled(true);
-       
-         if (arg != null && arg.length > 0) {
-            getBatch(arg[0]);
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
-        
-      
-       
     }
     
     
-     public void getBatch(String batch) {
-         try {
-            DecimalFormat df = new DecimalFormat("#0.00");  
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
-            int d = 0;
-            boolean gotIt = false;
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            boolean error = false;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                DecimalFormat df = new DecimalFormat("#0.00"); 
+                Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
 
+                    res = st.executeQuery("SELECT cur_id FROM  cur_mstr where cur_id = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    
+                       st.executeUpdate("insert into ap_mstr "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_check, ap_rmks, "
+                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                        + "ap_terms, ap_status, ap_bank ) "
+                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
+                              + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + tbkey.getText() + "'" + ","
+                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + "V" + "'" + ","
+                        + "'" + tbref.getText().replace("'", "''") + "'" + ","
+                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
+                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                        + "'" + dfdate.format(duedate) + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + "o" + "'"  + ","
+                        + "'" + apbank + "'"
+                        + ")"
+                        + ";");
+                       
+                       for (int j = 0; j < expensedet.getRowCount(); j++) {
+                        st.executeUpdate("insert into vod_mstr "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                                + "'" + ddvend.getSelectedItem().toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
+                            + "'" + tbref.getText().replace("'", "''") + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 8).toString() + "'"
+                            + ")"
+                            + ";");
+                  
+                     }
+                      
+                     /* create gl_tran records */
+                        if (! error)
+                        error = OVData.glEntryFromVoucherExpense(tbkey.getText(), dcdate.getDate());
+                         
+                        if (! error)
+                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), tbkey.getText(), tbref.getText(), ddvend.getSelectedItem().toString(), actamt, "AP-Expense");
+                           
+                  if (! error) {        
+                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                   initvars(null);
+                  } else {
+                   m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+                  }
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
                 actamt = 0.00;
-                res = st.executeQuery("select * from ap_mstr where ap_nbr = " + "'" + batch + "'" + ";");
+                res = st.executeQuery("select * from ap_mstr where ap_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
-                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
-                     expensenbr.setText(res.getString("ap_nbr"));
+                  i++;
+                     tbkey.setText(res.getString("ap_nbr"));
                      dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ap_effdate")));
                      tbcheck.setText(res.getString("ap_check"));
                      tbref.setText(res.getString("ap_ref"));
                      tbrmks.setText(res.getString("ap_rmks"));
                      ddvend.setSelectedItem(res.getString("ap_vend"));
                      ddsite.setSelectedItem(res.getString("ap_site"));
-                     
-                     gotIt = true;
                 }
                 
-                res = st.executeQuery("select * from vod_mstr where vod_id = " + "'" + batch + "'" + ";");
+                res = st.executeQuery("select * from vod_mstr where vod_id = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                 //  "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
                      expensemodel.addRow(new Object[] { res.getString("vod_id"),
@@ -313,32 +590,30 @@ public class ExpenseMaint extends javax.swing.JPanel {
                  
                   
                   actamt += res.getDouble("vod_voprice");
-                d++;
+               
                 }
-                if (gotIt) {
-                tbactualamt.setText(df.format(actamt));
-                tbcontrolamt.setText(df.format(actamt));
-                lbmessage.setText("Batch has been committed");
-                enableAll();
-                btadd.setEnabled(false);
-                } else {
-                 lbmessage.setText("Unable to find batch");   
-                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve Expense Batch");
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
+      return m;
     }
     
-   
-     
-      
-      public void setvendorvariables(String vendor) {
+    
+    // additional functions
+    public void setvendorvariables(String vendor) {
         
         try {
      
@@ -352,13 +627,15 @@ public class ExpenseMaint extends javax.swing.JPanel {
                 ResultSet res = null;
 
 
-                res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
+                res = st.executeQuery("select vd_name, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;
                    apacct = res.getString("vd_ap_acct");
                    apcc = res.getString("vd_ap_cc");
                    terms = res.getString("vd_terms");
                    apbank = res.getString("vd_bank");
+                   lbvendor.setText(res.getString("vd_name"));
+                   
                 }
 
             } catch (SQLException s) {
@@ -386,7 +663,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        expensenbr = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         tbcontrolamt = new javax.swing.JTextField();
@@ -424,11 +701,19 @@ public class ExpenseMaint extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         lbmessage = new javax.swing.JLabel();
         btbrowse = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btdelete = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Expense Maintenance"));
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
 
         jLabel24.setText("Expense Nbr");
 
@@ -457,7 +742,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
             }
         });
 
-        btadd.setText("Commit");
+        btadd.setText("Add");
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -553,10 +838,24 @@ public class ExpenseMaint extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Uncommit");
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btdelete.setText("Delete");
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btdeleteActionPerformed(evt);
+            }
+        });
+
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
             }
         });
 
@@ -569,78 +868,78 @@ public class ExpenseMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel36))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(34, 34, 34)
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                     .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(jLabel8)
-                                            .addGap(4, 4, 4)
-                                            .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(34, 34, 34)
-                                            .addComponent(jLabel4)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(39, 39, 39)
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(43, 43, 43)
-                                        .addComponent(jLabel35)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lbvendor, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnew)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel27)
-                                                .addGap(12, 12, 12)
-                                                .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel28)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addGap(31, 31, 31)
+                                    .addComponent(jLabel8)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
+                                .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(469, 469, 469)))
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel35)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbvendor, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnew)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btclear)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel27)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel28)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btedit)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btadd))
                             .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -665,8 +964,9 @@ public class ExpenseMaint extends javax.swing.JPanel {
                             .addComponent(btbrowse)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnew)
-                                .addComponent(expensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel24)))))
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel24)
+                                .addComponent(btclear)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -714,7 +1014,8 @@ public class ExpenseMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btadd)
-                            .addComponent(btedit))
+                            .addComponent(btdelete)
+                            .addComponent(btupdate))
                         .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -729,16 +1030,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-         enableAll();
-        clearAll();
-        btedit.setEnabled(false);
-        btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
-        expensenbr.setText(String.valueOf(OVData.getNextNbr("voucher")));
-        expensenbr.setEnabled(false);
-               
-               
-        
+        newAction("voucher"); 
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -779,126 +1071,17 @@ public class ExpenseMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                boolean error = false;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
-                setvendorvariables(ddvend.getSelectedItem().toString());
-                    
-                                        
-                    Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
-                    if (duedate == null) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Terms is undefined for this Vendor");
-                    }
-                     
-                    if (proceed) {
-                                        
-                      st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_check, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
-                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
-                              + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbref.getText().replace("'", "''") + "'" + ","
-                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
-                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(duedate) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-                int amt = 0;
-               // voucherdet =  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
-                    for (int j = 0; j < expensedet.getRowCount(); j++) {
-                        amt = Integer.valueOf(expensedet.getValueAt(j, 3).toString());
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                                + "'" + ddvend.getSelectedItem().toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbref.getText().replace("'", "''") + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 8).toString() + "'"
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromVoucherExpense(expensenbr.getText(), dcdate.getDate());
-                         
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbref.getText(), ddvend.getSelectedItem().toString(), actamt, "AP-Expense");
-                        
-                    if (error) {
-                        bsmf.MainFrame.show("An error occurred");
-                    } else {
-                    bsmf.MainFrame.show("Expense Complete");
-                    initvars(null);
-                    }
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add expense..sql error");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
-       
-        if (ddvend.getSelectedItem() != null && ! isInit )
-        try {
-            
-        
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
-                while (res.next()) {
-                    lbvendor.setText(res.getString("vd_name"));
-                }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get vendor name for this Vendor");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if ( ddvend.getSelectedItem() != null && ! ddvend.getSelectedItem().toString().isEmpty()  && ! isLoad) {
+            setvendorvariables(ddvend.getSelectedItem().toString());
+        } // ddvend
     }//GEN-LAST:event_ddvendActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
@@ -917,7 +1100,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddsiteActionPerformed
 
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
-        if (ddacct.getSelectedItem() != null && ! isInit )
+        if (ddacct.getSelectedItem() != null && ! isLoad )
         try {
             
         
@@ -952,10 +1135,14 @@ public class ExpenseMaint extends javax.swing.JPanel {
             tbcontrolamt.setText(x);
             tbcontrolamt.setBackground(Color.white);
         }
-        
-        if (! tbcontrolamt.getText().isEmpty()) {
+                
+         if (! tbcontrolamt.getText().isEmpty()) {
             control = Double.valueOf(tbcontrolamt.getText());
+        } else {
+            tbcontrolamt.setText("0.00");
+            control = 0.00;
         }
+        
         
        if (control == actamt && control != 0.00 ) {
              tbcontrolamt.setBackground(Color.green);
@@ -976,7 +1163,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
         reinitpanels("BrowseUtil", true, new String[]{"expensemaint","ap_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1027,7 +1214,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    }//GEN-LAST:event_bteditActionPerformed
+    }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
                  String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
@@ -1068,20 +1255,38 @@ public class ExpenseMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbqtyFocusGained
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+          if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteitem;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox<String> ddcc;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvend;
     private javax.swing.JTable expensedet;
-    private javax.swing.JTextField expensenbr;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -1105,6 +1310,7 @@ public class ExpenseMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbcheck;
     private javax.swing.JTextField tbcontrolamt;
     private javax.swing.JTextField tbitemservice;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbref;

@@ -460,7 +460,7 @@ public class DTData {
         
          } 
          
-          public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "ID", "REF", "Acct", "CC", "Site", "EffDate", "EntDate", "Desc", "Amount", "UserID"})
                 {
@@ -522,8 +522,10 @@ public class DTData {
         return mymodel;
         
          } 
-           
-        public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
+    
+        
+    
+    public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine"})
                 {
@@ -3206,7 +3208,7 @@ public class DTData {
         
          } 
             
-              public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Batch", "Vend", "Date", "Amt"})
                 {
@@ -3262,9 +3264,9 @@ public class DTData {
         return mymodel;
         
          } 
-            
-              
-             public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
+         
+           
+        public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "RecvID", "Vend", "PO", "PackingSlip", "Item", "RecvDate", "Qty"})
                 {

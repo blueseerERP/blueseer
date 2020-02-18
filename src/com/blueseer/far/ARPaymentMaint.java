@@ -278,11 +278,12 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         lbmessage.setForeground(Color.blue);
                 
         tbrmks.setText("");
-        tbcontrolamt.setText("0");
+        tbcontrolamt.setText("0.00");
         tbcontrolamt.setBackground(Color.white);
         tbcheck.setText("");
-        tbactualamt.setText("0");
+        tbactualamt.setText("0.00");
         tbactualamt.setBackground(Color.white);
+        tbactualamt.setEditable(false);
         tbrefamt.setText("0");
         referencemodel.setRowCount(0);
         armodel.setRowCount(0);
@@ -396,6 +397,11 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 if (aracct.isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show("There is no AR Account assigned for this cust");
+                    return b;
+                }
+                 if ( control != actamt || control == 0.00 || actamt == 0.00 ) {
+                    b = false;
+                    bsmf.MainFrame.show("control amount does not match actual amount");
                     return b;
                 }
                 
@@ -1317,6 +1323,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         
         if (! tbcontrolamt.getText().isEmpty()) {
             control = Double.valueOf(tbcontrolamt.getText());
+        } else {
+            tbcontrolamt.setText("0.00");
+            control = 0.00;
         }
         
        if (control == actamt && control != 0.00 ) {
