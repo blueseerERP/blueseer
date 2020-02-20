@@ -101,7 +101,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
                     @Override
                     public void tableChanged(TableModelEvent tme) {
-                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 5 || tme.getColumn() == 6 )) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 5 || tme.getColumn() == 7 )) {
                             retotal();
                             refreshDisplayTotals();
                         }
@@ -116,11 +116,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
           }  
          
        boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, true, true, true, false, false, false, false, false, false, false, false
+                false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-               canEdit = new boolean[]{false, false, false, false, false, true, true, true, false, false, false, false, false, false, false, false}; 
+               canEdit = new boolean[]{false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false}; 
             return canEdit[columnIndex];
         }
    

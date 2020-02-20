@@ -78,11 +78,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             })
     {
         boolean[] canEdit = new boolean[]{
-                false, false, false, false, true, true, true, false, false, false, false
+                false, false, false, false, true, false, true, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-               canEdit = new boolean[]{false, false, false, false, true, true, true, false, false, false, false}; 
+               canEdit = new boolean[]{false, false, false, false, true, false, true, false, false, false, false}; 
             return canEdit[columnIndex];
         }
     };
@@ -94,7 +94,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
                     @Override
                     public void tableChanged(TableModelEvent tme) {
-                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 4 || tme.getColumn() == 5 )) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 4 || tme.getColumn() == 6 )) {
                             retotal();
                             refreshDisplayTotals();
                         }
@@ -1573,7 +1573,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-         boolean canproceed = true;
+        
         int line = 0;
         
         String part = "";
@@ -1586,33 +1586,36 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
         orddet.setModel(myorddetmodel);
         
-        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(listprice.getText());
+        Pattern p = Pattern.compile("^[1-9]\\d*$");
+        Matcher m = p.matcher(qtyshipped.getText());
+        if (!m.find() || qtyshipped.getText() == null) {
+            bsmf.MainFrame.show("Invalid Qty");
+            return;
+        }
+        
+        
+         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+         m = p.matcher(listprice.getText());
         if (!m.find() || listprice.getText() == null) {
             bsmf.MainFrame.show("Invalid List Price format");
-            canproceed = false;
+            return;
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         m = p.matcher(discount.getText());
         if (!m.find() || discount.getText() == null) {
             bsmf.MainFrame.show("Invalid Discount format");
-            canproceed = false;
+            return;
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         m = p.matcher(netprice.getText());
         if (!m.find() || netprice.getText() == null) {
             bsmf.MainFrame.show("Invalid Net Price format");
-            canproceed = false;
+            return;
         }
         
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(qtyshipped.getText());
-        if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            canproceed = false;
-        }
+        
         line = getmaxline();
         line++;
         
@@ -1623,13 +1626,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
         if (OVData.isValidItem(part) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show("no base uom conversion");
-                canproceed = false;
                 dduom.requestFocus();
                 return;
         }
         if (OVData.isValidItem(part) && ! OVData.isBaseUOMOfItem(part, site, dduom.getSelectedItem().toString()) && ! OVData.isValidVendPriceRecordExists(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
                 bsmf.MainFrame.show("no price record for conversion uom"); 
-                canproceed = false;
                 dduom.requestFocus();
                 return;
         }
@@ -1638,8 +1639,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
         
         // "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
-        if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, part, custpart, tbkey.getText(),  qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
+       
+         myorddetmodel.addRow(new Object[]{line, part, custpart, tbkey.getText(),  qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
                 discount.getText(), netprice.getText(), "0", "open"});
          sumqty();
          sumdollars();
@@ -1650,7 +1651,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          qtyshipped.setText("");
          ddpart.requestFocus();
          
-        }
+       
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
