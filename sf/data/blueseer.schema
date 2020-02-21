@@ -964,7 +964,9 @@ CREATE TABLE IF NOT EXISTS `pos_mstr` (
   `pos_totamt` decimal(14,2) NOT NULL DEFAULT '0.00',
   `pos_bank` varchar(20) NOT NULL  DEFAULT '',
   `pos_grossamt` decimal(14,2) NOT NULL DEFAULT '0.00',
-  `pos_status` varchar(6) NOT NULL DEFAULT 'commit') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `pos_status` varchar(6) NOT NULL DEFAULT 'commit',
+  `pos_site` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `prt_mstr` (
   `prt_id` varchar(10) NOT NULL  DEFAULT '',
   `prt_type` varchar(10) NOT NULL  DEFAULT '',

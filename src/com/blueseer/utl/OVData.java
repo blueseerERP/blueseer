@@ -15452,6 +15452,35 @@ public class OVData {
         
     }
        
+        
+          public static ArrayList getGLAcctIncomeDisplayOnly() {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
+               while (res.next()) {
+                    myarray.add(res.getString("ac_id"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+       
        
        public static boolean isValidTerms(String code) {
        boolean myreturn = false;

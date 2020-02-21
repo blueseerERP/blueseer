@@ -189,12 +189,11 @@ public class CashTranBrowse extends javax.swing.JPanel {
                   
                 res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
                         " inner join pos_mstr on pos_nbr = posd_nbr  " +
-                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
                         " inner join ac_mstr on ac_id = posd_acct  " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type = 'expense' " +
-                        " AND ap_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
+                        " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
                         " group by posd_acct order by posd_acct desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -261,11 +260,10 @@ public class CashTranBrowse extends javax.swing.JPanel {
                  
                   
                 res = st.executeQuery("select pos_type, sum(pos_totamt) as 'sum' from pos_mstr  " +
-                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type <> 'expense' " +
-                         " AND ap_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +               
+                         " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +               
                         " group by pos_type order by pos_type desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -273,11 +271,14 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 String acct = "";
                 while (res.next()) {
                       acct = res.getString("pos_type");
+                      if (acct.equals("income")) {
+                          acct = "misc income";
+                      }
                     Double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                   dataset.setValue(acct, amt);
                 }
-        JFreeChart chart = ChartFactory.createPieChart("Buy / Sell For Date Range", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Buy / Sell / Misc Income For Date Range", dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -369,6 +370,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         tbtotexpenses.setText("0");
         tbtotsales.setText("0");
+        tbincome.setText("0");
         tbtotpurch.setText("0");
         saleslessexp.setText("0");
         expenses = 0.00;
@@ -460,6 +462,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         tbinventory = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        tbincome = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -640,6 +644,10 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         jLabel1.setText("Current Inventory:");
 
+        jLabel3.setText("Total Misc Income:");
+
+        tbincome.setText("0");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -648,14 +656,19 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel11))
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbincome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(tbtotexpenses, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
@@ -676,8 +689,10 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel3)
+                    .addComponent(tbincome, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
@@ -745,6 +760,7 @@ try {
                 
                  double totsales = 0.00;
                  double totpurch = 0.00;
+                 double totincome = 0.00;
                  
                  String trantype = "";
                  
@@ -783,11 +799,10 @@ try {
                 
                       
                   // now lets get the pos_mstr records    
-                  res = st.executeQuery("select pos_nbr, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
-                        " inner join ap_mstr on ap_nbr = pos_nbr and ap_type = 'E' " +
+                  res = st.executeQuery("select pos_nbr, pos_site, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
                         " where pos_entrydate >= " + "'" + fromdate + "'" + 
                         " and pos_entrydate <= " + "'" + todate + "'" +
-                        " and ap_site <= " + "'" + ddsite.getSelectedItem().toString() + "'" +        
+                        " and pos_site <= " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                         " order by pos_nbr desc;");
                 
                 
@@ -821,6 +836,19 @@ try {
                                 df.format(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clicklock 
                             }); 
+                         } else if (trantype.equals("income")) {
+                            totincome = totincome + res.getDouble("pos_totamt");    
+                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
+                               res.getString("pos_nbr"),
+                                res.getString("pos_key"),
+                                res.getString("pos_type"),
+                                res.getString("pos_entity"),
+                                res.getString("pos_entityname"),
+                                res.getString("pos_entrydate"),
+                                res.getString("pos_totqty"),
+                                df.format(res.getDouble("pos_totamt")),
+                                BlueSeerUtils.clicklock 
+                            });     
                          } else {
                              mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
@@ -842,6 +870,7 @@ try {
                 chartExp();       
                        
                 tbtotsales.setText(df.format(totsales));
+                tbincome.setText(df.format(totincome));
                 tbtotpurch.setText(df.format(totpurch));
                 tbtotexpenses.setText(df.format(expenses));
                 saleslessexp.setText(df.format((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
@@ -921,6 +950,7 @@ try {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
@@ -937,6 +967,7 @@ try {
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JButton tbcsv;
+    private javax.swing.JLabel tbincome;
     private javax.swing.JLabel tbinventory;
     private javax.swing.JLabel tbtotexpenses;
     private javax.swing.JLabel tbtotpurch;

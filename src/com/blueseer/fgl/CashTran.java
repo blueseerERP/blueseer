@@ -113,6 +113,7 @@ public class CashTran extends javax.swing.JPanel {
                 Double actqty = 0.00;
                
                 int voucherline = 0;
+                int incomeline = 0;
                 boolean isLoad = false;
                 String partnumber = "";
                 String newFileName = "";
@@ -127,6 +128,10 @@ public class CashTran extends javax.swing.JPanel {
                 "Line", "Item", "Qty", "Price", "Desc", "Ref"
             });
                  javax.swing.table.DefaultTableModel expensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Line", "Item", "Qty", "Price", "Ref", "Acct"
+            });
+                        javax.swing.table.DefaultTableModel incomemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Line", "Item", "Qty", "Price", "Ref", "Acct"
             });
@@ -262,6 +267,9 @@ public class CashTran extends javax.swing.JPanel {
                 case "expense":
                     message = addExpense();
                     break;
+                case "income":
+                    message = addIncome();
+                    break;    
                 case "recurexpense":
                     message = addRecurExpense();
                     break;
@@ -598,9 +606,10 @@ public class CashTran extends javax.swing.JPanel {
                     
                     if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
+                        + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + "," 
+                        + "'" + site + "'" + "," 
+                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","         
                         + "'" + ddentity.getSelectedItem().toString() + "'" + ","
                         + "'" + lbname.getText() + "'" + ","
                         + "'" + "buy" + "'" + ","       
@@ -800,8 +809,9 @@ public class CashTran extends javax.swing.JPanel {
                     
                     if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
+                        + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + expensenbr1.getText() + "'" + ","
+                        + "'" + site + "'" + ","          
                         + "'" + dfdate.format(dcdate1.getDate()) + "'" + "," 
                         + "'" + entity + "'" + ","
                         + "'" + lbname1.getText() + "'" + ","
@@ -940,8 +950,9 @@ public class CashTran extends javax.swing.JPanel {
                     
                     if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
+                        + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + tbKeyExpense.getText() + "'" + ","
+                        + "'" + site + "'" + ","         
                         + "'" + dfdate.format(dcdateExpense.getDate()) + "'" + "," 
                         + "'" + ddentityExpense.getSelectedItem().toString() + "'" + ","
                         + "'" + lbexpenseEntityName.getText() + "'" + ","
@@ -988,6 +999,132 @@ public class CashTran extends javax.swing.JPanel {
         
         return message;
     }
+    
+     public String[] addIncome() {
+          
+        String[] message = new String[2];
+        message[0] = "";
+        message[1] = ""; 
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                DecimalFormat df = new DecimalFormat("#0.00"); 
+                    
+                curr = OVData.getDefaultCurrency();
+                String site = OVData.getDefaultSite();   
+                String cashacct = OVData.getDefaultBankAcct(OVData.getDefaultARBank());
+                String cc = OVData.getDefaultCC();
+                     
+                     
+               
+               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
+                    for (int j = 0; j < incomeTable.getRowCount(); j++) {
+                       
+                          // Credit Income Account
+                       st.executeUpdate("insert into gl_tran "
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + " values ( " 
+                        + "'" + incomeTable.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + incomeTable.getValueAt(j, 5).toString() + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
+                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString()) * -1) + "'" + ","
+                        + "'" + tbKeyIncome.getText().toString() + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "JL" + "'" + ","
+                        + "'" + incomeTable.getValueAt(j, 1).toString().replace(",", "") + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                         + "'" + dfdate.format(now) + "'"
+                                + ")"
+                        + ";" );
+                    
+                       // Debit Cash Account
+                        st.executeUpdate("insert into gl_tran "
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + " values ( " 
+                        + "'1'" + ","
+                        + "'" + cashacct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
+                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString())) + "'" + ","
+                        + "'" + tbKeyIncome.getText().toString() + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "JL" + "'" + ","
+                        + "'" + incomeTable.getValueAt(j, 1).toString().replace(",", "") + "'" + ","
+                        + "'" + bsmf.MainFrame.userid + "'" + ","
+                         + "'" + dfdate.format(now) + "'"
+                                + ")"
+                        + ";" );  
+                        
+                        i++;
+                    }
+                    
+                      
+                    if (i == 0) {
+                        message = new String[]{"1", "An Error Occurred in Income"};
+                    } else {
+                    message = new String[]{"0", "income complete"};
+                    }
+                    
+                    if (i > 0 ) {
+                     st.executeUpdate("insert into pos_mstr "
+                        + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
+                        + " values ( " + "'" + tbKeyIncome.getText() + "'" + ","
+                        + "'" + site + "'" + ","         
+                        + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + "," 
+                        + "'" + site + "'" + ","
+                        + "'" + OVData.getDefaultSiteName() + "'" + ","
+                        + "'" + "income" + "'" + ","       
+                        + "'" + tbKeyIncome.getText().toString() + "'" + ","         
+                        + "'" + "1" + "'" + ","
+                        + "'" + df.format(Double.valueOf(tbincometotal.getText())) + "'" 
+                        + ")"
+                        + ";");
+                     
+                      for (int j = 0; j < incomeTable.getRowCount(); j++) {
+                      st.executeUpdate("insert into pos_det "
+                                + "(posd_nbr, posd_line, posd_item, posd_desc, posd_ref, posd_qty, posd_listprice, posd_netprice, posd_acct ) "
+                                + " values ( " + "'" + tbKeyIncome.getText() + "'" + ","
+                                + "'" + (j + 1) + "'" + ","
+                                + "'" + incomeTable.getValueAt(j, 1).toString() + "'"  + ","      
+                                + "'" + incomeTable.getValueAt(j, 4).toString() + "'"  + "," 
+                                + "'" + incomeTable.getValueAt(j, 5).toString() + "/" + OVData.getGLAcctDesc(incomeTable.getValueAt(j, 5).toString()) + "'"  + ","        
+                                + "'" + incomeTable.getValueAt(j, 2).toString() + "'"  + ","   
+                                + "'" + incomeTable.getValueAt(j, 3).toString() + "'"  + ","
+                                + "'" + incomeTable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + incomeTable.getValueAt(j, 5).toString() + "'"  
+                                + ")"
+                                + ";");
+                      }
+                     
+                    }
+               
+                    if (OVData.isAutoPost()) {
+                        OVData.PostGL2();
+                    }
+                    
+                //     initvars("2"); 
+                        
+                    
+            } catch (SQLException s) {
+                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                MainFrame.bslog(s);
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return message;
+    }
+    
     
      public String[] addRecurExpense() {
           
@@ -1090,8 +1227,9 @@ public class CashTran extends javax.swing.JPanel {
                     
                     if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_aracct, pos_totamt ) "
+                        + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_aracct, pos_totamt ) "
                         + " values ( " + "'" + key + "'" + ","
+                        + "'" +  ddrexpsite.getSelectedItem().toString() + "'" + "," 
                         + "'" + dfdate.format(now) + "'" + "," 
                         + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
                         + "'" + recurexpensetable.getValueAt(z, 4).toString() + "'" + ","
@@ -1206,6 +1344,64 @@ public class CashTran extends javax.swing.JPanel {
         }
     }
     
+     public void addIncomeAccount(String desc) {
+      //  ddrexpacct.removeAllItems();
+      //  ddaccountexpense.removeAllItems();
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                int acctnbr = OVData.getNextNbr("incomeaccount");
+                if (acctnbr >= 59000000 && acctnbr <= 59999999) {
+                    proceed = true;
+                } else {
+                    bsmf.MainFrame.show("income account generated number is beyond limits of 59000000 to 59999999");
+                    return;
+                }
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + String.valueOf(acctnbr) + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into ac_mstr "
+                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
+                            + " values ( " + "'" + String.valueOf(acctnbr) + "'" + ","
+                            + "'" + desc.replace("'", "").toUpperCase() + "'" + ","
+                            + "'" + "I" + "'" + ","
+                            + "'" + OVData.getDefaultCurrency() + "'" + ","
+                            + "'" + '1' + "'"        
+                            + ")"
+                            + ";");
+                        bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
+                        ddaccountincome.addItem(String.valueOf(acctnbr));
+                        ddaccountincome.setSelectedItem(String.valueOf(acctnbr));
+                        
+                    } else {
+                        bsmf.MainFrame.show("Acct Number Already Exists");
+                    }
+
+                    //reinitapmvariables();
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("unable to insert into ac_mstr");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
+    
     public void initvars(String[] arg) {
         String v = "0";
         if (arg != null && arg.length > 0) {
@@ -1214,6 +1410,7 @@ public class CashTran extends javax.swing.JPanel {
         isLoad = true;
         if (jTabbedPane1.getTabCount() == 0) {
         jTabbedPane1.add("misc expense", expensePanel);
+        jTabbedPane1.add("misc income", incomePanel);
         jTabbedPane1.add("buy asset", buyPanel);
         jTabbedPane1.add("sell asset", sellPanel);
         jTabbedPane1.add("recurring expense", expenseRecurPanel);
@@ -1294,6 +1491,23 @@ public class CashTran extends javax.swing.JPanel {
         btexpenseAddAccount.setEnabled(false);
     }
     
+     public void disableIncome() {
+         tbincometotal.setEnabled(false);
+        dcdateIncome.setEnabled(false);
+        tbincomeRef.setEnabled(false);
+        ddaccountincome.setEnabled(false);
+        tbincomeDesc.setEnabled(false);
+        tbincomeAmount.setEnabled(false);
+        btaddItemIncome.setEnabled(false);
+        btdeleteItemIncome.setEnabled(false);
+        btaddincome.setEnabled(false);
+        btincomeAddAccount.setEnabled(false);
+        tbKeyIncome.setEnabled(false);
+        
+        incomeTable.setEnabled(false);
+    }
+   
+    
     public void disableRecurExpense() {
         tbrexptotamt.setEnabled(false);
         ddrexpentity.setEnabled(false);
@@ -1371,6 +1585,22 @@ public class CashTran extends javax.swing.JPanel {
         
         expenseTable.setEnabled(true);
     }
+    
+    public void enableIncome() {
+          tbincometotal.setEnabled(true);
+        dcdateIncome.setEnabled(true);
+        tbincomeRef.setEnabled(true);
+        ddaccountincome.setEnabled(true);
+        tbincomeDesc.setEnabled(true);
+        tbincomeAmount.setEnabled(true);
+        btaddItemIncome.setEnabled(true);
+        btdeleteItemIncome.setEnabled(true);
+        btaddincome.setEnabled(true);
+        btincomeAddAccount.setEnabled(true);
+        
+        incomeTable.setEnabled(true);
+    }
+    
     
     public void enableRecurExpense() {
           tbrexptotamt.setEnabled(true);
@@ -1470,6 +1700,36 @@ public class CashTran extends javax.swing.JPanel {
             ddaccountexpense.setSelectedIndex(0);    
             
     }
+    
+     public void clearIncome() {
+         tbincomeAmount.setText("");
+        
+         tbKeyIncome.setText("");
+         tbincomeDesc.setText("");
+        tbincomeRef.setText("");
+        lbincomeacct.setText("");
+        tbincometotal.setText("");
+        tbincometotal.setEditable(false);
+        lbtitleIncome.setText("");
+        buymodel.setRowCount(0);
+        sellmodel.setRowCount(0);
+        expensemodel.setRowCount(0);
+        incomemodel.setRowCount(0);
+        incomeTable.setModel(incomemodel);
+        
+      
+            
+        ArrayList accts = new ArrayList();
+        accts = OVData.getGLAcctIncomeDisplayOnly(); 
+        ddaccountincome.removeAllItems();
+        for (int i = 0; i < accts.size(); i++) {
+            ddaccountincome.addItem(accts.get(i).toString());
+        }
+            if (ddaccountincome.getItemCount() > 0)
+            ddaccountincome.setSelectedIndex(0);    
+            
+    }
+    
     
     public void clearRecurExpense() {
         
@@ -1649,6 +1909,15 @@ public class CashTran extends javax.swing.JPanel {
          } 
          tbexpensetotal.setText(BlueSeerUtils.bsformat("",String.valueOf(total),"2"));
     }
+    
+     public void sumIncomeTotal() {
+         double total = 0.00;
+         for (int j = 0; j < incomeTable.getRowCount(); j++) {
+             total += ( Double.valueOf(incomeTable.getValueAt(j, 2).toString()) * Double.valueOf(incomeTable.getValueAt(j, 3).toString()));
+         } 
+         tbincometotal.setText(BlueSeerUtils.bsformat("",String.valueOf(total),"2"));
+    }
+    
     
     public void setvendorvariables(String vendor) {
         
@@ -1839,6 +2108,33 @@ public class CashTran extends javax.swing.JPanel {
         tbrexpincome = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         btupdateincome = new javax.swing.JButton();
+        incomePanel = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        dcdateIncome = new com.toedter.calendar.JDateChooser();
+        tbKeyIncome = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        btnewincome = new javax.swing.JButton();
+        jLabel39 = new javax.swing.JLabel();
+        lbtitleIncome = new javax.swing.JLabel();
+        jPanel13 = new javax.swing.JPanel();
+        lbitem4 = new javax.swing.JLabel();
+        tbincomeAmount = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        tbincomeDesc = new javax.swing.JTextField();
+        ddaccountincome = new javax.swing.JComboBox<>();
+        btdeleteItemIncome = new javax.swing.JButton();
+        btaddItemIncome = new javax.swing.JButton();
+        lbincomeacct = new javax.swing.JLabel();
+        btincomeAddAccount = new javax.swing.JButton();
+        tbincomeRef = new javax.swing.JTextField();
+        jLabel40 = new javax.swing.JLabel();
+        jPanel14 = new javax.swing.JPanel();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        incomeTable = new javax.swing.JTable();
+        tbincometotal = new javax.swing.JTextField();
+        btaddincome = new javax.swing.JButton();
+        jLabel42 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -3000,6 +3296,247 @@ public class CashTran extends javax.swing.JPanel {
         );
 
         add(expenseRecurPanel);
+
+        incomePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        incomePanel.setPreferredSize(new java.awt.Dimension(730, 561));
+
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc Income Maintenance"));
+
+        dcdateIncome.setDateFormatString("yyyy-MM-dd");
+
+        jLabel30.setText("TransNbr");
+
+        btnewincome.setText("New");
+        btnewincome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewincomeActionPerformed(evt);
+            }
+        });
+
+        jLabel39.setText("Date");
+
+        lbtitleIncome.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+
+        lbitem4.setText("Description:");
+
+        tbincomeAmount.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbincomeAmountFocusLost(evt);
+            }
+        });
+
+        jLabel20.setText("Amount");
+
+        jLabel31.setText("Income Account:");
+
+        ddaccountincome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddaccountincomeActionPerformed(evt);
+            }
+        });
+
+        btdeleteItemIncome.setText("Del Item");
+        btdeleteItemIncome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteItemIncomeActionPerformed(evt);
+            }
+        });
+
+        btaddItemIncome.setText("Add Item");
+        btaddItemIncome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddItemIncomeActionPerformed(evt);
+            }
+        });
+
+        btincomeAddAccount.setText("Add Account");
+        btincomeAddAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btincomeAddAccountActionPerformed(evt);
+            }
+        });
+
+        jLabel40.setText("Ref (optional)");
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbitem4)
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel40))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(ddaccountincome, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbincomeacct, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btincomeAddAccount))
+                    .addComponent(tbincomeRef, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(btaddItemIncome)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdeleteItemIncome))
+                    .addComponent(tbincomeAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbincomeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel31)
+                        .addComponent(ddaccountincome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbincomeacct, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btincomeAddAccount))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbitem4)
+                    .addComponent(tbincomeDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbincomeAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20))
+                .addGap(36, 36, 36)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbincomeRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel40))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btaddItemIncome)
+                    .addComponent(btdeleteItemIncome))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        incomeTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane12.setViewportView(incomeTable);
+
+        tbincometotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbincometotalActionPerformed(evt);
+            }
+        });
+
+        btaddincome.setText("Commit");
+        btaddincome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddincomeActionPerformed(evt);
+            }
+        });
+
+        jLabel42.setText("Total:");
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel42)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbincometotal, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btaddincome)
+                .addContainerGap())
+            .addComponent(jScrollPane12)
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btaddincome)
+                    .addComponent(tbincometotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel42))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addComponent(jLabel39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(tbKeyIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnewincome))
+                    .addComponent(dcdateIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbtitleIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel30))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbtitleIncome, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel30)
+                            .addComponent(tbKeyIncome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnewincome))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcdateIncome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel39))))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout incomePanelLayout = new javax.swing.GroupLayout(incomePanel);
+        incomePanel.setLayout(incomePanelLayout);
+        incomePanelLayout.setHorizontalGroup(
+            incomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(incomePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        incomePanelLayout.setVerticalGroup(
+            incomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(incomePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        add(incomePanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewbuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewbuyActionPerformed
@@ -3685,6 +4222,12 @@ public class CashTran extends javax.swing.JPanel {
                     disableExpense();
                     btnewexpense.setEnabled(true);
                     break;
+                
+                case "misc income":
+                    clearIncome();
+                    disableIncome();
+                    btnewincome.setEnabled(true);
+                    break;
                     
                 case "recurring expense":
                     clearRecurExpense();
@@ -3768,24 +4311,156 @@ public class CashTran extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btupdateincomeActionPerformed
 
+    private void btnewincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewincomeActionPerformed
+         tbKeyIncome.setText(String.valueOf(OVData.getNextNbr("gl")));
+                java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String clockdate = dfdate.format(now);
+                String clocktime = dftime.format(now);
+               
+                dcdateIncome.setDate(now);
+                lbtitleIncome.setText("Income");
+                enableIncome();
+               btnewincome.setEnabled(false);
+               btaddincome.setEnabled(false);  
+               incomeline = 0;
+               BlueSeerUtils.messagereset();
+    }//GEN-LAST:event_btnewincomeActionPerformed
+
+    private void tbincomeAmountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbincomeAmountFocusLost
+        String x = BlueSeerUtils.bsformat("", tbincomeAmount.getText(), "2");
+        if (x.equals("error")) {
+            tbincomeAmount.setText("");
+            tbincomeAmount.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbincomeAmount.requestFocus();
+        } else {
+            tbincomeAmount.setText(x);
+            tbincomeAmount.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbincomeAmountFocusLost
+
+    private void ddaccountincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddaccountincomeActionPerformed
+        if (ddaccountincome.getSelectedItem() != null && ! isLoad )
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddaccountincome.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        lbincomeacct.setText(res.getString("ac_desc"));
+                    }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from ac_mstr");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }//GEN-LAST:event_ddaccountincomeActionPerformed
+
+    private void btdeleteItemIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteItemIncomeActionPerformed
+          int[] rows = incomeTable.getSelectedRows();
+        for (int i : rows) {
+            ((javax.swing.table.DefaultTableModel) incomeTable.getModel()).removeRow(i);
+        }
+        
+         if (incomemodel.getRowCount() > 0) {
+                btaddincome.setEnabled(true);
+            }
+         
+         sumIncomeTotal();
+    }//GEN-LAST:event_btdeleteItemIncomeActionPerformed
+
+    private void btaddItemIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddItemIncomeActionPerformed
+         if (tbincomeAmount.getText().isEmpty()) {
+           bsmf.MainFrame.show("price field must be numeric");
+           tbincomeAmount.requestFocus();
+           return;
+       }
+               
+       if (tbincomeDesc.getText().isEmpty()) {
+           bsmf.MainFrame.show("Description field cannot be blank");
+           tbincomeDesc.requestFocus();
+           return;
+       }
+       
+       String ref = "misc income";
+       if (! tbincomeRef.getText().isEmpty()) {
+           ref = ref + "/" + tbincomeRef.getText();
+       }
+       
+            DecimalFormat df = new DecimalFormat("#0.00"); 
+            incomeline++;
+            
+           
+                 //"Line", "Item", "Qty", "Price", "Ref", "Acct"
+           incomemodel.addRow(new Object[] { incomeline, 
+                                            tbincomeDesc.getText().replace("'",""),
+                                            '1',
+                                            tbincomeAmount.getText(),
+                                            ref,
+                                            ddaccountincome.getSelectedItem().toString()
+                                          });
+         
+            if (incomemodel.getRowCount() > 0) {
+                btaddincome.setEnabled(true);
+            }
+            
+        tbincomeDesc.setText("");
+        tbincomeAmount.setText("");
+        
+        ddaccountincome.setSelectedIndex(0);
+        
+        sumIncomeTotal();
+        
+        tbincomeDesc.requestFocus();
+    }//GEN-LAST:event_btaddItemIncomeActionPerformed
+
+    private void btincomeAddAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btincomeAddAccountActionPerformed
+           String s = bsmf.MainFrame.input("Please input the account description: ");
+       addIncomeAccount(s);
+    }//GEN-LAST:event_btincomeAddAccountActionPerformed
+
+    private void tbincometotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbincometotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbincometotalActionPerformed
+
+    private void btaddincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddincomeActionPerformed
+         BlueSeerUtils.startTask(new String[]{"","Committing..."});
+        disableIncome();
+        btnewincome.setEnabled(true);
+        Task task = new Task("income");
+        task.execute();  
+    }//GEN-LAST:event_btaddincomeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadd1;
     private javax.swing.JButton btaddItemExpense;
+    private javax.swing.JButton btaddItemIncome;
     private javax.swing.JButton btaddentity;
     private javax.swing.JButton btaddentity1;
     private javax.swing.JButton btaddentity3;
     private javax.swing.JButton btaddexpense;
+    private javax.swing.JButton btaddincome;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btadditem1;
     private javax.swing.JButton btdeleteItemExpense;
+    private javax.swing.JButton btdeleteItemIncome;
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btdeleteitem1;
     private javax.swing.JButton btexpaddacct;
     private javax.swing.JButton btexpenseAddAccount;
     private javax.swing.JButton btexpenseAddEntity;
+    private javax.swing.JButton btincomeAddAccount;
     private javax.swing.JButton btnewbuy;
     private javax.swing.JButton btnewexpense;
+    private javax.swing.JButton btnewincome;
     private javax.swing.JButton btnewsell;
     private javax.swing.JButton btpayselected;
     private javax.swing.JButton btrexpadditem;
@@ -3797,7 +4472,9 @@ public class CashTran extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcdate1;
     private com.toedter.calendar.JDateChooser dcdate3;
     private com.toedter.calendar.JDateChooser dcdateExpense;
+    private com.toedter.calendar.JDateChooser dcdateIncome;
     private javax.swing.JComboBox<String> ddaccountexpense;
+    private javax.swing.JComboBox<String> ddaccountincome;
     private javax.swing.JComboBox ddentity;
     private javax.swing.JComboBox ddentity1;
     private javax.swing.JComboBox ddentityExpense;
@@ -3813,6 +4490,8 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JTextField expensenbr;
     private javax.swing.JTextField expensenbr1;
     private javax.swing.JFileChooser fc;
+    private javax.swing.JPanel incomePanel;
+    private javax.swing.JTable incomeTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -3825,6 +4504,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -3835,12 +4515,17 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -3849,6 +4534,9 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -3859,6 +4547,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
@@ -3867,9 +4556,11 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel lbacct1;
     private javax.swing.JLabel lbacct2;
     private javax.swing.JLabel lbexpenseEntityName;
+    private javax.swing.JLabel lbincomeacct;
     private javax.swing.JLabel lbitem1;
     private javax.swing.JLabel lbitem2;
     private javax.swing.JLabel lbitem3;
+    private javax.swing.JLabel lbitem4;
     private javax.swing.JLabel lblentity;
     private javax.swing.JLabel lblentity1;
     private javax.swing.JLabel lblentity2;
@@ -3881,10 +4572,12 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel lbtitle;
     private javax.swing.JLabel lbtitle1;
     private javax.swing.JLabel lbtitle2;
+    private javax.swing.JLabel lbtitleIncome;
     private javax.swing.JTable recurexpensetable;
     private javax.swing.JTable recurhisttable;
     private javax.swing.JPanel sellPanel;
     private javax.swing.JTextField tbKeyExpense;
+    private javax.swing.JTextField tbKeyIncome;
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbactualamt1;
     private javax.swing.JTextField tbexpenseDesc;
@@ -3894,6 +4587,10 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JTextField tbexpenseQty;
     private javax.swing.JTextField tbexpenseRemarks;
     private javax.swing.JTextField tbexpensetotal;
+    private javax.swing.JTextField tbincomeAmount;
+    private javax.swing.JTextField tbincomeDesc;
+    private javax.swing.JTextField tbincomeRef;
+    private javax.swing.JTextField tbincometotal;
     private javax.swing.JTextField tbitemservice;
     private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbpo1;
