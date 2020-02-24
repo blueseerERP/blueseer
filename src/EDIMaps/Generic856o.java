@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.blueseer.utl.OVData;
-import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
 import com.blueseer.utl.BlueSeerUtils;
 
@@ -47,114 +46,63 @@ import com.blueseer.utl.BlueSeerUtils;
  *
  * @author vaughnte
  */
-public class Generic856o {
+public class Generic856o extends com.blueseer.edi.EDIMap {
     
-    public static String[] Mapdata(String control[], String shipper, String entity) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
         com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = "856";
+       String doctype = c[1];
+     String key = doc.get(0).toString();
         
-       // get delimiters for this trading partner, doctype, docdirection
-        String[] delimiters = OVData.getDelimiters(entity, doctype, "0");
-        String dir = OVData.getEDICustDir(entity, doctype, "0");
-         String sd = delimiters[0];
-         String ed = delimiters[1];
-         String ud = delimiters[2];
-         
-         int i = 0;
-         int segcount = 0;
-         int hdrsegcount = 0;
-         int detsegcount = 0;
-         int trlsegcount = 0;
-         
-         // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generateEnvelope(entity, doctype, "0");
-         String ISA = envelope[0];
-         String GS = envelope[1];
-         String GE = envelope[2];
-         String IEA = envelope[3];
-         String filename = envelope[4];
-           String isactrl = envelope[5];
-         String gsctrl = envelope[6];
-         String stctrl = "0001"; // String.format("%09d", gsctrl);
+     // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
+    setControl(c);    
+    
+    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
+    // you can then override individual envelope elements as desired
+    setOutPutEnvelopeStrings(c);
         
-         // assign missing pieces of control (filename, isactrl, gsctrl, stctrl) which are characteristic of ALL outbound documents.  This must be done for ALL outbound maps
-        control[3] = filename;
-        control[4] = isactrl;
-        control[5] = gsctrl;
-        control[6] = stctrl;
          
-      
-        String ST = "ST" + ed + doctype + ed + stctrl + sd;
-        hdrsegcount = 2; // "ST and SE" included
-         // now lets get shipper header info 
-         // cust, ship, so, po, podate, shipdate, remarks, ref, shipvia, grosswt, netwt, trailernumber, site
-         
-         String sh_string = OVData.getShipperHeader(shipper);
-        String[] sh = sh_string.split(",", -1);
         
-          
-         String Header = "";
-         ArrayList<String> H = new ArrayList();
-         H.add("BSN" + ed + "00" + ed +  shipper + ed + sh[5] + ed + "1200");
-         H.add("DTM" + ed + "011" + ed + sh[4] + ed + "1200");
-         H.add("DTM" + ed + "067" + ed + sh[4] + ed + "1200");
+         String[] h = OVData.getShipperHeader(key);  // 13 elements...see declaration
+        
+         H.add("BSN" + ed + "00" + ed +  key + ed + h[5] + ed + "1200");
+         H.add("DTM" + ed + "011" + ed + h[4] + ed + "1200");
+         H.add("DTM" + ed + "067" + ed + h[4] + ed + "1200");
          H.add("HL" + ed + "1" + ed + ed + "S" + ed + "1");
-         H.add("TD5" + ed + "B" + ed + "2" + ed + sh[8] + ed + "ZZ" + ed + sh[8]);
-         H.add("REF" + ed + "CN" + sh[10]);
-         H.add("N1" + ed + "ST" + ed + OVData.getCustName(sh[0]) + ed + "92" + sh[1]);
-         H.add("N1" + ed + "SF" + ed + OVData.getDefaultSiteName() + ed + "92" + sh[12]);
+         H.add("TD5" + ed + "B" + ed + "2" + ed + h[8] + ed + "ZZ" + ed + h[8]);
+         H.add("REF" + ed + "CN" + h[10]);
+         H.add("N1" + ed + "ST" + ed + OVData.getCustName(h[0]) + ed + "92" + h[1]);
+         H.add("N1" + ed + "SF" + ed + OVData.getDefaultSiteName() + ed + "92" + h[12]);
          H.add("HL" + ed + "2" + ed + "1" + ed + "O" + ed + "1");
-         H.add("PRF" + ed + sh[3] + ed + "00" + ed + ed + sh[4]);
-         hdrsegcount += 10;
-                  
-         for (String z : H) {
-             Header += (EDI.trimSegment(z, ed).toUpperCase() + sd);
-         }
-         
-         
-         
-         String Detail = "";
-         ArrayList<String> D = new ArrayList();
-         
-         i = 3;
+         H.add("PRF" + ed + h[3] + ed + "00" + ed + ed + h[4]);
+        
+         int i = 0;
          int sumqty = 0;
          // part, custpart, qty, po, cumqty, listprice, netprice, reference
-         ArrayList<String> mylines = OVData.getShipperLines(shipper);
-         String[] detail = null;
-              for (String myline : mylines) {
-                  detail = myline.split(",",-1);
-                  sumqty = sumqty + Integer.valueOf(detail[2]);
+         ArrayList<String[]> lines = OVData.getShipperLines(key);
+        
+              for (String[] d : lines) {
+                  sumqty = sumqty + Integer.valueOf(d[2]);
                   D.add("HL" + ed  + String.valueOf(i) + ed + "2" + ed + "I" + ed + "1");
-                  D.add("LIN" + ed + String.valueOf(i) + ed + "BP" + ed + detail[1] + ed + "VP" + ed +  detail[0]);
-                  D.add("SN1" + ed + String.valueOf(i) + ed + detail[2] + ed + "EA" + ed + detail[2] + ed + ed + ed + ed + "AC");
+                  D.add("LIN" + ed + String.valueOf(i) + ed + "BP" + ed + d[1] + ed + "VP" + ed +  d[0]);
+                  D.add("SN1" + ed + String.valueOf(i) + ed + d[2] + ed + "EA" + ed + d[2] + ed + ed + ed + ed + "AC");
                   i++;
               }
-              
-         detsegcount += 3;
-            
-         for (String d : D) {
-             Detail += (EDI.trimSegment(d, ed).toUpperCase() + sd);
-         }    
-                 
-         String Trailer = "";
+        
+         
           ArrayList<String> T = new ArrayList();
           T.add("CTT" + ed + String.valueOf(i));
-          trlsegcount += 1;
+     
+        
+    // Call this function to join H, D, T arrays into H, D, T Strings     
+    setHDTStrings();
+        
+    // concat all into one Output String          
+    setFinalOutputString();  
+    
+    // Write to outfile
+    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2 parameter here instead of ""
           
-         for (String t : T) {
-             Trailer += (EDI.trimSegment(t, ed).toUpperCase() + sd);
-         } 
-            
-         segcount = hdrsegcount + detsegcount + trlsegcount;
-           
-         String SE = "SE" + ed + String.valueOf(segcount) + ed + "0001" + sd;
-                 // concat and send content to edi.writeFile
-                 String content = ISA + GS + ST + Header + Detail + Trailer + SE + GE + IEA;
-                 edi.writeFile(content, dir, filename); 
-                 
-                 
- 
-                 return control;
+    return c;
 }
 
 }

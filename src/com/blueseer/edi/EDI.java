@@ -1390,21 +1390,18 @@ public class EDI {
         String billto = "";
         String doctype = "856";
         String map = "";
-        String control= "";
         boolean proceed = true;
+       
          
         // lets determine the billto of this shipper
         billto = OVData.getShipperBillto(shipper);
         if (billto.isEmpty()) {
-            errorcode = 2;
             proceed = false;
+            errorcode = 2;
             return errorcode;
         }
         
-        // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIOutMap(billto, doctype, "0");
-        
-         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        String[] c = initEDIControl();   
         
         c[0] = billto;
         c[1] = doctype;
@@ -1414,26 +1411,49 @@ public class EDI {
         c[5] = "";
         c[6] = "";
         c[7] = shipper;
+        c[15] = "0"; // dir out
+        c[12] = "0"; // is override
         
+        // get Delimiters from Cust Defaults
+        String[] defaults = OVData.getEDIOutCustDefaults(billto, doctype, "0");
+        c[9] = defaults[7]; 
+        c[10] = defaults[6]; 
+        c[11] = defaults[8]; 
         
-        if (map.isEmpty()) {
+        // lets determine if an ASN map is available for this billto of this shipper
+        map = OVData.getEDIOutMap(c[0], c[1]);
+        
+          if (map.isEmpty()) {
             proceed = false;
-            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + billto + " / " + doctype);
             errorcode = 1;
+            OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + billto + " / " + doctype); 
                    return errorcode;
         } 
         
+        
+        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
+        ArrayList doc = new ArrayList();
+        doc.add(shipper);
+        
+        
+        
            if (proceed) {
-                    try {
-                    Class cls = Class.forName("EDIMaps." + map);
-                      //  Class cls = Class.forName("blueseer.custom" + map);
+                   try {
+                    Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", String.class, String.class);
-                    method.invoke(obj, shipper, billto);
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+               
+                    
+                    Object envelope = method.invoke(obj, doc, c); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    String[] return_control = (String[])envelope;
+                    
+                    OVData.writeEDILog(return_control, "1", "INFO", "Export"); 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c, "1", "ERROR", "unable to find map class for " + billto + " / " + doctype);
+                         if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to load map class for " + c[0] + " / " + c[1]);
+                        }
                         errorcode = 3;
                         ex.printStackTrace();
                     }
@@ -1459,7 +1479,7 @@ public class EDI {
         String doctype = "810";
         String map = "";
         boolean proceed = true;
-        String[] control = null;
+       
          
         // lets determine the billto of this shipper
         billto = OVData.getShipperBillto(shipper);
@@ -1469,12 +1489,7 @@ public class EDI {
             return errorcode;
         }
         
-         
-        
-        // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIOutMap(billto, doctype, "0");
-        
-        String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+        String[] c = initEDIControl();   
         
         c[0] = billto;
         c[1] = doctype;
@@ -1484,32 +1499,48 @@ public class EDI {
         c[5] = "";
         c[6] = "";
         c[7] = shipper;
+        c[15] = "0"; // dir out
+        c[12] = "0"; // is override
         
+        // get Delimiters from Cust Defaults
+        String[] defaults = OVData.getEDIOutCustDefaults(billto, doctype, "0");
+        c[9] = defaults[7]; 
+        c[10] = defaults[6]; 
+        c[11] = defaults[8]; 
         
+        // lets determine if an ASN map is available for this billto of this shipper
+        map = OVData.getEDIOutMap(c[0], c[1]);
         
-        if (map.isEmpty()) {
+          if (map.isEmpty()) {
             proceed = false;
             errorcode = 1;
             OVData.writeEDILog(c, "1", "ERROR", "no edi_mstr map for " + billto + " / " + doctype); 
                    return errorcode;
         } 
         
+        
+        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
+        ArrayList doc = new ArrayList();
+        doc.add(shipper);
+        
+        
            if (proceed) {
                     try {
-                    Class cls = Class.forName("EDIMaps." + map);
+                    Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", String[].class, String.class, String.class);
-                  // Object filename = method.invoke(obj, shipper, billto);
-                   // control = control + filename.toString();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+               
                     
-                    Object envelope = method.invoke(obj, c, shipper, billto); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    control = (String[])envelope;
+                    Object envelope = method.invoke(obj, doc, c); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
+                    String[] return_control = (String[])envelope;
                     
-                    OVData.writeEDILog(control, "1", "INFO", "Export"); 
+                    OVData.writeEDILog(return_control, "1", "INFO", "Export"); 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "1", "ERROR", "unable to find map class for " + billto + " / " + doctype); 
+                         if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to load map class for " + c[0] + " / " + c[1]);
+                        }
                         errorcode = 3;
                         ex.printStackTrace();
                     }
@@ -1546,7 +1577,7 @@ public class EDI {
          
         for (String w : wh) {   
         
-        map = OVData.getEDIOutMap(w, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        map = OVData.getEDIOutMap(w, doctype);
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
@@ -1620,7 +1651,7 @@ public class EDI {
         for (String ca : cars) {   
             
         
-        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        map = OVData.getEDIOutMap(ca, doctype); 
         String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
         c[0] = ca;
@@ -1687,7 +1718,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIOutMap(tp, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        map = OVData.getEDIOutMap(tp, doctype); 
         
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
@@ -1760,7 +1791,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIOutMap(ca, doctype, "0"); // the "0" is for outbound direction..."1" is inbound
+        map = OVData.getEDIOutMap(ca, doctype);
         
         
          String[] c = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
@@ -1835,6 +1866,11 @@ public class EDI {
          
          String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
         
+         //  if filepath is defined...use this for explicit file path relative to root
+         if (! defaults[9].isEmpty()) {
+             filename = defaults[9] + "/" + filename;
+         }
+         
          //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
          //BufferedWriter output;
          //output = new BufferedWriter(new FileWriter(f));
@@ -1897,13 +1933,13 @@ public class EDI {
        
           
            envelope[0] = "ISA" + ed + isa1 + ed + isa2 + ed + isa3 + ed + isa4 + ed + isa5 + ed + isa6 + ed + isa7 + ed + isa8 + ed + isa9 + ed + 
-                 isa10 + ed + isa11 + ed + isa12 + ed + isa13 + ed + isa14 + ed + isa15 + ed + isa16 + sd ;
+                 isa10 + ed + isa11 + ed + isa12 + ed + isa13 + ed + isa14 + ed + isa15 + ed + isa16 ;
            envelope[0] = envelope[0].toUpperCase();
-           envelope[1] = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8 + sd;
+           envelope[1] = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8;
             envelope[1] = envelope[1].toUpperCase();
-           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(filenumber) + sd;
+           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(filenumber);
             envelope[2] = envelope[2].toUpperCase();
-           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", filenumber) + sd;
+           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", filenumber);
             envelope[3] = envelope[3].toUpperCase();
             
            envelope[4] = filename;

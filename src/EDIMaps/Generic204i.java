@@ -46,7 +46,7 @@ import java.io.IOException;
  */
 public class Generic204i extends com.blueseer.edi.EDIMap {
     
-    public void Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
      
    
     
@@ -107,7 +107,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                    if (purpose.equals("01")) {
                    OVData.CancelFOFrom204i(custfo);
                    OVData.writeEDILog(c, "0", "INFO", "204 Cancel");
-                   return;
+                   break;
                    }
                
                    if (purpose.equals("04")) {
@@ -202,7 +202,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
              // blueseer.EDI.updateFOMSTRFrom204i(e, control);   not yet implemented
          }
         
-      
+      return c;
     }
 
  

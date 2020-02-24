@@ -132,7 +132,7 @@ public abstract class EDIMap implements EDIMapi {
             sd = delimConvertIntToStr(c[9]);
             ed = delimConvertIntToStr(c[10]);
             ud = delimConvertIntToStr(c[11]);
-            isOverride = Boolean.valueOf(c[12].toString()); // isOverrideEnvelope
+            isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
          }
          
         public String delimConvertIntToStr(String intdelim) {
@@ -156,11 +156,12 @@ public abstract class EDIMap implements EDIMapi {
                GE = envelope[2];
                IEA = envelope[3];
                filename = envelope[4];
+               outfile = filename;  
                isactrl = envelope[5];
                gsctrl = envelope[6];
                stctrl = String.format("%09d", Integer.valueOf(gsctrl));
-               ST = "ST" + ed + doctype + ed + stctrl + sd;
-               SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl + sd;  
+               ST = "ST" + ed + doctype + ed + stctrl ;
+               SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
                } else {
                  // you can override elements within the envelope xxArray fields at this point....or merge into segment string
                  // need to figure out what kind of error this bullshit is....

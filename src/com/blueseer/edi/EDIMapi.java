@@ -34,8 +34,8 @@ import java.util.ArrayList;
  */
 public interface EDIMapi {
  
-    public void Mapdata(ArrayList doc, String[] c) throws IOException;
-    
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException;
+        
     public void setControl(String[] c);
     
     public void setOutPutEnvelopeStrings(String[] c);

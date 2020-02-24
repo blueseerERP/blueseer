@@ -39,7 +39,7 @@ import java.io.IOException;
  */
 public class Generic990To990 extends com.blueseer.edi.EDIMap {    
     
-    public void Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
      
     
         com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
@@ -90,7 +90,7 @@ public class Generic990To990 extends com.blueseer.edi.EDIMap {
     // Write to outfile
     edi.writeFileCmdLine(content, outfile);
         
-      
+      return c;
     }
 
  

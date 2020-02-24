@@ -30,9 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
-import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
-import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import static com.blueseer.utl.OVData.writeEDILog;
 
@@ -43,35 +41,11 @@ import static com.blueseer.utl.OVData.writeEDILog;
  */
 public class Generic850i extends com.blueseer.edi.EDIMap {
     
-    public void Mapdata(ArrayList doc, String[] c) {
-     
-    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-     /*  
-            c[0] = senderid;
-            c[1] = doctype;
-            c[2] = map;
-            c[3] = infile;
-            c[4] = controlnum;
-            c[5] = gsctrlnbr;
-            c[6] = docid;
-            c[7] = ref;
-            c[8] = outfile;
-            c[9] = sd;
-            c[10] = ed;
-            c[11] = ud;
-            c[12] = overideenvelope
-            c[13] = isastring
-            c[14] = gsstring
-            c[15] = dir
-            c[16] = idxnbr
-            c[17] = isastart
-            c[18] = isaend
-            c[19] = docstart
-            cp20] = docend
-              */
-    setControl(c); 
-    setISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  
-    setGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));
+    public String[] Mapdata(ArrayList doc, String[] c) {
+   
+    setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
+    setISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
+    setGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
      
         // set mandatory document wide variables
          edi850 e = null;  // mandatory class creation
@@ -79,21 +53,17 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         int i = 0;   // detail line counter
         
         // set misc document wide variables
-        String duedate = "";
         String po = "";
-        String billto = "";
         String part = "";
         String uom = "";
         double discount = 0;
         double listprice = 0;
         double netprice = 0;
         boolean shiploop = false;
-       
-         
-        
-        // loop through each segment in the document
+               
+        // loop through each segment in the inbound raw 850
          for (Object seg : doc) {
-           
+        
              
            // create array of each segment per delimiter used  
            String x[] = seg.toString().split(EDI.escapeDelimiter(ed), -1);
@@ -103,13 +73,13 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            if (EDI.isEnvelopeSegment(x[0].toString())) { 
            continue;
            }
-            
            
-           // start mapping here
+           
            if (x[0].toString().equals("BEG")) {   // BEG SEGMENT DRIVE HEADER ORDER CREATION
               
                 /* We now set the instance object for edi850 class...to be called and updated later on */
                /* this is done once and only once per doc */
+               /* the object 'e' will contain cherry-picked information form the raw 850 file ...and passed to the CreateOrder routine */
                e = new edi850(isa06, isa08, gs02, gs03, isa13, isa09, doctype, stctrl);
               
               /* If there is a one to one relationship between an ISA sender ID and a billto code in CustMaster...then */
@@ -124,7 +94,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            /* the billto code here at the header level based on the ISA senderID or N1 BT segment  */
            /* because you will not be able to retrieve a billto code from a shipto code that hasn't been previously defined */
             
-               e.setOVBillTo(OVData.getEDICustFromSenderISA(isa06, doctype, "0"));   // 3rd parameter '0' is inbound direction '1' is outbound
+          
+               e.setOVBillTo(OVData.getEDICustFromSenderISA(isa06, doctype, "1"));   // 3rd parameter '0' is outbound direction '1' is inbound
                
                
                po = x[3];
@@ -141,7 +112,6 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            // DTM SEGMENT
            if (x[0].toString().equals("DTM") && x[1].toString().equals("002")) {
               e.setDueDate(convertDateFormat("yyyyMMdd", x[2].toString()));
-              duedate = convertDateFormat("yyyyMMdd", x[2].toString());
            }
            
            
@@ -180,6 +150,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
               e.setOVBillTo(OVData.getcustBillTo(e.getOVShipTo()));
               } 
               
+             
               
                // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
                // if here and we have a blank billto...then error out
@@ -228,7 +199,6 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                       DecimalFormat df = new DecimalFormat("#.##");
 
                       e.setDetNetPrice(i,String.valueOf(df.format(netprice)));
-                      bsmf.MainFrame.show(String.valueOf(netprice));
                       e.setDetListPrice(i,String.valueOf(df.format(listprice)));
                       e.setDetDisc(i,String.valueOf(df.format(discount)));
                  }
@@ -239,7 +209,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                
            } // END PO1 SEGMENT
           
-         }
+         } // END of segments in 850 Doc
          
          
          
@@ -248,7 +218,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
          com.blueseer.edi.EDI.createOrderFrom850(e, c); 
          
          
-        
+        return c;
       
     }
 

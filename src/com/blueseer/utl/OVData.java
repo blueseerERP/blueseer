@@ -5570,7 +5570,7 @@ public class OVData {
         
          } 
         
-       public static String getEDIOutMap(String billto, String doctype, String dir) {
+       public static String getEDIOutMap(String billto, String doctype) {
       
            String mystring = "";
         try{
@@ -5582,7 +5582,7 @@ public class OVData {
 
                 res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + billto + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
-                        " AND edi_dir = " + "'" + dir + "'" +
+                        " AND edi_dir = " + "'" + "0" + "'" +
                                 ";");
                while (res.next()) {
                    mystring = res.getString("edi_map");
@@ -5727,7 +5727,7 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from edi_mstr where edi_isa = " + "'" + isa + "'" + 
+                      res = st.executeQuery("select * from edi_mstr where edi_isa = " + "'" + isa.trim() + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
                                 " AND edi_dir = " + "'" + dir + "'" + 
                                 ";");
@@ -11828,8 +11828,9 @@ public class OVData {
          
          
             
-         public static String getShipperHeader(String shipper) {
-              String mystring = "";
+         public static String[] getShipperHeader(String shipper) {
+             
+              String[] H = new String[13];
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11844,19 +11845,20 @@ public class OVData {
                     
                     res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        mystring = res.getString("sh_cust") + "," +
-                                   res.getString("sh_ship") + "," +
-                                res.getString("sh_so") + "," +
-                                res.getString("sh_po") + "," +
-                                res.getString("sh_po_date") + "," +
-                                res.getString("sh_shipdate") + "," +
-                                res.getString("sh_rmks") + "," +
-                                res.getString("sh_ref") + "," +
-                                res.getString("sh_shipvia") + "," +
-                                res.getString("sh_gross_wt") + "," +
-                                res.getString("sh_net_wt") + "," +
-                                res.getString("sh_trailer") + "," +
-                                res.getString("sh_site") ;
+                        H[0] = res.getString("sh_cust");
+                        H[1] = res.getString("sh_ship");
+                        H[2] = res.getString("sh_so");
+                        H[3] = res.getString("sh_po");
+                        H[4] = res.getString("sh_po_date");
+                        H[5] = res.getString("sh_shipdate");
+                        H[6] = res.getString("sh_rmks");
+                        H[7] = res.getString("sh_ref");
+                        H[8] = res.getString("sh_shipvia");
+                        H[9] = res.getString("sh_gross_wt");
+                        H[10] = res.getString("sh_net_wt");
+                        H[11] = res.getString("sh_trailer");
+                        H[12] = res.getString("sh_site");
+                      
                     }
            }
             catch (SQLException s){
@@ -11869,7 +11871,7 @@ public class OVData {
             MainFrame.bslog(e);
             
         }
-        return mystring;
+        return H;
         
          }
          
@@ -12110,8 +12112,9 @@ public class OVData {
              
              
              
-        public static ArrayList getShipperLines(String shipper) {
-              ArrayList mylist = new ArrayList();  
+        public static ArrayList<String[]> getShipperLines(String shipper) {
+              ArrayList<String[]> mylist = new ArrayList();  
+              
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -12124,19 +12127,22 @@ public class OVData {
                 String mydate = dfdate.format(now);
                 
                    
-                   
+                   String[] d = new String[9];
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        mylist.add(res.getString("shd_part") + "," +
-                                   res.getString("shd_custpart") + "," +
-                                res.getInt("shd_qty") + "," +
-                                res.getString("shd_po") + "," +
-                                res.getInt("shd_cumqty") + "," +
-                                res.getDouble("shd_listprice") + "," +
-                                res.getDouble("shd_netprice") + "," +
-                                res.getString("shd_ref")   + "," +
-                                res.getString("shd_sku")
-                                );
+                        for (int z = 0; z < 9; z++) {
+                            d[z] = "";
+                        }
+                        d[0] = res.getString("shd_part");
+                        d[1] = res.getString("shd_custpart");
+                        d[2] = res.getString("shd_qty");
+                        d[3] = res.getString("shd_po");
+                        d[4] = res.getString("shd_cumqty");
+                        d[5] = res.getString("shd_listprice");
+                        d[6] = res.getString("shd_netprice");
+                        d[7] = res.getString("shd_ref");
+                        d[8] = res.getString("shd_sku");
+                        mylist.add(d);
                     }
            }
             catch (SQLException s){
