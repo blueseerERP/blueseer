@@ -52,7 +52,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
     }
 
     
-    public void initvars(String vars) {
+    public void initvars(String[] vars) {
         
         ddcategory.removeAllItems();
         ArrayList mylist = OVData.getGLICDefsList();

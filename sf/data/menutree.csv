@@ -90,7 +90,7 @@ LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Exchange Rate Maintenance,,,,1,1
 LedgerSetupMenu,GLControl,11,JMenuItem,GL Control,,,,1,1
 LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Income Statement Definition,,,,1,1
 Finance,LedgerReportsMenu,2,JMenu,Ledger Reports,,,,1,1
-LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Account Balance Report,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Trial Balance Report,,,,1,1
 LedgerReportsMenu,GLAcctBalSummaryByYear,2,JMenuItem,Account Activity (Year),,,,1,1
 LedgerReportsMenu,AcctBalSumYTD,3,JMenuItem,Account Balance YTD,,,,1,1
 LedgerReportsMenu,UnPostedTransRpt,4,JMenuItem,Unposted Transactions,,1,,1,1

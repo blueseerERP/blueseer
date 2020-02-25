@@ -379,7 +379,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Balance Report"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trial Balance Report"));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
