@@ -178,7 +178,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
          */
         @Override
         public Void doInBackground() throws IOException, FileNotFoundException, ClassNotFoundException {
-            EDI.processFileCmdLine(getFileName(),"","","");
+            EDI.processFile(getFileName(),"","","");
             return null;
         }
  
@@ -625,7 +625,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
                    //  bsmf.MainFrame.show(String.valueOf(i));
                     // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
                     // EDI.processFile(edifile);
-                    String[] m = EDI.processFileCmdLine(infile,"","","");
+                    String[] m = EDI.processFile(infile,"","","");
                     
                     // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {

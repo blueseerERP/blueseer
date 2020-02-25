@@ -52,7 +52,7 @@ public static void main(String args[]) {
                   listOfFiles[i].delete();
                   } else { 
                 //  EDI.processFile(listOfFiles[i].getName(),"","","");
-                  EDI.processFileCmdLine(listOfFiles[i].getName(),"","","");
+                  EDI.processFile(listOfFiles[i].getName(),"","","");
                   listOfFiles[i].renameTo(new File(archpath + listOfFiles[i].getName()));
                   }
                 }

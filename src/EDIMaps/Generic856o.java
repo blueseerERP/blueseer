@@ -93,14 +93,11 @@ public class Generic856o extends com.blueseer.edi.EDIMap {
           T.add("CTT" + ed + String.valueOf(i));
      
         
-    // Call this function to join H, D, T arrays into H, D, T Strings     
-    setHDTStrings();
-        
-    // concat all into one Output String          
-    setFinalOutputString();  
+    // Package it      
+    packagePayload();
     
     // Write to outfile
-    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2 parameter here instead of ""
+    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""
           
     return c;
 }

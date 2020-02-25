@@ -313,4 +313,12 @@ public abstract class EDIMap implements EDIMapi {
              
          }
          
+         public void packagePayload() {
+            // Call this function to join H, D, T arrays into H, D, T Strings     
+            setHDTStrings();
+
+            // concat all into one Output String          
+            setFinalOutputString();  
+
+         }
 }

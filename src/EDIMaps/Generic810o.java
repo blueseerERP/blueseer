@@ -40,7 +40,7 @@ import java.text.DecimalFormat;
 public class Generic810o extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
-        com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
+     com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
      String key = doc.get(0).toString();
         
@@ -50,8 +50,6 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
     // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
     // you can then override individual envelope elements as desired
     setOutPutEnvelopeStrings(c);
-        
-         
         
          String[] h = OVData.getShipperHeader(key);  // 13 elements...see declaration
         
@@ -96,15 +94,12 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
           T.add("TDS" + ed + df.format(sumamtTDS));
           T.add("ISS" + ed + String.valueOf(sumqty) + ed + "EA" + ed + String.valueOf(sumqty) + ed + "LB");
           T.add("CTT" + ed + String.valueOf(i));
-          
-    // Call this function to join H, D, T arrays into H, D, T Strings     
-    setHDTStrings();
-        
-    // concat all into one Output String          
-    setFinalOutputString();  
+   
+    // Package it      
+    packagePayload();
     
     // Write to outfile
-    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2 parameter here instead of ""
+    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""
           
     return c;
 }

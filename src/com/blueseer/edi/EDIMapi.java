@@ -40,9 +40,5 @@ public interface EDIMapi {
     
     public void setOutPutEnvelopeStrings(String[] c);
     
-    public void setHDTStrings();
-    
-    public void setFinalOutputString();
-   
-    
+    public void packagePayload();
 }

@@ -47,52 +47,31 @@ import com.blueseer.utl.BlueSeerUtils;
  *
  * @author vaughnte
  */
-public class Generic204o {
+public class Generic204o extends com.blueseer.edi.EDIMap {
     
-    public static String[] Mapdata(String[] control, String nbr, String entity) throws IOException {
-        com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = "204";
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+   com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
+     String doctype = c[1];
+     String key = doc.get(0).toString(); 
         
-       
-       // get delimiters for this trading partner, doctype, docdirection
-        String[] delimiters = OVData.getDelimiters(entity, doctype, "0");
-        String dir = OVData.getEDICustDir(entity, doctype, "0");
-         String sd = delimiters[0];
-         String ed = delimiters[1];
-         String ud = delimiters[2];
+     // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
+    setControl(c);    
+    
+    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
+    // you can then override individual envelope elements as desired
+    setOutPutEnvelopeStrings(c);
+        
          
-         int i = 0;
-         int segcount = 0;
-         int hdrsegcount = 0;
-         int detsegcount = 0;
-         
-         // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generateEnvelope(entity, doctype, "0");
-         String ISA = envelope[0];
-         String GS = envelope[1];
-         String GE = envelope[2];
-         String IEA = envelope[3];
-         String filename = envelope[4];
-         String isactrl = envelope[5];
-         String gsctrl = envelope[6];
-         String stctrl = "0001"; // String.format("%09d", gsctrl);
-        
-           // assign missing pieces of control (filename, isactrl, gsctrl, stctrl) which are characteristic of ALL outbound documents.  This must be done for ALL outbound maps
-        control[3] = filename;
-        control[4] = isactrl;
-        control[5] = gsctrl;
-        control[6] = stctrl;
-        
         
          // now lets get order header info 
          // fonbr, ref, site, wh, date, remarks, carrier, carrier_assigned
-         String[] h = OVData.getFreightOrderHeaderArray(nbr);
+         String[] h = OVData.getFreightOrderHeaderArray(key);
          
          // now detail
          // fod_line, fod_type, fod_shipper, fod_ref, fod_shipdate, fod_shiptime, fod_delvdate, fod_delvtime, fod_code, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip ...
          // fod_phone, fod_contact, fod_remarks, fod_pallets, fod_boxes, fod_weight, fod_wt_uom 
          // 20 elements
-         ArrayList<String[]> dt = OVData.getFreightOrderDetailArray(nbr);
+         ArrayList<String[]> dt = OVData.getFreightOrderDetailArray(key);
          
          
          // get Shipto Address (9 elements)  id, name, line1, line2, line3, city, state, zip, country
@@ -101,33 +80,18 @@ public class Generic204o {
         
         
         
-        String ST = "ST" + ed + doctype + ed + stctrl + sd;
-        hdrsegcount = 2; // "ST and SE" included
-         
-         String Header = "";
-         ArrayList<String> S = new ArrayList();
-         S.add("B2" + ed + ed + h[7] + ed + h[0] + ed + ed + ed + "PP");
-         S.add("B2A" + ed + "00" + ed + "LT");
-         hdrsegcount += 2;
+       
+         H.add("B2" + ed + ed + h[7] + ed + h[0] + ed + ed + ed + "PP");
+         H.add("B2A" + ed + "00" + ed + "LT");
          if (! h[1].isEmpty())  {
-           S.add("L11" + ed + h[1] + ed + "OQ");
-           hdrsegcount += 1;
+           H.add("L11" + ed + h[1] + ed + "OQ");
          }
          
          if (! h[5].isEmpty()) {
-             S.add("NTE" + ed + ed + h[5]);
-             hdrsegcount += 1;
+             H.add("NTE" + ed + ed + h[5]);
          }
         
          
-         for (String s : S) {
-             Header += (EDI.trimSegment(s, ed).toUpperCase() + sd);
-         }
-         
-         
-         
-         String Detail = "";
-         ArrayList<String> D = new ArrayList();
          int z = 0;
          int totqty = 0;
          double totwt = 0.00;
@@ -144,10 +108,9 @@ public class Generic204o {
              D.add("N2" + ed + d[9]);
              D.add("N3" + ed + d[10]);
              D.add("N4" + ed + d[12] + ed + d[13] + ed + d[14]);
-             detsegcount += 6;
+             
              if (! d[16].isEmpty() && ! d[15].isEmpty()) {
              D.add("G61" + ed + "SD" + ed + d[16] + ed + "TE" + ed + d[15]);
-             detsegcount += 1;
              }
              
              } else {
@@ -157,52 +120,29 @@ public class Generic204o {
              D.add("N2" + ed + d[9]);
              D.add("N3" + ed + d[10]);
              D.add("N4" + ed + d[12] + ed + d[13] + ed + d[14]);
-             detsegcount += 6;
              if (! d[16].isEmpty() && ! d[15].isEmpty()) {
              D.add("G61" + ed + "SD" + ed + d[16] + ed + "TE" + ed + d[15]);
-             detsegcount += 1;
              }
              D.add("OID" + ed + d[2] +  ed + d[3]);
              D.add("L5" + ed + ed + "TBD");
              D.add("AT8" + ed + "G" + ed + "L" + ed + d[20]);
-             detsegcount += 3;
              }
          }  
          
-         for (String d : D) {
-             Detail += (EDI.trimSegment(d, ed).toUpperCase() + sd);
-         }
+        
          
          
-         String Trailer = "";
-          ArrayList<String> T = new ArrayList();
-          T.add("L3" + ed + String.valueOf(totwt) + ed + "G");
-          hdrsegcount += 1;
-          
-         for (String t : T) {
-             Trailer += (EDI.trimSegment(t, ed).toUpperCase() + sd);
-         } 
+        
+        T.add("L3" + ed + String.valueOf(totwt) + ed + "G");
+         
             
-         segcount = hdrsegcount + detsegcount;
-         
-         String SE = "SE" + ed + String.valueOf(segcount) + ed + "0001" + sd;
-                         
-         
-                 
-                 // concat and send content to edi.writeFile
-                 String content = ISA + GS + ST + Header + Detail + Trailer + SE + GE + IEA;
-                 edi.writeFile(content, dir, filename); 
-                 
-        /*
-         output.write(ISA);
-         output.write(GS);
-         output.write(ST);
-         output.write(Header);
-         output.write(Detail);
-         output.write(Trailer);
-         output.close();
- */
-                 return control;  
+       // Package it      
+    packagePayload();
+    
+    // Write to outfile
+    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""
+          
+    return c;  
 }
 
 }

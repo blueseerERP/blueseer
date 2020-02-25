@@ -78,14 +78,11 @@ public class Generic990To990 extends com.blueseer.edi.EDIMap {
      // END MAP
          
          
-    // Call this function to join H, D, T arrays into H, D, T Strings     
-    setHDTStrings();
-        
-    // concat all into one Output String          
-    setFinalOutputString();  
+    // Package it      
+    packagePayload();
     
     // Write to Standard Out
-    System.out.println(content);
+    System.out.println(content);  // optional
     
     // Write to outfile
     edi.writeFileCmdLine(content, outfile);

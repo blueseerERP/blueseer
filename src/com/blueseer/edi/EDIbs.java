@@ -169,7 +169,7 @@ public static void main(String args[]) {
       // case of single input and output file    
     if (! infile.isEmpty() && ! outfile.isEmpty() ) {
         try {
-            EDI.processFileCmdLine(infile, map, outfile, isOverride); 
+            EDI.processFile(infile, map, outfile, isOverride); 
         } catch (IOException ex) {
            ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -194,7 +194,7 @@ public static void main(String args[]) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                  EDI.processFile(listOfFiles[i]);
+                  EDI.processFile(listOfFiles[i].getName(), map, "", isOverride);
                   }
                 }
               }
