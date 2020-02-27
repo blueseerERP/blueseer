@@ -15759,20 +15759,29 @@ public class OVData {
         
     }
           
-             public static ArrayList getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
-       ArrayList myarray = new ArrayList();
+       public static ArrayList<String[]> getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
+       ArrayList<String[]> myarray = new ArrayList();
+       
         try{
            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-
+                if (fromacct.isEmpty() && toacct.isEmpty()) {
+                    res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
+                } else {
                 res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr where " +
                          " ac_id >= " + "'" + fromacct + "'" + " AND " +
                          " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+                }
                while (res.next()) {
-                    myarray.add(res.getString("ac_id") + "," + res.getString("ac_cur") + "," + res.getString("ac_type") + "," + res.getString("ac_desc"));
+                   String[] x = new String[4];
+                   x[0] = res.getString("ac_id");
+                   x[1] = res.getString("ac_cur");
+                   x[2] = res.getString("ac_type");
+                   x[3] = res.getString("ac_desc");
+                    myarray.add(x);
                 }
                
            }

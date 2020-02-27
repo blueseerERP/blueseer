@@ -547,14 +547,14 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
 
         cbenabled.setText("Enabled?");
 
-        btdeleteelement.setText("Delete");
+        btdeleteelement.setText("DeleteElement");
         btdeleteelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteelementActionPerformed(evt);
             }
         });
 
-        btaddelement.setText("Add");
+        btaddelement.setText("AddElement");
         btaddelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddelementActionPerformed(evt);

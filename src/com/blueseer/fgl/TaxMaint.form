@@ -191,7 +191,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btdeleteelement">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete"/>
+                <Property name="text" type="java.lang.String" value="DeleteElement"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteelementActionPerformed"/>
@@ -201,7 +201,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btaddelement">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Add"/>
+                <Property name="text" type="java.lang.String" value="AddElement"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddelementActionPerformed"/>

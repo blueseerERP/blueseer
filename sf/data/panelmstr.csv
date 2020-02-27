@@ -70,6 +70,7 @@ com.blueseer.fgl.ExpenseMaint,,1
 com.blueseer.fgl.IncomeMaint,,1
 com.blueseer.fgl.GLAcctBalRpt1,,1
 com.blueseer.fgl.GLAcctBalRpt2,,1
+com.blueseer.fgl.TrialBalanceRpt,,1
 com.blueseer.fgl.GLAcctBalRpt3,,1
 com.blueseer.fgl.GLAcctBalYTD,,1
 com.blueseer.fgl.GLCalMaint,,1

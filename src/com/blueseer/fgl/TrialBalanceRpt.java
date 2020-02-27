@@ -75,12 +75,12 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author vaughnte
  */
-public class GLAcctBalRpt2 extends javax.swing.JPanel {
+public class TrialBalanceRpt extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "BegBal", "Activity", "EndBal"})
+                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "Debits", "Credits"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -92,7 +92,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     
     
     javax.swing.table.DefaultTableModel mymodelCC = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "BegBal", "Activity", "EndBal"})
+                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "Debits", "Credits"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -153,7 +153,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     /**
      * Creates new form ScrapReportPanel
      */
-    public GLAcctBalRpt2() {
+    public TrialBalanceRpt() {
         initComponents();
     }
 
@@ -195,7 +195,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       Double.valueOf(df.format(res.getDouble("glh_amt")))  });
                 }
                
-               labeldettotal.setText(df.format(total));
                 tabledetail.setModel(modeldetail);
                 this.repaint();
 
@@ -247,7 +246,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       Double.valueOf(df.format(res.getDouble("glh_amt")))});
                 }
                
-               labeldettotal.setText(df.format(total));
+              
                 tabledetail.setModel(modeldetail);
                 this.repaint();
 
@@ -264,11 +263,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
      
      
     public void initvars(String[] arg) {
-        lblendbal.setText("0");
-        lblbegbal.setText("0");
-        lblactbal.setText("0");
-        labeldettotal.setText("");
         
+        lbldebits.setText("0");
+        lblcredits.setText("0");
+       
         
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -323,14 +321,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         ddperiod.setSelectedItem(fromdatearray.get(1).toString());
         ArrayList startend = OVData.getGLCalForPeriod(ddyear.getSelectedItem().toString(), ddperiod.getSelectedItem().toString());
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
-        
-        ArrayList myacct = OVData.getGLAcctList();
-        for (int i = 0; i < myacct.size(); i++) {
-            ddacctfrom.addItem(myacct.get(i));
-            ddacctto.addItem(myacct.get(i));
-        }
-            ddacctfrom.setSelectedIndex(0);
-            ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1);
+       
         
           
           
@@ -354,33 +345,25 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         tabledetail = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         btdetail = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         cbzero = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         ddperiod = new javax.swing.JComboBox();
         ddyear = new javax.swing.JComboBox();
-        ddacctto = new javax.swing.JComboBox();
         datelabel = new javax.swing.JLabel();
-        ddacctfrom = new javax.swing.JComboBox();
         ddsite = new javax.swing.JComboBox();
         cbcc = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        lblactbal = new javax.swing.JLabel();
+        lblcredits = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        lblbegbal = new javax.swing.JLabel();
-        lblendbal = new javax.swing.JLabel();
-        EndBal = new javax.swing.JLabel();
-        labeldettotal = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lbldebits = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Balance Report"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trial Balance Report"));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -436,8 +419,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("To Acct");
-
         btRun.setText("Run");
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,8 +427,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
-
-        jLabel1.setText("From Acct");
 
         cbzero.setText("Supress Zeros");
 
@@ -480,45 +459,35 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(132, 132, 132))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4))
+                        .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(443, 443, 443))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddperiod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddacctfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(ddperiod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ddacctto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btRun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdetail))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbcc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbzero)))
-                .addContainerGap())
+                        .addComponent(jLabel5)
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btRun)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdetail))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(cbcc)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbzero)))
+                        .addGap(202, 202, 202))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(ddacctfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(btRun)
@@ -526,31 +495,23 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddacctto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ddperiod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(cbcc)
-                        .addComponent(cbzero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddperiod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbcc)
+                    .addComponent(cbzero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jLabel8.setText("Activity");
+        jLabel8.setText("Total Credits");
 
-        lblactbal.setText("0");
+        lblcredits.setText("0");
 
-        jLabel7.setText("Beginning Balance");
+        jLabel7.setText("Total Debits");
 
-        lblbegbal.setText("0");
-
-        lblendbal.setBackground(new java.awt.Color(195, 129, 129));
-        lblendbal.setText("0");
-
-        EndBal.setText("Ending Balance");
+        lbldebits.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -559,14 +520,12 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(EndBal)
                     .addComponent(jLabel8)
                     .addComponent(jLabel7))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblendbal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblactbal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblbegbal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblcredits, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbldebits, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -574,20 +533,14 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblbegbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbldebits, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblactbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblcredits, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EndBal)
-                    .addComponent(lblendbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(36, 36, 36))
         );
-
-        jLabel6.setText("Accout Balance");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -598,13 +551,8 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(labeldettotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -614,14 +562,9 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(labeldettotal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -662,14 +605,12 @@ try {
               tablereport.setModel(mymodelCC);
           tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-          tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
           } else {
               tablereport.setModel(mymodel);
           tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-          tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-          tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());    
+          tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer()); 
         //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
           }
@@ -677,7 +618,7 @@ try {
           
           for (int i = 0 ; i < tablereport.getColumnCount(); i++){ 
               if (cbcc.isSelected()) {
-                  if (i == 7 || i == 8 || i == 9) {
+                  if (i == 7 || i == 8 ) {
                  tablereport.getTableHeader().getColumnModel().getColumn(i)
                  .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.RIGHT));
                   } else {
@@ -685,7 +626,7 @@ try {
                  .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.LEFT));    
                   }
               } else {
-                   if (i == 6 || i == 7 || i == 8) {
+                   if (i == 6 || i == 7 ) {
                  tablereport.getTableHeader().getColumnModel().getColumn(i)
                  .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.RIGHT));
                   } else {
@@ -710,6 +651,8 @@ try {
                  double totbegbal = 0.00;
                  double totactivity = 0.00;
                  double totendbal = 0.00;
+                 double totaldebits = 0.00;
+                 double totalcredits = 0.00;
                  double preact = 0.00;
                  double postact = 0.00;
                  Date p_datestart = null;
@@ -717,7 +660,9 @@ try {
                  
                  ArrayList<String> ccamts = new ArrayList<String>();
                  
-                 ArrayList<String[]> accounts = OVData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                 ArrayList<String[]> accounts = OVData.getGLAcctListRangeWCurrTypeDesc("", "");
+                // ArrayList<String> accounts = OVData.getGLAcctList();
+                 
                  ArrayList<String> ccs = OVData.getGLCCList();
                  
                   totbegbal = 0.00;
@@ -735,10 +680,10 @@ try {
                  
                  if (cbcc.isSelected()) {
                  
-                 ACCTS:    for (String account[] : accounts) {
+                 ACCTS:    for (String[] account : accounts) {
                      
                      
-                  
+                 
                   acctid = account[0];
                   acctcurr = account[1];
                   accttype = account[2];
@@ -789,23 +734,30 @@ try {
                                begbal = begbal - activity;
                                endbal = begbal + activity;
                            
-                            mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                             if (accttype.equals("L") || accttype.equals("O")) {
+                                   totalcredits = totalcredits + (-1 * endbal);
+                                   mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
+                                Double.valueOf(df.format(0)),
+                                Double.valueOf(df.format((-1 * endbal)))
                             });
+                               } else {
+                                   totaldebits = totaldebits + endbal ;
+                                   mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                                acctdesc,
+                                site,
+                                res.getString("acb_cc"),
+                                Double.valueOf(df.format(endbal)),
+                                Double.valueOf(df.format(0))
+                            });
+                               }
                  totendbal = totendbal + endbal;
                  totbegbal = totbegbal + begbal;
                  totactivity = totactivity + activity;
                             
                        }
-                       
-                 
-                       
-                       
                   } else {
                      // must be income statement
                       res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where " +
@@ -839,15 +791,26 @@ try {
                             
                                begbal = begbal - activity;
                                endbal = begbal + activity;
-                           
-                            mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                               if (accttype.equals("I") ) {
+                                   totalcredits = totalcredits + (-1 * endbal);
+                                   mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
+                                Double.valueOf(df.format(0)),
+                                Double.valueOf(df.format((-1 * endbal)))
                             });
+                               } else {
+                                   totaldebits = totaldebits + endbal ;
+                                   mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                                acctdesc,
+                                site,
+                                res.getString("acb_cc"),
+                                Double.valueOf(df.format(endbal)),
+                                Double.valueOf(df.format(0))
+                            });
+                               }
+                            
                             
                                   
                  totendbal = totendbal + endbal;
@@ -887,7 +850,7 @@ try {
                  } else {    // else if not CC included
                      
                   
-                 ACCTS:    for (String[] account : accounts) {
+                 ACCTS:    for (String account[] : accounts) {
                      
                      
                   
@@ -902,6 +865,7 @@ try {
                   endbal = 0.00;
                   preact = 0.00;
                   postact = 0.00;
+                  
                 
                   
                   
@@ -971,13 +935,24 @@ try {
                //  if (begbal == 0 && endbal == 0 && activity == 0)
                //      bsmf.MainFrame.show(account);
                
+                 if (accttype.equals("A") || accttype.equals("E")) {  // Debits
+                     totaldebits = totaldebits + endbal;
+                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                                acctdesc,
+                                site,
+                                Double.valueOf(df.format(endbal)),
+                                Double.valueOf(df.format(0))
+                            });
+                 } else {  // credits
+                     totalcredits = totalcredits + (-1 * endbal);
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
-                            });
+                                Double.valueOf(df.format(0)),
+                                Double.valueOf(df.format((-1 * endbal)))  // reverse sign of credit column for trial balance
+                            }); 
+                 }
+                    
                
              
                    
@@ -988,10 +963,9 @@ try {
                  
                  
                  
-                 
-                lblendbal.setText(df.format(totendbal));
-                lblbegbal.setText(df.format(totbegbal));
-                lblactbal.setText(df.format(totactivity));
+              
+                lbldebits.setText(df.format(totaldebits));
+                lblcredits.setText(df.format(totalcredits));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem executing Acct Bal Report");
@@ -1005,7 +979,6 @@ try {
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
        detailpanel.setVisible(false);
-       labeldettotal.setText("");
        btdetail.setEnabled(false);
     }//GEN-LAST:event_btdetailActionPerformed
 
@@ -1014,7 +987,7 @@ try {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-               if (tablereport.getColumnCount() == 9) {
+               if (tablereport.getColumnCount() == 8) {
                 getdetail(tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 5).toString(), ddyear.getSelectedItem().toString(), ddperiod.getSelectedItem().toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
@@ -1044,24 +1017,18 @@ try {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel EndBal;
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
     private javax.swing.JCheckBox cbcc;
     private javax.swing.JCheckBox cbzero;
     private javax.swing.JLabel datelabel;
-    private javax.swing.JComboBox ddacctfrom;
-    private javax.swing.JComboBox ddacctto;
     private javax.swing.JComboBox ddperiod;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddyear;
     private javax.swing.JPanel detailpanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -1069,10 +1036,8 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel labeldettotal;
-    private javax.swing.JLabel lblactbal;
-    private javax.swing.JLabel lblbegbal;
-    private javax.swing.JLabel lblendbal;
+    private javax.swing.JLabel lblcredits;
+    private javax.swing.JLabel lbldebits;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
