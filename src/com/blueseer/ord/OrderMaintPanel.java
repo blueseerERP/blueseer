@@ -274,8 +274,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.black);
         
-         cbisallocated.setForeground(Color.black);
-         cbisallocated.setText("Allocation?");
+       
+        cbisallocated.setText("Allocation?");
+        
         
         ArrayList<String> mylist = new ArrayList<String>();
          jPanelSched.setVisible(false);
@@ -453,6 +454,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
+        
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -1075,16 +1077,13 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     if (res.getString("so_isallocated").equals("c")) {
                         cbisallocated.setSelected(true);
-                        cbisallocated.setForeground(Color.black);
                         cbisallocated.setText("Allocation?");
                     } 
                     else if (res.getString("so_isallocated").equals("p")) {
                         cbisallocated.setSelected(true);
-                        cbisallocated.setForeground(Color.red);
                         cbisallocated.setText("Allocation? (partial)");
                     } else {
                         cbisallocated.setSelected(false);
-                        cbisallocated.setForeground(Color.black);
                         cbisallocated.setText("Allocation?");
                     }
                     
