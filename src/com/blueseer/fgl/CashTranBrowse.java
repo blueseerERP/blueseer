@@ -802,7 +802,7 @@ try {
                   res = st.executeQuery("select pos_nbr, pos_site, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
                         " where pos_entrydate >= " + "'" + fromdate + "'" + 
                         " and pos_entrydate <= " + "'" + todate + "'" +
-                        " and pos_site <= " + "'" + ddsite.getSelectedItem().toString() + "'" +        
+                        " and pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                         " order by pos_nbr desc;");
                 
                 

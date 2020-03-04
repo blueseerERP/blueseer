@@ -293,14 +293,17 @@ public class CashTran extends javax.swing.JPanel {
                 case "expense":
                     initvars(new String[]{"0"});
                     break;
-                case "buy":
+                case "income":
                     initvars(new String[]{"1"});
-                    break;
-                case "sell":
+                    break;    
+                case "buy":
                     initvars(new String[]{"2"});
                     break;
-                case "recurexpense":
+                case "sell":
                     initvars(new String[]{"3"});
+                    break;
+                case "recurexpense":
+                    initvars(new String[]{"4"});
                     break;
                 default:
                     initvars(new String[]{"0"});
