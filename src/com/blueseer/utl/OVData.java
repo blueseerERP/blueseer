@@ -16298,8 +16298,6 @@ public class OVData {
     }
          
          public static double getGLAcctBalYTD(String site, String acct) {
-              
-              
        double amt = 0.00;
         try{
             Class.forName(driver).newInstance();
@@ -16329,6 +16327,86 @@ public class OVData {
         return amt;
         
     }
+         
+      public static double getGLAcctBalAsOfDate(String site, String acct, String date) { 
+       double amt = 0.00;
+       
+        DateFormat dfdate = new SimpleDateFormat("yyyy");
+        java.util.Date now = new java.util.Date();
+        String currentyear = dfdate.format(now);
+        
+        int year = Integer.valueOf(date.substring(0,4));
+        int period = Integer.valueOf(date.substring(5,7));
+        int prioryear = year - 1;
+        
+        ArrayList<java.sql.Date> actdatearray = OVData.getGLCalForPeriod(String.valueOf(year), String.valueOf(period));  
+                String datestart = String.valueOf(actdatearray.get(0));
+                String dateend = String.valueOf(actdatearray.get(1));
+       
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                String accttype = "";
+                  res = st.executeQuery("select ac_type from ac_mstr where ac_id = " + "'" + acct + "'" +  ";");
+                  while (res.next()) {
+                          accttype = res.getString("ac_type");
+                  }
+                
+                  
+                  // get all acb_mstr records associated with this account PRIOR to this date's period
+                  if (accttype.equals("L") || accttype.equals("A") || accttype.equals("O")) {
+                      //must be type balance sheet
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acct + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
+                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                        ";");
+                
+                       while (res.next()) {
+                          amt += res.getDouble("sum");
+                       }
+                  } else {
+                     // must be income statement
+                      res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acct + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
+                        ";");
+                
+                       while (res.next()) {
+                          amt += res.getDouble("sum");
+                       }
+                  }
+                  
+                  // now get all transactions in gl_hist that equate to current period transactions of inbound date
+                  res = st.executeQuery("select sum(glh_amt) as sum from gl_hist " +
+                        " where glh_acct = " + "'" + acct + "'" + " AND " + 
+                        " glh_site = " + "'" + site + "'" + " AND " +
+                        " glh_effdate >= " + "'" + datestart + "'" + " AND " +
+                        " glh_effdate <= " + "'" + dateend + "'" + 
+                        " group by glh_acct ;");
+                
+                       while (res.next()) {
+                          amt += res.getDouble("sum");
+                       }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return amt;
+        
+    }     
+         
          
          public static double getGLAcctBalSummCC(String site, String acct, String year, String per) {
               

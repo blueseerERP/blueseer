@@ -74,7 +74,11 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -94,22 +98,89 @@ public class ReconAccount extends javax.swing.JPanel {
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
     Double expenses = 0.00;
     Double inventory = 0.00;
+    boolean isLoad = false;
     
-    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
+    ReconAccount.MyTableModel mymodel = new ReconAccount.MyTableModel(new Object[][]{},
+                        new String[]{"ID", "Acct", "CC", "Site", "Ref", "Type", "EffDate", "Desc", "Amount", "CheckBox", "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0  || col == 9 )       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
+                        if (col == 9) {
+                            return Boolean.class;
+                        } else { 
+                            return String.class;  //other columns accept String values  
+                        }
+                      }
+            };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Shipper/Receiver", "Item", "Desc", "Ref", "Qty", "NetPrice"});
     
    
+    
+     class MyTableModel extends DefaultTableModel {  
+      
+        public MyTableModel(Object rowData[][], Object columnNames[]) {  
+             super(rowData, columnNames);  
+          }  
+         
+       boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false, false, false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            // plan is closed
+            if (tablereport.getModel().getValueAt(rowIndex, 10).equals("cleared")) {   // 1
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false};  
+            } else {
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, true, false};  
+            }
+            
+            return canEdit[columnIndex];
+        }
+     //     public Class getColumnClass(int col) {  
+     //       if (col == 6)       
+     //           return Double.class;  
+     //       else return String.class;  //other columns accept String values  
+    //    }  
+        
+        public Class getColumnClass(int column) {
+            
+            
+               if (column == 8)       
+                return Double.class; 
+               else if (column == 9) 
+                   return Boolean.class;
+            else return String.class;  //other columns accept String values 
+            
+       /*     
+      if (column >= 0 && column < getColumnCount()) {
+          
+          
+           if (getRowCount() > 0) {
+             // you need to check 
+             Object value = getValueAt(0, column);
+             // a line for robustness (in real code you probably would loop all rows until
+             // finding a not-null value 
+             if (value != null) {
+                return value.getClass();
+             }
+
+        }
+          
+          
+          
+      }  
+              
+        return Object.class;
+*/
+               }
+       
+        
+        
+   }    
+    
+     
     
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -133,6 +204,29 @@ public class ReconAccount extends javax.swing.JPanel {
     }
     
      
+      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
+
+          CheckBoxRenderer() {
+            setHorizontalAlignment(JLabel.CENTER);
+            
+          }
+
+          public Component getTableCellRendererComponent(JTable table, Object value,
+              boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+              setForeground(table.getSelectionForeground());
+              //super.setBackground(table.getSelectionBackground());
+              setBackground(table.getSelectionBackground());
+            } else {
+              setForeground(table.getForeground());
+              setBackground(table.getBackground());
+            }
+            setSelected((value != null && ((Boolean) value).booleanValue()));
+            return this;
+          }
+} 
+    
+     
      class SomeRenderer extends DefaultTableCellRenderer {
          
        public Component getTableCellRendererComponent(JTable table,
@@ -150,22 +244,12 @@ public class ReconAccount extends javax.swing.JPanel {
            
         }
         
-            String trantype = tablereport.getModel().getValueAt(table.convertRowIndexToModel(row), 4).toString();
-            if ( column == 4 && trantype.equals("sell") ) {
-           // c.setBackground(Color.green);
+            String trantype = tablereport.getModel().getValueAt(table.convertRowIndexToModel(row), 10).toString();
+            if ( column == 10 && trantype.equals("cleared") ) {
             c.setForeground(Color.blue);
+            } else {
+            c.setForeground(table.getForeground());
             }
-            else if ( column == 4 && trantype.equals("buy") ) {
-           // c.setBackground(Color.blue);
-            c.setForeground(Color.red);
-            }
-            else {
-                c.setBackground(table.getBackground());
-            }
-            
-      
-        
-           
             
             return c;
     }
@@ -322,7 +406,7 @@ public class ReconAccount extends javax.swing.JPanel {
         initComponents();
     }
 
-     public void getdetail(String shipper) {
+    public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -367,14 +451,68 @@ public class ReconAccount extends javax.swing.JPanel {
 
     }
     
+    public Double sumtoggle () {
+        double x = 0.00;
+        DecimalFormat df = new DecimalFormat("#0.00");
+         for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+              if (mymodel.getValueAt(i, 10).toString().equals("open") && (boolean) mymodel.getValueAt(i, 9)) {
+                     x += Double.valueOf(mymodel.getValueAt(i, 8).toString());
+                 }
+         }
+         
+        lbselecttotal.setText(df.format(x));
+       
+        return x;
+    }
+    
+    public void sumAll() {
+         
+    }
+    
+     public void updateRecon() {
+     
+     try {
+            
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+              double x = 0.00;
+              DecimalFormat df = new DecimalFormat("#0.00");
+              for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+                 if ( (boolean) mymodel.getValueAt(i, 9) ) {
+                     st.executeUpdate("update gl_hist set glh_recon = " + "'" + '1' + "'" 
+                            + " where glh_id = " + "'" + mymodel.getValueAt(i, 0).toString() + "'"                             
+                            + ";");
+                 }
+              }
+             
+              bsmf.MainFrame.show("reconciliation complete...transactions updated");
+              
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+            
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+     
+     }
+   
+    
+    
     public void initvars(String[] arg) {
-        tbtotexpenses.setText("0");
-        tbtotsales.setText("0");
-        tbincome.setText("0");
-        tbtotpurch.setText("0");
-        saleslessexp.setText("0");
+        lbdiff.setText("0");
+        lbstatementbal.setText("0");
+        lbselecttotal.setText("0");
         expenses = 0.00;
-        cbchart.setSelected(false);
+        
         
         java.util.Date now = new java.util.Date();
        
@@ -389,20 +527,43 @@ public class ReconAccount extends javax.swing.JPanel {
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
+        
+        tablereport.getModel().addTableModelListener(new TableModelListener() {
+         public void tableChanged(TableModelEvent e) {
+             if (e.getColumn() == 9 && ! isLoad) {
+                 //String value = ((DefaultTableModel) e.getSource()).getValueAt(e.getFirstRow(), e.getColumn()).toString();
+                 // bsmf.MainFrame.show(value);
+                 sumtoggle();
+             }
+         // your code goes here, whatever you want to do when something changes in the table
+         }
+         });
+        
+        
         tabledetail.setModel(modeldetail);
         
         tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
         
+        
+        
+          CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+                tablereport.getColumnModel().getColumn(9).setCellRenderer(checkBoxRenderer);  
         // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+         
        //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(7).setMaxWidth(100);
+         tablereport.getColumnModel().getColumn(9).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
         
         
-       
+        ArrayList<String> myacct = OVData.getGLAcctList();
+        for (int i = 0; i < myacct.size(); i++) {
+            ddacct.addItem(myacct.get(i));
+        }
+            ddacct.setSelectedIndex(0);
+                    
+                    
         ddsite.removeAllItems();
         ArrayList<String> mylist = OVData.getSiteList();
         for (String code : mylist) {
@@ -414,7 +575,6 @@ public class ReconAccount extends javax.swing.JPanel {
                     
        
         
-        btdetail.setEnabled(false);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
           
@@ -440,34 +600,32 @@ public class ReconAccount extends javax.swing.JPanel {
         chartlabel = new javax.swing.JLabel();
         pielabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        btdetail = new javax.swing.JButton();
         btRun = new javax.swing.JButton();
-        datelabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
-        tbcsv = new javax.swing.JButton();
-        cbchart = new javax.swing.JCheckBox();
         ddsite = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
+        ddacct = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        tbendbalance = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        btcommit = new javax.swing.JButton();
+        cbtoggle = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        saleslessexp = new javax.swing.JLabel();
-        tbtotsales = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        tbtotexpenses = new javax.swing.JLabel();
+        lbstatementbal = new javax.swing.JLabel();
+        lbdiff = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        tbtotpurch = new javax.swing.JLabel();
+        lbselecttotal = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        tbinventory = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lbacctbal = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tbincome = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("CashTranBrowse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Reconciliation"));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -530,13 +688,6 @@ public class ReconAccount extends javax.swing.JPanel {
 
         tablepanel.add(chartpanel);
 
-        btdetail.setText("Hide Detail");
-        btdetail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdetailActionPerformed(evt);
-            }
-        });
-
         btRun.setText("Run");
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -552,21 +703,31 @@ public class ReconAccount extends javax.swing.JPanel {
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
-        tbcsv.setText("CSV");
-        tbcsv.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbcsvActionPerformed(evt);
-            }
-        });
-
-        cbchart.setText("Charts");
-        cbchart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbchartActionPerformed(evt);
-            }
-        });
-
         jLabel2.setText("Site:");
+
+        jLabel4.setText("Acct:");
+
+        tbendbalance.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbendbalanceFocusLost(evt);
+            }
+        });
+
+        jLabel1.setText("Statement Balance:");
+
+        btcommit.setText("Commit");
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcommitActionPerformed(evt);
+            }
+        });
+
+        cbtoggle.setText("Toggle All?");
+        cbtoggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbtoggleActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -574,107 +735,101 @@ public class ReconAccount extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(btRun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdetail)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbcsv)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbchart))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(167, 167, 167)))
-                .addGap(18, 250, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(13, 13, 13)
+                            .addComponent(jLabel2))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4)))
+                    .addComponent(tbendbalance, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbtoggle)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btRun)
+                    .addComponent(btcommit))
+                .addGap(289, 289, 289))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btRun)
-                        .addComponent(btdetail)
-                        .addComponent(tbcsv)
-                        .addComponent(cbchart)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)))
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btRun)
+                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel5)
+                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbendbalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(btcommit)
+                    .addComponent(cbtoggle))
                 .addContainerGap())
         );
 
-        jLabel8.setText("Total Sales:");
+        jLabel8.setText("Statement Balance:");
 
-        saleslessexp.setText("0");
+        lbstatementbal.setText("0");
 
-        tbtotsales.setText("0");
+        lbdiff.setText("0");
 
-        jLabel9.setText("DateRange Profit:");
+        jLabel10.setText("Difference:");
 
-        tbtotexpenses.setText("0");
+        lbselecttotal.setText("0");
 
-        jLabel10.setText("Total Expenses:");
+        jLabel11.setText("Selected (open) Total:");
 
-        tbtotpurch.setText("0");
+        lbacctbal.setText("0");
 
-        jLabel11.setText("Total Purchases:");
-
-        tbinventory.setText("0");
-
-        jLabel1.setText("Current Inventory:");
-
-        jLabel3.setText("Total Misc Income:");
-
-        tbincome.setText("0");
+        jLabel3.setText("GL Account Balance:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbincome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(12, 12, 12)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(53, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(tbtotexpenses, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                    .addComponent(tbtotsales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbtotpurch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(saleslessexp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbstatementbal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbdiff, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                    .addComponent(lbacctbal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbselecttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -682,25 +837,21 @@ public class ReconAccount extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel3)
-                    .addComponent(tbincome, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                    .addComponent(lbacctbal, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saleslessexp, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(14, 14, 14))
+                    .addComponent(lbstatementbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbselecttotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbdiff, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -713,7 +864,7 @@ public class ReconAccount extends javax.swing.JPanel {
                     .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -725,7 +876,7 @@ public class ReconAccount extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -742,6 +893,7 @@ public class ReconAccount extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
+        isLoad = true;
     
 try {
             Class.forName(driver).newInstance();
@@ -757,25 +909,25 @@ try {
                mymodel.setNumRows(0);
                  
               
-                
-                 double totsales = 0.00;
-                 double totpurch = 0.00;
-                 double totincome = 0.00;
+                double total = 0.00;
+                double stendbal = 0.00;
+                if (! tbendbalance.getText().isEmpty()) {
+                    stendbal = Double.valueOf(tbendbalance.getText());
+                }
                  
-                 String trantype = "";
-                 
-            
                   Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     if (    tc.getModelIndex() == 0 ||
-                             tc.getModelIndex() == 9 ) {
+                     if ( tc.getModelIndex() == 9 ) {
                          continue;
                      }
                      tc.setCellRenderer(new ReconAccount.SomeRenderer());
                  }   
                
                 
+              
+                 
+                 
              
                  if (dcfrom.getDate() == null) {
                      fromdate = bsmf.MainFrame.lowdate;
@@ -787,99 +939,51 @@ try {
                  } else {
                     todate = dfdate.format(dcto.getDate()); 
                  }
-                  
-                      //lets get the total inventory value first
-                      inventory = 0.00;
-                      res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
-                        " inner join item_mstr on it_item = in_part where it_code = 'A' " );
-                      while (res.next()) {
-                          inventory += res.getDouble("sum");
-                      }
-                      tbinventory.setText(df.format(inventory));
+                 boolean toggle = false;
+                 String status = "";
+                 res = st.executeQuery("select glh_id, glh_acct, glh_cc, glh_site, glh_type, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt, glh_recon from gl_hist " +
+                        " where glh_acct = " + "'" + ddacct.getSelectedItem().toString() + "'" + " AND " + 
+                        " glh_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
+                        " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                        " glh_effdate <= " + "'" + todate + "'" + ";");
+                while (res.next()) {
+                    total = total + res.getDouble("glh_amt");
+                    toggle = res.getBoolean("glh_recon");
+                    if (toggle) {
+                        status = "cleared";
+                    } else {
+                        status = "open";
+                    }
+                   mymodel.addRow(new Object[]{ 
+                      res.getString("glh_id"),
+                      res.getString("glh_acct"), 
+                      res.getString("glh_cc"),
+                      res.getString("glh_site"),
+                      res.getString("glh_ref"), 
+                      res.getString("glh_type"), 
+                      res.getString("glh_effdate"),
+                      res.getString("glh_desc"),
+                      Double.valueOf(df.format(res.getDouble("glh_amt"))),
+                      toggle, status });
+                }
                 
-                      
-                  // now lets get the pos_mstr records    
-                  res = st.executeQuery("select pos_nbr, pos_site, pos_key, pos_type, pos_entity, pos_entityname, pos_entrydate, pos_totqty, pos_totamt from pos_mstr " +
-                        " where pos_entrydate >= " + "'" + fromdate + "'" + 
-                        " and pos_entrydate <= " + "'" + todate + "'" +
-                        " and pos_site <= " + "'" + ddsite.getSelectedItem().toString() + "'" +        
-                        " order by pos_nbr desc;");
-                
-                
-                       while (res.next()) {
-                          
-                        
-                         trantype = res.getString("pos_type");
-                         if (trantype.equals("sell")) {
-                             totsales = totsales + res.getDouble("pos_totamt");
-                         mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clickprint 
-                            });
-                         } else if (trantype.equals("buy")) {
-                             totpurch = totpurch + res.getDouble("pos_totamt");
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            }); 
-                         } else if (trantype.equals("income")) {
-                            totincome = totincome + res.getDouble("pos_totamt");    
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            });     
-                         } else {
-                             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
-                               res.getString("pos_nbr"),
-                                res.getString("pos_key"),
-                                res.getString("pos_type"),
-                                res.getString("pos_entity"),
-                                res.getString("pos_entityname"),
-                                res.getString("pos_entrydate"),
-                                res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
-                                BlueSeerUtils.clicklock 
-                            }); 
-                         }
-                                
-                       }
-              
+              // tbtoggletotal.setText(df.format(total));
+                lbstatementbal.setText(df.format(stendbal));
+                lbdiff.setText(df.format(stendbal - total));
+                lbacctbal.setText(df.format(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), todate)));
                        
                 chartBuyAndSell();
-                chartExp();       
+                chartExp();  
+                
+                isLoad = false;
                        
-                tbtotsales.setText(df.format(totsales));
-                tbincome.setText(df.format(totincome));
-                tbtotpurch.setText(df.format(totpurch));
-                tbtotexpenses.setText(df.format(expenses));
-                saleslessexp.setText(df.format((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
+                
                 
              
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Cash Trans Browse Report");
+                bsmf.MainFrame.show("Problem executing Recon Report");
             }
             con.close();
         } catch (Exception e) {
@@ -888,21 +992,20 @@ try {
        
     }//GEN-LAST:event_btRunActionPerformed
 
-    private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
-       detailpanel.setVisible(false);
-       btdetail.setEnabled(false);
-    }//GEN-LAST:event_btdetailActionPerformed
-
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
+      /* 
+        if ( col == 9) {
                 getdetail(tablereport.getValueAt(row, 1).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
+                if ( (boolean) mymodel.getValueAt(row, col) ) {
+                   //  x += Double.valueOf(mymodel.getValueAt(i, 8).toString());
+                 }
         }
-        /*
+       
         if ( col == 0 && tablereport.getValueAt(row, 4).toString().equals("sell") ) {
                 String mypanel = "MenuShipMaint";
                if (! checkperms(mypanel)) { return; }
@@ -915,35 +1018,65 @@ try {
                String args = tablereport.getValueAt(row, 3).toString();
                reinitpanels(mypanel, true, args);
         }
-*/
+
         if ( col == 9 && tablereport.getValueAt(row, 3).toString().equals("sell")) {
-              OVData.printReceipt(tablereport.getValueAt(row, 2).toString());
+            //  OVData.printReceipt(tablereport.getValueAt(row, 2).toString());
         }
+*/
     }//GEN-LAST:event_tablereportMouseClicked
 
-    private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
-      if (tablereport != null)
-        OVData.exportCSV(tablereport);
-    }//GEN-LAST:event_tbcsvActionPerformed
-
-    private void cbchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbchartActionPerformed
-        if (cbchart.isSelected()) {
-            chartpanel.setVisible(true);
-        } else {
-            chartpanel.setVisible(false);
+    private void cbtoggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtoggleActionPerformed
+         for (int i = 0 ; i < mymodel.getRowCount(); i++) {  
+            if (mymodel.getValueAt(i, 10).toString().equals("open")) {
+                mymodel.setValueAt(cbtoggle.isSelected(), i, 9);
+            } 
         }
-    }//GEN-LAST:event_cbchartActionPerformed
+         sumtoggle();
+         
+    }//GEN-LAST:event_cbtoggleActionPerformed
+
+    private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
+        DecimalFormat df = new DecimalFormat("#0.00");
+        if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
+            bsmf.MainFrame.show("Statement Balance is zero");
+            return;
+        }
+        
+        
+        if (Double.valueOf(lbdiff.getText()) == 0.00) {
+             updateRecon();
+        } else {
+            bsmf.MainFrame.show("Total selected amount does not balance");
+        }
+       
+    }//GEN-LAST:event_btcommitActionPerformed
+
+    private void tbendbalanceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbendbalanceFocusLost
+            String x = BlueSeerUtils.bsformat("", tbendbalance.getText(), "2");
+        if (x.equals("error")) {
+            tbendbalance.setText("");
+            tbendbalance.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            lbstatementbal.setText("0.00");
+            tbendbalance.requestFocus();
+        } else {
+            tbendbalance.setText(x);
+            tbendbalance.setBackground(Color.white);
+            lbstatementbal.setText(tbendbalance.getText());
+        }
+       
+    }//GEN-LAST:event_tbendbalanceFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton btdetail;
-    private javax.swing.JCheckBox cbchart;
+    private javax.swing.JButton btcommit;
+    private javax.swing.JCheckBox cbtoggle;
     private javax.swing.JLabel chartlabel;
     private javax.swing.JPanel chartpanel;
-    private javax.swing.JLabel datelabel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
@@ -951,26 +1084,24 @@ try {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbacctbal;
+    private javax.swing.JLabel lbdiff;
+    private javax.swing.JLabel lbselecttotal;
+    private javax.swing.JLabel lbstatementbal;
     private javax.swing.JLabel pielabel;
-    private javax.swing.JLabel saleslessexp;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
-    private javax.swing.JButton tbcsv;
-    private javax.swing.JLabel tbincome;
-    private javax.swing.JLabel tbinventory;
-    private javax.swing.JLabel tbtotexpenses;
-    private javax.swing.JLabel tbtotpurch;
-    private javax.swing.JLabel tbtotsales;
+    private javax.swing.JTextField tbendbalance;
     // End of variables declaration//GEN-END:variables
 }

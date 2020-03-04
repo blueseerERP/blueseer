@@ -99,6 +99,7 @@ LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Ledger Transaction Report,,1,,1,1
 LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Ledger Balance View/Export,,,,1,1
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Income Statement,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Income Statement(Year),,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1

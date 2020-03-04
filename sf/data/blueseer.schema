@@ -604,7 +604,9 @@ CREATE TABLE IF NOT EXISTS `gl_hist` (
   `glh_curr` varchar(3)  NOT NULL DEFAULT '',
   `glh_base_curr` varchar(3)  NOT NULL DEFAULT '',
   `glh_desc` varchar(30)  NOT NULL DEFAULT '',
-  `glh_userid` varchar(8)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `glh_userid` varchar(8)  NOT NULL DEFAULT '',
+  `glh_recon` tinyint(1)  NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `gl_tran` (
   `glt_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `glt_ref` varchar(20)  NOT NULL DEFAULT '',

@@ -112,6 +112,7 @@ admin;PaymentMaint
 admin;ExpenseMaint
 admin;IncomeMaint
 admin;TrialBalanceRpt
+admin;ReconAccount
 admin;ProdCodeMaint
 admin;ProdCodeBrowse
 admin;LocationMaint

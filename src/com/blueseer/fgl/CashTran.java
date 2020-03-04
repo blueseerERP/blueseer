@@ -1714,9 +1714,6 @@ public class CashTran extends javax.swing.JPanel {
         tbincometotal.setText("");
         tbincometotal.setEditable(false);
         lbtitleIncome.setText("");
-        buymodel.setRowCount(0);
-        sellmodel.setRowCount(0);
-        expensemodel.setRowCount(0);
         incomemodel.setRowCount(0);
         incomeTable.setModel(incomemodel);
         
@@ -1864,6 +1861,7 @@ public class CashTran extends javax.swing.JPanel {
         clearSell();
         clearExpense();
        clearRecurExpense();
+       clearIncome();
     }
   
     public void loadImage() {

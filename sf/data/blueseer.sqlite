@@ -714,7 +714,9 @@ CREATE TABLE "gl_hist" (
   "glh_curr" varchar(3) COLLATE NOCASE DEFAULT '',
   "glh_base_curr" varchar(3) COLLATE NOCASE DEFAULT '',
   "glh_desc" varchar(30) COLLATE NOCASE DEFAULT '',
-  "glh_userid" varchar(8) COLLATE NOCASE DEFAULT '');
+  "glh_userid" varchar(8) COLLATE NOCASE DEFAULT '',
+  "glh_recon" tinyint(1) COLLATE NOCASE DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
