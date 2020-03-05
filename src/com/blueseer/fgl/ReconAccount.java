@@ -69,6 +69,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.prd.ProdSchedPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -274,7 +275,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
                         " inner join pos_mstr on pos_nbr = posd_nbr  " +
                         " inner join ac_mstr on ac_id = posd_acct  " +
-                        " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
+                        " where pos_entrydate >= " + "'" + dfdate.format(dcglprevious.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type = 'expense' " +
                         " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
@@ -344,7 +345,7 @@ public class ReconAccount extends javax.swing.JPanel {
                  
                   
                 res = st.executeQuery("select pos_type, sum(pos_totamt) as 'sum' from pos_mstr  " +
-                        " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
+                        " where pos_entrydate >= " + "'" + dfdate.format(dcglprevious.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type <> 'expense' " +
                          " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +               
@@ -455,18 +456,40 @@ public class ReconAccount extends javax.swing.JPanel {
         double x = 0.00;
         DecimalFormat df = new DecimalFormat("#0.00");
          for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
-              if (mymodel.getValueAt(i, 10).toString().equals("open") && (boolean) mymodel.getValueAt(i, 9)) {
+            //  if (mymodel.getValueAt(i, 10).toString().equals("open") && (boolean) mymodel.getValueAt(i, 9)) {
+                 if ((boolean) mymodel.getValueAt(i, 9)) {
                      x += Double.valueOf(mymodel.getValueAt(i, 8).toString());
                  }
          }
-         
-        lbselecttotal.setText(df.format(x));
-       
+        sumAll(x); 
         return x;
     }
     
-    public void sumAll() {
-         
+    public void sumAll(double x) {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        double stendbal = 0.00;
+        double prevGLBalance = 0.00;
+        double diff = 0.00;
+        
+        if (! tbendbalance.getText().isEmpty()) {
+            stendbal = Double.valueOf(tbendbalance.getText());
+            lbstatementbal.setText(df.format(Double.valueOf(tbendbalance.getText())));
+        } else {
+            lbstatementbal.setText("0.00");
+        }
+        
+        if (! lbacctbal.getText().isEmpty()) {
+            prevGLBalance = Double.valueOf(lbacctbal.getText());
+        }
+        
+        lbselecttotal.setText(df.format(x));
+        lbdiff.setText(df.format(stendbal - prevGLBalance -  x));
+        if ( (stendbal - prevGLBalance -  x) == 0) {
+            lbdiff.setForeground(Color.blue);
+        } else {
+            lbdiff.setForeground(Color.red);
+        }
+        
     }
     
      public void updateRecon() {
@@ -507,21 +530,39 @@ public class ReconAccount extends javax.swing.JPanel {
    
     
     
-    public void initvars(String[] arg) {
+    public void initvars(String[] arg) throws ParseException {
+        
+        isLoad = true;
+        
+        lbacct.setText("");
         lbdiff.setText("0");
+        lbdiff.setForeground(Color.black);
+        tbendbalance.setText("");
         lbstatementbal.setText("0");
         lbselecttotal.setText("0");
         expenses = 0.00;
         
+             btRun.setEnabled(false);
+             btcommit.setEnabled(false);
+             dcglprevious.setEnabled(false);
+             dcto.setEnabled(false);
+             ddacct.setEnabled(false);
+             ddsite.setEnabled(false);
+             cbtoggle.setEnabled(false);
         
         java.util.Date now = new java.util.Date();
-       
         
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.DAY_OF_YEAR, 1);
-        java.util.Date firstday = cal.getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        int pyear = cal.get(Calendar.YEAR);
+        int pmonth = cal.get(Calendar.MONTH) + 1;
         
-        dcfrom.setDate(firstday);
+      //  bsmf.MainFrame.show(String.valueOf(pyear) + "/" + String.valueOf(pmonth));
+        
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        ArrayList glcal = OVData.getGLCalByYearAndPeriod(String.valueOf(pyear), String.valueOf(pmonth));
+        java.util.Date prevenddate = dfdate.parse(glcal.get(3).toString());
+        dcglprevious.setDate(prevenddate);
         dcto.setDate(now);
                
         mymodel.setNumRows(0);
@@ -561,7 +602,7 @@ public class ReconAccount extends javax.swing.JPanel {
         for (int i = 0; i < myacct.size(); i++) {
             ddacct.addItem(myacct.get(i));
         }
-            ddacct.setSelectedIndex(0);
+            
                     
                     
         ddsite.removeAllItems();
@@ -571,8 +612,9 @@ public class ReconAccount extends javax.swing.JPanel {
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
                     
-                    
-                    
+       isLoad = false;             
+          
+       ddacct.setSelectedIndex(0);
        
         
         detailpanel.setVisible(false);
@@ -603,7 +645,7 @@ public class ReconAccount extends javax.swing.JPanel {
         btRun = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        dcfrom = new com.toedter.calendar.JDateChooser();
+        dcglprevious = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
         ddsite = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
@@ -613,6 +655,7 @@ public class ReconAccount extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         btcommit = new javax.swing.JButton();
         cbtoggle = new javax.swing.JCheckBox();
+        lbacct = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lbstatementbal = new javax.swing.JLabel();
@@ -695,17 +738,23 @@ public class ReconAccount extends javax.swing.JPanel {
             }
         });
 
-        jLabel5.setText("From Date:");
+        jLabel5.setText("Statement Ending Balance:");
 
-        jLabel6.setText("To Date:");
+        jLabel6.setText("GL Previous Ending Date:");
 
-        dcfrom.setDateFormatString("yyyy-MM-dd");
+        dcglprevious.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
-        jLabel2.setText("Site:");
+        jLabel2.setText("Acct:");
 
-        jLabel4.setText("Acct:");
+        ddacct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddacctActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Site:");
 
         tbendbalance.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -713,7 +762,7 @@ public class ReconAccount extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("Statement Balance:");
+        jLabel1.setText("GLTo Date:");
 
         btcommit.setText("Commit");
         btcommit.addActionListener(new java.awt.event.ActionListener() {
@@ -742,26 +791,35 @@ public class ReconAccount extends javax.swing.JPanel {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(13, 13, 13)
-                            .addComponent(jLabel2))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4)))
-                    .addComponent(tbendbalance, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbendbalance)
+                            .addComponent(dcglprevious, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addComponent(jLabel2))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabel4)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbtoggle)
-                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btRun)
-                    .addComponent(btcommit))
-                .addGap(289, 289, 289))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                        .addComponent(btcommit))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbtoggle)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 132, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -769,31 +827,34 @@ public class ReconAccount extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
+                        .addComponent(jLabel2)
+                        .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btRun)
-                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel5)
-                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel4)
+                                .addComponent(btcommit)
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(tbendbalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcglprevious, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbendbalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(btcommit)
-                    .addComponent(cbtoggle))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbtoggle)
+                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
 
-        jLabel8.setText("Statement Balance:");
+        jLabel8.setText("GL Previous Ending Balance:");
 
         lbstatementbal.setText("0");
 
@@ -803,11 +864,11 @@ public class ReconAccount extends javax.swing.JPanel {
 
         lbselecttotal.setText("0");
 
-        jLabel11.setText("Selected (open) Total:");
+        jLabel11.setText("Selected Total:");
 
         lbacctbal.setText("0");
 
-        jLabel3.setText("GL Account Balance:");
+        jLabel3.setText("Statement Balance:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -816,20 +877,20 @@ public class ReconAccount extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel10))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(53, Short.MAX_VALUE)
+                        .addContainerGap(37, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbstatementbal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbdiff, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                    .addComponent(lbdiff, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
                     .addComponent(lbacctbal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbselecttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbselecttotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbstatementbal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -837,12 +898,12 @@ public class ReconAccount extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbacctbal, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(lbstatementbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbstatementbal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(lbacctbal, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbselecttotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -894,6 +955,7 @@ public class ReconAccount extends javax.swing.JPanel {
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
         isLoad = true;
+       
     
 try {
             Class.forName(driver).newInstance();
@@ -910,10 +972,9 @@ try {
                  
               
                 double total = 0.00;
-                double stendbal = 0.00;
-                if (! tbendbalance.getText().isEmpty()) {
-                    stendbal = Double.valueOf(tbendbalance.getText());
-                }
+                double toggletotal = 0.00;
+                boolean haveOpen = false;
+               
                  
                   Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
@@ -929,10 +990,10 @@ try {
                  
                  
              
-                 if (dcfrom.getDate() == null) {
+                 if (dcglprevious.getDate() == null) {
                      fromdate = bsmf.MainFrame.lowdate;
                  } else {
-                     fromdate = dfdate.format(dcfrom.getDate());
+                     fromdate = dfdate.format(dcglprevious.getDate()); // non-inclusive
                  }
                  if (dcto.getDate() == null) {
                      todate = bsmf.MainFrame.hidate;
@@ -944,40 +1005,48 @@ try {
                  res = st.executeQuery("select glh_id, glh_acct, glh_cc, glh_site, glh_type, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt, glh_recon from gl_hist " +
                         " where glh_acct = " + "'" + ddacct.getSelectedItem().toString() + "'" + " AND " + 
                         " glh_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
-                        " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                        " glh_effdate > " + "'" + fromdate + "'" + " AND " + // non-inclusive
                         " glh_effdate <= " + "'" + todate + "'" + ";");
                 while (res.next()) {
                     total = total + res.getDouble("glh_amt");
                     toggle = res.getBoolean("glh_recon");
                     if (toggle) {
                         status = "cleared";
+                        toggletotal = toggletotal + res.getDouble("glh_amt");
                     } else {
                         status = "open";
+                        haveOpen = true;
                     }
-                   mymodel.addRow(new Object[]{ 
-                      res.getString("glh_id"),
-                      res.getString("glh_acct"), 
-                      res.getString("glh_cc"),
-                      res.getString("glh_site"),
-                      res.getString("glh_ref"), 
-                      res.getString("glh_type"), 
-                      res.getString("glh_effdate"),
-                      res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_amt"))),
-                      toggle, status });
+                   
+                       mymodel.addRow(new Object[]{ 
+                          res.getString("glh_id"),
+                          res.getString("glh_acct"), 
+                          res.getString("glh_cc"),
+                          res.getString("glh_site"),
+                          res.getString("glh_ref"), 
+                          res.getString("glh_type"), 
+                          res.getString("glh_effdate"),
+                          res.getString("glh_desc"),
+                          Double.valueOf(df.format(res.getDouble("glh_amt"))),
+                          toggle, status });
+                   
                 }
                 
               // tbtoggletotal.setText(df.format(total));
-                lbstatementbal.setText(df.format(stendbal));
-                lbdiff.setText(df.format(stendbal - total));
-                lbacctbal.setText(df.format(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), todate)));
-                       
+              lbacctbal.setText(df.format(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
+             // bsmf.MainFrame.show(String.valueOf(toggletotal));
+              sumAll(toggletotal);
+               
                 chartBuyAndSell();
                 chartExp();  
                 
                 isLoad = false;
                        
-                
+                if (mymodel.getRowCount() > 0 && haveOpen) {
+                    btcommit.setEnabled(true);
+                } else {
+                    btcommit.setEnabled(false);
+                }
                 
              
                 
@@ -1037,17 +1106,22 @@ try {
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         DecimalFormat df = new DecimalFormat("#0.00");
-        if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
-            bsmf.MainFrame.show("Statement Balance is zero");
-            return;
-        }
-        
-        
-        if (Double.valueOf(lbdiff.getText()) == 0.00) {
-             updateRecon();
-        } else {
-            bsmf.MainFrame.show("Total selected amount does not balance");
-        }
+            
+                if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
+                    bsmf.MainFrame.show("Statement Balance is zero");
+                    return;
+                }
+
+
+                if (Double.valueOf(lbdiff.getText()) == 0.00) {
+                    boolean sure = bsmf.MainFrame.warn("Are you sure you want to auto-invoice?");     
+                    if (sure) {
+                     updateRecon();
+                    }
+                } else {
+                    bsmf.MainFrame.show("Total selected amount does not balance");
+                }
+                
        
     }//GEN-LAST:event_btcommitActionPerformed
 
@@ -1059,13 +1133,51 @@ try {
             bsmf.MainFrame.show("Non-Numeric character in textbox");
             lbstatementbal.setText("0.00");
             tbendbalance.requestFocus();
+             btRun.setEnabled(false);
+             btcommit.setEnabled(false);
+             dcglprevious.setEnabled(false);
+             dcto.setEnabled(false);
+             ddacct.setEnabled(false);
+             ddsite.setEnabled(false);
+             cbtoggle.setEnabled(false);
         } else {
             tbendbalance.setText(x);
             tbendbalance.setBackground(Color.white);
             lbstatementbal.setText(tbendbalance.getText());
+                if (! tbendbalance.getText().isEmpty()) {
+                btRun.setEnabled(true);
+                btcommit.setEnabled(false);
+                dcglprevious.setEnabled(true);
+                dcto.setEnabled(true);
+                ddacct.setEnabled(true);
+                ddsite.setEnabled(true);
+                cbtoggle.setEnabled(true);
+                }
         }
        
     }//GEN-LAST:event_tbendbalanceFocusLost
+
+    private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
+         if (ddacct.getSelectedItem() != null && ! isLoad )
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
+                    while (res.next()) {
+                        lbacct.setText(res.getString("ac_desc"));
+                    }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("cannot select from ac_mstr");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }//GEN-LAST:event_ddacctActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1074,7 +1186,7 @@ try {
     private javax.swing.JCheckBox cbtoggle;
     private javax.swing.JLabel chartlabel;
     private javax.swing.JPanel chartpanel;
-    private com.toedter.calendar.JDateChooser dcfrom;
+    private com.toedter.calendar.JDateChooser dcglprevious;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox<String> ddsite;
@@ -1093,6 +1205,7 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbacct;
     private javax.swing.JLabel lbacctbal;
     private javax.swing.JLabel lbdiff;
     private javax.swing.JLabel lbselecttotal;

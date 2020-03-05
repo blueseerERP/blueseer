@@ -15963,11 +15963,11 @@ public class OVData {
          
          public static ArrayList getGLCalByYearAndPeriod(String year, String per) {
               // function returns a 5 items from the gl_cal record where a date matches
-              // first element = year  as int
-              // second element = period as int
-              // third element = startdate as string
-              // fourth element = enddate as string
-              // fifth element = status as string
+              // 0 element = year  as int
+              // 1 element = period as int
+              // 2 element = startdate as string
+              // 3 element = enddate as string
+              // 4 element = status as string
               
       ArrayList myarray = new ArrayList();
         try{
@@ -16328,21 +16328,21 @@ public class OVData {
         
     }
          
-      public static double getGLAcctBalAsOfDate(String site, String acct, String date) { 
+      public static double getGLAcctBalAsOfDate(String site, String acct, String indate) { 
        double amt = 0.00;
        
         DateFormat dfdate = new SimpleDateFormat("yyyy");
         java.util.Date now = new java.util.Date();
         String currentyear = dfdate.format(now);
         
-        int year = Integer.valueOf(date.substring(0,4));
-        int period = Integer.valueOf(date.substring(5,7));
+        int year = Integer.valueOf(indate.substring(0,4));
+        int period = Integer.valueOf(indate.substring(5,7));
         int prioryear = year - 1;
         
         ArrayList<java.sql.Date> actdatearray = OVData.getGLCalForPeriod(String.valueOf(year), String.valueOf(period));  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
-       
+                
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -16382,18 +16382,20 @@ public class OVData {
                        }
                   }
                   
+             //  bsmf.MainFrame.show("1: " + datestart + "/" + dateend + "/" + amt);      
                   // now get all transactions in gl_hist that equate to current period transactions of inbound date
                   res = st.executeQuery("select sum(glh_amt) as sum from gl_hist " +
                         " where glh_acct = " + "'" + acct + "'" + " AND " + 
                         " glh_site = " + "'" + site + "'" + " AND " +
                         " glh_effdate >= " + "'" + datestart + "'" + " AND " +
-                        " glh_effdate <= " + "'" + dateend + "'" + 
+                        " glh_effdate <= " + "'" + indate + "'" + 
                         " group by glh_acct ;");
                 
                        while (res.next()) {
-                          amt += res.getDouble("sum");
+                          amt += res.getDouble("sum"); 
                        }
-               
+            
+             // bsmf.MainFrame.show("2: " + datestart + "/" + indate + "/" + amt);         
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
