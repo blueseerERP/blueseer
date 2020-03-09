@@ -328,7 +328,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel76">
               <Properties>
-                <Property name="text" type="java.lang.String" value="OrderNbr"/>
+                <Property name="text" type="java.lang.String" value="Key"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel86">

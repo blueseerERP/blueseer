@@ -1822,7 +1822,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Maintenance"));
 
-        jLabel76.setText("OrderNbr");
+        jLabel76.setText("Key");
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1837,7 +1837,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        jLabel82.setText("Customer");
+        jLabel82.setText("bill-to");
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1865,7 +1865,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        jLabel91.setText("ShipTo");
+        jLabel91.setText("ship-to");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -1875,7 +1875,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "cancel", "error", "hold", "open", "backorder", "close", " " }));
 
-        jLabel83.setText("PONbr");
+        jLabel83.setText("PO Number");
 
         jLabel85.setText("Status");
 
@@ -2410,7 +2410,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        lblpart1.setText("PartNumber");
+        lblpart1.setText("Item Number");
 
         jLabel5.setText("uom");
 

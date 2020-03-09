@@ -239,7 +239,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel76">
           <Properties>
-            <Property name="text" type="java.lang.String" value="OrderNbr"/>
+            <Property name="text" type="java.lang.String" value="Key"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbkey">
@@ -257,7 +257,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel82">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Customer"/>
+            <Property name="text" type="java.lang.String" value="bill-to"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddcust">
@@ -298,7 +298,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel91">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ShipTo"/>
+            <Property name="text" type="java.lang.String" value="ship-to"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblcustname">
@@ -528,7 +528,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel83">
               <Properties>
-                <Property name="text" type="java.lang.String" value="PONbr"/>
+                <Property name="text" type="java.lang.String" value="PO Number"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel85">
@@ -1197,7 +1197,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblpart1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="PartNumber"/>
+                    <Property name="text" type="java.lang.String" value="Item Number"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">

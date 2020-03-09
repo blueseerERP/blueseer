@@ -926,7 +926,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Maintenance"));
 
-        jLabel76.setText("OrderNbr");
+        jLabel76.setText("Key");
 
         jLabel86.setText("Remarks");
 
