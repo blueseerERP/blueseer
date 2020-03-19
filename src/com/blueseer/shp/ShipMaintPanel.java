@@ -248,12 +248,11 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         tbtotqty.setText("");
         totlines.setText("");
         
-        tbuserid.setText("");
+       
         tbtrailer.setText("");
         tbremarks.setText("");
         tbref.setText("");
-        tbmisc.setText("");
-        tbmisc2.setText("");
+        
         
         lbladdr.setText("");
         
@@ -315,9 +314,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         dcshipdate.setEnabled(true);
         tbtrailer.setEnabled(true);
         ddshipvia.setEnabled(true);
-        tbuserid.setEnabled(true);
-        tbmisc.setEnabled(true);
-        tbmisc2.setEnabled(true);
+       
         tbremarks.setEnabled(true);
         tbref.setEnabled(true);
         
@@ -346,9 +343,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         dcshipdate.setEnabled(false);
         tbtrailer.setEnabled(false);
         ddshipvia.setEnabled(false);
-        tbuserid.setEnabled(false);
-        tbmisc.setEnabled(false);
-        tbmisc2.setEnabled(false);
+        
         tbremarks.setEnabled(false);
         tbref.setEnabled(false);
         
@@ -394,12 +389,11 @@ public class ShipMaintPanel extends javax.swing.JPanel {
        
         sacmodel.setRowCount(0);
         
-        tbuserid.setText("");
+        
         tbtrailer.setText("");
         tbremarks.setText("");
         tbref.setText("");
-        tbmisc.setText("");
-        tbmisc2.setText("");
+       
         
         
         
@@ -1004,20 +998,14 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
         tbref = new javax.swing.JTextField();
         dcshipdate = new com.toedter.calendar.JDateChooser();
         tbtrailer = new javax.swing.JTextField();
         ddshipvia = new javax.swing.JComboBox();
         jLabel39 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        tbuserid = new javax.swing.JTextField();
-        tbmisc = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
         lbladdr = new javax.swing.JLabel();
-        tbmisc2 = new javax.swing.JTextField();
-        jLabel29 = new javax.swing.JLabel();
         tbremarks = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
         ddsite = new javax.swing.JComboBox();
@@ -1129,8 +1117,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
 
         jLabel35.setText("Shipdate");
 
-        jLabel26.setText("UserID");
-
         dcshipdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel39.setText("ShipVia");
@@ -1139,12 +1125,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
 
         jLabel27.setText("Ref");
 
-        jLabel28.setText("Misc");
-
         lbladdr.setBackground(java.awt.Color.lightGray);
         lbladdr.setBorder(javax.swing.BorderFactory.createTitledBorder("ShipTo Addr"));
-
-        jLabel29.setText("Misc2");
 
         jLabel41.setText("Remarks");
 
@@ -1154,49 +1136,34 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addComponent(jLabel25))
+                        .addComponent(jLabel35)
+                        .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel40, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel41))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel25)
-                            .addComponent(jLabel26))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbuserid)
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(dcshipdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(lbladdr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(10, 10, 10))
+                        .addGap(22, 22, 22))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel40, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel41, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                            .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel29)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tbmisc2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                            .addComponent(dcshipdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(69, 69, 69)
-                                            .addComponent(jLabel27)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(80, 80, 80)
-                                            .addComponent(jLabel28)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(tbremarks))))
-                .addContainerGap())
+                            .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbremarks, javax.swing.GroupLayout.DEFAULT_SIZE, 867, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1208,35 +1175,26 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                             .addComponent(jLabel25)
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbuserid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel26))))
-                .addGap(101, 101, 101)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(dcshipdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel35))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel27)
-                        .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel28)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dcshipdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel35))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel39))
-                    .addComponent(tbmisc2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel29))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel39))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel40))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbremarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel41))
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
         jLabel36.setText("ShipTo");
@@ -1681,7 +1639,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelitem)
                 .addGap(0, 93, Short.MAX_VALUE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
@@ -1743,7 +1701,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         panelDetailLayout.setVerticalGroup(
             panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDetailLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1775,8 +1733,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 dcshipdate.setDate(now);
                 podate = dfdate.format(now);
                 
-                tbuserid.setText(bsmf.MainFrame.userid.toString());
-                tbuserid.setEnabled(false);
+              
                 btbrowse.setEnabled(false);
                 btcustbrowse.setEnabled(false);
                 btorderbrowse.setEnabled(false);
@@ -1900,7 +1857,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                         + "'" + tbref.getText().replace("'", "") + "'" + "," 
                         + "'" + uniqpo + "'" + "," 
                         + "'" + tbremarks.getText().replace("'", "") + "'" + "," 
-                        + "'" + tbuserid.getText() + "'" + "," 
+                        + "'" + bsmf.MainFrame.userid + "'" + "," 
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + uniqwh + "'" + ","        
@@ -2018,7 +1975,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                         + " sh_shipdate = " + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                         + " sh_ref = " + "'" + tbref.getText() + "'" + ","
                         + " sh_rmks = " + "'" + tbremarks.getText() + "'" + ","
-                        + " sh_userid = " + "'" + tbuserid.getText() + "'" + ","
                         + " sh_site = " + "'" + ddsite.getSelectedItem().toString() + "'"   
                         + " where sh_id = " + "'" + tbshipper.getText().toString() + "'"
                         + ";");
@@ -2194,10 +2150,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel35;
@@ -2240,8 +2193,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTable sactable;
     private javax.swing.JTable tabledetail;
     private javax.swing.JTextField tbdesc;
-    private javax.swing.JTextField tbmisc;
-    private javax.swing.JTextField tbmisc2;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbref;
@@ -2250,7 +2201,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;
     private javax.swing.JTextField tbtrailer;
-    private javax.swing.JTextField tbuserid;
     private javax.swing.JTextField totlines;
     // End of variables declaration//GEN-END:variables
 }

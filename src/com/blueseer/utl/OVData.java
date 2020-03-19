@@ -6090,7 +6090,7 @@ public class OVData {
         
     }        
          
-         public static String getPartFromCustCItem2(String cust, String custpart) {
+    public static String getPartFromCustCItem2(String cust, String custpart) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6119,7 +6119,7 @@ public class OVData {
         
     }
          
-         public static String getPartFromCustUpc(String cust, String custpart) {
+    public static String getPartFromCustUpc(String cust, String custpart) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6148,7 +6148,7 @@ public class OVData {
         
     }
          
-         public static Double getPartPriceFromVend(String vend, String part, String uom, String curr) {
+    public static Double getPartPriceFromVend(String vend, String part, String uom, String curr) {
        Double myreturn = 0.00;
        String pricecode = "";
       
