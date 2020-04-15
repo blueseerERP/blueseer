@@ -78,7 +78,7 @@ public class ARAgingView extends javax.swing.JPanel {
     String selectedCustomer = "";
  
      MyTableModel modelsummary = new ARAgingView.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "Cust", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+                        new String[]{"Detail", "Cust", "Name", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -161,7 +161,7 @@ public class ARAgingView extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 2 || col == 3 || col == 4 || col == 5 || col == 6)       
+            if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7)       
                 return Double.class;  
             else return String.class;  //other columns accept String values  
            
@@ -766,11 +766,11 @@ try {
              //    }
               //    tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARAgingView.ButtonRenderer());
                   tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
-                  tablesummary.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                   tablesummary.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                  tablesummary.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                 // TableColumnModel tcm = tablescrap.getColumnModel();
                // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
                 
@@ -803,24 +803,26 @@ try {
                  i = 0;
                  
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                     res = st.executeQuery("SELECT ar_cust, " +
+                     res = st.executeQuery("SELECT ar_cust, cm_name, " +
                         " sum(case when ar_duedate > date() then ar_open_amt else 0 end) as '0', " +
                         " sum(case when ar_duedate <= date() and ar_duedate > date() - date(date(), '+30 day') then ar_open_amt else 0 end) as '30', " +
                         " sum(case when ar_duedate <= date() - date(date(), '+30 day') and ar_duedate > date(date(), '+60 day') then ar_open_amt else 0 end) as '60', " +
                         " sum(case when ar_duedate <= date() - date(date(), '+60 day') and ar_duedate > date(date(), '+90 day') then ar_open_amt else 0 end) as '90', " +
                         " sum(case when ar_duedate <= date() - date(date(), '+90 day') then ar_open_amt else 0 end) as '90p' " +
                         " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " +
                         " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
                          " group by ar_cust order by ar_cust;");
                  }  else {
-                 res = st.executeQuery("SELECT ar_cust, " +
+                 res = st.executeQuery("SELECT ar_cust, cm_name, " +
                         " sum(case when ar_duedate > curdate() then ar_open_amt else 0 end) as '0', " +
                         " sum(case when ar_duedate <= curdate() and ar_duedate > curdate() - interval 30 day then ar_open_amt else 0 end) as '30', " +
                         " sum(case when ar_duedate <= curdate() - interval 30 day and ar_duedate > curdate() - interval 60 day then ar_open_amt else 0 end) as '60', " +
                         " sum(case when ar_duedate <= curdate() - interval 60 day and ar_duedate > curdate() - interval 90 day then ar_open_amt else 0 end) as '90', " +
                         " sum(case when ar_duedate <= curdate() - interval 90 day then ar_open_amt else 0 end) as '90p' " +
                         " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " +
                          " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
                          " group by ar_cust order by ar_cust;");
@@ -832,6 +834,7 @@ try {
                         modelsummary.addRow(new Object[]{
                                 BlueSeerUtils.clickbasket,
                                 res.getString("ar_cust"),
+                                res.getString("cm_name"),
                                 Double.valueOf(df.format(res.getDouble("0"))),
                                 Double.valueOf(df.format(res.getDouble("30"))),
                                 Double.valueOf(df.format(res.getDouble("60"))),
@@ -844,7 +847,7 @@ try {
                       // create record with zero fields
                        modelsummary.addRow(new Object[]{
                                 BlueSeerUtils.clickbasket,
-                                custs.get(j),
+                                custs.get(j),"",
                                 0,0,0,0,0
                             });
                   }
