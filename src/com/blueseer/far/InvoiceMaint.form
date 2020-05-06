@@ -74,12 +74,10 @@
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="tbtotdollars" min="-2" pref="95" max="-2" attributes="0"/>
-                          <EmptySpace pref="47" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="btvoid" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btreverse" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane7" max="32767" attributes="0"/>
                       <Component id="jScrollPane8" alignment="0" max="32767" attributes="0"/>
@@ -119,7 +117,6 @@
                       <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btPrintShp" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btPrintInv" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btreverse" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="totlines" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tbtotqty" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -653,14 +650,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btreverse">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Reverse"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btreverseActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btbrowse">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">

@@ -1637,7 +1637,7 @@ public class MassLoad extends javax.swing.JPanel {
              list = defineCarrier();
          }
          if (key.compareTo("BOM Master") == 0) { 
-             list = defineCarrier();
+             list = defineBOMMaster();
          }
           if (key.compareTo("EDI Partner Master") == 0) { 
              list = defineEDIPartner();

@@ -320,7 +320,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
-        btreverse.setEnabled(false);
         btclear.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -346,14 +345,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
                        lbmessage.setForeground(Color.red);
                        btvoid.setEnabled(false);
                        btupdate.setEnabled(false);
-                       btreverse.setEnabled(false);
                        cbispaid.setSelected(true);
                    } else {
                        lbmessage.setText("this invoice is open");
                        lbmessage.setForeground(Color.blue);
                        btvoid.setEnabled(true);
                        btupdate.setEnabled(false);
-                       btreverse.setEnabled(true);
                        cbispaid.setSelected(false);
                    }
                    
@@ -380,10 +377,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     return b;
                 }
                
-               
-                
-               
-                
                
         return b;
     }
@@ -494,16 +487,63 @@ public class InvoiceMaint extends javax.swing.JPanel {
      return m;
      }
      
-    public String[] deleteRecord(String[] x) {
+     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
+        bsmf.MainFrame.show("This action will delete shipper, invoice, and AR Entry");
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            try {
+                
+                 // rules:  if posted to gl_hist, you cannot undo
+                 int c = 0;
+                  res = st.executeQuery("select * from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                      c++;
+                }
+                if (c > 0) {
+                  m = new String[]{BlueSeerUtils.ErrorBit, "Transaction already posted to Ledger, unable to void"};   
+                } else {
+                   // delete shipper
+                   i = st.executeUpdate("delete from ship_det where shd_id = " + "'" + x[0] + "'" + ";");
+                   i = st.executeUpdate("delete from ship_mstr where sh_id = " + "'" + x[0] + "'" + ";");
+                   
+                   // delete ar_mstr
+                   i = st.executeUpdate("delete from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
+                   
+                   // delete gl_tran
+                   i = st.executeUpdate("delete from gl_tran where glt_type = 'ISS-SALES' and glt_ref = " + "'" + x[0] + "'" + ";");
+                   
+                }
+                   // update acb_mstr
+                    if (i > 0  & c == 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
      return m;
      }
+   
       
     public String[] getRecord(String[] x) {
        String[] m = new String[2];
@@ -746,7 +786,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
         tbcust = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         lbcust = new javax.swing.JLabel();
-        btreverse = new javax.swing.JButton();
         btbrowse = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
@@ -1068,13 +1107,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     .addComponent(tbremarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        btreverse.setText("Reverse");
-        btreverse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btreverseActionPerformed(evt);
-            }
-        });
-
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1149,12 +1181,10 @@ public class InvoiceMaint extends javax.swing.JPanel {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbtotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btvoid)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btreverse))
+                        .addComponent(btupdate))
                     .addComponent(jScrollPane7)
                     .addComponent(jScrollPane8))
                 .addContainerGap())
@@ -1185,7 +1215,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     .addComponent(btupdate)
                     .addComponent(btPrintShp)
                     .addComponent(btPrintInv)
-                    .addComponent(btreverse)
                     .addComponent(totlines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(tbtotqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1203,7 +1232,11 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btvoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvoidActionPerformed
-        bsmf.MainFrame.show("not yet implemented");
+         if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete", new String[]{tbkey.getText()});    
     }//GEN-LAST:event_btvoidActionPerformed
 
     private void btPrintShpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintShpActionPerformed
@@ -1219,10 +1252,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
        bsmf.MainFrame.show("not yet implemented");
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void btreverseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btreverseActionPerformed
-       bsmf.MainFrame.show("not yet implemented");
-    }//GEN-LAST:event_btreverseActionPerformed
-
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
         reinitpanels("BrowseUtil", true, new String[]{"invoicemaint","sh_id"});
     }//GEN-LAST:event_btbrowseActionPerformed
@@ -1236,7 +1265,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
     private javax.swing.JButton btPrintShp;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
-    private javax.swing.JButton btreverse;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btvoid;
     private javax.swing.ButtonGroup buttonGroup1;

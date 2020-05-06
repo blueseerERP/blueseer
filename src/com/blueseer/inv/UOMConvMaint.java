@@ -371,10 +371,11 @@ public class UOMConvMaint extends javax.swing.JPanel    {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from conv_mstr where conv_fromcode = " + "'" + x[1] + "'" 
-                           + " and conv_tocode = " + "'" + x[0] + "'"
+                   int i = st.executeUpdate("delete from conv_mstr where conv_fromcode = " + "'" + x[0] + "'" 
+                           + " and conv_tocode = " + "'" + x[1] + "'"
                            + " and conv_type = 'uom' "
                            + ";");
+                
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);
