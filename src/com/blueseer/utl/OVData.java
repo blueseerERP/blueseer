@@ -12461,7 +12461,7 @@ public class OVData {
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
                         baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                        
+                      //  bsmf.MainFrame.show(baseqty + "/" + uom + "/" + qty);
                         
                         // lets determine if this is a legitimate item or a misc item...do not inventory misc items
                         res2 = st4.executeQuery("select it_item, it_loc, it_wh, it_code " +
