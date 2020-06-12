@@ -1879,6 +1879,9 @@ public class EDI {
         if (delim.equals("^")) {
             delim = "\\^";
         }
+         if (delim.equals("\\")) {
+            delim = "\\\\";
+        }
         return delim;
       }
       
