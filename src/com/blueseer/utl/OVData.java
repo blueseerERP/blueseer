@@ -20198,6 +20198,51 @@ public class OVData {
     }    
     
     
+    public static void printBOMJasper(String item) {
+        try{
+             Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                                
+                String imagepath = "";
+                String logo = "";
+              
+                logo = OVData.getSiteLogo(OVData.getDefaultSite());
+                
+                
+               String jasperfile = "bom_generic.jasper";
+               //jasperfile = OVData.getDefaultOrderJasper(site);
+               
+               imagepath = "images/" + logo;
+                HashMap hm = new HashMap();
+               
+                hm.put("REPORT_TITLE", "BOM RPT");    
+                
+                hm.put("myid",  item);
+                hm.put("imagepath", imagepath);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
+                con.close();
+                con = DriverManager.getConnection(url + db, user, pass);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/bomprt.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }    
+    
+    
     public static MimeBodyPart attachmentPart;
 
     

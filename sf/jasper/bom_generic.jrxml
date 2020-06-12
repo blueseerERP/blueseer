@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select ps_parent, ps_child,  ps_op, ps_qty_per, ps_ref, p.it_desc, c.it_desc as 'child_desc', c.it_code from pbm_mstr inner join item_mstr p on p.it_item = ps_parent inner join item_mstr c on c.it_item = ps_child where ps_parent  =  $P{myid};]]>
+	</queryString>
+	<field name="ps_parent" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_parent"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+	</field>
+	<field name="ps_child" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+	</field>
+	<field name="ps_op" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_op"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+	</field>
+	<field name="ps_qty_per" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="ps_qty_per"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+	</field>
+	<field name="ps_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+	</field>
+	<field name="it_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="child_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="child_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+	</field>
+	<field name="it_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+	</field>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{ps_qty_per}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<image>
+				<reportElement x="9" y="0" width="91" height="42" uuid="7d194944-b350-420d-ab9b-682f45a43dc9"/>
+				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="160" y="0" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{ps_parent}, false))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="312" y="0" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[BOM Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement x="417" y="0" width="80" height="20" uuid="c838f78f-8f27-4e07-b216-d42e6f860995"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="497" y="0" width="40" height="20" uuid="7bb51d99-d65a-48b5-86af-507492912f2e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="416" y="39" width="62" height="19" uuid="ff72763b-4033-4879-9b04-d9390211079c"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="482" y="38" width="66" height="20" uuid="9af12406-6714-4cf5-ae65-6668bf752aa1"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format( new java.util.Date() )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="19" y="10" width="61" height="19" uuid="07425326-7b17-4af6-b48b-dc15658ef3ff"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Parent Item:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="87" y="10" width="66" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
+				<textFieldExpression><![CDATA[$F{ps_parent}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="19" y="32" width="61" height="19" uuid="9141e20a-3214-4c3a-8693-f0e3f1468ee3"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Description:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="87" y="33" width="159" height="19" uuid="7de1c4e6-3317-4cea-87bd-1a102f1a4612"/>
+				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Component Item]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<staticText>
+				<reportElement x="344" y="0" width="90" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="-1" width="72" height="20" uuid="13f9b695-ff05-4d5f-b062-becc4685abbb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="-1" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="64" height="20" uuid="30933660-b057-4408-8963-609875170b57"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty Per]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="344" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<textFieldExpression><![CDATA[$F{ps_op}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="455" y="0" width="72" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{ps_qty_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="131" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<textFieldExpression><![CDATA[$F{child_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{ps_child}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="72" height="16" uuid="312d2284-6d32-4a7f-bac5-e1725474172d"/>
+				<textFieldExpression><![CDATA[$F{it_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="28" splitType="Stretch"/>
+	</lastPageFooter>
+</jasperReport>

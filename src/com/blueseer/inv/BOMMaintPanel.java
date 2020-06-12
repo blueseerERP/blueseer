@@ -75,6 +75,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         btupdate.setEnabled(false);
         btadd.setEnabled(false);
         btclear.setEnabled(false);
+        btpdf.setEnabled(false);
     }
     
     public void enableAll() {
@@ -88,6 +89,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         btupdate.setEnabled(true);
         btadd.setEnabled(true);
         btclear.setEnabled(true);
+        btpdf.setEnabled(true);
     }
     
     public void clearAll() {
@@ -233,10 +235,12 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                        btadd.setEnabled(true);
                         btupdate.setEnabled(false);
                         btdelete.setEnabled(false); 
+                        btpdf.setEnabled(false);
                     } else {
                       btadd.setEnabled(false);
                         btupdate.setEnabled(true);
-                        btdelete.setEnabled(true);  
+                        btdelete.setEnabled(true); 
+                        btpdf.setEnabled(true);
                     }
              } catch (SQLException s) {
                  bsmf.MainFrame.show("Unable to select pbm_mstr");
@@ -298,6 +302,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         complist = new javax.swing.JList<>();
         jLabel6 = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btpdf = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
@@ -373,6 +378,13 @@ public class BOMMaintPanel extends javax.swing.JPanel {
             }
         });
 
+        btpdf.setText("PDF");
+        btpdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btpdfActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -417,6 +429,8 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btpdf)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupdate)
@@ -469,7 +483,8 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
-                    .addComponent(btupdate))
+                    .addComponent(btupdate)
+                    .addComponent(btpdf))
                 .addContainerGap(82, Short.MAX_VALUE))
         );
 
@@ -772,12 +787,18 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
+       if (! tbpart.getText().isEmpty())
+        OVData.printBOMJasper(tbpart.getText());
+    }//GEN-LAST:event_btpdfActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btpdf;
     private javax.swing.JButton btupdate;
     private javax.swing.JList<String> complist;
     private javax.swing.JComboBox ddcomp;

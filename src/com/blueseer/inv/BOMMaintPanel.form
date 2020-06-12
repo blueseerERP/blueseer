@@ -116,6 +116,8 @@
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="btpdf" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btupdate" min="-2" max="-2" attributes="0"/>
@@ -187,6 +189,7 @@
                           <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btpdf" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="82" max="32767" attributes="0"/>
                   </Group>
@@ -317,6 +320,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btpdf">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="PDF"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpdfActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
