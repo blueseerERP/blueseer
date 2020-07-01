@@ -1158,13 +1158,8 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
-        
-        
         getSiteAddress(OVData.getDefaultSite());
-        
-        
         try {
-
             final PrinterJob pjob = PrinterJob.getPrinterJob();
             pjob.setJobName("Graphics Demo Printout");
             pjob.setCopies(1);

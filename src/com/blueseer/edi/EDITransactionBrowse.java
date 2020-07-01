@@ -196,7 +196,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                      " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
-                    " edx_doc >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edx_doc >= " + "'" + tbdoc.getText() + "'" +
                     " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
@@ -311,7 +311,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         cal.set(Calendar.DAY_OF_YEAR, 1);
         java.util.Date firstday = cal.getTime();
         
-        dcfrom.setDate(firstday);
+       // dcfrom.setDate(firstday);
+       dcfrom.setDate(now);
         dcto.setDate(now);
                
         mymodel.setNumRows(0);

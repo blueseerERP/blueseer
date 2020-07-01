@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -109,6 +110,197 @@ public class EDI {
                 return controlarray;
     }
    
+    public static String[] filterFile(String infile, String outfile, String[] doctypes) throws FileNotFoundException, IOException {
+        String[] m = new String[]{"0",""};
+        
+        String[] c = null;  // control values to pass to map and log
+         File file = new File(infile);
+        BufferedReader f = new BufferedReader(new FileReader(file));
+         char[] cbuf = new char[(int) file.length()];
+         f.read(cbuf); 
+         f.close();
+         
+         
+         DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
+         Date now = new Date();
+         List<String> allowed = Arrays.asList(doctypes);
+         boolean isInSet = true;
+         // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
+         int start = 0;
+         int end = 0;
+         int isacount = 0;
+         int isactrl = 0;
+         int gscount = 0;
+         int stcount = 0;
+         int ststart = 0;
+         int sestart = 0;
+         String ed_escape = "";
+         String sd_escape = "";
+         int gsstart = 0;
+         String doctype = "";
+         String docid = "";
+         ArrayList<String> isaList = new ArrayList<String>();
+          
+          char e = 0;
+          char s = 0;
+          char u = 0;
+          
+          
+         String filetype = "unknown";  
+           Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
+           ArrayList<Object> docs = new ArrayList<Object>();
+          
+            for (int i = 0; i < cbuf.length; i++) {
+                
+                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
+                    e = cbuf[i+103];
+                    u = cbuf[i+104];
+                    s = cbuf[i+105];
+                    filetype = "x12";
+                    // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
+                    if (cbuf[i+106] != 'G' && cbuf[i+107] != 'S' && ! String.format("%02x",(int) cbuf[i+106]).equals("0a")) {
+                        return m = new String[]{"1","malformed envelope"};
+                    }
+                    ed_escape = escapeDelimiter(String.valueOf(e));
+                    sd_escape = escapeDelimiter(String.valueOf(s));
+                    if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
+                        s = cbuf[i+106];
+                    start = i;
+                    isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
+                    isacount++;
+                    String[] isa = new String(cbuf, i, 105).split(ed_escape);
+                    isactrl = Integer.valueOf(isa[13]);
+                    
+                      // set control
+                    c = initEDIControl();
+                    c[0] = isa[6].trim(); // senderid
+                    c[21] = isa[8].trim(); // receiverid
+                    c[2] = "";
+                    c[3] = infile;
+                    c[4] = isa[13]; //isactrlnbr
+                    c[8] = outfile;
+                    c[9] = String.valueOf((int) s);
+                    c[10] = String.valueOf((int) e);
+                    c[11] = String.valueOf((int) u);
+                    c[12] = ""; // override
+                    c[13] = new String(cbuf,i,105);
+                    c[15] = "0"; // inbound
+                   
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
+                    gscount++;
+                    isaList.add("GS" + ":" + String.valueOf(i));
+                    gsstart = i;
+                    String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
+                                      
+                     c[5] = gs[6]; // gsctrlnbr
+                    gs[8] = gs[8].split(sd_escape)[0];
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
+                    c[14] = gs[2];  // overwriting usual use of c[14] for fileFilter
+                   
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
+                   
+                    stcount++;
+                    isaList.add("ST" + ":" + String.valueOf(i));
+                    ststart = i;
+                    
+                    String[] st = new String(cbuf, i, 16).split(ed_escape);
+                    doctype = st[1]; // doctype
+                    docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
+                   
+                   // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
+                } 
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
+                    isaList.add("SE" + ":" + String.valueOf(i));
+                    sestart = i;
+                    // add to hash if hash doesn't exist or insert into hash
+                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                    // painful reminder that you have to create copy of array at instance in time
+                    ArrayList copydocs = new ArrayList(docs);
+                    stse_hash.put(isacount, copydocs);
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
+                    end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
+                    // now add to ISAmap
+                   HashMap<Integer,ArrayList> mycopy = new HashMap<Integer,ArrayList>(stse_hash);
+                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, mycopy, c});
+                    isaList.add("IEA" + ":" + String.valueOf(i));
+                    stcount = 0;
+                    docs.clear();
+                    stse_hash.remove(isacount);
+                    
+                } 
+            }
+            
+    if (filetype.equals("unknown")) {
+    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,," + "false" );
+    isInSet = false;
+    }
+            
+            // now run through ISAMap records of this file
+    for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+      //  int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
+      //  int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
+        char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
+       String[] control = (String[]) isa.getValue()[6]; 
+      // System.out.println("    envelope: cust/key/start/end : " + c[0] + "/" + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
+         
+      //  String[] c = (String[]) isa.getValue()[6];
+       // ArrayList d = (ArrayList) isa.getValue()[5];
+        Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
+        
+     //   System.out.println("doc entryset is : " + d.entrySet());
+        
+        
+       //for (Object z : d) {
+       for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
+         
+       //    System.out.println("doc May entry key: " + z.getKey());
+           
+         for (Object r : z.getValue()) {
+            Object[] x = (Object[]) r;
+         
+            Integer[] k = (Integer[])x[0];
+          //  String doctype = (String)x[1];
+          //  String docid = (String)x[2];
+         
+         
+         if (! allowed.contains((String)x[1])) {
+             isInSet = false;
+         }
+         System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + c[0] + "," + c[14] + "," + 
+                 isa.getKey() + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
+                 k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + isInSet ); 
+      //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
+            
+           // Integer[] k = (Integer[])z.getValue()[0];
+           // String doctype = (String)z.getValue()[1];
+           // String docid = (String)z.getValue()[2];
+           
+            
+         //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+      
+      //      System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
+       
+  
+      } // r         
+               
+    } // object k
+        
+             
+       
+            // 997
+           
+    } // ISAMap entries
+    
+    if (! isInSet) {
+        m[0] = "1"; // discard...otherwise keep....m[0] = "0" initialized above
+    }
+    return m;
+    }
+    
     public static String[] processFile(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
         
         
@@ -1879,8 +2071,11 @@ public class EDI {
         if (delim.equals("^")) {
             delim = "\\^";
         }
-         if (delim.equals("\\")) {
+        if (delim.equals("\\")) {
             delim = "\\\\";
+        }
+        if (delim.equals("|")) {
+            delim = "\\|";
         }
         return delim;
       }

@@ -191,7 +191,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                   cal.set(Calendar.DAY_OF_YEAR, 1);
                   java.util.Date firstday = cal.getTime();
                   
-                res = st.executeQuery("select ac_type, sum(glh_amt) as 'sum' from gl_hist inner join ac_mstr on ac_id = glh_acct " +
+                res = st.executeQuery("select ac_type, sum(glh_base_amt) as 'sum' from gl_hist inner join ac_mstr on ac_id = glh_acct " +
                         " where glh_effdate >= " + "'" + dfdate.format(firstday) + "'" +
                         " AND glh_effdate <= " + "'" + dfdate.format(now) + "'" +
                         " AND glh_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +

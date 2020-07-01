@@ -177,13 +177,13 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_type, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt from gl_hist " +
+                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_type, glh_ref, glh_doc, glh_effdate, glh_desc, glh_base_amt from gl_hist " +
                         " where glh_acct = " + "'" + acct + "'" + " AND " + 
                         " glh_site = " + "'" + site + "'" + " AND " +
                         " glh_effdate >= " + "'" + datestart + "'" + " AND " +
                         " glh_effdate <= " + "'" + dateend + "'" + ";");
                 while (res.next()) {
-                    total = total + res.getDouble("glh_amt");
+                    total = total + res.getDouble("glh_base_amt");
                    modeldetail.addRow(new Object[]{ 
                       res.getString("glh_acct"), 
                        res.getString("glh_cc"),
@@ -192,7 +192,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                       res.getString("glh_type"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_amt")))  });
+                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))  });
                 }
                
                 tabledetail.setModel(modeldetail);
@@ -227,14 +227,14 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_ref, glh_doc, glh_effdate, glh_desc, glh_amt from gl_hist " +
+                res = st.executeQuery("select glh_acct, glh_cc, glh_site, glh_ref, glh_doc, glh_effdate, glh_desc, glh_base_amt from gl_hist " +
                         " where glh_acct = " + "'" + acct + "'" + " AND " + 
                         " glh_cc = " + "'" + cc + "'" + " AND " +
                         " glh_site = " + "'" + site + "'" + " AND " +
                         " glh_effdate >= " + "'" + datestart + "'" + " AND " +
                         " glh_effdate <= " + "'" + dateend + "'" + ";");
                 while (res.next()) {
-                    total = total + res.getDouble("glh_amt");
+                    total = total + res.getDouble("glh_base_amt");
                    modeldetail.addRow(new Object[]{ 
                       res.getString("glh_acct"), 
                        res.getString("glh_cc"),
@@ -243,7 +243,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                       res.getString("glh_doc"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_amt")))});
+                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))});
                 }
                
               

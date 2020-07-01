@@ -48,6 +48,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
     public void initvars(String[] arg)
     {
         tausers.setText("");
+        tamenus.setText("");
          fromuser.removeAllItems();
         touser.removeAllItems();
         ArrayList users = OVData.getusermstrlist();

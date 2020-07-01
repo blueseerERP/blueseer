@@ -161,10 +161,8 @@
                                               </Group>
                                           </Group>
                                       </Group>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="cbScrapped" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbExternal" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="cbScrapped" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbExternal" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="cbDeviation" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>

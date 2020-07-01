@@ -479,17 +479,17 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_userid " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_userid " +
                         " FROM  gl_tran where " + myfield + " like " + "'" + str + "%'" +
                         " order by glt_id desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_useride  " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_useride  " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "'" +
                         " order by glt_id desc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_useride  " +
+                 res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_useride  " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "%'" +
                         " order by glt_id desc ;");
                  }
@@ -502,7 +502,7 @@ public class DTData {
                                    res.getString("glt_effdate"),
                                    res.getString("glt_entdate"),
                                    res.getString("glt_desc"),
-                                   res.getString("glt_amt"),
+                                   res.getString("glt_base_amt"),
                                    res.getString("glt_userid")
                         });
                     }
@@ -5225,7 +5225,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                       res = st.executeQuery("SELECT glt_id, glt_acct, glt_cc, glt_ref, glt_effdate, glt_entdate, glt_amt, glt_desc, glt_type, ac_desc " +
+                       res = st.executeQuery("SELECT glt_id, glt_acct, glt_cc, glt_ref, glt_effdate, glt_entdate, glt_base_amt, glt_desc, glt_type, ac_desc " +
                         "from gl_tran inner join ac_mstr on ac_id = glt_acct order by glt_id desc ;");
                                
                     while (res.next()) {
@@ -5239,7 +5239,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                                 res.getString("glt_desc"),
                                 res.getString("glt_effdate"),
                                 res.getString("glt_entdate"),
-                                res.getDouble("glt_amt")
+                                res.getDouble("glt_base_amt")
                         });
                     }
            }

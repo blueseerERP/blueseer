@@ -32,6 +32,10 @@ package com.blueseer.edi;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,10 +63,11 @@ public static void main(String args[]) {
     String outdir = vs[3].toString();
     String map = vs[4].toString();
     String isOverride = vs[5].toString();
-    String prog = vs[6].toString();
+    String[] doctypes = vs[6].split(",");
+    String prog = vs[7].toString();
     
     String myargs = String.join(",", args);
-        
+    
    
     switch (prog) {
         
@@ -72,6 +77,12 @@ public static void main(String args[]) {
         case "multiple" :
             processMultiple(indir, outdir, map, isOverride);
             break;
+        case "filterFile" :
+            filterFile(infile, outfile, doctypes);
+            break; 
+        case "filterDir" :
+            filterDir(indir, outdir, doctypes);
+            break;    
         default:
             System.out.println("Unable to process arguments " + myargs);
         
@@ -85,8 +96,8 @@ public static void main(String args[]) {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x");
-        String[] vals = new String[7]; // last element is the program type (single or mulitiple)
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd");
+        String[] vals = new String[8]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
         
         String myargs = String.join(",", args);
@@ -105,9 +116,10 @@ public static void main(String args[]) {
              System.exit(1);
          }
          if (isSingle) 
-             vals[6] = "single";
+             vals[7] = "single";
          if (isMultiple) 
-             vals[6] = "multiple";
+             vals[7] = "multiple";
+         
          
          // initialize override to false
          vals[5] = "false";
@@ -127,7 +139,7 @@ public static void main(String args[]) {
               
               
               
-               if ( (args.length > i+1 && args[i+1] != null) || (args[i].toString().equals("-x")) ) {
+               if ( (args.length > i+1 && args[i+1] != null) || (args[i].toString().equals("-x")) || (args[i].toString().equals("-ff") || (args[i].toString().equals("-fd"))) ) {
                 
                  switch (args[i].toString().toLowerCase()) {
         
@@ -148,7 +160,15 @@ public static void main(String args[]) {
                         break;
                     case "-x" :
                         vals[5] = "true"; 
-                        break;    
+                        break; 
+                    case "-ff" :
+                        vals[6] = args[i+1];
+                        vals[7] = "filterFile"; 
+                        break;  
+                    case "-fd" :
+                        vals[6] = args[i+1];
+                        vals[7] = "filterDir"; 
+                        break;     
                     default:
                         System.out.println("Unable to process arguments " + myargs);
                         System.exit(1);
@@ -207,6 +227,52 @@ public static void main(String args[]) {
     } 
  }
  
+ public static void filterFile(String infile, String outfile, String[] doctypes) {
+      // case of single input and output file    
+    if (! infile.isEmpty()) {
+        try {
+            EDI.filterFile(infile, outfile, doctypes);
+        } catch (IOException ex) {
+           ex.printStackTrace();
+        }
+    }
+ }
+ 
+ 
+  public static void filterDir(String indir, String outdir, String[] doctypes) {
+     // case of multiple files....directory in and directory out 
+     String outfile = "";
+     outdir = outdir.replace("\\","\\\\"); 
+    if (! indir.isEmpty() && doctypes.length > 0) {
+         try {   
+               File folder = new File(indir);
+               File[] listOfFiles = folder.listFiles();
+               if (listOfFiles.length == 0) {
+                   System.out.println("No files to process");
+                   System.exit(1);
+               }
+              for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+               // System.out.println("file: " + listOfFiles[i].getName());
+                  if(listOfFiles[i].length() == 0) { 
+                  listOfFiles[i].delete();
+                  } else { 
+                  outfile = listOfFiles[i].getName();
+                  String[] m = EDI.filterFile(listOfFiles[i].getPath(), outfile, doctypes);
+                    if (m != null && m[0].equals("0")) {
+			Path newpath = Paths.get(outdir + listOfFiles[i].getName());
+                        Path oldpath = Paths.get(listOfFiles[i].getPath());
+			Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+			
+                    }
+                  }
+                }
+              }
+       } catch (IOException ex) {
+          ex.printStackTrace();
+       }
+    } 
+ }
  
 } // class
 

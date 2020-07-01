@@ -397,7 +397,7 @@ try {
                  
                 while (res.next()) {
                                       
-                    dol = dol + res.getDouble("glh_amt");
+                    dol = dol + res.getDouble("glh_base_amt");
                  
                     i++;
                         mymodel.addRow(new Object[]{
@@ -410,7 +410,7 @@ try {
                                 res.getString("glh_type"),
                                 res.getString("glh_acct"),
                                 res.getString("glh_cc"),
-                                res.getDouble("glh_amt")
+                                res.getDouble("glh_base_amt")
                             });
                 }
                 labeldollar.setText(String.valueOf(df.format(dol)));

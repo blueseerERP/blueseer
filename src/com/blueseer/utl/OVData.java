@@ -684,7 +684,6 @@ public class OVData {
 
                 st.executeUpdate("delete from perm_mstr where "
                         + " perm_menu = " + "'" + menu + "'"
-                        + " and perm_user <> 'admin' "
                         + ";");
 
             } // if proceed
@@ -11697,6 +11696,39 @@ public class OVData {
              return billto;
          }
          
+         public static String getOrderCurrency(String order) {
+             String curr = "";
+              try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+               java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                   
+                   
+                      res = st.executeQuery("select so_curr from so_mstr where so_nbr = " + "'" + order + "'" +";");
+                    while (res.next()) {
+                        curr = res.getString("so_curr");
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+             return curr;
+         }
+         
          
          public static ArrayList getOrderWHSource(String order) {
              ArrayList<String> wh = new ArrayList<String>();
@@ -16384,7 +16416,7 @@ public class OVData {
                   
              //  bsmf.MainFrame.show("1: " + datestart + "/" + dateend + "/" + amt);      
                   // now get all transactions in gl_hist that equate to current period transactions of inbound date
-                  res = st.executeQuery("select sum(glh_amt) as sum from gl_hist " +
+                  res = st.executeQuery("select sum(glh_base_amt) as sum from gl_hist " +
                         " where glh_acct = " + "'" + acct + "'" + " AND " + 
                         " glh_site = " + "'" + site + "'" + " AND " +
                         " glh_effdate >= " + "'" + datestart + "'" + " AND " +
@@ -16457,7 +16489,7 @@ public class OVData {
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                res = st.executeQuery("SELECT sum(glh_amt) as sum from gl_hist where " +
+                res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
                         " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                         " glh_effdate <= " + "'" + todate + "'" + " AND " +
                         " glh_acct = " + "'" + acct + "'" + " AND " +
@@ -16486,7 +16518,7 @@ public class OVData {
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                res = st.executeQuery("SELECT sum(glh_amt) as sum from gl_hist where " +
+                res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
                         " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                         " glh_effdate <= " + "'" + todate + "'" + " AND " +
                         " glh_acct = " + "'" + acct + "'" +  
@@ -17486,7 +17518,7 @@ public class OVData {
                 gltran.add(res.getInt("glt_id"));
                 acct = res.getString("glt_acct");
                 cc = res.getString("glt_cc");
-                amt = res.getDouble("glt_amt");
+                amt = res.getDouble("glt_base_amt");
                 per = res.getInt("glc_per");
                 year = res.getInt("glc_year");
                 site = res.getString("glt_site");
@@ -21271,6 +21303,8 @@ MainFrame.bslog(e);
                     carrier = shipvia;
                 }
                 
+                // override cust currency with order currency
+                curr = OVData.getOrderCurrency(so);
                 
                 // logic for asset type shipment/sale
                 if (shiptype.equals("A")) {

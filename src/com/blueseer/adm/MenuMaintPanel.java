@@ -336,6 +336,8 @@ public class MenuMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
+            OVData.addMenuToUser(x[0], "admin");
+      
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
@@ -404,6 +406,7 @@ public class MenuMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
             }
             bsmf.MainFrame.con.close();
+            OVData.deleteMenuToAllUsers(x[0]);
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
