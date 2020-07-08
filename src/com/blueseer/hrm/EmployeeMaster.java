@@ -487,7 +487,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                 if (dcdob.getDate() != null)
                     dobdatestr = "'" + dfdate.format(dcdob.getDate()) + "'";
 
-                    res = st.executeQuery("SELECT emp_nbre FROM  emp_mstr where emp_nbr = " + "'" + x[0] + "'" + ";");
+                    res = st.executeQuery("SELECT emp_nbr FROM  emp_mstr where emp_nbr = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                     }

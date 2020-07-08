@@ -113,6 +113,7 @@ public class EDI {
     public static String[] filterFile(String infile, String outfile, String[] doctypes) throws FileNotFoundException, IOException {
         String[] m = new String[]{"0",""};
         
+       
         String[] c = null;  // control values to pass to map and log
          File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
@@ -146,20 +147,24 @@ public class EDI {
           char s = 0;
           char u = 0;
           
-          
+          int mark = 0;
          String filetype = "unknown";  
            Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
            ArrayList<Object> docs = new ArrayList<Object>();
           
             for (int i = 0; i < cbuf.length; i++) {
                 
-                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
+                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+                        && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
                     e = cbuf[i+103];
                     u = cbuf[i+104];
                     s = cbuf[i+105];
                     filetype = "x12";
+                    mark = i;
+                    
+                    
                     // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
-                    if (cbuf[i+106] != 'G' && cbuf[i+107] != 'S' && ! String.format("%02x",(int) cbuf[i+106]).equals("0a")) {
+                    if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
                         return m = new String[]{"1","malformed envelope"};
                     }
                     ed_escape = escapeDelimiter(String.valueOf(e));
@@ -332,20 +337,21 @@ public class EDI {
           char e = 0;
           char s = 0;
           char u = 0;
-          
+          int mark = 0;
           
            
            Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
            ArrayList<Object> docs = new ArrayList<Object>();
           
             for (int i = 0; i < cbuf.length; i++) {
-                
-                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A') {
+              if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+                        && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
                     e = cbuf[i+103];
                     u = cbuf[i+104];
                     s = cbuf[i+105];
+                    mark = i;
                     // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
-                    if (cbuf[i+106] != 'G' && cbuf[i+107] != 'S' && ! String.format("%02x",(int) cbuf[i+106]).equals("0a")) {
+                if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
                         return m = new String[]{"1","malformed envelope"};
                     }
                     ed_escape = escapeDelimiter(String.valueOf(e));
@@ -808,7 +814,7 @@ public class EDI {
         falist.add(docid); // add ST doc id to falist for functional acknowledgement
       //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
        
-    // here you are inserting 'segments' into ArrayList doc
+    //  you are inserting 'segments' into ArrayList doc
     StringBuilder segment = new StringBuilder();
    // for (int i = 0; i < cbuf.length; i++) {
    ArrayList<String> doc = new ArrayList<String>();

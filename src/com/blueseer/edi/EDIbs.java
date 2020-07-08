@@ -65,6 +65,7 @@ public static void main(String args[]) {
     String isOverride = vs[5].toString();
     String[] doctypes = vs[6].split(",");
     String prog = vs[7].toString();
+    String archdir = vs[8].toString();
     
     String myargs = String.join(",", args);
     
@@ -81,7 +82,7 @@ public static void main(String args[]) {
             filterFile(infile, outfile, doctypes);
             break; 
         case "filterDir" :
-            filterDir(indir, outdir, doctypes);
+            filterDir(indir, outdir, archdir, doctypes);
             break;    
         default:
             System.out.println("Unable to process arguments " + myargs);
@@ -96,8 +97,8 @@ public static void main(String args[]) {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd");
-        String[] vals = new String[8]; // last element is the program type (single or mulitiple)
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad");
+        String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
         
         String myargs = String.join(",", args);
@@ -169,6 +170,9 @@ public static void main(String args[]) {
                         vals[6] = args[i+1];
                         vals[7] = "filterDir"; 
                         break;     
+                    case "-ad" :
+                        vals[8] = args[i+1]; 
+                        break;
                     default:
                         System.out.println("Unable to process arguments " + myargs);
                         System.exit(1);
@@ -231,7 +235,10 @@ public static void main(String args[]) {
       // case of single input and output file    
     if (! infile.isEmpty()) {
         try {
-            EDI.filterFile(infile, outfile, doctypes);
+           String[] m = EDI.filterFile(infile, outfile, doctypes);
+           if (m != null && m[0].equals("1")) {
+               System.out.println(m[1]);
+           }
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -239,10 +246,11 @@ public static void main(String args[]) {
  }
  
  
-  public static void filterDir(String indir, String outdir, String[] doctypes) {
+  public static void filterDir(String indir, String outdir, String archdir, String[] doctypes) {
      // case of multiple files....directory in and directory out 
      String outfile = "";
      outdir = outdir.replace("\\","\\\\"); 
+     
     if (! indir.isEmpty() && doctypes.length > 0) {
          try {   
                File folder = new File(indir);
@@ -258,13 +266,19 @@ public static void main(String args[]) {
                   listOfFiles[i].delete();
                   } else { 
                   outfile = listOfFiles[i].getName();
+                  Path oldpath = Paths.get(listOfFiles[i].getPath());
+                  Path newpath = Paths.get(outdir + listOfFiles[i].getName());
                   String[] m = EDI.filterFile(listOfFiles[i].getPath(), outfile, doctypes);
                     if (m != null && m[0].equals("0")) {
-			Path newpath = Paths.get(outdir + listOfFiles[i].getName());
-                        Path oldpath = Paths.get(listOfFiles[i].getPath());
 			Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
-			
+                    } else {
+                        System.out.println(m[1]);
                     }
+                    if (! archdir.isEmpty()) {
+                       Path archivepath = Paths.get(archdir + listOfFiles[i].getName());
+                       Files.copy(oldpath, archivepath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    listOfFiles[i].delete(); // now delete file
                   }
                 }
               }
