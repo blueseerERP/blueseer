@@ -121,7 +121,7 @@ DefaultTreeModel levelmodel = null;
     
     }
      
-     public void getMaxLevel(DefaultMutableTreeNode node) {
+    public void getMaxLevel(DefaultMutableTreeNode node) {
     int childCount = node.getChildCount();
     for (int i = 0; i < childCount; i++) {
         DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
@@ -138,7 +138,7 @@ DefaultTreeModel levelmodel = null;
 
 }
      
-      public void bind_tree2(String part) {
+    public void bind_tree2(String part) {
       //  jTree1.setModel(null);
        
         DefaultMutableTreeNode mynode = get_parents(part);
@@ -150,14 +150,7 @@ DefaultTreeModel levelmodel = null;
         
     }
     
-      
-       
-   
-    
-      
-     
-      
-      public DefaultMutableTreeNode get_parents(String mypart)  {
+    public DefaultMutableTreeNode get_parents(String mypart)  {
           
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         
@@ -184,8 +177,7 @@ DefaultTreeModel levelmodel = null;
         return mynode;
      }
 
-      
-      public DefaultMutableTreeNode get_nodes(String mypart, double perqty)  {
+    public DefaultMutableTreeNode get_nodes(String mypart, double perqty)  {
         lastlevel++;
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         String[] newpart = mypart.split("___");
@@ -229,7 +221,7 @@ DefaultTreeModel levelmodel = null;
         return mynode;
      }
      
-         public DefaultMutableTreeNode get_nodes_file(String mypart) throws FileNotFoundException, IOException {
+    public DefaultMutableTreeNode get_nodes_file(String mypart) throws FileNotFoundException, IOException {
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         String[] newpart = mypart.split("___");
          BufferedReader myfile = new BufferedReader(new FileReader(new File("/home/vaughnte/psmstr.csv")));
@@ -251,15 +243,11 @@ DefaultTreeModel levelmodel = null;
         myfile.close();
         return mynode;
      }
-    
-         
-         public class CustomCellRenderer
-		extends		JLabel
-		implements	TreeCellRenderer
-{
-   private ImageIcon		deckImage;
-   private ImageIcon[]		suitImages;
-   private ImageIcon[]		cardImages;
+             
+    public class CustomCellRenderer	extends JLabel	implements TreeCellRenderer {
+      private ImageIcon		deckImage;
+      private ImageIcon[]		suitImages;
+      private ImageIcon[]		cardImages;
 	private boolean			bSelected;
 
 
@@ -362,6 +350,7 @@ DefaultTreeModel levelmodel = null;
         lblevel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        btprint = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -377,6 +366,13 @@ DefaultTreeModel levelmodel = null;
         jTree1.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jScrollPane1.setViewportView(jTree1);
 
+        btprint.setText("Print");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -388,7 +384,9 @@ DefaultTreeModel levelmodel = null;
                         .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
                         .addComponent(lblevel, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -401,7 +399,8 @@ DefaultTreeModel levelmodel = null;
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                            .addComponent(jButton1)
+                            .addComponent(btprint))
                         .addGap(19, 19, 19))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(lblevel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -421,8 +420,13 @@ DefaultTreeModel levelmodel = null;
        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btprint;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

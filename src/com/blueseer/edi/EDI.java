@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
@@ -110,14 +111,38 @@ public class EDI {
                 return controlarray;
     }
    
+    public static void reduceFile(Path infile, String outdir, String[] positions) throws FileNotFoundException, IOException {
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
+        Date now = new Date();
+        File newfile = new File(outdir  + infile.getFileName().toString() + dfdate.format(now) + "_bs");
+        
+        File file = new File(infile.toString());
+        BufferedReader f = new BufferedReader(new FileReader(file));
+         char[] cbuf = new char[(int) file.length()];
+         f.read(cbuf); 
+         f.close();
+         
+         for (int kk = 0; kk < positions.length; kk+=2) {
+           char[] newarray = Arrays.copyOfRange(cbuf, Integer.valueOf(positions[kk]), Integer.valueOf(positions[kk+1]));
+           FileWriter out = new FileWriter(newfile,true);
+           out.write(newarray);
+           out.close();
+         }
+         
+         
+        
+    }
+    
     public static String[] filterFile(String infile, String outfile, String[] doctypes) throws FileNotFoundException, IOException {
         String[] m = new String[]{"0",""};
         
        
         String[] c = null;  // control values to pass to map and log
-         File file = new File(infile);
+        
+        File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
          char[] cbuf = new char[(int) file.length()];
+         int max = cbuf.length;
          f.read(cbuf); 
          f.close();
          
@@ -125,7 +150,7 @@ public class EDI {
          DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
          Date now = new Date();
          List<String> allowed = Arrays.asList(doctypes);
-         boolean isInSet = true;
+         
          // now lets see how many ISAs and STs within those ISAs and write character positions of each
          Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
          int start = 0;
@@ -154,7 +179,7 @@ public class EDI {
           
             for (int i = 0; i < cbuf.length; i++) {
                 
-                if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+                if ( ((i+103) <= max) && cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
                         && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
                     e = cbuf[i+103];
                     u = cbuf[i+104];
@@ -238,14 +263,19 @@ public class EDI {
                     
                 } 
             }
+      
+    
             
-    if (filetype.equals("unknown")) {
-    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,," + "false" );
-    isInSet = false;
-    }
-            
-            // now run through ISAMap records of this file
+    // now run through ISAMap records of this file
+    // set mixbag flag as false...and assign true if File has any ISA patterns with diff type of docs        
+    boolean mixbag = false;
+    boolean prevISA = false;
+    boolean isInSet = true;
+    StringBuilder keepers = new StringBuilder(); 
+    int q = 0;
+    
     for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+     q++;
       //  int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
       //  int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
@@ -255,11 +285,8 @@ public class EDI {
       //  String[] c = (String[]) isa.getValue()[6];
        // ArrayList d = (ArrayList) isa.getValue()[5];
         Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
-        
-     //   System.out.println("doc entryset is : " + d.entrySet());
-        
-        
-       //for (Object z : d) {
+    
+      
        for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
          
        //    System.out.println("doc May entry key: " + z.getKey());
@@ -274,9 +301,11 @@ public class EDI {
          
          if (! allowed.contains((String)x[1])) {
              isInSet = false;
+         } else {
+             isInSet = true;
          }
          System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + c[0] + "," + c[14] + "," + 
-                 isa.getKey() + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
+                 isa.getKey() + "," + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
                  k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + isInSet ); 
       //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
             
@@ -293,15 +322,30 @@ public class EDI {
       } // r         
                
     } // object k
-        
-             
-       
-            // 997
-           
+     // now determine how many ISAs are of allowed doc types
+     if (q > 1 && prevISA != isInSet) {
+       mixbag = true;  
+     }
+     if (isInSet) {
+         keepers.append(isa.getValue()[0] + "," + isa.getValue()[1]).append(",");
+     }
+     prevISA = isInSet;
     } // ISAMap entries
     
-    if (! isInSet) {
+    // if unknown...then no isa hashmap will be processed...just tag it.        
+    if (filetype.equals("unknown")) {
+    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,," + "false" );
+    isInSet = false;
+    }
+    
+    
+    if (! isInSet && ! mixbag) {
         m[0] = "1"; // discard...otherwise keep....m[0] = "0" initialized above
+    }
+    if (mixbag) {
+        System.out.println(dfdate.format(now) + "," + infile + "," + "mixbag" + ",,,,,,,,,,," );
+        m[0] = "9"; // mixbag...pass code 9 along with start,end of buffer to keep
+        m[1] = keepers.deleteCharAt(keepers.length() - 1).toString();
     }
     return m;
     }
@@ -314,6 +358,7 @@ public class EDI {
         File file = new File(infile);
         BufferedReader f = new BufferedReader(new FileReader(file));
          char[] cbuf = new char[(int) file.length()];
+         int max = cbuf.length;
          f.read(cbuf); 
          f.close();
          
@@ -344,7 +389,7 @@ public class EDI {
            ArrayList<Object> docs = new ArrayList<Object>();
           
             for (int i = 0; i < cbuf.length; i++) {
-              if (cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+             if ( ((i+103) <= max) && cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
                         && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
                     e = cbuf[i+103];
                     u = cbuf[i+104];

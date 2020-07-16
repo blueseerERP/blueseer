@@ -36,8 +36,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +51,8 @@ import jcifs.smb.SmbFileOutputStream;
 
 public class EDIbs {
     
-    
+    public static DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
+    public static Date now = new Date();
     
 public static void main(String args[]) {
  
@@ -263,6 +267,7 @@ public static void main(String args[]) {
                 if (listOfFiles[i].isFile()) {
                // System.out.println("file: " + listOfFiles[i].getName());
                   if(listOfFiles[i].length() == 0) { 
+                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,," ); 
                   listOfFiles[i].delete();
                   } else { 
                   outfile = listOfFiles[i].getName();
@@ -271,6 +276,11 @@ public static void main(String args[]) {
                   String[] m = EDI.filterFile(listOfFiles[i].getPath(), outfile, doctypes);
                     if (m != null && m[0].equals("0")) {
 			Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+                    } else if (m != null && m[0].equals("9")) {
+                        //mixed bag
+                        String[] keepers = m[1].split(",",-1);
+                        EDI.reduceFile(Paths.get(listOfFiles[i].getPath()), outdir, keepers);
+                        //Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
                     } else {
                         System.out.println(m[1]);
                     }
