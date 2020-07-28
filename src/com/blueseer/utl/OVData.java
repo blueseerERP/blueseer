@@ -83,7 +83,7 @@ import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileOutputStream;
 import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperFillManager; 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -3380,7 +3380,7 @@ public class OVData {
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr "
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total, ps_op from pbm_mstr "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
                         + " where ps_parent = " + "'" + mypart.toString() + "';");
@@ -3390,7 +3390,8 @@ public class OVData {
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
                             + res.getString("it_desc") + ","
-                            + res.getString("itc_total");
+                            + res.getString("itc_total") + ","
+                            + res.getString("ps_op");
 
                     myarray.add(mystring);
 

@@ -658,7 +658,11 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                         + " where it_item = " + "'" + tbkey.getText().toString() + "'"
                         + ";");
                 
-                    
+                    // also update pbm_mstr (BOM) if item type has changed
+                    // nope...bad idea
+                     // st.executeUpdate("update pbm_mstr set ps_type = " + "'" + ddcode.getSelectedItem().toString() + "'" + ","
+                     //                   + " where ps_child = " + "'" + tbkey.getText().toString() + "'" + ";");
+                 
                     
                     
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};

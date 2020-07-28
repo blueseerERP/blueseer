@@ -166,6 +166,7 @@ public class EDI {
          int gsstart = 0;
          String doctype = "";
          String docid = "";
+         String reference = "";
          ArrayList<String> isaList = new ArrayList<String>();
           
           char e = 0;
@@ -242,11 +243,31 @@ public class EDI {
                    
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
+                
+                // lets try to get the reference key of the doc...beg, bsn, etc
+                // BEG 
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'B' && cbuf[i+1] == 'E' && cbuf[i+2] == 'G') {
+                 String[] xx = new String(cbuf, i, 50).split(ed_escape);
+                 reference = xx[3];
+                }
+                // BSN
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'B' && cbuf[i+1] == 'S' && cbuf[i+2] == 'N') {
+                 String[] xx = new String(cbuf, i, 50).split(ed_escape);
+                 reference = xx[2];
+                }
+                // BSN
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'B' && cbuf[i+1] == 'I' && cbuf[i+2] == 'G') {
+                 String[] xx = new String(cbuf, i, 50).split(ed_escape);
+                 reference = xx[2];
+                }
+                // END of reference grab
+                
+                
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
                     isaList.add("SE" + ":" + String.valueOf(i));
                     sestart = i;
                     // add to hash if hash doesn't exist or insert into hash
-                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid, reference});
                     // painful reminder that you have to create copy of array at instance in time
                     ArrayList copydocs = new ArrayList(docs);
                     stse_hash.put(isacount, copydocs);
@@ -304,7 +325,7 @@ public class EDI {
          } else {
              isInSet = true;
          }
-         System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + c[0] + "," + c[14] + "," + 
+         System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + (String)x[3] + "," + c[0] + "," + c[14] + "," + 
                  isa.getKey() + "," + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
                  k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + isInSet ); 
       //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
@@ -334,7 +355,7 @@ public class EDI {
     
     // if unknown...then no isa hashmap will be processed...just tag it.        
     if (filetype.equals("unknown")) {
-    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,," + "false" );
+    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,,," + "false" );
     isInSet = false;
     }
     
@@ -343,7 +364,7 @@ public class EDI {
         m[0] = "1"; // discard...otherwise keep....m[0] = "0" initialized above
     }
     if (mixbag) {
-        System.out.println(dfdate.format(now) + "," + infile + "," + "mixbag" + ",,,,,,,,,,," );
+        System.out.println(dfdate.format(now) + "," + infile + "," + "mixbag" + ",,,,,,,,,,,," );
         m[0] = "9"; // mixbag...pass code 9 along with start,end of buffer to keep
         m[1] = keepers.deleteCharAt(keepers.length() - 1).toString();
     }
@@ -2128,6 +2149,10 @@ public class EDI {
         if (delim.equals("|")) {
             delim = "\\|";
         }
+        if (delim.equals("?")) {
+            delim = "\\?";
+        }
+        
         return delim;
       }
       

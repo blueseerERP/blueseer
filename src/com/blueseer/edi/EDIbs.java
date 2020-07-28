@@ -54,7 +54,7 @@ public class EDIbs {
     public static DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
     public static Date now = new Date();
     
-public static void main(String args[]) {
+public static void main(String args[]) throws IOException {
  
     // set config
    // bsmf.MainFrame.setConfig();
@@ -87,7 +87,10 @@ public static void main(String args[]) {
             break; 
         case "filterDir" :
             filterDir(indir, outdir, archdir, doctypes);
-            break;    
+            break;   
+        case "trafficDir" :
+            trafficDir(indir, map);
+            break;     
         default:
             System.out.println("Unable to process arguments " + myargs);
         
@@ -101,7 +104,7 @@ public static void main(String args[]) {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad");
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf");
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
         
@@ -173,7 +176,14 @@ public static void main(String args[]) {
                     case "-fd" :
                         vals[6] = args[i+1];
                         vals[7] = "filterDir"; 
-                        break;     
+                        break;  
+                    case "-td" :
+                        vals[2] = args[i+1];
+                        vals[7] = "trafficDir"; 
+                        break;  
+                    case "-tf" :
+                        vals[4] = args[i+1];
+                        break;      
                     case "-ad" :
                         vals[8] = args[i+1]; 
                         break;
@@ -248,9 +258,8 @@ public static void main(String args[]) {
         }
     }
  }
- 
- 
-  public static void filterDir(String indir, String outdir, String archdir, String[] doctypes) {
+  
+ public static void filterDir(String indir, String outdir, String archdir, String[] doctypes) {
      // case of multiple files....directory in and directory out 
      String outfile = "";
      outdir = outdir.replace("\\","\\\\"); 
@@ -260,14 +269,14 @@ public static void main(String args[]) {
                File folder = new File(indir);
                File[] listOfFiles = folder.listFiles();
                if (listOfFiles.length == 0) {
-                   System.out.println("No files to process");
+                   System.out.println(dfdate.format(now) + ", No files to process,,,,,,,,,,,,");
                    System.exit(1);
                }
               for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                // System.out.println("file: " + listOfFiles[i].getName());
                   if(listOfFiles[i].length() == 0) { 
-                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,," ); 
+                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,,," ); 
                   listOfFiles[i].delete();
                   } else { 
                   outfile = listOfFiles[i].getName();
@@ -297,6 +306,102 @@ public static void main(String args[]) {
        }
     } 
  }
+ 
+ public static void trafficDir(String indir, String map) throws FileNotFoundException, IOException {
+     // indir is the directory to traffic
+     // map is the definition file used to traffic file patterns to destinations
+     // the map (traffic file) is comma delimited (pattern,destdir,archdir)
+     
+     // read traffic file...aka map...exit if no file
+     ArrayList<String[]> trafficarray = new ArrayList<String[]>();
+     File tf = new File(map);
+     if(tf.exists()) {
+          FileReader reader = new FileReader(tf);
+          BufferedReader br = new BufferedReader(reader);
+          String line = "";
+          while ((line = br.readLine()) != null) {
+                trafficarray.add(line.split(",", -1));  // (pattern,destdir,archdir)
+          }
+          br.close();
+          reader.close();
+     } else {
+         System.out.println(dfdate.format(now) + " No Traffic File");
+         System.exit(1);
+     }
+     
+     // check trafficarray...make sure 3 elements per row
+     boolean isBad = false;
+     for (String[] s : trafficarray) {
+         if (s.length != 3) {
+             isBad = true;
+         }
+     }
+     if (isBad) {
+       System.out.println(dfdate.format(now) + " Bad Format Traffic File");
+         System.exit(1);  
+     }
+     
+     
+     
+     // OK...now let's loop through indir for files and compare against traffic file
+     String outfile = "";
+     String outdir = ""; 
+     String archdir = "";
+     boolean match = false;
+    
+         try {   
+               File folder = new File(indir);
+               File[] listOfFiles = folder.listFiles();
+               if (listOfFiles.length == 0) {
+                   System.out.println(dfdate.format(now) + " No files to process");
+                   System.exit(1);
+               }
+              for (int i = 0; i < listOfFiles.length; i++) {
+                match = false;
+                if (listOfFiles[i].isFile()) {
+                  if(listOfFiles[i].length() == 0) { 
+                  System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " zerosize" ); 
+                  listOfFiles[i].delete();
+                  } else { 
+                  for (String[] s : trafficarray) {
+                      if (listOfFiles[i].getName().contains(s[0])) {
+                          // found match
+                          match = true;
+                          outdir = s[1].replace("\\","\\\\");
+                          if (!s[2].isEmpty()) {
+                              archdir = s[2].replace("\\","\\\\");
+                          } else {
+                              archdir = "";
+                          }
+                          
+                          Path oldpath = Paths.get(listOfFiles[i].getPath());
+                          Path newpath = Paths.get(outdir + listOfFiles[i].getName());
+                          Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+                          System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() ); 
+                          if (! archdir.isEmpty()) {
+                             Path archivepath = Paths.get(archdir + listOfFiles[i].getName());
+                             Files.copy(oldpath, archivepath, StandardCopyOption.REPLACE_EXISTING); 
+                          }
+                          break;
+                      }
+                  }    
+                    // now delete if match found...otherwise leave file in place.
+                    if (match) {
+                    listOfFiles[i].delete(); // now delete file
+                    } else {
+                    System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " no match found" );     
+                    }
+                    
+                    
+                  } // else it's non-zero size...process it
+                } // yep it's a file
+              } // for all files found
+       } catch (IOException ex) {
+          ex.printStackTrace();
+       }
+    
+ }
+ 
  
 } // class
 

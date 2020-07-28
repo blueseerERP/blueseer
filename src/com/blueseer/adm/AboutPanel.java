@@ -58,62 +58,19 @@ public class AboutPanel extends javax.swing.JPanel {
     public void getSysInfo() {
                  /* Total number of processors or cores available to the JVM */
           jTextArea2.setText("");
-          
-       SystemInfo si = new SystemInfo(); 
-       
       
-       
-       HardwareAbstractionLayer hal = si.getHardware();
-       long availableMemory = hal.getMemory().getAvailable();
-       jTextArea2.append("Available memory (bytes): " + 
-       (availableMemory == Long.MAX_VALUE ? "no limit" : availableMemory) + "\n"); 
-       
-       long totalMemory = hal.getMemory().getTotal();
-       jTextArea2.append("Total memory (bytes): " + 
-       (totalMemory == Long.MAX_VALUE ? "no limit" : totalMemory) + "\n"); 
-       
-       jTextArea2.append("Processor: " + si.getHardware().getProcessor().getName() + "\n"); 
-       jTextArea2.append("Processor Vendor: " + si.getHardware().getProcessor().getVendor() + "\n"); 
-       jTextArea2.append("Processor Model: " + si.getHardware().getProcessor().getModel() + "\n"); 
-       jTextArea2.append("Processor Logical Count: " + si.getHardware().getProcessor().getLogicalProcessorCount() + "\n"); 
-       jTextArea2.append("Processor Physical Count: " + si.getHardware().getProcessor().getPhysicalProcessorCount() + "\n"); 
-       
-       OperatingSystem os = si.getOperatingSystem();
-       jTextArea2.append("Operating System: " + os + "\n");
-       jTextArea2.append("OS Family: " + os.getFamily() + "\n");
-       jTextArea2.append("OS Manufacturer: " + os.getManufacturer() + "\n");
-       jTextArea2.append("OS Version: " + os.getVersion().getVersion() + "\n");
-       jTextArea2.append("OS Bit: " + os.getBitness() + "\n");
-       jTextArea2.append("OS Build: " + os.getVersion().getBuildNumber() + "\n");
-       jTextArea2.append("OS Codename: " + os.getVersion().getCodeName() + "\n");
-       jTextArea2.append("OS FileSystem: " + os.getFileSystem() + "\n");
-       
-       
-        NetworkIF[] s = si.getHardware().getNetworkIFs();
-       for (NetworkIF x : s) {
-        jTextArea2.append("Network: " + x.getName() + " / " + String.join(", ", x.getIPv4addr()) + "\n");
-       }
-       
-       jTextArea2.append("Java Version: " + System.getProperty("java.version") + "\n");   
-       jTextArea2.append("Java VM: " + System.getProperty("java.vm.name") + "\n");
-       jTextArea2.append("Java VM Version: " + System.getProperty("java.vm.version") + "\n");
-       jTextArea2.append("Java Runtime Name: " + System.getProperty("java.runtime.name") + "\n");   
-       jTextArea2.append("Java Runtime Version: " + System.getProperty("java.runtime.version") + "\n");  
-       jTextArea2.append("Java Class Version: " + System.getProperty("java.class.version") + "\n");   
-       jTextArea2.append("Java Compiler: " + System.getProperty("sun.management.compiler") + "\n");   
-       
-       
-       // now get patch info...created from git command :  git rev-parse HEAD
+       // now pull sysinfo from app/sys.log file generated at startup (bsmf.MainFrame.logSysInfo())
        BufferedReader fsr;
         try {
-            fsr = new BufferedReader(new FileReader(new File(".patch")));
+            fsr = new BufferedReader(new FileReader(new File("data/sys.log")));
             String line = "";
             while ((line = fsr.readLine()) != null) {
-               jTextArea2.append("Patch: " + line);
+               jTextArea2.append(line + "\n");
             }
             fsr.close();
         } catch (FileNotFoundException ex) {
             MainFrame.bslog(ex);
+            jTextArea2.append("File not found at data/sys.log");
         } catch (IOException ex) {
             MainFrame.bslog(ex);
         }
