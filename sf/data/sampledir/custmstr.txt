@@ -1,1 +1,1 @@
-STARBUCKS:1000:Starbucks Coffee:111 somedrive:::Seattle:WA:55555:USA:::0:0:FEDEX:N30::::::99999999:9999:blah::BK:USD::::444-444-4444:asdf@asdf.com
+ACME:1000:ACME Coffee:111 somedrive:::Boulder City:NV:89005:USA:::0:0:FEDEX:N30::::::20000000:9999:blah::BK:USD:::::444-444-4444:asdf@asdf.com

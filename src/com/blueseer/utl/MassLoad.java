@@ -128,7 +128,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("it_site,s,10,mandatory,validated");
         list.add("it_code,s,10,mandatory,validated (P or M or A)");
         list.add("it_prodline,s,4,mandatory,validated");
-        list.add("it_loc,s,20,mandatory,validated");
+        list.add("it_loc,s,20,optional,unvalidated");
         list.add("it_lotsize,i,11,optional,unvalidated");
         list.add("it_sell_price,d,14,optional,unvalidated");
         list.add("it_pur_price,d,14,optional,unvalidated");
@@ -191,10 +191,10 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid site" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("it_loc") == 0 && ! OVData.isValidLocation(rs[j]) && ! cboverride.isSelected()) {
-                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid location" + "\n" );
-                       proceed = false;
-                }
+               // if (ld[0].compareTo("it_loc") == 0 && ! OVData.isValidLocation(rs[j]) && ! cboverride.isSelected()) {
+               //     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid location" + "\n" );
+               //        proceed = false;
+              //  }
                 if (ld[0].compareTo("it_prodline") == 0 && ! OVData.isValidProdLine(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid prodline" + "\n" );
                        proceed = false;
@@ -773,6 +773,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("serial,s,30,optional,unvalidated");
         list.add("reference,s,30,mandatory,unvalidated");
         list.add("remarks,s,50,optional,unvalidated");
+        list.add("remarks,s,30,mandatory,validated");
         return list;
     }
     

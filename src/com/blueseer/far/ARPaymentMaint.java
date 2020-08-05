@@ -89,6 +89,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 
 
 /**
@@ -119,7 +120,15 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 "Reference", "AmountToApply", "TaxAmount", "Curr"
             });
                 
-                
+    javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent tme) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 1 )) {
+                            sumdollars();
+                        }
+                        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };            
   
     public ARPaymentMaint() {
         initComponents();
@@ -287,6 +296,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         tbrefamt.setText("0");
         referencemodel.setRowCount(0);
         armodel.setRowCount(0);
+        armodel.addTableModelListener(ml);
         referencedet.setModel(referencemodel);
         ardet.setModel(armodel);
         
@@ -841,6 +851,34 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
          }
     }
     
+     public void sumdollars() {
+        DecimalFormat df = new DecimalFormat("#.00");
+        double dol = 0;
+        double summaryTaxPercent = 0;
+        double headertax = 0;
+        double matltax = 0;
+        double totaltax = 0;
+        
+        actamt = 0;
+         for (int j = 0; j < ardet.getRowCount(); j++) {
+             actamt += Double.valueOf(ardet.getModel().getValueAt(j,1).toString());
+         }
+         
+          if (ardet.getRowCount() >= 1) {
+             ddcurr.setEnabled(false);
+           }
+         if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
+        tbactualamt.setText(df.format(actamt));
+        
+    }
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1208,7 +1246,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
        // "Reference" "Amount"
          int[] rows = referencedet.getSelectedRows();
         for (int i : rows) {
-            actamt += Double.valueOf(referencedet.getModel().getValueAt(i,5).toString());
+            
             
            armodel.addRow(new Object[] { referencedet.getModel().getValueAt(i, 0),
                                               referencedet.getModel().getValueAt(i, 5),
@@ -1216,17 +1254,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                                               referencedet.getModel().getValueAt(i, 7)
                                               });
         }
-         if (ardet.getRowCount() >= 1) {
-             ddcurr.setEnabled(false);
-           }
-         if (control == actamt && control != 0.00 ) {
-             tbcontrolamt.setBackground(Color.green);
-             tbactualamt.setBackground(Color.green);
-         } else {
-            tbcontrolamt.setBackground(Color.white); 
-            tbactualamt.setBackground(Color.white);
-         }
-        tbactualamt.setText(df.format(actamt));
+        
+        sumdollars();
+        
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed

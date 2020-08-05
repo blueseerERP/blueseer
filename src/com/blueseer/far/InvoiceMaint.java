@@ -30,6 +30,8 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.OVData.TRHistIssSales;
+import static com.blueseer.utl.OVData.UpdateInventoryFromShipper;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -510,6 +512,58 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 if (c > 0) {
                   m = new String[]{BlueSeerUtils.ErrorBit, "Transaction already posted to Ledger, unable to void"};   
                 } else {
+                   
+                   // restore the original order
+                   String _order = "";
+                   String _line = "";
+                   String _orderstatus = "";
+                   String _detailstatus = "";
+                   String _cumshippedqty = "";
+                   String _qty = "";
+                   double _adjustedqty = 0.00;
+                   ArrayList<String[]> orderlines = new ArrayList<String[]>();
+                     res = st.executeQuery("select sod_nbr, sod_line, so_status, sod_status, sod_ord_qty, sod_shipped_qty, shd_qty " +
+                              " from so_mstr inner join sod_det on sod_nbr = so_nbr " +
+                              " inner join ship_det on shd_so = sod_nbr and shd_line = sod_line " +
+                              " where ship_det.shd_id =  " + "'" + x[0] + "'" + ";");
+                     while (res.next()) {
+                      _order = res.getString("sod_nbr");
+                      _line = res.getString("sod_line");
+                      _orderstatus = res.getString("so_status");
+                      _detailstatus = res.getString("sod_status");
+                      _cumshippedqty = res.getString("sod_shipped_qty");
+                      _qty = res.getString("shd_qty");
+                      orderlines.add(new String[]{_order, _line, _orderstatus, _detailstatus, _cumshippedqty,_qty});
+                     }
+                     // now loop through orderlines and adjust so_mstr and sod_det
+                     String finalstatus = "open";
+                     int z = 0;
+                     for (String[] s : orderlines) {
+                         z++;
+                         if (! s[0].isEmpty() && ! s[1].isEmpty()) {
+                             _adjustedqty = Double.valueOf(s[4]) - Double.valueOf(s[5]);
+                             if (_adjustedqty > 0) {
+                                 finalstatus = "backorder";
+                             }
+                             st.executeUpdate("update sod_det set " +
+                             " sod_shipped_qty = " + "'" + _adjustedqty + "'" + "," +
+                             " sod_status = 'open' "  +
+                             " where sod_nbr = " + "'" + s[0] + "'" + 
+                             " and sod_line = " + "'" + s[1] + "'" + ";");
+                         }
+                         if ( orderlines.size() == z && ! s[0].isEmpty()) {  // last line
+                              st.executeUpdate("update so_mstr set " +
+                             " so_status = " + "'" + finalstatus + "'" + 
+                             " where so_nbr = " + "'" + s[0] + "'" + ";");
+                         }
+                     }
+                     
+                     // now update Inventory
+                     OVData.UpdateInventoryFromShipperRV(x[0]);
+                     
+                     // now update TRHIST
+                     OVData.TRHistIssSalesRV(x[0], new java.util.Date());
+                    
                    // delete shipper
                    i = st.executeUpdate("delete from ship_det where shd_id = " + "'" + x[0] + "'" + ";");
                    i = st.executeUpdate("delete from ship_mstr where sh_id = " + "'" + x[0] + "'" + ";");
@@ -521,7 +575,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    i = st.executeUpdate("delete from gl_tran where glt_type = 'ISS-SALES' and glt_ref = " + "'" + x[0] + "'" + ";");
                    
                 }
-                   // update acb_mstr
+                   
                     if (i > 0  & c == 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);

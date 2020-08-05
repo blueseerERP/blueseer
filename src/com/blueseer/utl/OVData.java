@@ -3389,7 +3389,7 @@ public class OVData {
                             + res.getString("ps_child") + ","
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc") + ","
+                            + res.getString("it_desc").replace(",","") + ","
                             + res.getString("itc_total") + ","
                             + res.getString("ps_op");
 
@@ -3512,7 +3512,7 @@ public class OVData {
                             + res.getString("ps_child") + ","
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc");
+                            + res.getString("it_desc").replace(",","");
 
                     myarray.add(mystring);
 
@@ -3557,7 +3557,7 @@ public class OVData {
                             + res.getString("ps_child") + ","
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc") + ","
+                            + res.getString("it_desc").replace(",", "") + ","
                             + res.getString("itc_total");
 
                     myarray.add(mystring);
@@ -12618,7 +12618,7 @@ public class OVData {
                   
                     
                    
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_site " +
+                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom " +
                               " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                               " where shd_id = " + "'" + shipper + "'" +";");
                       
@@ -13266,8 +13266,8 @@ public class OVData {
                         loc = res.getString("shd_loc");
                         jobnbr = res.getString("shd_jobnbr");
                         serial = res.getString("shd_serial");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         // reverse qty
+                        baseqty = -1 * OVData.getUOMBaseQty(part, site, uom, qty);
                         qty = -1 * qty;
                         
                         
@@ -13294,7 +13294,7 @@ public class OVData {
                                 + "'" + cc + "'" + ","
                                 + "'" + lot + "'" + ","
                                 + "'" + serial + "'" + ","
-                                + "'" + "shconf" + "'" + ","
+                                + "'" + "void" + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + order + "'" + ","
                                 + "'" + line + "'" + ","

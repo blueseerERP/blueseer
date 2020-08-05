@@ -36,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,6 +57,15 @@ public class EDIbs {
     
 public static void main(String args[]) throws IOException {
  
+    //first things first...escape clause
+    // check for lock file...if exists then bail
+		Path lockpath = Paths.get("lock.txt");
+		if (Files.exists(lockpath)) {
+			System.out.println("lock file...exiting");
+			return;
+		}
+    
+    
     // set config
    // bsmf.MainFrame.setConfig();
     
@@ -307,10 +317,10 @@ public static void main(String args[]) throws IOException {
     } 
  }
  
- public static void trafficDir(String indir, String map) throws FileNotFoundException, IOException {
+ public static void trafficDir(String indir, String map) throws IOException {
      // indir is the directory to traffic
      // map is the definition file used to traffic file patterns to destinations
-     // the map (traffic file) is comma delimited (pattern,destdir,archdir)
+     // the map (traffic file) is comma delimited (pattern,destdir,archdir,singlefilename)
      
      // read traffic file...aka map...exit if no file
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
@@ -320,7 +330,7 @@ public static void main(String args[]) throws IOException {
           BufferedReader br = new BufferedReader(reader);
           String line = "";
           while ((line = br.readLine()) != null) {
-                trafficarray.add(line.split(",", -1));  // (pattern,destdir,archdir)
+                trafficarray.add(line.split(",", -1));  // (pattern,destdir,archdir,singlefilename)
           }
           br.close();
           reader.close();
@@ -329,10 +339,10 @@ public static void main(String args[]) throws IOException {
          System.exit(1);
      }
      
-     // check trafficarray...make sure 3 elements per row
+     // check trafficarray...make sure 4 elements per row
      boolean isBad = false;
      for (String[] s : trafficarray) {
-         if (s.length != 3) {
+         if (s.length != 4) {
              isBad = true;
          }
      }
@@ -347,6 +357,7 @@ public static void main(String args[]) throws IOException {
      String outfile = "";
      String outdir = ""; 
      String archdir = "";
+     String singlefile = "";
      boolean match = false;
     
          try {   
@@ -367,7 +378,14 @@ public static void main(String args[]) throws IOException {
                       if (listOfFiles[i].getName().contains(s[0])) {
                           // found match
                           match = true;
+                          singlefile = s[3];
                           outdir = s[1].replace("\\","\\\\");
+                          // if destination path is not valid...bail loop
+                          if (! Files.isDirectory(Paths.get(outdir))) {
+                            System.out.println(dfdate.format(now) + " destination dir does not exist for " + listOfFiles[i].getName()  );      
+                            match = false;
+                            break;
+                          } 
                           if (!s[2].isEmpty()) {
                               archdir = s[2].replace("\\","\\\\");
                           } else {
@@ -375,8 +393,18 @@ public static void main(String args[]) throws IOException {
                           }
                           
                           Path oldpath = Paths.get(listOfFiles[i].getPath());
-                          Path newpath = Paths.get(outdir + listOfFiles[i].getName());
-                          Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+                          Path newpath = null;
+                          if (singlefile.isEmpty()) {
+                              newpath = Paths.get(outdir + listOfFiles[i].getName());
+                              
+                              Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING); 
+                              
+                              
+                          } else {
+                              newpath = Paths.get(outdir + singlefile);
+                              byte[] data = Files.readAllBytes(oldpath);
+                              Files.write(newpath, data, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                          }
                           System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() ); 
                           if (! archdir.isEmpty()) {
                              Path archivepath = Paths.get(archdir + listOfFiles[i].getName());
@@ -389,7 +417,7 @@ public static void main(String args[]) throws IOException {
                     if (match) {
                     listOfFiles[i].delete(); // now delete file
                     } else {
-                    System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " no match found" );     
+                    System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " cannot place file" );     
                     }
                     
                     
@@ -398,6 +426,7 @@ public static void main(String args[]) throws IOException {
               } // for all files found
        } catch (IOException ex) {
           ex.printStackTrace();
+          System.out.println(dfdate.format(now) + " " + " IOException" ); 
        }
     
  }
