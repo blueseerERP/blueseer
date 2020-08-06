@@ -4,5 +4,5 @@ dist
 scripts
 scripts/test
 nbproject/private
-scripts/.patch
+!scripts/.patch
 !test/build.xml

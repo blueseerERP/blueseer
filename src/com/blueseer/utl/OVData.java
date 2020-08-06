@@ -3618,7 +3618,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into item_mstr " 
-                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_lotsize, it_createdate, "
+                      + "(it_item, it_desc, it_site, it_code, it_prodline, it_loc, it_wh, it_lotsize, it_createdate, "
                             + "it_sell_price, it_pur_price, it_mtl_cost, it_ovh_cost, it_out_cost, it_type, it_group, "
                             + "it_drawing, it_rev, it_custrev, it_comments, "
                             + "it_uom, it_net_wt, it_ship_wt, "
@@ -3630,14 +3630,14 @@ public class OVData {
                             "'" +  ld[3] + "'" + "," +  
                             "'" +  ld[4] + "'" + "," +  
                             "'" +  ld[5] + "'" + "," +  
-                            "'" +  ld[6] + "'" + "," +  
+                            "'" +  ld[6] + "'" + "," +          
+                            "'" +  ld[7] + "'" + "," +  
                             "'" +  dfdate.format(now) + "'" + "," + 
-                            "'" +  df.format(Double.valueOf(ld[7])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[8])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[9])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[10])) + "'" + "," +  
                             "'" +  df.format(Double.valueOf(ld[11])) + "'" + "," +  
-                            "'" +  ld[12] + "'" + "," +  
+                            "'" +  df.format(Double.valueOf(ld[12])) + "'" + "," +  
                             "'" +  ld[13] + "'" + "," +  
                             "'" +  ld[14] + "'" + "," +  
                             "'" +  ld[15] + "'" + "," +  
@@ -3651,13 +3651,14 @@ public class OVData {
                             "'" +  ld[23] + "'" + "," +  
                             "'" +  ld[24] + "'" + "," +  
                             "'" +  ld[25] + "'" + "," +  
-                            "'" +  ld[26] + "'" + "," + 
-                            "'" +  ld[27] + "'" + ",'ACTIVE'" + ");"
+                            "'" +  ld[26] + "'" + "," +  
+                            "'" +  ld[27] + "'" + "," + 
+                            "'" +  ld[28] + "'" + ",'ACTIVE'" + ");"
                            );
                     
                     OVData.addItemCostRec(ld[0], ld[2], "standard", 
-                            Double.valueOf(ld[9]), Double.valueOf(ld[10]), Double.valueOf(ld[11]), 
-                            (Double.valueOf(ld[9]) + Double.valueOf(ld[10]) + Double.valueOf(ld[11])));
+                            Double.valueOf(ld[10]), Double.valueOf(ld[11]), Double.valueOf(ld[12]), 
+                            (Double.valueOf(ld[10]) + Double.valueOf(ld[11]) + Double.valueOf(ld[12])));
                     }
                 }    
             } // if proceed
@@ -8448,12 +8449,6 @@ public class OVData {
                 myarray.add(arr); 
                 }
                 
-                res = st.executeQuery("select wh_id from wh_mstr order by wh_id ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"wh",res.getString("wh_id")};
-                myarray.add(arr); 
-                }
-                
                 res = st.executeQuery("select code_key from code_mstr  where code_code = 'ItemType' order by code_key ;" );
                 while (res.next()) {
                 String[] arr = new String[]{"type",res.getString("code_key")};
@@ -10819,6 +10814,35 @@ public class OVData {
         return isgood;
         
     }
+     
+            public static boolean isValidWarehouse(String key) {
+             
+       boolean isgood = false;
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select wh_id from wh_mstr where wh_id = " + "'" + key + "'" + ";");
+               while (res.next()) {
+                    isgood = true;
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isgood;
+        
+    }
+     
          
          public static boolean isValidProdLine(String key) {
              

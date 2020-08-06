@@ -280,7 +280,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         termdate.setDate(null);
         dcdob.setDate(null);
         tbkey.setEnabled(true);
-        tbprofile.setText("");
+        tbprofile.setText("default");
         tbline1.setText("");
         tbline2.setText("");
         tbphone.setText("");
