@@ -248,7 +248,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
        tbgroup.setText("");
        tbcreatedate.setText("");
        tbcreatedate.setEditable(false);
-       tbroutingcode.setText("");
+       
        tbsellprice.setText("");
        cbplan.setSelected(false);
        cbmrp.setSelected(false);
@@ -260,7 +260,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
        tbpurchprice.setText("");
        tbdrawing.setText("");
        tblotsize.setText("");
-       tbroutingcode.setText("");
+     
       tbmtlstd.setText("");
       tblbrstd.setText("");
       tbbdnstd.setText("");
@@ -286,6 +286,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
        ddloc.removeAllItems();
        ddwh.removeAllItems();
        ddtype.removeAllItems();
+       ddrouting.removeAllItems();
        
        
        ArrayList<String[]> mylist = OVData.getItemMaintInit();
@@ -304,8 +305,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             ddwh.addItem(code[1]);
             if (code[0].equals("type"))
             ddtype.addItem(code[1]);
+            if (code[0].equals("routing"))
+            ddrouting.addItem(code[1]);
             
         }
+       
+        ddrouting.insertItemAt("", 0);
+        ddrouting.setSelectedIndex(0);
        
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
@@ -535,7 +541,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                             + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
-                            + "'" + tbroutingcode.getText().replace("'", "") + "'" + ","
+                            + "'" + ddrouting.getSelectedItem().toString() + "'" + ","
                             + "'" + ddtax.getSelectedItem().toString() + "'" + ","
                             + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'"
                             + ")"
@@ -644,7 +650,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                         + "it_loc = " + "'" + ddloc.getSelectedItem().toString() + "'" + ","
                         + "it_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","        
                         + "it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "it_wf = " + "'" + tbroutingcode.getText().toString() + "'" + ","  
+                        + "it_wf = " + "'" + ddrouting.getSelectedItem().toString() + "'" + ","  
                         + "it_leadtime = " + "'" + leadtime + "'" + ","
                         + "it_safestock = " + "'" + safestock + "'" + ","
                         + "it_minordqty = " + "'" + minordqty + "'" + ","
@@ -766,7 +772,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                        tbcreatedate.setText(res.getString("it_createdate"));
                       ddwh.setSelectedItem(res.getString("it_wh"));
                       ddloc.setSelectedItem(res.getString("it_loc"));
-                      tbroutingcode.setText(res.getString("it_wf"));
+                      ddrouting.setSelectedItem(res.getString("it_wf"));
                       revlevel.setText(res.getString("it_rev"));
                       tbshipwt.setText(res.getString("it_ship_wt"));
                       tbnetwt.setText(res.getString("it_net_wt"));
@@ -1216,7 +1222,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         jLabel65 = new javax.swing.JLabel();
         custrevlevel = new javax.swing.JTextField();
         jLabel66 = new javax.swing.JLabel();
-        tbroutingcode = new javax.swing.JTextField();
         jLabel71 = new javax.swing.JLabel();
         cbplan = new javax.swing.JCheckBox();
         tbpurchprice = new javax.swing.JTextField();
@@ -1238,6 +1243,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
+        ddrouting = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablelocqty = new javax.swing.JTable();
@@ -1676,10 +1682,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel69))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbovhcost, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbroutingcode, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(tbovhcost, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 144, Short.MAX_VALUE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(custrevlevel, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1717,7 +1721,10 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel68)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbsafestock, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbsafestock, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(ddrouting, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1741,7 +1748,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                     .addComponent(tbdrawing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel61)
                     .addComponent(jLabel67))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbcreatedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel80)
@@ -1775,18 +1782,18 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                     .addComponent(jLabel75)
                     .addComponent(cbschedule)
                     .addComponent(cbaltbom))
-                .addGap(4, 4, 4)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbroutingcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel71))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(1, 1, 1)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel71)
+                    .addComponent(ddrouting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel79)
                     .addComponent(btadd)
                     .addComponent(btupdate)
                     .addComponent(btdelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel4);
@@ -2555,6 +2562,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     private javax.swing.JComboBox<String> ddimage;
     private javax.swing.JComboBox<String> ddloc;
     private javax.swing.JComboBox ddprodcode;
+    private javax.swing.JComboBox<String> ddrouting;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddstatus;
     private javax.swing.JComboBox<String> ddtax;
@@ -2645,7 +2653,6 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     private javax.swing.JTextField tbovhstd;
     private javax.swing.JTextField tbpurchprice;
     private javax.swing.JTextField tbqtyoh;
-    private javax.swing.JTextField tbroutingcode;
     private javax.swing.JTextField tbsafestock;
     private javax.swing.JTextField tbsellprice;
     private javax.swing.JTextField tbshipwt;

@@ -508,11 +508,8 @@
                                               <Component id="jLabel69" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="tbovhcost" min="-2" pref="115" max="-2" attributes="0"/>
-                                                  <Component id="tbroutingcode" min="-2" pref="163" max="-2" attributes="0"/>
-                                              </Group>
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <Component id="tbovhcost" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="144" max="32767" attributes="0"/>
                                           </Group>
                                           <Group type="102" attributes="0">
                                               <Component id="custrevlevel" min="-2" pref="115" max="-2" attributes="0"/>
@@ -563,6 +560,10 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbsafestock" min="-2" pref="97" max="-2" attributes="0"/>
                                   </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="ddrouting" min="-2" pref="146" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -592,7 +593,7 @@
                                   <Component id="jLabel61" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel67" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="13" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tbcreatedate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel80" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -632,12 +633,12 @@
                                   <Component id="cbschedule" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbaltbom" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="tbroutingcode" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel71" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel71" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddrouting" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="ddtax" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel79" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -645,7 +646,7 @@
                                   <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="17" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -740,8 +741,6 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Cust Rev"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="tbroutingcode">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel71">
                       <Properties>
@@ -856,6 +855,16 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
                       </Events>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="ddrouting">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="0"/>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>

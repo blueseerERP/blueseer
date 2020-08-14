@@ -133,8 +133,8 @@ public class EDI {
         
     }
     
-    public static String[] filterFile(String infile, String outfile, String[] doctypes) throws FileNotFoundException, IOException {
-        String[] m = new String[]{"0",""};
+    public static String[] filterFile(String infile, String outdir, String[] doctypes, ArrayList<String[]> trafficarray) throws FileNotFoundException, IOException {
+        String[] m = new String[]{"0","","","",""};  //status, message, doctype, tradeid, outdir
         
        
         String[] c = null;  // control values to pass to map and log
@@ -191,7 +191,7 @@ public class EDI {
                     
                     // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
                     if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
-                        return m = new String[]{"1","malformed envelope"};
+                        return m = new String[]{"1","malformed envelope", "", ""};
                     }
                     ed_escape = escapeDelimiter(String.valueOf(e));
                     sd_escape = escapeDelimiter(String.valueOf(s));
@@ -210,7 +210,7 @@ public class EDI {
                     c[2] = "";
                     c[3] = infile;
                     c[4] = isa[13]; //isactrlnbr
-                    c[8] = outfile;
+                    c[8] = outdir;
                     c[9] = String.valueOf((int) s);
                     c[10] = String.valueOf((int) e);
                     c[11] = String.valueOf((int) u);
@@ -325,9 +325,29 @@ public class EDI {
          } else {
              isInSet = true;
          }
+         m[2] = (String)x[1]; // set doctype here
+         m[3] = c[0]; // set tradeid here
+         if (isInSet) {
+         m[4] = outdir;  // set as default outdir unless overridden...leave blank if ! isInSet
+         }         
+         // now override outdir with def file element 2 if not empty
+         // def file defined as doctype, tradeid, outputdir, singlefilename
+         for (String[] def : trafficarray) { 
+                      // least to most significant
+                      
+              if (def[0].equals(m[2]) && def[1].isEmpty() && ! def[2].isEmpty()) { // if element 1 of def file matches doctype
+                  m[4] = def[2];
+              }   
+              if (def[0].equals(m[2]) && def[1].equals(m[3]) && ! def[2].isEmpty() ) { // if maches doctype and tradeid
+                 m[4] = def[2]; 
+              } 
+         }
+         
+         
+         
          System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + (String)x[3] + "," + c[0] + "," + c[14] + "," + 
                  isa.getKey() + "," + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
-                 k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + isInSet ); 
+                 k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + m[4] + "," + isInSet ); 
       //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
             
            // Integer[] k = (Integer[])z.getValue()[0];
@@ -355,7 +375,7 @@ public class EDI {
     
     // if unknown...then no isa hashmap will be processed...just tag it.        
     if (filetype.equals("unknown")) {
-    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,,," + "false" );
+    System.out.println(dfdate.format(now) + "," + infile + "," + filetype + ",,,,,,,,,,,," + "false" );
     isInSet = false;
     }
     
@@ -364,7 +384,7 @@ public class EDI {
         m[0] = "1"; // discard...otherwise keep....m[0] = "0" initialized above
     }
     if (mixbag) {
-        System.out.println(dfdate.format(now) + "," + infile + "," + "mixbag" + ",,,,,,,,,,,," );
+        System.out.println(dfdate.format(now) + "," + infile + "," + "mixbag" + ",,,,,,,,,,,,," );
         m[0] = "9"; // mixbag...pass code 9 along with start,end of buffer to keep
         m[1] = keepers.deleteCharAt(keepers.length() - 1).toString();
     }

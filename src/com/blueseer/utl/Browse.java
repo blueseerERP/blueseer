@@ -280,7 +280,10 @@ public class Browse extends javax.swing.JPanel {
                 tablereport.setModel(DTData.getGLTranBrowseUtil(tbtext.getText(), state, searchfield));
                 }
                 if (callingpanel.equals("bommaint")) {
-                tablereport.setModel(DTData.getItemBrowseUtil(tbtext.getText(), state, searchfield));
+                tablereport.setModel(DTData.getItemMClassBrowseUtil(tbtext.getText(), state, searchfield));
+                }
+                if (callingpanel.equals("bomtree")) {
+                tablereport.setModel(DTData.getItemMClassBrowseUtil(tbtext.getText(), state, searchfield));
                 }
                 if (callingpanel.equals("costmaint")) {
                 tablereport.setModel(DTData.getItemBrowseUtil(tbtext.getText(), state, searchfield));
@@ -485,6 +488,11 @@ public class Browse extends javax.swing.JPanel {
               if (! checkperms("BOMMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("BOMMaint", true, arg);
+            }
+            if (callingpanel.equals("bomtree")) {
+              if (! checkperms("BOMTree")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("BOMTree", true, arg);
             }
            
             if (callingpanel.equals("edicustmaint")) {

@@ -96,7 +96,7 @@ public static void main(String args[]) throws IOException {
             filterFile(infile, outfile, doctypes);
             break; 
         case "filterDir" :
-            filterDir(indir, outdir, archdir, doctypes);
+            filterDir(indir, outdir, archdir, doctypes, map);
             break;   
         case "trafficDir" :
             trafficDir(indir, map);
@@ -256,10 +256,10 @@ public static void main(String args[]) throws IOException {
  }
  
  public static void filterFile(String infile, String outfile, String[] doctypes) {
-      // case of single input and output file    
+      // case of single input and output file THIS NEEDS TO BE REVISTED!!!!!   
     if (! infile.isEmpty()) {
         try {
-           String[] m = EDI.filterFile(infile, outfile, doctypes);
+           String[] m = EDI.filterFile(infile, outfile, doctypes, null);
            if (m != null && m[0].equals("1")) {
                System.out.println(m[1]);
            }
@@ -269,30 +269,77 @@ public static void main(String args[]) throws IOException {
     }
  }
   
- public static void filterDir(String indir, String outdir, String archdir, String[] doctypes) {
+ public static void filterDir(String indir, String outdir, String archdir, String[] doctypes, String map) throws FileNotFoundException, IOException {
      // case of multiple files....directory in and directory out 
+    
+      // indir is the directory to traffic
+     // map is the definition file used to traffic file patterns to destinations
+     // the map (traffic file) is comma delimited (pattern,destdir,archdir,singlefilename)
+     
+     // read traffic file...aka map...exit if no file
+     ArrayList<String[]> trafficarray = new ArrayList<String[]>();
+     File tf = new File(map);
+     if(tf.exists()) {
+          FileReader reader = new FileReader(tf);
+          BufferedReader br = new BufferedReader(reader);
+          String line = "";
+          while ((line = br.readLine()) != null) {
+                trafficarray.add(line.split(",", -1));  // (pattern,destdir,archdir,singlefilename)
+          }
+          br.close();
+          reader.close();
+     } else {
+         System.out.println(dfdate.format(now) + " No Traffic File");
+         System.exit(1);
+     }
+     
+     // check trafficarray...make sure 4 elements per row
+     boolean isBad = false;
+     for (String[] s : trafficarray) {
+         if (s.length != 4) {
+             isBad = true;
+         }
+     }
+     if (isBad) {
+       System.out.println(dfdate.format(now) + " Bad Format Traffic File");
+         System.exit(1);  
+     }
+     
+     
+     
+     
      String outfile = "";
      outdir = outdir.replace("\\","\\\\"); 
-     
+     String newoutdir = "";
     if (! indir.isEmpty() && doctypes.length > 0) {
          try {   
                File folder = new File(indir);
                File[] listOfFiles = folder.listFiles();
                if (listOfFiles.length == 0) {
-                   System.out.println(dfdate.format(now) + ", No files to process,,,,,,,,,,,,");
+                   System.out.println(dfdate.format(now) + ", No files to process,,,,,,,,,,,,,");
                    System.exit(1);
                }
               for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                // System.out.println("file: " + listOfFiles[i].getName());
                   if(listOfFiles[i].length() == 0) { 
-                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,,," ); 
+                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,,,," ); 
                   listOfFiles[i].delete();
                   } else { 
                   outfile = listOfFiles[i].getName();
                   Path oldpath = Paths.get(listOfFiles[i].getPath());
                   Path newpath = Paths.get(outdir + listOfFiles[i].getName());
-                  String[] m = EDI.filterFile(listOfFiles[i].getPath(), outfile, doctypes);
+                  
+                  String[] m = EDI.filterFile(listOfFiles[i].getPath(), outdir, doctypes, trafficarray);
+                  
+                  
+                  if (! m[4].isEmpty())  {
+                      newoutdir = m[4].replace("\\","\\\\"); 
+                      newpath = Paths.get(newoutdir + listOfFiles[i].getName());
+                  }
+                  
+                  
+                    
                     if (m != null && m[0].equals("0")) {
 			Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
                     } else if (m != null && m[0].equals("9")) {

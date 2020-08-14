@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import com.itextpdf.text.Font;
@@ -98,8 +99,24 @@ DefaultTreeModel levelmodel = null;
     }
 
     public void initvars(String[] arg) {
-        
+        if (arg != null && arg.length > 0) {
+           tbpart.setText(arg[0]);
+           getItemTree(arg[0]);
+         }  
     }
+    
+    public void getItemTree(String parentitem) {
+        if (! parentitem.isEmpty()) {
+       bind_tree(parentitem);
+       prevlevel = 0;
+       lastlevel = 0;
+       calllevel = 0;
+       } else {
+           bsmf.MainFrame.show("Must enter a valid item");
+       }
+    }
+    
+   
     
     public void leveltest() {
     
@@ -117,7 +134,7 @@ DefaultTreeModel levelmodel = null;
        
 }
     
-     public void bind_tree(String parentpart) {
+    public void bind_tree(String parentpart) {
       //  jTree1.setModel(null);
        
        cost = 0;
@@ -384,30 +401,30 @@ DefaultTreeModel levelmodel = null;
 
         jPanel1 = new javax.swing.JPanel();
         tbpart = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         lblevel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         btprint = new javax.swing.JButton();
+        btbrowse = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("BOM Tree Lookup"));
 
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jTree1.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jScrollPane1.setViewportView(jTree1);
 
-        btprint.setText("Level Print");
+        btprint.setText("Indented Print");
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
+            }
+        });
+
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowseActionPerformed(evt);
             }
         });
 
@@ -421,10 +438,10 @@ DefaultTreeModel levelmodel = null;
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
                         .addComponent(btprint)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
                         .addComponent(lblevel, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -434,33 +451,19 @@ DefaultTreeModel levelmodel = null;
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)
-                            .addComponent(btprint))
-                        .addGap(19, 19, 19))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblevel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btprint))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblevel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btbrowse)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       if (! tbpart.getText().isEmpty() || OVData.isValidItem(tbpart.getText())) {
-       bind_tree(tbpart.getText());
-       prevlevel = 0;
-       lastlevel = 0;
-       calllevel = 0;
-       } else {
-           bsmf.MainFrame.show("Must enter a valid item");
-       }
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
@@ -559,10 +562,14 @@ DefaultTreeModel levelmodel = null;
          
     }//GEN-LAST:event_btprintActionPerformed
 
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"bomtree","it_item"});
+    }//GEN-LAST:event_btbrowseActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btprint;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTree jTree1;

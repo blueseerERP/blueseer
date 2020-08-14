@@ -198,7 +198,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        isLoad = true;
         tbkey.setText("");
         ddop.removeAllItems();
-        tbwc.setText("");
         tbopdesc.setText("");
         tbrunhoursinverted.setText("");
        
@@ -206,12 +205,20 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbsetuphours.setText("");
         cbmilestone.setSelected(false);
         
-          ddsite.removeAllItems();
+        ddsite.removeAllItems();
         ArrayList<String>mylist = OVData.getSiteList();
         for (String code : mylist) {
             ddsite.addItem(code);
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        ddwc.removeAllItems();
+        ArrayList<String> wc = OVData.getWorkCellList();
+        for (String code : wc) {
+            ddwc.addItem(code);
+        }
+        ddwc.insertItemAt("", 0);
+        ddwc.setSelectedIndex(0);
         
        isLoad = false;
     }
@@ -263,6 +270,13 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
+                if (ddwc.getSelectedItem() == null || ddwc.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose or assign a Work Cell");
+                    ddwc.requestFocus();
+                    return b;
+                }
+                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show("must enter a code");
@@ -277,12 +291,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
-                if (! OVData.isValidWorkCenter(tbwc.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a valid WorkCenter");
-                    tbwc.requestFocus();
-                    return b;
-                }
+                
                 
                 
                 
@@ -336,7 +345,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + ddop.getSelectedItem().toString() + "'" + ","
                             + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
                             + "'" + tbopdesc.getText() + "'" + ","
-                            + "'" + tbwc.getText() + "'" + ","
+                            + "'" + ddwc.getSelectedItem().toString() + "'" + ","
                             + "'" + tbsetuphours.getText() + "'" + ","
                             + "'" + tbrunhours.getText() + "'" 
                             + ")"
@@ -378,7 +387,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
                             + "wf_op_desc = " + "'" + tbopdesc.getText() + "'" + "," 
                             + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
-                            + "wf_cell = " + "'" + tbwc.getText() + "'" + ","
+                            + "wf_cell = " + "'" + ddwc.getSelectedItem().toString() + "'" + ","
                             + "wf_setup_hours = " + "'" + tbsetuphours.getText() + "'" + ","
                             + "wf_run_hours = " + "'" + tbrunhours.getText() + "'" + ","
                             + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
@@ -475,7 +484,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     
                     tbkey.setText(res.getString("wf_id"));
-                    tbwc.setText(res.getString("wf_cell"));
+                    ddwc.setSelectedItem(res.getString("wf_cell"));
                     tbopdesc.setText(res.getString("wf_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     ddop.setSelectedItem(res.getString("wf_op"));
@@ -548,7 +557,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btupdate = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         tbkey = new javax.swing.JTextField();
-        tbwc = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         ddop = new javax.swing.JComboBox();
         tbrunhoursinverted = new javax.swing.JTextField();
@@ -563,6 +571,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        ddwc = new javax.swing.JComboBox<>();
 
         jButton1.setText("jButton1");
 
@@ -688,7 +697,6 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(tbopdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tbwc, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(tbrunhoursinverted, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addComponent(tbsetuphours))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
@@ -704,7 +712,8 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear)))
+                        .addComponent(btclear))
+                    .addComponent(ddwc, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -737,8 +746,8 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbwc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(ddwc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
@@ -785,7 +794,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         runhours = 0.00;
                     
                     
-                    tbwc.setText(res.getString("wf_cell"));
+                    ddwc.setSelectedItem(res.getString("wf_cell"));
                     tbopdesc.setText(res.getString("wf_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
@@ -894,6 +903,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JCheckBox cbmilestone;
     private javax.swing.JComboBox ddop;
     private javax.swing.JComboBox<String> ddsite;
+    private javax.swing.JComboBox<String> ddwc;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -910,6 +920,5 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbrunhours;
     private javax.swing.JTextField tbrunhoursinverted;
     private javax.swing.JTextField tbsetuphours;
-    private javax.swing.JTextField tbwc;
     // End of variables declaration//GEN-END:variables
 }

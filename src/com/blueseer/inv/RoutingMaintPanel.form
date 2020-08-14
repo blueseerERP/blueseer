@@ -57,7 +57,7 @@
                       <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Group type="102" attributes="0">
@@ -71,7 +71,6 @@
                           <Component id="tbopdesc" alignment="0" min="-2" pref="273" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="tbwc" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbrunhoursinverted" alignment="0" pref="105" max="32767" attributes="0"/>
                                   <Component id="tbsetuphours" max="32767" attributes="0"/>
                               </Group>
@@ -92,6 +91,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btclear" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="ddwc" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -134,8 +134,8 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tbwc" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddwc" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -211,8 +211,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="tbwc">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
@@ -305,6 +303,16 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="ddwc">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

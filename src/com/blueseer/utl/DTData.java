@@ -527,7 +527,7 @@ public class DTData {
     
     public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "UOM", "Type", "Status", "Site", "ProdLine"})
+                      new String[]{"select", "Item", "Desc", "ClassCode", "UOM", "Type", "Status", "Site", "ProdLine", "Routing"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -544,28 +544,30 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, it_site, it_prodline  " +
+                    res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
                         " FROM  item_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by it_item ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, it_site, it_prodline  " +
+                    res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
                         " FROM  item_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by it_item ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, it_site, it_prodline  " +
+                 res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
                         " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by it_item ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
                                    res.getString("it_desc"),
+                                   res.getString("it_code"),
                                    res.getString("it_uom"),
                                    res.getString("it_type"),
                                    res.getString("it_status"),
                                    res.getString("it_site"),
-                                   res.getString("it_prodline")
+                                   res.getString("it_prodline"),
+                                   res.getString("it_wf")
                         });
                     }
            }
@@ -585,7 +587,73 @@ public class DTData {
         
          } 
       
-         public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getItemMClassBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Item", "Desc", "ClassCode", "UOM", "Type", "Status", "Site", "ProdLine", "Routing"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
+                        " FROM  item_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " and it_code = 'M' " +
+                        " order by it_item ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
+                        " FROM  item_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " and it_code = 'M' " +
+                        " order by it_item ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT it_item, it_desc, it_code, it_uom, it_type, it_status, it_site, it_prodline, it_wf  " +
+                        " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " and it_code = 'M' " +
+                        " order by it_item ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
+                                   res.getString("it_desc"),
+                                   res.getString("it_code"),
+                                   res.getString("it_uom"),
+                                   res.getString("it_type"),
+                                   res.getString("it_status"),
+                                   res.getString("it_site"),
+                                   res.getString("it_prodline"),
+                                   res.getString("it_wf")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+    
+    
+    public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"})
                 {

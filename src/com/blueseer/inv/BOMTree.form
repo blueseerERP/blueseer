@@ -39,10 +39,10 @@
                       <Group type="102" attributes="0">
                           <Component id="tbpart" min="-2" pref="132" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                           <Component id="btprint" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="126" max="32767" attributes="0"/>
+                          <EmptySpace pref="171" max="32767" attributes="0"/>
                           <Component id="lblevel" min="-2" pref="144" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
@@ -56,19 +56,16 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btprint" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblevel" min="-2" pref="17" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblevel" alignment="1" min="-2" pref="17" max="-2" attributes="0"/>
+                          <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" pref="473" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -77,14 +74,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="tbpart">
-        </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Search"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblevel">
         </Component>
@@ -106,10 +95,20 @@
         </Container>
         <Component class="javax.swing.JButton" name="btprint">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Level Print"/>
+            <Property name="text" type="java.lang.String" value="Indented Print"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btbrowse">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/lookup.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

@@ -15,6 +15,8 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import clockcode.csv clock_code
 .import locmstr.csv loc_mstr
 .import whmstr.csv wh_mstr
+.import wcmstr.csv wc_mstr
+.import wfmstr.csv wf_mstr
 .import ovctrl.csv ov_ctrl
 .import counter.csv counter
 .import acctmstr.csv ac_mstr

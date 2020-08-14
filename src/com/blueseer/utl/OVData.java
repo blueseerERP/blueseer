@@ -8041,9 +8041,64 @@ public class OVData {
     }  
         
          
-      
+    public static ArrayList getWorkCellList() {
+           ArrayList myarray = new ArrayList();
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select wc_cell from wc_mstr;" );
+               while (res.next()) {
+                myarray.add(res.getString("wc_cell"));                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get site list");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
+    public static ArrayList getRoutingList() {
+           ArrayList myarray = new ArrayList();
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select wf_id from wf_mstr;" );
+               while (res.next()) {
+                myarray.add(res.getString("wf_id"));                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get site list");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
             
-           public static ArrayList getSiteList() {
+    public static ArrayList getSiteList() {
            ArrayList myarray = new ArrayList();
          try{
             Class.forName(driver).newInstance();
@@ -8070,9 +8125,8 @@ public class OVData {
         return myarray;
         
     }
-        
-         
-            public static ArrayList getUOMList() {
+                
+    public static ArrayList getUOMList() {
            ArrayList myarray = new ArrayList();
          try{
             Class.forName(driver).newInstance();
@@ -8099,9 +8153,8 @@ public class OVData {
         return myarray;
         
     }
-           
-           
-            public static Double getPOSSalesTaxPct() {
+                    
+    public static Double getPOSSalesTaxPct() {
            Double percent = 0.00;
          try{
             Class.forName(driver).newInstance();
@@ -8455,6 +8508,11 @@ public class OVData {
                 myarray.add(arr); 
                 }
                 
+                res = st.executeQuery("select wf_id from wf_mstr order by wf_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"routing",res.getString("wf_id")};
+                myarray.add(arr); 
+                }
                
            }
             catch (SQLException s){
