@@ -166,7 +166,7 @@ String sitecitystatezip = "";
         
         ddprinter.removeAllItems();
         
-        ArrayList mylist = OVData.getZebraPrinterList();
+        ArrayList mylist = OVData.getPrinterList();
         for (int i = 0; i < mylist.size(); i++) {
             ddprinter.addItem(mylist.get(i));
         }
@@ -175,7 +175,7 @@ String sitecitystatezip = "";
         getSiteAddress(OVData.getDefaultSite());
         
          if (ddprinter.getItemCount() == 0) {
-            bsmf.MainFrame.show("No Zebra Printers Available");
+            bsmf.MainFrame.show("No Printers Available");
             btprint.setEnabled(false);
         }
         
@@ -359,11 +359,6 @@ String sitecitystatezip = "";
         
         try {
 
-Socket soc = null;
-DataOutputStream dos = null;
-String ZPLPrinterIPAddress = OVData.getPrinterIP(ddprinter.getSelectedItem().toString());
-int ZPLPrinterPort = 9100;
-            
             
   //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
  //           PrintStream ps = new PrintStream(fos);
@@ -416,12 +411,8 @@ concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
 
 */
 
- soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
-        dos= new DataOutputStream(soc.getOutputStream());
-        dos.writeBytes(concatline);
+ OVData.printLabelStream(concatline, ddprinter.getSelectedItem().toString());
 
- dos.close();
- soc.close();
  
  initvars(null);
 

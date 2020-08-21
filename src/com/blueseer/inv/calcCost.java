@@ -101,8 +101,6 @@ public class calcCost {
            public ArrayList getTotalCost(String part) {
              ArrayList mylist = new ArrayList();
              getTotalCostRecursive(part,1);
-            // getLbrCost(part);
-          //   getBdnCost(part);
              mylist.add(lowermtlcost + uppermtlcost);
              mylist.add(lowerlbrcost + upperlbrcost);
              mylist.add(lowerbdncost + upperbdncost);

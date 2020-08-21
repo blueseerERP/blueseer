@@ -29,11 +29,15 @@ package com.blueseer.lbl;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,6 +50,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
 
 /**
  *
@@ -195,7 +208,7 @@ String shipcountry = "";
         
         ddprinter.removeAllItems();
         
-        ArrayList mylist = OVData.getZebraPrinterList();
+        ArrayList mylist = OVData.getPrinterList();
         for (int i = 0; i < mylist.size(); i++) {
             ddprinter.addItem(mylist.get(i));
         }
@@ -204,7 +217,7 @@ String shipcountry = "";
         getSiteAddress(OVData.getDefaultSite());
         
          if (ddprinter.getItemCount() == 0) {
-            bsmf.MainFrame.show("No Zebra Printers Available");
+            bsmf.MainFrame.show("No Printers Available");
             btprint.setEnabled(false);
         }
         
@@ -272,21 +285,21 @@ String shipcountry = "";
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(214, 214, 214)
+                        .addGap(91, 91, 91)
                         .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btprint))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tblot, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -351,9 +364,6 @@ String shipcountry = "";
         
         getOrderInfo(tbordnbr.getText(), tbline.getText());
         
-        
-       
-        
         serialno = OVData.getNextNbr("label");
         serialno_str = String.valueOf(serialno);
         
@@ -404,11 +414,6 @@ String shipcountry = "";
         
         try {
 
-Socket soc = null;
-DataOutputStream dos = null;
-String ZPLPrinterIPAddress = OVData.getPrinterIP(ddprinter.getSelectedItem().toString());
-int ZPLPrinterPort = 9100;
-            
             
   //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
  //           PrintStream ps = new PrintStream(fos);
@@ -461,13 +466,8 @@ concatline = concatline.replace("$SITECSZ", sitecitystatezip);
 concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
 concatline = concatline.replace("$TODAYTIME", dftime.format(now));
 
- soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
- dos= new DataOutputStream(soc.getOutputStream());
- for (int i = 1 ; i <= nbroflabels ; i++) {  
- dos.writeBytes(concatline);
- }
- dos.close();
- soc.close();
+ OVData.printLabelStream(concatline, ddprinter.getSelectedItem().toString());
+
  
  initvars(null);
 } else {

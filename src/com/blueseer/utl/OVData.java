@@ -90,20 +90,33 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.print.PrinterJob;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import static java.lang.Math.abs;
 import java.math.RoundingMode;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Savepoint;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
 import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import jcifs.smb.SmbFileInputStream;
@@ -8013,7 +8026,7 @@ public class OVData {
     }        
           
         
-        public static String getProdLineInvAcct(String prodline) {
+    public static String getProdLineInvAcct(String prodline) {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -8039,8 +8052,131 @@ public class OVData {
         return myitem;
         
     }  
+    
+    public static String[] getWorkCellElements(String wc) {
+           String[] myarray = new String[9];
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from wc_mstr " +
+                        " where wc_cell = " + "'" + wc + "'" + ";" );
+               
+                while (res.next()) {
+                myarray = new String[]{res.getString("wc_cell"),
+                    res.getString("wc_desc"),
+                    res.getString("wc_site"),
+                    res.getString("wc_cc"),
+                    res.getString("wc_run_rate"),
+                    res.getString("wc_run_crew"),
+                    res.getString("wc_setup_rate"),
+                    res.getString("wc_setup"),
+                    res.getString("wc_bd_rate")
+                    };                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get site list");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray; 
         
-         
+    }
+       
+    public static String[] getRoutingElements(String routing) {
+           String[] myarray = new String[7];
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from wf_mstr " +
+                        " where wf_id = " + "'" + routing + "'" + ";" );
+               
+                while (res.next()) {
+                myarray = new String[]{res.getString("wf_id"),
+                    res.getString("wf_desc"),
+                    res.getString("wf_site"),
+                    res.getString("wf_op"),
+                    res.getString("wf_cell"),
+                    res.getString("wf_setup_hours"),
+                    res.getString("wf_run_hours")
+                    };                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get site list");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray; 
+        
+    }
+    
+    public static String[] getBOMParentOpElements(String parent, String op) {
+           String[] myarray = new String[10];
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select wf_setup_hours, wf_run_hours, " +
+                        " wc_run_rate, wc_run_crew, wc_setup_rate, wc_setup, " +
+                        " wc_bdn_rate, wc_cc, wf_desc, wc_desc " +
+                        " from wf_mstr " +
+                        " inner join wc_mstr on wf_cell = wc_cell " +
+                        " inner join item_mstr on it_wf = wf_id " +
+                        " where it_item = " + "'" + parent + "'" + 
+                        " and wf_op = " + "'" + op + "'" +  ";" );
+               
+                while (res.next()) {
+                myarray = new String[]{
+                    res.getString("wc_run_rate"),
+                    res.getString("wc_setup_rate"),
+                    res.getString("wc_bdn_rate"),
+                    res.getString("wc_run_crew"),
+                    res.getString("wc_setup"),
+                    res.getString("wf_run_hours"),
+                    res.getString("wf_setup_hours"),
+                    res.getString("wc_cc"),
+                    res.getString("wf_desc"),
+                    res.getString("wc_desc")
+                    };                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get site list");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray; 
+        
+    }
+    
+    
     public static ArrayList getWorkCellList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -8068,7 +8204,7 @@ public class OVData {
         return myarray;
         
     }
-    
+        
     public static ArrayList getRoutingList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -9273,6 +9409,34 @@ public class OVData {
         
     }
          
+         public static String getItemLotSize(String item) {
+           String myreturn = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+               while (res.next()) {
+                myreturn = res.getString("it_lotsize");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+        
+    }
+         
+         
          public static String getItemRouting(String item) {
            String myreturn = "";
          try{
@@ -9742,7 +9906,7 @@ public class OVData {
         
     }
           
-          public static Double getItemOutCost(String item) {
+    public static Double getItemOutCost(String item) {
            Double cost = 0.00;
          try{
             Class.forName(driver).newInstance();
@@ -9769,7 +9933,7 @@ public class OVData {
         
     }
            
-           public static String getItemStatusByPart(String mypart) {
+    public static String getItemStatusByPart(String mypart) {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
@@ -9796,7 +9960,7 @@ public class OVData {
         
     }
          
-           public static String getItemDesc(String mypart) {
+    public static String getItemDesc(String mypart) {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
@@ -9823,35 +9987,8 @@ public class OVData {
         
     }
            
-           public static ArrayList getShaftPartNumbers() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_code = 'M' and it_item like 'SC1%' order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Shafts");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
            
-             public static ArrayList getItemRoutingOPs(String myitem) {
+    public static ArrayList getItemRoutingOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -9878,7 +10015,7 @@ public class OVData {
         
     }
      
-                public static ArrayList getItemWFOPs(String myitem) {
+    public static ArrayList getItemWFOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -9905,7 +10042,7 @@ public class OVData {
         
     }
              
-              public static boolean isLastOperation(String item, String op) {
+    public static boolean isLastOperation(String item, String op) {
        boolean isLast = false;
        String lastopcheck = "";
        
@@ -9948,7 +10085,7 @@ public class OVData {
         
     }     
              
-          public static boolean isValidOperation(String item, String op) {
+    public static boolean isValidOperation(String item, String op) {
        boolean isGood = false;
         try{
             Class.forName(driver).newInstance();
@@ -9980,7 +10117,7 @@ public class OVData {
         
     }    
          
-       public static ArrayList getItemMasterSchedlist() {
+    public static ArrayList getItemMasterSchedlist() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -10007,7 +10144,7 @@ public class OVData {
         
     }    
           
-      public static ArrayList getItemMasterMCodelist() {
+    public static ArrayList getItemMasterMCodelist() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -10035,7 +10172,7 @@ public class OVData {
     }
       
       
-      public static ArrayList getItemMasterACodelist() {
+    public static ArrayList getItemMasterACodelist() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -10062,7 +10199,7 @@ public class OVData {
         
     }
       
-       public static ArrayList getItemMasterACodeForCashTran() {
+    public static ArrayList getItemMasterACodeForCashTran() {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -10988,7 +11125,7 @@ public class OVData {
         
     }  
           
-                  public static boolean isValidWorkCenter(String key) {
+    public static boolean isValidWorkCenter(String key) {
        boolean isGood = false;
         try{
             Class.forName(driver).newInstance();
@@ -11074,16 +11211,17 @@ public class OVData {
         
     }
            
-           public static String getShiftChrome() throws ParseException {
-          String myshift = "";
+        public static String getShiftSpecific(String a, String b, String c) throws ParseException {
+         // a, b, c = specific time as string...example "06:00", "14:00", "22:00"
+         String myshift = "";
          Calendar now = Calendar.getInstance();
 
          int hour = now.get(Calendar.HOUR_OF_DAY); // Get hour in 24 hour format
          int minute = now.get(Calendar.MINUTE);
          Date currenttime = new SimpleDateFormat("HH:mm").parse(hour + ":" + minute);
-         Date firstshift = new SimpleDateFormat("HH:mm").parse("06:00");
-         Date secondshift = new SimpleDateFormat("HH:mm").parse("14:00");
-         Date thirdshift = new SimpleDateFormat("HH:mm").parse("22:00");
+         Date firstshift = new SimpleDateFormat("HH:mm").parse(a);  // a = "06:00"
+         Date secondshift = new SimpleDateFormat("HH:mm").parse(b);
+         Date thirdshift = new SimpleDateFormat("HH:mm").parse(c);
 
 
          if (firstshift.before( currenttime ) && secondshift.after(currenttime)) {
@@ -11103,10 +11241,8 @@ public class OVData {
              myshift = "3";
           return myshift;
       }
-         
-           
-           
-         public static ArrayList getOperationsByPart(String mypart) {
+                    
+        public static ArrayList getOperationsByPart(String mypart) {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -11133,7 +11269,7 @@ public class OVData {
         
     }
          
-          public static int getFirstOpByPart(String mypart) {
+        public static int getFirstOpByPart(String mypart) {
            int myreturn = -1;
         try{
             Class.forName(driver).newInstance();
@@ -11162,7 +11298,7 @@ public class OVData {
         
     }
           
-           public static int getLastOpByPart(String mypart) {
+        public static int getLastOpByPart(String mypart) {
            int myreturn = -1;
         try{
             Class.forName(driver).newInstance();
@@ -11191,7 +11327,7 @@ public class OVData {
         
     }
          
-         public static Double getLaborWithSetup(String part, String op) {
+        public static Double getLaborWithSetup(String part, String op) {
         
              Double labor = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000");           
@@ -11225,7 +11361,7 @@ public class OVData {
             
          }
          
-         public static Double getBurdenWithSetup(String part, String op) {
+        public static Double getBurdenWithSetup(String part, String op) {
         
              Double burden = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000");            
@@ -11259,7 +11395,7 @@ public class OVData {
             
          }
          
-         public static Double getItemLbrCost(String part, String op, String site, String set) {
+        public static Double getItemLbrCost(String part, String op, String site, String set) {
              Double labor = 0.00;
               DecimalFormat df = new DecimalFormat("#.00000"); 
               try{
@@ -11293,7 +11429,7 @@ public class OVData {
              return labor;
          }
          
-         public static Double getItemBdnCost(String part, String op, String site, String set) {
+        public static Double getItemBdnCost(String part, String op, String site, String set) {
              Double burden = 0.00;
               DecimalFormat df = new DecimalFormat("#.00000"); 
               try{
@@ -11327,7 +11463,7 @@ public class OVData {
              return burden;
          }
          
-         public static Double getLaborWithOutSetup(String part, String op) {
+        public static Double getLaborWithOutSetup(String part, String op) {
         
              Double labor = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000"); 
@@ -11362,7 +11498,7 @@ public class OVData {
             
          }
          
-          public static Double getLaborAllOps(String part) {
+        public static Double getLaborAllOps(String part) {
         
              Double labor = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000");           
@@ -11407,7 +11543,7 @@ public class OVData {
             
          }
           
-           public static Double getBurdenAllOps(String part) {
+        public static Double getBurdenAllOps(String part) {
         
              Double burden = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000"); 
@@ -11450,7 +11586,7 @@ public class OVData {
             
          }
          
-         public static Double getBurdenWithOutSetup(String part, String op) {
+        public static Double getBurdenWithOutSetup(String part, String op) {
         
              Double burden = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000");          
@@ -11482,8 +11618,6 @@ public class OVData {
              return burden;
             
          }
-         
-      
            
         public static void setStandardCosts(String site, String item) {
             calcCost cur = new calcCost();
@@ -11587,9 +11721,7 @@ public class OVData {
         }  
         }
        
-    
-       
-         public static ArrayList rollCost(String part) {
+        public static ArrayList rollCost(String part) {
              ArrayList<String> myarray = new ArrayList<String>();
              String mystring = "";
              Double labor = 0.0;
@@ -11713,7 +11845,111 @@ public class OVData {
              return myarray;
          }
     
-         public static String getShipperBillto(String shipper) {
+        public static Double simulateCost(String site, String item, String opvar, 
+                                          double runratevar,
+                                          double setupratevar,
+                                          double burdenratevar,
+                                          double runhoursvar,
+                                          double setuphoursvar,
+                                          double runcrewvar,
+                                          double setupcrewvar,
+                                          double lotsizevar,
+                                          boolean doMatl) {
+            double x = 0.00;
+            Double labor = 0.0;
+             Double burden = 0.0;
+             Double material = 0.0;
+             Double ovh = 0.0;
+             Double outside = 0.0;
+             Double total = 0.0;
+             String op = "";
+                  try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                Statement st2 = con.createStatement();
+                ResultSet res = null;
+                ResultSet res2 = null;
+                
+               
+                 // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
+                res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
+                        " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
+                        " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
+                        " inner join wc_mstr on wc_cell = wf_cell  " + 
+                        " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
+                        " where it_item = " + "'" + item + "'" + 
+                        " order by wf_op; " );
+               int i = 0;         
+               while (res.next()) {
+                   i++;
+                   
+                   op = res.getString("wf_op");
+                  
+                   
+                   material = 0.0;
+                   labor = 0.0;
+                   burden = 0.0;
+                   
+                   if (op.equals(opvar)) {
+                       // simulation
+                       if (lotsizevar == 0) {
+                        labor += ( ((setupratevar * setuphoursvar) ) +
+                                (runratevar * runhoursvar * runcrewvar )  );
+                        burden += ( ((burdenratevar * setuphoursvar)  ) +
+                                (burdenratevar * runhoursvar )  );
+                       } else {
+                         labor += ( ((setupratevar * setuphoursvar) / lotsizevar ) +
+                                 (runratevar * runhoursvar * runcrewvar )  );
+                        burden += ( ((burdenratevar * setuphoursvar) / lotsizevar ) +
+                                (burdenratevar * runhoursvar )  );  
+                       }
+                       
+                       
+                   } else {
+                       if (res.getDouble("it_lotsize") == 0) {
+                        labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                                (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
+                       } else {
+                         labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                                 (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
+                       }
+                   }
+                   
+                   if (doMatl) {
+                   // now do the matl for this operation
+                   res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                        " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
+                        " where ps_parent = " + "'" + item + "'" +
+                        " AND ps_op = " + "'" + op + "'" + ";");
+                    while (res2.next()) {
+                    material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                    //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                    //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                   }
+                   } // if calling program wants this routine to include material
+                total = labor + burden + material + ovh + outside;
+               } 
+                
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("Cannot roll cost");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+            return total;
+        }
+        
+        public static String getShipperBillto(String shipper) {
              String billto = "";
               try{
             Class.forName(driver).newInstance();
@@ -19645,7 +19881,7 @@ public class OVData {
        /* end ar related functions */
        
         
-     public static ArrayList getZebraPrinterList() {
+     public static ArrayList getPrinterList() {
            ArrayList<String> mylist = new ArrayList<String>();  
          try{
             Class.forName(driver).newInstance();
@@ -19654,7 +19890,7 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select prt_id from prt_mstr where prt_type = 'ZEBRA' order by prt_id;");
+                res = st.executeQuery("select prt_id from prt_mstr order by prt_id;");
                while (res.next()) {
                 mylist.add(res.getString("prt_id"));                    
                 }
@@ -19672,8 +19908,8 @@ public class OVData {
         
     }    
      
-      public static String getPrinterIP(String printer) {
-          String myreturn = "";
+      public static String[] getPrinterInfo(String printer) {
+          String myreturn[] = new String[]{"","",""};
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -19681,14 +19917,17 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select prt_ip from prt_mstr where  " +
+                res = st.executeQuery("select prt_ip, prt_port, prt_type from prt_mstr where  " +
                         " prt_id = " + "'" + printer + "'" + " ;");
                while (res.next()) {
-                myreturn = res.getString("prt_ip");                    
+                myreturn[0] = res.getString("prt_ip");
+                myreturn[1] = res.getString("prt_port");
+                myreturn[2] = res.getString("prt_type");
                 }
                
            }
             catch (SQLException s){
+                s.printStackTrace();
                  bsmf.MainFrame.show("SQL cannot get  printer ip");
             }
             con.close();
@@ -22358,8 +22597,10 @@ MainFrame.bslog(e);
           
         Socket soc = null;
         DataOutputStream dos = null;
-        String ZPLPrinterIPAddress = OVData.getPrinterIP(this_printer);
-        int ZPLPrinterPort = 9100;
+        String[] prt = OVData.getPrinterInfo(this_printer);
+        if (prt[2].equals("DirectToIP") && prt[1].isEmpty()) {
+            prt[1] = "9100";
+        }
 
         BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/item.prn")));
         String line = "";
@@ -22376,9 +22617,9 @@ MainFrame.bslog(e);
 
         concatline = concatline.replace("$ITEMNBR", item);
 
-         soc = new Socket(ZPLPrinterIPAddress, ZPLPrinterPort);
+         soc = new Socket(prt[0], Integer.valueOf(prt[1]));
                 dos= new DataOutputStream(soc.getOutputStream());
-                dos.writeBytes(concatline);
+                dos.writeBytes(concatline); 
 
          dos.close();
          soc.close();
@@ -22386,6 +22627,44 @@ MainFrame.bslog(e);
 } catch (Exception e) {
 MainFrame.bslog(e);
 }
+      }
+      
+      public static void printLabelStream(String text, String printer) throws IOException, PrintException {
+          
+          String[] prt = OVData.getPrinterInfo(printer);
+            if (prt[2].equals("DirectToIP") && prt[1].isEmpty()) {
+                prt[1] = "9100";
+            }
+          
+          if (prt[2].equals("DirectToIP")) {
+            Socket soc = null;
+            DataOutputStream dos = null;
+             soc = new Socket(prt[0], Integer.valueOf(prt[1]));
+                    dos= new DataOutputStream(soc.getOutputStream());
+                    dos.writeBytes(text);
+
+             dos.close();
+             soc.close();
+            }
+            
+            if (prt[2].equals("NetworkShare")) {
+            PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+             pras.add(new Copies(1));
+             InputStream stream = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
+             Doc doc = new SimpleDoc(stream, DocFlavor.INPUT_STREAM.AUTOSENSE,null);
+             PrintService service = null;
+             PrintService[] services = PrinterJob.lookupPrintServices();
+              for (int index = 0; service == null && index < services.length; index++) {
+                    if (services[index].getName().equalsIgnoreCase(prt[0])) {
+
+                        service = services[index];
+                    }
+                }
+             if (service != null) { 
+             DocPrintJob job = service.createPrintJob();
+             job.print(doc, pras);
+             } 
+            }
       }
       
       public static boolean isInvCtrlPlanMultiScan() {

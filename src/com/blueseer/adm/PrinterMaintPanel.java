@@ -254,16 +254,11 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 }
                 if (tbip.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter an IP address");
+                    bsmf.MainFrame.show("must enter an IP address or Shared Name");
                     tbip.requestFocus();
                     return b;
                 }
-                if (tbport.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a Port");
-                    tbport.requestFocus();
-                    return b;
-                }
+                
                 
                 
                 
@@ -289,7 +284,10 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-     
+     String port = "";
+     if (tbport.getText() != null) {
+         port = tbport.getText();
+     }
      try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -313,7 +311,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + tbdesc.getText().toString() + "'" + ","
                             + "'" + ddtype.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbip.getText().toString() + "'" + ","
-                                + "'" + tbport.getText().toString() + "'"
+                                + "'" + port + "'"
                             + ")"
                             + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -336,7 +334,10 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-     
+     String port = "";
+     if (tbport.getText() != null) {
+         port = tbport.getText();
+     }
      try {
             boolean proceed = true;
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -345,7 +346,7 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                     st.executeUpdate("update prt_mstr set prt_desc = " + "'" + tbdesc.getText() + "'" + ","
                             + "prt_ip = " + "'" + tbip.getText() + "'" + ","
-                            + "prt_port = " + "'" + tbport.getText() + "'" + ","
+                            + "prt_port = " + "'" + port + "'" + ","
                             + "prt_type = " + "'" + ddtype.getSelectedItem().toString() + "'" 
                             + " where prt_id = " + "'" + tbkey.getText() + "'"                             
                             + ";");
@@ -497,11 +498,16 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "LASER", "ZEBRA" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NetworkShare", "DirectToIP" }));
+        ddtype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtypeActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Type:");
 
-        jLabel4.setText("IP:");
+        jLabel4.setText("ShareName / IP:");
 
         jLabel5.setText("Port:");
 
@@ -640,6 +646,16 @@ public class PrinterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
         executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
+        if (ddtype.getSelectedItem().toString().equals("NetworkShare")) {
+            tbport.setText("");
+            tbport.setEnabled(false);
+        } else {
+            tbport.setText("");
+            tbport.setEnabled(true);
+        }
+    }//GEN-LAST:event_ddtypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
