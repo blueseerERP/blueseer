@@ -84,7 +84,7 @@ import javax.swing.ImageIcon;
 public class OrderReport1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new OrderReport1.MyTableModel(new Object[][]{},
-                        new String[]{"Select", "Order", "Cust", "PO", "Remarks", "OrdDate", "DueDate", "Qty", "Amount", "Status"})
+                        new String[]{"Select", "Order", "Cust", "PO", "Remarks", "OrdDate", "DueDate", "Qty", "Amount", "Status", "PlanStatus"})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -203,7 +203,7 @@ public class OrderReport1 extends javax.swing.JPanel {
          tableorder.getTableHeader().setReorderingAllowed(false);
          
          Calendar calfrom = Calendar.getInstance();
-         calfrom.add(Calendar.DATE, -365);
+         calfrom.add(Calendar.DATE, -7);
          dcFrom.setDate(calfrom.getTime());
          
           ddfromcust.removeAllItems();
@@ -486,6 +486,7 @@ try {
                 String tocust = "";
                 String fromcode = "";
                 String tocode = "";
+                String planstatus = "";
                 
                 if (ddfromcust.getSelectedItem() == null || ddfromcust.getSelectedItem().toString().isEmpty()) {
                     fromcust = bsmf.MainFrame.lowchar;
@@ -542,6 +543,9 @@ try {
                  
                  
                 while (res.next()) {
+                    
+                    planstatus = OVData.orderPlanStatus(res.getString("so_nbr"));
+                    
                     if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
                         continue;
                     if (! cbclose.isSelected() && res.getString("so_status").equals("close"))
@@ -565,12 +569,16 @@ try {
                                 res.getString("so_due_date"),
                                 res.getInt("totqty"),
                                 Double.valueOf(df.format(res.getDouble("totdol"))),
-                                res.getString("so_status")
+                                res.getString("so_status"),
+                                planstatus
                             });
                 }
                 labeldollar.setText(String.valueOf(df.format(dol)));
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
+                
+              
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for Order Report");

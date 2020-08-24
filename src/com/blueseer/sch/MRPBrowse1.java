@@ -1215,7 +1215,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                    // if no plan records then create dummy zero 'PLAN' record
                    if (z == 0) {
                       mymodel.addRow(new Object[]{
-                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, item,
                         "PLAN",
                         "0",
                         "0",

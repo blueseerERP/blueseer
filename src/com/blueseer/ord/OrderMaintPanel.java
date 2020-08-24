@@ -336,12 +336,20 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         autoallocate = OVData.isOrderAutoAllocate();
         cbisallocated.setSelected(autoallocate);
         
+        
+        ddsite.removeAllItems();
+        mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
         // lets check order control for custitemonly versus any item from item master to be filled into ddpart
         custitemonly = OVData.isCustItemOnly();
         if (! custitemonly) {
             lblCustItemAndDesc.setText("Description");
             ddpart.removeAllItems();
-            ArrayList<String> items = OVData.getItemMasterAlllist();
+            ArrayList<String> items = OVData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
             for (String item : items) {
             ddpart.addItem(item);
             }  
@@ -427,12 +435,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
         ddstatus.setSelectedItem("open");
         
-         ddsite.removeAllItems();
-        mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        
         lbqtyavailable.setBackground(Color.gray);
         lbqtyavailable.setText("");
         
@@ -1407,10 +1411,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void setPrice() {
+        String[] TypeAndPrice = new String[]{"","0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
                 DecimalFormat df = new DecimalFormat("#0.0000");
                 
-                String[] TypeAndPrice = OVData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                TypeAndPrice = OVData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
                 Double price = Double.valueOf(TypeAndPrice[1]);
@@ -1873,7 +1878,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel90.setText("ShipVia");
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "cancel", "error", "hold", "open", "backorder", "close", " " }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "cancel", "error", "hold", "open", "backorder", "close", "" }));
 
         jLabel83.setText("PO Number");
 
@@ -1890,6 +1895,12 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         cbblanket.setText("Blanket?");
 
         jLabel92.setText("Site:");
+
+        ddsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsiteActionPerformed(evt);
+            }
+        });
 
         btordduebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btordduebrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -3335,6 +3346,16 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void btprintpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintpsActionPerformed
         OVData.printShipperByOrder(tbkey.getText());
     }//GEN-LAST:event_btprintpsActionPerformed
+
+    private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
+            if (! isLoad) {
+            ddpart.removeAllItems();
+            ArrayList<String> items = OVData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
+            for (String item : items) {
+            ddpart.addItem(item);
+            }  
+            }
+    }//GEN-LAST:event_ddsiteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

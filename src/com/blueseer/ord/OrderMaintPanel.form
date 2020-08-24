@@ -521,7 +521,7 @@
                     <StringItem index="3" value="open"/>
                     <StringItem index="4" value="backorder"/>
                     <StringItem index="5" value="close"/>
-                    <StringItem index="6" value=" "/>
+                    <StringItem index="6" value=""/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -572,6 +572,9 @@
                   <StringArray count="0"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddsiteActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btordduebrowse">
               <Properties>

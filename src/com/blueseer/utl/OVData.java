@@ -10227,34 +10227,7 @@ public class OVData {
         
     }
       
-      public static ArrayList getItemMasterNitridelist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_item like 'SC11%' order by it_item;");
-               while (res.next()) {
-                    if (! res.getString("it_item").endsWith("V5"))
-                    myarray.add(res.getString("it_item"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-      
+     
          public static ArrayList getItemMasterRawlist() {
        ArrayList myarray = new ArrayList();
         try{
@@ -10311,6 +10284,37 @@ public class OVData {
         return myarray;
         
     }
+        
+         public static ArrayList getItemMasterListBySite(String site) {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_item from item_mstr " +
+                        " where it_site = " + "'" + site + "'" + " order by it_item ;");
+               while (res.next()) {
+                    myarray.add(res.getString("it_item"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+       
          
         public static ArrayList getItemRange(String site, String fromitem, String toitem) {
        ArrayList myarray = new ArrayList();
@@ -22511,6 +22515,60 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
+      public static String orderPlanStatus(String order) {
+          String x = "unknown";
+          int summation = 0;
+          int linecount = 0;
+          int nullcount = 0;
+           try {
+
+             Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                 ResultSet res = null;
+                 boolean proceed = true;
+                 res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status " +
+                         " from sod_det " +
+                         " left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line " +
+                         " where sod_nbr = " + "'" + order + "'" 
+                         + " ;");
+               while (res.next()) {
+                   linecount++;
+                   if (res.getString("plan_status") == null) {
+                       nullcount++;
+                   } else {
+                       summation += res.getInt("plan_status");
+                   }
+                   
+                   
+               }
+               
+               if (summation == linecount) {
+                   x = "complete";
+               }
+               if (summation == 0 && nullcount == 0 && linecount > 0) {
+                   x = "planned";
+               }
+               if (summation == 0 && nullcount > 0) {
+                   x = "partialplan";
+               }
+               if (nullcount == linecount && linecount > 0) {
+                   x = "unplanned";
+               }
+               
+               
+             
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return x;
+      }
+      
       public static boolean updatePlanOrder(String order, String schedqty, String cell, String scheddate, String status) {
           boolean myreturn = false;  
           try {
@@ -22595,8 +22653,7 @@ MainFrame.bslog(e);
           if (this_printer.isEmpty())
               return;
           
-        Socket soc = null;
-        DataOutputStream dos = null;
+      
         String[] prt = OVData.getPrinterInfo(this_printer);
         if (prt[2].equals("DirectToIP") && prt[1].isEmpty()) {
             prt[1] = "9100";
@@ -22617,12 +22674,35 @@ MainFrame.bslog(e);
 
         concatline = concatline.replace("$ITEMNBR", item);
 
-         soc = new Socket(prt[0], Integer.valueOf(prt[1]));
-                dos= new DataOutputStream(soc.getOutputStream());
-                dos.writeBytes(concatline); 
+         if (prt[2].equals("DirectToIP")) {
+            Socket soc = null;
+            DataOutputStream dos = null;
+             soc = new Socket(prt[0], Integer.valueOf(prt[1]));
+                    dos= new DataOutputStream(soc.getOutputStream());
+                    dos.writeBytes(concatline);
 
-         dos.close();
-         soc.close();
+             dos.close();
+             soc.close();
+            }
+            
+            if (prt[2].equals("NetworkShare")) {
+            PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+             pras.add(new Copies(1));
+             InputStream stream = new ByteArrayInputStream(concatline.getBytes(StandardCharsets.UTF_8));
+             Doc doc = new SimpleDoc(stream, DocFlavor.INPUT_STREAM.AUTOSENSE,null);
+             PrintService service = null;
+             PrintService[] services = PrinterJob.lookupPrintServices();
+              for (int index = 0; service == null && index < services.length; index++) {
+                    if (services[index].getName().equalsIgnoreCase(prt[0])) {
+
+                        service = services[index];
+                    }
+                }
+             if (service != null) { 
+             DocPrintJob job = service.createPrintJob();
+             job.print(doc, pras);
+             } 
+            }
  
 } catch (Exception e) {
 MainFrame.bslog(e);

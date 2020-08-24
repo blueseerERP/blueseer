@@ -292,7 +292,7 @@ private static Integer level(TreeNode tree, TreeNode target, int currentLevel) {
 public void getComponents(String parent) {
         
          
-       String site = OVData.getDefaultSite();
+       String site = OVData.getItemSite(parent);
        DecimalFormat df = new DecimalFormat("#.00000"); 
        double matlcost = 0.00;
        tbtotmaterial.setText(String.valueOf(matlcost));
