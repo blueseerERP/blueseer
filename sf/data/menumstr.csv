@@ -86,6 +86,7 @@ ReqMaint,,com.blueseer.pur.ReqMaintPanel,JMenuItem,reqm
 RoutingBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,roub
 RoutingMaint,,com.blueseer.inv.RoutingMaintPanel,JMenuItem,roum
 SchedOrdBrowse,,com.blueseer.ord.OrderReportSched,JMenuItem,schb
+PlanRptGenerator,,com.blueseer.sch.PlanRptGenerator,JMenuItem,planb
 ScrapEntry,,com.blueseer.prd.ScrapMaintPanel,JMenuItem,scrp
 ScrapRpt1,,com.blueseer.prd.ScrapReportPanel,JMenuItem,scrr
 ShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,shcf

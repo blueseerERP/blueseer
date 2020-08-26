@@ -10555,7 +10555,7 @@ public class OVData {
         
     }   
          
-             public static boolean isAutoItem() {
+    public static boolean isAutoItem() {
              
        boolean autoitem = false;
         try{
@@ -10583,7 +10583,7 @@ public class OVData {
         
     }   
           
-         public static boolean isAutoInvoice() {
+    public static boolean isAutoInvoice() {
              
        boolean autoinvoice = false;
         try{
@@ -10611,7 +10611,7 @@ public class OVData {
         
     }  
          
-      public static boolean isOrderAutoAllocate() {
+    public static boolean isOrderAutoAllocate() {
              
        boolean autoallocate = false;
         try{
@@ -10639,7 +10639,7 @@ public class OVData {
         
     }       
      
-        public static boolean isOrderExceedQOHU() {
+    public static boolean isOrderExceedQOHU() {
              
        boolean exceedqohu = false;
         try{
@@ -10666,10 +10666,8 @@ public class OVData {
         return exceedqohu;
         
     }       
-     
-      
-         
-       public static boolean isAutoCust() {
+        
+    public static boolean isAutoCust() {
              
        boolean autocust = false;
         try{
@@ -10697,7 +10695,7 @@ public class OVData {
         
     }  
        
-       public static boolean isAutoVend() {
+    public static boolean isAutoVend() {
              
        boolean autovend = false;
         try{
@@ -10725,7 +10723,7 @@ public class OVData {
         
     }  
        
-        public static boolean isAutoPost() {
+    public static boolean isAutoPost() {
              
        boolean autopost = false;
         try{
@@ -22518,6 +22516,7 @@ MainFrame.bslog(e);
       public static String orderPlanStatus(String order) {
           String x = "unknown";
           int summation = 0;
+          int scheduled = 0;
           int linecount = 0;
           int nullcount = 0;
            try {
@@ -22528,7 +22527,7 @@ MainFrame.bslog(e);
                 Statement st = con.createStatement();
                  ResultSet res = null;
                  boolean proceed = true;
-                 res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status " +
+                 res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status, plan_is_sched " +
                          " from sod_det " +
                          " left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line " +
                          " where sod_nbr = " + "'" + order + "'" 
@@ -22539,21 +22538,19 @@ MainFrame.bslog(e);
                        nullcount++;
                    } else {
                        summation += res.getInt("plan_status");
+                       scheduled += res.getInt("plan_is_sched");
                    }
                    
                    
                }
                
-               if (summation == linecount) {
+               if (summation == linecount && scheduled == linecount && nullcount == 0) {
                    x = "complete";
                }
-               if (summation == 0 && nullcount == 0 && linecount > 0) {
+               if (summation == 0 && nullcount == 0 && scheduled == linecount) {
                    x = "planned";
                }
-               if (summation == 0 && nullcount > 0) {
-                   x = "partialplan";
-               }
-               if (nullcount == linecount && linecount > 0) {
+               if (summation == 0 && nullcount >= 0 && scheduled == 0) {
                    x = "unplanned";
                }
                
@@ -22734,14 +22731,14 @@ MainFrame.bslog(e);
              Doc doc = new SimpleDoc(stream, DocFlavor.INPUT_STREAM.AUTOSENSE,null);
              PrintService service = null;
              PrintService[] services = PrinterJob.lookupPrintServices();
-              for (int index = 0; service == null && index < services.length; index++) {
+              
+                for (int index = 0; service == null && index < services.length; index++) {
                     if (services[index].getName().equalsIgnoreCase(prt[0])) {
-
                         service = services[index];
                     }
                 }
-             if (service != null) { 
-             DocPrintJob job = service.createPrintJob();
+             if (service != null) {  
+             DocPrintJob job = service.createPrintJob(); 
              job.print(doc, pras);
              } 
             }
@@ -23135,7 +23132,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-       public static int getPlanStatus(String serialno) {
+    public static int getPlanStatus(String serialno) {
           
           // -1 plan_status is void
           // 0 plan_status is open
@@ -23166,8 +23163,44 @@ MainFrame.bslog(e);
         }
           return myreturn;
       }
-      
-      public static void updateLabelStatus(String serialno, String value) {
+    
+    public static String getPlanStatusMnemonic(int status) {
+          
+          // -1 plan_status is void
+          // 0 plan_status is open
+          // 1 plan_status is closed/complete
+          
+          String x = "unknown";
+          if (status == 0) {
+              x = "open";
+          }
+          if (status == -1) {
+              x = "void";
+          }
+          if (status == 1) {
+              x = "complete";
+          }
+          return x;
+      }
+     
+    public static String getPlanIsSchedMnemonic(int issched) {
+          
+          // 
+          // 0 plan_is_sched is no
+          // 1 plan_is_sched is yes
+          
+          String x = "unknown";
+          if (issched == 0) {
+              x = "no";
+          }
+          if (issched == 1) {
+              x = "yes";
+          }
+          return x;
+      }
+    
+    
+    public static void updateLabelStatus(String serialno, String value) {
           try {
 
             Class.forName(driver).newInstance();

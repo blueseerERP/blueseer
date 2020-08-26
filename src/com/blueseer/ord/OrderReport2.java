@@ -79,7 +79,7 @@ import static bsmf.MainFrame.user;
 public class OrderReport2 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new OrderReport2.MyTableModel(new Object[][]{},
-                        new String[]{"Order", "Cust", "PO", "DueDate", "Part", "Desc", "QtyOrd", "QtyShipped"});
+                        new String[]{"Order", "Cust", "PO", "DueDate", "Part", "Desc", "QtyOrd", "QtyShipped", "PlanNbr", "IsSched?", "Cell", "QtySched", "DateSched", "PlanStatus"});
     
      
     /**
@@ -376,6 +376,8 @@ try {
                 String tocust = "";
                 String fromcode = "";
                 String tocode = "";
+                String issched = "";
+                String planstatus = "";
                 
                 if (ddfromcust.getSelectedItem().toString().isEmpty()) {
                     fromcust = bsmf.MainFrame.lowchar;
@@ -412,9 +414,10 @@ try {
 
                      
                  res = st.executeQuery("SELECT sod_nbr, sod_part, sod_ord_qty, sod_shipped_qty, so_cust, so_po, so_due_date, so_status, " +
-                        " it_desc " +
+                        " it_desc, plan_nbr, plan_is_sched, plan_cell, plan_qty_sched, plan_date_sched, plan_status " +
                         " FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
                         " inner join item_mstr on it_item = sod_part " +
+                        " left outer join plan_mstr on plan_line = sod_line and plan_order = sod_nbr " + 
                         " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND so_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
@@ -434,7 +437,29 @@ try {
                         continue;                       
 
                     
-                   
+                    if (! res.getString("plan_is_sched").isEmpty()) {
+                        if (res.getString("plan_is_sched").equals("0")) {
+                            issched = "no";
+                        } else {
+                            issched = "yes";
+                        }
+                    } else {
+                        issched = "no";
+                    }
+                    
+                    if (! res.getString("plan_status").isEmpty()) {
+                        if (res.getString("plan_status").equals("0")) {
+                            planstatus = "open";
+                        } else if (res.getString("plan_status").equals("1")) {
+                            planstatus = "closed";
+                        } else {
+                            planstatus = "void";
+                        }
+                        
+                    } else {
+                        issched = "none";
+                    }
+                    
                     qty = qty + res.getInt("sod_ord_qty");
                     i++;
                         mymodel.addRow(new Object[]{
@@ -445,7 +470,13 @@ try {
                                 res.getString("sod_part"),
                                 res.getString("it_desc"),
                                 res.getInt("sod_ord_qty"),
-                                res.getInt("sod_shipped_qty")
+                                res.getInt("sod_shipped_qty"),
+                                res.getString("plan_nbr"),
+                                issched,
+                                res.getString("plan_cell"),
+                                res.getString("plan_qty_sched"),
+                                res.getString("plan_date_sched"),
+                                planstatus
                                 
                             });
                 }

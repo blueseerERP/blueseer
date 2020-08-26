@@ -36,6 +36,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +46,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.print.PrintException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -2527,7 +2531,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     private void btprintlabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintlabelActionPerformed
         String printer = OVData.getDefaultLabelPrinter();
         if (OVData.isValidPrinter(printer)) {
-            OVData.printLabelItem(tbkey.getText(), printer);
+            try {
+                OVData.printLabelStream(tbkey.getText(), printer);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (PrintException ex) {
+                ex.printStackTrace();
+            } 
         } else {
             bsmf.MainFrame.show("no default label printer defined");
         }

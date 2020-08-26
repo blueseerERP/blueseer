@@ -210,7 +210,6 @@ String sitecitystatezip = "";
         btGetShipToList = new javax.swing.JButton();
         ddshipto = new javax.swing.JComboBox();
         lbladdr = new javax.swing.JLabel();
-        bttest = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -246,13 +245,6 @@ String sitecitystatezip = "";
         lbladdr.setText("                                                                                                                                                 ");
         lbladdr.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
 
-        bttest.setText("test");
-        bttest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttestActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -279,9 +271,7 @@ String sitecitystatezip = "";
                         .addComponent(ddbillto, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(bttest)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btprint)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -309,9 +299,7 @@ String sitecitystatezip = "";
                     .addComponent(ddprinter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btprint)
-                    .addComponent(bttest))
+                .addComponent(btprint)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -372,70 +360,10 @@ String sitecitystatezip = "";
         getShiptoInfo(ddbillto.getSelectedItem().toString(), ddshipto.getSelectedItem().toString());
     }//GEN-LAST:event_ddshiptoActionPerformed
 
-    private void bttestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestActionPerformed
-          if (ddprinter.getSelectedItem() == null) {
-                 bsmf.MainFrame.show("No Selected Zebra Printer");
-                 return;
-            }
-
-            try {
-
-
-            BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
-            String line = "";
-            String concatline = "";
-
-            while ((line = fsr.readLine()) != null) {
-                concatline += line;
-            }
-            fsr.close();
-
-            java.util.Date now = new java.util.Date();
-            DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
-
-            concatline = concatline.replace("$ADDRNAME", shipname);
-            concatline = concatline.replace("$ADDRLINE1", shipline1);
-            concatline = concatline.replace("$ADDRLINE2", shipline2);
-            concatline = concatline.replace("$ADDRCITY", shipcity);
-            concatline = concatline.replace("$ADDRSTATE", shipstate);
-            concatline = concatline.replace("$ADDRZIP", shipzip);
-
-            concatline = concatline.replace("$SITENAME", sitename);
-            concatline = concatline.replace("$SITEADDR", siteaddr);
-            concatline = concatline.replace("$SITEPHONE", sitephone);
-            concatline = concatline.replace("$SITECSZ", sitecitystatezip);
-
-            concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
-
-     PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-     pras.add(new Copies(1));
-     InputStream stream = new ByteArrayInputStream(concatline.getBytes(StandardCharsets.UTF_8));
-     Doc doc = new SimpleDoc(stream, DocFlavor.INPUT_STREAM.AUTOSENSE,null);
-     PrintService service = null;
-     PrintService[] services = PrinterJob.lookupPrintServices();
-      for (int index = 0; service == null && index < services.length; index++) {
-            if (services[index].getName().equalsIgnoreCase(ddprinter.getSelectedItem().toString())) {
-
-                service = services[index];
-            }
-        }
-     if (service != null) { 
-     DocPrintJob job = service.createPrintJob();
-     job.print(doc, pras);
-     } else {
-         bsmf.MainFrame.show("unable to see printer: " + ddprinter.getSelectedItem().toString());
-     }    
-
-            } catch (Exception e) {
-            MainFrame.bslog(e);
-            }
-    }//GEN-LAST:event_bttestActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btGetShipToList;
     private javax.swing.JButton btprint;
-    private javax.swing.JButton bttest;
     private javax.swing.JComboBox ddbillto;
     private javax.swing.JComboBox ddprinter;
     private javax.swing.JComboBox ddshipto;
