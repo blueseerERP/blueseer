@@ -61,8 +61,12 @@ import javax.swing.table.TableColumn;
 public class PlanRptGenerator extends javax.swing.JPanel {
 
     /* NOTES:
-    See initvars for naming and index convention of subreports.
-    EACH index must have a method assigned to it...of the fashion 'displayIndex' + i
+    See method 'initvars' for naming and index convention of subreports.
+    All subreports are defined by an index number as defined by ddreport drop down
+    EACH index must have 3 methods constructed as follows
+    1)  displayVariablesIndex + i
+    2)  displayResultsIndex + i
+    3)  tableClickIndex + i
     */
     
     javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -147,7 +151,24 @@ public class PlanRptGenerator extends javax.swing.JPanel {
         }
     }
     
-       
+    
+    
+    public void initvars(String[] arg) {
+      ddreport.removeAllItems();
+      ddreport.addItem("Plan Browse By Item"); // index 0
+      ddreport.addItem("Plan Browse By Item Range"); // index 1
+      ddreport.addItem("Plan Browse By Sales Order"); // index 2
+      ddreport.addItem("Plan Browse By Sales Order Range"); // index 3
+      rbactive.setSelected(true);
+      rbinactive.setSelected(false);
+      buttonGroup1.add(rbactive);
+      buttonGroup1.add(rbinactive);
+      ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+    }
+   
+    
+    
+    /* misc methods */   
     public void hidePanels() {
         paneltb.setVisible(false);
         paneltb2.setVisible(false);
@@ -223,6 +244,7 @@ public class PlanRptGenerator extends javax.swing.JPanel {
         lbdate2.setVisible(true);
     }
     
+    /* display Variables Index Section */
     public void displayVariablesIndex0 () {
            
            resetVariables();
@@ -259,6 +281,8 @@ public class PlanRptGenerator extends javax.swing.JPanel {
            lbkey2.setText("To SO:");
     }
     
+    
+    /* display Results Index Section */
     public void displayResultsIndex0 () {
          
         tablereport.setModel(DTData.getPlanByItem(tbkey1.getText(),tbkey1.getText()));
@@ -325,19 +349,28 @@ public class PlanRptGenerator extends javax.swing.JPanel {
               
     }
     
-    
-    public void initvars(String[] arg) {
-          ddreport.removeAllItems();
-          ddreport.addItem("Plan Browse By Item"); // index 0
-          ddreport.addItem("Plan Browse By Item Range"); // index 1
-          ddreport.addItem("Plan Browse By Sales Order"); // index 2
-          ddreport.addItem("Plan Browse By Sales Order Range"); // index 3
-       rbactive.setSelected(true);
-       rbinactive.setSelected(false);
-       buttonGroup1.add(rbactive);
-       buttonGroup1.add(rbinactive);
-       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+    /* tableClick Index Section */
+    public void tableClickIndex0 (int row, int col) {
+          if (! checkperms("ItemMaint")) { return; }
+           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
     }
+    
+    public void tableClickIndex1 (int row, int col) {
+          if (! checkperms("ItemMaint")) { return; }
+           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
+    }
+    
+    public void tableClickIndex2 (int row, int col) {
+          if (! checkperms("OrderMaint")) { return; }
+           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
+    }
+    
+    public void tableClickIndex3 (int row, int col) {
+          if (! checkperms("OrderMaint")) { return; }
+           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -705,8 +738,23 @@ public class PlanRptGenerator extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-              if (! checkperms("ItemMaint")) { return; }
-           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+            
+         try {
+                   Method mymethod;
+                   mymethod = this.getClass().getMethod("tableClickIndex" + ddreport.getSelectedIndex(), Integer.TYPE, Integer.TYPE);
+                   mymethod.invoke(this, row, col);
+               } catch (NoSuchMethodException ex) {
+                   ex.printStackTrace();
+               } catch (SecurityException ex) {
+                   ex.printStackTrace();
+               } catch (IllegalAccessException ex) {
+                   ex.printStackTrace();
+               } catch (IllegalArgumentException ex) {
+                   ex.printStackTrace();
+               } catch (InvocationTargetException ex) {
+                   ex.printStackTrace();
+               }
+        
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
@@ -737,20 +785,7 @@ public class PlanRptGenerator extends javax.swing.JPanel {
                }
            }
        } 
-       /*
-       if (ddreport.getSelectedIndex() == 0) { 
-           displayIndex0();
-       }
-       if (ddreport.getSelectedIndex() == 1) {
-           displayIndex1();
-       }
-       if (ddreport.getSelectedIndex() == 2) {
-           displayIndex2();
-       }
-       if (ddreport.getSelectedIndex() == 3) {
-           displayIndex3();
-       }
-*/
+      
     }//GEN-LAST:event_ddreportActionPerformed
 
 
