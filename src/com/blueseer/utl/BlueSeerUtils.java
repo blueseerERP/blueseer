@@ -35,7 +35,9 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -328,9 +330,9 @@ public class BlueSeerUtils {
 	 */
 	public static NumberRenderer getCurrencyRenderer()
 	{
-		return new NumberRenderer( NumberFormat.getCurrencyInstance());
-               
-	}
+         
+          return new NumberRenderer( NumberFormat.getCurrencyInstance());
+        }
 
 	/*
 	 *  Use the default integer formatter for the default locale
@@ -384,4 +386,6 @@ public class BlueSeerUtils {
          bsmf.MainFrame.messagelabel.setText("");
      }
     
+     
+     
 }

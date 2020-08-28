@@ -23,8 +23,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package com.blueseer.sch;
+package com.blueseer.far;
 
+import com.blueseer.ctr.*;
+import com.blueseer.inv.*;
+import com.blueseer.sch.*;
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
@@ -43,9 +46,13 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -58,15 +65,35 @@ import javax.swing.table.TableColumn;
  *
  * @author vaughnte
  */
-public class PlanRptGenerator extends javax.swing.JPanel {
+public class ARRptPicker extends javax.swing.JPanel {
 
     /* NOTES:
-    See method 'initvars' for naming and index convention of subreports.
-    All subreports are defined by an index number as defined by ddreport drop down
-    EACH index must have 3 methods constructed as follows
-    1)  displayVariablesIndex + i
+    These notes apply to all RptPicker classes.
+    
+    All subreport items in the drop down report list on the main panel
+    are defined in Generic Code Maintenance under the Admin Menu.  
+    
+    The scheme in Generic code maintenance is :
+    
+    code = 'MenuName'...example SchRptPicker
+    key = x ...where x is an integer that defines the index order in the drop down
+    value = "Name of report"
+    
+    Once the entry in Generic Code Maintenance is complete...the developer must include
+    3 methods specific to the behaviour of the report that end with 
+    the index number as defined in Generic Code Maintenance 'key' field.
+    
+    1)  displayVariablesIndex + i   where i = 'key' field in Generic Code Maintenance
     2)  displayResultsIndex + i
     3)  tableClickIndex + i
+    
+    Use base 0 as the first index value.
+    
+    See examples below of these three methods
+    
+    Note:  this was developed in this manner to reduce the number of JPanel classes required
+    per each sub report.   I'm all ears if have another option.  :)
+    
     */
     
     javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -126,7 +153,7 @@ public class PlanRptGenerator extends javax.swing.JPanel {
     /**
      * Creates new form CustXrefRpt1
      */
-    public PlanRptGenerator() {
+    public ARRptPicker() {
         initComponents();
     }
 
@@ -155,15 +182,17 @@ public class PlanRptGenerator extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
       ddreport.removeAllItems();
-      ddreport.addItem("Plan Browse By Item"); // index 0
-      ddreport.addItem("Plan Browse By Item Range"); // index 1
-      ddreport.addItem("Plan Browse By Sales Order"); // index 2
-      ddreport.addItem("Plan Browse By Sales Order Range"); // index 3
+      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("ARRptPicker");
+      for (String[] s : list) {
+          ddreport.addItem(s[1]);
+      }
+     
       rbactive.setSelected(true);
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+     
     }
    
     
@@ -250,42 +279,15 @@ public class PlanRptGenerator extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("Search Item:");
-           lbkey2.setText("");
-           tbkey2.setVisible(false);
+           lbkey1.setText("From Nbr:");
+           lbkey2.setText("To Nbr:");
     }
-        
-    public void displayVariablesIndex1 () {
-           resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
-    }
-    
-    public void displayVariablesIndex2 () {
-           
-           resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("Search SO:");
-           lbkey2.setText("");
-           tbkey2.setVisible(false);
-    }
-    
-    public void displayVariablesIndex3 () {
-           resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("From SO:");
-           lbkey2.setText("To SO:");
-    }
-    
+       
     
     /* display Results Index Section */
     public void displayResultsIndex0 () {
          
-        tablereport.setModel(DTData.getPlanByItem(tbkey1.getText(),tbkey1.getText()));
+        tablereport.setModel(RPData.getARBrowse(tbkey1.getText(),tbkey2.getText()));
         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
         Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
           while (en.hasMoreElements()) {
@@ -294,81 +296,20 @@ public class PlanRptGenerator extends javax.swing.JPanel {
                      tc.getIdentifier().toString().equals("print") ) {
                  continue;
              }
-             tc.setCellRenderer(new PlanRptGenerator.renderer1());
+             tc.setCellRenderer(new ARRptPicker.renderer1());
          }
                
     }
     
-    public void displayResultsIndex1 () {
-      
-        tablereport.setModel(DTData.getPlanByItem(tbkey1.getText(),tbkey2.getText()));
-       // tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
-       // tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new PlanRptGenerator.renderer1());
-         }
-               
-    }
     
-    public void displayResultsIndex2 () {
-        
-        tablereport.setModel(DTData.getPlanBySalesOrder(tbkey1.getText(),tbkey1.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new PlanRptGenerator.renderer1());
-         }
-               
-    }
-    
-    public void displayResultsIndex3 () {
-         
-        tablereport.setModel(DTData.getPlanBySalesOrder(tbkey1.getText(),tbkey2.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new PlanRptGenerator.renderer1());
-         }
-              
-    }
     
     /* tableClick Index Section */
     public void tableClickIndex0 (int row, int col) {
-          if (! checkperms("ItemMaint")) { return; }
-           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
+        return;
+          //if (! checkperms("CustMaint")) { return; }
+          // reinitpanels("CustMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
     }
     
-    public void tableClickIndex1 (int row, int col) {
-          if (! checkperms("ItemMaint")) { return; }
-           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
-    }
-    
-    public void tableClickIndex2 (int row, int col) {
-          if (! checkperms("OrderMaint")) { return; }
-           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
-    }
-    
-    public void tableClickIndex3 (int row, int col) {
-          if (! checkperms("OrderMaint")) { return; }
-           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, col).toString()});
-    }
     
     
     /**
@@ -412,6 +353,8 @@ public class PlanRptGenerator extends javax.swing.JPanel {
         tbkey4 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Report Picker"));
 
         btview.setText("View");
         btview.addActionListener(new java.awt.event.ActionListener() {
@@ -621,14 +564,11 @@ public class PlanRptGenerator extends javax.swing.JPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -637,18 +577,17 @@ public class PlanRptGenerator extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(4, 4, 4)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btview)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btcsv)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btview)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcsv)))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -659,9 +598,9 @@ public class PlanRptGenerator extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(btview)
                     .addComponent(btcsv))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jScrollPane1.setBorder(null);
@@ -702,10 +641,10 @@ public class PlanRptGenerator extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

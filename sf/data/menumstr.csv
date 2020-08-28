@@ -86,7 +86,16 @@ ReqMaint,,com.blueseer.pur.ReqMaintPanel,JMenuItem,reqm
 RoutingBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,roub
 RoutingMaint,,com.blueseer.inv.RoutingMaintPanel,JMenuItem,roum
 SchedOrdBrowse,,com.blueseer.ord.OrderReportSched,JMenuItem,schb
-PlanRptGenerator,,com.blueseer.sch.PlanRptGenerator,JMenuItem,planb
+SchRptPicker,,com.blueseer.sch.SchRptPicker,JMenuItem,rpsc
+InvRptPicker,,com.blueseer.inv.InvRptPicker,JMenuItem,rpin
+OrdRptPicker,,com.blueseer.ord.OrdRptPicker,JMenuItem,rpor
+PurRptPicker,,com.blueseer.pur.PurRptPicker,JMenuItem,rppu
+ShpRptPicker,,com.blueseer.shp.ShpRptPicker,JMenuItem,rpsh
+CusRptPicker,,com.blueseer.ctr.CusRptPicker,JMenuItem,rpcu
+VenRptPicker,,com.blueseer.vdr.VenRptPicker,JMenuItem,rpve
+APRptPicker,,com.blueseer.fap.APRptPicker,JMenuItem,rpap
+ARRptPicker,,com.blueseer.far.ARRptPicker,JMenuItem,rpar
+HRRptPicker,,com.blueseer.hrm.HRRptPicker,JMenuItem,rphr
 ScrapEntry,,com.blueseer.prd.ScrapMaintPanel,JMenuItem,scrp
 ScrapRpt1,,com.blueseer.prd.ScrapReportPanel,JMenuItem,scrr
 ShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,shcf

@@ -146,7 +146,16 @@ com.blueseer.prd.ScrapReportPanel,,1
 com.blueseer.prd.TesterViewPanel,,1
 com.blueseer.prd.TransBrowsePanel,,1
 com.blueseer.sch.RetailReorderRpt,,1
-com.blueseer.sch.PlanRptGenerator,,1
+com.blueseer.sch.SchRptPicker,,1
+com.blueseer.inv.InvRptPicker,,1
+com.blueseer.ord.OrdRptPicker,,1
+com.blueseer.pur.PurRptPicker,,1
+com.blueseer.shp.ShpRptPicker,,1
+com.blueseer.fap.APRptPicker,,1
+com.blueseer.far.ARRptPicker,,1
+com.blueseer.ctr.CusRptPicker,,1
+com.blueseer.vdr.VenRptPicker,,1
+com.blueseer.hrm.HRRptPicker,,1
 com.blueseer.pur.POBrowse,,1
 com.blueseer.pur.POMaintPanel,,1
 com.blueseer.pur.ReqControl,,1

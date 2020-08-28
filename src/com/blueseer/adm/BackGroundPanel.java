@@ -37,6 +37,7 @@ import java.util.Random;
 import javax.swing.*;
 
 import java.awt.geom.Path2D;
+import java.util.Locale;
 
 /*
  *  Support custom painting on a panel in the form of
@@ -366,7 +367,6 @@ g2.fill(path);
 		float y = (height - image.getHeight(null)) * alignmentY;
 		g.drawImage(image, (int)x + insets.left, (int)y + insets.top, this);
 	}
-        
         
         
         

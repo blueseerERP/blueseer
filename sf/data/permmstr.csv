@@ -1,5 +1,14 @@
 admin;CustomerMenu
-admin;PlanRptGenerator
+admin;SchRptPicker
+admin;InvRptPicker
+admin;OrdRptPicker
+admin;PurRptPicker
+admin;ShpRptPicker
+admin;APRptPicker
+admin;ARRptPicker
+admin;CusRptPicker
+admin;VenRptPicker
+admin;HRRptPicker
 admin;CustMaint
 admin;CustReport1
 admin;CustXrefMaint

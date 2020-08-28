@@ -5931,6 +5931,38 @@ public class OVData {
         
     }
       
+        public static ArrayList getCodeAndDescMstrOrderByDesc(String type) {
+       ArrayList<String[]> myarray = new ArrayList();
+       
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select code_key, code_value from code_mstr " +
+                        " where code_code = " + "'" + type + "'" + 
+                        " order by cast(code_key as decimal) ;");
+               while (res.next()) {
+                    myarray.add(new String[]{res.getString("code_key"), res.getString("code_value")});
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+      
+        
         public static ArrayList getPartListFromCustCode(String cust) {
             ArrayList myarray = new ArrayList();   
             try {

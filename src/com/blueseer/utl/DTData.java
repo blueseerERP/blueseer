@@ -460,131 +460,7 @@ public class DTData {
         
          } 
      
-    public static DefaultTableModel getPlanByItem(String itemfrom, String itemto) {
-        
-        boolean autoitem = OVData.isAutoItem();
-        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "Class", "Site", "PlanNbr", "PlanType", "OrderNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                 if (autoitem) {
-                 res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
-                        " where cast(it_item as decimal) >= " + "'" + itemfrom + "'" +
-                        " and cast(it_item as decimal) <= " + "'" + itemto + "'" +
-                        " order by plan_nbr ;");
-                 } else {
-                  res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
-                        " where it_item >= " + "'" + itemfrom + "'" +
-                        " and it_item <= " + "'" + itemto + "'" +
-                        " order by plan_nbr ;");   
-                 }
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
-                                   res.getString("it_desc"),
-                                   res.getString("it_code"),
-                                   res.getString("it_site"),
-                                   res.getString("plan_nbr"),
-                                   res.getString("plan_type"),
-                                   res.getString("plan_order"),
-                                   res.getString("plan_is_sched"),
-                                   res.getString("plan_cell"),
-                                   res.getString("plan_qty_sched"),
-                                   res.getString("plan_date_sched"),
-                                   res.getString("plan_status")
-                                  
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         } 
-    
-    public static DefaultTableModel getPlanBySalesOrder(String sofrom, String soto) {
-        
-        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Order", "Line", "Item", "Desc", "Class", "Site", "PlanNbr", "PlanType",  "isSched", "Cell", "QtySched", "DateSched", "Status"})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                 
-                 res = st.executeQuery("SELECT sod_part, sod_nbr, sod_line, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  sod_det inner join item_mstr on sod_part = it_item left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line  " +
-                        " where cast(sod_nbr as decimal) >= " + "'" + sofrom + "'" +
-                        " and cast(sod_nbr as decimal) <= " + "'" + soto + "'" +
-                        " order by sod_line ;");
-                
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
-                                   res.getString("sod_nbr"),
-                                   res.getString("sod_line"),
-                                   res.getString("sod_part"),
-                                   res.getString("it_desc"),
-                                   res.getString("it_code"),
-                                   res.getString("it_site"),
-                                   res.getString("plan_nbr"),
-                                   res.getString("plan_type"),
-                                   res.getString("plan_is_sched"),
-                                   res.getString("plan_cell"),
-                                   res.getString("plan_qty_sched"),
-                                   res.getString("plan_date_sched"),
-                                   res.getString("plan_status")
-                                  
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         } 
-    
+   
     
     public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -2532,7 +2408,7 @@ public class DTData {
         
          } 
           
-           public static DefaultTableModel getOrderBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getOrderBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "OrderNbr", "Billto", "Shipto", "PONumber", "OrderDate", "DueDate", "Status"})
                 {
@@ -2592,7 +2468,7 @@ public class DTData {
         
          } 
            
-           public static DefaultTableModel getPOBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getPOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "PO Nbr", "Vendor", "Site", "Remarks", "OrderDate", "DueDate", "Status"})
                 {
@@ -5522,7 +5398,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
          }
             
             
-              public static DefaultTableModel getARPaymentBrowse() {
+    public static DefaultTableModel getARPaymentBrowse() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"ARNbr", "Cust", "InvoiceNbr", "CheckNbr", "DateApplied", "Amount"}); 
              

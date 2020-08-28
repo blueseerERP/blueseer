@@ -100,3 +100,16 @@ state,WA,Washington State
 state,WI,Wisconsin
 state,WV,West Virginia
 state,WY,Wyoming
+InvRptPicker,0,Item Master By Item Range
+CusRptPicker,0,Customer Master By CustCode Range
+VenRptPicker,0,Vendor Master By VendCode Range
+OrdRptPicker,0,Orders By Order Number Range
+PurRptPicker,0,POs By PO Number Range
+ARRptPicker,0,AR entries by AR Number Range
+APRptPicker,0,AP entries by AP Number Range
+HRRptPicker,0,Employees Report by Emp ID Range
+ShpRptPicker,0,Shippers by Shipper Number Range
+SchRptPicker,0,Plan Browse By Item
+SchRptPicker,1,Plan Browse By Item Range
+SchRptPicker,2,Plan Browse By Sales Order
+SchRptPicker,3,Plan Browse By Sales Order Range
