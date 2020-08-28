@@ -88,11 +88,11 @@ RoutingMaint,,com.blueseer.inv.RoutingMaintPanel,JMenuItem,roum
 SchedOrdBrowse,,com.blueseer.ord.OrderReportSched,JMenuItem,schb
 SchRptPicker,,com.blueseer.sch.SchRptPicker,JMenuItem,rpsc
 InvRptPicker,,com.blueseer.inv.InvRptPicker,JMenuItem,rpin
-OrdRptPicker,,com.blueseer.ord.OrdRptPicker,JMenuItem,rpor
-PurRptPicker,,com.blueseer.pur.PurRptPicker,JMenuItem,rppu
+OrdRptPicker,,com.blueseer.ord.OrdRptPicker,JMenuItem,rpso
+PurRptPicker,,com.blueseer.pur.PurRptPicker,JMenuItem,rppo
 ShpRptPicker,,com.blueseer.shp.ShpRptPicker,JMenuItem,rpsh
-CusRptPicker,,com.blueseer.ctr.CusRptPicker,JMenuItem,rpcu
-VenRptPicker,,com.blueseer.vdr.VenRptPicker,JMenuItem,rpve
+CusRptPicker,,com.blueseer.ctr.CusRptPicker,JMenuItem,rpcm
+VenRptPicker,,com.blueseer.vdr.VenRptPicker,JMenuItem,rpvm
 APRptPicker,,com.blueseer.fap.APRptPicker,JMenuItem,rpap
 ARRptPicker,,com.blueseer.far.ARRptPicker,JMenuItem,rpar
 HRRptPicker,,com.blueseer.hrm.HRRptPicker,JMenuItem,rphr
