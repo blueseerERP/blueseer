@@ -48,9 +48,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultCellEditor;
@@ -602,7 +604,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         double totamt = 0.00;
         double myqty = 0;
         double myprice = 0.00;
-        DecimalFormat df = new DecimalFormat("###.##");
+        DecimalFormat df = new DecimalFormat("##0.00", new DecimalFormatSymbols(Locale.US));
         
         for (int i = 0; i < itemtable.getRowCount(); i++) {
             myqty = 0;

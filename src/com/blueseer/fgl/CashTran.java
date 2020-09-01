@@ -85,6 +85,8 @@ import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -331,7 +333,7 @@ public class CashTran extends javax.swing.JPanel {
     }
    
     public void calcdiff() {
-         DecimalFormat df = new DecimalFormat("#0.00");   
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
         double diff = 0.00;
         double totincome = 0.00;
         double totexpense = 0.00;
@@ -471,7 +473,7 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddentity.getSelectedItem().toString());
                     
                 curr = OVData.getDefaultCurrency();
@@ -688,7 +690,7 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(entity);
                     
                 curr = OVData.getDefaultCurrency();
@@ -883,7 +885,7 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddentityExpense.getSelectedItem().toString());
                     
                 curr = OVData.getDefaultCurrency();
@@ -1018,7 +1020,7 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00"); 
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
                     
                 curr = OVData.getDefaultCurrency();
                 String site = OVData.getDefaultSite();   
@@ -1151,7 +1153,7 @@ public class CashTran extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dfdate2 = new SimpleDateFormat("yyyyMMdd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddentityExpense.getSelectedItem().toString());
                     
                
@@ -3588,7 +3590,7 @@ public class CashTran extends javax.swing.JPanel {
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
-            DecimalFormat df = new DecimalFormat("#0.00"); 
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
             actqty += Double.valueOf(tbqty.getText()); 
             actamt += Double.valueOf(tbqty.getText()) * 
@@ -3809,7 +3811,7 @@ public class CashTran extends javax.swing.JPanel {
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
-            DecimalFormat df = new DecimalFormat("#0.00"); 
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
             actqty += Double.valueOf(tbqty1.getText()); 
             actamt += Double.valueOf(tbqty1.getText()) * 
@@ -3970,7 +3972,7 @@ public class CashTran extends javax.swing.JPanel {
         
        partnumber = String.valueOf(OVData.getNextNbr("item"));
        
-            DecimalFormat df = new DecimalFormat("#0.00"); 
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
             
            
@@ -4138,7 +4140,7 @@ public class CashTran extends javax.swing.JPanel {
        
        String uniqueID = String.valueOf(OVData.getNextNbr("rexpense"));
        
-            DecimalFormat df = new DecimalFormat("#0.00"); 
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             
@@ -4395,7 +4397,7 @@ public class CashTran extends javax.swing.JPanel {
            ref = ref + "/" + tbincomeRef.getText();
        }
        
-            DecimalFormat df = new DecimalFormat("#0.00"); 
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             incomeline++;
             
            

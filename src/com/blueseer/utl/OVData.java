@@ -105,6 +105,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Savepoint;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -868,7 +870,7 @@ public class OVData {
             ResultSet res = null;
             try {
 
-                DecimalFormat df = new DecimalFormat("0.00000");
+                DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + part + "'"
                         + " AND itc_set = " + "'" + set + "'"
@@ -3257,7 +3259,7 @@ public class OVData {
      }
       
     public static DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
-           DecimalFormat df = new DecimalFormat("#.####");
+           DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US));
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
@@ -3322,7 +3324,7 @@ public class OVData {
       }
        
     public static DefaultMutableTreeNode get_nodes_by_op(String root, String mypart, String myop)  {
-        DecimalFormat df = new DecimalFormat("#.####"); 
+        DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
             myroot = myop;
@@ -3613,7 +3615,7 @@ public class OVData {
                
                 int i = 0;
                 String[] ld = null;
-               DecimalFormat df = new DecimalFormat("0.00000");
+               DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
                 
                 // now loop through comma delimited list and insert into item master table
                 for (String rec : list) {
@@ -3701,7 +3703,7 @@ public class OVData {
             try {
                 int i = 0;
                 String[] ld = null;
-               DecimalFormat df = new DecimalFormat("0.00000");
+               DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
                 
                
                     
@@ -4150,7 +4152,7 @@ public class OVData {
                    
                    String op = "";
                    String type = "";
-                    DecimalFormat df = new DecimalFormat("#0.00");
+                    DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                     DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                   try {
             Class.forName(driver).newInstance();
@@ -11364,7 +11366,7 @@ public class OVData {
         public static Double getLaborWithSetup(String part, String op) {
         
              Double labor = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000");           
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));           
              try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11398,7 +11400,7 @@ public class OVData {
         public static Double getBurdenWithSetup(String part, String op) {
         
              Double burden = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000");            
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));            
              try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11431,7 +11433,7 @@ public class OVData {
          
         public static Double getItemLbrCost(String part, String op, String site, String set) {
              Double labor = 0.00;
-              DecimalFormat df = new DecimalFormat("#.00000"); 
+              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
               try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11465,7 +11467,7 @@ public class OVData {
          
         public static Double getItemBdnCost(String part, String op, String site, String set) {
              Double burden = 0.00;
-              DecimalFormat df = new DecimalFormat("#.00000"); 
+              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
               try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11500,7 +11502,7 @@ public class OVData {
         public static Double getLaborWithOutSetup(String part, String op) {
         
              Double labor = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000"); 
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
                         
              try{
             Class.forName(driver).newInstance();
@@ -11535,7 +11537,7 @@ public class OVData {
         public static Double getLaborAllOps(String part) {
         
              Double labor = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000");           
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));           
              try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11580,7 +11582,7 @@ public class OVData {
         public static Double getBurdenAllOps(String part) {
         
              Double burden = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000"); 
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
              
              try{
             Class.forName(driver).newInstance();
@@ -11623,7 +11625,7 @@ public class OVData {
         public static Double getBurdenWithOutSetup(String part, String op) {
         
              Double burden = 0.0;
-             DecimalFormat df = new DecimalFormat("#.00000");          
+             DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));          
              try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -11655,7 +11657,7 @@ public class OVData {
            
         public static void setStandardCosts(String site, String item) {
             calcCost cur = new calcCost();
-            DecimalFormat df = new DecimalFormat("#.0000"); 
+            DecimalFormat df = new DecimalFormat("#.0000", new DecimalFormatSymbols(Locale.US)); 
             ArrayList<Double> costcur = new ArrayList<Double>();
             costcur = cur.getTotalCostElements(item);
             Double totalcost = 0.00;
@@ -14134,7 +14136,7 @@ public class OVData {
           }
          
           String rndamt = "";
-          DecimalFormat df = new DecimalFormat("#0.00");
+          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
           df.setRoundingMode(RoundingMode.HALF_UP); 
           
           //bsmf.MainFrame.show(String.valueOf(amt) + "/" + df.format(amt));
@@ -14992,7 +14994,7 @@ public class OVData {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 
                 // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
@@ -17146,7 +17148,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 
                  int prioryear = 0;
@@ -17273,7 +17275,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 
                  int prioryear = 0;
@@ -17403,7 +17405,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 
                  int prioryear = 0;
@@ -17506,7 +17508,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 
                  int prioryear = 0;
@@ -17624,7 +17626,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 df.setRoundingMode(RoundingMode.HALF_UP); 
                 int i = 0;
                
@@ -17693,7 +17695,7 @@ public class OVData {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 df.setRoundingMode(RoundingMode.HALF_UP); 
                 int i = 0;
                
@@ -17757,7 +17759,7 @@ public class OVData {
            
        public static void AcctBalEntry(String site, String acct, String cc, double amt, String EffDate) {
            try {
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -17838,7 +17840,7 @@ public class OVData {
         public static void PostGL2() {
            try {
             ArrayList<Integer> gltran = new ArrayList();
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -18020,7 +18022,7 @@ public class OVData {
        
        /* start ap related functions */
        public static void APCheckRun(JTable mytable, Date effdate, int checknbr, String type) {
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             int batchid = OVData.getNextNbr("batch");
@@ -18127,7 +18129,7 @@ public class OVData {
  
        public static boolean APExpense(Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount, String type) {
            boolean myreturn = false; 
-           DecimalFormat df = new DecimalFormat("#0.00");   
+           DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             int batchid = OVData.getNextNbr("batch");
@@ -18219,7 +18221,7 @@ public class OVData {
        
        public static boolean APCheckRun_apd_mstr(JTable mytable, int batchid) {
            boolean myreturn = false;
-           DecimalFormat df = new DecimalFormat("#0.00");
+           DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
        try {
 
             Class.forName(driver).newInstance();
@@ -18256,7 +18258,7 @@ public class OVData {
        
        public static boolean APExpense_apd_mstr(int batchid, String vend, String voucher, String invoice, Double amount) {
            boolean myreturn = false;
-           DecimalFormat df = new DecimalFormat("#0.00");
+           DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
        try {
 
             Class.forName(driver).newInstance();
@@ -18288,7 +18290,7 @@ public class OVData {
        
        public static boolean APCheckRunUpdateVouchers(int batchid) {
            boolean myreturn = false;
-           DecimalFormat df = new DecimalFormat("#0.00");
+           DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
            
            ArrayList<String[]> mylist = new ArrayList<String[]>();
            String[] rec = new String[5];
@@ -18403,7 +18405,7 @@ public class OVData {
             String[] m = new String[]{"",""};
             
             boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             
@@ -18635,7 +18637,7 @@ public class OVData {
        
        public static boolean AREntry(String shipper, Date effdate) {
             boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             
@@ -18805,7 +18807,7 @@ public class OVData {
        
         public static boolean AREntryRV(String shipper, Date effdate) {
             boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-            DecimalFormat df = new DecimalFormat("#0.00");   
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             
@@ -19441,7 +19443,7 @@ public class OVData {
        
       
         public static void updateShipperSAC(String shipper) {
-           DecimalFormat df = new DecimalFormat("#.00");
+           DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
            ArrayList<String> orders = new ArrayList<String>();
            ArrayList<String[]> sac = new ArrayList<String[]>();
@@ -21435,7 +21437,7 @@ MainFrame.bslog(e);
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
                 

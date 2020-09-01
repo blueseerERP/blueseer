@@ -30,6 +30,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -105,17 +106,17 @@ public class BlueSeerUtils {
         }
        
         if (precision.equals("2")) {
-         df = new DecimalFormat("#0.00"); 
+         df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
         } else if (precision.equals("3")) {
-         df = new DecimalFormat("#0.000");  
+         df = new DecimalFormat("#0.000", new DecimalFormatSymbols(Locale.US));  
         } else if (precision.equals("4")) {
-         df = new DecimalFormat("#0.0000");   
+         df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));   
         } else if (precision.equals("5")) {
-         df = new DecimalFormat("#0.00000");    
+         df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));    
          } else if (precision.equals("0")) {
-         df = new DecimalFormat("#0");    
+         df = new DecimalFormat("#0", new DecimalFormatSymbols(Locale.US));    
         } else {
-         df = new DecimalFormat("#0.00");    
+         df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));    
         }
         try {
         outvalue = df.format(Double.valueOf(invalue));

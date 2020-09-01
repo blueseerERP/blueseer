@@ -39,8 +39,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
@@ -538,7 +540,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
         try {
 
-            DecimalFormat df = new DecimalFormat("#0.0000");
+            DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -583,7 +585,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
     }
       
     public void setData() {
-         DecimalFormat df = new DecimalFormat("#0.0000");
+         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = OVData.getPartPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
@@ -883,7 +885,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
                     tbkey.getText() + "'" +
                     " and vpr_type = " + "'LIST'" +

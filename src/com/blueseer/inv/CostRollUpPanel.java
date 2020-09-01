@@ -47,6 +47,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import java.awt.Color;
 import java.math.RoundingMode;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.tree.TreeNode;
 
 /**
@@ -84,7 +86,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         costs = OVData.getItemCostStdElements(tbitem.getText(), "standard", thissite);
        
         calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("#.0000"); 
+        DecimalFormat df = new DecimalFormat("#.0000", new DecimalFormatSymbols(Locale.US)); 
         ArrayList<Double> costcur = new ArrayList<Double>();
         costcur = cur.getTotalCostElements(tbitem.getText());
         
@@ -149,7 +151,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         double totovh = 0.0;
         double totout = 0.0;
         String stdtotalcost = "";
-        DecimalFormat df = new DecimalFormat("#.00000"); 
+        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         df.setRoundingMode(RoundingMode.HALF_UP);
           for (String cost : costs) {
               String[] elements = cost.split(",", -1);

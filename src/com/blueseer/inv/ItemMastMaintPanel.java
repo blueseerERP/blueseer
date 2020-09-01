@@ -43,9 +43,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.PrintException;
@@ -412,6 +414,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         setComponentDefaultValues();
         btnew.setEnabled(true);
         btitembrowse.setEnabled(true);
+        btdescbrowse.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -440,8 +443,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 String type = "";
                 String code = "";
                 String prodcode = "";
-                DecimalFormat df = new DecimalFormat("0.00000");
-                
+                DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
                 proceed = validateInput("addRecord");
                 
                 if (proceed) {
@@ -580,7 +582,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
      String[] m = new String[2];
       try {
             boolean proceed = true;
-            DecimalFormat df = new DecimalFormat("0.00000");
+            DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));    
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -749,8 +751,8 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 double out = 0.00;
                 double tot = 0.00;
                 
-                DecimalFormat df = new DecimalFormat("0.00000"); 
-                
+                DecimalFormat df = new DecimalFormat("0.00000" , new DecimalFormatSymbols(Locale.US));
+                 
                     res = st.executeQuery("SELECT * from item_mstr left outer join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = it_site " +
                             " where it_item = " + "'" + 
                             x[0] + "'" + ";");
@@ -855,7 +857,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
              
        Double opcost = 0.00;
        Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.####"); 
+       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -966,7 +968,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
        Double lastovh = 0.00;
        Double lastsvc = 0.00;
        
-       DecimalFormat df = new DecimalFormat("#.####"); 
+       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -1077,7 +1079,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
       
     public void getcurrentcost(String parentpart) {
                 calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("0.00000"); 
+        DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(tbkey.getText());
      tbmtlcur.setText(df.format(costlist.get(0)));
@@ -1108,7 +1110,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     }
        
     public DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
-           DecimalFormat df = new DecimalFormat("0.00000");
+           DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
@@ -1134,7 +1136,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
      }
       
     public DefaultMutableTreeNode get_nodes_op(String mypart)  {
-        DecimalFormat df = new DecimalFormat("0.00000"); 
+        DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();

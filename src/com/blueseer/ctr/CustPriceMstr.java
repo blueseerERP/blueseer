@@ -42,6 +42,8 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import bsmf.MainFrame; 
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -66,7 +68,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
         initvars(null);
         try {
 
-            DecimalFormat df = new DecimalFormat("#0.0000");
+            DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -256,7 +258,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
     }
     
     public void setData() {
-         DecimalFormat df = new DecimalFormat("#0.0000");
+         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = OVData.getPartPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
@@ -963,7 +965,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
               res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode_disc.getSelectedItem().toString() + "'" +
                       " and cpr_type = " + "'DISCOUNT'" +
@@ -1040,7 +1042,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 String[] str = pricelist.getSelectedValue().toString().split(":", -1);
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
               res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode.getSelectedItem().toString() + "'" +
                       " and cpr_type = " + "'LIST'" +

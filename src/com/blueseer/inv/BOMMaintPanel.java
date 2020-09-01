@@ -39,8 +39,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Locale;
 import javax.swing.DefaultListModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -169,7 +171,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     }
     
     public void establishParent(String item) {
-        DecimalFormat df5 = new DecimalFormat("#.00000"); 
+        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
           boolean validItem =  OVData.isValidItem(item);
             boolean hasRouting =  getRouting(item);
              if (validItem && hasRouting) {
@@ -202,7 +204,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     
     public void getCurrentCost(String parent) {
                 calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("#.00000"); 
+        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(parent);
      
@@ -211,7 +213,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     }
     
     public void callSimulateCost() {
-        DecimalFormat df = new DecimalFormat("#.00000"); 
+        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         double pph = 0.00;
         double pps = 0.00;
         if (Double.valueOf(tbpphsim.getText()) != 0) {
@@ -293,7 +295,7 @@ public void getComponents(String parent) {
         
          
        String site = OVData.getItemSite(parent);
-       DecimalFormat df = new DecimalFormat("#.00000"); 
+       DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
        double matlcost = 0.00;
        tbtotmaterial.setText(String.valueOf(matlcost));
         try {
@@ -346,7 +348,7 @@ public void getComponents(String parent) {
     }
     
 public void getComponentDetail(String component) {
-        DecimalFormat df5 = new DecimalFormat("#.00000"); 
+        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         tbcomptype.setText("");
         lblcomp.setText("");
         tbcompcost.setText("");
@@ -387,7 +389,7 @@ public void getComponentDetail(String component) {
    
     
 public void setcomponentattributes(String parent, String component, String op) {
-       DecimalFormat df5 = new DecimalFormat("#.00000");
+       DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));
           tbqtyper.setText("");
           tbref.setText("");
         
@@ -1296,8 +1298,8 @@ public void bind_tree(String parentpart) {
      //   Integer level = level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)jTree1.getLastSelectedPathComponent());
      //   bsmf.MainFrame.show("Level:" + level);
      
-     DecimalFormat df = new DecimalFormat("#"); 
-     DecimalFormat df2 = new DecimalFormat("#.00"); 
+     DecimalFormat df = new DecimalFormat("#", new DecimalFormatSymbols(Locale.US)); 
+     DecimalFormat df2 = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US)); 
      
             tbrunrate.setText("");
             tbsetuprate.setText("");

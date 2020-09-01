@@ -244,6 +244,8 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            setComponentDefaultValues();
            btnew.setEnabled(true);
            btcustcodebrowse.setEnabled(true);
+           btcustzipbrowse.setEnabled(true);
+           btcustnamebrowse.setEnabled(true);
            tbkey.requestFocus();
        
         

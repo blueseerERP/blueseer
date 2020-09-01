@@ -62,7 +62,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -609,7 +611,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 int d = 0;
                 String order = "";
@@ -726,7 +728,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }
     
     public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
              dol = dol + ( Double.valueOf(tabledetail.getValueAt(j, 4).toString()) * Double.valueOf(tabledetail.getValueAt(j, 5).toString()) ); 

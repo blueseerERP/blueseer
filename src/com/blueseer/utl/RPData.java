@@ -37,6 +37,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -665,7 +667,7 @@ public class RPData {
        } 
     
     public static DefaultTableModel getShipperBrowse(String from, String to) {
-           DecimalFormat df = new DecimalFormat("#.00");
+           DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
                // df.setMinimumFractionDigits(2);
                // df.setMaximumFractionDigits(2);
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

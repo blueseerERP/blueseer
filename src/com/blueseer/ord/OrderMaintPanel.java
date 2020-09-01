@@ -38,10 +38,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,7 +78,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 boolean custitemonly = true;
                 boolean autoallocate = false;
                 
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
                 
@@ -599,6 +601,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btordnbrbrowse.setEnabled(true);
+        btordpobrowse.setEnabled(true);
+        btordduebrowse.setEnabled(true);
+        btorddatebrowse.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
             executeTask("get", arg);
@@ -1413,7 +1418,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void setPrice() {
         String[] TypeAndPrice = new String[]{"","0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 
                 TypeAndPrice = OVData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
@@ -1554,7 +1559,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;
@@ -1604,7 +1609,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void retotal() {
         
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;

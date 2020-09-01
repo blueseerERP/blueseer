@@ -50,6 +50,8 @@ import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import com.blueseer.utl.IBlueSeer;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 /**
@@ -69,7 +71,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      String blanket = "";
      String status = "";
       boolean venditemonly = true;  
-     DecimalFormat df = new DecimalFormat("#0.0000");
+     DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
      
      // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -735,7 +737,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
      // additional functions
     public void setPrice() {
-         DecimalFormat df = new DecimalFormat("#0.0000");
+         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 String[] TypeAndPrice = OVData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
@@ -840,7 +842,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.0000");
+        DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
         
         if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
             netprice.setText(listprice.getText());
@@ -884,7 +886,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
              dol = dol + ( Double.valueOf(orddet.getValueAt(j, 4).toString()) * Double.valueOf(orddet.getValueAt(j, 8).toString()) ); 
@@ -939,7 +941,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
      public void retotal() {
         
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;
