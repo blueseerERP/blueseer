@@ -53,6 +53,8 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -324,7 +326,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);

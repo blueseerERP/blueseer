@@ -69,6 +69,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.DTData;
 import static com.blueseer.utl.ReportPanel.TableReport;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -172,7 +174,7 @@ public class ForecastBrowsePanel extends javax.swing.JPanel {
       
          modeltrans.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         
         try {

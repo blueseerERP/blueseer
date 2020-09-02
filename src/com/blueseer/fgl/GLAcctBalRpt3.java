@@ -63,8 +63,10 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -219,7 +221,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -486,7 +488,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -658,7 +660,7 @@ try {
     }//GEN-LAST:event_bthidechartActionPerformed
 
     private void ddsumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsumActionPerformed
-       DecimalFormat df = new DecimalFormat("#0.00");
+       DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         double amt = 0.00;
         for (int i = 0 ; i < tablereport.getRowCount() ; i++) {
                amt += Double.valueOf(tablereport.getValueAt(i, Integer.valueOf(ddsum.getSelectedItem().toString()) + 2).toString());

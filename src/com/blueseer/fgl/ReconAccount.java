@@ -69,10 +69,12 @@ import static bsmf.MainFrame.user;
 import com.blueseer.prd.ProdSchedPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -303,7 +305,7 @@ public class ReconAccount extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -371,7 +373,7 @@ public class ReconAccount extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -412,7 +414,7 @@ public class ReconAccount extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
          double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -454,7 +456,7 @@ public class ReconAccount extends javax.swing.JPanel {
     
     public Double sumtoggle () {
         double x = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
             //  if (mymodel.getValueAt(i, 10).toString().equals("open") && (boolean) mymodel.getValueAt(i, 9)) {
                  if ((boolean) mymodel.getValueAt(i, 9)) {
@@ -466,7 +468,7 @@ public class ReconAccount extends javax.swing.JPanel {
     }
     
     public void sumAll(double x) {
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         double stendbal = 0.00;
         double prevGLBalance = 0.00;
         double diff = 0.00;
@@ -503,7 +505,7 @@ public class ReconAccount extends javax.swing.JPanel {
             try {
                 
               double x = 0.00;
-              DecimalFormat df = new DecimalFormat("#0.00");
+              DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
               for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 9) ) {
                      st.executeUpdate("update gl_hist set glh_recon = " + "'" + '1' + "'" 
@@ -964,7 +966,7 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
@@ -1105,7 +1107,7 @@ try {
     }//GEN-LAST:event_cbtoggleActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             
                 if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
                     bsmf.MainFrame.show("Statement Balance is zero");

@@ -72,9 +72,11 @@ import com.blueseer.prd.ProdSchedPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
+import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -261,7 +263,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
         
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 

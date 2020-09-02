@@ -76,7 +76,9 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 
 /**
@@ -617,7 +619,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                  Integer[] values = new Integer[13];
                  double diff = 0.0;
                  
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 int days = 0;
                 if (! tbdays.getText().isEmpty()) {

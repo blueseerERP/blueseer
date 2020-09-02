@@ -37,7 +37,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -455,7 +457,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
                 double runhours = 0.00;
                 double setuphours = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00000");
+                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                  if (x == null && x.length < 1) { return new String[]{}; };
                  
@@ -780,7 +782,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
                 double runhours = 0.00;
                 double setuphours = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00000");
+                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'"  + " AND " +
                         " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
@@ -836,7 +838,7 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
-        DecimalFormat df = new DecimalFormat("#0.00000");
+        DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
         if (! tbrunhoursinverted.getText().isEmpty() && Double.valueOf(tbrunhoursinverted.getText()) > 0)
         tbrunhours.setText(df.format(1 / Double.valueOf(tbrunhoursinverted.getText())));
         else

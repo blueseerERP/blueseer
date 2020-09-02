@@ -80,7 +80,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.ReportPanel.TableReport;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -247,7 +249,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -318,7 +320,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -357,7 +359,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -466,7 +468,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -538,7 +540,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -619,7 +621,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -705,7 +707,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                 try {
                     Statement st = con.createStatement();
@@ -786,7 +788,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -901,7 +903,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -973,7 +975,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -1014,7 +1016,7 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("$ #,##0.00");
+                DecimalFormat df = new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US));
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");            
                 res = st.executeQuery("select ar_cust, sum(ar_amt) as 'sum' from ar_mstr " +
                     " where ar_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
@@ -1045,7 +1047,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -1266,7 +1268,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1364,7 +1366,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -1427,7 +1429,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -1490,7 +1492,7 @@ public class ChartView extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -1528,7 +1530,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1794,7 +1796,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1863,7 +1865,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1932,7 +1934,7 @@ public class ChartView extends javax.swing.JPanel {
                 con = DriverManager.getConnection(url + db, user, pass);
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 try {
                     Statement st = con.createStatement();
                     ResultSet res = null;

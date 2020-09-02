@@ -40,6 +40,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -250,7 +252,7 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
 
               

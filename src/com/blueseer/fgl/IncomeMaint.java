@@ -84,6 +84,8 @@ import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -322,7 +324,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] setAction(int i) {
         String[] m = new String[2];
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
@@ -415,7 +417,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean proceed = true;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00"); 
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
                 
                 
                 actamt = Double.valueOf(tbamt.getText());

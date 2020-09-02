@@ -34,8 +34,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
@@ -74,7 +76,7 @@ public class POSMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                // partnbr.removeAllItems();
                int i = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                
              
               
@@ -142,7 +144,7 @@ public class POSMaint extends javax.swing.JPanel {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         if (tbdisc.getText().isEmpty() || Double.parseDouble(tbdisc.getText().toString()) == 0) {
             tbnetprice.setText(tblistprice.getText());
@@ -802,7 +804,7 @@ public class POSMaint extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
         int line = 0;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         String part = "";
         String custpart = "";
         
@@ -865,7 +867,7 @@ public class POSMaint extends javax.swing.JPanel {
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 clockdate = dfdate.format(now);
                 clocktime = dftime.format(now);
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
        
@@ -976,7 +978,7 @@ public class POSMaint extends javax.swing.JPanel {
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         int[] rows = orddet.getSelectedRows();
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
             if (orddet.getValueAt(i, 10).toString().equals("close") || orddet.getValueAt(i, 10).toString().equals("partial")) {
                 bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
@@ -1041,7 +1043,7 @@ public class POSMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_rbcardActionPerformed
 
     private void tbcashFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcashFocusLost
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         double change = Double.valueOf(tbcash.getText()) - Double.valueOf(tbtotnet.getText());
         tbchange.setText(df.format(change));
         tbcash.setBackground(Color.white);

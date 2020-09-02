@@ -77,6 +77,8 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -346,7 +348,7 @@ public class ProdSchedRpt1 extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         
         try {
@@ -845,7 +847,7 @@ try {
 
                 double amt = 0;
                
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 String fpart = "";
                 String tpart = "";

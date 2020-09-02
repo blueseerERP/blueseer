@@ -115,13 +115,24 @@ public class BOMMaintPanel extends javax.swing.JPanel {
        tbpart.setText("");
        tbpart.setEditable(true);
        tbpart.setForeground(Color.black);    
-        ddcomp.removeAllItems();
+       tbparentcostCUR.setBackground(Color.white); 
+       tbparentcostSTD.setBackground(Color.white);
+       
+       ddcomp.removeAllItems();
         ddop.removeAllItems();
         tbqtyper.setText("");
         tbref.setText("");
         lblcomp.setText("");
         lblparent.setText("");
-        
+        tbtotmaterial.setText("");
+        tbtotoperational.setText("");
+        tbparentcostCUR.setText("");
+        tbparentcostSTD.setText("");
+        tbtotmaterialsim.setText("");
+        tbtotoperationalsim.setText("");
+        tbparentcostsim.setText("");
+        tbcompcost.setText("");
+        tbcomptype.setText("");
         
         tbrunrate.setEditable(false);
         tbsetuprate.setEditable(false);
@@ -180,12 +191,17 @@ public class BOMMaintPanel extends javax.swing.JPanel {
               lblparent.setText(OVData.getItemDesc(item));
               tblotsize.setText(OVData.getItemLotSize(item));
               tbparentcostSTD.setText(String.valueOf(df5.format(OVData.getItemCost(item, "STANDARD", OVData.getDefaultSite()))));
+              tbtotoperational.setText(String.valueOf(df5.format(OVData.getItemOperationalCost(item, "STANDARD", OVData.getDefaultSite()))));
+             
               getComponents(item);
                   getOPs(item);
                   bind_tree(item);
                   getCurrentCost(item);
                   ddcomp.removeItem(tbpart.getText());  // remove parent from component list
                   enableAll();
+                  
+                  
+                  
                   
              } else if (validItem && ! hasRouting) {
                tbpart.setEditable(true);
@@ -200,6 +216,9 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 disableAll();
                 
              }
+             
+             
+             
     }
     
     public void getCurrentCost(String parent) {
@@ -207,39 +226,81 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(parent);
-     
+     double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
      tbparentcostCUR.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
-       
+     double standard = Double.valueOf(tbparentcostSTD.getText());
+     
+     if (current != standard ) {
+             tbparentcostCUR.setBackground(Color.green);
+             tbparentcostSTD.setBackground(Color.yellow);
+         } else {
+            tbparentcostCUR.setBackground(Color.green); 
+            tbparentcostSTD.setBackground(Color.green);
+         }
+     
     }
     
     public void callSimulateCost() {
         DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         double pph = 0.00;
         double pps = 0.00;
-        if (Double.valueOf(tbpphsim.getText()) != 0) {
-            pph = 1 / Double.valueOf(tbpphsim.getText());
+        double pphsim = 0.00;
+        double ppssim = 0.00;
+        
+        double runratesim = 0.00;
+        double setupratesim = 0.00;
+        double burdenratesim = 0.00;
+        double crewsizesim = 0.00;
+        double setupsizesim = 0.00;
+        double lotsizesim = 0.00;
+        
+        if (! tbpphsim.getText().isEmpty())
+        pphsim = Double.valueOf(tbpphsim.getText());
+        
+        if (! tbppssim.getText().isEmpty())
+        ppssim = Double.valueOf(tbppssim.getText());
+        
+        if (! tbrunratesim.getText().isEmpty())
+        runratesim = Double.valueOf(tbrunratesim.getText());
+        if (! tbsetupratesim.getText().isEmpty())
+        setupratesim = Double.valueOf(tbsetupratesim.getText());
+        if (! tbburdenratesim.getText().isEmpty())
+        burdenratesim = Double.valueOf(tbburdenratesim.getText());
+        if (! tbcrewsizesim.getText().isEmpty())
+        crewsizesim = Double.valueOf(tbcrewsizesim.getText());
+        if (! tbsetupsizesim.getText().isEmpty())
+        setupsizesim = Double.valueOf(tbsetupsizesim.getText());
+        if (! tblotsize.getText().isEmpty())
+        lotsizesim = Double.valueOf(tblotsize.getText());
+        
+        
+        if (pphsim != 0) {
+            pph = 1 / pphsim;
         }
-        if (Double.valueOf(tbppssim.getText()) != 0) {
-            pps = 1 / Double.valueOf(tbppssim.getText());
+        if (ppssim != 0) {
+            pps = 1 / ppssim;
         }
         Object o = jTree1.getLastSelectedPathComponent();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
-      //  bsmf.MainFrame.show(pph + "/" + pps);
+      
         double totalcost = 0.00;
+        if (node != null) {
+            
         totalcost = OVData.simulateCost("", 
                 tbpart.getText(), 
                 node.toString(), 
-                Double.valueOf(tbrunratesim.getText()), 
-                Double.valueOf(tbsetupratesim.getText()),
-                Double.valueOf(tbburdenratesim.getText()),
+                runratesim, 
+                setupratesim,
+                burdenratesim,
                 pph,
                 pps,
-                Double.valueOf(tbcrewsizesim.getText()),
-                Double.valueOf(tbsetupsizesim.getText()),
-                Double.valueOf(tblotsize.getText()),
+                crewsizesim,
+                setupsizesim,
+                lotsizesim,
                 false
         );
-        
+        }
+       // bsmf.MainFrame.show(String.valueOf(totalcost));
         // now add material
         double matl = 0.00;
         for (int j = 0; j < matltable.getRowCount(); j++) {
@@ -1174,6 +1235,7 @@ public void bind_tree(String parentpart) {
                         bsmf.MainFrame.show("Added BOM Record");
                         bind_tree(tbpart.getText());
                         getComponents(tbpart.getText());
+                        getCurrentCost(tbpart.getText().toString());
                     } else {
                         bsmf.MainFrame.show("BOM Record Already Exists");
                     }
@@ -1210,6 +1272,7 @@ public void bind_tree(String parentpart) {
                     bsmf.MainFrame.show("deleted BOM record");
                     bind_tree(tbpart.getText());
                     getComponents(tbpart.getText());
+                    getCurrentCost(tbpart.getText().toString());
                     
                     }
                 } catch (SQLException s) {
@@ -1264,6 +1327,7 @@ public void bind_tree(String parentpart) {
                     bsmf.MainFrame.show("Updated BOM Record");
                     bind_tree(tbpart.getText());
                     getComponents(tbpart.getText());
+                    getCurrentCost(tbpart.getText().toString());
                 } 
          
             } catch (SQLException s) {

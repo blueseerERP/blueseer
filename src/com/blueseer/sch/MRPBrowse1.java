@@ -37,6 +37,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -94,7 +96,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
       
          
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          
           ArrayList<String> parents = new ArrayList<String>();
         parents = OVData.getpsmstrparents2(part);
@@ -170,7 +172,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
       
        
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          String status = "";
          
          Enumeration<TableColumn> en = tabledetail.getColumnModel().getColumns();
@@ -238,7 +240,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
       
        
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          
          
          
@@ -296,7 +298,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                  
        Double opcost = 0.00;
        Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.####"); 
+       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);

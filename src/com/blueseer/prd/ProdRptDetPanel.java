@@ -60,7 +60,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.OVData;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  *
@@ -308,14 +310,15 @@ public class ProdRptDetPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel4)
                                 .addComponent(toPart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fromCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btRun)
                                 .addComponent(btexport)
                                 .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel10)))
+                                .addComponent(jLabel10))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(fromCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(toCell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -361,7 +364,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 int i = 0;
                 String frompart = "";
@@ -487,7 +490,7 @@ try {
          int i = 0;
            int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 String frompart = "";
                 String topart = "";
                 String fromcell = "";

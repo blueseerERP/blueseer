@@ -83,6 +83,8 @@ import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -356,7 +358,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    
-                   DecimalFormat df = new DecimalFormat("#0.00");
+                   DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                    tbactualamt.setText(df.format(actamt));
                    tbcontrolamt.setText(df.format(actamt));
         } else {
@@ -452,7 +454,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                
                 
                 String basecurr = OVData.getDefaultCurrency();
@@ -736,7 +738,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     public void getreferences(String cust) {
         referencemodel.setRowCount(0);
         try {
-            DecimalFormat df = new DecimalFormat("#0.00");  
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));  
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             Statement st = bsmf.MainFrame.con.createStatement();
@@ -852,7 +854,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
      public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;
@@ -1238,7 +1240,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
-        DecimalFormat df = new DecimalFormat("#0.00"); 
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
               
        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
@@ -1299,7 +1301,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
-          DecimalFormat df = new DecimalFormat("#0.00");  
+          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));  
         for (int i = 0; i < referencedet.getRowCount(); i++) {
             actamt += Double.valueOf(referencedet.getModel().getValueAt(i,5).toString());
             

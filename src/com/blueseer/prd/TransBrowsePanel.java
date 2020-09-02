@@ -63,6 +63,8 @@ import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 
@@ -339,7 +341,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 String frompart = "";
                 String topart = "";

@@ -53,6 +53,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.IBlueSeer;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -765,7 +767,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
           jtpEarnings.setContentType("text/html");
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -868,7 +870,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
           StyleConstants.setForeground(keyWord, Color.RED);
           StyleConstants.setBackground(keyWord, Color.YELLOW);
           StyleConstants.setBold(keyWord, true);
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          double empexception = 0.00;
         
         try {
@@ -945,7 +947,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
          double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 

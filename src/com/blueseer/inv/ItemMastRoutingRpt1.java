@@ -32,6 +32,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -154,7 +156,7 @@ public class ItemMastRoutingRpt1 extends javax.swing.JPanel {
 
        Double opcost = 0.00;
        Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.#####"); 
+       DecimalFormat df = new DecimalFormat("#.#####", new DecimalFormatSymbols(Locale.US)); 
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);

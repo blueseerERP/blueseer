@@ -81,6 +81,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -819,7 +821,7 @@ try {
 
                 double amt = 0;
                
-                DecimalFormat df = new DecimalFormat("###,###,###.##");
+                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 String fpart = "";
                 String tpart = "";

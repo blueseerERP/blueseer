@@ -75,9 +75,11 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
@@ -419,7 +421,7 @@ public class PayRollMaint extends javax.swing.JPanel {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
           jtpEarnings.setContentType("text/html");
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -487,7 +489,7 @@ public class PayRollMaint extends javax.swing.JPanel {
           StyleConstants.setForeground(keyWord, Color.RED);
           StyleConstants.setBackground(keyWord, Color.YELLOW);
           StyleConstants.setBold(keyWord, true);
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          double empexception = 0.00;
         
         try {
@@ -575,7 +577,7 @@ public class PayRollMaint extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
          double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -643,7 +645,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                    double amount = 0.00;
                    tbid.setText(batch);
@@ -702,7 +704,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdatetm = new SimpleDateFormat("yyMMddhhmm");
                 DateFormat dfdate = new SimpleDateFormat("yyMMdd");
@@ -1394,7 +1396,7 @@ public class PayRollMaint extends javax.swing.JPanel {
          // if lastdayofmonth >= today and less than nowplus7   --- monthly
          // if 15th >= today and less than nowplus7  --- midmonth
          
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         mymodel.setRowCount(0);
          try{
             Class.forName(driver).newInstance();

@@ -52,6 +52,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -77,7 +79,7 @@ public class GLTranMaint extends javax.swing.JPanel {
 };
     
     public void tallyamount() {
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         double amt = 0.00;
         positiveamt = 0.00;
         for (int i = 0; i < transtable.getRowCount(); i++) {
@@ -222,7 +224,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public void getGLTran(String refid) {
         try {
-            DecimalFormat df = new DecimalFormat("#0.00");
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             
@@ -679,7 +681,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 String nextstartdate = "";
                 Double amt = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 
                 if (  Double.compare(Double.valueOf(tbcontrolamt.getText().toString()), positiveamt) != 0 ) {
                     proceed = false;
@@ -831,7 +833,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         String prodline = "";
         String status = "";
         String op = "";
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         transtable.setModel(transmodel);
         
          if (tbdesc.getText().isEmpty()) {

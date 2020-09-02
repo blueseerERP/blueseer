@@ -80,6 +80,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 /**
@@ -326,7 +328,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
       public void getreceiverinfo(String myreceiver) {
         
         try {
-            DecimalFormat df = new DecimalFormat("#0.00");
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
@@ -365,7 +367,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
        public void getvoucherinfo(String voucher) {
         
         try {
-            DecimalFormat df = new DecimalFormat("#0.00");
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
@@ -828,7 +830,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
        // receiverdet  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
@@ -881,7 +883,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddvend.getSelectedItem().toString());
                     
                                         
@@ -1060,7 +1062,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = voucherdet.getSelectedRows();
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
             bsmf.MainFrame.show("Removing row " + i);
              actamt -= Double.valueOf(voucherdet.getModel().getValueAt(i,3).toString()) * Double.valueOf(voucherdet.getModel().getValueAt(i,4).toString());
@@ -1164,7 +1166,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ddpoActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
-          DecimalFormat df = new DecimalFormat("#0.00");
+          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         for (int i = 0; i < receiverdet.getRowCount(); i++) {
             actamt += Double.valueOf(receiverdet.getModel().getValueAt(i,3).toString()) * Double.valueOf(receiverdet.getModel().getValueAt(i,6).toString());
             

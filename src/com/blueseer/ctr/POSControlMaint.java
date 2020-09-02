@@ -36,7 +36,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  *
@@ -55,7 +57,7 @@ public class POSControlMaint extends javax.swing.JPanel {
 
     
      public void getcontrol() {
-          DecimalFormat df = new DecimalFormat("#0.00");   
+          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
          try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -230,7 +232,7 @@ public class POSControlMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void taxpercentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_taxpercentFocusLost
-        DecimalFormat df = new DecimalFormat("#0.00");
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         if (! taxpercent.getText().isEmpty()) {
         double taxpct = Double.valueOf(taxpercent.getText());
         taxpercent.setText(df.format(taxpct));

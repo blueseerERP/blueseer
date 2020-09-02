@@ -47,6 +47,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -660,7 +662,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00");   
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 
                      
                     if (proceed) {
@@ -741,7 +743,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
         String status = "";
         String op = "";
         transtable.setModel(transmodel);
-         DecimalFormat df = new DecimalFormat("#0.00"); 
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
          double amt = 0.00;
       
         if (! BlueSeerUtils.isMoneyFormat(tbamt.getText())) {

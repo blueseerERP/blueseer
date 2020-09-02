@@ -35,8 +35,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  *
@@ -347,7 +349,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         String op = "";
         double qty = 0;
         double totalcost = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         String loc = "";
         String wh = "";

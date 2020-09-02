@@ -34,8 +34,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -294,7 +296,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
         ArrayList<String> mylist = new ArrayList<String>();
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         String[] ac = null;
         double total = 0.00;
         mylist = OVData.getGLBalByYearByPeriod(Integer.valueOf(ddfromyear.getSelectedItem().toString()), Integer.valueOf(ddtoyear.getSelectedItem().toString()), Integer.valueOf(ddfromper.getSelectedItem().toString()), Integer.valueOf(ddtoper.getSelectedItem().toString()), ddsite.getSelectedItem().toString(), cbzero.isSelected(), cbbs.isSelected());

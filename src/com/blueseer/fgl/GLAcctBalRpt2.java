@@ -66,6 +66,8 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -161,7 +163,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -214,7 +216,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -651,7 +653,7 @@ try {
                 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int j = 0;
                
                mymodel.setNumRows(0);

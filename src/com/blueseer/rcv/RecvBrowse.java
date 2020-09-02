@@ -68,6 +68,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 
 /**
@@ -128,7 +130,7 @@ public class RecvBrowse extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         
         try {
@@ -449,7 +451,7 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);

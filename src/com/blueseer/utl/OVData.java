@@ -9799,6 +9799,38 @@ public class OVData {
         
     }
          
+         public static Double getItemOperationalCost(String item, String set, String site) {
+          double cost = 0.00; 
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                
+                res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+                        + " itc_set = " + "'" + set + "'" + " AND "
+                        + " itc_site = " + "'" + site + "'" + ";" );
+               while (res.next()) {
+                   cost += res.getDouble("itc_lbr_top") + 
+                           res.getDouble("itc_bdn_top") +
+                           res.getDouble("itc_ovh_top") +
+                           res.getDouble("itc_out_top");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return cost;
+        
+    }
+           
           public static Double getItemMtlCostStd(String item, String set, String site) {
            Double cost = 0.00;
          try{
@@ -11975,7 +12007,7 @@ public class OVData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot roll cost");
+                 bsmf.MainFrame.show("Cannot simulate cost");
             }
             con.close();
         }

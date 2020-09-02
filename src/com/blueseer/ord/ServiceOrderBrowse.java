@@ -71,9 +71,11 @@ import static bsmf.MainFrame.user;
 import com.blueseer.prd.ProdSchedPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -219,7 +221,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -290,7 +292,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00"), new DecimalFormat("0%"));
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
         plot.setLabelGenerator(gen);
 
         try {
@@ -331,7 +333,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
          double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
+         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -701,7 +703,7 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00");
+                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";

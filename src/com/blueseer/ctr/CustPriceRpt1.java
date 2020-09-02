@@ -47,6 +47,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import bsmf.MainFrame;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -273,7 +275,7 @@ public class CustPriceRpt1 extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000");
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
 
                
