@@ -5617,7 +5617,7 @@ public class OVData {
         
     }
        
-       public static String getEDICustDir(String billto, String doctype, String dir) {
+       public static String getEDICustDir(String tp, String doctype, String dir) {
       
            String mystring = "";
         try{
@@ -5627,7 +5627,7 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_filepath from edi_mstr where edi_id = " + "'" + billto + "'" + 
+                res = st.executeQuery("select edi_filepath from edi_mstr where edi_id = " + "'" + tp + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
                         " AND edi_dir = " + "'" + dir + "'" +
                                 ";");

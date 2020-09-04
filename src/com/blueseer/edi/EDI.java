@@ -2072,11 +2072,20 @@ public class EDI {
         // get counter for ediout
         int filenumber = OVData.getNextNbr("ediout");
         
-     
-         String sd = "\n";   // "\n"  or "\u001c"
-         String ed = "*";
-         String ud = ">";
-         
+        String[] defaults = OVData.getEDIOutCustDefaults(in_isa[6].trim(), "997", "0");
+        
+        String sd = "\n";
+        String ed = "*";
+        String ud = ">";
+        if (defaults[7] != null) {
+         sd = delimConvertIntToStr(defaults[7]);  // "\n"  or "\u001c"
+        }
+        if (defaults[6] != null) {
+         ed = delimConvertIntToStr(defaults[6]);
+        } 
+        if (defaults[8] != null) {
+         ud = delimConvertIntToStr(defaults[8]);
+        }
          
        //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
          String filename = "997" + "." + in_isa[6].trim() + "." + String.valueOf(filenumber) + "." + "txt";
@@ -2091,10 +2100,10 @@ public class EDI {
          Date now = new Date();
         
          
-         String isa1 = "00";
-         String isa2 = "          ";
-         String isa3 = "00";
-         String isa4 = "          ";
+         String isa1 = String.format("%2s", in_isa[3]);
+         String isa2 = String.format("%10s", in_isa[4]);
+         String isa3 = String.format("%2s", in_isa[1]);
+         String isa4 = String.format("%10s", in_isa[2]);
          String isa5 = String.format("%2s", in_isa[7]);
          String isa6 = String.format("%-15s", in_isa[8].trim());
          String isa7 = String.format("%2s", in_isa[5]);

@@ -62,6 +62,8 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     
     // global variable declarations
                 boolean isLoad = false;
+                String site = "";
+                String parent = "";
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Comp", "Type", "Op", "QtyPer", "Cost"});
@@ -94,6 +96,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         btadd.setEnabled(false);
         btclear.setEnabled(false);
         btpdf.setEnabled(false);
+        btroll.setEnabled(false);
     }
     
     public void enableAll() {
@@ -107,6 +110,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         btadd.setEnabled(true);
         btclear.setEnabled(true);
         btpdf.setEnabled(true);
+        btroll.setEnabled(true);
     }
     
     public void clearAll() {
@@ -188,15 +192,16 @@ public class BOMMaintPanel extends javax.swing.JPanel {
              if (validItem && hasRouting) {
               tbpart.setEditable(false);
               tbpart.setForeground(Color.blue);
+              site = OVData.getDefaultSite();
+              parent = item;
               lblparent.setText(OVData.getItemDesc(item));
               tblotsize.setText(OVData.getItemLotSize(item));
-              tbparentcostSTD.setText(String.valueOf(df5.format(OVData.getItemCost(item, "STANDARD", OVData.getDefaultSite()))));
-              tbtotoperational.setText(String.valueOf(df5.format(OVData.getItemOperationalCost(item, "STANDARD", OVData.getDefaultSite()))));
-             
+              
               getComponents(item);
                   getOPs(item);
                   bind_tree(item);
-                  getCurrentCost(item);
+                  callSimulateCost();
+                  getCostSets(item);
                   ddcomp.removeItem(tbpart.getText());  // remove parent from component list
                   enableAll();
                   
@@ -221,22 +226,25 @@ public class BOMMaintPanel extends javax.swing.JPanel {
              
     }
     
-    public void getCurrentCost(String parent) {
-                calcCost cur = new calcCost();
+    public void getCostSets(String parent) {
+        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+        tbparentcostSTD.setText(String.valueOf(df5.format(OVData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
+             
+        calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(parent);
-     double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
-     tbparentcostCUR.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
-     double standard = Double.valueOf(tbparentcostSTD.getText());
-     
-     if (current != standard ) {
-             tbparentcostCUR.setBackground(Color.green);
-             tbparentcostSTD.setBackground(Color.yellow);
-         } else {
-            tbparentcostCUR.setBackground(Color.green); 
-            tbparentcostSTD.setBackground(Color.green);
-         }
+        double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
+        tbparentcostCUR.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+        tbtotoperational.setText(df.format(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+        double standard = Double.valueOf(tbparentcostSTD.getText());
+         if (! tbparentcostCUR.getText().equals(tbparentcostSTD.getText())) {
+                 tbparentcostCUR.setBackground(Color.green);
+                 tbparentcostSTD.setBackground(Color.yellow);
+             } else {
+                tbparentcostCUR.setBackground(Color.green); 
+                tbparentcostSTD.setBackground(Color.green);
+             }
      
     }
     
@@ -610,6 +618,7 @@ public void bind_tree(String parentpart) {
         tbtotmaterial = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         tbtotmaterialsim = new javax.swing.JTextField();
+        btroll = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
@@ -957,6 +966,13 @@ public void bind_tree(String parentpart) {
                 .addContainerGap())
         );
 
+        btroll.setText("Roll Cost");
+        btroll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrollActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1016,7 +1032,9 @@ public void bind_tree(String parentpart) {
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btroll)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btpdf)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelete)
@@ -1083,7 +1101,8 @@ public void bind_tree(String parentpart) {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate)
-                    .addComponent(btpdf))
+                    .addComponent(btpdf)
+                    .addComponent(btroll))
                 .addContainerGap())
         );
 
@@ -1235,7 +1254,8 @@ public void bind_tree(String parentpart) {
                         bsmf.MainFrame.show("Added BOM Record");
                         bind_tree(tbpart.getText());
                         getComponents(tbpart.getText());
-                        getCurrentCost(tbpart.getText().toString());
+                        callSimulateCost();
+                        getCostSets(tbpart.getText().toString());
                     } else {
                         bsmf.MainFrame.show("BOM Record Already Exists");
                     }
@@ -1272,7 +1292,7 @@ public void bind_tree(String parentpart) {
                     bsmf.MainFrame.show("deleted BOM record");
                     bind_tree(tbpart.getText());
                     getComponents(tbpart.getText());
-                    getCurrentCost(tbpart.getText().toString());
+                    getCostSets(tbpart.getText().toString());
                     
                     }
                 } catch (SQLException s) {
@@ -1327,7 +1347,9 @@ public void bind_tree(String parentpart) {
                     bsmf.MainFrame.show("Updated BOM Record");
                     bind_tree(tbpart.getText());
                     getComponents(tbpart.getText());
-                    getCurrentCost(tbpart.getText().toString());
+                    callSimulateCost();
+                    getCostSets(tbpart.getText().toString());
+                    
                 } 
          
             } catch (SQLException s) {
@@ -1417,6 +1439,7 @@ public void bind_tree(String parentpart) {
                 tbpphsim.setText(String.valueOf(df.format(pph)));
                 tbppssim.setText(String.valueOf(df.format(pps)));
                 
+                callSimulateCost();
             }
         }
         
@@ -1574,6 +1597,11 @@ public void bind_tree(String parentpart) {
         }
     }//GEN-LAST:event_tbppssimFocusLost
 
+    private void btrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrollActionPerformed
+       OVData.setStandardCosts(site, parent);
+       getCostSets(parent);
+    }//GEN-LAST:event_btrollActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1581,6 +1609,7 @@ public void bind_tree(String parentpart) {
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btpdf;
+    private javax.swing.JButton btroll;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddcomp;
     private javax.swing.JComboBox<String> ddop;

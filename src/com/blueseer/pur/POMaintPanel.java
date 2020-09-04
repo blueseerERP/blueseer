@@ -531,6 +531,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     st.executeUpdate("update po_mstr "
                        + " set po_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
                         + " po_rmks = " + "'" + remarks.getText().replace("'", "''") + "'" + "," 
+                        + " po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","         
                         + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "''") + "'" + "," 
                         + " po_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + "," 
                        + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'"          
@@ -563,7 +564,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + " pod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + " pod_netprice = " + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
                             + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
-                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" 
+                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
+                            + " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'"
                             + " where pod_nbr = " + "'" + x[0] + "'" 
                             + " AND pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
                             + ";");

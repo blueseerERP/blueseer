@@ -63,9 +63,20 @@ public class Generic997o  {
      Date now = new Date();
        
        
-         String sd = "\n";
-         String ed = "*";
-         String ud = ">";
+         String[] defaults = OVData.getEDIOutCustDefaults(_isa[6].trim(), "997", "0");
+        
+        String sd = "\n";
+        String ed = "*";
+        String ud = ">";
+        if (defaults[7] != null) {
+         sd = delimConvertIntToStr(defaults[7]);  // "\n"  or "\u001c"
+        }
+        if (defaults[6] != null) {
+         ed = delimConvertIntToStr(defaults[6]);
+        } 
+        if (defaults[8] != null) {
+         ud = delimConvertIntToStr(defaults[8]);
+        }
          
          int i = 0;
          int segcount = 0;

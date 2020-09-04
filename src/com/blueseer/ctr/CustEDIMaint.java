@@ -568,6 +568,11 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btdeleteattribute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
 
         btaddattribute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddattribute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddattributeActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(listAttributes);
 
@@ -908,6 +913,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
             tbsub.setBackground(Color.white);
         }
     }//GEN-LAST:event_tbsubFocusLost
+
+    private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btaddattributeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

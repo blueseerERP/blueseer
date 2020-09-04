@@ -574,6 +574,9 @@
                   <Image iconType="3" name="/images/add.png"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddattributeActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddattribute">
               <Properties>

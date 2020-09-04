@@ -96,7 +96,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
     
        // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        ProdSchedPanel.MyTableModel mymodel = new ProdSchedPanel.MyTableModel(new Object[][]{},
-                        new String[]{"JobNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print", "Update", "Void"})
+                        new String[]{"PlanNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print", "Update", "Void"})
                {
                       @Override  
                       public Class getColumnClass(int col) {  
