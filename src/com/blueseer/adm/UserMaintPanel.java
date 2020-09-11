@@ -316,7 +316,7 @@ public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         i++;
                     }
                     if (i == 0) {
-                        String passwd = new String(tbpassword.getPassword());
+                    String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
                     st.executeUpdate("insert into user_mstr "
                         + "(user_id, user_site, user_lname, user_fname,"
                         + "user_mname, user_email, user_phone, user_cell, user_rmks, user_passwd) "
@@ -366,7 +366,7 @@ public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    String passwd = new String(tbpassword.getPassword()).replace("'", "''");
+                    String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
                         st.executeUpdate("update user_mstr set "
                                 + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                                 + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
@@ -448,7 +448,7 @@ public class UserMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         tbphone.setText(res.getString("user_phone"));
                         tbcell.setText(res.getString("user_cell"));
                         tarmks.setText(res.getString("user_rmks"));
-                        tbpassword.setText(res.getString("user_passwd"));
+                        tbpassword.setText(bsmf.MainFrame.PassWord("1", res.getString("user_passwd").toCharArray()));
                         ddsite.setSelectedItem(res.getString("user_site"));
                     }
 
