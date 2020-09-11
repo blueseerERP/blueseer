@@ -507,6 +507,16 @@ CREATE TABLE "edi_xref" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edi_attr" (
+  "exa_tpid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "exa_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "eeo_det" (
   "eeod_id" int(11) NOT NULL DEFAULT '0',
   "eeod_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',

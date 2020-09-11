@@ -189,6 +189,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
      
+     String passwd = bsmf.MainFrame.PassWord("0", tbsmtppass.getPassword());
+     
      try {
            
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -239,7 +241,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                             "'" + tbemailserver.getText() + "'" +  "," + "," +
                             "'" + tbemailfrom.getText() + "'" +  "," + 
                             "'" + tbsmtpuser.getText() + "'" +  "," + 
-                            "'" + tbsmtppass.getText() + "'" +        
+                            "'" + passwd + "'" +        
                             ")" + ";");                  
                           m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                     } else {
@@ -260,7 +262,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                             " ov_email_server = " + "'" + tbemailserver.getText() + "'" + "," +
                             " ov_email_from = " + "'" + tbemailfrom.getText() + "'" + "," +
                             " ov_smtpauthuser = " + "'" + tbsmtpuser.getText() + "'" + "," +
-                            " ov_smtpauthpass = " + "'" + tbsmtppass.getText() + "'" +        
+                            " ov_smtpauthpass = " + "'" + passwd + "'" +        
                             ";");   
                     }
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -306,7 +308,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         tbemailserver.setText(res.getString("ov_email_server"));
                         tbemailfrom.setText(res.getString("ov_email_from"));
                         tbsmtpuser.setText(res.getString("ov_smtpauthuser"));
-                        tbsmtppass.setText(res.getString("ov_smtpauthpass"));
+                        tbsmtppass.setText(bsmf.MainFrame.PassWord("1", res.getString("ov_smtpauthpass").toCharArray()));
                         tbimagedir.setText(res.getString("ov_image_directory"));
                         tbtempdir.setText(res.getString("ov_temp_directory"));
                         tblabeldir.setText(res.getString("ov_label_directory"));
@@ -389,9 +391,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         tbsmtpuser = new javax.swing.JTextField();
-        tbsmtppass = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        tbsmtppass = new javax.swing.JPasswordField();
         panelCopySite = new javax.swing.JPanel();
         tbtosite = new javax.swing.JTextField();
         ddfromsite = new javax.swing.JComboBox<>();
@@ -494,7 +496,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbedidir, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                    .addComponent(tbedidir, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                     .addComponent(tbjasperdir)
                     .addComponent(tblabeldir)
                     .addComponent(tbtempdir)
@@ -502,9 +504,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(tbemailserver)
                     .addComponent(tbemailfrom)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tbsmtppass, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                            .addComponent(tbsmtpuser))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbsmtpuser, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(tbsmtppass))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -526,8 +528,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbsmtppass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
+                    .addComponent(jLabel14)
+                    .addComponent(tbsmtppass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbimagedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -741,7 +743,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JTextField tblabeldir;
     private javax.swing.JTextField tblocale;
     private javax.swing.JTextField tbrcolor;
-    private javax.swing.JTextField tbsmtppass;
+    private javax.swing.JPasswordField tbsmtppass;
     private javax.swing.JTextField tbsmtpuser;
     private javax.swing.JTextField tbtempdir;
     private javax.swing.JTextField tbtosite;

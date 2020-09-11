@@ -36,6 +36,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -43,6 +44,8 @@ import java.util.ArrayList;
  */
 public class CustEDIMaint extends javax.swing.JPanel {
 
+    DefaultListModel listmodel = new DefaultListModel();
+    
     /**
      * Creates new form CarrierMaintPanel
      */
@@ -50,7 +53,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         initComponents();
     }
 
-     public boolean isFile(String myfile) {
+    public boolean isFile(String myfile) {
          // lets check and see if class exists in package
        boolean isgood = false;
        
@@ -111,6 +114,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 
                 if (i > 0) {
                    enableAll();
+                   getAttributes(code, doctype, dir);
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
@@ -124,12 +128,20 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
     }
     
+     public void getAttributes(String code, String doctype, String dir) {
+        listmodel.removeAllElements();
+        ArrayList<String> list = OVData.getEDIAttributesList(code, doctype, dir);
+        for (String x : list) {
+            listmodel.addElement(x);
+        }
+    }
+    
     public void clearAll() {
        
         buttonGroup1.add(rbin);
         buttonGroup1.add(rbout);
         
-        
+        listAttributes.setModel(listmodel);
         
         dddoc.removeAllItems();
         ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
@@ -153,6 +165,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbfileprefix.setText("");
         tbfilesuffix.setText("");
         tbkey.setText("");
+        tbattributekey.setText("");
+        tbattributevalue.setText("");
+        
     }
     
     public void enableAll() {
@@ -161,6 +176,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btupdate.setEnabled(true);
         btdelete.setEnabled(true);
         btbrowse.setEnabled(true);
+        btdeleteattribute.setEnabled(true);
+        btaddattribute.setEnabled(true);
         tbisa.setEnabled(true);
         tbisaq.setEnabled(true);
         tbgs.setEnabled(true);
@@ -180,6 +197,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbkey.setEnabled(true);
         rbin.setEnabled(true);
         rbout.setEnabled(true);
+        tbattributekey.setEnabled(true);
+        tbattributevalue.setEnabled(true);
     }
     
     public void disableAll() {
@@ -188,6 +207,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
         btbrowse.setEnabled(false);
+        btdeleteattribute.setEnabled(false);
+        btaddattribute.setEnabled(false);
         tbisa.setEnabled(false);
         tbisaq.setEnabled(false);
         tbgs.setEnabled(false);
@@ -207,9 +228,11 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbkey.setEnabled(false);
          rbin.setEnabled(false);
         rbout.setEnabled(false);
+        tbattributekey.setEnabled(false);
+        tbattributevalue.setEnabled(false);
     }
     
-      public void initvars(String[] arg) {
+    public void initvars(String[] arg) {
         
        clearAll();
        disableAll();
@@ -282,10 +305,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         btdeleteattribute = new javax.swing.JButton();
         btaddattribute = new javax.swing.JButton();
-        ddattribute = new javax.swing.JComboBox<>();
         tbattributevalue = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         listAttributes = new javax.swing.JList<>();
+        tbattributekey = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -566,6 +589,11 @@ public class CustEDIMaint extends javax.swing.JPanel {
         );
 
         btdeleteattribute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeleteattribute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteattributeActionPerformed(evt);
+            }
+        });
 
         btaddattribute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
         btaddattribute.addActionListener(new java.awt.event.ActionListener() {
@@ -582,22 +610,25 @@ public class CustEDIMaint extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tbattributevalue, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(ddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(btdeleteattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btaddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(tbattributevalue, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(btdeleteattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(tbattributekey))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tbattributekey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -605,7 +636,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     .addComponent(btaddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btdeleteattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -915,8 +946,63 @@ public class CustEDIMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbsubFocusLost
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
-        // TODO add your handling code here:
+        boolean dir = false;
+        if (rbin.isSelected()) {
+                    dir = true;
+                } else {
+                    dir = false;
+                }
+        OVData.addEDIAttributeRecord(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)), tbattributekey.getText(), tbattributevalue.getText());
+        getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)));
+        tbattributekey.setText("");
+        tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
+
+    private void btdeleteattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattributeActionPerformed
+        boolean proceed = true; 
+        
+         boolean dir = false;
+        if (rbin.isSelected()) {
+            dir = true;
+        } else {
+            dir = false;
+        }
+        
+        
+        if (listAttributes.isSelectionEmpty()) {
+            proceed = false;
+            bsmf.MainFrame.show("nothing is selected");
+        } else {
+           proceed = bsmf.MainFrame.warn("Are you sure?");
+        }
+        if (proceed) {
+            String[] z = listAttributes.getSelectedValue().toString().split(":");
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+              
+                   int i = st.executeUpdate("delete from edi_attr where exa_tpid = " + "'" + tbkey.getText() + "'" + 
+                                            " and exa_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                                            " and exa_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'" +
+                                            " and exa_key = " + "'" + z[0].toString() + "'" +
+                                             ";");
+                    if (i > 0) {
+                    bsmf.MainFrame.show("deleted code " + listAttributes.getSelectedValue().toString());
+                    getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)));
+                    }
+                } catch (SQLException s) {
+                    MainFrame.bslog(s);
+                    bsmf.MainFrame.show("Unable to Delete edi_attr Record");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        }
+    }//GEN-LAST:event_btdeleteattributeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -929,7 +1015,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.JButton btupdate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbfa;
-    private javax.swing.JComboBox<String> ddattribute;
     private javax.swing.JComboBox<String> dddoc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -956,6 +1041,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.JList<String> listAttributes;
     private javax.swing.JRadioButton rbin;
     private javax.swing.JRadioButton rbout;
+    private javax.swing.JTextField tbattributekey;
     private javax.swing.JTextField tbattributevalue;
     private javax.swing.JTextField tbelement;
     private javax.swing.JTextField tbfilepath;

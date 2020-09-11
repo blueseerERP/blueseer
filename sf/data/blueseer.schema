@@ -427,6 +427,13 @@ CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_ovaddr` varchar(30) NOT NULL  DEFAULT '',
   `exr_gsid` varchar(15) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `edi_attr` (
+  `exa_tpid` varchar(15) NOT NULL  DEFAULT '',
+  `exa_doc` varchar(10) NOT NULL  DEFAULT '',
+  `exa_dir` tinyint(1) NOT NULL  DEFAULT '0',
+  `exa_key` varchar(50) NOT NULL  DEFAULT '',
+  `exa_value` varchar(50) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `eeo_det` (
   `eeod_id` int(11) NOT NULL DEFAULT '0',
   `eeod_type` varchar(30) NOT NULL  DEFAULT '',

@@ -1301,7 +1301,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btPrintShpActionPerformed
 
     private void btPrintInvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintInvActionPerformed
-       OVData.printInvoice(tbkey.getText());
+       OVData.printInvoice(tbkey.getText(), true);
     }//GEN-LAST:event_btPrintInvActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed

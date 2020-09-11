@@ -313,7 +313,67 @@ public class OVData {
         
     }
      
-      
+    public static String getCustEmail(String cust) {
+        String x = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+            
+                res = st.executeQuery("select cm_email from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+               while (res.next()) {
+                    x = res.getString("cm_email");
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    public static String getCustEmailByInvoice(String invoice) {
+        String x = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+            
+                res = st.executeQuery("select cm_email from cm_mstr " +
+                        " inner join ship_mstr on sh_cust = cm_code " +
+                        " where sh_id = " + "'" + invoice + "'" + ";");
+               while (res.next()) {
+                    x = res.getString("cm_email");
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    
     public static int getNextPO() {
        int mypo = 0;
         try{
@@ -3885,6 +3945,54 @@ public class OVData {
                   return myreturn;
              } 
     
+    public static boolean addEDIAttributeRecord(String tp, String doc, String dir, String key, String value) {
+                 boolean myreturn = true;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                   res =  st.executeQuery("select exa_tpid from edi_attr where " +
+                                           " exa_tpid = " + "'" + tp + "'" + 
+                                           " and exa_doc = " + "'" + doc + "'" +
+                                           " and exa_dir = " + "'" + dir + "'" +
+                                           " and exa_key = " + "'" + key + "'" +
+                                           ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edi_attr " 
+                      + "(exa_tpid, exa_doc, exa_dir, exa_key, exa_value ) " 
+                      + " values ( " + 
+                    "'" +  tp + "'" + "," + 
+                    "'" +  doc + "'" + "," +
+                    "'" +  dir + "'" + "," +  
+                    "'" +  key + "'" + "," + 
+                    "'" +  value + "'" 
+                    +  ");"
+                           );     
+                   }
+                   
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
               
     public static boolean addEDIMstrRecord(ArrayList<String> list) {
                  boolean myreturn = true;
@@ -5540,7 +5648,37 @@ public class OVData {
         return mystring;
         
          }
-      
+    
+    public static ArrayList<String> getEDIAttributesList(String tp, String doctype, String dir) {
+           
+             ArrayList<String> x = new ArrayList<String>();
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                   
+                      res = st.executeQuery("select * from edi_attr where exa_tpid = " + "'" + tp + "'" + 
+                        " AND exa_doc = " + "'" + doctype + "'" + " AND exa_dir = " + "'" + dir + "'" + ";");
+                    while (res.next()) {
+                       x.add(res.getString("exa_key") + ":" + res.getString("exa_value"));
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         }
+        
          public static String[] getEDI997SystemDefaults() {
            
                     
@@ -6565,7 +6703,7 @@ public class OVData {
                return netprice;
            }
      
-           public static String getCodeDescByCode(String key) {
+    public static String getCodeDescByCode(String key) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6593,7 +6731,7 @@ public class OVData {
         
     }
            
-                public static String getCodeValueByCodeKey(String code, String key) {
+    public static String getCodeValueByCodeKey(String code, String key) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6625,41 +6763,7 @@ public class OVData {
     }
         
           
-           public static String[] getSMTPCredentials() {
-         String[] x = new String[4];
-         for (int i = 0; i < x.length; i++) {
-             x[i] = "";
-         }
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select * from ov_ctrl;" );
-               while (res.next()) {
-                x[0] = res.getString("ov_email_server");   
-                x[1] = res.getString("ov_email_from"); 
-                x[2] = res.getString("ov_smtpauthuser"); 
-                x[3] = res.getString("ov_smtpauthpass"); 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-        
-    }
-          
          
-          
             public static String getSystemImageDirectory() {
          String myreturn = "";
          try{
@@ -20036,7 +20140,7 @@ public class OVData {
     }    
      
       
-      public static void exportCSV(JTable tablereport) {
+    public static void exportCSV(JTable tablereport) {
           FileDialog fDialog;
                 fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
                 fDialog.setVisible(true);
@@ -20077,7 +20181,7 @@ public class OVData {
                 
       }
         
-     public static void printPOS_Jasper(String nbr) {
+    public static void printPOS_Jasper(String nbr) {
         try{
              Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -20121,8 +20225,49 @@ public class OVData {
             MainFrame.bslog(e);
         }
     }      
-      
-    public static void printInvoice(String invoice) {
+    
+    public static String[] sendInvoice(String invoice, String site) {
+        String[] m = new String[]{"0","email transmitted"};
+        printInvoice(invoice, false);
+        String siteinfo[] = getSiteAddressArray(site);
+        String filename = "temp/ivprt.pdf";
+        String subject = "Automated communication from " + siteinfo[1];
+        String body = "This is an automated delivery for invoice number: " + invoice + "." + "\n";
+        body += "The attachment contains the details of the invoice in pdf format.";
+        body += "\n\n";
+        body += "Thank you, \n";
+        body += "\n\n";
+        body += siteinfo[1] + "\n";
+        body += siteinfo[2] + "\n";
+        body += siteinfo[5] + ", " + siteinfo[6] + " " + siteinfo[7] + "\n";
+        body += siteinfo[8] + "\n";
+        
+        
+        String custEmail = "";
+        custEmail = getCustEmailByInvoice(invoice);
+        File file = new File("temp/ivprt.pdf");
+        if (file.exists()) {
+            if (custEmail == null || custEmail.isEmpty()) {
+               m[0] = "1";
+               m[1] = "customer email not defined";
+            } else {
+               sendEmail(custEmail, subject, body, filename); 
+            }
+        } else {
+            m[0] = "1";
+            m[1] = "unable to locate attachment file";
+        }
+        return m;
+        
+    }
+    
+    public static void printInvoice(String invoice, boolean display) {
+        
+        File file = new File("temp/ivprt.pdf");
+        if (file.exists()) {
+            file.delete();
+        }
+        
         try{
              Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -20151,8 +20296,6 @@ public class OVData {
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultInvoiceJasper(site);
                 }
-                
-               
                imagepath = "images/" + logo;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
@@ -20167,9 +20310,11 @@ public class OVData {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
+                if (display) {
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
+                }
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -20666,10 +20811,8 @@ public class OVData {
     
     
     public static MimeBodyPart attachmentPart;
-
     
-    
-     public static class SMTPAuthenticator extends javax.mail.Authenticator {
+    public static class SMTPAuthenticator extends javax.mail.Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
            String[] smtpcreds = getSMTPCredentials(); 
            String username = smtpcreds[2];
@@ -20678,90 +20821,155 @@ public class OVData {
         }
     }
     
+    public static String[] getSMTPCredentials() {
+         String[] x = new String[4];
+         for (int i = 0; i < x.length; i++) {
+             x[i] = "";
+         }
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from ov_ctrl;" );
+               while (res.next()) {
+                x[0] = res.getString("ov_email_server");   
+                x[1] = res.getString("ov_email_from"); 
+                x[2] = res.getString("ov_smtpauthuser"); 
+                x[3] = bsmf.MainFrame.PassWord("1", res.getString("ov_smtpauthpass").toCharArray()); 
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+          
+    public static String[] isSMTPServer() {
+        String[] x = new String[]{"0",""};
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from ov_ctrl;" );
+               while (res.next()) {
+                   if (res.getString("ov_email_server").isEmpty()) {
+                    x[0] = "1";
+                    x[1] = "SMTP server not defined";
+                   }
+                   if (res.getString("ov_email_from").isEmpty()) {
+                    x[0] = "1";
+                    x[1] = "From Email not defined";
+                   }
+                   if (res.getString("ov_smtpauthuser").isEmpty()) {
+                    x[0] = "1";
+                    x[1] = "Missing Auth User for SMTP Authetincation";
+                   }
+                   if (res.getString("ov_smtpauthpass").isEmpty()) {
+                    x[0] = "1";
+                    x[1] = "Missing Auth Passwd for SMTP Authetincation";
+                   }
+                     
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
     public static void sendEmail(String to, String subject, String body, String filename) {
 
   // Strings that contain from, to, subject, body and file path to the attachment
 
-  String[] smtpcreds = getSMTPCredentials();
-  String from = smtpcreds[1];
-  String emailserver = smtpcreds[0];
-  
-  
-  if (emailserver.isEmpty() || from.isEmpty()) {
-      return;
-  }
-  // Set smtp properties
+      String[] smtpcreds = getSMTPCredentials();
+      String from = smtpcreds[1];
+      String emailserver = smtpcreds[0];
 
-  Properties properties = new Properties();
 
-  
-// properties.put("mail.smtp.host", "10.17.2.9");
-
- properties.put("mail.smtp.host", emailserver);
- properties.put("mail.smtp.auth", "true");
-  Authenticator auth = new SMTPAuthenticator();
-  Session session = Session.getDefaultInstance(properties, auth);
+      if (emailserver.isEmpty() || from.isEmpty()) {
+          return;
+      }
+      // Set smtp properties
+      Properties properties = new Properties();
+      properties.put("mail.smtp.host", emailserver);
+      properties.put("mail.smtp.auth", "true");
+      properties.put("mail.smtp.starttls.enable", "true");
+      Authenticator auth = new SMTPAuthenticator();
+      Session session = Session.getDefaultInstance(properties, auth);
 
   try {
    
-MimeMessage message = new MimeMessage(session);
+    MimeMessage message = new MimeMessage(session);
 
-message.setFrom(new InternetAddress(from));
+    message.setFrom(new InternetAddress(from));
 
-message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+    message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-message.setSubject(subject);
+    message.setSubject(subject);
 
-message.setSentDate(new Date());
+    message.setSentDate(new Date());
 
 // Set the email body
 
-MimeBodyPart messagePart = new MimeBodyPart();
+    MimeBodyPart messagePart = new MimeBodyPart();
 
-messagePart.setText(body);
+    messagePart.setText(body);
 
 // Set the email attachment file
 
-if (! filename.isEmpty()) {
+    if (! filename.isEmpty()) {
+            attachmentPart = new MimeBodyPart();
+            FileDataSource fileDataSource = new FileDataSource(filename) {
 
-attachmentPart = new MimeBodyPart();
+                @Override
 
-FileDataSource fileDataSource = new FileDataSource(filename) {
+                public String getContentType() {
 
-    @Override
+              return "application/octet-stream";
 
-    public String getContentType() {
+                }
 
-  return "application/octet-stream";
-
+            };
+            attachmentPart.setDataHandler(new DataHandler(fileDataSource));
+            attachmentPart.setFileName(fileDataSource.getName());
     }
-
-};
-
-attachmentPart.setDataHandler(new DataHandler(fileDataSource));
-
-attachmentPart.setFileName(fileDataSource.getName());
-}
 // Add all parts of the email to Multipart object
 
-Multipart multipart = new MimeMultipart();
+    Multipart multipart = new MimeMultipart();
 
-multipart.addBodyPart(messagePart);
- if (! filename.isEmpty()) {
- multipart.addBodyPart(attachmentPart);
- }
-message.setContent(multipart);
+    multipart.addBodyPart(messagePart);
+     if (! filename.isEmpty()) {
+     multipart.addBodyPart(attachmentPart);
+     }
+    message.setContent(multipart);
 
-// Send email
+    // Send email
 
-Transport.send(message);
+    Transport.send(message);
 
-  } catch (MessagingException e) {
-
-MainFrame.bslog(e);
-
-  }
+    } catch (MessagingException e) {
+      MainFrame.bslog(e);
     }
+ }
          
     public static void sendEmailByID(String to, String subject, String body, String filename) {
 	 
@@ -20871,7 +21079,9 @@ MainFrame.bslog(e);
 	 
 	  }
 	    }
-      
+     
+    
+    
     public static void CreateAdvancedShipperHeader(String id, String site, String billto, String shipto, String isroot, String type, String shipdate, String createdate, String shipvia, String reference) {
         
     }

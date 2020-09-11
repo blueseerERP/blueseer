@@ -1960,7 +1960,14 @@ public class EDI {
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
         String[] defaults = OVData.getEDIOutCustDefaults(entity, doctype, dir);
-       
+         ArrayList<String> attrs = OVData.getEDIAttributesList(entity, doctype, dir);
+        Map<String, String> attrkeys = new HashMap<String, String>();
+        for (String x : attrs) {
+            String[] z = x.split(":", -1);
+            if (z != null && ! z[0].isEmpty()) {
+                attrkeys.put(z[0], z[1]);
+            }
+        }
         
         // get counter for ediout
         int filenumber = OVData.getNextNbr("ediout");
@@ -1996,9 +2003,17 @@ public class EDI {
         
          
          String isa1 = "00";
+         if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
+         
          String isa2 = "          ";
+         if (attrkeys.containsKey("ISA02")) {isa2 = String.format("%10s",attrkeys.get("ISA02"));}
+         
          String isa3 = "00";
+         if (attrkeys.containsKey("ISA03")) {isa3 = String.format("%2s",attrkeys.get("ISA03"));}
+         
          String isa4 = "          ";
+         if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
+         
          String isa5 = String.format("%2s", defaults[4]);
          String isa6 = String.format("%-15s", defaults[3]);
          String isa7 = String.format("%2s", defaults[1]);
@@ -2006,10 +2021,18 @@ public class EDI {
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = "U";
+         if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
+         
          String isa12 = defaults[12].substring(0,5);
+         if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
+         
          String isa13 = String.format("%09d", filenumber);
          String isa14 = "0";
+         if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
+         
          String isa15 = "P";
+         if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
+         
          String isa16 = ud;
          
          String gs1 = "";
@@ -2035,13 +2058,21 @@ public class EDI {
         
          
          String gs2 = defaults[5];
+         if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
+         
          String gs3 = defaults[2];
+         if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
+         
          String gs4 = gsdfdate.format(now);
          String gs5 = gsdftime.format(now);
          String gs6 = String.valueOf(filenumber);
          String gs7 = "X";
+         if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
+         
          String gs8 = defaults[12];
+         if (attrkeys.containsKey("GS08")) {gs8 = attrkeys.get("GS08");}
           
+         
         
         
        
@@ -2073,6 +2104,15 @@ public class EDI {
         int filenumber = OVData.getNextNbr("ediout");
         
         String[] defaults = OVData.getEDIOutCustDefaults(in_isa[6].trim(), "997", "0");
+        ArrayList<String> attrs = OVData.getEDIAttributesList(in_isa[6].trim(), "997", "0");
+      
+        Map<String, String> attrkeys = new HashMap<String, String>();
+        for (String x : attrs) {
+            String[] z = x.split(":", -1);
+            if (z != null && ! z[0].isEmpty()) {
+                attrkeys.put(z[0], z[1]);
+            }
+        }
         
         String sd = "\n";
         String ed = "*";
@@ -2087,8 +2127,11 @@ public class EDI {
          ud = delimConvertIntToStr(defaults[8]);
         }
          
-       //  String filename = defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
-         String filename = "997" + "." + in_isa[6].trim() + "." + String.valueOf(filenumber) + "." + "txt";
+        if (defaults[10].isEmpty()) {  // if no filename provided in EDI Partner Master
+            defaults[10] = "997" + "." + in_isa[6].trim();
+        }
+         String filename =  defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+       //  String filename = "997" + "." + in_isa[6].trim() + "." + String.valueOf(filenumber) + "." + "txt";
         
          //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
          //BufferedWriter output;
@@ -2101,9 +2144,17 @@ public class EDI {
         
          
          String isa1 = String.format("%2s", in_isa[3]);
+         if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
+         
          String isa2 = String.format("%10s", in_isa[4]);
+         if (attrkeys.containsKey("ISA02")) {isa2 = String.format("%10s",attrkeys.get("ISA02"));}
+         
          String isa3 = String.format("%2s", in_isa[1]);
+         if (attrkeys.containsKey("ISA03")) {isa3 = String.format("%2s",attrkeys.get("ISA03"));}
+         
          String isa4 = String.format("%10s", in_isa[2]);
+         if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
+         
          String isa5 = String.format("%2s", in_isa[7]);
          String isa6 = String.format("%-15s", in_isa[8].trim());
          String isa7 = String.format("%2s", in_isa[5]);
@@ -2111,10 +2162,18 @@ public class EDI {
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = "U";
+         if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
+         
          String isa12 = in_gs[8].substring(0,5);
+         if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%5s",attrkeys.get("ISA12"));}
+         
          String isa13 = String.format("%09d", filenumber);
          String isa14 = "0";
+         if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
+         
          String isa15 = "P";
+         if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
+         
          String isa16 = ud;
          
          String gs1 = "FA";
@@ -2122,12 +2181,19 @@ public class EDI {
         
          
          String gs2 = in_gs[3];
+         if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
+         
          String gs3 = in_gs[2];
+         if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
+         
          String gs4 = gsdfdate.format(now);
          String gs5 = gsdftime.format(now);
          String gs6 = String.valueOf(filenumber);
          String gs7 = "X";
+         if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
+         
          String gs8 = in_gs[8];
+         if (attrkeys.containsKey("GS08")) {gs8 = attrkeys.get("GS08");}
           
         
         

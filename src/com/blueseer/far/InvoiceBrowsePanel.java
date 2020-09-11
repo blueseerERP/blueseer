@@ -67,8 +67,15 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.ImageIcon;
+import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableCellRenderer;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -76,13 +83,14 @@ import javax.swing.ImageIcon;
  */
 public class InvoiceBrowsePanel extends javax.swing.JPanel {
  
+    boolean sending = false;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "Shipper", "Cust", "ShipDate", "InvDate", "Status", "Amount", "AmountOpen"})
+                        new String[]{"Select", "Detail", "Shipper", "Site", "Cust", "ShipDate", "InvDate", "Status", "Amount", "AmountOpen", "Print", "Email"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 1 )       
+                        if (col == 0 || col == 1 || col == 10 || col == 11)       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -112,7 +120,28 @@ public class InvoiceBrowsePanel extends javax.swing.JPanel {
     }
     
    
+ class SomeRenderer extends DefaultTableCellRenderer {
+         
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
 
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+        
+            boolean issched = (Boolean) tablereport.getModel().getValueAt(table.convertRowIndexToModel(row), 4);
+            if (( column == 5 || column == 6) && ! issched ) {
+            c.setBackground(Color.green);
+            c.setForeground(Color.BLACK);
+            
+            }
+            else {
+                c.setBackground(table.getBackground());
+            }
+            return c;
+    }
+    }
+    
     
     
     
@@ -123,7 +152,49 @@ public class InvoiceBrowsePanel extends javax.swing.JPanel {
         initComponents();
     }
 
-     public void getdetail(String shipper) {
+     public void executeTask(String x, int y, String w) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String key = "";
+          int row = 0;
+          String site = "";
+          
+          public Task(String key, int row, String site) { 
+              this.key = key;
+              this.row = row;
+              this.site = site;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message = OVData.sendInvoice(key, site); 
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+            BlueSeerUtils.endTask(message);
+            sending = false;
+            tablereport.getModel().setValueAt(BlueSeerUtils.clickmail,row,11);
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y, w); 
+       z.execute(); 
+       
+    }
+    
+    
+    public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -173,6 +244,45 @@ public class InvoiceBrowsePanel extends javax.swing.JPanel {
 
     }
     
+    public void jasperInvoice(String jobid, String bustitle) {
+        
+       try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                String jasperfile = "jobticket.jasper";  // need to make this changeable via site_mstr
+
+                HashMap hm = new HashMap();
+                hm.put("BUSINESSTITLE", bustitle);
+                hm.put("REPORT_TITLE", jasperfile);
+                 hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("myid",  jobid);
+                //hm.put("imagepath", "images/avmlogo.png");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
+         
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+                
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("sql problem printing single ticket");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+    }
+  
+    
     public void initvars(String[] arg) {
         tbdetqty.setText("0");
         tbtotopen.setText("0");
@@ -188,26 +298,23 @@ public class InvoiceBrowsePanel extends javax.swing.JPanel {
                
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
-        tablereport.setModel(mymodel);
+        
         tabledetail.setModel(modeldetail);
-        
-        tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
-        
         tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-        
-        tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-        tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-      //   tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-      //   tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+               
+        tablereport.setModel(mymodel);
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+      
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(10).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(11).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
-        
-        
-        
-        
+                
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
           
@@ -530,9 +637,9 @@ try {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
-               mymodel.setNumRows(0);
+                mymodel.setNumRows(0);
                  
-              
+              //  tablereport.getColumnModel().getColumn(10).setCellRenderer(new InvoiceBrowsePanel.SomeRenderer());
                 
                  double totsales = 0.00;
                  double totopen = 0.00;
@@ -572,7 +679,7 @@ try {
                   
                  
                  
-                  res = st.executeQuery("select sh_id, ar_status, sh_cust, sh_shipdate, sh_confdate, ar_amt, ar_open_amt from ship_mstr " +
+                  res = st.executeQuery("select sh_id, ar_status, sh_cust, sh_site, sh_shipdate, sh_confdate, ar_amt, ar_open_amt from ship_mstr " +
                         " inner join ar_mstr on ar_nbr = sh_id AND ar_type = 'I' where " +
                         " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
                         " sh_id <= " + "'" + shipperto + "'" + " AND " +
@@ -594,12 +701,15 @@ try {
                          
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
                                res.getString("sh_id"),
+                                res.getString("sh_site"),
                                 res.getString("sh_cust"),
                                 BlueSeerUtils.xNull(res.getString("sh_shipdate")),
                                 BlueSeerUtils.xNull(res.getString("sh_confdate")),
                                 status,
                                 df.format(res.getDouble("ar_amt")),
-                                df.format(res.getDouble("ar_open_amt"))
+                                df.format(res.getDouble("ar_open_amt")),
+                                BlueSeerUtils.clickprint,
+                                BlueSeerUtils.clickmail
                             });
                                 
                        }
@@ -639,6 +749,23 @@ try {
                if (! checkperms(mypanel)) { return; }
                String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
+        }
+        if (col == 10) {
+            OVData.printInvoice(tablereport.getValueAt(row, 2).toString(), true); 
+        }
+        if (col == 11) {
+            if (sending) {
+                return;
+            }
+            String[] x = OVData.isSMTPServer();
+            if (x[0].equals("0")) {
+               // tablereport.setEnabled(false);
+                tablereport.getModel().setValueAt(BlueSeerUtils.clicklock,row,11);
+                sending = true; 
+                executeTask(tablereport.getValueAt(row, 2).toString(), row, tablereport.getValueAt(row, 3).toString());
+            } else {
+                bsmf.MainFrame.show(x[1]);
+            }
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

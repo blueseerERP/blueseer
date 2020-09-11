@@ -29,18 +29,29 @@ package com.blueseer.edi;
  *
  * @author vaughnte
  */
+import com.blueseer.utl.OVData;
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileOutputStream;
 
 public class EDILoad {
+    
+    
+    
 public static void main(String args[]) {
  try {
-             bsmf.MainFrame.setConfig();
-               String archpath = "/apps/edi/rawin/";
-               File folder = new File("/apps/edi/ovin");
+           bsmf.MainFrame.setConfig();
+            String inDir = OVData.getEDIInDir();
+            String inArch = OVData.getEDIInArch(); 
+            String ErrorDir = OVData.getEDIErrorDir(); 
+               String archpath = inArch;
+               File folder = new File(inDir);
                File[] listOfFiles = folder.listFiles();
                if (listOfFiles.length == 0) {
                    System.out.println("No files to process");
@@ -51,9 +62,35 @@ public static void main(String args[]) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                //  EDI.processFile(listOfFiles[i].getName(),"","","");
-                  EDI.processFile(listOfFiles[i].getName(),"","","");
-                  listOfFiles[i].renameTo(new File(archpath + listOfFiles[i].getName()));
+                 String[] m = EDI.processFile(inDir + "/" + listOfFiles[i].getName(),"","","");
+                 
+                 // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                        System.out.println(m[1]);
+                        // now move to error folder
+                        Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + listOfFiles[i].getName());
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + listOfFiles[i].getName());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                         continue;  // bale from here
+                    }
+                    
+                    // if delete set in control panel...remove file and continue;
+                         if (OVData.isEDIDeleteFlag()) {
+                          Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + listOfFiles[i].getName());
+                          Files.delete(filetodelete);
+                         }
+                    
+                    // now archive file
+                         if (! inArch.isEmpty() && ! OVData.isEDIDeleteFlag() && OVData.isEDIArchFlag() ) {
+                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + listOfFiles[i].getName());
+                         Path target = FileSystems.getDefault().getPath(inArch + "/" + listOfFiles[i].getName());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
+                          // now remove from list
+                         }
+                 
+                  
                   }
                 }
               }

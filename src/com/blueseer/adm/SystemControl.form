@@ -262,7 +262,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="tbedidir" pref="229" max="32767" attributes="0"/>
+                          <Component id="tbedidir" pref="232" max="32767" attributes="0"/>
                           <Component id="tbjasperdir" max="32767" attributes="0"/>
                           <Component id="tblabeldir" max="32767" attributes="0"/>
                           <Component id="tbtempdir" max="32767" attributes="0"/>
@@ -270,9 +270,9 @@
                           <Component id="tbemailserver" max="32767" attributes="0"/>
                           <Component id="tbemailfrom" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="tbsmtppass" pref="179" max="32767" attributes="0"/>
-                                  <Component id="tbsmtpuser" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="tbsmtpuser" pref="179" max="32767" attributes="0"/>
+                                  <Component id="tbsmtppass" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -303,8 +303,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbsmtppass" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbsmtppass" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -388,8 +388,6 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tbsmtpuser">
             </Component>
-            <Component class="javax.swing.JTextField" name="tbsmtppass">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="SMTP Auth User"/>
@@ -399,6 +397,8 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="SMTP Auth Pass"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JPasswordField" name="tbsmtppass">
             </Component>
           </SubComponents>
         </Container>

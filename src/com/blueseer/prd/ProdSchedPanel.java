@@ -880,13 +880,13 @@ try {
         //        mytable.getColumn("Void").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
                 
                 
-                
                 DefaultCellEditor singleClick = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(6));
                 singleClick.setClickCountToStart(1);
                 mytable.setDefaultEditor(mytable.getColumnClass(6), singleClick);
                 DefaultCellEditor singleClick2 = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(5));
                 singleClick2.setClickCountToStart(1);
                 mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick2);
+                
               //  mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick);
                 
                 
