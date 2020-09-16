@@ -380,6 +380,10 @@ try {
                 String tocode = "";
                 String issched = "";
                 String planstatus = "";
+                String plannbr = "";
+                String plancell = "";
+                String planqtysched = "";
+                String plandatesched = "";
                 
                 if (ddfromcust.getSelectedItem().toString().isEmpty()) {
                     fromcust = bsmf.MainFrame.lowchar;
@@ -438,6 +442,11 @@ try {
                     if (! cberror.isSelected() && res.getString("so_status").equals("error"))
                         continue;                       
 
+                    if (res.getString("plan_nbr") != null) {
+                        plannbr = res.getString("plan_nbr");
+                        plancell = res.getString("plan_cell");
+                        planqtysched = res.getString("plan_qty_sched");
+                        plandatesched = res.getString("plan_date_sched");
                     
                     if (! res.getString("plan_is_sched").isEmpty()) {
                         if (res.getString("plan_is_sched").equals("0")) {
@@ -462,6 +471,8 @@ try {
                         issched = "none";
                     }
                     
+                    } // if not null plan
+                    
                     qty = qty + res.getInt("sod_ord_qty");
                     i++;
                         mymodel.addRow(new Object[]{
@@ -473,11 +484,11 @@ try {
                                 res.getString("it_desc"),
                                 res.getInt("sod_ord_qty"),
                                 res.getInt("sod_shipped_qty"),
-                                res.getString("plan_nbr"),
+                                plannbr,
                                 issched,
-                                res.getString("plan_cell"),
-                                res.getString("plan_qty_sched"),
-                                res.getString("plan_date_sched"),
+                                plancell,
+                                planqtysched,
+                                plandatesched,
                                 planstatus
                                 
                             });
