@@ -28,6 +28,7 @@ import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -46,6 +47,13 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 /**
  *
  * @author vaughnte
@@ -140,7 +148,16 @@ public class BlueSeerUtils {
        return mydate;
     }
     
-  
+    public static String transformDocToString(Document document) throws TransformerConfigurationException, TransformerException {
+        String xml = "";
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer trans = tf.newTransformer();
+        StringWriter sw = new StringWriter();
+        trans.transform(new DOMSource(document), new StreamResult(sw)); 
+        xml = sw.toString();
+        return xml;
+    }
+   
     
     public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
