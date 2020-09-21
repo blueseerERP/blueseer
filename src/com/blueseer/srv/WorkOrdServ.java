@@ -33,7 +33,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -59,6 +61,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -66,10 +71,10 @@ import org.w3c.dom.Element;
  */
 public class WorkOrdServ extends HttpServlet {
     
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
+        BufferedReader reader = request.getReader();
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         String id = request.getParameter("id");
@@ -79,7 +84,29 @@ public class WorkOrdServ extends HttpServlet {
            response.getWriter().println(getWorkOrderXML(id)); 
         }
     }
-        
+     
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        BufferedReader reader = request.getReader();
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        if (reader == null) {
+            response.getWriter().println("no xml stream provided");
+        } else {
+            try { 
+                response.getWriter().println(postWorkOrderXML(request));
+            } catch (ParserConfigurationException ex) {
+                bsmf.MainFrame.bslog(ex);
+            } catch (SAXException ex) {
+                bsmf.MainFrame.bslog(ex);
+            }
+        }
+    }
+    
+    
+
+    
     public static String getWorkOrderXML(String id) {
        
         String x = ""; 
@@ -303,5 +330,39 @@ public class WorkOrdServ extends HttpServlet {
     
 }
     
+    public static String postWorkOrderXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException {
+        String x = "";
+        // read xml and convert to DOM
+        InputStream xml = request.getInputStream();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder(); 
+        Document doc = db.parse(xml);
+        String origin = "";
+        String destination = "";
+        String remoteuser = request.getRemoteUser();
+        String remoteaddr = request.getRemoteAddr();
+       
+        // parse the routing element and retrieve origin and destination
+        NodeList routing = doc.getElementsByTagName("routing");
+        for (int i = 0; i < routing.getLength(); i++) {
+
+		Node nNode = routing.item(i);
+
+		System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+			Element eElement = (Element) nNode;
+
+			//System.out.println("Staff id : " + eElement.getAttribute("id"));
+			origin = "Origin : " + eElement.getElementsByTagName("origin").item(0).getTextContent();
+			destination = "Destination : " + eElement.getElementsByTagName("destination").item(0).getTextContent();
+			
+
+		}
+	}
+
+        return x;
+    }
     
 }

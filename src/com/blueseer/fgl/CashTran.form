@@ -1484,15 +1484,21 @@
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="ddrexpentity" min="-2" pref="110" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btaddentity3" min="-2" pref="23" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                                              <Component id="lbname3" min="-2" pref="188" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="ddrexpsite" min="-2" pref="136" max="-2" attributes="0"/>
                                           <Component id="dcdate3" alignment="0" min="-2" pref="161" max="-2" attributes="0"/>
+                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <Component id="ddrexpsite" min="-2" pref="136" max="-2" attributes="0"/>
+                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <Component id="cbrexpshowall" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <Component id="ddrexpentity" min="-2" pref="110" max="-2" attributes="0"/>
+                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <Component id="btaddentity3" min="-2" pref="23" max="-2" attributes="0"/>
+                                                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                                  <Component id="lbname3" min="-2" pref="188" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1503,7 +1509,7 @@
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                                       <Component id="lblentity3" min="-2" max="-2" attributes="0"/>
@@ -1526,7 +1532,8 @@
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbrexpshowall" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                       <Component id="lbname3" min="-2" pref="28" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1584,20 +1591,17 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="lbitem3" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel23" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel22" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel32" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="btrexpadditem" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="btrexpdelitem" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="btrexpadditem" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="tbrexprice" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
                                       <Component id="tbrexpensedesc" alignment="0" min="-2" pref="313" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
@@ -1611,6 +1615,11 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btexpaddacct" min="-2" pref="23" max="-2" attributes="0"/>
                                       </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="tbrexpid" min="-2" pref="81" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="cbrexpenabled" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace pref="28" max="32767" attributes="0"/>
                               </Group>
@@ -1619,7 +1628,13 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="42" max="32767" attributes="0"/>
+                                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tbrexpid" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel32" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbrexpenabled" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="tbrexpensedesc" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1640,10 +1655,7 @@
                                       <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="btrexpadditem" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btrexpdelitem" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="btrexpadditem" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -1685,17 +1697,9 @@
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                           </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JButton" name="btrexpdelitem">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Del Item"/>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrexpdelitemActionPerformed"/>
-                          </Events>
-                        </Component>
                         <Component class="javax.swing.JButton" name="btrexpadditem">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="Add Item"/>
+                            <Property name="text" type="java.lang.String" value="Add Recur Expense"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrexpadditemActionPerformed"/>
@@ -1713,6 +1717,21 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="lbrexpacctname">
                         </Component>
+                        <Component class="javax.swing.JCheckBox" name="cbrexpenabled">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Visble"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbrexpenabledActionPerformed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="tbrexpid">
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel32">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="expID"/>
+                          </Properties>
+                        </Component>
                       </SubComponents>
                     </Container>
                     <Component class="javax.swing.JComboBox" name="ddrexpsite">
@@ -1729,6 +1748,14 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Site"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="cbrexpshowall">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Show All"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbrexpshowallActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
