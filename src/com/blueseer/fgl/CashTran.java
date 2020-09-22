@@ -348,6 +348,11 @@ public class CashTran extends javax.swing.JPanel {
         }
         diff = totincome - totexpense;
         tbrexpdiff.setText(df.format(diff));
+        if (diff < 0) {
+            tbrexpdiff.setBackground(Color.red);
+        } else {
+            tbrexpdiff.setBackground(Color.green);
+        }
     }
     
     public void getRecurringExpense(boolean showall) {
@@ -366,6 +371,7 @@ public class CashTran extends javax.swing.JPanel {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
+                
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
@@ -378,15 +384,17 @@ public class CashTran extends javax.swing.JPanel {
                 while (res.next()) {
                 totincome += Double.valueOf(res.getString("exp_amt"));
                 }
+                
                 if (showall) {                
                 res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
                                   " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
-                                  " where exp_entity <> ''  " +
+                                  " where exp_entity <> '' and exp_site =  " + "'" + ddrexpsite.getSelectedItem().toString() + "'" +
                                   ";");
                 } else {
                 res = st.executeQuery("select * from exp_mstr left outer join pos_mstr on pos_key = exp_id " +
                                   " and pos_entrydate like " + "'" + dfdate.format(now).substring(0,8) + "%" + "'" +
                                   " where exp_entity <> '' and exp_active = '1' " +
+                                  " and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" +
                                   ";");    
                 }
                 while (res.next()) {
@@ -415,6 +423,7 @@ public class CashTran extends javax.swing.JPanel {
             tbrexptotamt.setText(String.valueOf(totexpense)); 
             tbrexpincome.setText(String.valueOf(totincome)); 
             bsmf.MainFrame.con.close();
+           
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1563,7 +1572,6 @@ public class CashTran extends javax.swing.JPanel {
     public void disableRecurExpense() {
         tbrexptotamt.setEnabled(false);
         ddrexpentity.setEnabled(false);
-        dcdate3.setEnabled(false);
         ddrexpacct.setEnabled(false);
         tbrexpensedesc.setEnabled(false);
         tbrexprice.setEnabled(false);
@@ -1659,7 +1667,6 @@ public class CashTran extends javax.swing.JPanel {
     public void enableRecurExpense() {
           tbrexptotamt.setEnabled(true);
         ddrexpentity.setEnabled(true);
-        dcdate3.setEnabled(true);
         ddrexpacct.setEnabled(true);
         tbrexpensedesc.setEnabled(true);
         tbrexprice.setEnabled(true);
@@ -1785,6 +1792,7 @@ public class CashTran extends javax.swing.JPanel {
     
     
     public void clearRecurExpense() {
+         
          tbrexpid.setEnabled(false);
          tbrexprice.setText("");
          terms = "";
@@ -1799,9 +1807,6 @@ public class CashTran extends javax.swing.JPanel {
          cbrexpshowall.setSelected(false);
          tbrexpid.setText("");
          
-         java.util.Date now = new java.util.Date();
-         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-         dcdate3.setDate(now);
         
         lbrexpacctname.setText("");
         tbrexptotamt.setText("");
@@ -1839,7 +1844,7 @@ public class CashTran extends javax.swing.JPanel {
         recurexpensetable.getColumn("Name").setPreferredWidth(0);
         recurexpensetable.getColumn("Name").setMinWidth(0);
         
-        
+        isLoad = true;
         ddrexpentity.removeAllItems();
          ArrayList entity = new ArrayList();
         entity = OVData.getvendmstrlist(); 
@@ -1854,6 +1859,7 @@ public class CashTran extends javax.swing.JPanel {
         for (String code : mylist) {
             ddrexpsite.addItem(code);
         }
+        ddrexpsite.setSelectedIndex(0);
         
             
          ArrayList accts = new ArrayList();
@@ -1867,6 +1873,7 @@ public class CashTran extends javax.swing.JPanel {
             
         getRecurringExpense(cbrexpshowall.isSelected());   
         calcdiff();
+        isLoad = false;
     }
     
     
@@ -2141,12 +2148,6 @@ public class CashTran extends javax.swing.JPanel {
         jScrollPane11 = new javax.swing.JScrollPane();
         recurexpensetable = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
-        dcdate3 = new com.toedter.calendar.JDateChooser();
-        lblentity3 = new javax.swing.JLabel();
-        ddrexpentity = new javax.swing.JComboBox();
-        lbname3 = new javax.swing.JLabel();
-        jLabel38 = new javax.swing.JLabel();
-        btaddentity3 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         lbitem3 = new javax.swing.JLabel();
         tbrexprice = new javax.swing.JTextField();
@@ -2160,9 +2161,15 @@ public class CashTran extends javax.swing.JPanel {
         cbrexpenabled = new javax.swing.JCheckBox();
         tbrexpid = new javax.swing.JTextField();
         jLabel32 = new javax.swing.JLabel();
+        ddrexpentity = new javax.swing.JComboBox();
+        lblentity3 = new javax.swing.JLabel();
+        btaddentity3 = new javax.swing.JButton();
+        lbname3 = new javax.swing.JLabel();
         ddrexpsite = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        btrexpclear = new javax.swing.JButton();
         cbrexpshowall = new javax.swing.JCheckBox();
+        lbrexpsitename = new javax.swing.JLabel();
         tbrexpdiff = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         tbrexpincome = new javax.swing.JTextField();
@@ -3098,25 +3105,6 @@ public class CashTran extends javax.swing.JPanel {
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Recurring Expense Maintenance"));
 
-        dcdate3.setDateFormatString("yyyy-MM-dd");
-
-        lblentity3.setText("VendorCode");
-
-        ddrexpentity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddrexpentityActionPerformed(evt);
-            }
-        });
-
-        jLabel38.setText("Date");
-
-        btaddentity3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
-        btaddentity3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddentity3ActionPerformed(evt);
-            }
-        });
-
         lbitem3.setText("Expense Acct");
 
         tbrexprice.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -3158,6 +3146,21 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel32.setText("expID");
 
+        ddrexpentity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddrexpentityActionPerformed(evt);
+            }
+        });
+
+        lblentity3.setText("VendorCode");
+
+        btaddentity3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddentity3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddentity3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
@@ -3168,56 +3171,86 @@ public class CashTran extends javax.swing.JPanel {
                     .addComponent(lbitem3)
                     .addComponent(jLabel23)
                     .addComponent(jLabel22)
-                    .addComponent(jLabel32))
+                    .addComponent(jLabel32)
+                    .addComponent(lblentity3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btrexpadditem)
-                    .addComponent(tbrexprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbrexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btexpaddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btexpaddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(tbrexpid, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbrexpenabled)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                            .addComponent(btrexpadditem)
+                            .addComponent(tbrexprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbrexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addComponent(tbrexpid, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbrexpenabled))
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addComponent(ddrexpentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaddentity3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbname3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddrexpentity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblentity3))
+                        .addComponent(btaddentity3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbname3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbrexpid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel32)
                     .addComponent(cbrexpenabled))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbrexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23))
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbrexpensedesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel23))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbitem3))
+                            .addComponent(btexpaddacct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbrexpacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddrexpacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbitem3))
-                    .addComponent(btexpaddacct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbrexprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btrexpadditem)
-                .addGap(22, 22, 22))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
+        ddrexpsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddrexpsiteActionPerformed(evt);
+            }
+        });
+
         jLabel1.setText("Site");
+
+        btrexpclear.setText("Clear");
+        btrexpclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrexpclearActionPerformed(evt);
+            }
+        });
 
         cbrexpshowall.setText("Show All");
         cbrexpshowall.addActionListener(new java.awt.event.ActionListener() {
@@ -3230,62 +3263,37 @@ public class CashTran extends javax.swing.JPanel {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbrexpsitename, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btrexpclear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbrexpshowall))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel38)
-                            .addComponent(lblentity3)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcdate3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel8Layout.createSequentialGroup()
-                                    .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbrexpshowall))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
-                                    .addComponent(ddrexpentity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btaddentity3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(31, 31, 31)
-                                    .addComponent(lbname3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(lblentity3))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddrexpentity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btaddentity3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(cbrexpshowall)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbname3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel38)
-                    .addComponent(dcdate3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(btrexpclear)
+                    .addComponent(cbrexpshowall)
+                    .addComponent(lbrexpsitename, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -4204,8 +4212,8 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + lbname3.getText() + "'" + ","
                             + "'" + ddrexpacct.getSelectedItem().toString() + "'" + ","
                             + "'" + "9999" + "'"  + ","
-                            + "'" + dfdate.format(dcdate3.getDate()) + "'"  + ","     
-                            + "'" + dfdate.format(dcdate3.getDate()) + "'"  + ","
+                            + "'" + dfdate.format(now) + "'"  + ","     
+                            + "'" + dfdate.format(now) + "'"  + ","
                             + "'" + bsmf.MainFrame.userid + "'"  + ","   
                             + "'" + tbrexpensedesc.getText().replace("'","") + "'"  + ","   
                             + "'" + "" + "'"  + ","   // ref        
@@ -4521,6 +4529,17 @@ public class CashTran extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cbrexpshowallActionPerformed
 
+    private void btrexpclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrexpclearActionPerformed
+        clearRecurExpense();
+    }//GEN-LAST:event_btrexpclearActionPerformed
+
+    private void ddrexpsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpsiteActionPerformed
+        if (! isLoad) {
+        getRecurringExpense(cbrexpshowall.isSelected());
+        calcdiff();
+        }
+    }//GEN-LAST:event_ddrexpsiteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadd1;
@@ -4547,6 +4566,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JButton btnewsell;
     private javax.swing.JButton btpayselected;
     private javax.swing.JButton btrexpadditem;
+    private javax.swing.JButton btrexpclear;
     private javax.swing.JButton btupdateincome;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buyPanel;
@@ -4554,7 +4574,6 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbrexpshowall;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcdate1;
-    private com.toedter.calendar.JDateChooser dcdate3;
     private com.toedter.calendar.JDateChooser dcdateExpense;
     private com.toedter.calendar.JDateChooser dcdateIncome;
     private javax.swing.JComboBox<String> ddaccountexpense;
@@ -4606,7 +4625,6 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
@@ -4654,6 +4672,7 @@ public class CashTran extends javax.swing.JPanel {
     private javax.swing.JLabel lbname1;
     private javax.swing.JLabel lbname3;
     private javax.swing.JLabel lbrexpacctname;
+    private javax.swing.JLabel lbrexpsitename;
     private javax.swing.JLabel lbtitle;
     private javax.swing.JLabel lbtitle1;
     private javax.swing.JLabel lbtitle2;

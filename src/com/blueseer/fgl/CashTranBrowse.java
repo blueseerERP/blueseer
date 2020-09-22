@@ -225,7 +225,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
+        ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
        // ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, 400, 200);
         } catch (IOException e) {
             MainFrame.bslog(e);
@@ -293,7 +293,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.7));
+        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
