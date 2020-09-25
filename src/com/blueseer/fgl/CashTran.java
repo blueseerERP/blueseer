@@ -1859,7 +1859,7 @@ public class CashTran extends javax.swing.JPanel {
         for (String code : mylist) {
             ddrexpsite.addItem(code);
         }
-        ddrexpsite.setSelectedIndex(0);
+        
         
             
          ArrayList accts = new ArrayList();
@@ -1874,6 +1874,8 @@ public class CashTran extends javax.swing.JPanel {
         getRecurringExpense(cbrexpshowall.isSelected());   
         calcdiff();
         isLoad = false;
+        
+        ddrexpsite.setSelectedItem(OVData.getDefaultSite());
     }
     
     
@@ -3272,7 +3274,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addComponent(ddrexpsite, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbrexpsitename, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btrexpclear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbrexpshowall))
@@ -4535,6 +4537,8 @@ public class CashTran extends javax.swing.JPanel {
 
     private void ddrexpsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddrexpsiteActionPerformed
         if (! isLoad) {
+        String[] siteinfo = OVData.getSiteAddressArray(ddrexpsite.getSelectedItem().toString());
+        lbrexpsitename.setText(siteinfo[1]);
         getRecurringExpense(cbrexpshowall.isSelected());
         calcdiff();
         }
