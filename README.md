@@ -1,4 +1,4 @@
-<img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/basket.png">
+
 <img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP">
 <h3>Developer: Terry Vaughn</h3>
 <h3>latest release version: 4.3</h3>
@@ -8,6 +8,10 @@
 <h3>genre:  Enterprise Resource Planning (ERP), Accounting, Personal Finance</h3> 
 <h3>license: MIT License</h3>
 <h3>website: www.blueseer.com</h3>
+
+<img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market1.png">
+
+<img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market2.png">
 
 '''BlueSeer ERP''' is a Free open source ERP software package.  It was designed to meet the needs of
 the manufacturing community for an ERP system that is easily customizable and
