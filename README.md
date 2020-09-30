@@ -1,5 +1,5 @@
-
-<img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP">
+<img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market1.png">
+<!-- <img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP"> -->
 <h3>Developer: Terry Vaughn</h3>
 <h3>latest release version: 4.3</h3>
 <h3>latest release date: 2020-09-06</h3>
@@ -9,7 +9,7 @@
 <h3>license: MIT License</h3>
 <h3>website: www.blueseer.com</h3>
 
-<img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market1.png">
+
 
 <img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market2.png">
 
