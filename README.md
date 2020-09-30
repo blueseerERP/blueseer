@@ -1,3 +1,4 @@
+<img src="https://raw.githubusercontent.com/blueseerERP/blueseer/master/.github/src/images/basket.png">
 <img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP">
 <h3>Developer: Terry Vaughn</h3>
 <h3>latest release version: 4.3</h3>
