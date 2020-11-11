@@ -95,6 +95,9 @@ public static void main(String args[]) throws IOException {
         case "filterFile" :
             filterFile(infile, outfile, doctypes);
             break; 
+        case "extractFile" :
+            extractFile(map, indir, outdir);
+            break;       
         case "filterDir" :
             filterDir(indir, outdir, archdir, doctypes, map);
             break;   
@@ -114,7 +117,7 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf");
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e");
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
         
@@ -179,6 +182,10 @@ public static void main(String args[]) throws IOException {
                     case "-x" :
                         vals[5] = "true"; 
                         break; 
+                    case "-e" :
+                        vals[4] = args[i+1];
+                        vals[7] = "extractFile"; 
+                        break;      
                     case "-ff" :
                         vals[6] = args[i+1];
                         vals[7] = "filterFile"; 
@@ -254,6 +261,40 @@ public static void main(String args[]) throws IOException {
        }
     } 
  }
+ 
+ public static void extractFile(String key, String indir, String outdir) throws IOException {
+     // case of multiple files....directory in and directory out 
+     boolean isMatch = false;
+    
+     if (! indir.isEmpty() && ! outdir.isEmpty() && ! key.isEmpty()) {
+          
+               File folder = new File(indir);
+               File[] listOfFiles = folder.listFiles();
+               if (listOfFiles.length == 0) {
+                   System.out.println("No files to process");
+                   System.exit(1);
+               }
+              for (int i = 0; i < listOfFiles.length; i++) {
+                  isMatch = false;
+                if (listOfFiles[i].isFile()) {
+               // System.out.println("processing file " + listOfFiles[i].getName());
+                 List<String> fc = Files.readAllLines(Paths.get(listOfFiles[i].getPath()));
+                 for (String x : fc ) {
+                     if (x.contains(key)) {
+                         isMatch = true;
+                         break;
+                     }
+                 }
+                 if (isMatch) {
+                     Path newpath = Paths.get(outdir + listOfFiles[i].getName());
+                     Files.copy(Paths.get(listOfFiles[i].getPath()), newpath);
+                 }
+                }
+              }
+        
+    } 
+ }
+ 
  
  public static void filterFile(String infile, String outfile, String[] doctypes) {
       // case of single input and output file THIS NEEDS TO BE REVISTED!!!!!   
@@ -367,7 +408,7 @@ public static void main(String args[]) throws IOException {
  public static void trafficDir(String indir, String map) throws IOException {
      // indir is the directory to traffic
      // map is the definition file used to traffic file patterns to destinations
-     // the map (traffic file) is comma delimited (pattern,destdir,archdir,singlefilename)
+     // the map (traffic file) is comma delimited (pattern,destdir,archdir,singlefilename,delete(yes,no))
      
      // read traffic file...aka map...exit if no file
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
@@ -389,7 +430,7 @@ public static void main(String args[]) throws IOException {
      // check trafficarray...make sure 4 elements per row
      boolean isBad = false;
      for (String[] s : trafficarray) {
-         if (s.length != 4) {
+         if (s.length != 5) {
              isBad = true;
          }
      }
@@ -399,6 +440,20 @@ public static void main(String args[]) throws IOException {
      }
      
      
+      FilenameFilter byfilename = new FilenameFilter() {
+             @Override
+             public boolean accept(File f, String name) {
+                 // We want to find only .c files
+                 return name.endsWith(".txt");
+             }
+         };
+      FileFilter byfiletype = new FileFilter() {
+             @Override
+             public boolean accept(File f) {
+                 // We want to find only .c files
+                 return f.isFile();
+             }
+         };
      
      // OK...now let's loop through indir for files and compare against traffic file
      String outfile = "";
@@ -406,16 +461,24 @@ public static void main(String args[]) throws IOException {
      String archdir = "";
      String singlefile = "";
      boolean match = false;
+     boolean deleteFile = false;
+     Path newpath = null;
     
          try {   
-               File folder = new File(indir);
-               File[] listOfFiles = folder.listFiles();
+              File folder = new File(indir);
+              File[] listOfFiles = folder.listFiles(byfiletype);
+                  
                if (listOfFiles.length == 0) {
-                   System.out.println(dfdate.format(now) + " No files to process");
+                   System.out.println(dfdate.format(now) + " " + listOfFiles.length + " No files to process");
                    System.exit(1);
                }
+               
+              System.out.println(dfdate.format(now) + " " + " File Count=" + listOfFiles.length );
+               
+               
               for (int i = 0; i < listOfFiles.length; i++) {
                 match = false;
+                deleteFile = false;
                 if (listOfFiles[i].isFile()) {
                   if(listOfFiles[i].length() == 0) { 
                   System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " zerosize" ); 
@@ -427,6 +490,9 @@ public static void main(String args[]) throws IOException {
                           match = true;
                           singlefile = s[3];
                           outdir = s[1].replace("\\","\\\\");
+                          if (! s[4].isEmpty() && s[4].toLowerCase().equals("yes")) {
+                              deleteFile = true;
+                          }
                           // if destination path is not valid...bail loop
                           if (! Files.isDirectory(Paths.get(outdir))) {
                             System.out.println(dfdate.format(now) + " destination dir does not exist for " + listOfFiles[i].getName()  );      
@@ -440,7 +506,7 @@ public static void main(String args[]) throws IOException {
                           }
                           
                           Path oldpath = Paths.get(listOfFiles[i].getPath());
-                          Path newpath = null;
+                          
                           if (singlefile.isEmpty()) {
                               newpath = Paths.get(outdir + listOfFiles[i].getName());
                               
@@ -452,19 +518,25 @@ public static void main(String args[]) throws IOException {
                               byte[] data = Files.readAllBytes(oldpath);
                               Files.write(newpath, data, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                           }
-                          System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() ); 
-                          if (! archdir.isEmpty()) {
+                           if (! archdir.isEmpty()) {
                              Path archivepath = Paths.get(archdir + listOfFiles[i].getName());
                              Files.copy(oldpath, archivepath, StandardCopyOption.REPLACE_EXISTING); 
                           }
                           break;
                       }
                   }    
+                    
+                    
                     // now delete if match found...otherwise leave file in place.
                     if (match) {
-                    listOfFiles[i].delete(); // now delete file
+                        if (deleteFile) {
+                            listOfFiles[i].delete(); // now delete file
+                             System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed and deleted"); 
+                         } else {
+                            System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed but not deleted"); 
+                        }
                     } else {
-                    System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " cannot place file" );     
+                    System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " file cannot be placed" );     
                     }
                     
                     

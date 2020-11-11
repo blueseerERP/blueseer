@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -249,7 +249,7 @@ sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_net
 				<text><![CDATA[Remarks:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="54" y="59" width="511" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<reportElement x="54" y="59" width="503" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
 				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -272,20 +272,13 @@ sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_net
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Item]]></text>
+				<text><![CDATA[Item/CustItem]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<staticText>
-				<reportElement x="109" y="0" width="72" height="20" uuid="13f9b695-ff05-4d5f-b062-becc4685abbb"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[CustItem]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="192" y="0" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<reportElement x="109" y="0" width="155" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -329,7 +322,7 @@ sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_net
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
@@ -339,12 +332,12 @@ sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_net
 				<textFieldExpression><![CDATA[$F{shd_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="192" y="0" width="72" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<reportElement x="109" y="0" width="155" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
+				<reportElement x="20" y="16" width="89" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{shd_custpart}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="264" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
@@ -358,8 +351,7 @@ sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_net
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue())
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>

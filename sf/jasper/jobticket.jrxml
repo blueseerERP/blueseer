@@ -322,7 +322,7 @@ order by wf_op;]]>
 				<text><![CDATA[Operation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<reportElement x="330" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -332,14 +332,14 @@ order by wf_op;]]>
 				<reportElement x="4" y="19" width="756" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<staticText>
-				<reportElement x="375" y="3" width="67" height="16" uuid="0fffd97f-7e60-4d08-a152-6468408b7447"/>
+				<reportElement x="509" y="2" width="67" height="16" uuid="0fffd97f-7e60-4d08-a152-6468408b7447"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty Good]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="442" y="3" width="78" height="16" uuid="f94c6c89-db4e-4d79-962b-a33138580b5d"/>
+				<reportElement x="591" y="2" width="78" height="16" uuid="f94c6c89-db4e-4d79-962b-a33138580b5d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -353,7 +353,7 @@ order by wf_op;]]>
 				<text><![CDATA[Desc]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="261" y="0" width="69" height="20" uuid="59ff2ff0-ead4-4f1e-aa83-8550c4b43b60"/>
+				<reportElement x="405" y="0" width="69" height="20" uuid="59ff2ff0-ead4-4f1e-aa83-8550c4b43b60"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -368,19 +368,19 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{wf_op}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="58" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<reportElement x="330" y="0" width="58" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{wf_cell}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="91" y="0" width="106" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<reportElement x="91" y="0" width="229" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
 				<textFieldExpression><![CDATA[$F{wf_desc}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="375" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
+				<reportElement x="510" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
 				<text><![CDATA[____________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="442" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
+				<reportElement x="591" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
 				<text><![CDATA[____________]]></text>
 			</staticText>
 			<subreport>
@@ -398,7 +398,7 @@ order by wf_op;]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="261" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
+				<reportElement x="405" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
 				<textFieldExpression><![CDATA[new BigDecimal($F{runrate}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
 			</textField>
 		</band>

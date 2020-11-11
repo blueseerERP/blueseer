@@ -106,95 +106,6 @@ public class WorkOrdServ extends HttpServlet {
     
     
 
-    
-    public static String getWorkOrderXML(String id) {
-       
-        String x = ""; 
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
-         try {
-             docBuilder = docFactory.newDocumentBuilder();
-         } catch (ParserConfigurationException ex) {
-             bsmf.MainFrame.bslog(ex);
-             bsmf.MainFrame.show(ex.getMessage());
-         }
-        Document doc = docBuilder.newDocument();
-        
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-                res = st.executeQuery("select * from plan_mstr " +
-                               " inner join item_mstr on " +
-                               " it_item = plan_part " +
-                               " where plan_nbr = " + "'" + id + "'" + ";");
-                       
-                 
-                 StringWriter writer = new StringWriter();
-                    int z = 0;
-                    while (res.next()) {
-                        z++;
-                            // Create Root Element
-                        doc = WorkOrderXML.createRoot(doc);
-                        
-                        // Create Routing Tag Content
-                        doc = WorkOrderXML.createRouting(doc, "", "");
-                       
-                        // Create header Tag content
-                        doc = WorkOrderXML.createHeader(doc, 
-                                res.getString("plan_nbr"), 
-                                res.getString("plan_part"),
-                                res.getString("it_site"),
-                                res.getString("it_desc"),
-                                res.getString("it_code"),
-                                res.getString("it_wf"),
-                                res.getString("it_drawing"),
-                                res.getString("it_rev"),
-                                res.getString("it_loc"),
-                                res.getString("it_wh"),
-                                res.getString("it_lotsize"),
-                                res.getString("it_comments"),
-                                res.getString("it_uom"),
-                                res.getString("plan_qty_req"),
-                                res.getString("plan_qty_sched"),
-                                res.getString("plan_cell"),
-                                res.getString("plan_type"),
-                                res.getString("plan_rmks"),
-                                res.getString("plan_status"),
-                                res.getString("plan_order"),
-                                res.getString("plan_line"),
-                                res.getString("plan_date_sched"),
-                                res.getString("plan_date_due")
-                                );
-                        
-                        }
-                       
-                       // now transform to String
-                       if (z > 0) {
-                       x = BlueSeerUtils.transformDocToString(doc);
-                       }
-                       
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return x;
-        
-         } 
-    
     public static class  WorkOrderXML {
     
     public static Document createRoot(Document doc) {
@@ -330,6 +241,94 @@ public class WorkOrdServ extends HttpServlet {
     
 }
     
+    public static String getWorkOrderXML(String id) {
+       
+        String x = ""; 
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+         try {
+             docBuilder = docFactory.newDocumentBuilder();
+         } catch (ParserConfigurationException ex) {
+             bsmf.MainFrame.bslog(ex);
+             bsmf.MainFrame.show(ex.getMessage());
+         }
+        Document doc = docBuilder.newDocument();
+        
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                res = st.executeQuery("select * from plan_mstr " +
+                               " inner join item_mstr on " +
+                               " it_item = plan_part " +
+                               " where plan_nbr = " + "'" + id + "'" + ";");
+                       
+                 
+                 StringWriter writer = new StringWriter();
+                    int z = 0;
+                    while (res.next()) {
+                        z++;
+                            // Create Root Element
+                        doc = WorkOrderXML.createRoot(doc);
+                        
+                        // Create Routing Tag Content
+                        doc = WorkOrderXML.createRouting(doc, "", "");
+                       
+                        // Create header Tag content
+                        doc = WorkOrderXML.createHeader(doc, 
+                                res.getString("plan_nbr"), 
+                                res.getString("plan_part"),
+                                res.getString("it_site"),
+                                res.getString("it_desc"),
+                                res.getString("it_code"),
+                                res.getString("it_wf"),
+                                res.getString("it_drawing"),
+                                res.getString("it_rev"),
+                                res.getString("it_loc"),
+                                res.getString("it_wh"),
+                                res.getString("it_lotsize"),
+                                res.getString("it_comments"),
+                                res.getString("it_uom"),
+                                res.getString("plan_qty_req"),
+                                res.getString("plan_qty_sched"),
+                                res.getString("plan_cell"),
+                                res.getString("plan_type"),
+                                res.getString("plan_rmks"),
+                                res.getString("plan_status"),
+                                res.getString("plan_order"),
+                                res.getString("plan_line"),
+                                res.getString("plan_date_sched"),
+                                res.getString("plan_date_due")
+                                );
+                        
+                        }
+                       
+                       // now transform to String
+                       if (z > 0) {
+                       x = BlueSeerUtils.transformDocToString(doc);
+                       }
+                       
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+        
     public static String postWorkOrderXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException {
         String x = "";
         // read xml and convert to DOM

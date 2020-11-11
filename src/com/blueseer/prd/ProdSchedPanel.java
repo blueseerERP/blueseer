@@ -84,6 +84,7 @@ import java.awt.event.FocusEvent;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -127,6 +128,32 @@ public class ProdSchedPanel extends javax.swing.JPanel {
      * Creates new form ScrapReportPanel
      */
     
+      
+  class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
+  public ComboBoxRenderer(String[] items) {
+    super(items);
+  }
+
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+      boolean hasFocus, int row, int column) {
+    if (isSelected) {
+      setForeground(table.getSelectionForeground());
+      super.setBackground(table.getSelectionBackground());
+    } else {
+      setForeground(table.getForeground());
+      setBackground(table.getBackground());
+    }
+    setSelectedItem(value);
+    return this;
+  }
+}
+
+  class ComboBoxEditor extends DefaultCellEditor {
+  public ComboBoxEditor(String[] items) {
+    super(new JComboBox(items));
+  }
+} 
+      
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
 
           CheckBoxRenderer() {
@@ -858,13 +885,22 @@ try {
                    
               //  mytable.getColumnModel().getColumn(0).setCellRenderer(new ProdSchedPanel.SomeRenderer());  
               
-                  CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+                CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
                 mytable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer); 
                  
+              //  ComboBoxRenderer comboBoxRenderer = new ComboBoxRenderer(new String[]{"1","2"});
+              //  mytable.getColumnModel().getColumn(5).setCellRenderer(comboBoxRenderer); 
+                String[] values = new String[]{"1","2"};
+                TableColumn col = mytable.getColumnModel().getColumn(5);
+                col.setCellEditor(new ComboBoxEditor(values));
+                col.setCellRenderer(new ComboBoxRenderer(values));
+                
+                
                  Enumeration<TableColumn> en = mytable.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
                      if (tc.getIdentifier().toString().equals("isSched") || 
+                             tc.getIdentifier().toString().equals("Cell") ||
                              tc.getIdentifier().toString().equals("Print") ||
                              tc.getIdentifier().toString().equals("Update") ||
                              tc.getIdentifier().toString().equals("Void")) {
@@ -883,9 +919,9 @@ try {
                 DefaultCellEditor singleClick = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(6));
                 singleClick.setClickCountToStart(1);
                 mytable.setDefaultEditor(mytable.getColumnClass(6), singleClick);
-                DefaultCellEditor singleClick2 = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(5));
-                singleClick2.setClickCountToStart(1);
-                mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick2);
+             //   DefaultCellEditor singleClick2 = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(5));
+              //  singleClick2.setClickCountToStart(1);
+             //   mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick2);
                 
               //  mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick);
                 
