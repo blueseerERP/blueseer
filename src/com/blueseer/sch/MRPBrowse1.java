@@ -168,7 +168,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
 
     }
     
-         public void getPlans(String part) {
+        public void getPlans(String part) {
       
        
          double total = 0.00;
@@ -236,7 +236,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
 
     }
         
-           public void getPurch(String part) {
+        public void getPurch(String part) {
       
        
          double total = 0.00;
@@ -288,7 +288,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
 
     }
          
-             public void getrecenttrans(String parentpart) {
+        public void getrecenttrans(String parentpart) {
              
                  
          tbqtyoh.setText(String.valueOf(OVData.getItemQOHTotal(parentpart, OVData.getDefaultSite())));

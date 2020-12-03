@@ -154,7 +154,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
   }
 } 
       
-     public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
+  class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
 
           CheckBoxRenderer() {
             setHorizontalAlignment(JLabel.CENTER);
@@ -176,7 +176,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
           }
 } 
       
-     class MyTableModel extends DefaultTableModel {  
+  class MyTableModel extends DefaultTableModel {  
       
         public MyTableModel(Object rowData[][], Object columnNames[]) {  
              super(rowData, columnNames);  
@@ -240,13 +240,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
         
    }    
     
-     
-     
-     
-     
-     
-     
-     class SomeRenderer extends DefaultTableCellRenderer {
+  class SomeRenderer extends DefaultTableCellRenderer {
          
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -314,7 +308,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
     }
     }
     
-    class ButtonRenderer extends JButton implements TableCellRenderer {
+  class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -341,9 +335,8 @@ public class ProdSchedPanel extends javax.swing.JPanel {
             return this;
         }
     }
-
     
-     class ButtonEditor extends DefaultCellEditor {
+  class ButtonEditor extends DefaultCellEditor {
 
         protected JButton button;
         private String label;
@@ -486,7 +479,7 @@ public class ProdSchedPanel extends javax.swing.JPanel {
         
     }
     
-      public void postcommit() {
+    public void postcommit() {
         java.util.Date now = new java.util.Date();
          
          Calendar calfrom = Calendar.getInstance();
