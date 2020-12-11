@@ -137,7 +137,6 @@ com.blueseer.prd.PlanMiscMaint,,1
 com.blueseer.prd.ProdEntryByPlanPanel,,1
 com.blueseer.prd.ProdEntryMaint,,1
 com.blueseer.prd.ProdRptDetPanel,,1
-com.blueseer.prd.ProdSchedPanel,,1
 com.blueseer.prd.ProdSchedRpt1,,1
 com.blueseer.prd.ReworkMaintPanel,,1
 com.blueseer.prd.ReworkReportPanel,,1
@@ -145,8 +144,6 @@ com.blueseer.prd.ScrapMaintPanel,,1
 com.blueseer.prd.ScrapReportPanel,,1
 com.blueseer.prd.TesterViewPanel,,1
 com.blueseer.prd.TransBrowsePanel,,1
-com.blueseer.sch.RetailReorderRpt,,1
-com.blueseer.sch.SchRptPicker,,1
 com.blueseer.inv.InvRptPicker,,1
 com.blueseer.ord.OrdRptPicker,,1
 com.blueseer.pur.PurRptPicker,,1
@@ -164,12 +161,15 @@ com.blueseer.pur.ReqReportPanel,,1
 com.blueseer.rcv.RecvBrowse,,1
 com.blueseer.rcv.RecvByPOBrowse,,1
 com.blueseer.rcv.RecvMaintPanel,,1
+com.blueseer.sch.Scheduler,,1
 com.blueseer.sch.DemdToPlanPanel,,1
 com.blueseer.sch.FcstToPlanPanel,,1
 com.blueseer.sch.ForecastBrowsePanel,,1
 com.blueseer.sch.ForecastMaintPanel,,1
 com.blueseer.sch.KanbanMinToPlanPanel,,1
 com.blueseer.sch.MRPBrowse1,,1
+com.blueseer.sch.RetailReorderRpt,,1
+com.blueseer.sch.SchRptPicker,,1
 com.blueseer.shp.ShipConfirmPanel,,1
 com.blueseer.shp.ShipMaintPanel,,1
 com.blueseer.far.InvoiceMaint,,1

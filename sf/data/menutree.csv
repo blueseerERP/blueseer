@@ -193,7 +193,7 @@ ScrapReports,ScrapChartDolByCode,5,JMenuItem,Scrap Dollars By Code (BarChart),,1
 ScrapReports,ScrapChartDolByPart,6,JMenuItem,Scrap Dollars By Part (BarChart),,1,,1,1
 ScrapReports,ScrapChartDolByDept,7,JMenuItem,Scrap Dollars By Dept (BarChart),,1,,1,1
 ScrapReports,ScrapPerWeek,8,JMenuItem,Scrap Per Week (BarChart),,1,,1,1
-ScheduleMenu,ProdSchedMaint,1,JMenuItem,Scheduler,,,,1,1
+ScheduleMenu,Scheduler,1,JMenuItem,Scheduler,,,,1,1
 ScheduleMenu,SchRptPicker,2,JMenuItem,Schedule Report Picker,,1,,1,1
 ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Scheduled Plan Report,,1,,1,1
 ScheduleMenu,PlanMiscMaint,4,JMenuItem,Misc Plan Maintenance,,,,1,1

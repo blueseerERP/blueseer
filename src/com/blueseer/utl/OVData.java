@@ -6043,28 +6043,33 @@ public class OVData {
         
     }
        
-        public static ArrayList getCodeAndDescMstr(String type) {
-       ArrayList myarray = new ArrayList();
+    public static ArrayList<String[]> getCodeAndValueMstr(String code) {
+       ArrayList<String[]> myarray = new ArrayList<String[]>();
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select code_key, code_value from code_mstr where code_code = " + "'" + type + "'" + " order by code_key ;");
+                res = st.executeQuery("select code_key, code_value from code_mstr where code_code = " + "'" + code + "'" + " order by code_key ;");
                while (res.next()) {
-                    myarray.add(res.getString("code_key") + " = " + res.getString("code_value"));
-                    
+                    myarray.add(new String[]{res.getString("code_key"),res.getString("code_value")});
                 }
                
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+          } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            con.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
@@ -13313,7 +13318,7 @@ public class OVData {
          
          /* start of production scheduling */
          
-          public static int CommitSchedules(JTable mytable) {
+          public static int CommitSchedules(JTable mytable, String datesched) {
             int count = 0;
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
@@ -13339,7 +13344,7 @@ public class OVData {
                        + " plan_qty_sched = " + "'" + mytable.getValueAt(i,6).toString() + "'" + ","
                         + " plan_status = " + "'" + status + "'" + ","
                         + " plan_is_sched = '1' " + ","
-                        + " plan_date_sched = " + "'" + dfdate.format(now) + "'" 
+                        + " plan_date_sched = " + "'" + datesched + "'" 
                         + " where plan_nbr = " + "'" + mytable.getValueAt(i,0) + "'" + ";" );
            }      
               } catch (SQLException s) {

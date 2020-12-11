@@ -79,7 +79,7 @@ ReqPendRpt1,,com.blueseer.utl.ReportPanel,JMenuItem,rqpr
 PostGLTrans,,com.blueseer.fgl.PostGLPanel,JMenuItem,post
 ProdCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prcb
 ProdCodeMaint,,com.blueseer.inv.ProdCodeMaintPanel,JMenuItem,prcm
-ProdSchedMaint,,com.blueseer.prd.ProdSchedPanel,JMenuItem,schm
+Scheduler,,com.blueseer.sch.Scheduler,JMenuItem,schm
 QPRBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,qprb
 QPRMaint,,com.blueseer.inv.QPRMaintPanel,JMenuItem,qprm
 ReqMaint,,com.blueseer.pur.ReqMaintPanel,JMenuItem,reqm

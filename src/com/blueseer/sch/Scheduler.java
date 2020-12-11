@@ -75,6 +75,10 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 
 /**
@@ -105,17 +109,35 @@ public class Scheduler extends javax.swing.JPanel {
     MyTableModelDetail modeldetail = new MyTableModelDetail(new Object[][]{},
            new String[]{"PlanNbr", "Part", "Type", "Cell", "QtySched", "Status"});
      
+     DefaultTableModel modelavailable = new DefaultTableModel(new Object[][]{},
+           new String[]{"Cell", "Capacity", "QtySched", "QtyAvail"});
+             /*
+                    {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 1 || col == 2 || col == 3  ) {      
+                            return Integer.class; 
+                        } else {
+                            return String.class;
+                        }  //other columns accept String values  
+                      }  
+                        }
+             */
     
     boolean isLoad = false;
-    String[] cells = null;
+    ArrayList<String[]>  cells = new ArrayList<String[]>();  // contains cell and capacity
+    ArrayList<String>  cellsonly = new ArrayList<String>(); 
+    String thisCell = "";
+    double thisCellCapacity = 0;
     String startdate = "";
     String enddate = "";
     String cumstartdate = "";
     String cumenddate = "";
     double schtot = 0;
     double reqtot = 0;
+    double sumOfAllCells = 0;
     
-    class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
+  class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
   public ComboBoxRenderer(String[] items) {
     super(items);
   }
@@ -234,8 +256,8 @@ public class Scheduler extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 3 )       
-                return Integer.class;  
+            if (col == 4 )       
+                return Double.class;  
             else return String.class;  //other columns accept String values  
         }  
       @Override  
@@ -263,6 +285,7 @@ public class Scheduler extends javax.swing.JPanel {
 
       
         }    
+  
     
   
   class SomeRenderer extends DefaultTableCellRenderer {
@@ -273,31 +296,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
-     
-        
-        
-        /*
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 7);  // 7 = status column
-        if ("error".equals(status)) {
-            c.setBackground(Color.red);
-            c.setForeground(Color.WHITE);
-        } else if ("close".equals(status)) {
-            c.setBackground(Color.blue);
-            c.setForeground(Color.WHITE);
-        } else if ("backorder".equals(status)) {
-            c.setBackground(Color.yellow);
-            c.setForeground(Color.BLACK);
-        }
-        else {
-            c.setBackground(table.getBackground());
-            c.setForeground(table.getForeground());
-        }   
-        */
-        
-        //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
-      // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
-      // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
-       
+      
         if (isSelected)
         {
             setBackground(table.getSelectionBackground());
@@ -333,6 +332,39 @@ public class Scheduler extends javax.swing.JPanel {
     }
     }
     
+   class AvailableRenderer extends DefaultTableCellRenderer {
+         
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+      
+        if (isSelected)
+        {
+            setBackground(table.getSelectionBackground());
+            setForeground(Color.BLACK);
+           
+        }
+        else
+        {
+              double diff = Double.valueOf(tableavailable.getModel().getValueAt(table.convertRowIndexToModel(row), 3).toString());  // 7 = status column
+             
+              if (diff < 0) {
+              setForeground(Color.red);  
+              } else if (diff == 0) {
+              setForeground(Color.green); 
+             } else {
+              setBackground(table.getBackground());
+              setForeground(table.getForeground());
+              }
+        } 
+            return c;
+    }
+    }
+  
+  
   class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
@@ -421,6 +453,31 @@ public class Scheduler extends javax.swing.JPanel {
      */
     public Scheduler() {
         initComponents();
+           
+    jc.getDayChooser().addPropertyChangeListener("day", new PropertyChangeListener() {
+   @Override
+   public void propertyChange(PropertyChangeEvent e) {
+       int z = (int) e.getNewValue();
+       adjustCalendar(z);
+       getDetail();
+       PanelDetail.setVisible(true);
+      /*
+       JPanel jPanel = jc.getDayChooser().getDayPanel();
+       Component[] component = jPanel.getComponents();
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+       Calendar cal = Calendar.getInstance();
+        cal.setTime(jc.getDate());
+        
+        // first day of month
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        int offset = cal.get(Calendar.DAY_OF_WEEK);
+        int z = (int) e.getNewValue();
+      component[z + 6 + (offset - 1)].setForeground(Color.blue);
+      */
+        //bsmf.MainFrame.show(e.getPropertyName()+ ": " + e.getNewValue() + " " + c.getBackground());
+   }
+});     
+         
     }
 
      public void printtickets(String fromjob, String tojob ) {
@@ -547,7 +604,9 @@ public class Scheduler extends javax.swing.JPanel {
        //  }
          dcto.setDate(calto.getTime());
          
-        
+        lblThisDateQtySched.setText("0");
+        lblThisDateQtyCapacity.setText("0");
+         
          frompart.setText("");
          topart.setText("");
          
@@ -556,7 +615,16 @@ public class Scheduler extends javax.swing.JPanel {
          
          modeldetail.setRowCount(0);
          tabledetail.setModel(modeldetail);
+         
+          modelavailable.setRowCount(0);
+         tableavailable.setModel(modelavailable);
         
+         Enumeration<TableColumn> en = tableavailable.getColumnModel().getColumns();
+                while (en.hasMoreElements()) {
+                    TableColumn tc = en.nextElement();
+                    tc.setCellRenderer(new Scheduler.AvailableRenderer());
+                }
+         
         ddsite.removeAllItems();
         ArrayList<String>  mylist = OVData.getSiteList();
         for (String code : mylist) {
@@ -564,23 +632,27 @@ public class Scheduler extends javax.swing.JPanel {
         } 
          
         ddcellchoice.removeAllItems();
-        ArrayList<String>  cells_list = OVData.getCodeMstrKeyList("CELL");
-        cells = cells_list.toArray(new String[cells_list.size()]);
-        for (String code : cells_list) {
-          ddcellchoice.addItem(code);
+        cells = OVData.getCodeAndValueMstr("CELL");
+      //  cells = cells_list.toArray(new String[cells_list.size()]);
+        for (String[] code : cells) {
+          ddcellchoice.addItem(code[0]);
+          cellsonly.add(code[0]);
+          if (code[1] != null && ! code[1].isEmpty()) {
+           sumOfAllCells += Double.valueOf(code[1]);
+          }
         } 
         ddcellchoice.insertItemAt("ALL", 0);
         ddcellchoice.setSelectedIndex(0);
         
         isLoad = false;
        
-             
-         
+     
          
     }
     
     public void getDetail() {
          modeldetail.setRowCount(0);
+         modelavailable.setRowCount(0);
          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
       
@@ -592,13 +664,16 @@ public class Scheduler extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;  
+                double totqty = 0;
+                double totcap = 0;
                 
                 if (ddcellchoice.getSelectedItem().toString().equals("ALL")) {
                 res = st.executeQuery("SELECT plan_nbr, plan_type, plan_part, plan_qty_req, plan_qty_comp, "
                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, ifnull(plan_is_sched,0) plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_sched = " + "'" + dfdate.format(jc.getDate()) + "'" +
-                        " AND plan_is_sched = " + "'1' "  +
+                        " AND plan_is_sched = " + "'" + "1" + "'"  +
+                        " AND plan_status <> " + "'" + "-1" + "'"  + // void
                         " order by plan_part, plan_cell;");
                 } else {
                 res = st.executeQuery("SELECT plan_nbr, plan_type, plan_part, plan_qty_req, plan_qty_comp, "
@@ -606,20 +681,50 @@ public class Scheduler extends javax.swing.JPanel {
                         " FROM  plan_mstr " +
                         " where plan_date_sched = " + "'" + dfdate.format(jc.getDate()) + "'" +
                         " AND plan_cell = " + "'" + ddcellchoice.getSelectedItem().toString() + "'" +
-                        " AND plan_is_sched = " + "'1' "  +
+                        " AND plan_is_sched = " + "'" + "1" + "'"  +
+                        " AND plan_status <> " + "'" + "-1" + "'"  + // void
                         " order by plan_part, plan_cell;");    
                 }
                 while (res.next()) {
+                    totqty += res.getDouble("plan_qty_sched");
                    modeldetail.addRow(new Object[]{ 
                       res.getString("plan_nbr"), 
                        res.getString("plan_part"),
                        res.getString("plan_type"),
                        res.getString("plan_cell"),
-                       res.getString("plan_qty_sched"),
+                       res.getDouble("plan_qty_sched"),
                       res.getString("plan_status")});
                 }
-               
-                this.repaint();
+                
+                
+                // now get available
+                double qty = 0;
+                double diff = 0;
+                
+               for (String[] cell : cells) {
+                   qty = 0;
+                   diff = 0;
+                   
+                   for (int j = 0; j < tabledetail.getRowCount(); j++) {
+                        if (cell[0].equals(tabledetail.getValueAt(j, 3).toString())) {
+                         qty += Double.valueOf(tabledetail.getValueAt(j, 4).toString());   
+                        }
+                    }
+                    
+                    diff = Double.valueOf(cell[1].toString()) - qty;
+                    totcap += diff;
+                   
+                    modelavailable.addRow(new Object[]{ 
+                      cell[0].toString(), 
+                      cell[1].toString(),
+                       String.valueOf(qty),
+                       String.valueOf(diff) });
+                    
+               }
+             
+               lblThisDateQtySched.setText(String.valueOf(totqty));
+               lblThisDateQtyCapacity.setText(String.valueOf(totcap));
+               // this.repaint();
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -649,9 +754,19 @@ public class Scheduler extends javax.swing.JPanel {
                         " FROM  plan_mstr " +
                         " where plan_date_sched >= " + "'" + fromdate + "'" +
                         " AND plan_date_sched <= " + "'" + todate + "'"  +
-                        " AND plan_is_sched = " + "'1' "  +
+                        " AND plan_is_sched = " + "'" + "1" + "'"  +
+                        " AND plan_status <> " + "'" + "-1" + "'"  + // void
                         " group by plan_date_sched, plan_cell order by plan_date_sched;");
-                } 
+                } else {
+                   res = st.executeQuery("SELECT sum(plan_qty_sched) as 'sum', plan_date_sched, plan_cell " +
+                        " FROM  plan_mstr " +
+                        " where plan_date_sched >= " + "'" + fromdate + "'" +
+                        " AND plan_date_sched <= " + "'" + todate + "'"  +
+                        " AND plan_is_sched = " + "'" + "1" + "'"  +
+                        " AND plan_status <> " + "'" + "-1" + "'"  + // void
+                        " AND plan_cell = " + "'" + ddcellchoice.getSelectedItem().toString() + "'" +
+                        " group by plan_date_sched, plan_cell order by plan_date_sched;");  
+                }
                 while (res.next()) {
                     String[] s = new String[]{res.getString("plan_date_sched"), res.getString("plan_cell"),res.getString("sum") };
                     arr.add(s);
@@ -668,7 +783,7 @@ public class Scheduler extends javax.swing.JPanel {
         return arr;
     }    
     
-    public void adjustCalendar() {
+    public void adjustCalendar(int dateClicked) {
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
@@ -689,22 +804,58 @@ public class Scheduler extends javax.swing.JPanel {
         cal.setTime(jc.getDate());
         String x = "";
         int sum = 0;
-        ArrayList<String[]> list = getSummaryByDate(firstday,lastday);
+        boolean isFull = false;
+        ArrayList<String[]> list = getSummaryByDate(firstday,lastday); // returns date,cell,sum
         
         for (int z = 1; z <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); z++) {
+            if (z == dateClicked) {
+            component[z + 6 + (offset - 1)].setForeground(Color.red);
+            } else {
+            component[z + 6 + (offset - 1)].setForeground(Color.black);
+            }
             x = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + String.format("%02d", z) ;
             sum = 0;
+            if (ddcellchoice.getSelectedItem().toString().equals("ALL")) {
             for (String[] k : list) {
                 if (k[0].equals(x)) {
                     sum += Integer.valueOf(k[2]);
                 }
             }
-            if (sum > 100) {
-                
-                 cal.set(Calendar.DAY_OF_MONTH,z);
-                 component[z + 6 + (offset - 1)].setBackground(Color.green);
-                 // bsmf.MainFrame.show(x + "/" + z + "/" + offset);
+                if (sum >= sumOfAllCells) {
+                     cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.green);
+                     // bsmf.MainFrame.show(x + "/" + z + "/" + offset);
+                } else if (sum > 0 && sum < sumOfAllCells) {
+                     cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.yellow);
+                     // bsmf.MainFrame.show(x + "/" + z + "/" + offset);
+                }  else {
+                    cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.LIGHT_GRAY);
+                } 
+            
+            } else {
+               for (String[] k : list) {
+                if (k[0].equals(x) && k[1].equals(ddcellchoice.getSelectedItem().toString())) {
+                    sum += Integer.valueOf(k[2]);
+                }
             }
+            //   bsmf.MainFrame.show(thisCell + "/" + sum + "/" + thisCellCapacity);
+               
+                if (sum >= thisCellCapacity) {
+                     cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.green);
+                    
+                } else if (sum > 0 && sum < thisCellCapacity) {
+                     cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.yellow);
+                     // bsmf.MainFrame.show(x + "/" + z + "/" + offset);
+                }  else {
+                    cal.set(Calendar.DAY_OF_MONTH,z);
+                     component[z + 6 + (offset - 1)].setBackground(Color.LIGHT_GRAY);
+                }
+            }
+            
         }
         
     }
@@ -721,49 +872,46 @@ public class Scheduler extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        bthide = new javax.swing.JButton();
-        ddsite = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
         jc = new com.toedter.calendar.JCalendar();
-        dcfrom = new com.toedter.calendar.JDateChooser();
-        dcto = new com.toedter.calendar.JDateChooser();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        frompart = new javax.swing.JTextField();
-        topart = new javax.swing.JTextField();
-        cbsched = new javax.swing.JCheckBox();
-        cbclosed = new javax.swing.JCheckBox();
-        btRun = new javax.swing.JButton();
-        btcommit = new javax.swing.JButton();
-        labelcount = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        labelqtysched = new javax.swing.JLabel();
-        labelqtyreqd = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         ddcellchoice = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        btdetail = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        frompart = new javax.swing.JTextField();
+        labelqtyreqd = new javax.swing.JLabel();
+        btcommit = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        dcto = new com.toedter.calendar.JDateChooser();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        dcfrom = new com.toedter.calendar.JDateChooser();
+        labelcount = new javax.swing.JLabel();
+        labelqtysched = new javax.swing.JLabel();
+        btRun = new javax.swing.JButton();
+        cbclosed = new javax.swing.JCheckBox();
+        topart = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        cbsched = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox();
+        jLabel8 = new javax.swing.JLabel();
+        bthide = new javax.swing.JButton();
+        lblThisDateQtySched = new javax.swing.JLabel();
+        lblThisDateQtyCapacity = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         PanelReport = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mytable = new javax.swing.JTable();
         PanelDetail = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableavailable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
         setLayout(new java.awt.BorderLayout());
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("MRP Browse"));
-
-        bthide.setText("Hide Detail");
-        bthide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthideActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Site");
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduler"));
 
         jc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jc.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -772,29 +920,17 @@ public class Scheduler extends javax.swing.JPanel {
             }
         });
 
-        dcfrom.setDateFormatString("yyyy-MM-dd");
-
-        dcto.setDateFormatString("yyyy-MM-dd");
-
-        jLabel7.setText("From:");
-
-        jLabel8.setText("To:");
-
-        cbsched.setText("Unscheduled Only?");
-
-        cbclosed.setText("OpenOnly?");
-        cbclosed.addActionListener(new java.awt.event.ActionListener() {
+        ddcellchoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbclosedActionPerformed(evt);
+                ddcellchoiceActionPerformed(evt);
             }
         });
 
-        btRun.setText("Run");
-        btRun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRunActionPerformed(evt);
-            }
-        });
+        jLabel4.setText("Cell:");
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        labelqtyreqd.setText("0");
 
         btcommit.setText("Commit");
         btcommit.addActionListener(new java.awt.event.ActionListener() {
@@ -803,99 +939,125 @@ public class Scheduler extends javax.swing.JPanel {
             }
         });
 
-        labelcount.setText("0");
+        jLabel2.setText("Tot Qty Reqd");
 
-        jLabel9.setText("Rows");
+        dcto.setDateFormatString("yyyy-MM-dd");
+
+        jLabel3.setText("Site");
+
+        jLabel1.setText("Tot Qty Sched");
+
+        dcfrom.setDateFormatString("yyyy-MM-dd");
+
+        labelcount.setText("0");
 
         labelqtysched.setText("0");
 
-        labelqtyreqd.setText("0");
-
-        jLabel1.setText("Qty Sched");
-
-        jLabel2.setText("Qty Reqd");
-
-        jLabel4.setText("Cell:");
-
-        btdetail.setText("Detail");
-        btdetail.addActionListener(new java.awt.event.ActionListener() {
+        btRun.setText("Run");
+        btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdetailActionPerformed(evt);
+                btRunActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        cbclosed.setText("OpenOnly?");
+        cbclosed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbclosedActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("From:");
+
+        cbsched.setText("Unscheduled Only?");
+
+        jLabel9.setText("Rows");
+
+        jLabel8.setText("To:");
+
+        bthide.setText("Hide Detail");
+        bthide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bthideActionPerformed(evt);
+            }
+        });
+
+        lblThisDateQtySched.setText("0");
+
+        lblThisDateQtyCapacity.setText("0");
+
+        jLabel5.setText("Selected Date Tot Qty");
+
+        jLabel6.setText("Selected Date Tot Avail");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelqtysched, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelqtyreqd, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblThisDateQtySched, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblThisDateQtyCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(btcommit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bthide))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jLabel8)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(frompart, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                                .addComponent(topart))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                                    .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(frompart)
+                                .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addGap(3, 3, 3)
                                 .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(cbsched)
                                 .addGap(5, 5, 5)
                                 .addComponent(cbclosed, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btRun)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btcommit))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(labelqtysched, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelqtyreqd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-            .addComponent(jc, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddcellchoice, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bthide))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btRun)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -903,32 +1065,66 @@ public class Scheduler extends javax.swing.JPanel {
                 .addGap(6, 6, 6)
                 .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbsched)
                     .addComponent(cbclosed))
                 .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btRun)
-                    .addComponent(btcommit))
+                    .addComponent(btcommit)
+                    .addComponent(bthide))
                 .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelqtyreqd, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(labelqtysched, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jc, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcellchoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(btdetail)
-                    .addComponent(bthide))
-                .addContainerGap())
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(labelqtysched, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelqtyreqd, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblThisDateQtySched, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblThisDateQtyCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18))
         );
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddcellchoice, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jc, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddcellchoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jc, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(172, 172, 172))
+        );
+
+        mytable.setAutoCreateRowSorter(true);
         mytable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -951,13 +1147,16 @@ public class Scheduler extends javax.swing.JPanel {
         PanelReport.setLayout(PanelReportLayout);
         PanelReportLayout.setHorizontalGroup(
             PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
         );
         PanelReportLayout.setVerticalGroup(
             PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduled On This Date"));
+
+        tabledetail.setAutoCreateRowSorter(true);
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -971,17 +1170,35 @@ public class Scheduler extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(tabledetail);
 
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder("Available Cells On This Date"));
+
+        tableavailable.setAutoCreateRowSorter(true);
+        tableavailable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tableavailable);
+
         javax.swing.GroupLayout PanelDetailLayout = new javax.swing.GroupLayout(PanelDetail);
         PanelDetail.setLayout(PanelDetailLayout);
         PanelDetailLayout.setHorizontalGroup(
             PanelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelDetailLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         PanelDetailLayout.setVerticalGroup(
             PanelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addGroup(PanelDetailLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1095,8 +1312,8 @@ public class Scheduler extends javax.swing.JPanel {
                 //  mytable.getColumnModel().getColumn(5).setCellRenderer(comboBoxRenderer);
                 
                 TableColumn col = mytable.getColumnModel().getColumn(5);
-                col.setCellEditor(new ComboBoxEditor(cells));
-                col.setCellRenderer(new ComboBoxRenderer(cells));
+                col.setCellEditor(new ComboBoxEditor(cellsonly.toArray(new String[cellsonly.size()])));
+                col.setCellRenderer(new ComboBoxRenderer(cellsonly.toArray(new String[cellsonly.size()])));
 
                 Enumeration<TableColumn> en = mytable.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
@@ -1209,7 +1426,7 @@ public class Scheduler extends javax.swing.JPanel {
                 labelqtyreqd.setText(String.valueOf(reqtot));
                 labelcount.setText(String.valueOf(i));
 
-        adjustCalendar();
+        adjustCalendar(0);
                 
                 
                 //    RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mymodel);
@@ -1229,7 +1446,7 @@ public class Scheduler extends javax.swing.JPanel {
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         boolean commit = true;
         int count = 0;
-        java.util.Date now = new java.util.Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         // clean out the unchecked rows
 
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
@@ -1264,7 +1481,7 @@ public class Scheduler extends javax.swing.JPanel {
 
             // all that should be left are lines to be scheduled
             if (mytable.getRowCount() > 0) {
-                count = OVData.CommitSchedules(mytable);
+                count = OVData.CommitSchedules(mytable, df.format(jc.getDate()) );
             }
             postcommit();
             bsmf.MainFrame.show(String.valueOf(count) + " " + "Schedules Committed ");
@@ -1275,24 +1492,36 @@ public class Scheduler extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbclosedActionPerformed
 
-    private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
-        getDetail();
-        PanelDetail.setVisible(true);
-    }//GEN-LAST:event_btdetailActionPerformed
-
     private void jcPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcPropertyChange
        if (! evt.getPropertyName().toLowerCase().equals("ancestor")) {
            String[] o = evt.getOldValue().toString().split(",");
            String[] n = evt.getNewValue().toString().split(",");
            
            if (! o[30].equals(n[30])) {
-               adjustCalendar();
+               adjustCalendar(0);
            }
-          
-       
-        
        }
     }//GEN-LAST:event_jcPropertyChange
+
+    private void ddcellchoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcellchoiceActionPerformed
+        if (! isLoad) {
+          //  bsmf.MainFrame.show("firing");
+            for (String[] x : cells) {
+                if (ddcellchoice.getSelectedItem().toString().equals(x[0])) {
+                    thisCell = x[0];
+                  //  bsmf.MainFrame.show(x[0]);
+                    if (x[1] != null && ! x[1].isEmpty()) {
+                    thisCellCapacity = Double.valueOf(x[1]);
+                    } else {
+                    thisCellCapacity = 0;    
+                    }
+                }
+            }
+            adjustCalendar(0);
+            getDetail();
+            PanelDetail.setVisible(true);
+        }
+    }//GEN-LAST:event_ddcellchoiceActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1300,7 +1529,6 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JPanel PanelReport;
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcommit;
-    private javax.swing.JButton btdetail;
     private javax.swing.JButton bthide;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbclosed;
@@ -1314,18 +1542,25 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private com.toedter.calendar.JCalendar jc;
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labelqtyreqd;
     private javax.swing.JLabel labelqtysched;
+    private javax.swing.JLabel lblThisDateQtyCapacity;
+    private javax.swing.JLabel lblThisDateQtySched;
     private javax.swing.JTable mytable;
+    private javax.swing.JTable tableavailable;
     private javax.swing.JTable tabledetail;
     private javax.swing.JTextField topart;
     // End of variables declaration//GEN-END:variables

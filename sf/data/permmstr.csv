@@ -168,7 +168,7 @@ admin;InventoryAdjustment
 admin;InventoryReportsMenu
 admin;TransBrowse
 admin;ScheduleMenu
-admin;ProdSchedMaint
+admin;Scheduler
 admin;ProdSchedRpt1
 admin;PlanMiscMaint
 admin;ForecastMaint

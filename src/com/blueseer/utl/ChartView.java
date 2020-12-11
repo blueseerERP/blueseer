@@ -2581,10 +2581,11 @@ public class ChartView extends javax.swing.JPanel {
          if (whichreport.equals("ScrapChartQtyByCode")) {
             CodesAccumQty();
             tacodes.setText("");
-            ArrayList codes = OVData.getCodeAndDescMstr("Scrap");
+            ArrayList<String[]> codes = OVData.getCodeAndValueMstr("Scrap");
             String str = "";
             for (int i = 0; i < codes.size(); i++) {
-              str += (codes.get(i)) + "\n";
+              String[] c = codes.get(i);  
+              str += (c[0] + " = " + c[1]) + "\n";
             }
             tacodes.setText(str);
             CodePanel.setVisible(true);
@@ -2593,10 +2594,11 @@ public class ChartView extends javax.swing.JPanel {
           if (whichreport.equals("ScrapChartDolByCode")) {
             CodesAccumDollar();
             tacodes.setText("");
-            ArrayList codes = OVData.getCodeAndDescMstr("Scrap");
+            ArrayList<String[]> codes = OVData.getCodeAndValueMstr("Scrap"); 
             String str = "";
             for (int i = 0; i < codes.size(); i++) {
-              str += (codes.get(i)) + "\n";
+              String[] c = codes.get(i);  
+              str += (c[0] + " = " + c[1]) + "\n";
             }
             tacodes.setText(str);
             CodePanel.setVisible(true);
