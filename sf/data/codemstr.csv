@@ -45,9 +45,9 @@ labeltype,pouch,
 labeltype,addr,
 SCRAP,AB1,Scrap Code AB
 SCRAP,VB1,Scrap Code VB
-CELL,CELL1,Cell 1
-CELL,CELL2,Cell 2
-CELL,CELL3,Cell 3
+CELL,CELL1,100
+CELL,CELL2,100
+CELL,CELL3,100
 edixref,1000,DANAHER
 orderstatus,close,
 engineer,Ted,

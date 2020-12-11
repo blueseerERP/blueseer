@@ -26,9 +26,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
-import com.blueseer.prd.ProdSchedPanel;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
