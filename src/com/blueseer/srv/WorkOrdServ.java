@@ -33,12 +33,16 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.createMessage;
+import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -49,6 +53,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,7 +68,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import java.util.LinkedHashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  *
@@ -74,32 +84,33 @@ public class WorkOrdServ extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        BufferedReader reader = request.getReader();
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         String id = request.getParameter("id");
-        if (id == null || id.isEmpty()) {
-            response.getWriter().println("id is null or blank");
+        String fromdate = request.getParameter("fromdate");
+        String todate = request.getParameter("todate");
+        String fromitem = request.getParameter("fromitem");
+        String toitem = request.getParameter("toitem");
+        if (id != null && ! id.isEmpty()) {
+            response.getWriter().println(getWorkOrderJSON(id));
         } else {
-           response.getWriter().println(getWorkOrderXML(id)); 
+           response.getWriter().println(getWorkOrderListByDateJSON(fromdate,todate,fromitem,toitem)); 
         }
     }
      
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        BufferedReader reader = request.getReader();
+       // BufferedReader reader = request.getReader();
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
-        if (reader == null) {
-            response.getWriter().println("no xml stream provided");
+        if (request == null) {
+            response.getWriter().println("no valid payload provided");
         } else {
-            try { 
-                response.getWriter().println(postWorkOrderXML(request));
-            } catch (ParserConfigurationException ex) {
-                bsmf.MainFrame.bslog(ex);
-            } catch (SAXException ex) {
-                bsmf.MainFrame.bslog(ex);
+            try {
+                response.getWriter().println(postWorkOrderJSON(request));
+            } catch (TransformerException ex) {
+                response.getWriter().println(ex);
             }
         }
     }
@@ -109,7 +120,7 @@ public class WorkOrdServ extends HttpServlet {
     public static class  WorkOrderXML {
     
     public static Document createRoot(Document doc) {
-        Element rootElement = doc.createElement("doc");
+        Element rootElement = doc.createElement("Document");
         doc.appendChild(rootElement);        
         return doc;
     }
@@ -131,7 +142,7 @@ public class WorkOrdServ extends HttpServlet {
         return doc;
     }
     
-    public static Document createHeader(Document doc, String nbr, String item, String site,
+    public static Document createBody(Document doc, String nbr, String item, String site,
             String desc, String code, String wf, String drawing, String rev,
             String loc, String wh, String lotsize, String comments, String uom,
             String qtyreq, String qtysched, String cell, String type,
@@ -141,8 +152,11 @@ public class WorkOrdServ extends HttpServlet {
         Element header = doc.createElement("WorkOrder");
         doc.getDocumentElement().appendChild(header);
        
-       
-        Element e = doc.createElement("WorkOrderNumber");
+        Element e = doc.createElement("Action");
+                        e.appendChild(doc.createTextNode("query"));
+        header.appendChild(e);
+        
+        e = doc.createElement("WorkOrderNumber");
                         e.appendChild(doc.createTextNode(BlueSeerUtils.xNull(nbr)));
         header.appendChild(e);
        
@@ -152,6 +166,10 @@ public class WorkOrdServ extends HttpServlet {
        
         e = doc.createElement("Site");
                         e.appendChild(doc.createTextNode(BlueSeerUtils.xNull(site)));
+        header.appendChild(e);
+        
+        e = doc.createElement("Operation");
+                        e.appendChild(doc.createTextNode("")); // multi operations
         header.appendChild(e);
        
         e = doc.createElement("ItemDescription");
@@ -233,6 +251,26 @@ public class WorkOrdServ extends HttpServlet {
         e = doc.createElement("OrderDueDate");
                         e.appendChild(doc.createTextNode(BlueSeerUtils.xNull(datedue)));
         header.appendChild(e);
+        
+        e = doc.createElement("QtyComplete");
+                        e.appendChild(doc.createTextNode(""));
+        header.appendChild(e);
+        
+        e = doc.createElement("DateComplete");
+                        e.appendChild(doc.createTextNode(""));
+        header.appendChild(e);
+        
+        e = doc.createElement("LotNumber");
+                        e.appendChild(doc.createTextNode(""));
+        header.appendChild(e);
+        
+        e = doc.createElement("Operator");
+                        e.appendChild(doc.createTextNode(""));
+        header.appendChild(e);
+        
+        e = doc.createElement("PostComments");
+                        e.appendChild(doc.createTextNode(""));
+        header.appendChild(e);
        
         return doc;
     }
@@ -241,6 +279,7 @@ public class WorkOrdServ extends HttpServlet {
     
 }
     
+   
     public static String getWorkOrderXML(String id) {
        
         String x = ""; 
@@ -269,16 +308,25 @@ public class WorkOrdServ extends HttpServlet {
                  
                  StringWriter writer = new StringWriter();
                     int z = 0;
+                    String status = "";
                     while (res.next()) {
                         z++;
+                        
+                        if (res.getString("plan_status").equals("1")) {
+                            status = "closed";
+                        } else if (res.getString("plan_status").equals("-1")) {
+                            status = "void";
+                        } else {
+                            status = "open";
+                        }
                             // Create Root Element
                         doc = WorkOrderXML.createRoot(doc);
                         
                         // Create Routing Tag Content
-                        doc = WorkOrderXML.createRouting(doc, "", "");
+                     //   doc = WorkOrderXML.createRouting(doc, "", "");
                        
                         // Create header Tag content
-                        doc = WorkOrderXML.createHeader(doc, 
+                        doc = WorkOrderXML.createBody(doc, 
                                 res.getString("plan_nbr"), 
                                 res.getString("plan_part"),
                                 res.getString("it_site"),
@@ -297,7 +345,7 @@ public class WorkOrdServ extends HttpServlet {
                                 res.getString("plan_cell"),
                                 res.getString("plan_type"),
                                 res.getString("plan_rmks"),
-                                res.getString("plan_status"),
+                                status,
                                 res.getString("plan_order"),
                                 res.getString("plan_line"),
                                 res.getString("plan_date_sched"),
@@ -329,39 +377,384 @@ public class WorkOrdServ extends HttpServlet {
         
          } 
         
-    public static String postWorkOrderXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException {
+    public static String getWorkOrderJSON(String id) {
+       
+        String x = ""; 
+        
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_part as 'Item', " +
+                        " it_desc as 'Description', it_wf as 'Routing', it_drawing as 'Drawing', " +
+                        " it_rev as 'Revision', it_loc as 'Location', it_wh as 'Warehouse', " +
+                        " it_lotsize as 'LotSize', it_comments as 'ItemComments', it_uom as 'UOM', " +
+                        " plan_qty_req as 'QtyRequired', plan_qty_sched as 'QtyScheduled', " +
+                        " plan_cell as 'Cell', plan_type as 'PlanType', plan_rmks as 'PlanRemarks', " +
+                        " plan_order as 'Order', plan_line as 'Line', plan_date_sched as 'DateScheduled', " +
+                        " plan_date_due as 'DateDue', " +
+                        " case when plan_status = '1' then 'closed' when plan_status = '0' then 'open' when plan_status = '-1' then 'void' end as 'Status' " +
+                        " from plan_mstr " +
+                               " inner join item_mstr on " +
+                               " it_item = plan_part " +
+                               " where plan_nbr = " + "'" + id + "'" + ";");
+                       
+               
+                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    ResultSetMetaData rsmd = res.getMetaData(); 
+                    while (res.next()) {
+                        int numColumns = rsmd.getColumnCount();
+                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                          for (int i=1; i<=numColumns; i++) {
+                            String column_name = rsmd.getColumnName(i);
+                            jsonOrderedMap.put(column_name, res.getObject(column_name));
+                          }
+                          json.add(jsonOrderedMap);
+                    }
+                    x = json.toJson();
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+     
+    public static String getWorkOrderListByDateJSON(String fromdate, String todate, String fromitem, String toitem) {
+       
+        String x = ""; 
+        if (fromitem == null || fromitem.isEmpty()) {
+            fromitem = bsmf.MainFrame.lowchar;
+        }
+        if (toitem == null || toitem.isEmpty()) {
+            toitem = bsmf.MainFrame.hichar;
+        }
+        if (fromdate == null) {
+            fromdate = "";
+        }
+        if (todate == null) {
+            todate = "";
+        }
+        
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_part as 'Item', " +
+                        " it_desc as 'Description', it_wf as 'Routing', it_drawing as 'Drawing', " +
+                        " it_rev as 'Revision', it_loc as 'Location', it_wh as 'Warehouse', " +
+                        " it_lotsize as 'LotSize', it_comments as 'ItemComments', it_uom as 'UOM', " +
+                        " plan_qty_req as 'QtyRequired', plan_qty_sched as 'QtyScheduled', " +
+                        " plan_cell as 'Cell', plan_type as 'PlanType', plan_rmks as 'PlanRemarks', " +
+                        " plan_order as 'Order', plan_line as 'Line', plan_date_create as 'DateCreate', " +
+                        " plan_date_due as 'DateDue', " +
+                        " case when plan_status = '1' then 'closed' when plan_status = '0' then 'open' when plan_status = '-1' then 'void' end as 'Status' " +
+                        " from plan_mstr " +
+                               " inner join item_mstr on " +
+                               " it_item = plan_part " +
+                               " where plan_date_create >= " + "'" + fromdate + "'" + 
+                               " and plan_date_create <= " + "'" + todate + "'" + 
+                               " and plan_part >= " + "'" + fromitem + "'" +
+                               " and plan_part <= " + "'" + toitem + "'" +        
+                                       ";");
+                       
+               
+                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    ResultSetMetaData rsmd = res.getMetaData(); 
+                    while (res.next()) {
+                        int numColumns = rsmd.getColumnCount();
+                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                          for (int i=1; i<=numColumns; i++) {
+                            String column_name = rsmd.getColumnName(i);
+                            jsonOrderedMap.put(column_name, res.getObject(column_name));
+                          }
+                          json.add(jsonOrderedMap);
+                    }
+                    x = json.toJson();
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+    
+    
+    public static String postWorkOrderXML(HttpServletRequest request) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         String x = "";
+        
+         JTable mytable = new JTable();
+            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+            });
+        
         // read xml and convert to DOM
         InputStream xml = request.getInputStream();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder(); 
         Document doc = db.parse(xml);
-        String origin = "";
-        String destination = "";
+        String action = "";
+        String workordernbr = "";
+        String item = "";
+        String site = "";
+        String operation = "";
+        String qtycomp = "";
+        String datecomp = "";
+        String lotnbr = "";
+        String operator = "";
+        String postcomments = "";
+        String junktag = "";
+        
         String remoteuser = request.getRemoteUser();
         String remoteaddr = request.getRemoteAddr();
        
         // parse the routing element and retrieve origin and destination
-        NodeList routing = doc.getElementsByTagName("routing");
-        for (int i = 0; i < routing.getLength(); i++) {
-
-		Node nNode = routing.item(i);
-
-		System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
+        NodeList orderElements = doc.getElementsByTagName("WorkOrder");
+        for (int i = 0; i < orderElements.getLength(); i++) {
+		Node nNode = orderElements.item(i);
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
 			Element eElement = (Element) nNode;
-
-			//System.out.println("Staff id : " + eElement.getAttribute("id"));
-			origin = "Origin : " + eElement.getElementsByTagName("origin").item(0).getTextContent();
-			destination = "Destination : " + eElement.getElementsByTagName("destination").item(0).getTextContent();
-			
-
+                        NodeList n = eElement.getChildNodes();
+                        for (int k = 0; k < n.getLength(); k++) {
+                            if (n.item(k).getNodeType() == Node.ELEMENT_NODE) {
+                            System.out.println("\n" + k + ": " + "Element :" + n.item(k).getNodeName());
+                                switch(n.item(k).getNodeName()) {
+                                     case "Action" :
+                                         action = n.item(k).getTextContent();
+                                         break;
+                                     case "WorkOrderNumber" :
+                                         workordernbr = n.item(k).getTextContent();
+                                         break;
+                                     case "Item" :
+                                         item = n.item(k).getTextContent();
+                                          System.out.println("\n" + k + ": " + "Element :" + n.item(k).getTextContent());
+                                          break;
+                                     case "Site" :
+                                         site = n.item(k).getTextContent();
+                                         break;
+                                     case "Operation" :
+                                         operation = n.item(k).getTextContent();
+                                         break;
+                                     case "QtyComplete" :
+                                         qtycomp = n.item(k).getTextContent();
+                                         break; 
+                                     case "DateComplete" :
+                                         datecomp = n.item(k).getTextContent();
+                                         break; 
+                                     case "LotNumber" :
+                                         lotnbr = n.item(k).getTextContent();
+                                         break; 
+                                     case "Operator" :
+                                         operator = n.item(k).getTextContent();
+                                         break;   
+                                     case "PostComments" :
+                                         postcomments = n.item(k).getTextContent();
+                                         break;       
+                                     default :
+                                         junktag = n.item(k).getNodeName();
+                                }
+                            }
+                        }
+                        
+			// x = eElement.getElementsByTagName("Item").item(0).getTextContent();
 		}
 	}
-
-        return x;
+        
+        // check for bad elements
+        if (item.isEmpty() || ! OVData.isValidItem(item)) {
+           return createMessage("Item not in item master", "fail", "0"); 
+        }
+        
+        if (! OVData.isValidOperation(item, operation)) {
+           return createMessage("Not a valid operation for this item", "fail", "0"); 
+        }
+        
+        if (OVData.getPlanStatus(workordernbr) != 0) {
+           return createMessage("Work Order is closed", "fail", "0"); 
+        }
+        
+        
+        // create table of data
+        String[] det = OVData.getItemDetail(item); 
+        mymodel.addRow(new Object[]{item,
+                "ISS-WIP",
+                operation,
+                qtycomp,
+                datecomp,
+                det[8], // location
+                workordernbr,  // serialno  ...using JOBID from tubtraveler
+                lotnbr,  // reference -- tr_ref holds the scrap code
+                site,
+                operator,
+                det[3],
+                "",   //  tr_actcell
+                postcomments.replace(",", ""),   // remarks 
+                "", // pack station
+                "", // pack date
+                "", // assembly date
+                "WorkOrdServ", // program
+                det[9] // warehouse
+            });
+            mytable.setModel(mymodel);
+        // load tran table and create pland_mstr
+         if (! OVData.loadTranHistByTable(mytable)) {
+           return createMessage("loadTranHistByTable failed", "fail", "0");   
+         } else {
+             int key = OVData.CreatePlanDet(mytable);
+             return createMessage("work order loaded successfully", "success", String.valueOf(key));
+         }
+       
     }
     
+    public static String postWorkOrderJSON(HttpServletRequest request) throws IOException, TransformerException {
+        String x = "";
+        
+         JTable mytable = new JTable();
+            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+            });
+        String line = "";
+        StringBuffer jb = new StringBuffer();
+        BufferedReader reader = request.getReader();
+        while ((line = reader.readLine()) != null) {
+        jb.append(line);
+        }
+        
+        JSONObject json = new JSONObject(jb.toString());
+       
+        String action = "";
+        String workordernbr = "";
+        String item = "";
+        String site = "";
+        String operation = "";
+        String qtycomp = "";
+        String datecomp = "";
+        String lotnbr = "";
+        String operator = "";
+        String postcomments = "";
+        String junktag = "";
+        
+        
+        // now lets iterate over the JSON object
+        for (String keyStr : json.keySet()) { 
+        Object keyvalue = json.get(keyStr);
+        
+            switch(keyStr) {
+                 case "Action" :
+                     action = keyvalue.toString();
+                     break;
+                 case "WorkOrderNumber" :
+                     workordernbr = keyvalue.toString();
+                     break;
+                 case "Item" :
+                     item = keyvalue.toString();
+                     break;
+                 case "Site" :
+                     site = keyvalue.toString();
+                     break;
+                 case "Operation" :
+                     operation = keyvalue.toString();
+                     break;
+                 case "QtyComplete" :
+                     qtycomp = keyvalue.toString();
+                     break; 
+                 case "DateComplete" :
+                     datecomp = keyvalue.toString();
+                     break; 
+                 case "LotNumber" :
+                     lotnbr = keyvalue.toString();
+                     break; 
+                 case "Operator" :
+                     operator = keyvalue.toString();
+                     break;   
+                 case "PostComments" :
+                     postcomments = keyvalue.toString();
+                     break;       
+                 default :
+                     junktag = keyvalue.toString();
+            }
+
+       
+        //for nested objects iteration if required
+        //if (keyvalue instanceof JSONObject)
+        //    printJsonObject((JSONObject)keyvalue);
+    }
+        
+       
+        // check for bad elements
+        if (item.isEmpty() || ! OVData.isValidItem(item)) {
+           return createMessage("Item not in item master", "fail", "0"); 
+        }
+        
+        if (! OVData.isValidOperation(item, operation)) {
+           return createMessage("Not a valid operation for this item", "fail", "0"); 
+        }
+        
+        if (OVData.getPlanStatus(workordernbr) != 0) {
+           return createMessage("Work Order is closed", "fail", "0"); 
+        }
+        
+        
+        // create table of data
+        String[] det = OVData.getItemDetail(item); 
+        mymodel.addRow(new Object[]{item,
+                "ISS-WIP",
+                operation,
+                qtycomp,
+                datecomp,
+                det[8], // location
+                workordernbr,  // serialno  ...using JOBID from tubtraveler
+                lotnbr,  // reference -- tr_ref holds the scrap code
+                site,
+                operator,
+                det[3],
+                "",   //  tr_actcell
+                postcomments.replace(",", ""),   // remarks 
+                "", // pack station
+                "", // pack date
+                "", // assembly date
+                "WorkOrdServ", // program
+                det[9] // warehouse
+            });
+            mytable.setModel(mymodel);
+        // load tran table and create pland_mstr
+         if (! OVData.loadTranHistByTable(mytable)) {
+           return createMessage("loadTranHistByTable failed", "fail", "0");   
+         } else {
+             int key = OVData.CreatePlanDet(mytable);
+             return createMessage("work order loaded successfully", "success", String.valueOf(key));
+         }
+       
+    }
+    
+    
+   
 }

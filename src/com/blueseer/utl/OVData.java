@@ -128,6 +128,8 @@ import jcifs.smb.SmbFileInputStream;
 
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /*
@@ -4637,6 +4639,104 @@ public class OVData {
         return myreturn;
     }
 
+    
+     public static String[] addCustMstrWShipToMinimal(String[] list) {
+       // list[0] will have newly assigned custcode from getNextNbr
+       // return array:  aracct, arcc, currency, bank, terms, carrier, onhold, site
+       String[] x = new String[]{"","","","","","","", ""}; 
+        
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+                        
+            x[0] = OVData.getDefaultARAcct();
+            x[1] = OVData.getDefaultARCC();
+            x[2] = OVData.getDefaultCurrency();
+            x[3] = OVData.getDefaultARBank();
+            x[4] = "N00";
+            x[5] = "";
+            x[6] = "0";
+            x[7] = OVData.getDefaultSite();
+            
+            try {
+                int i = 0;
+               
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + list[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_phone, cm_email, cm_dateadd, cm_datemod, "
+                                + " cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_terms ) "
+                                + " values ( "
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[1] + "'" + ","
+                                + "'" + list[2] + "'" + ","
+                                + "'" + list[3] + "'" + ","
+                                + "'" + list[4] + "'" + ","
+                                + "'" + list[5] + "'" + ","
+                                + "'" + list[6] + "'" + ","
+                                + "'" + list[7] + "'" + ","
+                                + "'" + list[8] + "'" + ","
+                                + "'" + list[9] + "'" + ","
+                                + "'" + list[10] + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + x[0] + "'" + ","
+                                + "'" + x[1] + "'" + ","
+                                + "'" + x[3] + "'" + ","
+                                + "'" + x[2] + "'" + ","
+                                + "'" + x[4] + "'"                                       
+                                + " );"
+                        );
+
+                        // now add default shipto with same shipcode as billcode
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
+                                + " values ( "
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[11] + "'" + ","
+                                + "'" + list[12] + "'" + ","
+                                + "'" + list[13] + "'" + ","
+                                + "'" + list[14] + "'" + ","
+                                + "'" + list[15] + "'" + ","
+                                + "'" + list[16] + "'" + ","
+                                + "'" + list[17] + "'" + ","
+                                + "'" + list[18] + "'"
+                                + " );"
+                        );
+
+                    }
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+    
     public static boolean addCustMstrWShipTo(ArrayList<String> list) {
         boolean myreturn = true;
         try {
@@ -6935,7 +7035,7 @@ public class OVData {
          
             
            
-              public static String getDefaultSite() {
+    public static String getDefaultSite() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -6962,7 +7062,7 @@ public class OVData {
         
     }
               
-           public static String getDefaultWH() {
+    public static String getDefaultWH() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -6989,7 +7089,7 @@ public class OVData {
         
     }
         
-          public static String getDefaultCC() {
+    public static String getDefaultCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7019,7 +7119,7 @@ public class OVData {
            
               
               
-              public static String getDefaultSiteName() {
+    public static String getDefaultSiteName() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7046,7 +7146,7 @@ public class OVData {
         
     }
               
-              public static String getDefaultCurrency() {
+    public static String getDefaultCurrency() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7073,7 +7173,7 @@ public class OVData {
         
     }
        
-                    public static String getDefaultLabelPrinter() {
+    public static String getDefaultLabelPrinter() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7101,7 +7201,7 @@ public class OVData {
     }
               
               
-               public static String getDefaultARBank() {
+    public static String getDefaultARBank() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7128,7 +7228,7 @@ public class OVData {
         
     }
                
-         public static String getDefaultARAcct() {
+    public static String getDefaultARAcct() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7183,7 +7283,7 @@ public class OVData {
     }
     
     
-      public static String getDefaultPayLaborAcct() {
+    public static String getDefaultPayLaborAcct() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7210,7 +7310,7 @@ public class OVData {
         
     }
     
-     public static String getDefaultPayLaborCC() {
+    public static String getDefaultPayLaborCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7237,7 +7337,7 @@ public class OVData {
         
     }
     
-     public static String getDefaultPaySalariedAcct() {
+    public static String getDefaultPaySalariedAcct() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7264,7 +7364,7 @@ public class OVData {
         
     }
       
-   public static String getDefaultPaySalariedCC() {
+    public static String getDefaultPaySalariedCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7291,7 +7391,7 @@ public class OVData {
         
     }  
          
-      public static String getDefaultPayTaxAcct() {
+    public static String getDefaultPayTaxAcct() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7318,7 +7418,7 @@ public class OVData {
         
     }
       
-          public static String getPayProfileDetAcct(String profile, String line) {
+    public static String getPayProfileDetAcct(String profile, String line) {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7346,7 +7446,7 @@ public class OVData {
         
     }  
       
-              public static String getPayProfileDetCC(String profile, String line) {
+    public static String getPayProfileDetCC(String profile, String line) {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7375,7 +7475,7 @@ public class OVData {
     }  
           
       
-       public static String getPayProfileAcctPayTaxCC() {
+    public static String getPayProfileAcctPayTaxCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7402,7 +7502,7 @@ public class OVData {
         
     }
          
-         public static String getDefaultSalesAcct() {
+    public static String getDefaultSalesAcct() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7429,7 +7529,7 @@ public class OVData {
         
     }
          
-          public static String getDefaultAssetAcctAR() {
+    public static String getDefaultAssetAcctAR() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7456,7 +7556,7 @@ public class OVData {
         
     }
          
-           public static String getDefaultAssetAcctAP() {
+    public static String getDefaultAssetAcctAP() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7483,7 +7583,7 @@ public class OVData {
         
     }
           
-           public static String getDefaultAssetCC() {
+    public static String getDefaultAssetCC() {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -7510,7 +7610,7 @@ public class OVData {
         
     }
           
-         public static String getCustTerms(String cust) {
+    public static String getCustTerms(String cust) {
            String myitem = null;
          try{
             Class.forName(driver).newInstance();
@@ -10161,7 +10261,49 @@ public class OVData {
         return myitem;
         
     }
-           
+       
+    public static String[] getItemDetail(String mypart) {
+           String[] x = new String[]{"","","","","","","","","",""};
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+               while (res.next()) {
+                x[0] = res.getString("it_item"); 
+                x[1] = res.getString("it_desc"); 
+                x[2] = res.getString("it_uom"); 
+                x[3] = res.getString("it_prodline"); 
+                x[4] = res.getString("it_code"); 
+                x[5] = res.getString("it_rev"); 
+                x[6] = res.getString("it_status"); 
+                x[7] = res.getString("it_site"); 
+                x[8] = res.getString("it_loc"); 
+                x[9] = res.getString("it_wh"); 
+                }
+          } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Item Master");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+        
            
     public static ArrayList getItemRoutingOPs(String myitem) {
        ArrayList myarray = new ArrayList();
@@ -13841,6 +13983,11 @@ public class OVData {
           17=warehouse
           
           */
+          
+          if (mytable == null || mytable.getRowCount() == 0) {
+              return false;
+          }
+          
           boolean didLoad = false;
           String mytrkey = "";
           boolean islastop = false;
@@ -13880,9 +14027,9 @@ public class OVData {
                 // added later
                 Double _baseqty = 0.00;
                 String _uom = "";
-                
+             
           for (int i = 0; i < mytable.getRowCount(); i++) {
-              
+          
               _part = mytable.getValueAt(i, 0).toString();
               _type = mytable.getValueAt(i, 1).toString();
               _op = mytable.getValueAt(i, 2).toString();
@@ -22632,6 +22779,276 @@ public class OVData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
+      }
+      
+      public static String[] CreateSalesOrderByJSON(String jsonString) {
+          String[] x = new String[]{"","",""};
+          boolean isError = false; 
+          JSONObject json = new JSONObject(jsonString);
+          String junktag = "";
+          String PONumber = "";
+          String Remarks = "";
+          String OrderDate = "";
+          String DueDate = "";
+          String Currency = "";
+          String Type = "";
+          String ShipVia = "";
+          String BillToCode = "";
+          String BillToName = "";
+          String BillToAddr1 = "";
+          String BillToCity = "";
+          String BillToState = "";
+          String BillToZip = "";
+          String BillToCountry = "";
+          String BillToEmail = "";
+          String BillToPhone = "";
+          String ShipToCode = "";
+          String ShipToName = "";
+          String ShipToAddr1 = "";
+          String ShipToCity = "";
+          String ShipToState = "";
+          String ShipToZip = "";
+          String ShipToCountry = "";
+          ArrayList<String[]> detail = new ArrayList<String[]>();
+          
+          
+          for (String keyStr : json.keySet()) { 
+           Object keyvalue = json.get(keyStr);
+           
+           // process header tags in JSON
+           switch(keyStr) {
+                 case "PONumber" :
+                     PONumber = keyvalue.toString();
+                     break;
+                 case "Remarks" :
+                     Remarks = keyvalue.toString();
+                     break;
+                 case "OrderDate" :
+                     OrderDate = keyvalue.toString();
+                     break;
+                 case "DueDate" :
+                     DueDate = keyvalue.toString();
+                     break;
+                 case "Currency" :
+                     Currency = keyvalue.toString();
+                     break;
+                 case "Type" :
+                     Type = keyvalue.toString();
+                     break; 
+                 case "ShipVia" :
+                     ShipVia = keyvalue.toString();
+                     break;    
+                 case "BillToCode" :
+                     BillToCode = keyvalue.toString();
+                     break;
+                 case "BillToName" :
+                     BillToName = keyvalue.toString();
+                     break;
+                 case "BillToAddr1" :
+                     BillToAddr1 = keyvalue.toString();
+                     break;
+                 case "BillToCity" :
+                     BillToCity = keyvalue.toString();
+                     break;
+                 case "BillToState" :
+                     BillToState = keyvalue.toString();
+                     break;
+                 case "BillToZip" :
+                     BillToZip = keyvalue.toString();
+                     break; 
+                 case "BillToCountry" :
+                     BillToCountry = keyvalue.toString();
+                     break;
+                 case "BillToEmail" :
+                     BillToEmail = keyvalue.toString();
+                     break;
+                 case "BillToPhone" :
+                     BillToPhone = keyvalue.toString();
+                     break;
+                 case "ShipToCode" :
+                     ShipToCode = keyvalue.toString();
+                     break;
+                 case "ShipToName" :
+                     ShipToName = keyvalue.toString();
+                     break;
+                 case "ShipToAddr1" :
+                     ShipToAddr1 = keyvalue.toString();
+                     break;
+                 case "ShipToCity" :
+                     ShipToCity = keyvalue.toString();
+                     break;
+                 case "ShipToState" :
+                     ShipToState = keyvalue.toString();
+                     break;
+                 case "ShipToZip" :
+                     ShipToZip = keyvalue.toString();
+                     break; 
+                 case "ShipToCountry" :
+                     ShipToCountry = keyvalue.toString();
+                     break;     
+                 default :
+                     junktag = keyvalue.toString();
+            }
+           
+           // process detail array 'Items' in JSON
+           if (keyStr.equals("Items")) {
+                for (Object line : (JSONArray) keyvalue) {
+                    JSONObject jsonDetail = new JSONObject(line);
+                    String ItemNumber = "";
+                    String Line = "";
+                    String OrderQty = "";
+                    String UOM = "";
+                    String CustItem = "";
+                    String ListPrice = "";
+                    String NetPrice = "";
+                    String Discount = "";
+                    String junktagdet = "";
+                    
+                    for (String detailKey : jsonDetail.keySet()) {
+                        Object detailValue = jsonDetail.get(detailKey);
+                        switch(detailKey) {
+                             case "ItemNumber" :
+                                 ItemNumber = detailValue.toString();
+                                 break;
+                             case "Line" :
+                                 Line = detailValue.toString();
+                                 break;
+                             case "OrderQty" :
+                                 OrderQty = detailValue.toString();
+                                 break;
+                             case "UOM" :
+                                 UOM = detailValue.toString();
+                                 break;
+                             case "CustItem" :
+                                 CustItem = detailValue.toString();
+                                 break;
+                             case "ListPrice" :
+                                 ListPrice = detailValue.toString();
+                                 break;  
+                             case "NetPrice" :
+                                 NetPrice  = detailValue.toString();
+                                 break;  
+                             case "Discount" :
+                                 Discount = detailValue.toString();
+                                 break;      
+                             default :
+                                 junktagdet = detailValue.toString();
+                        }
+                    }
+                    detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
+	            // System.out.println("Items: " + line.toString());
+	        }
+           } // if key = "Items"
+           
+          }
+          
+       
+          
+         
+           try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+          
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                 
+                
+                // get billto specific data
+                // aracct, arcc, currency, bank, terms, carrier, onhold, site
+                String[] custinfo = new String[]{"","","","","","","", ""};
+                
+                // if billto exists...use it...otherwise create unique billto/shipto
+                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
+               while (res.next()) {
+                   i++;
+                   custinfo[0] = res.getString("cm_ar_acct");
+                   custinfo[1] = res.getString("cm_ar_cc");
+                   custinfo[2] = res.getString("cm_curr");
+                   custinfo[3] = res.getString("cm_bank");
+                   custinfo[4] = res.getString("cm_terms");
+                   custinfo[5] = res.getString("cm_carrier");
+                   custinfo[6] = res.getString("cm_onhold");
+                   custinfo[7] = res.getString("cm_site");
+                }
+               if (i == 0) {
+                   // create billto/shipto on the fly and assign return to custcode
+                   BillToCode = String.valueOf(OVData.getNextNbr("customer"));
+                    // set String array of address info for creation of billto/shipto
+                   String[] addr = new String[]{BillToCode, BillToName, BillToAddr1, "", "", BillToCity, BillToState, BillToZip, BillToCountry, BillToEmail, BillToPhone, ShipToName, ShipToAddr1, "", "", ShipToCity, ShipToState, ShipToZip, ShipToCountry};  
+                   custinfo = OVData.addCustMstrWShipToMinimal(addr);
+               }
+               
+                
+                String nbr = String.valueOf(OVData.getNextNbr("order"));
+                
+                if (proceed) {
+                    st.executeUpdate("insert into so_mstr "
+                        + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
+                        + "so_create_date, so_userid, so_status,"
+                        + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                        + "'" + BillToCode + "'" + ","
+                        + "'" + BillToCode + "'" + ","
+                        + "'" + PONumber + "'" + ","
+                        + "'" + OrderDate + "'" + ","
+                        + "'" + DueDate + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + "api" + "'" + ","
+                        + "'" + "open" + "'" + ","
+                        + "'" + Remarks + "'" + ","
+                        + "'" + custinfo[4] + "'" + ","
+                        + "'" + custinfo[0] + "'" + ","
+                        + "'" + custinfo[1] + "'" + ","
+                        + "'" + custinfo[5] + "'" + ","
+                        + "'DISCRETE'" + ","
+                        + "'" + custinfo[7] + "'" + ","
+                        + "'" + custinfo[6] + "'"
+                        + ")"
+                        + ";");
+                    
+                  //  detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
+	            for (String[] s : detail) {
+                    st.executeUpdate("insert into sod_det "
+                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + s[0] + "'" + ","
+                            + "'" + custinfo[7] + "'" + ","
+                            + "'" + PONumber + "'" + ","
+                            + "'" + s[2] + "'" + ","
+                            + "'" + s[6] + "'" + ","
+                            + "'" + s[5] + "'" + ","
+                            + "'" + s[7] + "'" + ","
+                            + "'" + DueDate + "'" + ","
+                            + '0' + "," + "'" + s[4] + "'" +  "," 
+                            + "'" + "open" + "'" + ","
+                            + "'" + s[1] + "'"
+                            + ")"
+                            + ";");
+                    }
+                    
+                } // if proceed
+                else {
+                    isError = true;
+                }
+            } catch (SQLException s) {
+                isError = true;
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          
+          
+          
+          return x;
       }
       
       public static void CreateSalesOrderSchedDet(String order, String line, String date, String qty, String type, String ref, String rlse) {

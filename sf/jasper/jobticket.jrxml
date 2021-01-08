@@ -46,7 +46,7 @@
      plan_order,
      plan_type,
      plan_line,
-     plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell, 
+     plan_cell, it_item, it_desc, it_wf, wf_op, wf_desc, wf_cell, 
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
@@ -111,6 +111,7 @@ order by wf_op;]]>
 	<field name="custcode" class="java.lang.String"/>
 	<field name="custitem" class="java.lang.String"/>
 	<field name="plan_type" class="java.lang.String"/>
+	<field name="it_desc" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -177,28 +178,28 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{it_wf}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="223" y="6" width="62" height="14" uuid="f6e59878-ac4a-4a2f-b06b-391500f383da"/>
+				<reportElement x="223" y="6" width="47" height="14" uuid="f6e59878-ac4a-4a2f-b06b-391500f383da"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Part No:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="300" y="5" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<reportElement x="280" y="3" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="25" width="100" height="20" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
+				<reportElement x="280" y="45" width="140" height="20" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{custitem}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="47" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="280" y="67" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -212,14 +213,14 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="223" y="26" width="47" height="18" uuid="9967513d-73e7-49da-ad40-6d373f837682"/>
+				<reportElement x="223" y="45" width="47" height="18" uuid="9967513d-73e7-49da-ad40-6d373f837682"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Cust Part:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="223" y="47" width="47" height="18" uuid="b136a10f-569b-4af6-817c-88c92508d9e3"/>
+				<reportElement x="223" y="67" width="47" height="18" uuid="b136a10f-569b-4af6-817c-88c92508d9e3"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -240,14 +241,18 @@ order by wf_op;]]>
 				<text><![CDATA[Quantity:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="442" y="30" width="78" height="15" uuid="87805905-dadc-4764-8fd6-71d184c708e6"/>
+				<reportElement x="442" y="30" width="78" height="20" uuid="87805905-dadc-4764-8fd6-71d184c708e6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Plan Due Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="442" y="53" width="78" height="18" uuid="9514b42e-7051-47cc-9fb1-884a371c88dc"/>
+				<reportElement x="442" y="51" width="78" height="20" uuid="9514b42e-7051-47cc-9fb1-884a371c88dc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -272,43 +277,63 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_date_create}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="442" y="78" width="78" height="18" uuid="e4860c0e-53f8-4be9-8698-57659d25a42a"/>
+				<reportElement x="442" y="71" width="78" height="20" uuid="e4860c0e-53f8-4be9-8698-57659d25a42a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Plan Sched Date:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="520" y="78" width="136" height="20" uuid="449bdd55-6acd-4a46-b1c3-4e48b688c595"/>
+				<reportElement x="520" y="71" width="136" height="20" uuid="449bdd55-6acd-4a46-b1c3-4e48b688c595"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="223" y="69" width="47" height="18" uuid="352a63fb-6482-47d1-b873-5c27b565e044"/>
+				<reportElement x="223" y="89" width="47" height="18" uuid="352a63fb-6482-47d1-b873-5c27b565e044"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[PO:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="280" y="69" width="100" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
+				<reportElement x="280" y="89" width="140" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{custpo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="140" y="92" width="42" height="17" uuid="50f5ff4c-99d7-4a15-8085-838d4b24698d"/>
+				<reportElement x="442" y="92" width="42" height="20" uuid="50f5ff4c-99d7-4a15-8085-838d4b24698d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[OrderType:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="185" y="92" width="73" height="17" uuid="73971ff4-00d5-4d37-a030-f6217fca5ac5"/>
+				<reportElement x="520" y="92" width="73" height="17" uuid="73971ff4-00d5-4d37-a030-f6217fca5ac5"/>
 				<textFieldExpression><![CDATA[$F{plan_type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="223" y="25" width="47" height="18" uuid="2274dde6-551d-4570-846e-85884da4c548"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Description:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="25" width="140" height="17" uuid="0ddfe843-94d7-43ca-a60b-94427905a20b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

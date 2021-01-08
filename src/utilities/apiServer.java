@@ -34,33 +34,90 @@ package utilities;
 import com.blueseer.srv.SalesOrdServ;
 import com.blueseer.srv.WorkOrdServ;
 import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.server.Handler;
 
 
 import org.eclipse.jetty.servlet.ServletContextHandler; 
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.WebAppContext;
 
+ 
+     
 
 public class apiServer {
+    
+   
+    
      public static void main(String[] args) throws Exception {
          
         bsmf.MainFrame.setConfig();
          
-        Server server = new Server(8080);
+        Server server = new Server(8088);
 	ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
         context.setResourceBase(webdir);
-        server.setHandler(context);
-        context.addServlet(WorkOrdServ.class, "/WorkOrder");
-        context.addServlet(SalesOrdServ.class, "/SalesOrder");
-        // add hello servlet
-        //context.addServlet(HelloServlet.class, "/hello/*");
-	        
+       
+        context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
+        context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");
+        context.addServlet(SalesOrdServ.class, "/SalesOrder/*");
+        context.addServlet(SalesOrdServ.class, "/SalesOrderList/*");
+        context.addServlet(TestServlet.class, "/test/*");
+        //server.setHandler(context);
+        
+        
+        WebAppContext webapp = new WebAppContext();
+        webapp.setContextPath("/bsweb");
+        webapp.setResourceBase("web/");
+        webapp.setWelcomeFiles(new String[]{"index.html"});
+       
+        
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
+        contexts.setHandlers(new Handler[] { context, webapp });
+        server.setHandler(contexts);
+       
+        // failed JSP support
+        /*
+       Configuration.ClassList classlist = Configuration.ClassList
+            .setServerDefault(server);
+        classlist.addBefore(
+            "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+            "org.eclipse.jetty.annotations.AnnotationConfiguration");
+	  */
+        
+        
 	   server.start();
 	   server.join(); 
 	    
 	       
 	        
-	 }        
+	 }      
+     
+     
+      public static class TestServlet extends HttpServlet
+{
+    private String greeting="Looking Good!";
+    public TestServlet(){}
+    public TestServlet(String greeting)
+    {
+        this.greeting=greeting;
+    }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        response.setContentType("text/html");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().println("<h1>"+greeting+"</h1>");
+        response.getWriter().println("session=" + request.getSession(true).getId());
+    }
+}
+    
+    
+     
 }

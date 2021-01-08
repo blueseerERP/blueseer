@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 import bsmf.MainFrame;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -47,6 +48,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -54,6 +58,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 /**
  *
  * @author vaughnte
@@ -404,6 +409,56 @@ public class BlueSeerUtils {
          bsmf.MainFrame.messagelabel.setText("");
      }
     
+     public static class MessageXML {
+         public static Document createRoot(Document doc) {
+        Element rootElement = doc.createElement("Document");
+        doc.appendChild(rootElement);        
+        return doc;
+        }
+         
+         public static Document createBody(Document doc, String message, String status, String key ) {
+        
+        Element header = doc.createElement("Message");
+        doc.getDocumentElement().appendChild(header);
+       
+        Element e = doc.createElement("Status");
+                        e.appendChild(doc.createTextNode(status));
+        header.appendChild(e);
+        
+        e = doc.createElement("ReturnKey");
+                        e.appendChild(doc.createTextNode(BlueSeerUtils.xNull(key)));
+        header.appendChild(e);
+       
+        e = doc.createElement("Description");
+                        e.appendChild(doc.createTextNode(BlueSeerUtils.xNull(message)));
+        header.appendChild(e);
+       
+        return doc;
+    }
      
+    }
+    
+     
+     public static String createMessage(String message, String status, String key) throws TransformerException {
+        String x = "";
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+         try {
+             docBuilder = docFactory.newDocumentBuilder();
+         } catch (ParserConfigurationException ex) {
+             bsmf.MainFrame.bslog(ex);
+             bsmf.MainFrame.show(ex.getMessage());
+         }
+        Document doc = docBuilder.newDocument();
+        
+        doc = MessageXML.createRoot(doc);
+        
+        doc = MessageXML.createBody(doc, message, status, key);
+        
+        x = BlueSeerUtils.transformDocToString(doc);
+        
+        return x;
+    }
+    
      
 }

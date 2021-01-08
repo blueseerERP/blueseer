@@ -33,20 +33,28 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.createMessage;
+import com.blueseer.utl.OVData;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JTable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -59,14 +67,19 @@ public class SalesOrdServ extends HttpServlet {
 @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         String id = request.getParameter("id");
-        if (id == null || id.isEmpty()) {
-            response.getWriter().println("id is null or blank");
+        String fromdate = request.getParameter("fromdate");
+        String todate = request.getParameter("todate");
+        String fromnbr = request.getParameter("fromnbr");
+        String tonbr = request.getParameter("tonbr");
+        String fromcust = request.getParameter("fromcust");
+        String tocust = request.getParameter("tocust");
+        if (id != null && ! id.isEmpty()) {
+            response.getWriter().println(getSalesOrderJSON(id));
         } else {
-           response.getWriter().println(getSalesOrderXML(id)); 
+           response.getWriter().println(getSalesOrderListByDateJSON(fromdate,todate,fromnbr,tonbr,fromcust,tocust)); 
         }
     }
         
@@ -201,7 +214,296 @@ public static String getSalesOrderXML(String id) {
         return x;
         
          } 
+  
+public static String getSalesOrderJSON(String id) {
+       
+        String x = ""; 
+        
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+               res = st.executeQuery("select so_nbr as 'OrderNumber', " +
+               " so_site as 'Site', so_po as 'PONumber', so_ord_date as 'OrderDate',  " +
+               " so_due_date as 'DueDate', so_rmks as 'Remarks', so_type as 'Type', " +
+               " so_curr as 'Currency', so_shipvia as 'ShipVia', so_status as 'Status', " +
+               " so_cust as 'BillToCode', cm_name as 'BillToName', " +
+               " cm_line1 as 'BillToAddr1', cm_city as 'BillToCity', " +
+               " cm_state as 'BillToState', cm_zip as 'BillToZip', " + 
+               " so_ship as 'ShipToCode', cms_name as 'ShipToName', " +
+               " cms_line1 as 'ShipToAddr1', cms_city as 'ShipToCity', " +
+               " cms_state as 'ShipToState', cms_zip as 'ShipToZip' " +          
+               " from so_mstr " +
+               " inner join cm_mstr on " +
+               " cm_mstr.cm_code = so_cust " +
+               " inner join cms_det on " +
+               " cms_det.cms_shipto = so_ship " +
+               " where so_nbr = " + "'" + id + "'" + ";");
+                
+               
+                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    org.json.simple.JsonArray jsondet = new org.json.simple.JsonArray();
+                    ResultSetMetaData rsmd = res.getMetaData(); 
+                    LinkedHashMap<String, Object> jsonOrderedMapHdr = new LinkedHashMap<String, Object>();
+                        
+                    while (res.next()) {
+                        int numColumns = rsmd.getColumnCount();
+                       // LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                          for (int i=1; i<=numColumns; i++) {
+                            String column_name = rsmd.getColumnName(i);
+                            jsonOrderedMapHdr.put(column_name, res.getObject(column_name));
+                          }
+                         // json.add(jsonOrderedMap);
+                    }
+                    
+                    res = st.executeQuery("select sod_part as 'ItemNumber', " +
+               " sod_line as 'Line', sod_uom as 'UOM', sod_custpart as 'CustItem',  " +
+               " sod_ord_qty as 'OrderQty', sod_shipped_qty as 'ShippedQty', sod_status as 'LineStatus', " +
+               " sod_listprice as 'ListPrice', sod_netprice as 'NetPrice', sod_disc as 'Discount', " +
+               " sod_loc as 'LineLocation', sod_wh as 'LineWarehouse' " +   
+               " from sod_det " +
+               " where sod_nbr = " + "'" + id + "'" + ";");
+                rsmd = res.getMetaData(); 
+                while (res.next()) {
+                    int numColumns = rsmd.getColumnCount();
+                    LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                      for (int i=1; i<=numColumns; i++) {
+                        String column_name = rsmd.getColumnName(i);
+                        jsonOrderedMap.put(column_name, res.getObject(column_name));
+                      }
+                      jsondet.add(jsonOrderedMap);
+                }
+                    jsonOrderedMapHdr.put("Items", jsondet);
+                    json.add(jsonOrderedMapHdr);
+                    x = json.toJson();
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+     
+public static String getSalesOrderListByDateJSON(String fromdate, String todate, String fromnbr, String tonbr, String fromcust, String tocust) {
+       
+        String x = ""; 
+        if (fromnbr == null || fromnbr.isEmpty()) {
+            fromnbr = bsmf.MainFrame.lownbr;
+        }
+        if (tonbr == null || tonbr.isEmpty()) {
+            tonbr = bsmf.MainFrame.hinbr;
+        }
+        if (fromdate == null || fromdate.isEmpty()) {
+            fromdate = bsmf.MainFrame.lowdate;
+        }
+        if (todate == null || todate.isEmpty()) {
+            todate = bsmf.MainFrame.hidate;
+        }
+        if (fromcust == null || fromcust.isEmpty()) {
+            fromcust = bsmf.MainFrame.lowchar;
+        }
+        if (tocust == null || tocust.isEmpty()) {
+            tocust = bsmf.MainFrame.hichar;
+        }
+       
+       // System.out.println("HERE: " + fromnbr + "/" + tonbr + "/" + fromdate + "/" + todate + "/" + fromcust + "/" + tocust);
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+              res = st.executeQuery("select so_nbr as 'OrderNumber', " +
+               " so_site as 'Site', so_po as 'PONumber', so_ord_date as 'OrderDate',  " +
+               " so_due_date as 'DueDate', so_rmks as 'Remarks', so_type as 'Type', " +
+               " so_curr as 'Currency', so_shipvia as 'ShipVia', so_status as 'Status', " +
+               " so_cust as 'BillToCode', cm_name as 'BillToName', " +
+               " cm_line1 as 'BillToAddr1', cm_city as 'BillToCity', " +
+               " cm_state as 'BillToState', cm_zip as 'BillToZip', " + 
+               " so_ship as 'ShipToCode', cms_name as 'ShipToName', " +
+               " cms_line1 as 'ShipToAddr1', cms_city as 'ShipToCity', " +
+               " cms_state as 'ShipToState', cms_zip as 'ShipToZip' " +          
+               " from so_mstr " +
+               " inner join cm_mstr on " +
+               " cm_mstr.cm_code = so_cust " +
+               " inner join cms_det on " +
+               " cms_det.cms_shipto = so_ship " +
+               " where so_nbr >= " + "'" + fromnbr + "'" + 
+               " and so_nbr <= " + "'" + tonbr + "'" +
+               " and so_cust >= " + "'" + fromcust + "'" +
+               " and so_cust <= " + "'" + tocust + "'" +
+               " and so_ord_date >= " + "'" + fromdate + "'" +   
+               " and so_ord_date <= " + "'" + todate + "'" +        
+               
+               ";");
+               
+                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    ResultSetMetaData rsmd = res.getMetaData(); 
+                    while (res.next()) {
+                        int numColumns = rsmd.getColumnCount();
+                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                          for (int i=1; i<=numColumns; i++) {
+                            String column_name = rsmd.getColumnName(i);
+                            jsonOrderedMap.put(column_name, res.getObject(column_name));
+                          }
+                          json.add(jsonOrderedMap);
+                    }
+                    x = json.toJson();
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+ 
+public static String postSalesOrderJSON(HttpServletRequest request) throws IOException, TransformerException {
+        String x = "";
+        
+         JTable mytable = new JTable();
+            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+            });
+        String line = "";
+        StringBuffer jb = new StringBuffer();
+        BufferedReader reader = request.getReader();
+        while ((line = reader.readLine()) != null) {
+        jb.append(line);
+        }
+        
+        JSONObject json = new JSONObject(jb.toString());
+       
+        String action = "";
+        String workordernbr = "";
+        String item = "";
+        String site = "";
+        String operation = "";
+        String qtycomp = "";
+        String datecomp = "";
+        String lotnbr = "";
+        String operator = "";
+        String postcomments = "";
+        String junktag = "";
+        
+        
+        // now lets iterate over the JSON object
+        for (String keyStr : json.keySet()) { 
+        Object keyvalue = json.get(keyStr);
+        
+            switch(keyStr) {
+                 case "Action" :
+                     action = keyvalue.toString();
+                     break;
+                 case "WorkOrderNumber" :
+                     workordernbr = keyvalue.toString();
+                     break;
+                 case "Item" :
+                     item = keyvalue.toString();
+                     break;
+                 case "Site" :
+                     site = keyvalue.toString();
+                     break;
+                 case "Operation" :
+                     operation = keyvalue.toString();
+                     break;
+                 case "QtyComplete" :
+                     qtycomp = keyvalue.toString();
+                     break; 
+                 case "DateComplete" :
+                     datecomp = keyvalue.toString();
+                     break; 
+                 case "LotNumber" :
+                     lotnbr = keyvalue.toString();
+                     break; 
+                 case "Operator" :
+                     operator = keyvalue.toString();
+                     break;   
+                 case "PostComments" :
+                     postcomments = keyvalue.toString();
+                     break;       
+                 default :
+                     junktag = keyvalue.toString();
+            }
+
+       
+        //for nested objects iteration if required
+        //if (keyvalue instanceof JSONObject)
+        //    printJsonObject((JSONObject)keyvalue);
+    }
+        
+       
+        // check for bad elements
+        if (item.isEmpty() || ! OVData.isValidItem(item)) {
+           return createMessage("Item not in item master", "fail", "0"); 
+        }
+        
+        if (! OVData.isValidOperation(item, operation)) {
+           return createMessage("Not a valid operation for this item", "fail", "0"); 
+        }
+        
+        if (OVData.getPlanStatus(workordernbr) != 0) {
+           return createMessage("Work Order is closed", "fail", "0"); 
+        }
+        
+        
+        // create table of data
+        String[] det = OVData.getItemDetail(item); 
+        mymodel.addRow(new Object[]{item,
+                "ISS-WIP",
+                operation,
+                qtycomp,
+                datecomp,
+                det[8], // location
+                workordernbr,  // serialno  ...using JOBID from tubtraveler
+                lotnbr,  // reference -- tr_ref holds the scrap code
+                site,
+                operator,
+                det[3],
+                "",   //  tr_actcell
+                postcomments.replace(",", ""),   // remarks 
+                "", // pack station
+                "", // pack date
+                "", // assembly date
+                "WorkOrdServ", // program
+                det[9] // warehouse
+            });
+            mytable.setModel(mymodel);
+        // load tran table and create pland_mstr
+         if (! OVData.loadTranHistByTable(mytable)) {
+           return createMessage("loadTranHistByTable failed", "fail", "0");   
+         } else {
+             int key = OVData.CreatePlanDet(mytable);
+             return createMessage("work order loaded successfully", "success", String.valueOf(key));
+         }
+       
+    }
     
+
 public static class  SalesOrderXML {
     
     public static Document createRoot(Document doc) {

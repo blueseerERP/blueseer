@@ -633,6 +633,8 @@ public class Scheduler extends javax.swing.JPanel {
          
         ddcellchoice.removeAllItems();
         cells = OVData.getCodeAndValueMstr("CELL");
+        cellsonly.clear();
+        sumOfAllCells = 0;
       //  cells = cells_list.toArray(new String[cells_list.size()]);
         for (String[] code : cells) {
           ddcellchoice.addItem(code[0]);
@@ -786,11 +788,14 @@ public class Scheduler extends javax.swing.JPanel {
     public void adjustCalendar(int dateClicked) {
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        
+        java.util.Date now = new java.util.Date();
+        int today = Integer.valueOf(dfdate.format(now).toString().substring(8,10));
         JPanel jPanel = jc.getDayChooser().getDayPanel();
         Component component[] = jPanel.getComponents();
         Calendar cal = Calendar.getInstance();
         cal.setTime(jc.getDate());
+        
+        
         
         // first day of month
         cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -856,6 +861,11 @@ public class Scheduler extends javax.swing.JPanel {
                 }
             }
             
+        }
+        
+        // if dateclicked = 0 ; refresh to current day
+        if (dateClicked == 0) {
+           component[today + 6 + (offset - 1)].setForeground(Color.red);
         }
         
     }
@@ -1236,8 +1246,14 @@ public class Scheduler extends javax.swing.JPanel {
               printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
         }
         
+        
         if (col == 14)   {
                     if ( mytable.getValueAt(row, 12).equals("open")) {
+                        // lets confirm valid date has been entered
+                        if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 9).toString())) {
+                            bsmf.MainFrame.show("Invalid Date Provided");
+                            return;
+                        }
                         boolean isGood = OVData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
                         mytable.getValueAt(row, 6).toString(),
                         mytable.getValueAt(row, 5).toString(),
