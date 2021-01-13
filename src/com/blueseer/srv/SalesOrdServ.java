@@ -34,6 +34,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
+import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,13 +77,32 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         String tonbr = request.getParameter("tonbr");
         String fromcust = request.getParameter("fromcust");
         String tocust = request.getParameter("tocust");
+        String status = request.getParameter("status");
         if (id != null && ! id.isEmpty()) {
             response.getWriter().println(getSalesOrderJSON(id));
         } else {
-           response.getWriter().println(getSalesOrderListByDateJSON(fromdate,todate,fromnbr,tonbr,fromcust,tocust)); 
+           response.getWriter().println(getSalesOrderListByDateJSON(fromdate,todate,fromnbr,tonbr,fromcust,tocust,status)); 
         }
     }
-        
+
+ @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+       // BufferedReader reader = request.getReader();
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        if (request == null) {
+            response.getWriter().println("no valid payload provided");
+        } else {
+            try {
+                response.getWriter().println(postSalesOrderJSON(request));
+            } catch (TransformerException ex) {
+                response.getWriter().println(ex);
+            }
+        }
+    }
+    
+
 public static String getSalesOrderXML(String id) {
        
     String x = ""; 
@@ -297,7 +317,7 @@ public static String getSalesOrderJSON(String id) {
         
          } 
      
-public static String getSalesOrderListByDateJSON(String fromdate, String todate, String fromnbr, String tonbr, String fromcust, String tocust) {
+public static String getSalesOrderListByDateJSON(String fromdate, String todate, String fromnbr, String tonbr, String fromcust, String tocust, String status) {
        
         String x = ""; 
         if (fromnbr == null || fromnbr.isEmpty()) {
@@ -317,6 +337,9 @@ public static String getSalesOrderListByDateJSON(String fromdate, String todate,
         }
         if (tocust == null || tocust.isEmpty()) {
             tocust = bsmf.MainFrame.hichar;
+        }
+        if (status == null) {
+            status = "";
         }
        
        // System.out.println("HERE: " + fromnbr + "/" + tonbr + "/" + fromdate + "/" + todate + "/" + fromcust + "/" + tocust);
@@ -354,6 +377,9 @@ public static String getSalesOrderListByDateJSON(String fromdate, String todate,
                     org.json.simple.JsonArray json = new org.json.simple.JsonArray();
                     ResultSetMetaData rsmd = res.getMetaData(); 
                     while (res.next()) {
+                        if (! status.isEmpty() && ! res.getString("Status").equals(status)) {
+                        continue;
+                        }
                         int numColumns = rsmd.getColumnCount();
                         LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
                           for (int i=1; i<=numColumns; i++) {
@@ -383,127 +409,19 @@ public static String getSalesOrderListByDateJSON(String fromdate, String todate,
  
 public static String postSalesOrderJSON(HttpServletRequest request) throws IOException, TransformerException {
         String x = "";
-        
-         JTable mytable = new JTable();
-            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
-            });
+         
         String line = "";
         StringBuffer jb = new StringBuffer();
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null) {
         jb.append(line);
         }
+            
+        String[] m = OVData.CreateSalesOrderByJSON(jb.toString());
+        return createMessageJSON(m[0], m[1], m[2]); 
         
-        JSONObject json = new JSONObject(jb.toString());
-       
-        String action = "";
-        String workordernbr = "";
-        String item = "";
-        String site = "";
-        String operation = "";
-        String qtycomp = "";
-        String datecomp = "";
-        String lotnbr = "";
-        String operator = "";
-        String postcomments = "";
-        String junktag = "";
-        
-        
-        // now lets iterate over the JSON object
-        for (String keyStr : json.keySet()) { 
-        Object keyvalue = json.get(keyStr);
-        
-            switch(keyStr) {
-                 case "Action" :
-                     action = keyvalue.toString();
-                     break;
-                 case "WorkOrderNumber" :
-                     workordernbr = keyvalue.toString();
-                     break;
-                 case "Item" :
-                     item = keyvalue.toString();
-                     break;
-                 case "Site" :
-                     site = keyvalue.toString();
-                     break;
-                 case "Operation" :
-                     operation = keyvalue.toString();
-                     break;
-                 case "QtyComplete" :
-                     qtycomp = keyvalue.toString();
-                     break; 
-                 case "DateComplete" :
-                     datecomp = keyvalue.toString();
-                     break; 
-                 case "LotNumber" :
-                     lotnbr = keyvalue.toString();
-                     break; 
-                 case "Operator" :
-                     operator = keyvalue.toString();
-                     break;   
-                 case "PostComments" :
-                     postcomments = keyvalue.toString();
-                     break;       
-                 default :
-                     junktag = keyvalue.toString();
-            }
-
-       
-        //for nested objects iteration if required
-        //if (keyvalue instanceof JSONObject)
-        //    printJsonObject((JSONObject)keyvalue);
-    }
-        
-       
-        // check for bad elements
-        if (item.isEmpty() || ! OVData.isValidItem(item)) {
-           return createMessage("Item not in item master", "fail", "0"); 
-        }
-        
-        if (! OVData.isValidOperation(item, operation)) {
-           return createMessage("Not a valid operation for this item", "fail", "0"); 
-        }
-        
-        if (OVData.getPlanStatus(workordernbr) != 0) {
-           return createMessage("Work Order is closed", "fail", "0"); 
-        }
-        
-        
-        // create table of data
-        String[] det = OVData.getItemDetail(item); 
-        mymodel.addRow(new Object[]{item,
-                "ISS-WIP",
-                operation,
-                qtycomp,
-                datecomp,
-                det[8], // location
-                workordernbr,  // serialno  ...using JOBID from tubtraveler
-                lotnbr,  // reference -- tr_ref holds the scrap code
-                site,
-                operator,
-                det[3],
-                "",   //  tr_actcell
-                postcomments.replace(",", ""),   // remarks 
-                "", // pack station
-                "", // pack date
-                "", // assembly date
-                "WorkOrdServ", // program
-                det[9] // warehouse
-            });
-            mytable.setModel(mymodel);
-        // load tran table and create pland_mstr
-         if (! OVData.loadTranHistByTable(mytable)) {
-           return createMessage("loadTranHistByTable failed", "fail", "0");   
-         } else {
-             int key = OVData.CreatePlanDet(mytable);
-             return createMessage("work order loaded successfully", "success", String.valueOf(key));
-         }
-       
     }
     
-
 public static class  SalesOrderXML {
     
     public static Document createRoot(Document doc) {

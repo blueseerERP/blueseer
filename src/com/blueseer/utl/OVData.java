@@ -18778,7 +18778,6 @@ public class OVData {
                     
                     duedate = getDueDateFromTerms(effdate, terms);
                     if (duedate == null) {
-                    System.out.println("Terms Due Date is null for shipper " + shipper);
                         myerror = true;
                     }
                     
@@ -19010,7 +19009,6 @@ public class OVData {
                     
                     duedate = getDueDateFromTerms(effdate, terms);
                     if (duedate == null) {
-                    System.out.println("Terms Due Date is null for shipper " + shipper);
                         myerror = true;
                     }
                     
@@ -19142,7 +19140,6 @@ public class OVData {
                                         
                     Date duedate = getDueDateFromTerms(effdate, terms);
                     if (duedate == null) {
-                    System.out.println("Terms Due Date is null for shipper " + shipper);
                         myerror = true;
                     }
                     
@@ -21234,86 +21231,6 @@ public class OVData {
      
     
     
-    public static void CreateAdvancedShipperHeader(String id, String site, String billto, String shipto, String isroot, String type, String shipdate, String createdate, String shipvia, String reference) {
-        
-    }
-    
-    public static void CreateAdvancedShipperDetail(String id, String site, String billto, String shipto, String isroot, String type, String shipdate, String createdate, String shipvia, String reference) {
-        
-    }
-    
-    public static void CreateAdvancedShipper(String pid, 
-                                               String id, 
-                                               String site, 
-                                               String so, 
-                                               String type, 
-                                               String shipdate, 
-                                               String shipvia, 
-                                               String hdrref,
-                                               String soline,
-                                               String sopart,
-                                               Double qty,
-                                               String lineref) {
-          
-          boolean canproceed = true;
-          String po = "";
-          try{
-            
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets find the SO associated */
-                int i = 0;
-                res = st.executeQuery("select sod_nbr, sod_part, sod_line " +
-                       " from sod_det " +
-                       " where sod_line = " + "'" + soline.toString() + "'" + 
-                        " AND sod_part = " + "'" + sopart.toString() + "'" +
-                        " AND sod_nbr = " + "'" + so.toString() + "'" + ";");
-                 while (res.next()) {
-                     po = res.getString("sod_po");
-                   i++;
-                 }
-                 if (i == 0) {
-                     canproceed = false;
-                     bsmf.MainFrame.show("Cannot find SO line record");
-                 }
-                    
-                // if (type = "s")
-                 /* lets find the parent ship_tree  */
-                 res = st.executeQuery("select ship_id, ship_pid " +
-                       " from ship_tree " +
-                       " where sod_line = " + "'" + soline.toString() + "'" + 
-                        " AND sod_part = " + "'" + sopart.toString() + "'" +
-                        " AND sod_nbr = " + "'" + so.toString() + "'" + ";");
-                 while (res.next()) {
-                     po = res.getString("sod_po");
-                   i++;
-                 }
-                 
-                
-                if (canproceed) {
-                    
-                    
-                    
-                }
-               
-              
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-          
-          
-    }
-    
      public static String getEDIOutDir() {
        String mystring = "";
         try{
@@ -21978,6 +21895,267 @@ public class OVData {
           return messg;
       } 
        
+       public static String[] CreateShipperByJSON(String jsonString) {
+          String[] x = new String[]{"","",""};
+          boolean isError = false; 
+          JSONObject json = new JSONObject(jsonString);
+          String junktag = "";
+          String nbr = "";
+          String Site = "";
+          String BOLNumber = "";
+          String BillToCode = "";
+          String ShipToCode = "";
+          String OrderNumber = "";
+          String PONumber = "";
+          String Reference = "";
+          String ShipDate = "";
+          String OrderDate = "";
+          String Remarks = "";
+          String ShipVia = "";
+          String Type = "";
+          ArrayList<String[]> detail = new ArrayList<String[]>();
+          
+          
+          for (String keyStr : json.keySet()) { 
+           Object keyvalue = json.get(keyStr);
+           
+           // process header tags in JSON
+           switch(keyStr) {
+                 case "OrderNumber" :
+                     OrderNumber = keyvalue.toString();
+                     break;
+                 case "PONumber" :
+                     PONumber = keyvalue.toString();
+                     break;
+                 case "Remarks" :
+                     Remarks = keyvalue.toString();
+                     break;
+                 case "OrderDate" :
+                     OrderDate = keyvalue.toString();
+                     break;
+                 case "ShipDate" :
+                     ShipDate = keyvalue.toString();
+                     break;
+                 case "BOLNumber" :
+                     BOLNumber = keyvalue.toString();
+                     break;
+                 case "Type" :
+                     Type = keyvalue.toString();
+                     break; 
+                 case "ShipVia" :
+                     ShipVia = keyvalue.toString();
+                     break;    
+                 case "BillToCode" :
+                     BillToCode = keyvalue.toString();
+                     break;
+                 case "Reference" :
+                     Reference = keyvalue.toString();
+                     break;
+                 case "Site" :
+                     Site = keyvalue.toString();
+                     break;
+                 default :
+                     junktag = keyvalue.toString();
+            }
+           
+           // process detail array 'Items' in JSON
+           if (keyStr.equals("Items")) {
+                for (Object line : (JSONArray) keyvalue) {
+                    JSONObject jsonDetail = new JSONObject(line.toString());
+                        
+                    String ItemNumber = "";
+                    String ItemDescription = "";
+                    String Line = "";
+                    String Order = "";
+                    String PO = "";
+                    String ShipQty = "";
+                    String UOM = "";
+                    String CustItem = "";
+                    String SkuItem = "";
+                    String UpcItem = "";
+                    String ListPrice = "";
+                    String NetPrice = "";
+                    String Discount = "";
+                    String TaxAmt = "";
+                    String Warehouse = "";
+                    String Location = "";
+                    String junktagdet = "";
+                    
+                    
+                    for (String detailKey : jsonDetail.keySet()) {
+                        Object detailValue = jsonDetail.get(detailKey);
+                        switch(detailKey) {
+                             case "ItemNumber" :
+                                 ItemNumber = detailValue.toString();
+                                 break;
+                             case "ItemDescription" :
+                                 ItemDescription = detailValue.toString();
+                                 break;    
+                             case "Line" :
+                                 Line = detailValue.toString();
+                                 break;
+                             case "Order" :
+                                 Order = detailValue.toString();
+                                 break;
+                             case "PO" :
+                                 PO = detailValue.toString();
+                                 break;    
+                             case "ShipQty" :
+                                 ShipQty = detailValue.toString();
+                                 break;
+                             case "UOM" :
+                                 UOM = detailValue.toString();
+                                 break;
+                             case "CustItem" :
+                                 CustItem = detailValue.toString();
+                                 break;
+                             case "SkuItem" :
+                                 SkuItem = detailValue.toString();
+                                 break;    
+                             case "UpcItem" :
+                                 UpcItem = detailValue.toString();
+                                 break;    
+                             case "ListPrice" :
+                                 ListPrice = detailValue.toString();
+                                 break;  
+                             case "NetPrice" :
+                                 NetPrice  = detailValue.toString();
+                                 break;  
+                             case "Discount" :
+                                 Discount = detailValue.toString();
+                                 break;  
+                             case "TaxAmt" :
+                                 TaxAmt = detailValue.toString();
+                                 break;
+                             case "Warehouse" :
+                                 Warehouse = detailValue.toString();
+                                 break;
+                             case "Location" :
+                                 Location = detailValue.toString();
+                                 break;    
+                             default :
+                                 junktagdet = detailValue.toString();
+                        }
+                    }
+                    detail.add(new String[]{ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
+	            
+	        }
+           } // if key = "Items"
+           
+          }
+         
+          // here we create the table records
+           try {
+
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+          
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();
+                 
+                if (nbr.isEmpty()) {
+                nbr = String.valueOf(OVData.getNextNbr("shipper"));
+                }
+                
+                 // get billto specific data
+                // aracct, arcc, currency, bank, terms, carrier, onhold, site
+                String[] custinfo = new String[]{"","","","","","","", ""};
+                
+                // if billto exists...use it...otherwise create unique billto/shipto
+                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
+               while (res.next()) {
+                   i++;
+                   custinfo[0] = res.getString("cm_ar_acct");
+                   custinfo[1] = res.getString("cm_ar_cc");
+                   custinfo[2] = res.getString("cm_curr");
+                   custinfo[3] = res.getString("cm_bank");
+                   custinfo[4] = res.getString("cm_terms");
+                   custinfo[5] = res.getString("cm_carrier");
+                   custinfo[6] = res.getString("cm_onhold");
+                   custinfo[7] = res.getString("cm_site");
+                }
+                             
+                
+                if (proceed) {
+                    st.executeUpdate("insert into ship_mstr " 
+                        + " (sh_id, sh_cust, sh_ship,"
+                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
+                        + " values ( " + "'" + nbr + "'" + "," 
+                        + "'" + BillToCode + "'" + "," 
+                        + "'" + ShipToCode + "'" + ","
+                        + "'" + ShipDate + "'" + ","
+                        + "'" + OrderDate + "'" + ","
+                        + "'" + BOLNumber + "'" + "," 
+                        + "'" + PONumber + "'" + "," 
+                        + "'" + Reference + "'" + ","        
+                        + "'" + Remarks + "'" + "," 
+                        + "'" + bsmf.MainFrame.userid + "'" + "," 
+                        + "'" + Site + "'" + ","
+                        + "'" + custinfo[2] + "'" + ","
+                        + "'" + ShipVia + "'" + ","        
+                        + "'" + custinfo[4] + "'" + ","
+                        + "'" + "" + "'" + ","
+                        + "'" + custinfo[0] + "'" + ","
+                        + "'" + custinfo[1] + "'" + ","
+                        + "'" + Type + "'"
+                        + ");" );
+                    
+                  
+                    //ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
+	            for (String[] s : detail) {
+                    st.executeUpdate("insert into ship_det "
+                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                            + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + s[2] + "'" + ","
+                            + "'" + s[0] + "'" + ","
+                            + "'" + s[3] + "'" + ","
+                            + "'" + ShipDate + "'" + ","        
+                            + "'" + s[4] + "'" + ","
+                            + "'" + s[5] + "'" + ","
+                            + "'" + s[6] + "'" + ","        
+                            + "'" + s[11] + "'" + ","
+                            + "'" + s[10] + "'" + ","
+                            + "'" + s[12] + "'" + ","
+                            + "'" + s[1] + "'" + ","
+                            + "'" + s[14] + "'" + ","
+                            + "'" + s[15] + "'" + ","
+                            + "'" + s[13] + "'" + ","        
+                            + "'" + Site + "'"
+                            + ")"
+                            + ";");
+                    }
+                   
+                    x[0] = "success";
+                    x[1] = "Loaded Sales Order Successfully";
+                    x[2] = nbr;
+                    
+                } // if proceed
+                else {
+                    x[0] = "fail";
+                    x[1] = "unable to process";
+                }
+            } catch (SQLException s) {
+                x[0] = "fail";
+                x[1] = "unable to load order SQLException";
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          
+          
+          
+          return x;
+      }
+      
+       
        public static boolean CreateShipperHdr(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype ) {
           boolean isError = false; 
           
@@ -22147,7 +22325,7 @@ public class OVData {
         }
       }
       
-        public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
+       public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
           
           // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
             try {
@@ -22893,7 +23071,8 @@ public class OVData {
            // process detail array 'Items' in JSON
            if (keyStr.equals("Items")) {
                 for (Object line : (JSONArray) keyvalue) {
-                    JSONObject jsonDetail = new JSONObject(line);
+                    JSONObject jsonDetail = new JSONObject(line.toString());
+                        
                     String ItemNumber = "";
                     String Line = "";
                     String OrderQty = "";
@@ -22936,13 +23115,13 @@ public class OVData {
                         }
                     }
                     detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
-	            // System.out.println("Items: " + line.toString());
+	            
 	        }
            } // if key = "Items"
            
           }
           
-       
+          
           
          
            try {
@@ -23032,13 +23211,19 @@ public class OVData {
                             + ")"
                             + ";");
                     }
+                   
+                    x[0] = "success";
+                    x[1] = "Loaded Sales Order Successfully";
+                    x[2] = nbr;
                     
                 } // if proceed
                 else {
-                    isError = true;
+                    x[0] = "fail";
+                    x[1] = "unable to process";
                 }
             } catch (SQLException s) {
-                isError = true;
+                x[0] = "fail";
+                x[1] = "unable to load order SQLException";
                 MainFrame.bslog(s);
             }
             con.close();
@@ -23050,6 +23235,7 @@ public class OVData {
           
           return x;
       }
+      
       
       public static void CreateSalesOrderSchedDet(String order, String line, String date, String qty, String type, String ref, String rlse) {
           String part = "";

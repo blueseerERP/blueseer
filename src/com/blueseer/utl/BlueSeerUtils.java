@@ -439,7 +439,7 @@ public class BlueSeerUtils {
     }
     
      
-     public static String createMessage(String message, String status, String key) throws TransformerException {
+     public static String createMessage(String status, String message, String key) throws TransformerException {
         String x = "";
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
@@ -460,5 +460,11 @@ public class BlueSeerUtils {
         return x;
     }
     
-     
+     public static String createMessageJSON(String status, String message, String key) throws TransformerException {
+        String x = "{\"Status\":" + "\"" + status + "\"" + "," +
+                   "\"Message\":" + "\"" + message + "\"" + "," + 
+                   "\"Key\":" + "\"" + key + "\"}";
+        return x;
+    }
+    
 }

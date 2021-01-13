@@ -1083,6 +1083,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     ddship.setSelectedItem(res.getString("so_ship"));
                     ddship.setEditable(true);
                     ponbr.setText(res.getString("so_po"));
+                    remarks.setText(res.getString("so_rmks"));
                     tbhdrwh.setText(res.getString("so_wh"));
                     duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_due_date")));
                     orddate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_ord_date")));

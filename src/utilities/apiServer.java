@@ -31,7 +31,10 @@ package utilities;
  */
 
 
+import com.blueseer.srv.CustomerServ;
+import com.blueseer.srv.ItemServ;
 import com.blueseer.srv.SalesOrdServ;
+import com.blueseer.srv.ShipperServ;
 import com.blueseer.srv.WorkOrdServ;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -69,6 +72,12 @@ public class apiServer {
         context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");
         context.addServlet(SalesOrdServ.class, "/SalesOrder/*");
         context.addServlet(SalesOrdServ.class, "/SalesOrderList/*");
+        context.addServlet(ShipperServ.class, "/Shipper/*");
+        context.addServlet(ShipperServ.class, "/ShipperList/*");
+        context.addServlet(ItemServ.class, "/Item/*");
+        context.addServlet(ItemServ.class, "/ItemList/*");
+        context.addServlet(CustomerServ.class, "/Customer/*");
+        context.addServlet(CustomerServ.class, "/CustomerList/*");
         context.addServlet(TestServlet.class, "/test/*");
         //server.setHandler(context);
         

@@ -34,6 +34,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
+import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -91,10 +92,11 @@ public class WorkOrdServ extends HttpServlet {
         String todate = request.getParameter("todate");
         String fromitem = request.getParameter("fromitem");
         String toitem = request.getParameter("toitem");
+        String status = request.getParameter("status");
         if (id != null && ! id.isEmpty()) {
             response.getWriter().println(getWorkOrderJSON(id));
         } else {
-           response.getWriter().println(getWorkOrderListByDateJSON(fromdate,todate,fromitem,toitem)); 
+           response.getWriter().println(getWorkOrderListByDateJSON(fromdate,todate,fromitem,toitem,status)); 
         }
     }
      
@@ -433,7 +435,7 @@ public class WorkOrdServ extends HttpServlet {
         
          } 
      
-    public static String getWorkOrderListByDateJSON(String fromdate, String todate, String fromitem, String toitem) {
+    public static String getWorkOrderListByDateJSON(String fromdate, String todate, String fromitem, String toitem, String status) {
        
         String x = ""; 
         if (fromitem == null || fromitem.isEmpty()) {
@@ -443,11 +445,15 @@ public class WorkOrdServ extends HttpServlet {
             toitem = bsmf.MainFrame.hichar;
         }
         if (fromdate == null) {
-            fromdate = "";
+            fromdate = bsmf.MainFrame.lowdate;
         }
         if (todate == null) {
-            todate = "";
+            todate = bsmf.MainFrame.hidate;
         }
+        if (status == null) {
+            status = "";
+        }
+       
         
         try{
             Class.forName(driver).newInstance();
@@ -473,11 +479,15 @@ public class WorkOrdServ extends HttpServlet {
                                " and plan_part >= " + "'" + fromitem + "'" +
                                " and plan_part <= " + "'" + toitem + "'" +        
                                        ";");
+                
                        
                
                     org.json.simple.JsonArray json = new org.json.simple.JsonArray();
                     ResultSetMetaData rsmd = res.getMetaData(); 
                     while (res.next()) {
+                        if (! status.isEmpty() && ! res.getString("Status").equals(status)) {
+                        continue;
+                        }
                         int numColumns = rsmd.getColumnCount();
                         LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
                           for (int i=1; i<=numColumns; i++) {
@@ -544,7 +554,7 @@ public class WorkOrdServ extends HttpServlet {
                         NodeList n = eElement.getChildNodes();
                         for (int k = 0; k < n.getLength(); k++) {
                             if (n.item(k).getNodeType() == Node.ELEMENT_NODE) {
-                            System.out.println("\n" + k + ": " + "Element :" + n.item(k).getNodeName());
+                          //  System.out.println("\n" + k + ": " + "Element :" + n.item(k).getNodeName());
                                 switch(n.item(k).getNodeName()) {
                                      case "Action" :
                                          action = n.item(k).getTextContent();
@@ -554,7 +564,7 @@ public class WorkOrdServ extends HttpServlet {
                                          break;
                                      case "Item" :
                                          item = n.item(k).getTextContent();
-                                          System.out.println("\n" + k + ": " + "Element :" + n.item(k).getTextContent());
+                                      //    System.out.println("\n" + k + ": " + "Element :" + n.item(k).getTextContent());
                                           break;
                                      case "Site" :
                                          site = n.item(k).getTextContent();
@@ -747,10 +757,10 @@ public class WorkOrdServ extends HttpServlet {
             mytable.setModel(mymodel);
         // load tran table and create pland_mstr
          if (! OVData.loadTranHistByTable(mytable)) {
-           return createMessage("loadTranHistByTable failed", "fail", "0");   
+           return createMessageJSON("fail", "loadTranHistByTable failed", "");   
          } else {
              int key = OVData.CreatePlanDet(mytable);
-             return createMessage("work order loaded successfully", "success", String.valueOf(key));
+             return createMessageJSON("success", "work order loaded successfully",String.valueOf(key));
          }
        
     }
