@@ -106,10 +106,13 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Savepoint;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -120,8 +123,12 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import jcifs.smb.SmbFileInputStream;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
 
 
@@ -6089,7 +6096,7 @@ public class OVData {
         
     }
       
-       public static String getPriceGroupCodeFromCust(String custcode) {
+      public static String getPriceGroupCodeFromCust(String custcode) {
        String myreturn = "";
         try{
             Class.forName(driver).newInstance();
@@ -6116,7 +6123,7 @@ public class OVData {
         
     }
       
-           public static String getPriceGroupCodeFromVend(String vend) {
+      public static String getPriceGroupCodeFromVend(String vend) {
        String myreturn = "";
         try{
             Class.forName(driver).newInstance();
@@ -6835,7 +6842,36 @@ public class OVData {
         return mystring;
         
     }
-           
+    
+    public static String getCodeKeyByCode(String code) {
+       String mystring = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + code + "'" + " order by code_key ;");
+               while (res.next()) {
+                   mystring = res.getString("code_key");
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+         
+    
     public static String getCodeValueByCodeKey(String code, String key) {
        String mystring = "";
         try{
@@ -20538,6 +20574,65 @@ public class OVData {
             MainFrame.bslog(e);
         }
     }    
+    
+    public static void printJTableToJasper(String reportname, JTable tablereport, String type) {
+        HashMap hm = new HashMap();
+        hm.put("REPORT_TITLE", reportname);
+        
+        
+        TableModel model = tablereport.getModel();
+        DefaultTableModel newmodel = new DefaultTableModel();
+        for (int k = 0; k < model.getColumnCount(); k++) {
+            if (model.getColumnName(k).equals("select")) {
+                continue;
+            }
+            newmodel.addColumn(model.getColumnName(k));
+        }
+        
+         int nRow = model.getRowCount(), nCol = newmodel.getColumnCount();
+         int offset = model.getColumnCount() - nCol;
+         String[] myarray = new String[nCol];
+        // String[][] tableData = new String[nRow][nCol];
+         for (int i = 0 ; i < nRow ; i++) {
+           for (int j = 0 ; j < nCol ; j++) {
+           // tableData[i][j] = model.getValueAt(i,j).toString();
+            myarray[j] = model.getValueAt(i,(j + offset)).toString();
+           }
+           newmodel.addRow(myarray);
+         }
+         
+       
+        
+        
+        
+        for (int j = 0; j < newmodel.getColumnCount(); j++) {
+           hm.put("d" + j,  newmodel.getColumnName(j).toString());
+        }
+        
+        String jasperfile = OVData.getCodeValueByCodeKey("jasper", type);
+        if (jasperfile.isEmpty()) {
+            jasperfile = "genericJTable6.jasper";
+        }
+        
+        
+        File mytemplate = new File("jasper/" + jasperfile); 
+        JasperPrint jasperPrint; 
+       try {
+           
+         jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(newmodel) );
+         JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+           jasperViewer.setVisible(true);
+           jasperViewer.setFitPageZoomRatio();
+           //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
+       } catch (JRException ex) {
+           MainFrame.bslog(ex);
+       }
+      
+
+        
+                
+           
+    }   
     
     
     public static void printReceipt(String shipper) {

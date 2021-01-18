@@ -50,7 +50,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -93,6 +95,9 @@ public class InvRptPicker extends javax.swing.JPanel {
     per each sub report.   I'm all ears if have another option.  :)
     
     */
+    
+    
+    Map<Integer, String> jaspermap = new HashMap<Integer, String>();
     
     javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -180,9 +185,20 @@ public class InvRptPicker extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
       ddreport.removeAllItems();
+      jaspermap.clear();
+      int k = 0;
       ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("InvRptPicker");
       for (String[] s : list) {
-          ddreport.addItem(s[1]);
+          
+          String[] x = s[1].split(":",-1);
+          if (x != null && x.length == 2) {
+              jaspermap.put(k, x[0]);
+              ddreport.addItem(x[1]);
+          } else {
+              jaspermap.put(k, "P1");
+              ddreport.addItem(s[1]);
+          }
+          
       }
      
       rbactive.setSelected(true);
@@ -348,6 +364,7 @@ public class InvRptPicker extends javax.swing.JPanel {
         tbkey3 = new javax.swing.JTextField();
         lbkey4 = new javax.swing.JLabel();
         tbkey4 = new javax.swing.JTextField();
+        btprint = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
@@ -568,6 +585,13 @@ public class InvRptPicker extends javax.swing.JPanel {
             .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        btprint.setText("Print/PDF");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -583,6 +607,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btview)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -594,7 +620,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                     .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(btview)
-                    .addComponent(btcsv))
+                    .addComponent(btcsv)
+                    .addComponent(btprint))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
@@ -724,9 +751,14 @@ public class InvRptPicker extends javax.swing.JPanel {
       
     }//GEN-LAST:event_ddreportActionPerformed
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+       OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) ); 
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcsv;
+    private javax.swing.JButton btprint;
     private javax.swing.JButton btview;
     private javax.swing.ButtonGroup buttonGroup1;
     private com.toedter.calendar.JDateChooser dcdate1;

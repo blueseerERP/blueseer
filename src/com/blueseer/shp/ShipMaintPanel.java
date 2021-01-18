@@ -1926,7 +1926,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void btPrintShpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintShpActionPerformed
-        OVData.printShipper(tbshipper.getText());
+         OVData.printShipper(tbshipper.getText());
+       // OVData.printJTableToJasper("Shipper Report", tabledetail ); 
 
     }//GEN-LAST:event_btPrintShpActionPerformed
 

@@ -187,7 +187,7 @@ public class RPData {
     public static DefaultTableModel getItemBrowse(String from, String to) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "Code", "ProdLine", "Group", "Loc", "WH", "CreateDate", "SellPrice", "PurchPrice", "Revision"})
+                        new String[]{"select", "Item", "Desc", "CreateDate", "ProdLine", "Code" , "Group", "Loc", "WH",  "SellPrice", "PurchPrice", "Revision"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -218,12 +218,12 @@ public class RPData {
                 while (res.next()) {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
                                 res.getString("it_desc"),
-                                res.getString("it_code"),
+                                res.getString("it_createdate"),
                                 res.getString("it_prodline"),
+                                res.getString("it_code"),
                                 res.getString("it_group"),
                                 res.getString("it_loc"),
                                 res.getString("it_wh"),
-                                res.getString("it_createdate"),
                                 res.getDouble("it_sell_price"),
                                 res.getDouble("it_pur_price"),
                                 res.getString("it_rev")

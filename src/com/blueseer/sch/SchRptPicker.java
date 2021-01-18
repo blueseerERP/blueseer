@@ -48,6 +48,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -90,7 +92,7 @@ public class SchRptPicker extends javax.swing.JPanel {
     per each sub report.   I'm all ears if have another option.  :)
     
     */
-    
+    Map<Integer, String> jaspermap = new HashMap<Integer, String>();
     javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "1", "2", "3", "4"
@@ -177,9 +179,18 @@ public class SchRptPicker extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
       ddreport.removeAllItems();
+      jaspermap.clear();
+      int k = 0;
       ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("SchRptPicker");
       for (String[] s : list) {
-          ddreport.addItem(s[1]);
+           String[] x = s[1].split(":",-1);
+          if (x != null && x.length == 2) {
+              jaspermap.put(k, x[0]);
+              ddreport.addItem(x[1]);
+          } else {
+              jaspermap.put(k, "P1");
+              ddreport.addItem(s[1]);
+          }
       }
      
       rbactive.setSelected(true);

@@ -26,13 +26,20 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.hidate;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
@@ -55,9 +62,23 @@ public class AboutPanel extends javax.swing.JPanel {
     }
 
     
-    public void getSysInfo() {
-                 /* Total number of processors or cores available to the JVM */
-          jTextArea2.setText("");
+    class Task extends SwingWorker<Void, Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public Void doInBackground() {
+            logSysInfo();
+            return null;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            BlueSeerUtils.endTask(new String[]{"0","System info is complete"});
+           
+             
       
        // now pull sysinfo from app/sys.log file generated at startup (bsmf.MainFrame.logSysInfo())
        BufferedReader fsr;
@@ -74,6 +95,111 @@ public class AboutPanel extends javax.swing.JPanel {
         } catch (IOException ex) {
             MainFrame.bslog(ex);
         }
+        }
+    }  
+    
+    
+    public static void logSysInfo() {
+        
+       
+       SystemInfo si = new SystemInfo(); 
+       HardwareAbstractionLayer hal = si.getHardware();
+       
+       
+       long availableMemory = hal.getMemory().getAvailable();
+       
+       String Text = "INIT DATE:  " + hidate + "\n";
+       Text += "Locale: " +  Locale.getDefault().toString() + "\n"; 
+       Text += "Version: " +  MainFrame.ver + "\n"; 
+       Text += "DataBase: " +  MainFrame.db + "\n";
+       Text += "DataBaseType: " +  MainFrame.dbtype + "\n";
+       Text += "DataBaseDriver: " +  MainFrame.driver + "\n";
+      
+       
+       
+       Text += "Available memory (bytes): " + 
+       (availableMemory == Long.MAX_VALUE ? "no limit" : availableMemory) + "\n";
+       
+       long totalMemory = hal.getMemory().getTotal();
+       Text += "Total memory (bytes): " + 
+       (totalMemory == Long.MAX_VALUE ? "no limit" : totalMemory) + "\n"; 
+       
+       Text += "Processor: " + si.getHardware().getProcessor().getName() + "\n";
+       Text += "Processor Vendor: " + si.getHardware().getProcessor().getVendor() + "\n"; 
+       Text += "Processor Model: " + si.getHardware().getProcessor().getModel() + "\n"; 
+       Text += "Processor Logical Count: " + si.getHardware().getProcessor().getLogicalProcessorCount() + "\n"; 
+       Text += "Processor Physical Count: " + si.getHardware().getProcessor().getPhysicalProcessorCount() + "\n"; 
+       
+       
+       OperatingSystem os = si.getOperatingSystem();
+       
+       
+       
+       Text += "Operating System: " + os + "\n";
+       Text += "OS Family: " + os.getFamily() + "\n";
+       Text += "OS Manufacturer: " + os.getManufacturer() + "\n";
+       Text += "OS Version: " + os.getVersion().getVersion() + "\n";
+       Text += "OS Bit: " + os.getBitness() + "\n";
+       Text += "OS Build: " + os.getVersion().getBuildNumber() + "\n";
+       Text += "OS Codename: " + os.getVersion().getCodeName() + "\n";
+       Text += "OS FileSystem: " + os.getFileSystem() + "\n";
+       
+       
+        NetworkIF[] s = si.getHardware().getNetworkIFs();
+        
+        
+       for (NetworkIF x : s) {
+        Text += "Network: " + x.getName() + " / " + String.join(", ", x.getIPv4addr()) + "\n";
+       }
+       
+       Text += "Java Version: " + System.getProperty("java.version") + "\n";   
+       Text += "Java VM: " + System.getProperty("java.vm.name") + "\n";
+       Text += "Java VM Version: " + System.getProperty("java.vm.version") + "\n";
+       Text += "Java Runtime Name: " + System.getProperty("java.runtime.name") + "\n";   
+       Text += "Java Runtime Version: " + System.getProperty("java.runtime.version") + "\n";  
+       Text += "Java Class Version: " + System.getProperty("java.class.version") + "\n";   
+       Text += "Java Compiler: " + System.getProperty("sun.management.compiler") + "\n";   
+       
+       
+       // now get patch info...created from git command :  git rev-parse HEAD
+       /*
+       BufferedReader fsr;
+        try {
+            fsr = new BufferedReader(new FileReader(new File(".patch")));
+            String line = "";
+            while ((line = fsr.readLine()) != null) {
+               Text += "Patch: " + line;
+            }
+            fsr.close();
+        } catch (FileNotFoundException ex) {
+            MainFrame.bslog(ex);
+        } catch (IOException ex) {
+            MainFrame.bslog(ex);
+        }
+       */
+       // now write to app.log
+        try(FileWriter fileWriter =
+         new FileWriter("data/sys.log", false) ){
+
+         fileWriter.write(Text);
+        }      catch (IOException ex) {
+           bslog(ex);
+        }
+       
+        
+    }
+    
+    
+    
+    public void getSysInfo() {
+                 /* Total number of processors or cores available to the JVM */
+       jTextArea2.setText("");
+       BlueSeerUtils.startTask(new String[]{"","Retrieving System Info..."});
+        Task task = new Task();
+        task.execute();
+                
+       
+      
            
     }
     
