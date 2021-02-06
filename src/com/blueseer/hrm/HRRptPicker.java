@@ -186,16 +186,11 @@ public class HRRptPicker extends javax.swing.JPanel {
        ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("HRRptPicker");
-      for (String[] s : list) {
-           String[] x = s[1].split(":",-1);
-          if (x != null && x.length == 2) {
-              jaspermap.put(k, x[0]);
-              ddreport.addItem(x[1]);
-          } else {
-              jaspermap.put(k, "P1");
-              ddreport.addItem(s[1]);
-          }
+      ArrayList<String[]> list = OVData.getJasperByGroup("HRRptGroup");
+      for (String[] x : list) {
+              jaspermap.put(k, x[1]);
+              ddreport.addItem(x[0]);
+          k++;
       }
      
       rbactive.setSelected(true);
@@ -361,6 +356,7 @@ public class HRRptPicker extends javax.swing.JPanel {
         tbkey3 = new javax.swing.JTextField();
         lbkey4 = new javax.swing.JLabel();
         tbkey4 = new javax.swing.JTextField();
+        btprint = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
@@ -581,6 +577,13 @@ public class HRRptPicker extends javax.swing.JPanel {
             .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        btprint.setText("Print/PDF");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -596,6 +599,8 @@ public class HRRptPicker extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btview)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -607,7 +612,8 @@ public class HRRptPicker extends javax.swing.JPanel {
                     .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(btview)
-                    .addComponent(btcsv))
+                    .addComponent(btcsv)
+                    .addComponent(btprint))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
@@ -737,9 +743,15 @@ public class HRRptPicker extends javax.swing.JPanel {
       
     }//GEN-LAST:event_ddreportActionPerformed
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
+ 
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcsv;
+    private javax.swing.JButton btprint;
     private javax.swing.JButton btview;
     private javax.swing.ButtonGroup buttonGroup1;
     private com.toedter.calendar.JDateChooser dcdate1;

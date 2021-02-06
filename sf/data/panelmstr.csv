@@ -4,6 +4,7 @@ com.blueseer.adm.DefaultMstrPanel,,1
 com.blueseer.adm.FileOrderLoadPanel,,1
 com.blueseer.adm.FTPMaint,,1
 com.blueseer.adm.GenCodeMaintPanel,,1
+com.blueseer.adm.JasperRptMaint,,1
 com.blueseer.adm.MenuMaintPanel,,1
 com.blueseer.adm.MenuTreeMaint,,1
 com.blueseer.adm.NewClass,,1

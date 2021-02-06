@@ -186,16 +186,11 @@ public class PurRptPicker extends javax.swing.JPanel {
       ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("PurRptPicker");
-      for (String[] s : list) {
-           String[] x = s[1].split(":",-1);
-          if (x != null && x.length == 2) {
-              jaspermap.put(k, x[0]);
-              ddreport.addItem(x[1]);
-          } else {
-              jaspermap.put(k, "P1");
-              ddreport.addItem(s[1]);
-          }
+      ArrayList<String[]> list = OVData.getJasperByGroup("PurRptGroup");
+      for (String[] x : list) {
+              jaspermap.put(k, x[1]);
+              ddreport.addItem(x[0]);
+          k++;
       }
      
       rbactive.setSelected(true);
@@ -361,6 +356,7 @@ public class PurRptPicker extends javax.swing.JPanel {
         tbkey3 = new javax.swing.JTextField();
         lbkey4 = new javax.swing.JLabel();
         tbkey4 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
@@ -581,6 +577,13 @@ public class PurRptPicker extends javax.swing.JPanel {
             .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        jButton1.setText("Print/PDF");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -596,6 +599,8 @@ public class PurRptPicker extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btview)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -607,7 +612,8 @@ public class PurRptPicker extends javax.swing.JPanel {
                     .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(btview)
-                    .addComponent(btcsv))
+                    .addComponent(btcsv)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
@@ -737,6 +743,11 @@ public class PurRptPicker extends javax.swing.JPanel {
       
     }//GEN-LAST:event_ddreportActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
+ 
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcsv;
@@ -747,6 +758,7 @@ public class PurRptPicker extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddkey1;
     private javax.swing.JComboBox<String> ddkey2;
     private javax.swing.JComboBox<String> ddreport;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

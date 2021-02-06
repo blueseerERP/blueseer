@@ -19,6 +19,7 @@ ReconAccount,,com.blueseer.fgl.ReconAccount,JMenuItem,recon
 GLCalMaint,,com.blueseer.fgl.GLCalMaint,JMenuItem,calm
 GLTranMaint,,com.blueseer.fgl.GLTranMaint,JMenuItem,gltr
 GenericCodeMaint,,com.blueseer.adm.GenCodeMaintPanel,JMenuItem,genm
+JasperRptMaint,,com.blueseer.adm.JasperRptMaint,JMenuItem,jasp
 HR,,,JMenu, 
 Inventory,,,JMenu, 
 ItemLevelCalculate,,com.blueseer.inv.ItemLevelMaint,JMenuItem,mrpx

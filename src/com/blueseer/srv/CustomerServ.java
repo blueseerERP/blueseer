@@ -71,12 +71,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         String id = request.getParameter("id");
         String fromcust = request.getParameter("fromcust");
         String tocust = request.getParameter("tocust");
+        String fromname = request.getParameter("fromname");
+        String toname = request.getParameter("toname");
+        String fromzip = request.getParameter("fromzip");
+        String tozip = request.getParameter("tozip");
         
         String status = request.getParameter("status");
         if (id != null && ! id.isEmpty()) {
             response.getWriter().println(getCustomerJSON(id));
         } else {
-           response.getWriter().println(getCustomerListByVarJSON(fromcust,tocust)); 
+           response.getWriter().println(getCustomerListByVarJSON(fromcust,tocust,fromname,toname,fromzip,tozip)); 
         }
     }
 
@@ -155,7 +159,7 @@ public static String getCustomerJSON(String id) {
         
          } 
      
-public static String getCustomerListByVarJSON(String fromcust, String tocust) {
+public static String getCustomerListByVarJSON(String fromcust, String tocust, String fromname, String toname, String fromzip, String tozip) {
        
         String x = ""; 
        
@@ -165,7 +169,18 @@ public static String getCustomerListByVarJSON(String fromcust, String tocust) {
         if (tocust == null || tocust.isEmpty()) {
             tocust = bsmf.MainFrame.hichar;
         }
-        
+        if (fromname == null || fromname.isEmpty()) {
+            fromname = bsmf.MainFrame.lowchar;
+        }
+        if (toname == null || toname.isEmpty()) {
+            toname = bsmf.MainFrame.hichar;
+        }
+        if (fromzip == null || fromzip.isEmpty()) {
+            fromzip = bsmf.MainFrame.lowchar;
+        }
+        if (tozip == null || tozip.isEmpty()) {
+            tozip = bsmf.MainFrame.hichar;
+        }
        
        // System.out.println("HERE: " + fromnbr + "/" + tonbr + "/" + fromdate + "/" + todate + "/" + fromcust + "/" + tocust);
         try{
@@ -184,6 +199,10 @@ public static String getCustomerListByVarJSON(String fromcust, String tocust) {
                        " from cm_mstr " +  
                " where cm_code >= " + "'" + fromcust + "'" +
                " and cm_code <= " + "'" + tocust + "'" +
+               " and cm_name >= " + "'" + fromname + "'" +
+               " and cm_name <= " + "'" + toname + "'" +
+               " and cm_zip >= " + "'" + fromzip + "'" +
+               " and cm_zip <= " + "'" + tozip + "'" +        
                ";");
                
                     org.json.simple.JsonArray json = new org.json.simple.JsonArray();

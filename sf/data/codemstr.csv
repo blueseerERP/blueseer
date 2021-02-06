@@ -1,122 +1,115 @@
-PCC,PCC,DEFAULT SEVERITY CODE
-Discounts,Freight,Freight
-Discounts,Volume,Volume
-Discounts,Other,Other
-Discounts,Promo,Promo
-orderstatus,cancel,
-orderstatus,error,
-orderstatus,hold,
-orderstatus,open,
-orderstatus,commit,
-engineer,frank,
-orderstatus,backorder,
-ItemType,FG,Finished Goods
-ItemType,RAW,Raw Material
-ItemType,SUB,Sub Assembly
-ItemType,ASSET,Asset
-ItemType,SERVICE,Service
-edidoctype,850,
-edidoctype,810,
-edidoctype,856,
-edidoctype,940,
-edidoctype,943,
-edidoctype,944,
-edidoctype,945,
-edidoctype,219,
-edidoctype,220,
-edidoctype,204,
-edidoctype,990,
-edidoctype,214,
-edidoctype,997,
-edidoctype,864,
-edidoctype,824,
-trantype,ISS-SALES,
-trantype,ISS-SCRAP,
-trantype,WIP-ISFG,
-trantype,ISS-MISC,
-trantype,RCT-MISC,
-trantype,ISS-REWK,
-trantype,RCT-PURCH,
-trantype,LOC-TRNF,
-trantype,WIP-TRAN,
-trantype,RCT-FG,
-labeltype,cont,
-labeltype,pouch,
-labeltype,addr,
-SCRAP,AB1,Scrap Code AB
-SCRAP,VB1,Scrap Code VB
-CELL,CELL1,100
-CELL,CELL2,100
-CELL,CELL3,100
-edixref,1000,DANAHER
-orderstatus,close,
-engineer,Ted,
-state,AK,Alaska
-state,AL,Alabama
-state,AR,Arkansas
-state,AZ,Arizona
-state,CA,California
-state,CO,Colorado
-state,CT,Connecticut
-state,DC,District of Columbia
-state,DE,Delaware
-state,FL,Florida
-state,GA,Georgia
-state,HI,Hawaii
-state,IA,Iowa
-state,ID,Idaho
-state,IL,Illinois
-state,IN,Indiana
-state,KS,Kansas
-state,KY,Kentucky
-state,LA,Louisiana
-state,MA,Massachusetts
-state,MD,Maryland
-state,ME,Maine
-state,MI,Michigan
-state,MN,Minnesota
-state,MO,Missouri
-state,MS,Mississippi
-state,MT,Montana
-state,NC,North Carolina
-state,ND,North Dakota
-state,NE,Nebraska
-state,NH,New Hampshire
-state,NJ,New Jersey
-state,NM,New Mexico
-state,NV,Nevada
-state,NY,New York
-state,OH,Ohio
-state,OK,Oklahoma
-state,OR,Oregon
-state,PA,Pennsylvania
-state,PR,Puerto Rico
-state,RI,Rhode Island
-state,SC,South Carolina
-state,SD,South Dakota
-state,TN,Tennessee
-state,TX,Texas
-state,UT,Utah
-state,VA,Virginia
-state,VT,Vermont
-state,WA,Washington State
-state,WI,Wisconsin
-state,WV,West Virginia
-state,WY,Wyoming
-InvRptPicker,0,L2:Item Master By Item Range
-CusRptPicker,0,P1:Customer Master By CustCode Range
-VenRptPicker,0,P1:Vendor Master By VendCode Range
-OrdRptPicker,0,P1:Orders By Order Number Range
-PurRptPicker,0,P1:POs By PO Number Range
-ARRptPicker,0,P1:AR entries by AR Number Range
-APRptPicker,0,P1:AP entries by AP Number Range
-HRRptPicker,0,P1:Employees Report by Emp ID Range
-ShpRptPicker,0,P1:Shippers by Shipper Number Range
-SchRptPicker,0,P1:Plan Browse By Item
-SchRptPicker,1,P1:Plan Browse By Item Range
-SchRptPicker,2,P1:Plan Browse By Sales Order
-SchRptPicker,3,P1:Plan Browse By Sales Order Range
-jasper,P1,genericJTable6.jasper
-jasper,P2,genericJTable6P2.jasper
-jasper,L1,genericJTable11.jasper
-jasper,L2,genericJTable11L2.jasper
+PCC,PCC,DEFAULT SEVERITY CODE,1
+Discounts,Freight,Freight,0
+Discounts,Volume,Volume,0
+Discounts,Other,Other,0
+Discounts,Promo,Promo,0
+orderstatus,cancel,,1
+orderstatus,error,,1
+orderstatus,hold,,1
+orderstatus,open,,1
+orderstatus,commit,,1
+engineer,frank,,0
+orderstatus,backorder,,0
+ItemType,FG,Finished Goods,0
+ItemType,RAW,Raw Material,0
+ItemType,SUB,Sub Assembly,0
+ItemType,ASSET,Asset,1
+ItemType,SERVICE,Service,1
+edidoctype,850,,1
+edidoctype,810,,1
+edidoctype,856,,1
+edidoctype,940,,1
+edidoctype,943,,1
+edidoctype,944,,1
+edidoctype,945,,1
+edidoctype,219,,1
+edidoctype,220,,1
+edidoctype,204,,1
+edidoctype,990,,1
+edidoctype,214,,1
+edidoctype,997,,1
+edidoctype,864,,1
+edidoctype,824,,1
+trantype,ISS-SALES,,1
+trantype,ISS-SCRAP,,1
+trantype,WIP-ISFG,,1
+trantype,ISS-MISC,,1
+trantype,RCT-MISC,,1
+trantype,ISS-REWK,,1
+trantype,RCT-PURCH,,1
+trantype,LOC-TRNF,,1
+trantype,WIP-TRAN,,1
+trantype,RCT-FG,,1
+labeltype,cont,,1
+labeltype,pouch,,1
+labeltype,addr,,1
+SCRAP,AB1,Scrap Code AB,0
+SCRAP,VB1,Scrap Code VB,0
+CELL,CELL1,100,0
+CELL,CELL2,100,0
+CELL,CELL3,100,0
+edixref,1000,DANAHER,0
+orderstatus,close,,0
+engineer,Ted,,0
+state,AK,Alaska,0
+state,AL,Alabama,0
+state,AR,Arkansas,0
+state,AZ,Arizona,0
+state,CA,California,0
+state,CO,Colorado,0
+state,CT,Connecticut,0
+state,DC,District of Columbia,0
+state,DE,Delaware,0
+state,FL,Florida,0
+state,GA,Georgia,0
+state,HI,Hawaii,0
+state,IA,Iowa,0
+state,ID,Idaho,0
+state,IL,Illinois,0
+state,IN,Indiana,0
+state,KS,Kansas,0
+state,KY,Kentucky,0
+state,LA,Louisiana,0
+state,MA,Massachusetts,0
+state,MD,Maryland,0
+state,ME,Maine,0
+state,MI,Michigan,0
+state,MN,Minnesota,0
+state,MO,Missouri,0
+state,MS,Mississippi,0
+state,MT,Montana,0
+state,NC,North Carolina,0
+state,ND,North Dakota,0
+state,NE,Nebraska,0
+state,NH,New Hampshire,0
+state,NJ,New Jersey,0
+state,NM,New Mexico,0
+state,NV,Nevada,0
+state,NY,New York,0
+state,OH,Ohio,0
+state,OK,Oklahoma,0
+state,OR,Oregon,0
+state,PA,Pennsylvania,0
+state,PR,Puerto Rico,0
+state,RI,Rhode Island,0
+state,SC,South Carolina,0
+state,SD,South Dakota,0
+state,TN,Tennessee,0
+state,TX,Texas,0
+state,UT,Utah,0
+state,VA,Virginia,0
+state,VT,Vermont,0
+state,WA,Washington State,0
+state,WI,Wisconsin,0
+state,WV,West Virginia,0
+state,WY,Wyoming,0
+jasper,P1,genericJTableP6.jasper,1
+jasper,P2,genericJTableP6a.jasper,1
+jasper,P3,genericJTableP3.jasper,1
+jasper,P4,genericJTableP4.jasper,1
+jasper,P5,genericJTableP5.jasper,1
+jasper,L1,genericJTableL11.jasper,1
+jasper,L2,genericJTableL11a.jasper,1
+jasper,L6,genericJTableL6.jasper,1
+jasper,L7,genericJTableL7.jasper,1
+jasper,L8,genericJTableL8.jasper,1

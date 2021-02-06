@@ -695,8 +695,8 @@ public class GLTranMaint extends javax.swing.JPanel {
                     return;
                 }
                    
-                ArrayList<String> caldate = OVData.getGLCalForDate(dfdate.format(effdate.getDate()));
-                if (caldate.isEmpty()) {
+                String[] caldate = OVData.getGLCalForDate(dfdate.format(effdate.getDate()));
+                if (caldate == null || caldate[0].isEmpty()) {
                     proceed = false;
                     bsmf.MainFrame.show("No calendar period for effective date");
                     return;
@@ -709,9 +709,9 @@ public class GLTranMaint extends javax.swing.JPanel {
                 }
                     
                 // if reversing...check and make sure next immediate period is open
-                if (! caldate.isEmpty() && type.equals("RV")) {
-                    int nextperiod = Integer.valueOf(caldate.get(1)) + 1;
-                    int thisyear = Integer.valueOf(caldate.get(0));
+                if (! caldate[0].isEmpty() && type.equals("RV")) {
+                    int nextperiod = Integer.valueOf(caldate[1]) + 1;
+                    int thisyear = Integer.valueOf(caldate[0]);
                       if (nextperiod > 12) {
                           thisyear++;
                           nextperiod = 1;
@@ -736,18 +736,24 @@ public class GLTranMaint extends javax.swing.JPanel {
                      return;
                 }
                 
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+                
                 if (proceed) {
                     for (int i = 0; i < transtable.getRowCount(); i++) {
                         amt = Double.valueOf(transtable.getValueAt(i, 4).toString());
                         
                         st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
                         + " values ( " 
                         + "'" + transtable.getValueAt(i, 0).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
                         + "'" + dfdate.format(effdate.getDate()) + "'" + ","
                         + "'" + transtable.getValueAt(i, 4).toString() + "'" + ","
+                        + "'" + transtable.getValueAt(i, 4).toString() + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","        
                         + "'" + tbref.getText().toString() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + type + "'" + ","
@@ -836,19 +842,21 @@ public class GLTranMaint extends javax.swing.JPanel {
         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         transtable.setModel(transmodel);
         
-         if (tbdesc.getText().isEmpty()) {
+        if (tbdesc.getText().isEmpty()) {
              bsmf.MainFrame.show("Desc cannot be blank");
              tbdesc.setBackground(Color.yellow);
             tbdesc.requestFocus();
             return;
          }
-       
+        
+        
+        
         if (tbamt.getText().isEmpty()) {
-             bsmf.MainFrame.show("Amount cannot be blank");
+             bsmf.MainFrame.show("amount cannot be blank");
             tbamt.setBackground(Color.yellow);
             tbamt.requestFocus();
             return;
-        }
+         }
        
         if (! OVData.isAcctNumberValid(ddacct.getSelectedItem().toString()) ) {
             bsmf.MainFrame.show("Acct is not valid");

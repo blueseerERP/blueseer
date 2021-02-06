@@ -184,21 +184,14 @@ public class InvRptPicker extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
-      ddreport.removeAllItems();
+     ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("InvRptPicker");
-      for (String[] s : list) {
-          
-          String[] x = s[1].split(":",-1);
-          if (x != null && x.length == 2) {
-              jaspermap.put(k, x[0]);
-              ddreport.addItem(x[1]);
-          } else {
-              jaspermap.put(k, "P1");
-              ddreport.addItem(s[1]);
-          }
-          
+      ArrayList<String[]> list = OVData.getJasperByGroup("InvRptGroup");
+      for (String[] x : list) {
+              jaspermap.put(k, x[1]);
+              ddreport.addItem(x[0]);
+          k++;
       }
      
       rbactive.setSelected(true);

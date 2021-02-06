@@ -41,9 +41,15 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
@@ -72,35 +78,23 @@ public class CusRptPicker extends javax.swing.JPanel {
     These notes apply to all RptPicker classes.
     
     All subreport items in the drop down report list on the main panel
-    are defined in Generic Code Maintenance under the Admin Menu.  
+    are defined in Jasper Maintenance under the Admin Menu.  
     
-    The scheme in Generic code maintenance is :
-    
-    code = 'MenuName'...example SchRptPicker
-    key = x ...where x is an integer that defines the index order in the drop down
-    value = "Name of report"
-    
-    Once the entry in Generic Code Maintenance is complete...the developer must include
-    3 methods specific to the behaviour of the report that end with 
-    the index number as defined in Generic Code Maintenance 'key' field.
-    
-    1)  displayVariablesIndex + i   where i = 'key' field in Generic Code Maintenance
-    2)  displayResultsIndex + i
-    3)  tableClickIndex + i
-    
-    Use base 0 as the first index value.
-    
-    See examples below of these three methods
-    
+    There is one function per report listed in the report drop down selection box.
+    Each report listed must have a corresponding 'func' included here between
+    the CUSTOM FUNCTIONS begin/end comments.
+    The name of each function created is added to the 'func' field in the 
+    Jasper Maintenance Menu for the report in the drop down list.
+    One report, one title, one func
+        
     Note:  this was developed in this manner to reduce the number of JPanel classes required
     per each sub report.   I'm all ears if have another option.  :)
     
     */
-    Map<Integer, String> jaspermap = new HashMap<Integer, String>();
-    javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "1", "2", "3", "4"
-            });
+    Map<String, String> jaspermap = new HashMap<String, String>();
+    String jasperGroup = "CusRptGroup";
+    boolean isLoad = false;
+    
      class renderer1 extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
@@ -182,19 +176,15 @@ public class CusRptPicker extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
+      isLoad = true;
       ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("CusRptPicker");
-      for (String[] s : list) {
-           String[] x = s[1].split(":",-1);
-          if (x != null && x.length == 2) {
-              jaspermap.put(k, x[0]);
-              ddreport.addItem(x[1]);
-          } else {
-              jaspermap.put(k, "P1");
-              ddreport.addItem(s[1]);
-          }
+      ArrayList<String[]> list = OVData.getJasperByGroup(jasperGroup);
+      for (String[] x : list) { // list is string of desc, func, format
+              jaspermap.put(x[0], x[2]); // desc, format
+              ddreport.addItem(x[0]); // desc
+          k++;
       }
      
       rbactive.setSelected(true);
@@ -202,7 +192,7 @@ public class CusRptPicker extends javax.swing.JPanel {
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
-     
+     isLoad = false;
     }
    
     
@@ -218,15 +208,15 @@ public class CusRptPicker extends javax.swing.JPanel {
     
     public void showPanels(String[] panels) {
         for (String panel : panels) {
-            if (panel.equals("tb"))
+            if (panel.equals("tb"))   // two textboxes tbkey1 & tbkey2
                 paneltb.setVisible(true);
-            if (panel.equals("tb2"))
+            if (panel.equals("tb2"))  // two textboxes tbkey3 & tbkey4
                 paneltb2.setVisible(true);
-            if (panel.equals("dc"))
+            if (panel.equals("dc"))  // two datechoosers dcdate1 & dcdate2
                 paneldc.setVisible(true);
-            if (panel.equals("dd"))
+            if (panel.equals("dd"))  // two dropdowns ddkey1 & ddkey2
                 paneldd.setVisible(true);
-            if (panel.equals("rb"))
+            if (panel.equals("rb"))  // two radio buttosn  rbactive & rbinactive
                 panelrb.setVisible(true);
         }
     }
@@ -283,43 +273,373 @@ public class CusRptPicker extends javax.swing.JPanel {
         lbdate2.setVisible(true);
     }
     
-    /* display Variables Index Section */
-    public void displayVariablesIndex0 () {
-           
+    /* CUSTOM FUNCTIONS BEGIN  */
+    // one function per report to be added here
+    // each function takes a boolean parameter.
+    // if parameter is true....function creates layout for input variables
+    // if parameter is false....function fills table with SQL query based in input variables
+    // NOTE:  input variables (swing form components) are limited to:
+    // four textboxes (tb1 & tb2 panels), 2 datechoosers, 2 dropdowns, 2 radiobuttons
+    // see showPanels function for input panels layout mechanism
+    
+    /* Customer Address info by code range */
+    public void custAddrInfoByRange (boolean input) {
+        
+        if (input) { // input...draw variable input panels
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
            lbkey1.setText("From CustCode:");
            lbkey2.setText("To CustCode:");
-    }
-       
-    
-    /* display Results Index Section */
-    public void displayResultsIndex0 () {
-         
-        tablereport.setModel(RPData.getCustBrowse(tbkey1.getText(),tbkey2.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
+        } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "Line1", "City", "State", "Zip"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT cm_code, cm_market, cm_name, cm_line1, " +
+                    " cm_city, cm_state, cm_zip, cm_market, cm_phone, cm_email, " +
+                    " cm_terms, cm_bank, cm_curr, cm_ar_acct, cm_onhold " +
+                    "from cm_mstr " +
+                    " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                    " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                    "order by cm_code ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("cm_line1"),
+                        res.getString("cm_city"),
+                        res.getString("cm_state"),
+                        res.getString("cm_zip")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
              }
-             tc.setCellRenderer(new CusRptPicker.renderer1());
-         }
+        } // else run report
                
     }
-    
-    
-    
-    /* tableClick Index Section */
-    public void tableClickIndex0 (int row, int col) {
-          if (! checkperms("CustMaint")) { return; }
-           reinitpanels("CustMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+              
+    /* Customer code, name, phone, email info by code range */
+    public void custPhoneEmailByRange (boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb"});
+           lbkey1.setText("From CustCode:");
+           lbkey2.setText("To CustCode:");
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "Phone", "Email"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT cm_code, cm_name, " +
+                    " cm_phone, cm_email " +
+                    "from cm_mstr " +
+                    " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                    " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                    "order by cm_code ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("cm_phone"),
+                        res.getString("cm_email")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
+             }
+        } // else run report
     }
     
+    /* Customer finance settings by code range */
+    public void custFinanceInfoByRange (boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb"});
+           lbkey1.setText("From CustCode:");
+           lbkey2.setText("To CustCode:");
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "Terms", "Bank", "Curr", "ARAcct", "ARcc", "OnHold"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                 res = st.executeQuery("SELECT cm_code, cm_market, cm_name,  " +
+                        " cm_terms, cm_bank, cm_curr, cm_ar_acct, cm_ar_cc, " +
+                        " case when cm_onhold = '0' then 'false' else 'true' end as 'cm_onhold' " +
+                        "from cm_mstr " +
+                        " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                        " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                        "order by cm_code ;");
+
+                while (res.next()) {
+                   
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("cm_terms"),
+                        res.getString("cm_bank"),
+                        res.getString("cm_curr"),
+                        res.getString("cm_ar_acct"),
+                        res.getString("cm_ar_cc"),
+                        res.getString("cm_onhold")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
+             }
+        } // else run report
+    }
     
+     /* Customer ShipTo list by code range */
+    public void custShipTosByRange (boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb"});
+           lbkey1.setText("From CustCode:");
+           lbkey2.setText("To CustCode:");
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "ShipToCode", "Name", "Addr", "City", "State", "Zip"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                 res = st.executeQuery("SELECT cm_code, cm_name,  " +
+                        " cms_shipto, cms_name, cms_line1, cms_city, cms_state, cms_zip " +
+                          "from cm_mstr inner join cms_det on cms_code = cm_code " +
+                        " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                        " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                        "order by cm_code ;");
+
+                while (res.next()) {
+                   
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("cms_shipto"),
+                        res.getString("cms_name"),
+                        res.getString("cms_line1"),
+                        res.getString("cms_city"),
+                        res.getString("cms_state"),
+                        res.getString("cms_zip")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
+             }
+        } // else run report
+    }
+    
+    /* CUSTOM FUNCTIONS END */
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -669,14 +989,12 @@ public class CusRptPicker extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
-        String func = "";
-        for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayResultsIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, false);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -689,7 +1007,6 @@ public class CusRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       }  
           
     }//GEN-LAST:event_btviewActionPerformed
 
@@ -697,23 +1014,7 @@ public class CusRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            
-         try {
-                   Method mymethod;
-                   mymethod = this.getClass().getMethod("tableClickIndex" + ddreport.getSelectedIndex(), Integer.TYPE, Integer.TYPE);
-                   mymethod.invoke(this, row, col);
-               } catch (NoSuchMethodException ex) {
-                   ex.printStackTrace();
-               } catch (SecurityException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalAccessException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalArgumentException ex) {
-                   ex.printStackTrace();
-               } catch (InvocationTargetException ex) {
-                   ex.printStackTrace();
-               }
-        
+            reinitpanels("CustMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
@@ -723,14 +1024,14 @@ public class CusRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void ddreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddreportActionPerformed
-       String func = "";
-       for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayVariablesIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+      
+       if (! isLoad)  { 
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, true);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -743,12 +1044,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       } 
+       }
       
     }//GEN-LAST:event_ddreportActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()) );
     }//GEN-LAST:event_btprintActionPerformed
 
 

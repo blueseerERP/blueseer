@@ -92,11 +92,13 @@ public class WorkOrdServ extends HttpServlet {
         String todate = request.getParameter("todate");
         String fromitem = request.getParameter("fromitem");
         String toitem = request.getParameter("toitem");
+        String fromcell = request.getParameter("fromcell");
+        String tocell = request.getParameter("tocell");
         String status = request.getParameter("status");
         if (id != null && ! id.isEmpty()) {
             response.getWriter().println(getWorkOrderJSON(id));
         } else {
-           response.getWriter().println(getWorkOrderListByDateJSON(fromdate,todate,fromitem,toitem,status)); 
+           response.getWriter().println(getWorkOrderListByDateJSON(fromdate,todate,fromitem,toitem,fromcell,tocell,status)); 
         }
     }
      
@@ -435,7 +437,7 @@ public class WorkOrdServ extends HttpServlet {
         
          } 
      
-    public static String getWorkOrderListByDateJSON(String fromdate, String todate, String fromitem, String toitem, String status) {
+    public static String getWorkOrderListByDateJSON(String fromdate, String todate, String fromitem, String toitem, String fromcell, String tocell, String status) {
        
         String x = ""; 
         if (fromitem == null || fromitem.isEmpty()) {
@@ -443,6 +445,12 @@ public class WorkOrdServ extends HttpServlet {
         }
         if (toitem == null || toitem.isEmpty()) {
             toitem = bsmf.MainFrame.hichar;
+        }
+        if (fromcell == null || fromcell.isEmpty()) {
+            fromcell = bsmf.MainFrame.lowchar;
+        }
+        if (tocell == null || tocell.isEmpty()) {
+            tocell = bsmf.MainFrame.hichar;
         }
         if (fromdate == null) {
             fromdate = bsmf.MainFrame.lowdate;
@@ -477,7 +485,9 @@ public class WorkOrdServ extends HttpServlet {
                                " where plan_date_create >= " + "'" + fromdate + "'" + 
                                " and plan_date_create <= " + "'" + todate + "'" + 
                                " and plan_part >= " + "'" + fromitem + "'" +
-                               " and plan_part <= " + "'" + toitem + "'" +        
+                               " and plan_part <= " + "'" + toitem + "'" + 
+                               " and plan_cell >= " + "'" + fromcell + "'" +
+                               " and plan_cell <= " + "'" + tocell + "'" +                
                                        ";");
                 
                        

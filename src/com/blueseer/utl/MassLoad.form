@@ -97,20 +97,21 @@
         <Component class="javax.swing.JComboBox" name="ddtable">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="13">
+              <StringArray count="14">
                 <StringItem index="0" value="Item Master"/>
                 <StringItem index="1" value="BOM Master"/>
                 <StringItem index="2" value="Customer Master"/>
                 <StringItem index="3" value="Customer ShipTo Master"/>
-                <StringItem index="4" value="Vendor Master"/>
-                <StringItem index="5" value="Customer Xref"/>
-                <StringItem index="6" value="Customer Price List"/>
+                <StringItem index="4" value="Customer Xref"/>
+                <StringItem index="5" value="Customer Price List"/>
+                <StringItem index="6" value="Vendor Master"/>
                 <StringItem index="7" value="Vendor Xref"/>
                 <StringItem index="8" value="Vendor Price List"/>
                 <StringItem index="9" value="Inventory Adjustment"/>
-                <StringItem index="10" value="Generic Code"/>
-                <StringItem index="11" value="EDI Partner Master"/>
-                <StringItem index="12" value="Carrier Master"/>
+                <StringItem index="10" value="GL Account Balances"/>
+                <StringItem index="11" value="Generic Code"/>
+                <StringItem index="12" value="EDI Partner Master"/>
+                <StringItem index="13" value="Carrier Master"/>
               </StringArray>
             </Property>
           </Properties>

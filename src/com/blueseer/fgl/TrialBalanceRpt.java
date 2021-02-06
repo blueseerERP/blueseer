@@ -318,9 +318,9 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         for (int i = 1 ; i <= 12; i++) {
             ddperiod.addItem(String.valueOf(i));
         }
-        ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+        String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
         //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
-        ddperiod.setSelectedItem(fromdatearray.get(1).toString());
+        ddperiod.setSelectedItem(fromdatearray[1].toString());
         ArrayList startend = OVData.getGLCalForPeriod(ddyear.getSelectedItem().toString(), ddperiod.getSelectedItem().toString());
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
        

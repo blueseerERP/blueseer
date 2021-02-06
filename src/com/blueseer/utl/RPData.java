@@ -244,9 +244,9 @@ public class RPData {
            return mymodel;
        } 
 
-    public static DefaultTableModel getCustBrowse(String from, String to) {
+    public static DefaultTableModel getCustBrowseAddrInfo(String from, String to) {
       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Line1", "City", "State", "Zip", "Market", "Phone", "Email", "Terms", "Bank", "ARAcct", "OnHold"})
+              new String[]{"select", "CustCode", "Name", "Line1", "City", "State", "Zip", "Phone", "Email"})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -285,13 +285,68 @@ public class RPData {
                         res.getString("cm_city"),
                         res.getString("cm_state"),
                         res.getString("cm_zip"),
-                        res.getString("cm_market"),
                         res.getString("cm_phone"),
-                        res.getString("cm_email"),
+                        res.getString("cm_email")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         }
+    
+    public static DefaultTableModel getCustBrowseFinInfo(String from, String to) {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "Terms", "Bank", "Curr", "ARAcct", "ARcc", "OnHold"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{    
+              if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+              }
+              if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+              }
+                    res = st.executeQuery("SELECT cm_code, cm_market, cm_name,  " +
+                        " cm_terms, cm_bank, cm_curr, cm_ar_acct, cm_ar_cc, cm_onhold " +
+                        "from cm_mstr " +
+                        " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                        " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                        "order by cm_code ;");
+
+                while (res.next()) {
+                   
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
                         res.getString("cm_terms"),
                         res.getString("cm_bank"),
                         res.getString("cm_curr"),
                         res.getString("cm_ar_acct"),
+                        res.getString("cm_ar_cc"),
                         res.getString("cm_onhold")
                             });
                 }
@@ -311,6 +366,7 @@ public class RPData {
         return mymodel;
         
          }
+    
     
     public static DefaultTableModel getVendBrowse( String from, String to) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

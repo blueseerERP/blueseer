@@ -3115,7 +3115,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
-           String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
+        String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
         if (x.equals("error")) {
             listprice.setText("");
             listprice.setBackground(Color.yellow);

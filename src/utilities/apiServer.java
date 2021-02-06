@@ -112,7 +112,7 @@ public class apiServer {
      
       public static class TestServlet extends HttpServlet
 {
-    private String greeting="Looking Good!";
+    private String greeting="BlueSeer API server says hello!";
     public TestServlet(){}
     public TestServlet(String greeting)
     {

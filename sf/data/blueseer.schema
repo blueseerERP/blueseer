@@ -379,6 +379,36 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0',
   `edic_delete` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `export_mstr` (
+  `export_docnbr` varchar(30) NOT NULL  DEFAULT '',
+  `export_doctype` varchar(30) NOT NULL  DEFAULT '',
+  `export_edi` tinyint(1) NOT NULL  DEFAULT '0',
+  `export_edi_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `export_edi_userid` varchar(30) NOT NULL  DEFAULT '',
+  `export_print` tinyint(1) NOT NULL  DEFAULT '0',
+  `export_print_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `export_print_userid` varchar(30) NOT NULL  DEFAULT '',
+  `export_email` tinyint(1) NOT NULL  DEFAULT '0',
+  `export_email_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `export_email_userid` varchar(30) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `jasp_mstr` (
+  `jasp_group` varchar(30) NOT NULL  DEFAULT '',
+  `jasp_desc` varchar(200) NOT NULL  DEFAULT '',
+  `jasp_func` varchar(200) NOT NULL  DEFAULT '',
+  `jasp_sequence` int(3) NOT NULL  DEFAULT '0',
+  `jasp_format` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `cron_log` (
+  `cron_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `cron_prog` varchar(30) NOT NULL  DEFAULT '',
+  `cron_sys` varchar(30) NOT NULL  DEFAULT '',
+  `cron_severity` varchar(8) NOT NULL  DEFAULT '',
+  `cron_desc` varchar(200) NOT NULL  DEFAULT '',
+  `cron_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cron_ref` varchar(30) NOT NULL  DEFAULT '',
+  `cron_status` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `elg_idxnbr` varchar(9) NOT NULL  DEFAULT '',
@@ -1790,7 +1820,8 @@ CREATE TABLE IF NOT EXISTS `counter` (
 CREATE TABLE IF NOT EXISTS `code_mstr` (
   `code_code` varchar(30) NOT NULL  DEFAULT '',
   `code_key` varchar(30) NOT NULL  DEFAULT '',
-  `code_value` varchar(50) NOT NULL  DEFAULT ''
+  `code_value` varchar(50) NOT NULL  DEFAULT '',
+  `code_internal` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `label_zebra` (
   `lblz_code` varchar(10) NOT NULL DEFAULT '',

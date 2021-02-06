@@ -183,19 +183,14 @@ public class ShpRptPicker extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
-       ddreport.removeAllItems();
+      ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getCodeAndDescMstrOrderByDesc("ShpRptPicker");
-      for (String[] s : list) {
-           String[] x = s[1].split(":",-1);
-          if (x != null && x.length == 2) {
-              jaspermap.put(k, x[0]);
-              ddreport.addItem(x[1]);
-          } else {
-              jaspermap.put(k, "P1");
-              ddreport.addItem(s[1]);
-          }
+      ArrayList<String[]> list = OVData.getJasperByGroup("ShpRptGroup");
+      for (String[] x : list) {
+              jaspermap.put(k, x[1]);
+              ddreport.addItem(x[0]);
+          k++;
       }
      
       rbactive.setSelected(true);
@@ -749,7 +744,8 @@ public class ShpRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_ddreportActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-       OVData.printJTableToJasper("Shipper Report", tablereport, "L2" ); 
+       OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
+ 
     }//GEN-LAST:event_btprintActionPerformed
 
 

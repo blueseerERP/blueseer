@@ -4260,6 +4260,49 @@ public class OVData {
                   return myreturn;
              } 
            
+     public static boolean addGLAcctBalances(ArrayList<String> list) {
+            boolean myreturn = true;
+                  
+            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
+              
+            String[] calarray = OVData.getGLCalForDate(dfdate.format(now));
+                    
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement(); 
+                String[] ld = null;
+                               
+             // order of delimited elements in file:   acct, cc, site, amount
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                      st.executeUpdate(" insert into acb_mstr " 
+                      + "(acb_acct, acb_cc, acb_year, acb_per, acb_site, acb_amt ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  calarray[0] + "'" + "," +  
+                    "'" +  calarray[1] + "'" + "," +  
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  df.format(Double.valueOf(ld[3])) + "'" + 
+                    " );"
+                    );     
+                }    // end loop
+            }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = false;
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+       } 
     
    
                
@@ -6183,6 +6226,68 @@ public class OVData {
         
     }
       
+    public static ArrayList getJasperByGroup(String group) {
+       ArrayList<String[]> myarray = new ArrayList();
+       
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from jasp_mstr " +
+                        " where jasp_group = " + "'" + group + "'" + 
+                        " order by cast(jasp_sequence as decimal) ;");
+               while (res.next()) {
+                    myarray.add(new String[]{res.getString("jasp_desc"), res.getString("jasp_func"), res.getString("jasp_format")});
+                }
+               
+           }
+            catch (SQLException s){
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+      
+    public static String getJasperFuncByTitle(String group, String title) {
+       String x = "";
+       
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from jasp_mstr " +
+                        " where jasp_group = " + "'" + group + "'" +
+                        " and jasp_desc = " + "'" + title + "'" +
+                        " ;");
+               while (res.next()) {
+                    x = res.getString("jasp_func");
+                }
+               
+           }
+            catch (SQLException s){
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
         public static ArrayList getCodeAndDescMstrOrderByDesc(String type) {
        ArrayList<String[]> myarray = new ArrayList();
        
@@ -16592,15 +16697,15 @@ public class OVData {
         
     }
        
-         public static ArrayList getGLCalForDate(String EffDate) {
-              // function returns a 5 items from the gl_cal record where a date matches
-              // first element = year  as int
-              // second element = period as int
-              // third element = startdate as string
-              // fourth element = enddate as string
-              // fifth element = status as string
-              
-      ArrayList myarray = new ArrayList();
+         public static String[] getGLCalForDate(String EffDate) {
+              // function returns a String array
+              // first element = year  
+              // second element = period 
+              // third element = startdate 
+              // fourth element = enddate 
+              // fifth element = status 
+      String[] x = new String[]{"","","","",""};        
+      
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -16613,11 +16718,11 @@ public class OVData {
                         " AND glc_end >= " +
                         "'" + EffDate.toString() + "'" + ";");
                while (res.next()) {
-                    myarray.add(res.getString("glc_year"));
-                     myarray.add(res.getString("glc_per"));
-                      myarray.add(res.getString("glc_start"));
-                       myarray.add(res.getString("glc_end"));
-                        myarray.add(res.getString("glc_status"));
+                    x[0] = res.getString("glc_year");
+                    x[1] = res.getString("glc_per");
+                    x[2] = res.getString("glc_start");
+                    x[3] = res.getString("glc_end");
+                    x[4] = res.getString("glc_status");
                }
                
            }
@@ -16629,7 +16734,7 @@ public class OVData {
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myarray;
+        return x;
         
     }
          
@@ -17458,9 +17563,10 @@ public class OVData {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   
-              ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray.get(0).toString());
-              int current_period = Integer.valueOf(fromdatearray.get(1).toString());
+              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+              
+              int current_year = Integer.valueOf(fromdatearray[0].toString());
+              int current_period = Integer.valueOf(fromdatearray[1].toString());
               try {
                   
                   
@@ -17585,9 +17691,9 @@ public class OVData {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   
-              ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray.get(0).toString());
-              int current_period = Integer.valueOf(fromdatearray.get(1).toString());
+              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+              int current_year = Integer.valueOf(fromdatearray[0].toString());
+              int current_period = Integer.valueOf(fromdatearray[1].toString());
               try {
                   
                   
@@ -17715,9 +17821,9 @@ public class OVData {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   
-              ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray.get(0).toString());
-              int current_period = Integer.valueOf(fromdatearray.get(1).toString());
+              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+              int current_year = Integer.valueOf(fromdatearray[0].toString());
+              int current_period = Integer.valueOf(fromdatearray[1].toString());
               try {
                   
                   
@@ -17818,9 +17924,9 @@ public class OVData {
               java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
               ArrayList<String> mylist = new ArrayList<String>();   
-              ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray.get(0).toString());
-              int current_period = Integer.valueOf(fromdatearray.get(1).toString());
+              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+              int current_year = Integer.valueOf(fromdatearray[0].toString());
+              int current_period = Integer.valueOf(fromdatearray[1].toString());
               try {
                   
                   
@@ -20589,6 +20695,7 @@ public class OVData {
             newmodel.addColumn(model.getColumnName(k));
         }
         
+       
          int nRow = model.getRowCount(), nCol = newmodel.getColumnCount();
          int offset = model.getColumnCount() - nCol;
          String[] myarray = new String[nCol];
@@ -20611,9 +20718,10 @@ public class OVData {
         
         String jasperfile = OVData.getCodeValueByCodeKey("jasper", type);
         if (jasperfile.isEmpty()) {
-            jasperfile = "genericJTable6.jasper";
+            jasperfile = "genericJTableL11.jasper";
         }
         
+      
         
         File mytemplate = new File("jasper/" + jasperfile); 
         JasperPrint jasperPrint; 
@@ -22227,7 +22335,7 @@ public class OVData {
                     }
                    
                     x[0] = "success";
-                    x[1] = "Loaded Sales Order Successfully";
+                    x[1] = "Loaded Shipper Successfully";
                     x[2] = nbr;
                     
                 } // if proceed
@@ -22237,7 +22345,7 @@ public class OVData {
                 }
             } catch (SQLException s) {
                 x[0] = "fail";
-                x[1] = "unable to load order SQLException";
+                x[1] = "unable to load shipper SQLException";
                 MainFrame.bslog(s);
             }
             con.close();

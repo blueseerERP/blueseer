@@ -340,12 +340,12 @@ try {
                  // am I within a period
                  // what period am I ending
                  // am I short of today's date
-                 ArrayList fromdatearray = OVData.getGLCalForDate(dfdate.format(dcFrom.getDate()));
-                 ArrayList todatearray = OVData.getGLCalForDate(dfdate.format(dcTo.getDate()));
-                 int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
-                 int fromdateyear = Integer.valueOf(fromdatearray.get(0).toString());
-                 int todateperiod = Integer.valueOf(todatearray.get(1).toString());
-                 int todateyear = Integer.valueOf(todatearray.get(0).toString());
+                 String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(dcFrom.getDate()));
+                 String[] todatearray = OVData.getGLCalForDate(dfdate.format(dcTo.getDate()));
+                 int fromdateperiod = Integer.valueOf(fromdatearray[1].toString());
+                 int fromdateyear = Integer.valueOf(fromdatearray[0].toString());
+                 int todateperiod = Integer.valueOf(todatearray[1].toString());
+                 int todateyear = Integer.valueOf(todatearray[0].toString());
                  int priorperiod = 0;
                  int prioryear = 0;
                  double begbal = 0.00;

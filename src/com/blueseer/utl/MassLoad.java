@@ -347,6 +347,88 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     
+       // GL Account Balances stuff
+    public ArrayList<String> defineGLAcctBalances() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("acb_acct,s,10,mandatory,validated");
+        list.add("acb_cc,s,4,mandatory,validated");
+        list.add("acb_site,s,10,mandatory,validated");
+        list.add("acb_amt,d,14,mandatory,validated");
+        return list;
+    }
+    
+    public boolean checkGLAcctBalances(String[] rs, int i) {
+        boolean proceed = true;
+        
+        ArrayList<String> list = defineGLAcctBalances();
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == list.size()) {
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+               
+                if (ld[0].compareTo("acb_acct") == 0 && ! OVData.isValidGLAcct(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid account code" + "\n" );
+                       proceed = false;
+                }
+                if (ld[0].compareTo("acb_cc") == 0 && ! OVData.isValidGLcc(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid cost center / dept" + "\n" );
+                       proceed = false;
+                }
+                if (ld[0].compareTo("acb_site") == 0 && ! OVData.isValidSite(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid Site" + "\n" );
+                       proceed = false;
+                }
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processGLAcctBalances (File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
+                   temp = checkGLAcctBalances(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+            }
+            fsr.close();
+            
+             if (proceed) {
+                   if(OVData.addGLAcctBalances(list))
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
     
       // Generic Code stuff
     public ArrayList<String> defineGenericCode() {
@@ -1525,6 +1607,12 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                    }
                }
+               if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
+                   temp = checkGLAcctBalances(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
             }
             fsr.close();
             // now we should have a clean file....attempt to load
@@ -1575,6 +1663,9 @@ public class MassLoad extends javax.swing.JPanel {
                }
                if (ddtable.getSelectedItem().toString().compareTo("BOM Master") == 0) {
                   processBOMMaster(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
+                  processGLAcctBalances(myfile);
                }
               
          }
@@ -1645,9 +1736,12 @@ public class MassLoad extends javax.swing.JPanel {
          if (key.compareTo("BOM Master") == 0) { 
              list = defineBOMMaster();
          }
-          if (key.compareTo("EDI Partner Master") == 0) { 
+        if (key.compareTo("EDI Partner Master") == 0) { 
              list = defineEDIPartner();
-         }
+        }
+        if (key.compareTo("GL Account Balances") == 0) { 
+             list = defineGLAcctBalances();
+        }
        
        
         
@@ -1689,7 +1783,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Vendor Master", "Customer Xref", "Customer Price List", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "Generic Code", "EDI Partner Master", "Carrier Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partner Master", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
