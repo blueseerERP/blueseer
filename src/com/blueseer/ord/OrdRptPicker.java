@@ -213,7 +213,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
     
     public void showPanels(String[] panels) {
         for (String panel : panels) {
-            if (panel.equals("tb"))   // two textboxes tbkey1 & tbkey2
+            if (panel.equals("tb1"))   // two textboxes tbkey1 & tbkey2
                 paneltb.setVisible(true);
             if (panel.equals("tb2"))  // two textboxes tbkey3 & tbkey4
                 paneltb2.setVisible(true);
@@ -293,9 +293,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
         if (input) { // input...draw variable input panel
            resetVariables();
            hidePanels();
-           showPanels(new String[]{"tb","dc"});
-           lbkey1.setText("From OrdNbr:");
-           lbkey2.setText("To OrdNbr:");
+           showPanels(new String[]{"dc"});
            lbdate1.setText("From DueDate:");
            lbdate2.setText("To DueDate:");
            java.util.Date now = new java.util.Date();
@@ -303,17 +301,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
            dcdate2.setDate(now);
          } else { // output...fill report
             // colect variables from input
-            String from = tbkey1.getText();
-            String to = tbkey2.getText();
             String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
             String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
             // cleanup variables
-            if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lownbr;
-            }
-            if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hinbr;
-            }
+          
             if (fromdate.isEmpty()) {
                   fromdate = bsmf.MainFrame.lowdate;
             }
@@ -345,12 +336,11 @@ public class OrdRptPicker extends javax.swing.JPanel {
             ResultSet res = null;
             try{   
                 res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
-                    " sum((sod_ord_qty - sod_shipped_qty) * sod_netprice) as 'total' " +
+                    " sum(sod_ord_qty * sod_netprice) as 'total' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
-                    " where cast(so_nbr as decimal) >= " + "'" + from + "'" +
-                    " and cast(so_nbr as decimal) <= " + "'" + to + "'" +
-                    " and so_due_date >= " + "'" + fromdate + "'" +
+                    " where " +
+                    " so_due_date >= " + "'" + fromdate + "'" +
                     " and so_due_date <= " + "'" + todate + "'" +         
                     " group by so_nbr order by so_nbr ;");
 
@@ -396,7 +386,215 @@ public class OrdRptPicker extends javax.swing.JPanel {
                
     }
    
-    
+    /* Order by Order Date range */
+    public void ordersOrdDateByRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"dc"});
+           lbdate1.setText("From OrdDate:");
+           lbdate2.setText("To OrdDate:");
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "OrderNbr", "PONbr", "CustCode", "Name", "OrdDate", "DueDate", "Status", "Amount"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                    " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
+                    " inner join cm_mstr on cm_code = so_cust " +
+                    " where " +
+                    " so_ord_date >= " + "'" + fromdate + "'" +
+                    " and so_ord_date <= " + "'" + todate + "'" +         
+                    " group by so_nbr order by so_nbr ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("so_ord_date"),
+                        res.getString("so_due_date"),
+                        res.getString("so_status"),
+                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+    /* Order by Order Date range */
+    public void ordersCustDateByRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1", "dc"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+           lbdate1.setText("From OrdDate:");
+           lbdate2.setText("To OrdDate:");
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lownbr;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hinbr;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "OrderNbr", "PONbr", "CustCode", "Name", "OrdDate", "DueDate", "Status", "Amount"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                    " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
+                    " inner join cm_mstr on cm_code = so_cust " +
+                    " where " +
+                    " so_cust >= " + "'" + fromcust + "'" +
+                    " and so_cust <= " + "'" + tocust + "'" +   
+                    " and so_ord_date >= " + "'" + fromdate + "'" +
+                    " and so_ord_date <= " + "'" + todate + "'" +         
+                    " group by so_nbr order by so_nbr ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("so_ord_date"),
+                        res.getString("so_due_date"),
+                        res.getString("so_status"),
+                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
     /* CUSTOM FUNCTIONS END */
     
     /**
