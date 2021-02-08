@@ -2,15 +2,16 @@ CusRptGroup,Customer Addr Info By ID,custAddrInfoByRange,0,L6
 CusRptGroup,Customer Phone Email By ID,custPhoneEmailByRange,1,P4
 CusRptGroup,Customer Finance setup By ID,custFinanceInfoByRange,2,L8
 CusRptGroup,Customer Shipto list By cust,custShipTosByRange,3,L8
+CusRptGroup,Customer Total Sales By Range,custTotalSalesByRange,4,P5C
 InvRptGroup,Item Master By Item Range,itemMstrByRange,0,L2
 VenRptGroup,Vendor Master By VendCode Range,vendAddrByRange,0,L8
-OrdRptGroup,Orders By Order Number Range,ordersByNbrRange,0,P1
-PurRptGroup,POs By PO Number Range,poByNbrRange,0,P1
-ARRptGroup,AR entries by AR Number Range,arByNbrRange,0,P1
-APRptGroup,AP entries by AP Number Range,apByNbrRange,0,P1
-HRRptGroup,Employees Report by Emp ID Range,empByIDRange,0,P1
-ShpRptGroup,Shippers by Shipper Number Range,shipperByNbrRange,0,P1
-SchRptGroup,Plan Browse By Item,planByItem,0,P1
-SchRptGroup,Plan Browse By Item Range,planByItemRange,1,P1
-SchRptGroup,Plan Browse By Sales Order,planByOrd,2,P1
-SchRptGroup,Plan Browse By Sales Order Range,planByOrdRange,3,P1
+OrdRptGroup,Orders By Due Date Range,ordersDueDateByRange,0,L8C
+PurRptGroup,POs By PO Number Range,poByNbrRange,0,P6
+ARRptGroup,AR entries by AR Number Range,arByNbrRange,0,P6
+APRptGroup,AP entries by AP Number Range,apByNbrRange,0,P6
+HRRptGroup,Employees Report by Emp ID Range,empByIDRange,0,P6
+ShpRptGroup,Shippers by Shipper Number Range,shipperByNbrRange,0,P6
+SchRptGroup,Plan Browse By Item,planByItem,0,P6
+SchRptGroup,Plan Browse By Item Range,planByItemRange,1,P6
+SchRptGroup,Plan Browse By Sales Order,planByOrd,2,P6
+SchRptGroup,Plan Browse By Sales Order Range,planByOrdRange,3,P6

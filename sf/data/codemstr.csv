@@ -103,13 +103,17 @@ state,WA,Washington State,0
 state,WI,Wisconsin,0
 state,WV,West Virginia,0
 state,WY,Wyoming,0
-jasper,P1,genericJTableP6.jasper,1
-jasper,P2,genericJTableP6a.jasper,1
 jasper,P3,genericJTableP3.jasper,1
 jasper,P4,genericJTableP4.jasper,1
 jasper,P5,genericJTableP5.jasper,1
+jasper,P5C,genericJTableP5C.jasper,1
+jasper,P6,genericJTableP6.jasper,1
+jasper,P6A,genericJTableP6a.jasper,1
+jasper,P6C,genericJTableP5C.jasper,1
 jasper,L1,genericJTableL11.jasper,1
 jasper,L2,genericJTableL11a.jasper,1
 jasper,L6,genericJTableL6.jasper,1
 jasper,L7,genericJTableL7.jasper,1
+jasper,L7C,genericJTableL7C.jasper,1
 jasper,L8,genericJTableL8.jasper,1
+jasper,L8C,genericJTableL8C.jasper,1

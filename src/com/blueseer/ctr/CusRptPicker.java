@@ -186,7 +186,11 @@ public class CusRptPicker extends javax.swing.JPanel {
               ddreport.addItem(x[0]); // desc
           k++;
       }
-     
+      ddreport.insertItemAt("", 0);
+      ddreport.setSelectedIndex(0);
+      resetVariables();
+      hidePanels();
+      
       rbactive.setSelected(true);
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
@@ -639,6 +643,111 @@ public class CusRptPicker extends javax.swing.JPanel {
         } // else run report
     }
     
+     /* Customer Total Sales by range */
+    public void custTotalSalesByRange (boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb","dc"});
+           lbkey1.setText("From CustCode:");
+           lbkey2.setText("To CustCode:");
+           lbdate1.setText("From Date:");
+           lbdate2.setText("To Date:");
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "fromdate", "todate", "TotSales"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 5) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                 res = st.executeQuery("SELECT cm_code, cm_name,  " +
+                        " sum(shd_qty * shd_netprice) as 'total' " +
+                          "from cm_mstr inner join ship_mstr on sh_cust = cm_code " +
+                        " inner join ship_det on shd_id = sh_id and sh_status = '1' " +
+                        " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                        " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                        " and sh_shipdate >= " + "'" + fromdate + "'" +
+                        " and sh_shipdate <= " + "'" + todate + "'" +
+                        " group by cm_code order by cm_code ;");
+
+                while (res.next()) {
+                   
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        fromdate,
+                        todate,
+                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
+             }
+        } // else run report
+    }
+    
+    
     /* CUSTOM FUNCTIONS END */
     
     /**
@@ -760,14 +869,12 @@ public class CusRptPicker extends javax.swing.JPanel {
             .addGroup(paneldcLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbdate1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbdate2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         paneldcLayout.setVerticalGroup(
