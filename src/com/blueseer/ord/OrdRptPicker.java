@@ -485,7 +485,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                
     }
    
-    /* Order by Order Date range */
+    /* Order by Cust / Date range */
     public void ordersCustDateByRange (boolean input) {
         
         if (input) { // input...draw variable input panel
@@ -565,6 +565,418 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_due_date"),
                         res.getString("so_status"),
                         BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+    /* Open Orders by Cust range */
+    public void ordersOpenByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "OrderNbr", "PONbr", "CustCode", "Name", "OrdDate", "DueDate", "Status", "Amount"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                    " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
+                    " inner join cm_mstr on cm_code = so_cust " +
+                    " where " +
+                    " so_cust >= " + "'" + fromcust + "'" +
+                    " and so_cust <= " + "'" + tocust + "'" +   
+                    " and so_status <> " + "'" + "close" + "'" +       
+                    " group by so_nbr order by so_nbr ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("so_ord_date"),
+                        res.getString("so_due_date"),
+                        res.getString("so_status"),
+                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+     /* Open Orders Detail by Cust range */
+    public void ordersOpenDetailByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "OrderNbr", "PONbr", "Status", "Name", "Item", "OrdQty", "ShippedQty", "Remaining"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, sod_part, cm_code, cm_name, " +
+                    " sod_ord_qty, sod_shipped_qty, (sod_ord_qty - sod_shipped_qty) as 'remaining' " +
+                    " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
+                    " inner join cm_mstr on cm_code = so_cust " +
+                    " where " +
+                    " so_cust >= " + "'" + fromcust + "'" +
+                    " and so_cust <= " + "'" + tocust + "'" +   
+                    " and so_status <> " + "'" + "close" + "'" +       
+                    " order by so_nbr ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("so_status"),
+                        res.getString("cm_name"),
+                        res.getString("sod_part"),
+                        res.getString("sod_ord_qty"),
+                        res.getString("sod_shipped_qty"),
+                        res.getString("remaining")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+    /* OnHold Orders by Cust range */
+    public void ordersOnHoldByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "OrderNbr", "PONbr", "CustCode", "Name", "OrdDate", "DueDate", "Status", "Amount"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name, " +
+                    " sum(sod_ord_qty  * sod_netprice) as 'total' " +
+                    " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
+                    " inner join cm_mstr on cm_code = so_cust " +
+                    " where " +
+                    " so_cust >= " + "'" + fromcust + "'" +
+                    " and so_cust <= " + "'" + tocust + "'" +   
+                    " and so_status = " + "'" + "onhold" + "'" +       
+                    " group by so_nbr order by so_nbr ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("so_ord_date"),
+                        res.getString("so_due_date"),
+                        res.getString("so_status"),
+                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+     /* Open Orders Detail by Cust range */
+    public void ordersShippedDetailByPO (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From PO:");
+           lbkey2.setText("To PO:");
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String frompo = tbkey1.getText();
+            String topo = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (frompo.isEmpty()) {
+                  frompo = bsmf.MainFrame.lowchar;
+            }
+            if (topo.isEmpty()) {
+                  topo = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "PONbr", "OrderNbr", "ShipperNbr", "ShipDate", "Remarks",  "Item", "Desc", "ShipQty"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery("SELECT sod_nbr, shd_po, sh_id, sh_shipdate,  " +
+                    " sod_ord_qty, shd_qty, shd_part, shd_desc, sh_rmks " +
+                    " from ship_det inner join ship_mstr on sh_id = shd_id " +
+                    " inner join sod_det on sod_nbr = shd_so and sod_line = shd_line" + 
+                    " where " +
+                    " shd_po >= " + "'" + frompo + "'" +
+                    " and shd_po <= " + "'" + topo + "'" +  
+                    " order by shd_po ;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("shd_po"),
+                        res.getString("sod_nbr"),
+                        res.getString("sh_id"),
+                        res.getString("sh_shipdate"),
+                        res.getString("sh_rmks"),                        
+                        res.getString("shd_part"),
+                        res.getString("shd_desc"),
+                        res.getString("shd_qty")
+                        
                             });
                 }
            }

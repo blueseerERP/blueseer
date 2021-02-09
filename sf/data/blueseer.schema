@@ -1343,7 +1343,11 @@ CREATE TABLE IF NOT EXISTS `ship_mstr` (
   `sh_trailer` varchar(30) NOT NULL  DEFAULT '',
   `sh_freight` varchar(30) NOT NULL  DEFAULT '',
   `sh_po_date` date  DEFAULT NULL,
-  `sh_type` varchar(3) NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `sh_type` varchar(3) NOT NULL DEFAULT '',
+  `sh_boxes` int(8) NOT NULL DEFAULT '0',
+  `sh_pallets` int(8) NOT NULL DEFAULT '0',
+  `sh_tracking` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_tree` (
   `ship_id` varchar(30)  NOT NULL DEFAULT '',
   `ship_site` varchar(10)  NOT NULL DEFAULT '',

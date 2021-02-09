@@ -189,43 +189,59 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                                  <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
-                              </Group>
                               <Component id="jLabel35" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel40" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel27" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel41" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="dcshipdate" pref="150" max="32767" attributes="0"/>
                                   <Component id="ddsite" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="dcshipdate" min="-2" pref="150" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lbladdr" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="353" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="tbtrailer" min="-2" pref="201" max="-2" attributes="0"/>
                                   <Component id="ddshipvia" min="-2" pref="150" max="-2" attributes="0"/>
                                   <Component id="tbref" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                                  <Component id="tbremarks" alignment="0" pref="867" max="32767" attributes="0"/>
+                                  <Component id="tbremarks" alignment="0" pref="846" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="tbboxes" alignment="0" pref="90" max="32767" attributes="0"/>
+                                  <Component id="tbpallets" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="trackingListScrollPane" alignment="0" pref="223" max="32767" attributes="0"/>
+                                  <Component id="tbtracking" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btaddtracking" min="-2" pref="28" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btdeletetracking" min="-2" pref="28" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -268,7 +284,29 @@
                           <Component id="tbremarks" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="209" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbpallets" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbboxes" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbtracking" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btaddtracking" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btdeletetracking" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                          <Component id="trackingListScrollPane" alignment="0" min="-2" pref="52" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="68" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -276,12 +314,12 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel25">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Site"/>
+                <Property name="text" type="java.lang.String" value="Site:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel35">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Shipdate"/>
+                <Property name="text" type="java.lang.String" value="Shipdate:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbref">
@@ -302,17 +340,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel39">
               <Properties>
-                <Property name="text" type="java.lang.String" value="ShipVia"/>
+                <Property name="text" type="java.lang.String" value="ShipVia:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel40">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Trailer"/>
+                <Property name="text" type="java.lang.String" value="Trailer:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel27">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Ref"/>
+                <Property name="text" type="java.lang.String" value="Ref:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbladdr">
@@ -331,7 +369,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel41">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Remarks"/>
+                <Property name="text" type="java.lang.String" value="Remarks:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddsite">
@@ -339,6 +377,73 @@
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
                 </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbpallets">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbboxes">
+            </Component>
+            <Container class="javax.swing.JScrollPane" name="trackingListScrollPane">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JList" name="trackinglist">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Pallets:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel8">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Boxes:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel9">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tracking List:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btaddtracking">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/add.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddtrackingActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btdeletetracking">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/delete.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletetrackingActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbtracking">
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel10">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Track Nbr:"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -582,7 +687,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane7" min="-2" pref="279" max="-2" attributes="0"/>
+                  <Component id="jScrollPane7" min="-2" pref="257" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane2" min="-2" pref="54" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -630,9 +735,9 @@
                       <Component id="btadditem" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btdelitem" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="93" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jPanel5" alignment="0" pref="150" max="32767" attributes="0"/>
+                  <Component id="jPanel5" alignment="0" pref="213" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -684,11 +789,6 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel7" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                                   <Component id="lblwhqty" min="-2" pref="15" max="-2" attributes="0"/>
@@ -697,6 +797,13 @@
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
                               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jPanel7" alignment="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="jPanel6" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -767,7 +874,7 @@
                                   <Component id="jLabel48" alignment="0" pref="22" max="32767" attributes="0"/>
                                   <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="28" max="32767" attributes="0"/>
+                              <EmptySpace pref="91" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
