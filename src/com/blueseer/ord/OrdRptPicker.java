@@ -287,7 +287,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
     // four textboxes (tb1 & tb2 panels), 2 datechoosers, 2 dropdowns, 2 radiobuttons
     // see showPanels function for input panels layout mechanism
     
-    /* Order by Due Date range */
+     /* Order by Due Date range */
     public void ordersDueDateByRange (boolean input) {
         
         if (input) { // input...draw variable input panel
@@ -354,7 +354,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_ord_date"),
                         res.getString("so_due_date"),
                         res.getString("so_status"),
-                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                        BlueSeerUtils.currformat(res.getString("total")),
                             });
                 }
            }
@@ -385,7 +385,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
         } // else run report
                
     }
-   
+    
+    
     /* Order by Order Date range */
     public void ordersOrdDateByRange (boolean input) {
         
@@ -453,7 +454,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_ord_date"),
                         res.getString("so_due_date"),
                         res.getString("so_status"),
-                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                        BlueSeerUtils.currformat(res.getString("total")),
                             });
                 }
            }
@@ -564,7 +565,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_ord_date"),
                         res.getString("so_due_date"),
                         res.getString("so_status"),
-                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                        BlueSeerUtils.currformat(res.getString("total")),
                             });
                 }
            }
@@ -667,7 +668,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_ord_date"),
                         res.getString("so_due_date"),
                         res.getString("so_status"),
-                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                        BlueSeerUtils.currformat(res.getString("total")),
                             });
                 }
            }
@@ -873,7 +874,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_ord_date"),
                         res.getString("so_due_date"),
                         res.getString("so_status"),
-                        BlueSeerUtils.bsformat("", res.getString("total"), "2")
+                        BlueSeerUtils.currformat(res.getString("total")),
                             });
                 }
            }

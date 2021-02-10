@@ -139,6 +139,13 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String currformat(String invalue) {
+        String x = "";
+        DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.US)); 
+        x = df.format(Double.valueOf(invalue));   
+        return x;
+    }
+    
     public static String convertDateFormat(String format, String indate) {
        String mydate = "";
         if (format.equals("yyyyMMdd") && indate.length() == 8) {

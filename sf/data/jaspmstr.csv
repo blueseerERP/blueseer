@@ -10,7 +10,7 @@ OrdRptGroup,Open Orders By Cust,ordersOpenByCust,3,L8C
 OrdRptGroup,Open Orders Detail By Cust,ordersOpenDetailByCust,4,L8
 OrdRptGroup,Orders OnHold By Cust,ordersOnHoldByCust,5,L8C
 OrdRptGroup,Order Shipments By PO,ordersShippedDetailByPO,6,L8
-InvRptGroup,Item Master By Item Range,itemMstrByRange,0,L2
+InvRptGroup,Item Info By Item Range,iteminfoByItemRange,0,L2
 VenRptGroup,Vendor Master By VendCode Range,vendAddrByRange,0,L8
 PurRptGroup,POs By PO Number Range,poByNbrRange,0,P6
 ARRptGroup,AR entries by AR Number Range,arByNbrRange,0,P6
