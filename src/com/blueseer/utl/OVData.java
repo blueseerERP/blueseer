@@ -10686,7 +10686,7 @@ public class OVData {
     }
       
      
-         public static ArrayList getItemMasterRawlist() {
+    public static ArrayList getItemMasterRawlist() {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -10713,8 +10713,37 @@ public class OVData {
         return myarray;
         
     }
-         
-        public static ArrayList getItemMasterAlllist() {
+
+    public static ArrayList getItemsByType() {
+       ArrayList myarray = new ArrayList();
+        try{
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select it_item from item_mstr where it_type = 'CONT' order by it_item ;");
+               while (res.next()) {
+                    myarray.add(res.getString("it_item"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
+    
+    public static ArrayList getItemMasterAlllist() {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -10743,7 +10772,7 @@ public class OVData {
         
     }
         
-         public static ArrayList getItemMasterListBySite(String site) {
+    public static ArrayList getItemMasterListBySite(String site) {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -10774,7 +10803,7 @@ public class OVData {
     }
        
          
-        public static ArrayList getItemRange(String site, String fromitem, String toitem) {
+    public static ArrayList getItemRange(String site, String fromitem, String toitem) {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -10806,7 +10835,7 @@ public class OVData {
     }
          
          
-        public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
+    public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();

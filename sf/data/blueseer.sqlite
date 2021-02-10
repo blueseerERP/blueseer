@@ -1471,7 +1471,8 @@ CREATE TABLE "ship_det" (
   "shd_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_sku" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "shd_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT ''
+  "shd_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shd_cont" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

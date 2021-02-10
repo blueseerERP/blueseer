@@ -1198,7 +1198,8 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_ref` varchar(30) NOT NULL  DEFAULT '',
   `shd_sku` varchar(30) NOT NULL  DEFAULT '',
   `shd_desc` varchar(50) NOT NULL  DEFAULT '',
-  `shd_uom` varchar(3) NOT NULL  DEFAULT ''
+  `shd_uom` varchar(3) NOT NULL  DEFAULT '',
+  `shd_cont` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_id` int(11) NOT NULL  DEFAULT '0',

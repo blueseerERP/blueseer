@@ -10,6 +10,7 @@ orderstatus,open,,1
 orderstatus,commit,,1
 engineer,frank,,0
 orderstatus,backorder,,0
+ItemType,CONT,Container,0
 ItemType,FG,Finished Goods,0
 ItemType,RAW,Raw Material,0
 ItemType,SUB,Sub Assembly,0
