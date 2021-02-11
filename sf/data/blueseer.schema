@@ -1315,6 +1315,12 @@ CREATE TABLE IF NOT EXISTS `do_mstr` (
   `do_po` varchar(30) NOT NULL  DEFAULT '',
   `do_so` varchar(30) NOT NULL DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `ship_log` (
+  `shl_id` varchar(8) NOT NULL  DEFAULT '',
+  `shl_type` varchar(8) NOT NULL  DEFAULT '',
+  `shl_datetime` varchar(20) NOT DEFAULT '',
+  `shl_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_mstr` (
   `sh_id` varchar(8) NOT NULL  DEFAULT '',
   `sh_cust` varchar(8) NOT NULL  DEFAULT '',
@@ -1346,8 +1352,7 @@ CREATE TABLE IF NOT EXISTS `ship_mstr` (
   `sh_po_date` date  DEFAULT NULL,
   `sh_type` varchar(3) NOT NULL DEFAULT '',
   `sh_boxes` int(8) NOT NULL DEFAULT '0',
-  `sh_pallets` int(8) NOT NULL DEFAULT '0',
-  `sh_tracking` varchar(200) NOT NULL DEFAULT ''
+  `sh_pallets` int(8) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_tree` (
   `ship_id` varchar(30)  NOT NULL DEFAULT '',

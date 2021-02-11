@@ -382,6 +382,284 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
    
+    /* Item info by ProdLine range */
+    public void itemByProdLineRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From ProdLine:");
+           lbkey2.setText("To ProdLine:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromprodline = tbkey1.getText();
+            String toprodline = tbkey2.getText();
+           
+            // cleanup variables
+          
+            if (fromprodline.isEmpty()) {
+                  fromprodline = bsmf.MainFrame.lowchar;
+            }
+            if (toprodline.isEmpty()) {
+                  toprodline = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"select", "Item", "Desc", "Type", "ProdLine", "Code" , "Group", "Loc", "WH",  "SellPrice", "PurchPrice", "Revision"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              res = st.executeQuery("SELECT it_item, it_desc, it_code, it_prodline, " +
+                      " it_group, it_loc, it_wh, it_type, it_sell_price, " +
+                        "  it_pur_price, it_rev from item_mstr " +
+                        " where it_prodline >= " + "'" + fromprodline + "'" +
+                        " and it_prodline <= " + "'" + toprodline + "'" +
+                        " order by it_item; ") ;
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
+                                res.getString("it_desc"),
+                                res.getString("it_type"),
+                                res.getString("it_prodline"),
+                                res.getString("it_code"),
+                                res.getString("it_group"),
+                                res.getString("it_loc"),
+                                res.getString("it_wh"),
+                                BlueSeerUtils.currformat(res.getString("it_sell_price")),
+                                BlueSeerUtils.currformat(res.getString("it_pur_price")),
+                                res.getString("it_rev")
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+    /* Item Costs range */
+    public void itemCostsRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Item:");
+           lbkey2.setText("To Item:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromitem = tbkey1.getText();
+            String toitem = tbkey2.getText();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromitem.isEmpty()) {
+                  fromitem = bsmf.MainFrame.lownbr;
+            }
+            if (toitem.isEmpty()) {
+                  toitem = bsmf.MainFrame.hinbr;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"select", "Item", "Desc", "Matl", "Labor", "Burden", "OvhHead", "Service", "Total"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              res = st.executeQuery("select * from item_cost inner join item_mstr on it_item = itc_item " +
+                       " where itc_item >= " + "'" + fromitem + "'" +  " AND " 
+                       + " itc_item <= " + "'" + toitem + "'" + " AND "        
+                        + " itc_set = " + "'" + "standard" + "'" + " AND "
+                        + " itc_site = " + "'" + site + "'" + ";" );
+              
+              
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top"))),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top") )),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top") )),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top") )),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_out_low") + res.getDouble("itc_out_top") )),
+                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_total")))
+                                
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+    /* Item Costs range */
+    public void itemCustPriceRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Item:");
+           lbkey2.setText("To Item:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromitem = tbkey1.getText();
+            String toitem = tbkey2.getText();
+            // cleanup variables
+          
+            if (fromitem.isEmpty()) {
+                  fromitem = bsmf.MainFrame.lownbr;
+            }
+            if (toitem.isEmpty()) {
+                  toitem = bsmf.MainFrame.hinbr;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"select", "Item", "Desc", "CustCode", "CustName", "Currency", "UOM", "ItemMstrPrice", "CustSpecifcPrice"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              res = st.executeQuery("select it_item, cpr_item, it_desc, it_sell_price, " +
+                      " cpr_cust, cpr_curr, cpr_uom, cm_name, cpr_price " +
+                      " from cpr_mstr " +
+                      " inner join item_mstr on cpr_item = it_item " +
+                      " inner join cm_mstr on cm_code = cpr_cust " +
+                      " where cpr_item >= " + "'" + fromitem + "'" +  " AND " +
+                       " cpr_item <= " + "'" + toitem + "'" +
+                       " and cpr_type = 'List' " +
+                       ";" );
+              
+              
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("cpr_cust"),
+                        res.getString("cm_name"),
+                        res.getString("cpr_curr"),
+                        res.getString("cpr_uom"),
+                        BlueSeerUtils.currformat(res.getString("it_sell_price")),
+                        BlueSeerUtils.currformat(res.getString("cpr_price"))
+                                
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
    
     /* CUSTOM FUNCTIONS END */
     

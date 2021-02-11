@@ -10110,7 +10110,7 @@ public class OVData {
         
     }
          
-          public static ArrayList getItemCostStdElements(String item, String set, String site) {
+    public static ArrayList getItemCostStdElements(String item, String set, String site) {
            ArrayList<Double> mylist = new ArrayList<Double>();
          try{
             Class.forName(driver).newInstance();
@@ -10148,7 +10148,47 @@ public class OVData {
         return mylist;
         
     }
-         
+     
+    public static ArrayList<String[]> getItemCostByRange(String item, String from, String set, String site) {
+           ArrayList<String[]> mylist = new ArrayList<String[]>();
+           String[] myarray = new String[]{"","","","","","",""};
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from item_cost inner join item_mstr on it_item = itc_item where itc_item = " + "'" + item + "'" +  " AND " 
+                        + " itc_set = " + "'" + set + "'" + " AND "
+                        + " itc_site = " + "'" + site + "'" + ";" );
+               while (res.next()) {
+                myarray[0] = res.getString("it_item");
+                myarray[1] = String.valueOf(res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top") );
+                myarray[2] = String.valueOf(res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top") );
+                myarray[3] = String.valueOf(res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top") );
+                myarray[4] = String.valueOf(res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top") );
+                myarray[5] = String.valueOf(res.getDouble("itc_out_low") + res.getDouble("itc_out_top") );
+                myarray[6] = String.valueOf(res.getDouble("itc_total"));
+                
+                mylist.add(myarray);
+                
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
          public static Double getItemOperationalCost(String item, String set, String site) {
           double cost = 0.00; 
          try{

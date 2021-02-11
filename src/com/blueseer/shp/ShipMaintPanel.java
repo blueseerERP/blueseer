@@ -561,15 +561,13 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     status = res.getString("sh_status");
                     lbladdr.setText(res.getString("cms_name") + "  " + res.getString("cms_line1") + "..." + res.getString("cms_city") +
                                     ", " + res.getString("cms_state") + " " + res.getString("cms_zip"));
-                
-                    if (! res.getString("sh_tracking").isEmpty()) {
-                      String[] tr = res.getString("sh_tracking").split(";",-1);
-                      for (String t : tr) {
-                          trackinglistmodel.addElement(t);
-                      }
-                    }
-                
+                                
                 }
+                res = st.executeQuery("select * from ship_log where shl_id = " + "'" + myshipper + "'" + " and shl_type = 'track' " + ";");
+                while (res.next()) {
+                    trackinglistmodel.addElement(res.getString("shl_value"));
+                }
+                
 
                 res = st.executeQuery("select * from ship_det where shd_id = " + "'" + myshipper + "'" + ";");
                 while (res.next()) {
@@ -1986,20 +1984,10 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                      uniqwh = tabledetail.getValueAt(j, 7).toString();
                    }
 
-                   // concatenate delimited field tracking number from list
-                   String trackingNbrString = "";
-                   if (trackinglistmodel.getSize() > 0) {
-                       for (int z = 0; z < trackinglistmodel.getSize(); z++) {
-                           trackingNbrString += (trackinglistmodel.get(z) + ";");
-                       }
-                   }
-                   if (! trackingNbrString.isEmpty()) {
-                      trackingNbrString = trackingNbrString.substring(0, trackingNbrString.length() - 1);
-                   }
-
+                  
 
                 st.executeUpdate("insert into ship_mstr " 
-                    + " (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes, sh_tracking, sh_shipvia, "
+                    + " (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes,  sh_shipvia, "
                     + " sh_shipdate, sh_po_date, sh_ref, sh_po, " 
                     + " sh_rmks, sh_userid, sh_site, sh_curr, sh_wh, "
                     + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc ) "
@@ -2007,8 +1995,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     + "'" + ddbillto.getSelectedItem().toString() + "'" + "," 
                     + "'" + ddshipto.getSelectedItem().toString() + "'" + ","
                     + "'" + tbpallets.getText() + "'" + "," 
-                    + "'" + tbboxes.getText() + "'" + "," 
-                    + "'" + trackingNbrString + "'" + ","       
+                    + "'" + tbboxes.getText() + "'" + ","      
                     + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","         
                     + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                     + "'" + podate + "'" + ","
@@ -2054,6 +2041,16 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                         + ";");
                 }
 
+                // tracking number storage
+                    for (int z = 0; z < trackinglistmodel.getSize(); z++) {
+                        st.executeUpdate("insert into ship_log " +
+                            " (shl_id, shl_type, shl_value) " +
+                            " values ( " + "'" + tbshipper.getText() + "'" + "," +
+                            "'" + "track" + "'" + "," +
+                            "'" + trackinglistmodel.get(z) + "'" +
+                            ");" );    
+                    }
+                
                 // now update shs_det
                 OVData.updateShipperSAC(tbshipper.getText());
 
@@ -2128,23 +2125,11 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                          d++;
                          uniqpo = tabledetail.getValueAt(j, 3).toString();
                        }
-                    
-                    // concatenate delimited field tracking number from list
-                   String trackingNbrString = "";
-                   if (trackinglistmodel.getSize() > 0) {
-                       for (int z = 0; z < trackinglistmodel.getSize(); z++) {
-                           trackingNbrString += (trackinglistmodel.get(z) + ":");
-                       }
-                   }
-                   if (! trackingNbrString.isEmpty()) {
-                      trackingNbrString = trackingNbrString.substring(0, trackingNbrString.length() - 1);
-                   }
-                    
+                   
                     st.executeUpdate("update ship_mstr set " 
                         + " sh_shipdate = " + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                         + " sh_ref = " + "'" + tbref.getText() + "'" + ","
                         + " sh_rmks = " + "'" + tbremarks.getText() + "'" + ","
-                        + " sh_tracking = " + "'" + trackingNbrString + "'" + "," 
                         + " sh_shipvia = " + "'" + ddshipvia.getSelectedItem() + "'" + ","         
                         + " sh_pallets = " + "'" + tbpallets.getText() + "'" + ","
                         + " sh_boxes = " + "'" + tbboxes.getText() + "'" + ","        
@@ -2176,6 +2161,17 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                             + "'" + ddsite.getSelectedItem().toString() + "'" 
                             + ")"
                             + ";");
+                    }
+                    
+                    // tracking number storage
+                   st.executeUpdate("delete from ship_log where shl_type = 'track' and shl_id = " + "'" + tbshipper.getText() + "'"  );
+                    for (int z = 0; z < trackinglistmodel.getSize(); z++) {
+                        st.executeUpdate("insert into ship_log " +
+                            " (shl_id, shl_type, shl_value) " +
+                            " values ( " + "'" + tbshipper.getText() + "'" + "," +
+                            "'" + "track" + "'" + "," +
+                            "'" + trackinglistmodel.get(z) + "'" +
+                            ");" );    
                     }
                     
                      // now update shs_det
