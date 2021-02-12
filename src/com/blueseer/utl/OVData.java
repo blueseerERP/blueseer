@@ -20754,8 +20754,8 @@ public class OVData {
         HashMap hm = new HashMap();
         hm.put("REPORT_TITLE", reportname);
         
-        
         TableModel model = tablereport.getModel();
+        
         DefaultTableModel newmodel = new DefaultTableModel();
         for (int k = 0; k < model.getColumnCount(); k++) {
             if (model.getColumnName(k).equals("select")) {
@@ -20763,20 +20763,28 @@ public class OVData {
             }
             newmodel.addColumn(model.getColumnName(k));
         }
-        
+       
        
          int nRow = model.getRowCount(), nCol = newmodel.getColumnCount();
          int offset = model.getColumnCount() - nCol;
          String[] myarray = new String[nCol];
-        // String[][] tableData = new String[nRow][nCol];
-         for (int i = 0 ; i < nRow ; i++) {
+         
+        for (int i = 0 ; i < nRow ; i++) {
+           for (int j = 0 ; j < nCol ; j++) {
+            myarray[j] = tablereport.getValueAt(i,(j + offset)).toString();
+           }
+           newmodel.addRow(myarray);
+         }
+        
+        /*
+        for (int i = 0 ; i < nRow ; i++) {
            for (int j = 0 ; j < nCol ; j++) {
            // tableData[i][j] = model.getValueAt(i,j).toString();
             myarray[j] = model.getValueAt(i,(j + offset)).toString();
            }
            newmodel.addRow(myarray);
          }
-         
+         */
        
         
         

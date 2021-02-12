@@ -25,6 +25,8 @@ SOFTWARE.
  */
 package com.blueseer.far;
 
+import com.blueseer.inv.*;
+import com.blueseer.ord.*;
 import com.blueseer.ctr.*;
 import com.blueseer.inv.*;
 import com.blueseer.sch.*;
@@ -42,13 +44,21 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Enumeration;
@@ -73,35 +83,23 @@ public class ARRptPicker extends javax.swing.JPanel {
     These notes apply to all RptPicker classes.
     
     All subreport items in the drop down report list on the main panel
-    are defined in Generic Code Maintenance under the Admin Menu.  
+    are defined in Jasper Maintenance under the Admin Menu.  
     
-    The scheme in Generic code maintenance is :
-    
-    code = 'MenuName'...example SchRptPicker
-    key = x ...where x is an integer that defines the index order in the drop down
-    value = "Name of report"
-    
-    Once the entry in Generic Code Maintenance is complete...the developer must include
-    3 methods specific to the behaviour of the report that end with 
-    the index number as defined in Generic Code Maintenance 'key' field.
-    
-    1)  displayVariablesIndex + i   where i = 'key' field in Generic Code Maintenance
-    2)  displayResultsIndex + i
-    3)  tableClickIndex + i
-    
-    Use base 0 as the first index value.
-    
-    See examples below of these three methods
-    
+    There is one function per report listed in the report drop down selection box.
+    Each report listed must have a corresponding 'func' included here between
+    the CUSTOM FUNCTIONS begin/end comments.
+    The name of each function created is added to the 'func' field in the 
+    Jasper Maintenance Menu for the report in the drop down list.
+    One report, one title, one func
+        
     Note:  this was developed in this manner to reduce the number of JPanel classes required
     per each sub report.   I'm all ears if have another option.  :)
     
     */
-    Map<Integer, String> jaspermap = new HashMap<Integer, String>();
-    javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "1", "2", "3", "4"
-            });
+    Map<String, String> jaspermap = new HashMap<String, String>();
+    String jasperGroup = "ARRptGroup";
+    boolean isLoad = false;
+    
      class renderer1 extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
@@ -183,22 +181,27 @@ public class ARRptPicker extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
+      isLoad = true;
       ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getJasperByGroup("ARRptGroup");
-      for (String[] x : list) {
-              jaspermap.put(k, x[1]);
-              ddreport.addItem(x[0]);
+      ArrayList<String[]> list = OVData.getJasperByGroup(jasperGroup);
+      for (String[] x : list) { // list is string of desc, func, format
+              jaspermap.put(x[0], x[2]); // desc, format
+              ddreport.addItem(x[0]); // desc
           k++;
       }
-     
+      ddreport.insertItemAt("", 0);
+      ddreport.setSelectedIndex(0);
+      resetVariables();
+      hidePanels();
+           
       rbactive.setSelected(true);
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
-     
+     isLoad = false;
     }
    
     
@@ -214,15 +217,15 @@ public class ARRptPicker extends javax.swing.JPanel {
     
     public void showPanels(String[] panels) {
         for (String panel : panels) {
-            if (panel.equals("tb"))
+            if (panel.equals("tb1"))   // two textboxes tbkey1 & tbkey2
                 paneltb.setVisible(true);
-            if (panel.equals("tb2"))
+            if (panel.equals("tb2"))  // two textboxes tbkey3 & tbkey4
                 paneltb2.setVisible(true);
-            if (panel.equals("dc"))
+            if (panel.equals("dc"))  // two datechoosers dcdate1 & dcdate2
                 paneldc.setVisible(true);
-            if (panel.equals("dd"))
+            if (panel.equals("dd"))  // two dropdowns ddkey1 & ddkey2
                 paneldd.setVisible(true);
-            if (panel.equals("rb"))
+            if (panel.equals("rb"))  // two radio buttosn  rbactive & rbinactive
                 panelrb.setVisible(true);
         }
     }
@@ -279,44 +282,467 @@ public class ARRptPicker extends javax.swing.JPanel {
         lbdate2.setVisible(true);
     }
     
-    /* display Variables Index Section */
-    public void displayVariablesIndex0 () {
-           
+    /* CUSTOM FUNCTIONS BEGIN  */
+    // one function per report to be added here
+    // each function takes a boolean parameter.
+    // if parameter is true....function creates layout for input variables
+    // if parameter is false....function fills table with SQL query based in input variables
+    // NOTE:  input variables (swing form components) are limited to:
+    // four textboxes (tb1 & tb2 panels), 2 datechoosers, 2 dropdowns, 2 radiobuttons
+    // see showPanels function for input panels layout mechanism
+    
+   /* AR Entries By Customer range */
+    public void AREntriesByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
            resetVariables();
            hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("From Nbr:");
-           lbkey2.setText("To Nbr:");
-    }
-       
-    
-    /* display Results Index Section */
-    public void displayResultsIndex0 () {
-         
-        tablereport.setModel(RPData.getARBrowse(tbkey1.getText(),tbkey2.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+           
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Cust", "Name", "Type", "Ref", "Nbr", "EffDate", "DueDate", "Currency", "Amt", "AmtOpen", "Status"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              res = st.executeQuery("select ar_id, ar_cust, cm_name, ar_type, " +
+                               " ar_ref, ar_nbr, ar_effdate, ar_invdate, ar_duedate, ar_curr, ar_amt, ar_base_amt, ar_open_amt, " +
+                               " case when ar_status = 'c' then 'closed' else 'open' end as 'status', " +
+                               " ar_curr, ar_acct " +
+                               " from ar_mstr inner join cm_mstr on cm_code = ar_cust " +
+                               " where ar_cust >= " + "'" + fromcust + "'" +
+                               " and ar_cust <= " + "'" + tocust + "'" + ";");
+                while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                            res.getString("ar_cust"),
+                            res.getString("cm_name"),
+                            res.getString("ar_type"),
+                            res.getString("ar_ref"),
+                            res.getString("ar_nbr"),
+                            res.getString("ar_effdate"),
+                            res.getString("ar_duedate"),
+                            res.getString("ar_curr"),
+                            BlueSeerUtils.currformat(res.getString("ar_amt")),
+                            BlueSeerUtils.currformat(res.getString("ar_open_amt")),
+                            res.getString("status")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new ARRptPicker.renderer1());
              }
-             tc.setCellRenderer(new ARRptPicker.renderer1());
-         }
+        } // else run report
                
     }
-    
-    
-    
-    /* tableClick Index Section */
-    public void tableClickIndex0 (int row, int col) {
-        return;
-          //if (! checkperms("CustMaint")) { return; }
-          // reinitpanels("CustMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+   
+    /* AR Aging By Customer range */
+    public void ARAgingByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+           
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Cust", "Name", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                
+            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+                 
+            for (int j = 0; j < custs.size(); j++) {    
+                
+              if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                     res = st.executeQuery("SELECT ar_cust, cm_name, " +
+                        " sum(case when ar_duedate > date() then ar_open_amt else 0 end) as '0', " +
+                        " sum(case when ar_duedate <= date() and ar_duedate > date() - date(date(), '+30 day') then ar_open_amt else 0 end) as '30', " +
+                        " sum(case when ar_duedate <= date() - date(date(), '+30 day') and ar_duedate > date(date(), '+60 day') then ar_open_amt else 0 end) as '60', " +
+                        " sum(case when ar_duedate <= date() - date(date(), '+60 day') and ar_duedate > date(date(), '+90 day') then ar_open_amt else 0 end) as '90', " +
+                        " sum(case when ar_duedate <= date() - date(date(), '+90 day') then ar_open_amt else 0 end) as '90p' " +
+                        " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " +
+                        " where ar_cust = " + "'" + custs.get(j) + "'" + 
+                        " AND ar_status = 'o' " +
+                         " group by ar_cust order by ar_cust;");
+                 }  else {
+                 res = st.executeQuery("SELECT ar_cust, cm_name, " +
+                        " sum(case when ar_duedate > curdate() then ar_open_amt else 0 end) as '0', " +
+                        " sum(case when ar_duedate <= curdate() and ar_duedate > curdate() - interval 30 day then ar_open_amt else 0 end) as '30', " +
+                        " sum(case when ar_duedate <= curdate() - interval 30 day and ar_duedate > curdate() - interval 60 day then ar_open_amt else 0 end) as '60', " +
+                        " sum(case when ar_duedate <= curdate() - interval 60 day and ar_duedate > curdate() - interval 90 day then ar_open_amt else 0 end) as '90', " +
+                        " sum(case when ar_duedate <= curdate() - interval 90 day then ar_open_amt else 0 end) as '90p' " +
+                        " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " +
+                         " where ar_cust = " + "'" + custs.get(j) + "'" + 
+                        " AND ar_status = 'o' " +
+                         " group by ar_cust order by ar_cust;");
+                 }
+                while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                                res.getString("ar_cust"),
+                                res.getString("cm_name"),
+                                BlueSeerUtils.currformat(res.getString("0")),
+                                BlueSeerUtils.currformat(res.getString("30")),
+                                BlueSeerUtils.currformat(res.getString("60")),
+                                BlueSeerUtils.currformat(res.getString("90")),
+                                BlueSeerUtils.currformat(res.getString("90p"))
+                        });
+                    }
+           
+            }
+            
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new ARRptPicker.renderer1());
+             }
+        } // else run report
+               
     }
-    
-    
+   
+     /* AR Aging Detail By Customer range */
+    public void ARAgingDetailByCust (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+           
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Cust", "Name", "InvNbr", "PONbr", "InvDate", "DueDate", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                
+            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+                 
+            for (int j = 0; j < custs.size(); j++) {    
+                
+               if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                 res = st.executeQuery("SELECT cm_name, ar_cust, ar_rmks, ar_ref, ar_type, ar_nbr, ar_effdate, ar_duedate, " +
+                        " case when ar_duedate > date() then ar_open_amt else 0 end as '0', " +
+                        " case when ar_duedate <= date() and ar_duedate > date() - date(date(), '+30 day') then ar_open_amt else 0 end as '30', " +
+                        " case when ar_duedate <= date() - date(date(), '+30 day') and ar_duedate > date(date(), '+60 day') then ar_open_amt else 0 end as '60', " +
+                        " case when ar_duedate <= date() - date(date(), '+60 day') and ar_duedate > date(date(), '+90 day') then ar_open_amt else 0 end as '90', " +
+                        " case when ar_duedate <= date() - date(date(), '+90 day') then ar_open_amt else 0 end as '90p' " +
+                        " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " +
+                        " where ar_cust = " + "'" + custs.get(j) + "'" + 
+                        " AND ar_status = 'o' " +
+                         " order by ar_cust, ar_nbr ;"); 
+                 } else {
+                 res = st.executeQuery("SELECT cm_name, ar_cust, ar_rmks, ar_ref, ar_type, ar_nbr, ar_effdate, ar_duedate, " +
+                        " case when ar_duedate > curdate() then ar_open_amt else 0 end as '0', " +
+                        " case when ar_duedate <= curdate() and ar_duedate > curdate() - interval 30 day then ar_open_amt else 0 end as '30', " +
+                        " case when ar_duedate <= curdate() - interval 30 day and ar_duedate > curdate() - interval 60 day then ar_open_amt else 0 end as '60', " +
+                        " case when ar_duedate <= curdate() - interval 60 day and ar_duedate > curdate() - interval 90 day then ar_open_amt else 0 end as '90', " +
+                        " case when ar_duedate <= curdate() - interval 90 day then ar_open_amt else 0 end as '90p' " +
+                        " FROM  ar_mstr " +
+                        " inner join cm_mstr on cm_code = ar_cust " + 
+                        " where ar_cust = " + "'" + custs.get(j) + "'" + 
+                        " AND ar_status = 'o' " +
+                         " order by ar_cust, ar_nbr ;");     
+                 }
+                while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                            
+                            res.getString("ar_cust"),
+                            res.getString("cm_name"),
+                            res.getString("ar_nbr"),
+                            res.getString("ar_ref"),
+                            res.getString("ar_effdate"),
+                            res.getString("ar_duedate"),
+                                BlueSeerUtils.currformat(res.getString("0")),
+                                BlueSeerUtils.currformat(res.getString("30")),
+                                BlueSeerUtils.currformat(res.getString("60")),
+                                BlueSeerUtils.currformat(res.getString("90")),
+                                BlueSeerUtils.currformat(res.getString("90p"))
+                        });
+                    }
+           
+            }
+            
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new ARRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+   /* AR Payments By Customer Date range */
+    public void ARPaymentsByCustDate (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1", "dc"});
+           lbkey1.setText("From Cust:");
+           lbkey2.setText("To Cust:");
+           lbdate1.setText("From Date:");
+           lbdate2.setText("To Date:");
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+           
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Cust", "Name", "InvNbr", "PONbr", "Type", "CheckNbr", "INAmt", "CKAmt"})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                
+            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+                 
+            for (int j = 0; j < custs.size(); j++) {    
+                
+              res = st.executeQuery("SELECT a.ar_cust, cm_name, b.ar_ref as 'b.ar_ref', b.ar_duedate as 'b.ar_duedate', a.ar_nbr, a.ar_ref, ard_ref, a.ar_type, a.ar_effdate, a.ar_amt, ard_amt " +
+                        " FROM  ar_mstr a " +
+                        " inner join ard_mstr on ard_id = a.ar_nbr " +
+                        " inner join ar_mstr b on b.ar_nbr = ard_ref and b.ar_type = 'I' " +
+                        " inner join cm_mstr on cm_code = a.ar_cust " +
+                        " where a.ar_cust >= " + "'" + fromcust + "'" + 
+                        " AND a.ar_cust <= " + "'" + tocust + "'" +        
+                        " AND a.ar_type = 'P' " +
+                        " AND a.ar_effdate >= " + "'" + fromdate + "'" +
+                        " AND a.ar_effdate <= " + "'" + todate + "'" +
+                         " order by a.ar_effdate desc ;");        
+                while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                            res.getString("ar_cust"),
+                            res.getString("cm_name"),
+                            res.getString("ard_ref"),
+                            res.getString("b.ar_ref"),
+                            res.getString("ar_type"),
+                            res.getString("ar_ref"),
+                            BlueSeerUtils.currformat(res.getString("ard_amt")),
+                            BlueSeerUtils.currformat(res.getString("ar_amt"))
+                        });
+                    }
+           
+            }
+            
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new ARRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+   
+    /* CUSTOM FUNCTIONS END */
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -361,7 +787,7 @@ public class ARRptPicker extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Report Picker"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Report Picker"));
 
         btview.setText("View");
         btview.addActionListener(new java.awt.event.ActionListener() {
@@ -437,14 +863,12 @@ public class ARRptPicker extends javax.swing.JPanel {
             .addGroup(paneldcLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbdate1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbdate2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         paneldcLayout.setVerticalGroup(
@@ -666,14 +1090,12 @@ public class ARRptPicker extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
-        String func = "";
-        for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayResultsIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, false);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -686,7 +1108,6 @@ public class ARRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       }  
           
     }//GEN-LAST:event_btviewActionPerformed
 
@@ -694,23 +1115,7 @@ public class ARRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            
-         try {
-                   Method mymethod;
-                   mymethod = this.getClass().getMethod("tableClickIndex" + ddreport.getSelectedIndex(), Integer.TYPE, Integer.TYPE);
-                   mymethod.invoke(this, row, col);
-               } catch (NoSuchMethodException ex) {
-                   ex.printStackTrace();
-               } catch (SecurityException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalAccessException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalArgumentException ex) {
-                   ex.printStackTrace();
-               } catch (InvocationTargetException ex) {
-                   ex.printStackTrace();
-               }
-        
+            reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
@@ -720,14 +1125,14 @@ public class ARRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void ddreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddreportActionPerformed
-       String func = "";
-       for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayVariablesIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+      
+       if (! isLoad)  { 
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, true);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -740,13 +1145,12 @@ public class ARRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       } 
+       }
       
     }//GEN-LAST:event_ddreportActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
- 
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()) );
     }//GEN-LAST:event_btprintActionPerformed
 
 
