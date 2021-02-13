@@ -310,10 +310,10 @@ public class APRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lowchar;
+                  from = bsmf.MainFrame.lownbr;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hichar;
+                  to = bsmf.MainFrame.hinbr;
             }
           
             
@@ -345,8 +345,8 @@ public class APRptPicker extends javax.swing.JPanel {
                             res.getString("ap_ref"),
                             res.getString("ap_effdate"),
                             res.getString("ap_duedate"),
-                            res.getDouble("ap_amt"),
-                            res.getString("ap_base_amt"),
+                            BlueSeerUtils.currformat(res.getString("ap_amt")),
+                            BlueSeerUtils.currformat(res.getString("ap_base_amt")),
                             res.getString("ap_status"),
                             res.getString("ap_curr"),
                             res.getString("ap_acct")
@@ -437,8 +437,8 @@ public class APRptPicker extends javax.swing.JPanel {
                             res.getString("ap_ref"),
                             res.getString("ap_type"),
                             res.getString("ap_effdate"),
-                            res.getDouble("ap_amt"),
-                            res.getString("ap_base_amt"),
+                            BlueSeerUtils.currformat(res.getString("ap_amt")),
+                            BlueSeerUtils.currformat(res.getString("ap_base_amt")),
                             res.getString("ap_status"),
                             res.getString("ap_curr"),
                             res.getString("ap_acct")

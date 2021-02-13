@@ -309,10 +309,10 @@ public class HRRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (from.isEmpty()) {
-                  from = bsmf.MainFrame.lowchar;
+                  from = bsmf.MainFrame.lownbr;
             }
             if (to.isEmpty()) {
-                  to = bsmf.MainFrame.hichar;
+                  to = bsmf.MainFrame.hinbr;
             }
           
             

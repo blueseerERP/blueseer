@@ -1,6 +1,7 @@
 build
 build.xml
 dist
+jre8_32
 scripts
 scripts/test
 nbproject/private

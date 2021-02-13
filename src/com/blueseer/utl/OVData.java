@@ -18633,13 +18633,22 @@ public class OVData {
             java.util.Date now = new java.util.Date();
             int batchid = OVData.getNextNbr("batch");
             double sum = 0.00;
+            double baseamt = 0.00;
             String acct = "";
             String cc = "";
             String terms = "";
             String bank = "";
+            String curr = "";
+            String basecurr = "";
             String site = "";
             String ref = "";
            
+            
+             // let's handle the currency exchange...if any
+                    basecurr = OVData.getDefaultCurrency();
+                    
+                    
+                    
            
             // ok...lets create the apd_mstr table
                 APExpense_apd_mstr(batchid, vend, voucher, invoice, amount) ;
@@ -18656,7 +18665,7 @@ public class OVData {
                 ResultSet res2 = null;
          
                   
-                   res = st.executeQuery("select ap_site, ap_ref, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms from apd_mstr " +
+                   res = st.executeQuery("select ap_site, ap_ref, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms, ap_curr from apd_mstr " +
                            " inner join vd_mstr on vd_addr = apd_vend " +
                            " inner join ap_mstr on ap_nbr = apd_nbr " +
                            " where apd_batch = " + "'" + batchid + "'" +
@@ -18665,6 +18674,7 @@ public class OVData {
                    while (res.next()) {
                         vend = res.getString("apd_vend");
                         sum = res.getDouble("sum");
+                        curr = res.getString("ap_curr");
                         acct = res.getString("vd_ap_acct");
                         cc = res.getString("vd_ap_cc");
                         terms = res.getString("vd_terms");
@@ -18672,20 +18682,30 @@ public class OVData {
                         site = res.getString("ap_site");
                         ref = res.getString("ap_ref");
                         
+                    if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                        baseamt = sum;
+                    } else {
+                        baseamt = OVData.getExchangeBaseValue(basecurr, curr, sum);
+                    }
+                        
+                        
                         st2.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_check, "
-                        + "ap_entdate, ap_effdate, ap_bank, ap_acct, ap_cc, "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_check, "
+                        + "ap_entdate, ap_effdate, ap_bank, ap_curr, ap_base_curr, ap_acct, ap_cc, "
                         + "ap_terms, ap_batch ) "
                         + " values ( " + "'" + vend + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + checknbr + "'" + ","
                         + "'" + df.format(sum) + "'" + ","
+                        + "'" + df.format(baseamt) + "'" + ","        
                         + "'" + "E" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + checknbr + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + dfdate.format(effdate) + "'" + ","
                         + "'" + bank + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","        
                         + "'" + acct + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + terms + "'" + ","
@@ -22038,7 +22058,8 @@ public class OVData {
                 }
                 
                 
-                Double totamt = 0.00;
+                Double amt = 0.00;
+                Double baseamt = 0.00;
                 int qty = 0;
                 
                 
@@ -22048,14 +22069,17 @@ public class OVData {
                 String terms = "";
                 String carrier = "";
                 String apbank = "";
+                String curr = "";
+                String basecurr = "";
                 
-               res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
+               res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
                 while (res.next()) {
                     i++;
                    apacct = res.getString("vd_ap_acct");
                    apcc = res.getString("vd_ap_cc");
                    terms = res.getString("vd_terms");
                    apbank = res.getString("vd_bank");
+                   curr = res.getString("vd_curr");
                 }
 
                 if (i == 0) {
@@ -22075,7 +22099,7 @@ public class OVData {
                   //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                   for (int j = 0; j < voucherdet.getRowCount(); j++) {
                         qty = Integer.valueOf(voucherdet.getValueAt(j,3).toString());
-                        totamt += Double.valueOf(voucherdet.getValueAt(j, 3).toString()) * Double.valueOf(voucherdet.getValueAt(j, 4).toString());
+                        amt += Double.valueOf(voucherdet.getValueAt(j, 3).toString()) * Double.valueOf(voucherdet.getValueAt(j, 4).toString());
                         st.executeUpdate("insert into vod_mstr "
                             + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
                             + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
@@ -22134,16 +22158,27 @@ public class OVData {
                        
                      }  //end of for each line
                     
-                                
+                          
+                  // let's handle the currency exchange...if any
+                    basecurr = OVData.getDefaultCurrency();
+                    
+                    
+                    if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                        baseamt = amt;
+                    } else {
+                        baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
+                    }
+                  
                 // now the header voucher
                      st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
+                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_rmks, "
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
+                        + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
                         + " values ( " + "'" + vend + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + nbr + "'" + ","
-                        + "'" + df.format(totamt) + "'" + ","
+                        + "'" + df.format(amt) + "'" + ","
+                        + "'" + df.format(baseamt) + "'" + ","        
                         + "'" + "V" + "'" + ","
                         + "'" + invoice + "'" + ","
                         + "'" + remarks + "'" + ","
@@ -22154,7 +22189,9 @@ public class OVData {
                         + "'" + apcc + "'" + ","
                         + "'" + terms + "'" + ","
                         + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
+                        + "'" + apbank + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'"        
                         + ")"
                         + ";");
                      

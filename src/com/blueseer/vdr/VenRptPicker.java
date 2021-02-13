@@ -507,7 +507,7 @@ public class VenRptPicker extends javax.swing.JPanel {
             ResultSet res = null;
             try{   
                  res = st.executeQuery("SELECT vd_addr, vd_market, vd_name,  " +
-                        " vd_terms, vd_bank, vd_curr, vd_ap_acct, vd_ap_cc, " +
+                        " vd_terms, vd_bank, vd_curr, vd_ap_acct, vd_ap_cc " +
                         "from vd_mstr " +
                         " where cast(vd_addr as decimal) >= " + "'" + from + "'" +
                         " and cast(vd_addr as decimal) <= " + "'" + to + "'" +

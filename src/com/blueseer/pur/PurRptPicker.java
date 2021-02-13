@@ -335,7 +335,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
+                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status, " +
                         " sum(pod_ord_qty  * pod_netprice) as 'total' " +
                         " FROM  po_mstr inner join pod_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
@@ -402,10 +402,10 @@ public class PurRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (fromvend.isEmpty()) {
-                  fromvend = bsmf.MainFrame.lownbr;
+                  fromvend = bsmf.MainFrame.lowchar;
             }
             if (tovend.isEmpty()) {
-                  tovend = bsmf.MainFrame.hinbr;
+                  tovend = bsmf.MainFrame.hichar;
             }
             
             
@@ -429,7 +429,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
+                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status, " +
                         " sum(pod_ord_qty  * pod_netprice) as 'total' " +
                         " FROM  po_mstr inner join pod_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
@@ -503,10 +503,10 @@ public class PurRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (fromvend.isEmpty()) {
-                  fromvend = bsmf.MainFrame.lownbr;
+                  fromvend = bsmf.MainFrame.lowchar;
             }
             if (tovend.isEmpty()) {
-                  tovend = bsmf.MainFrame.hinbr;
+                  tovend = bsmf.MainFrame.hichar;
             }
             if (fromdate.isEmpty()) {
                   fromdate = bsmf.MainFrame.lowdate;
@@ -536,7 +536,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
+                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status, " +
                         " sum(pod_ord_qty  * pod_netprice) as 'total' " +
                         " FROM  po_mstr inner join pod_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
@@ -605,10 +605,10 @@ public class PurRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (fromvend.isEmpty()) {
-                  fromvend = bsmf.MainFrame.lownbr;
+                  fromvend = bsmf.MainFrame.lowchar;
             }
             if (tovend.isEmpty()) {
-                  tovend = bsmf.MainFrame.hinbr;
+                  tovend = bsmf.MainFrame.hichar;
             }
             
             
@@ -632,7 +632,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
+                res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status, " +
                         " pod_ord_qty, pod_rcvd_qty, pod_netprice, pod_part, pod_due_date " +
                         " FROM  po_mstr inner join pod_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +

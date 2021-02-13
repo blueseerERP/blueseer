@@ -321,17 +321,9 @@ public class SchRptPicker extends javax.swing.JPanel {
             // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-            boolean autoitem = OVData.isAutoItem();
+            
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-        new String[]{"Item", "Desc", "Class", "PlanNbr", "PlanType", "OrderNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
+        new String[]{"Item", "Desc", "Class", "PlanNbr", "PlanType", "OrderNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"}); 
             
       try{
             Class.forName(driver).newInstance();
@@ -339,32 +331,26 @@ public class SchRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                if (autoitem) {
+               
                  res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
                         " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
-                        " where cast(it_item as decimal) >= " + "'" + from + "'" +
-                        " and cast(it_item as decimal) <= " + "'" + to + "'" +
+                        " where it_item  >= " + "'" + from + "'" +
+                        " and it_item  <= " + "'" + to + "'" +
                         " order by plan_nbr ;");
-                 } else {
-                  res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
-                        " where it_item >= " + "'" + from + "'" +
-                        " and it_item <= " + "'" + to + "'" +
-                        " order by plan_nbr ;");   
-                 }
+                 
                     while (res.next()) {
                         mymodel.addRow(new Object[] { 
                                    res.getString("it_item"),
                                    res.getString("it_desc"),
                                    res.getString("it_code"),
-                                   res.getString("plan_nbr"),
-                                   res.getString("plan_type"),
-                                   res.getString("plan_order"),
-                                   res.getString("plan_is_sched"),
-                                   res.getString("plan_cell"),
-                                   res.getString("plan_qty_sched"),
-                                   res.getString("plan_date_sched"),
-                                   res.getString("plan_status")
+                                   BlueSeerUtils.xNull(res.getString("plan_nbr")),
+                                   BlueSeerUtils.xNull(res.getString("plan_type")),
+                                   BlueSeerUtils.xNull(res.getString("plan_order")),
+                                   BlueSeerUtils.xNull(res.getString("plan_is_sched")),
+                                   BlueSeerUtils.xNull(res.getString("plan_cell")),
+                                   BlueSeerUtils.xNull(res.getString("plan_qty_sched")),
+                                   BlueSeerUtils.xNull(res.getString("plan_date_sched")),
+                                   BlueSeerUtils.xNull(res.getString("plan_status"))
                                   
                         });
                     }
@@ -429,17 +415,9 @@ public class SchRptPicker extends javax.swing.JPanel {
             // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-            boolean autoitem = OVData.isAutoItem();
+          
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-        new String[]{"Order", "Line", "Item", "Desc", "Class", "PlanNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
+        new String[]{"Order", "Line", "Item", "Desc", "Class", "PlanNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"}); 
             
       try{
             Class.forName(driver).newInstance();

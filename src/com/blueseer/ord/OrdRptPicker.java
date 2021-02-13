@@ -509,10 +509,10 @@ public class OrdRptPicker extends javax.swing.JPanel {
             // cleanup variables
           
             if (fromcust.isEmpty()) {
-                  fromcust = bsmf.MainFrame.lownbr;
+                  fromcust = bsmf.MainFrame.lowchar;
             }
             if (tocust.isEmpty()) {
-                  tocust = bsmf.MainFrame.hinbr;
+                  tocust = bsmf.MainFrame.hichar;
             }
             if (fromdate.isEmpty()) {
                   fromdate = bsmf.MainFrame.lowdate;

@@ -17,7 +17,7 @@ InvRptGroup,Item Cust Price By Item,itemCustPriceRange,3,L8
 VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
 VenRptGroup,Vendor Contact Info By Code,vendPhoneEmailByRange,1,L8
 VenRptGroup,Vendor Finance Info By Code,vendFinanceInfoByRange,2,L8
-VenRptGroup,Vendor Total Purchases By Code/Date,vendFinanceInfoByRange,3,L8
+VenRptGroup,Vendor Total Purchases By Code/Date,vendTotalPurchasesByRange,3,L8
 PurRptGroup,POs By PO Date,poByOrdDateRange,0,L8
 PurRptGroup,POs By Vendor,poByVendRange,1,L8
 PurRptGroup,POs By Vend / PO Date,poByVendOrdDateRange,2,L8

@@ -659,8 +659,7 @@ public class ARRptPicker extends javax.swing.JPanel {
                         " inner join ard_mstr on ard_id = a.ar_nbr " +
                         " inner join ar_mstr b on b.ar_nbr = ard_ref and b.ar_type = 'I' " +
                         " inner join cm_mstr on cm_code = a.ar_cust " +
-                        " where a.ar_cust >= " + "'" + fromcust + "'" + 
-                        " AND a.ar_cust <= " + "'" + tocust + "'" +        
+                        " where a.ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND a.ar_type = 'P' " +
                         " AND a.ar_effdate >= " + "'" + fromdate + "'" +
                         " AND a.ar_effdate <= " + "'" + todate + "'" +
