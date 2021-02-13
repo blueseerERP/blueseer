@@ -939,7 +939,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "PONbr", "OrderNbr", "ShipperNbr", "ShipDate", "Remarks",  "Item", "Desc", "ShipQty"})
+              new String[]{"select", "OrderNbr", "PONbr", "ShipperNbr", "ShipDate", "Remarks",  "Item", "Desc", "ShipQty"})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -969,8 +969,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
                         BlueSeerUtils.clickflag,  // imageicon always column 1
-                        res.getString("shd_po"),
                         res.getString("sod_nbr"),
+                        res.getString("shd_po"),
                         res.getString("sh_id"),
                         res.getString("sh_shipdate"),
                         res.getString("sh_rmks"),                        
@@ -1053,7 +1053,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Report Picker"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Sales Order Report Picker"));
 
         btview.setText("View");
         btview.addActionListener(new java.awt.event.ActionListener() {

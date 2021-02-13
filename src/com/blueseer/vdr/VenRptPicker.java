@@ -704,7 +704,7 @@ public class VenRptPicker extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Report Picker"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vendor Report Picker"));
 
         btview.setText("View");
         btview.addActionListener(new java.awt.event.ActionListener() {
