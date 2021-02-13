@@ -319,15 +319,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Cust", "Name", "Type", "Ref", "Nbr", "EffDate", "DueDate", "Currency", "Amt", "AmtOpen", "Status"})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
+               new String[]{"Cust", "Name", "Type", "Ref", "Nbr", "EffDate", "DueDate", "Currency", "Amt", "AmtOpen", "Status"});
            
            try{
             Class.forName(driver).newInstance();
@@ -412,17 +404,8 @@ public class ARRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Cust", "Name", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
+           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+           new String[]{"Cust", "Name", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"});
            try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -529,16 +512,8 @@ public class ARRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Cust", "Name", "InvNbr", "PONbr", "InvDate", "DueDate", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
+    javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    new String[]{"Cust", "Name", "InvNbr", "PONbr", "InvDate", "DueDate", "0 Days", "30 Days", "60 Days", "90 Days", "90PlusDays"});
            
            try{
             Class.forName(driver).newInstance();
@@ -664,16 +639,8 @@ public class ARRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Cust", "Name", "InvNbr", "PONbr", "Type", "CheckNbr", "INAmt", "CKAmt"})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+        new String[]{"Cust", "Name", "InvNbr", "PONbr", "Type", "CheckNbr", "INAmt", "CKAmt"});
            
            try{
             Class.forName(driver).newInstance();
@@ -1115,7 +1082,7 @@ public class ARRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+            //reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

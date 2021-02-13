@@ -1087,7 +1087,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+            reinitpanels("ShipMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

@@ -25,6 +25,10 @@ SOFTWARE.
  */
 package com.blueseer.sch;
 
+import com.blueseer.ord.*;
+import com.blueseer.ctr.*;
+import com.blueseer.inv.*;
+import com.blueseer.sch.*;
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
@@ -39,16 +43,24 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,35 +80,23 @@ public class SchRptPicker extends javax.swing.JPanel {
     These notes apply to all RptPicker classes.
     
     All subreport items in the drop down report list on the main panel
-    are defined in Generic Code Maintenance under the Admin Menu.  
+    are defined in Jasper Maintenance under the Admin Menu.  
     
-    The scheme in Generic code maintenance is :
-    
-    code = 'MenuName'...example SchRptPicker
-    key = x ...where x is an integer that defines the index order in the drop down
-    value = "Name of report"
-    
-    Once the entry in Generic Code Maintenance is complete...the developer must include
-    3 methods specific to the behaviour of the report that end with 
-    the index number as defined in Generic Code Maintenance 'key' field.
-    
-    1)  displayVariablesIndex + i   where i = 'key' field in Generic Code Maintenance
-    2)  displayResultsIndex + i
-    3)  tableClickIndex + i
-    
-    Use base 0 as the first index value.
-    
-    See examples below of these three methods
-    
+    There is one function per report listed in the report drop down selection box.
+    Each report listed must have a corresponding 'func' included here between
+    the CUSTOM FUNCTIONS begin/end comments.
+    The name of each function created is added to the 'func' field in the 
+    Jasper Maintenance Menu for the report in the drop down list.
+    One report, one title, one func
+        
     Note:  this was developed in this manner to reduce the number of JPanel classes required
     per each sub report.   I'm all ears if have another option.  :)
     
     */
-    Map<Integer, String> jaspermap = new HashMap<Integer, String>();
-    javax.swing.table.DefaultTableModel initmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "1", "2", "3", "4"
-            });
+    Map<String, String> jaspermap = new HashMap<String, String>();
+    String jasperGroup = "SchRptGroup";
+    boolean isLoad = false;
+    
      class renderer1 extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
@@ -178,21 +178,27 @@ public class SchRptPicker extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
+      isLoad = true;
       ddreport.removeAllItems();
       jaspermap.clear();
       int k = 0;
-      ArrayList<String[]> list = OVData.getJasperByGroup("SchRptGroup");
-      for (String[] x : list) {
-              jaspermap.put(k, x[1]);
-              ddreport.addItem(x[0]);
+      ArrayList<String[]> list = OVData.getJasperByGroup(jasperGroup);
+      for (String[] x : list) { // list is string of desc, func, format
+              jaspermap.put(x[0], x[2]); // desc, format
+              ddreport.addItem(x[0]); // desc
           k++;
       }
-     
+      ddreport.insertItemAt("", 0);
+      ddreport.setSelectedIndex(0);
+      resetVariables();
+      hidePanels();
+           
       rbactive.setSelected(true);
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+     isLoad = false;
     }
    
     
@@ -208,15 +214,15 @@ public class SchRptPicker extends javax.swing.JPanel {
     
     public void showPanels(String[] panels) {
         for (String panel : panels) {
-            if (panel.equals("tb"))
+            if (panel.equals("tb1"))   // two textboxes tbkey1 & tbkey2
                 paneltb.setVisible(true);
-            if (panel.equals("tb2"))
+            if (panel.equals("tb2"))  // two textboxes tbkey3 & tbkey4
                 paneltb2.setVisible(true);
-            if (panel.equals("dc"))
+            if (panel.equals("dc"))  // two datechoosers dcdate1 & dcdate2
                 paneldc.setVisible(true);
-            if (panel.equals("dd"))
+            if (panel.equals("dd"))  // two dropdowns ddkey1 & ddkey2
                 paneldd.setVisible(true);
-            if (panel.equals("rb"))
+            if (panel.equals("rb"))  // two radio buttosn  rbactive & rbinactive
                 panelrb.setVisible(true);
         }
     }
@@ -273,132 +279,228 @@ public class SchRptPicker extends javax.swing.JPanel {
         lbdate2.setVisible(true);
     }
     
-    /* display Variables Index Section */
-    public void displayVariablesIndex0 () {
-           
-           resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("Search Item:");
-           lbkey2.setText("");
-           tbkey2.setVisible(false);
-    }
+    /* CUSTOM FUNCTIONS BEGIN  */
+    // one function per report to be added here
+    // each function takes a boolean parameter.
+    // if parameter is true....function creates layout for input variables
+    // if parameter is false....function fills table with SQL query based in input variables
+    // NOTE:  input variables (swing form components) are limited to:
+    // four textboxes (tb1 & tb2 panels), 2 datechoosers, 2 dropdowns, 2 radiobuttons
+    // see showPanels function for input panels layout mechanism
+    
+   
+    /* Plan Orders by Item range */
+    public void planOrdersByItem (boolean input) {
         
-    public void displayVariablesIndex1 () {
+        if (input) { // input...draw variable input panel
            resetVariables();
            hidePanels();
-           showPanels(new String[]{"tb"});
+           showPanels(new String[]{"tb1"});
            lbkey1.setText("From Item:");
            lbkey2.setText("To Item:");
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lowchar;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+            boolean autoitem = OVData.isAutoItem();
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+        new String[]{"Item", "Desc", "Class", "PlanNbr", "PlanType", "OrderNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                if (autoitem) {
+                 res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
+                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
+                        " where cast(it_item as decimal) >= " + "'" + from + "'" +
+                        " and cast(it_item as decimal) <= " + "'" + to + "'" +
+                        " order by plan_nbr ;");
+                 } else {
+                  res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
+                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
+                        " where it_item >= " + "'" + from + "'" +
+                        " and it_item <= " + "'" + to + "'" +
+                        " order by plan_nbr ;");   
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] { 
+                                   res.getString("it_item"),
+                                   res.getString("it_desc"),
+                                   res.getString("it_code"),
+                                   res.getString("plan_nbr"),
+                                   res.getString("plan_type"),
+                                   res.getString("plan_order"),
+                                   res.getString("plan_is_sched"),
+                                   res.getString("plan_cell"),
+                                   res.getString("plan_qty_sched"),
+                                   res.getString("plan_date_sched"),
+                                   res.getString("plan_status")
+                                  
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new SchRptPicker.renderer1());
+             }
+        } // else run report
+               
     }
     
-    public void displayVariablesIndex2 () {
-           
+     /* Plan Orders by Item range */
+    public void planOrdersBySalesOrder (boolean input) {
+        
+        if (input) { // input...draw variable input panel
            resetVariables();
            hidePanels();
-           showPanels(new String[]{"tb"});
-           lbkey1.setText("Search SO:");
-           lbkey2.setText("");
-           tbkey2.setVisible(false);
-    }
-    
-    public void displayVariablesIndex3 () {
-           resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb"});
+           showPanels(new String[]{"tb1"});
            lbkey1.setText("From SO:");
            lbkey2.setText("To SO:");
-    }
-    
-    
-    /* display Results Index Section */
-    public void displayResultsIndex0 () {
-         
-        tablereport.setModel(RPData.getPlanByItem(tbkey1.getText(),tbkey1.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new SchRptPicker.renderer1());
-         }
-               
-    }
-    
-    public void displayResultsIndex1 () {
+          // java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+          //  String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+           // String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lowchar;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+            boolean autoitem = OVData.isAutoItem();
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+        new String[]{"Order", "Line", "Item", "Desc", "Class", "PlanNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                
+                 res = st.executeQuery("SELECT sod_part, sod_nbr, sod_line, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
+                        " FROM  sod_det inner join item_mstr on sod_part = it_item left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line  " +
+                        " where cast(sod_nbr as decimal) >= " + "'" + from + "'" +
+                        " and cast(sod_nbr as decimal) <= " + "'" + to + "'" +
+                        " order by sod_line ;");
+                 
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] { 
+                                   res.getString("sod_nbr"),
+                                   res.getString("sod_line"),
+                                   res.getString("sod_part"),
+                                   res.getString("it_desc"),
+                                   res.getString("it_code"),
+                                   res.getString("plan_nbr"),
+                                   res.getString("plan_is_sched"),
+                                   res.getString("plan_cell"),
+                                   res.getString("plan_qty_sched"),
+                                   res.getString("plan_date_sched"),
+                                   res.getString("plan_status")
+                                  
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
       
-        tablereport.setModel(RPData.getPlanByItem(tbkey1.getText(),tbkey2.getText()));
-       // tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
-       // tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getNumberRenderer());
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new SchRptPicker.renderer1());
              }
-             tc.setCellRenderer(new SchRptPicker.renderer1());
-         }
+        } // else run report
                
     }
     
-    public void displayResultsIndex2 () {
-        
-        tablereport.setModel(RPData.getPlanBySalesOrder(tbkey1.getText(),tbkey1.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new SchRptPicker.renderer1());
-         }
-               
-    }
-    
-    public void displayResultsIndex3 () {
-         
-        tablereport.setModel(RPData.getPlanBySalesOrder(tbkey1.getText(),tbkey2.getText()));
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-        Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-          while (en.hasMoreElements()) {
-             TableColumn tc = en.nextElement();
-             if (tc.getIdentifier().toString().equals("select") || 
-                     tc.getIdentifier().toString().equals("print") ) {
-                 continue;
-             }
-             tc.setCellRenderer(new SchRptPicker.renderer1());
-         }
-              
-    }
-    
-    /* tableClick Index Section */
-    public void tableClickIndex0 (int row, int col) {
-          if (! checkperms("ItemMaint")) { return; }
-           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
-    }
-    
-    public void tableClickIndex1 (int row, int col) {
-          if (! checkperms("ItemMaint")) { return; }
-           reinitpanels("ItemMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
-    }
-    
-    public void tableClickIndex2 (int row, int col) {
-          if (! checkperms("OrderMaint")) { return; }
-           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
-    }
-    
-    public void tableClickIndex3 (int row, int col) {
-          if (! checkperms("OrderMaint")) { return; }
-           reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
-    }
-    
+   
+    /* CUSTOM FUNCTIONS END */
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -442,6 +544,8 @@ public class SchRptPicker extends javax.swing.JPanel {
         btprint = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Report Picker"));
 
         btview.setText("View");
         btview.addActionListener(new java.awt.event.ActionListener() {
@@ -517,14 +621,12 @@ public class SchRptPicker extends javax.swing.JPanel {
             .addGroup(paneldcLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(paneldcLayout.createSequentialGroup()
-                        .addComponent(lbdate2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbdate1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbdate2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneldcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcdate2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dcdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         paneldcLayout.setVerticalGroup(
@@ -651,14 +753,11 @@ public class SchRptPicker extends javax.swing.JPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         btprint.setText("Print/PDF");
@@ -674,20 +773,19 @@ public class SchRptPicker extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(4, 4, 4)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btview)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btcsv)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btview)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcsv)))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -699,9 +797,9 @@ public class SchRptPicker extends javax.swing.JPanel {
                     .addComponent(btview)
                     .addComponent(btcsv)
                     .addComponent(btprint))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jScrollPane1.setBorder(null);
@@ -742,22 +840,20 @@ public class SchRptPicker extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
-        String func = "";
-        for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayResultsIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, false);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -770,7 +866,6 @@ public class SchRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       }  
           
     }//GEN-LAST:event_btviewActionPerformed
 
@@ -778,23 +873,7 @@ public class SchRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            
-         try {
-                   Method mymethod;
-                   mymethod = this.getClass().getMethod("tableClickIndex" + ddreport.getSelectedIndex(), Integer.TYPE, Integer.TYPE);
-                   mymethod.invoke(this, row, col);
-               } catch (NoSuchMethodException ex) {
-                   ex.printStackTrace();
-               } catch (SecurityException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalAccessException ex) {
-                   ex.printStackTrace();
-               } catch (IllegalArgumentException ex) {
-                   ex.printStackTrace();
-               } catch (InvocationTargetException ex) {
-                   ex.printStackTrace();
-               }
-        
+            reinitpanels("OrderMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
@@ -804,14 +883,14 @@ public class SchRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void ddreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddreportActionPerformed
-       String func = "";
-       for (int i = 0; i < ddreport.getItemCount(); i++) {
-           func = "displayVariablesIndex" + i;
-           Method mymethod;
-           if (i == ddreport.getSelectedIndex()) {
+      
+       if (! isLoad)  { 
+       String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
+       Method mymethod;
+           if (func != null && ! func.isEmpty()) {
                try {
-                   mymethod = this.getClass().getMethod(func);
-                   mymethod.invoke(this);
+                   mymethod = this.getClass().getMethod(func, Boolean.TYPE);
+                   mymethod.invoke(this, true);
                } catch (NoSuchMethodException ex) {
                    ex.printStackTrace();
                } catch (SecurityException ex) {
@@ -824,13 +903,12 @@ public class SchRptPicker extends javax.swing.JPanel {
                    ex.printStackTrace();
                }
            }
-       } 
+       }
       
     }//GEN-LAST:event_ddreportActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedIndex()) );
- 
+        OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()) );
     }//GEN-LAST:event_btprintActionPerformed
 
 

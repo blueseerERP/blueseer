@@ -14,19 +14,24 @@ InvRptGroup,Item Info By Item Range,iteminfoByItemRange,0,L2
 InvRptGroup,Item Info By ProdLine Range,itemByProdLineRange,1,L2
 InvRptGroup,Item Costs By Item Range,itemCostsRange,2,L8
 InvRptGroup,Item Cust Price By Item,itemCustPriceRange,3,L8
-VenRptGroup,Vendor Master By VendCode Range,vendAddrByRange,0,L8
-PurRptGroup,POs By PO Number Range,poByNbrRange,0,P6
+VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
+VenRptGroup,Vendor Contact Info By Code,vendPhoneEmailByRange,1,L8
+VenRptGroup,Vendor Finance Info By Code,vendFinanceInfoByRange,2,L8
+VenRptGroup,Vendor Total Purchases By Code/Date,vendFinanceInfoByRange,3,L8
+PurRptGroup,POs By PO Date,poByOrdDateRange,0,L8
+PurRptGroup,POs By Vendor,poByVendRange,1,L8
+PurRptGroup,POs By Vend / PO Date,poByVendOrdDateRange,2,L8
+PurRptGroup,POs By PO Detail By Vend,poDetailByVendRange,3,L8
 ARRptGroup,AR Entries by Customer,AREntriesByCust,0,L2
 ARRptGroup,AR Aging by Customer,ARAgingByCust,1,L7
 ARRptGroup,AR Aging Detail by Customer,ARAgingDetailByCust,2,L2
 ARRptGroup,AR Payments by Customer Date,ARPaymentsByCustDate,3,L8
-APRptGroup,AP Entries by Vendor,apByNbrRange,0,P6
-HRRptGroup,Employees Report by Emp ID Range,empByIDRange,0,P6
+APRptGroup,AP Entries by APNbr,apByNbrRange,0,L11
+APRptGroup,AP Entries by Vendor,apByVendorRange,1,L11
+HRRptGroup,Employees Report by EmpNbr,employeeByEmpNbr,0,L8
 ShpRptGroup,Shippers by ShipDate Range,shippersByShipDateRange,0,L11
 ShpRptGroup,Shippers by Number Range,shippersByShipNbrRange,1,L11
 ShpRptGroup,Shippers by Customer Date Range,shippersByCustDateRange,2,L11
 ShpRptGroup,Shipper Detail by Customer Date,shipperDetailByCustDateRange,3,L8
-SchRptGroup,Plan Browse By Item,planByItem,0,P6
-SchRptGroup,Plan Browse By Item Range,planByItemRange,1,P6
-SchRptGroup,Plan Browse By Sales Order,planByOrd,2,P6
-SchRptGroup,Plan Browse By Sales Order Range,planByOrdRange,3,P6
+SchRptGroup,Plan Orders By Item,planOrdersByItem,0,L11
+SchRptGroup,Plan Orders By Sales Order,planOrdersBySalesOrder,1,L11
