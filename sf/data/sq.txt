@@ -51,8 +51,7 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import ovmstr.csv ov_mstr
 .import glctrl.csv gl_ctrl
 .import glicdef.csv glic_def
-.separator ';'
-.import usrmstr.csv user_mstr
 .import permmstr.csv perm_mstr
+.import usrmstr.csv user_mstr
 .import permwmstr.csv perm_mstr
 .import mockmstr.csv mock_mstr

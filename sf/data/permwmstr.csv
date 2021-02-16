@@ -1,5 +1,5 @@
-admin;Finance
-admin;Inventory
-admin;Sales
-admin;Purchasing
-admin;ItemTypeReport
+admin,Finance
+admin,Inventory
+admin,Sales
+admin,Purchasing
+admin,ItemTypeReport

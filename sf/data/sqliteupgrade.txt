@@ -1,0 +1,74 @@
+CREATE TABLE IF NOT EXISTS "jasp_mstr" (
+  "jasp_group" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "jasp_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "jasp_func" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "jasp_sequence" int(3) NOT NULL DEFAULT '0',
+  "jasp_format" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS "export_mstr" (
+  "export_docnbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "export_doctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "export_edi" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "export_edi_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_edi_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "export_print" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "export_print_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_print_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "export_email" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "export_email_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_email_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS "cron_log" (
+  "cron_id" INTEGER PRIMARY KEY,
+  "cron_prog" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_sys" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "cron_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS "edi_attr" (
+  "exa_tpid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "exa_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS "ship_log" (
+  "shl_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shl_type" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shl_datetime" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shl_value" varchar(200) COLLATE NOCASE DEFAULT '');
+/* */
+/* */
+/* */
+alter table order_ctrl add column orc_exceedqohu tinyint(1);
+alter table order_ctrl add column orc_autoallocate tinyint(1);
+alter table so_mstr add column so_isallocated varchar(1) COLLATE NOCASE DEFAULT '';
+alter table sod_det add column sod_all_qty int(8) NOT NULL DEFAULT '0';
+alter table ship_mstr add column sh_boxes int(8) COLLATE NOCASE DEFAULT '0';
+alter table ship_mstr add column sh_pallets int(8) COLLATE NOCASE DEFAULT '0';
+alter table ship_det add column shd_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table ship_det add column shd_cont varchar(30) COLLATE NOCASE DEFAULT '';
+alter table tran_mstr add column tr_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table tran_mstr add column tr_base_qty decimal(14,5) NOT NULL DEFAULT '0';
+alter table pod_mstr add column pod_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table recv_det add column rvd_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table pos_mstr add column pos_site varchar(10) COLLATE NOCASE DEFAULT '';
+alter table gl_hist add column glh_recon tinyint(1) COLLATE NOCASE DEFAULT '0';
+alter table code_mstr add column code_internal tinyint(1) COLLATE NOCASE DEFAULT '0';
+/* */
+/* */
+delete from menu_mstr;
+delete from menu_tree;
+delete from panel_mstr;
+delete from perm_mstr where perm_user = 'admin';
+/* */
+/* */
+.mode csv
+.import menumstr.csv menu_mstr
+.import menutree.csv menu_tree
+.import panelmstr.csv panel_mstr
+.import permmstr.csv perm_mstr
+

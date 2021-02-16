@@ -1318,7 +1318,7 @@ ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_log` (
   `shl_id` varchar(8) NOT NULL  DEFAULT '',
   `shl_type` varchar(8) NOT NULL  DEFAULT '',
-  `shl_datetime` varchar(20) NOT DEFAULT '',
+  `shl_datetime` varchar(20) NOT NULL DEFAULT '',
   `shl_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE IF NOT EXISTS `ship_mstr` (

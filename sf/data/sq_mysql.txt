@@ -24,6 +24,7 @@ load data local infile 'curmstr.csv' replace into table cur_mstr fields terminat
 load data local infile 'pos_ctrl.csv' replace into table pos_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'deptmstr.csv' replace into table dept_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'jaspmstr.csv' replace into table jasp_mstr fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'plmstr.csv' replace into table pl_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'apctrl.csv' replace into table ap_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'poctrl.csv' replace into table po_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
@@ -40,8 +41,8 @@ load data local infile 'empmstr.csv' replace into table emp_mstr fields terminat
 load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'profilemstr.csv' replace into table pay_profile fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'profiledet.csv' replace into table pay_profdet fields terminated by ',' ignore 0 Lines; show errors; 
-load data local infile 'usrmstr.csv' replace into table user_mstr fields terminated by ';' ignore 0 Lines; show errors; 
-load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ';' ignore 0 Lines; show errors; 
-load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ';' ignore 0 Lines; show errors; 
-load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ';' ignore 0 Lines; show errors; 
+load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'usrmstr.csv' replace into table user_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 
