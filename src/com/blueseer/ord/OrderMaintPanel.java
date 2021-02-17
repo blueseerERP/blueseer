@@ -118,11 +118,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
           }  
          
        boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-               canEdit = new boolean[]{false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false}; 
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}; 
             return canEdit[columnIndex];
         }
    
@@ -850,18 +850,37 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    
-                   
-                    
-                     // if available sod_det line item...then update....else insert
-                     
-                     
                       int invqty = 0;
                          int allqty = 0;
                          int qohunall = 0;
                          int allocationvalue = 0;
                          boolean completeAllocation = true;   
                      
+                    // first delete any sod_det line records that have been
+                    // disposed from the current orddet table
+                    ArrayList<String> deletes = new ArrayList<String>();
+                    boolean goodLine = false;
+                    res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'"  + ";" );
+                    while (res.next()) {
+                      goodLine = false;
+                      for (int j = 0; j < orddet.getRowCount(); j++) {
+                         if (orddet.getValueAt(j, 0).toString().equals(res.getString("sod_line"))) {
+                             goodLine = true;
+                         }
+                      }
+                      if (! goodLine) {
+                          deletes.add(res.getString("sod_line"));
+                      }
+                    }
+                    for (String d : deletes) {
+                       st.executeUpdate("delete from sod_det " + 
+                               " where sod_nbr = " + "'" + tbkey.getText() + "'" +
+                               " and sod_line = " + "'" + d + "'" +
+                               ";");
+                    }
+                    
+                    
+                    
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
@@ -911,7 +930,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         
                         
                         
-                        res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
+                            res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
                                 " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
                             while (res.next()) {
                             i++;
@@ -1114,8 +1133,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
                       res.getString("sod_custpart"), res.getString("sod_nbr"), 
-                      res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_listprice"),
-                      res.getDouble("sod_disc"), res.getString("sod_netprice"), res.getString("sod_shipped_qty"), res.getString("sod_status"),
+                      res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice")),
+                      BlueSeerUtils.priceformat(res.getString("sod_disc")), BlueSeerUtils.priceformat(res.getString("sod_netprice")), res.getString("sod_shipped_qty"), res.getString("sod_status"),
                       res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt")
                   });
                 }
@@ -1638,13 +1657,13 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
              listprice = Double.valueOf(orddet.getValueAt(j, 7).toString());
-             orddet.setValueAt(String.valueOf(newdisc), j, 8);
+             orddet.setValueAt(BlueSeerUtils.priceformat(String.valueOf(newdisc)), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
              } else {
              newprice = listprice;    
              }
-             orddet.setValueAt(String.valueOf(newprice), j, 9);
+             orddet.setValueAt(BlueSeerUtils.priceformat(String.valueOf(newprice)), j, 9);
               
              
          }
@@ -1652,6 +1671,60 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          
     }
     
+    public boolean validateDetail() {
+        boolean canproceed = true;
+        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        Matcher m = p.matcher(listprice.getText());
+        if (!m.find() || listprice.getText() == null) {
+            bsmf.MainFrame.show("Invalid List Price format");
+            canproceed = false;
+        }
+        
+        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        if (! discount.getText().isEmpty()) {
+            m = p.matcher(discount.getText());
+            if (!m.find()) {
+                bsmf.MainFrame.show("Invalid Discount format");
+                canproceed = false;
+            }
+        }
+        
+        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        m = p.matcher(netprice.getText());
+        if (!m.find() || netprice.getText() == null) {
+            bsmf.MainFrame.show("Invalid Net Price format");
+            canproceed = false;
+        }
+        
+        p = Pattern.compile("^[1-9]\\d*$");
+        m = p.matcher(qtyshipped.getText());
+        if (!m.find() || qtyshipped.getText() == null) {
+            bsmf.MainFrame.show("Invalid Qty");
+            canproceed = false;
+        }
+        
+         
+        
+        // check unallocated qty
+        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
+             bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
+            canproceed = false;
+        }
+        
+        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("no base uom conversion");
+                canproceed = false;
+                dduom.requestFocus();
+                
+        }
+        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("no price record for conversion uom");
+                canproceed = false;
+                dduom.requestFocus();
+                
+        }
+      return canproceed;   
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1772,6 +1845,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbmisc = new javax.swing.JTextField();
         ddwh = new javax.swing.JComboBox<>();
         ddloc = new javax.swing.JComboBox<>();
+        btupdateitem = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         orddet = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
@@ -2403,14 +2477,14 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jPanelLines.setBorder(javax.swing.BorderFactory.createTitledBorder("Lines"));
         jPanelLines.setPreferredSize(new java.awt.Dimension(821, 627));
 
-        btadditem.setText("Add Item");
+        btadditem.setText("Insert");
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
             }
         });
 
-        btdelitem.setText("Del Item");
+        btdelitem.setText("Remove");
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
@@ -2640,24 +2714,34 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addContainerGap())
         );
 
+        btupdateitem.setText("Update");
+        btupdateitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateitemActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(541, 541, 541)
                         .addComponent(btadditem)
-                        .addGap(8, 8, 8)
-                        .addComponent(btdelitem))
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdateitem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelitem)))
+                .addGap(0, 37, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2671,9 +2755,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btdelitem)
                     .addComponent(btadditem)
-                    .addComponent(btdelitem)))
+                    .addComponent(btupdateitem)))
         );
 
         orddet.setModel(new javax.swing.table.DefaultTableModel(
@@ -2772,7 +2857,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(btsacdelete)
                     .addComponent(tbsacamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(percentlabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jLabel3.setText("Total Lines:");
@@ -2850,11 +2935,12 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             .addGroup(jPanelLinesLayout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
 
         add(jPanelLines);
@@ -2865,99 +2951,26 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-        boolean canproceed = true;
+        
         int line = 0;
-        
-        String part = "";
-        String custpart = "";
-        String desc = "";
-        String site = ddsite.getSelectedItem().toString();
-        
-        
-            part = ddpart.getSelectedItem().toString();
-            
-            
-            if (OVData.isValidItem(part)) {
-                desc = OVData.getItemDesc(part);
-                custpart = custnumber.getText();
-            } else {
-                desc = custnumber.getText().toString();  // if non-inventory item custnumber field is the description field
-                custpart = "miscitem";
-            }
-            
-       
-        orddet.setModel(myorddetmodel);
-        
-        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(listprice.getText());
-        if (!m.find() || listprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid List Price format");
-            canproceed = false;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        if (! discount.getText().isEmpty()) {
-            m = p.matcher(discount.getText());
-            if (!m.find()) {
-                bsmf.MainFrame.show("Invalid Discount format");
-                canproceed = false;
-            }
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(netprice.getText());
-        if (!m.find() || netprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid Net Price format");
-            canproceed = false;
-        }
-        
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(qtyshipped.getText());
-        if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            canproceed = false;
-        }
-        
-         
-        
-        // check unallocated qty
-        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(part,ddsite.getSelectedItem().toString(),tbkey.getText())) {
-             bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
-            canproceed = false;
-        }
-        
-        if (OVData.isValidItem(part) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no base uom conversion");
-                canproceed = false;
-                dduom.requestFocus();
-                return;
-        }
-        if (OVData.isValidItem(part) && ! OVData.isBaseUOMOfItem(part, site, dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no price record for conversion uom");
-                canproceed = false;
-                dduom.requestFocus();
-                return;
-        }
-        
-        
         
         line = getmaxline();
         line++;
         
-        
+        boolean canproceed = validateDetail();
         
         //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice"
         if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, part, custpart, tbkey.getText(), ponbr.getText(), 
+            myorddetmodel.addRow(new Object[]{line, ddpart.getSelectedItem().toString(), custnumber.getText(), tbkey.getText(), ponbr.getText(), 
                 qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
                 discount.getText(), netprice.getText(), 
                 "0", "open",
-                ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), desc, 
-                String.valueOf(OVData.getTaxAmtApplicableByItem(part, (Double.valueOf(netprice.getText()) * Double.valueOf(qtyshipped.getText())) ))
+                ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
+                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (Double.valueOf(netprice.getText()) * Double.valueOf(qtyshipped.getText())) ))
             });
             
             // lets collect tax elements for each item
-            ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(part);
+            ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(ddpart.getSelectedItem().toString());
             if (list != null) {
             linetax.put(line, list);
             } 
@@ -3299,6 +3312,23 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked
         int row = orddet.rowAtPoint(evt.getPoint());
         int col = orddet.columnAtPoint(evt.getPoint());
+        //   "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
+        isLoad = true;  
+        ddpart.setSelectedItem(orddet.getValueAt(row, 1).toString());
+        dduom.setSelectedItem(orddet.getValueAt(row, 6).toString());
+        ddwh.setSelectedItem(orddet.getValueAt(row, 12).toString());
+        ddloc.setSelectedItem(orddet.getValueAt(row, 13).toString());
+        qtyshipped.setText(orddet.getValueAt(row, 5).toString());
+        custnumber.setText(orddet.getValueAt(row, 2).toString());
+        tbdesc.setText(orddet.getValueAt(row, 14).toString());
+        listprice.setText(orddet.getValueAt(row, 7).toString());
+        netprice.setText(orddet.getValueAt(row, 9).toString());
+        discount.setText(orddet.getValueAt(row, 8).toString());
+       
+        isLoad = false;
+        //tbmisc.setText(orddet.getValueAt(row, 5).toString());
+        
+       /* blanket stuff not implemented yet
         String order = "";
         String po = "";
         String part = "";
@@ -3312,6 +3342,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             this.getSchedRecords(order, po, part, line);
            
         }
+       */
     }//GEN-LAST:event_orddetMouseClicked
 
     private void ddtaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtaxActionPerformed
@@ -3384,6 +3415,51 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
     }//GEN-LAST:event_ddsiteActionPerformed
 
+    private void btupdateitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateitemActionPerformed
+          int line = 0;
+        
+        line = getmaxline();
+        line++;
+        
+        int[] rows = orddet.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show("Only 1 row must be selected");
+                return;
+        }
+        for (int i : rows) {
+            if (orddet.getValueAt(i, 11).toString().equals("close") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+                bsmf.MainFrame.show("Cannot Update Closed or Partial Item");
+                return;
+            } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("The item field value cannot be different for this table record");
+                return;
+            }else {
+                boolean canproceed = validateDetail();
+                if (canproceed) {
+                orddet.setValueAt(qtyshipped.getText(), i, 5);
+                orddet.setValueAt(dduom.getSelectedItem().toString(), i, 6);
+                orddet.setValueAt(listprice.getText(), i, 7);
+                orddet.setValueAt(discount.getText(), i, 8);
+                orddet.setValueAt(netprice.getText(), i, 9);
+                orddet.setValueAt(custnumber.getText(), i, 2);
+                orddet.setValueAt(tbdesc.getText(), i, 14);
+                orddet.setValueAt(ddwh.getSelectedItem().toString(), i, 12);
+                orddet.setValueAt(ddloc.getSelectedItem().toString(), i, 13);
+                
+                refreshDisplayTotals();         
+                listprice.setText("");
+                netprice.setText("");
+                discount.setText("");
+                qtyshipped.setText("");
+                ddpart.requestFocus();
+                
+                }
+            }
+        }
+        
+        
+    }//GEN-LAST:event_btupdateitemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -3404,6 +3480,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btsacadd;
     private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
     private javax.swing.JCheckBox cbisallocated;
     private javax.swing.JCheckBox cbissourced;

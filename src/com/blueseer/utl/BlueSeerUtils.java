@@ -146,6 +146,14 @@ public class BlueSeerUtils {
         return x;
     }
     
+    public static String priceformat(String invalue) {
+        String x = "";
+        DecimalFormat df = new DecimalFormat("#0.0000#", new DecimalFormatSymbols(Locale.US)); 
+        x = df.format(Double.valueOf(invalue));   
+        return x;
+    }
+    
+    
     public static String convertDateFormat(String format, String indate) {
        String mydate = "";
         if (format.equals("yyyyMMdd") && indate.length() == 8) {
