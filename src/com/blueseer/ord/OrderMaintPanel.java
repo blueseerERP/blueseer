@@ -3416,7 +3416,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_ddsiteActionPerformed
 
     private void btupdateitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateitemActionPerformed
-          int line = 0;
+        int line = 0;
         
         line = getmaxline();
         line++;
