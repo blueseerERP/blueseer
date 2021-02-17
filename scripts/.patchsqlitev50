@@ -1,0 +1,9 @@
+/* BEGIN addition to menu_mstr   */
+/*
+insert into menu_mstr (menu_id) select 'ItemReports' as menu_id from menu_mstr where not exists (select * from menu_mstr where menu_id = 'ItemReports') limit 1;
+update menu_mstr set menu_desc = '', menu_panel = '', menu_type = 'JMenu', menu_navcode = '' where menu_id = 'ItemReports';
+insert into menu_tree (mt_par, mt_child) select 'Inventory' as mt_par, 'ItemReports' as mt_child where not exists (select * from menu_tree where mt_par = 'Inventory' and mt_child = 'ItemReports') limit 1;
+update menu_tree set mt_index = '17', mt_type = 'JMenu', mt_label = 'Inventory Reports',mt_icon = '', mt_initvar = '', mt_func = '', mt_visible = '1', mt_enable = '1' where mt_par = 'Inventory' and mt_child = 'ItemReports';
+insert into perm_mstr (perm_user, perm_menu) select 'admin' as perm_user, 'ItemReports' as perm_menu from perm_mstr where not exists (select * from perm_mstr where perm_user = 'Admin' and perm_menu = 'ItemReports' ) limit 1;
+*/
+/* END addition to menu_mstr   */

@@ -1,0 +1,33 @@
+/* BEGIN addition to menu_mstr   */
+/*
+insert into menu_mstr (menu_id) select 'ItemReports' as menu_id from menu_mstr where not exists (select * from menu_mstr where menu_id = 'ItemReports') limit 1;
+update menu_mstr set menu_desc = '', menu_panel = '', menu_type = 'JMenu', menu_navcode = '' where menu_id = 'ItemReports';
+insert into menu_tree (mt_par, mt_child) select 'Inventory' as mt_par, 'ItemReports' as mt_child where not exists (select * from menu_tree where mt_par = 'Inventory' and mt_child = 'ItemReports') limit 1;
+update menu_tree set mt_index = '17', mt_type = 'JMenu', mt_label = 'Inventory Reports',mt_icon = '', mt_initvar = '', mt_func = '', mt_visible = '1', mt_enable = '1' where mt_par = 'Inventory' and mt_child = 'ItemReports';
+insert into perm_mstr (perm_user, perm_menu) select 'admin' as perm_user, 'ItemReports' as perm_menu from perm_mstr where not exists (select * from perm_mstr where perm_user = 'Admin' and perm_menu = 'ItemReports' ) limit 1;
+*/
+/* END addition to menu_mstr   */
+--
+--
+/* BEGIN order_ctrl alter table for new field  */
+CREATE TABLE IF NOT EXISTS "order2_ctrl" (
+  "orc_autosource" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_autoinvoice" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_autoallocate" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_custitem" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_srvm_type" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_srvm_item_default" tinyint(1) NOT NULL DEFAULT '0'
+);
+insert into order2_ctrl(orc_autosource,orc_autoinvoice,orc_autoallocate,orc_custitem,orc_srvm_type,orc_srvm_item_default) select orc_autosource, orc_autoinvoice, 1, orc_custitem, orc_srvm_type, orc_srvm_item_default from order_ctrl;
+drop table order_ctrl;
+alter table order2_ctrl rename to order_ctrl;
+alter table order_ctrl add column orc_exceedqohu tinyint(1);
+alter table so_mstr add column so_isallocated varchar(1) COLLATE NOCASE DEFAULT '';
+alter table sod_det add column sod_all_qty int(8) NOT NULL DEFAULT '0';
+alter table ship_det add column shd_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table tran_mstr add column tr_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table tran_mstr add column tr_base_qty decimal(14,5) NOT NULL DEFAULT '0';
+alter table pod_mstr add column pod_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table recv_det add column rvd_uom varchar(3) COLLATE NOCASE DEFAULT '';
+alter table pos_mstr add column pos_site varchar(10) COLLATE NOCASE DEFAULT '';
+alter table gl_hist add column glh_recon tinyint(1) COLLATE NOCASE DEFAULT '0';
