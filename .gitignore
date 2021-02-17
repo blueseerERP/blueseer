@@ -3,4 +3,4 @@ build.xml
 dist
 jre8
 nbproject/private
-!test/build.xml
+!scripts/build.xml
