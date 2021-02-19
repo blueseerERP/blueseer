@@ -76,11 +76,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
      // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "line", "Part", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+                "line", "Part", "Desc" ,"VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
             })
     {
         boolean[] canEdit = new boolean[]{
-                false, false, false, false, true, false, true, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -238,8 +238,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jTabbedPane1.add("Schedule", panelSchedule);
         
         
-        jTabbedPane1.setEnabledAt(2, true);
-        jTabbedPane1.setEnabledAt(1, true);
+        jTabbedPane1.setEnabledAt(2, false);
+        jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(0, true);
         
          java.util.Date now = new java.util.Date();
@@ -433,7 +433,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         + ";");
 
                   
-                 
+                  //"line", "Part", "Desc" ,"VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+            
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                         st.executeUpdate("insert into pod_mstr "
                             + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, pod_disc, pod_netprice, pod_due_date, "
@@ -441,13 +442,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
                             + '0' + "," 
                             + "''" + ","
@@ -550,7 +551,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
-                        if (orddet.getValueAt(j, 10).toString().equals("close"))
+                        if (orddet.getValueAt(j, 11).toString().equals("close"))
                             continue;
                         res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + x[0] + "'" +
                                 " and pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
@@ -558,16 +559,16 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             i++;
                             }
                             
-                             //   "line", "Part", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+                             //   "line", "Part", "Desc", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
                             if (i > 0) {
                               st.executeUpdate("update pod_mstr set "
                             + " pod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "''") + "'" + ","
-                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
-                            + " pod_ord_qty = " + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + " pod_uom = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","        
-                            + " pod_listprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + " pod_disc = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + " pod_netprice = " + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 3).toString().replace("'", "''") + "'" + ","
+                            + " pod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " pod_uom = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
+                            + " pod_listprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + " pod_disc = " + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + " pod_netprice = " + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
                             + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
                             + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
                             + " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'"
@@ -581,13 +582,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             + " values ( " 
                             + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","        
                             + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
                             + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","        
                             + "'" + "0" + "'" + ","
@@ -649,12 +650,20 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 }
                 
                  // myorddetmodel  "Line", "Part", "CustPart",  "PO", "Qty", UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select * from pod_mstr where pod_nbr = " + "'" + x[0] + "'" + ";");
+                res = st.executeQuery("select * from pod_mstr left outer join item_mstr on it_item = pod_part where pod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
-                  myorddetmodel.addRow(new Object[]{res.getString("pod_line"), res.getString("pod_part"),
-                      res.getString("pod_vendpart"), res.getString("pod_nbr"), 
-                      res.getString("pod_ord_qty"), res.getString("pod_uom"), res.getString("pod_listprice"),
-                      res.getDouble("pod_disc"), res.getString("pod_netprice"), res.getString("pod_rcvd_qty"), res.getString("pod_status")});
+                  myorddetmodel.addRow(new Object[]{res.getString("pod_line"), 
+                      res.getString("pod_part"),
+                      res.getString("it_desc"), 
+                      res.getString("pod_vendpart"), 
+                      res.getString("pod_nbr"), 
+                      res.getString("pod_ord_qty"), 
+                      res.getString("pod_uom"), 
+                      res.getString("pod_listprice"),
+                      res.getDouble("pod_disc"), 
+                      res.getString("pod_netprice"), 
+                      res.getString("pod_rcvd_qty"), 
+                      res.getString("pod_status")});
                 }
                
                  
@@ -762,7 +771,55 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 setnetprice();
          }
      }
-     
+    
+    public boolean validateDetail() {
+        boolean canproceed = true;
+        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        Matcher m = p.matcher(listprice.getText());
+        if (!m.find() || listprice.getText() == null) {
+            bsmf.MainFrame.show("Invalid List Price format");
+            canproceed = false;
+        }
+        
+        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        if (! discount.getText().isEmpty()) {
+            m = p.matcher(discount.getText());
+            if (!m.find()) {
+                bsmf.MainFrame.show("Invalid Discount format");
+                canproceed = false;
+            }
+        }
+        
+        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        m = p.matcher(netprice.getText());
+        if (!m.find() || netprice.getText() == null) {
+            bsmf.MainFrame.show("Invalid Net Price format");
+            canproceed = false;
+        }
+        
+        p = Pattern.compile("^[1-9]\\d*$");
+        m = p.matcher(qtyshipped.getText());
+        if (!m.find() || qtyshipped.getText() == null) {
+            bsmf.MainFrame.show("Invalid Qty");
+            canproceed = false;
+        }
+        
+         
+        
+        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("no base uom conversion");
+                dduom.requestFocus();
+                return false;
+        }
+        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidVendPriceRecordExists(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("no price record for conversion uom"); 
+                dduom.requestFocus();
+                return false;
+        }
+      return canproceed;   
+    }
+   
+    
     public void getparts(String part) {
         try {
 
@@ -777,7 +834,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 int k = ddpart.getSelectedIndex();
               
                 
-                // lets first try as cust part...i.e....lets look up the item based on entering a customer part number.
+                // lets first try as vend part...i.e....lets look up the item based on entering a vendor part number.
                 if (k < 0) {
                     
                 res = st.executeQuery("select vdp_item, vdp_vitem from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" 
@@ -786,7 +843,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 int i = 0;
                 while (res.next()) {
                     i++;
-                    ddpart.setSelectedItem(res.getString("vdp_item"));
+                   // ddpart.setSelectedItem(res.getString("vdp_item"));
                     vendnumber.setText(part);
                     ddpart.setForeground(Color.blue);
                     vendnumber.setForeground(Color.blue);
@@ -818,7 +875,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             listprice.setText("0.00");
             netprice.setText("0.00");
             qtyshipped.setText("0");
-            vendnumber.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            tbdesc.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            vendnumber.setText(OVData.getVendPartFromPart(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
             dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);
             vendnumber.setForeground(Color.blue);
@@ -875,7 +933,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void sumqty() {
         int qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 4).toString()); 
+             qty = qty + Integer.valueOf(orddet.getValueAt(j, 5).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -896,7 +954,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(orddet.getValueAt(j, 4).toString()) * Double.valueOf(orddet.getValueAt(j, 8).toString()) ); 
+             dol = dol + ( Double.valueOf(orddet.getValueAt(j, 5).toString()) * Double.valueOf(orddet.getValueAt(j, 9).toString()) ); 
          }
          tbtotdollars.setText(df.format(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
@@ -956,14 +1014,14 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         double listprice = 0;
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             listprice = Double.valueOf(orddet.getValueAt(j, 6).toString());
-             orddet.setValueAt(String.valueOf(newdisc), j, 7);
+             listprice = Double.valueOf(orddet.getValueAt(j, 7).toString());
+             orddet.setValueAt(String.valueOf(newdisc), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
              } else {
              newprice = listprice;    
              }
-             orddet.setValueAt(String.valueOf(newprice), j, 8);
+             orddet.setValueAt(String.valueOf(newprice), j, 9);
               
              
          }
@@ -1029,6 +1087,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel84 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dduom = new javax.swing.JComboBox<>();
+        tbdesc = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         netprice = new javax.swing.JTextField();
         jLabel80 = new javax.swing.JLabel();
@@ -1038,6 +1098,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel89 = new javax.swing.JLabel();
         btdelitem = new javax.swing.JButton();
         btadditem = new javax.swing.JButton();
+        btupdateitem = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         orddet = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -1251,9 +1312,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(jLabel91)
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel77)))
+                    .addComponent(jLabel77))
                 .addGap(6, 6, 6)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1369,27 +1428,32 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel6.setText("Description");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel84, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jLabel87, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel79, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel84, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(jLabel87, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel79, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(vendnumber, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                    .addComponent(ddpart, 0, 203, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(qtyshipped, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(dduom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(dduom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdesc))
                 .addContainerGap(107, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1399,6 +1463,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel87))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1411,7 +1479,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel84))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         netprice.setEditable(false);
@@ -1442,17 +1510,24 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel89.setText("NetPrice");
 
-        btdelitem.setText("Del Item");
+        btdelitem.setText("Delete");
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
             }
         });
 
-        btadditem.setText("Add Item");
+        btadditem.setText("Add");
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
+            }
+        });
+
+        btupdateitem.setText("Update");
+        btupdateitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateitemActionPerformed(evt);
             }
         });
 
@@ -1471,12 +1546,14 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(btadditem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdateitem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdelitem))
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(discount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
                         .addComponent(listprice, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(netprice)))
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1496,7 +1573,8 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btdelitem)
-                    .addComponent(btadditem))
+                    .addComponent(btadditem)
+                    .addComponent(btupdateitem))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1511,13 +1589,18 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        orddet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orddetMouseClicked(evt);
+            }
+        });
         jScrollPane8.setViewportView(orddet);
 
         jLabel1.setText("Total Lines");
 
         jLabel2.setText("Total Qty");
 
-        jLabel3.setText("TotCost");
+        jLabel3.setText("Total $");
 
         javax.swing.GroupLayout panelDetailLayout = new javax.swing.GroupLayout(panelDetail);
         panelDetail.setLayout(panelDetailLayout);
@@ -1583,72 +1666,29 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
         int line = 0;
         
-        String part = "";
-        String custpart = "";
-        String site = "";
-        
-            part = ddpart.getSelectedItem().toString();
-            custpart = vendnumber.getText().toString();
-            site = ddsite.getSelectedItem().toString();
-       
-        orddet.setModel(myorddetmodel);
-        
-        Pattern p = Pattern.compile("^[1-9]\\d*$");
-        Matcher m = p.matcher(qtyshipped.getText());
-        if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            return;
-        }
-        
-        
-         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-         m = p.matcher(listprice.getText());
-        if (!m.find() || listprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid List Price format");
-            return;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(discount.getText());
-        if (!m.find() || discount.getText() == null) {
-            bsmf.MainFrame.show("Invalid Discount format");
-            return;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(netprice.getText());
-        if (!m.find() || netprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid Net Price format");
-            return;
-        }
-        
-        
         line = getmaxline();
         line++;
         
            if (line == 1 && ! editmode) {
             btadd.setEnabled(true);
         } 
-           
-           
-        if (OVData.isValidItem(part) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no base uom conversion");
-                dduom.requestFocus();
-                return;
-        }
-        if (OVData.isValidItem(part) && ! OVData.isBaseUOMOfItem(part, site, dduom.getSelectedItem().toString()) && ! OVData.isValidVendPriceRecordExists(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no price record for conversion uom"); 
-                dduom.requestFocus();
-                return;
-        }
-           
-           
-           
         
-        // "line", "Part", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+         boolean canproceed = validateDetail();
+        // "line", "Part", "Desc", "VendPart", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
        
-         myorddetmodel.addRow(new Object[]{line, part, custpart, tbkey.getText(),  qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
-                discount.getText(), netprice.getText(), "0", "open"});
+        if (canproceed) {
+         myorddetmodel.addRow(new Object[]{line, 
+             ddpart.getSelectedItem().toString(), 
+             tbdesc.getText(),  
+             vendnumber.getText(), 
+             tbkey.getText(),  
+             qtyshipped.getText(), 
+             dduom.getSelectedItem().toString(), 
+             listprice.getText(), 
+             discount.getText(), 
+             netprice.getText(), 
+             "0", 
+             "open"});
          sumqty();
          sumdollars();
          sumlinecount();
@@ -1657,7 +1697,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          discount.setText("");
          qtyshipped.setText("");
          ddpart.requestFocus();
-         
+        }
        
     }//GEN-LAST:event_btadditemActionPerformed
 
@@ -1670,13 +1710,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-         if (ddpart.getSelectedItem() != null)
+         if (ddpart.getSelectedItem() != null && ! isLoad)
         getparts(ddpart.getSelectedItem().toString());
     }//GEN-LAST:event_ddpartActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
 
-        if (ddvend.getItemCount() > 0 && ! isLoad && ! ddvend.getSelectedItem().toString().isEmpty()) {
+        if (ddvend.getItemCount() > 0) {
            jTabbedPane1.setEnabledAt(1, true);
            vendChangeEvent(ddvend.getSelectedItem().toString());
         } // if ddvend has a list
@@ -1685,7 +1725,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
          int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
-            if (orddet.getValueAt(i, 10).toString().equals("close") || orddet.getValueAt(i, 10).toString().equals("partial")) {
+            if (orddet.getValueAt(i, 11).toString().equals("close") || orddet.getValueAt(i, 11).toString().equals("partial")) {
                 bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
                 return;
                             } else {
@@ -1807,6 +1847,64 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btupdateitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateitemActionPerformed
+        int line = 0;
+        
+        line = getmaxline();
+        line++;
+        
+        int[] rows = orddet.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show("Only 1 row must be selected");
+                return;
+        }
+        for (int i : rows) {
+            if (orddet.getValueAt(i, 11).toString().equals("close") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+                bsmf.MainFrame.show("Cannot Update Closed or Partial Item");
+                return;
+            } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {
+                bsmf.MainFrame.show("The item field value cannot be different for this table record");
+                return;
+            }else {
+                boolean canproceed = validateDetail();
+                if (canproceed) {
+         //"line", "Part", "Desc", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+                orddet.setValueAt(qtyshipped.getText(), i, 5);
+                orddet.setValueAt(dduom.getSelectedItem().toString(), i, 6);
+                orddet.setValueAt(listprice.getText(), i, 7);
+                orddet.setValueAt(discount.getText(), i, 8);
+                orddet.setValueAt(netprice.getText(), i, 9);
+                orddet.setValueAt(tbdesc.getText(), i, 2);
+                
+                refreshDisplayTotals();         
+                listprice.setText("");
+                netprice.setText("");
+                discount.setText("");
+                qtyshipped.setText("");
+                ddpart.requestFocus();
+                
+                }
+            }
+        }
+    }//GEN-LAST:event_btupdateitemActionPerformed
+
+    private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked
+        int row = orddet.rowAtPoint(evt.getPoint());
+        int col = orddet.columnAtPoint(evt.getPoint());
+         //"line", "Part", "Desc", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
+         isLoad = true;  
+        ddpart.setSelectedItem(orddet.getValueAt(row, 1).toString());
+        dduom.setSelectedItem(orddet.getValueAt(row, 6).toString());
+        qtyshipped.setText(orddet.getValueAt(row, 5).toString());
+        vendnumber.setText(orddet.getValueAt(row, 3).toString());
+        listprice.setText(orddet.getValueAt(row, 7).toString());
+        netprice.setText(orddet.getValueAt(row, 9).toString());
+        discount.setText(orddet.getValueAt(row, 8).toString());
+        tbdesc.setText(orddet.getValueAt(row, 2).toString());
+       
+        isLoad = false;
+    }//GEN-LAST:event_orddetMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -1818,6 +1916,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btpoprint;
     private javax.swing.JButton btpovendbrowse;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddpart;
@@ -1833,6 +1932,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel77;
     private javax.swing.JLabel jLabel78;
@@ -1868,6 +1968,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField remarks;
     private javax.swing.JTable tablesched;
     private javax.swing.JTextField tbbuyer;
+    private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbtotdollars;
     private javax.swing.JTextField tbtotqty;

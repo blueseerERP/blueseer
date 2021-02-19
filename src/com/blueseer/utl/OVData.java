@@ -6464,7 +6464,7 @@ public class OVData {
         
     }
         
-           public static String getVendPartFromPart(String vend, String part) {
+       public static String getVendPartFromPart(String vend, String part) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6482,7 +6482,8 @@ public class OVData {
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vdp_Mstr");
+                  MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot retrieve vdp_mstr");
             }
             con.close();
         }
