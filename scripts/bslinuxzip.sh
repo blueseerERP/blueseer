@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ## creation of generic zip for both sqlite and mysql versions
+bsdir=$(pwd)
 bszip="blueseer.generic.linux.v50.zip"
 rm -f $bszip
 cd ../sf
@@ -22,5 +23,5 @@ zip -u $bszip login.sh
 zip -u $bszip mysql_install.sh
 zip -u $bszip controlM.sh
 cd /tmp
-zip -ru bs/blueseer/scripts/$bszip jre8/*
+zip -ru $bsdir/$bszip jre8/*
 
