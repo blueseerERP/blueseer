@@ -419,6 +419,9 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("pomaint")) {
                 tablereport.setModel(DTData.getPOBrowseUtil(tbtext.getText(), state, searchfield));
                 }
+                if (callingpanel.equals("reqmaint")) {
+                tablereport.setModel(DTData.getReqBrowseUtil(tbtext.getText(), state, searchfield)); 
+                }
                 if (callingpanel.equals("domaint")) {
                 tablereport.setModel(DTData.getDOBrowseUtil(tbtext.getText(), state, searchfield)); 
                 }
@@ -718,25 +721,30 @@ public class Browse extends javax.swing.JPanel {
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("MenuMaint", true, arg);
             }
-               if (callingpanel.equals("vendmaint")) {
+            if (callingpanel.equals("vendmaint")) {
               if (! checkperms("VendMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("VendMaint", true, arg);
             }
-              if (callingpanel.equals("custmaint")) {
+            if (callingpanel.equals("custmaint")) {
               if (! checkperms("CustMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("CustMaint", true, arg);
             }
-                if (callingpanel.equals("ordermaint")) {
+            if (callingpanel.equals("ordermaint")) {
               if (! checkperms("OrderMaint")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("OrderMaint", true, arg);
             }
-                     if (callingpanel.equals("pomaint")) {
+            if (callingpanel.equals("pomaint")) {
               if (! checkperms("POMaintMenu")) { return; }
               arg = new String[] {tablereport.getValueAt(row, 1).toString()};
               reinitpanels("POMaintMenu", true, arg);
+            }
+            if (callingpanel.equals("reqmaint")) {
+              if (! checkperms("ReqMaint")) { return; }
+              arg = new String[] {tablereport.getValueAt(row, 1).toString()};
+              reinitpanels("ReqMaint", true, arg);
             }
                     if (callingpanel.equals("shipmaint")) {
               if (! checkperms("ShipMaint")) { return; }

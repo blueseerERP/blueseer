@@ -27,7 +27,9 @@ SOFTWARE.
 package com.blueseer.pur;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -56,10 +58,15 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -72,130 +79,34 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author vaughnte
  */
-public class ReqMaintPanel extends javax.swing.JPanel {
+public class ReqMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     /**
      * Creates new form PurchReqMaint
      */
     
     
+    // global variable declarations
+     boolean isLoad = false;
+    
      javax.swing.table.DefaultTableModel reqtask = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
                    "id", "owner", "status", "Sequence", "Email"
-                   });
+                   }){
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
      javax.swing.table.DefaultTableModel itemmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
                    "item", "qty", "price"
                    });
-    
-     
-  
-
-     
-     
-     
+         
      public String admins[];
-    
-      class ButtonRenderer extends JButton implements TableCellRenderer {
-
-        public ButtonRenderer() {
-            setOpaque(true);
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            
-            
-            
-            if (isSelected) {
-                setForeground(table.getSelectionForeground());
-                setBackground(table.getSelectionBackground());
-            } else {
-                setForeground(table.getForeground());
-                setBackground(UIManager.getColor("Button.background"));
-            }
-            setText((value == null) ? "" : value.toString());
-            if (jTable1.getModel().getValueAt(row, 2).toString().compareTo("approved") == 0) {
-            setBackground(Color.green);
-            //setEnabled(false);
-            setText("complete");
-            }
-            return this;
-        }
-    }
-
-    class ButtonEditor extends DefaultCellEditor {
-
-        protected JButton button;
-        private String label;
-        private String columnname;
-        private int myrow;
-        private int mycol;
-        private boolean isPushed;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            if (isSelected) {
-                button.setForeground(table.getSelectionForeground());
-                button.setBackground(table.getSelectionBackground());
-            } else {
-                button.setForeground(table.getForeground());
-                button.setBackground(table.getBackground());
-            }
-            label = (value == null) ? "" : value.toString();
-            columnname = String.valueOf(column);
-            button.setText(label);
-            //button.setText("approve");
-            
-            isPushed = true;
-           
-            return button;
-        }
-
-        public Object getCellEditorValue() {
-            if (isPushed) {
-                // 
-                // 
-               //JOptionPane.showMessageDialog(button, columnname + ":" + label );
-                // System.out.println(label + ": Ouch!");
-              //  if ((jTable1.getColumnName(0).toString().compareTo("Shipper")) == 0) {
-                    // approvereq(label);
-              //  }
-                myrow = jTable1.getSelectedRow();
-                if (jTable1.getModel().getValueAt(myrow, 2).toString().compareTo("pending") == 0) {
-                    if (jTable1.getModel().getValueAt(myrow, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) {
-                 approvereq(jTable1.getValueAt(myrow, 0).toString(), jTable1.getValueAt(myrow, 3).toString());
-                    } else {
-                      bsmf.MainFrame.show("you do not have access to approve this action");  
-                    }
-                    //bsmf.MainFrame.show(jTable1.getValueAt(myrow, 1).toString());
-                }
-            }
-            isPushed = false;
-            return new String(label);
-        }
-
-        public boolean stopCellEditing() {
-            isPushed = false;
-            return super.stopCellEditing();
-        }
-
-        protected void fireEditingStopped() {
-            super.fireEditingStopped();
-        }
-    }
-
+   
     
     class SomeRenderer extends DefaultTableCellRenderer {
         public SomeRenderer() {
@@ -208,284 +119,656 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
 
-        if (isSelected) {
-                c.setForeground(table.getSelectionForeground());
-                c.setBackground(table.getSelectionBackground());
-            } else {
-                c.setForeground(table.getForeground());
-                c.setBackground(UIManager.getColor("Button.background"));
-            }
+        
             //Integer percentage = (Integer) table.getValueAt(row, 3);
             //if (percentage > 30)
-            if (table.getValueAt(row, 2).toString().compareTo("approved") == 0)   
-            {c.setBackground(Color.green);
-             c.setEnabled(false);
+            if (table.getValueAt(row, 2).toString().compareTo("approved") == 0){
+             c.setBackground(Color.green);
+            } else {
+             c.setBackground(table.getBackground());
+             c.setForeground(table.getForeground());
             }
-            else {
-                c.setBackground(table.getBackground());
-                c.setEnabled(true);
-            }
+            
         return c;
     }
     }
     
      
-     public ReqMaintPanel() {
+    public ReqMaintPanel() {
         initComponents();
         
        
     }
 
-    public void initddvend() {
-        ddvend.removeAllItems();
-        ArrayList myvend = OVData.getvendnamelist();
-        for (int i = 0; i < myvend.size(); i++) {
-            ddvend.addItem(myvend.get(i));
+     // interface functions implemented  
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
         }
-         
-    } 
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("add") && message[0].equals("0")) {
+             initvars(key);
+           } else if (this.type.equals("update") && message[0].equals("0")) {
+             initvars(key);    
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
     
-    public void initdddept() {
-       dddept.removeAllItems();
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+        
+    public void setComponentDefaultValues() {
+        
+        isLoad = true;
+        approverPanel.setVisible(false);
+         
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+       
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        tbrequestor.setText(bsmf.MainFrame.userid);
+        
+        tbamt.setText("");
+        tbAR.setText("");
+       
+        tbacct.setText("");
+        tbproject.setText("");
+        tbdesc.setText("");
+        tbpo.setText("");
+        tbstatus.setText("");
+        caldate.setDate(now);
+        itemmodel.setRowCount(0);
+        itemtable.setModel(itemmodel);
+        tbqty.setText("");
+        tbitem.setText("");
+        tbprice.setText("");
+        
+        approverTable.setModel(reqtask);
+        approverTable.getColumnModel().getColumn(2).setCellRenderer(new ReqMaintPanel.SomeRenderer());
+        set_admins();
+        itemtable.setModel(itemmodel);
+        
+        
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (String code : mylist) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        ddvend.removeAllItems();
+        ArrayList myvends = OVData.getvendnamelist();
+        for (int i = 0; i < myvends.size(); i++) {
+         ddvend.addItem(myvends.get(i));
+        }
+        ddvend.insertItemAt("", 0);
+        ddvend.setSelectedIndex(0);
+          
+        dddept.removeAllItems();
         ArrayList mydept = OVData.getdeptidlist();
         for (int i = 0; i < mydept.size(); i++) {
             dddept.addItem(mydept.get(i));
-        }
-         
-    } 
-    
-    public void initddtype(String user) {
+        }  
+        
         ddtype.removeAllItems();
-        
-        ddtype.addItem("Expense");
-        ddtype.addItem("Inventory");
-        ddtype.addItem("AR");
-        ddtype.addItem("Sorting");
-        
-        if (admins != null) {
-        for (String admin : admins) {
-          if (admin.compareTo(user) == 0) {
-              ddtype.addItem("MRO");
-          }  
-        }
-        }
-    } 
-   
-    public void disableall() {
-        
-        tbrequestor.setEnabled(false);
-        tbamt.setEnabled(false);
-        tbAR.setEnabled(false);
-        tbcc.setEnabled(false);
-        tbacct.setEnabled(false);
-        tbproject.setEnabled(false);
-        tbdesc.setEnabled(false);
-        tbpo.setEnabled(false);
-        tbstatus.setEnabled(false);
-        btPurchReqNew.setEnabled(true);
-        btPurchReqAdd.setEnabled(false);
-        btPurchReqEdit.setEnabled(false);
-        btPurchReqGet.setEnabled(true);
-        tbsite.setEnabled(false);
-        itemmodel.setRowCount(0);
-        itemtable.setModel(itemmodel);
-        tbqty.setEnabled(false);
-        tbitem.setEnabled(false);
-        tbprice.setEnabled(false);
-        tbcc.setEnabled(false);
-        tbacct.setEnabled(false);
-        override.setEnabled(false);
-        tbsite.setEnabled(false);
-        dddept.setEnabled(false);
-        ddvend.setEnabled(false);
-        dddept.setEnabled(false);
-        
-        caldate.setEnabled(false);
-        tbvendnbr.setEnabled(false);
-        btAddItem.setEnabled(false);
-        btdelitem.setEnabled(false);
-        ddtype.setEnabled(false);
-        btprint.setEnabled(false);
-    }
-    
-    public void enableall_onNew() {
-        tbrequestor.setEnabled(false);
-        tbamt.setEnabled(true);
-        tbAR.setEnabled(true);
-        tbcc.setEnabled(true);
-        tbacct.setEnabled(true);
-        tbproject.setEnabled(true);
-        tbdesc.setEnabled(true);
-        tbpo.setEnabled(true);
-        tbstatus.setEnabled(true);
-        btPurchReqNew.setEnabled(false);
-        btPurchReqAdd.setEnabled(true);
-        btPurchReqEdit.setEnabled(false);
-        btPurchReqGet.setEnabled(false);
-        tbsite.setEnabled(false);
-        itemmodel.setRowCount(0);
-        itemtable.setModel(itemmodel);
-        tbqty.setEnabled(true);
-        tbitem.setEnabled(true);
-        tbprice.setEnabled(true);
-        tbcc.setEnabled(true);
-        tbacct.setEnabled(true);
-        override.setEnabled(true);
-        
-        dddept.setEnabled(true);
-        ddvend.setEnabled(true);
-        dddept.setEnabled(true);
-         caldate.setEnabled(true);
-        tbvendnbr.setEnabled(true);
-        btAddItem.setEnabled(true);
-        btdelitem.setEnabled(true);
-         ddtype.setEnabled(true);
-        btprint.setEnabled(true);
-    }
-    
-     public void enableall_onGet() {
-        tbrequestor.setEnabled(false);
-        tbamt.setEnabled(true);
-        tbAR.setEnabled(true);
-        tbcc.setEnabled(true);
-        tbacct.setEnabled(true);
-        tbproject.setEnabled(true);
-        tbdesc.setEnabled(true);
-        tbpo.setEnabled(true);
-        tbstatus.setEnabled(true);
-        btPurchReqNew.setEnabled(false);
-        btPurchReqAdd.setEnabled(false);
-        btPurchReqEdit.setEnabled(true);
-        btPurchReqGet.setEnabled(false);
-        tbsite.setEnabled(true);
-        itemmodel.setRowCount(0);
-        itemtable.setModel(itemmodel);
-        tbqty.setEnabled(true);
-        tbitem.setEnabled(true);
-        tbprice.setEnabled(true);
-        tbcc.setEnabled(true);
-        tbacct.setEnabled(true);
-        override.setEnabled(true);
-        
-        dddept.setEnabled(true);
-        ddvend.setEnabled(true);
-        dddept.setEnabled(true);
-         caldate.setEnabled(true);
-        tbvendnbr.setEnabled(true);
-        btAddItem.setEnabled(true);
-        btdelitem.setEnabled(true);
-         ddtype.setEnabled(true);
-        btprint.setEnabled(true);
-    }
-    
-    public void reinitvariables(String myid) {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        tbnbr.setEnabled(true);
-        tbnbr.setText(myid);
-        tbrequestor.setText("");
-        tbamt.setText("");
-        tbAR.setText("");
-        tbcc.setText("");
-        tbacct.setText("");
-        tbproject.setText("");
-        tbdesc.setText("");
-        tbpo.setText("");
-        tbstatus.setText("");
-        caldate.setDate(now);
-        btPurchReqNew.setEnabled(true);
-        btPurchReqAdd.setEnabled(false);
-        btPurchReqEdit.setEnabled(false);
-        btPurchReqGet.setEnabled(true);
-        tbsite.setText(OVData.getDefaultSite());
-        itemmodel.setRowCount(0);
-        itemtable.setModel(itemmodel);
-        tbqty.setText("");
-        tbitem.setText("");
-        tbprice.setText("");
-        tbcc.setEnabled(false);
-        tbacct.setEnabled(false);
-        override.setEnabled(false);
-        override.setSelected(false);
-        tbsite.setEnabled(false);
+        ArrayList mytype = OVData.getCodeMstrKeyList("REQTYPE");
+        for (int i = 0; i < mytype.size(); i++) {
+            ddtype.addItem(mytype.get(i));
+        }  
+          
+        isLoad = false;
         
         
-        
-        set_admins();
-       
-        itemtable.setModel(itemmodel);
-        initddtype(bsmf.MainFrame.userid);
-        initddvend();
-        initdddept();
-        ddvend.setSelectedIndex(0);
-        dddept.setSelectedIndex(0);
-        jScrollPane2.setVisible(false);
-
     }
     
     public void initvars(String[] arg) {
-         java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        tbrequestor.setText("");
-        tbamt.setText("");
-        tbAR.setText("");
-        tbcc.setText("");
-        tbacct.setText("");
-        tbproject.setText("");
-        tbdesc.setText("");
-        tbpo.setText("");
-        tbstatus.setText("");
-        caldate.setDate(now);
-        btPurchReqNew.setEnabled(true);
-        btPurchReqAdd.setEnabled(false);
-        btPurchReqEdit.setEnabled(false);
-        btPurchReqGet.setEnabled(true);
-        tbsite.setText(OVData.getDefaultSite());
-        itemmodel.setRowCount(0);
-        itemtable.setModel(itemmodel);
-        tbqty.setText("");
-        tbitem.setText("");
-        tbprice.setText("");
-        tbcc.setEnabled(false);
-        tbacct.setEnabled(false);
-        override.setEnabled(false);
-        override.setSelected(false);
-        tbsite.setEnabled(false);
-        tbprice.setBackground(Color.white);
-        tbqty.setBackground(Color.white);
-        
-        
-        
-        set_admins();
        
-        itemtable.setModel(itemmodel);
-        initddtype(bsmf.MainFrame.userid);
-        initddvend();
-        initdddept();
-        if (ddvend.getItemCount() > 0)
-        ddvend.setSelectedIndex(0);
-        
-        if (dddept.getItemCount() > 0)
-        dddept.setSelectedIndex(0);
-        
-        jScrollPane2.setVisible(false);
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btbrowse.setEnabled(true);
         
         
-        
-       if (arg != null && arg.length > 0) {
-           enableall_onGet();
-        getreqmstrinfo(arg[0].toString());
-        btPurchReqAdd.setEnabled(false);
-        jScrollPane2.setVisible(true);
+        if (arg != null && arg.length > 0) {
+            executeTask("get", arg);
         } else {
-            disableall();
-        tbnbr.setEnabled(true);
-        tbnbr.setText("");
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
         }
+          
+    }
+  
+    public void newAction(String x) {
+        setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btprint.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setForeground(Color.blue);
+        tbrequestor.setEnabled(false);
+        tbvendcode.setEnabled(false);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
         
-
     }
     
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+                   tbrequestor.setEnabled(false);
+                   tbvendcode.setEnabled(false);
+                   
+                   if (tbstatus.getText().compareTo("approved") == 0 ) {
+                         tbstatus.setForeground(Color.green);
+                         btupdate.setEnabled(false);
+                   }
+                   if (tbstatus.getText().compareTo("pending") == 0 ) {
+                    tbstatus.setForeground(Color.red);
+                   }
+                   
+                   
+                   
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+        
+    public String[] addRecord(String[] x) {
+         
+         String[] m = new String[2];
+         try {
+
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+                int i = 0;
+                double threshold = 0;
+                boolean preapproved = false;
+                String mystatus = "";
+                String firstapprover = "";
+                boolean sendemail = false;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                 javax.swing.JTable mytable = new javax.swing.JTable();
+                    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{
+                   "id", "owner", "status", "Sequence", "Email"
+                   });
+                
+                 for (i = 0; i < itemtable.getRowCount(); i++) {
+                        if (itemtable.getModel().getValueAt(i, 0) == null &&
+                        itemtable.getModel().getValueAt(i, 1) == null &&
+                        itemtable.getModel().getValueAt(i, 2) == null) {
+                       ((javax.swing.table.DefaultTableModel) itemtable.getModel()).removeRow(i);
+                        }      
+                 }
+                
+                
+                String status = "pending";
+                if (isadmin()) {
+                    preapproved = true;
+                    status = "approved";
+                }
+                
+                
+                // lets trim remarks/desc to 300 chars only
+                String rmks = "";
+                if (tbdesc.getText().length() > 300) {
+                   rmks = tbdesc.getText().substring(0, 300).replace("'", "");
+                } else {
+                    rmks = tbdesc.getText().replace("'", "");
+                }
+                
+                 st.executeUpdate("insert into req_mstr "
+                        + "(req_id, req_name, req_date, req_vendnbr, "
+                        + "req_type, req_dept, req_amt,  req_desc, req_acct, req_cc, req_po, req_status, req_site, req_vend )"
+                        + " values ( " + "'" + tbkey.getText() + "'" + ","
+                        + "'" + tbrequestor.getText() + "'" + ","
+                        + "'" + dfdate.format(caldate.getDate()) + "'" + ","
+                        + "'" + tbvendcode.getText() + "'" + ","
+                        + "'" + ddtype.getSelectedItem() + "'" + ","
+                        + "'" + dddept.getSelectedItem() + "'" + ","
+                        + "'" + tbamt.getText() + "'" + ","
+                        + "'" + rmks + "'" + ","
+                            + "''" + ","
+                            + "''" + ","
+                            + "''" + ","
+                        + "'" + status + "'"  + ","
+                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
+                        + "'" + ddvend.getSelectedItem().toString() + "'"
+                        + ")"
+                        + ";");
+                    
+                    for (i = 0; i < itemtable.getRowCount(); i++) {
+                        
+                        if (itemtable.getModel().getValueAt(i, 0) == null &&
+                        itemtable.getModel().getValueAt(i, 1) == null &&
+                        itemtable.getModel().getValueAt(i, 2) == null) {
+                        continue;
+                        }        
+                        
+                    st.executeUpdate("insert into req_det "
+                        + "(reqd_id, reqd_item, reqd_qty, reqd_price )"
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 0).toString().replace("'", "") + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 1) + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 2) + "'"
+                        + ")"
+                        + ";");
+                        
+                    }
+                    
+                     if (! preapproved) {
+                    res = st.executeQuery("select reqa_owner, reqa_sequence, req_amt_threshold, reqa_email from req_auth inner join req_ctrl where reqa_enabled = '1' order by reqa_sequence ;");
+                   
+                    while (res.next()) {
+                        threshold = res.getDouble("req_amt_threshold");
+                         mymodel.addRow(new Object[]{tbkey.getText().toString(), res.getString("reqa_owner"), "queued", res.getString("reqa_sequence"), res.getString("reqa_email") }); 
+                    }
+                    mytable.setModel(mymodel);
+                    
+                    if (mytable.getRowCount() > 0 ) {
+                     mystatus = "pending";
+                     
+                     for (int j = 0; j < mytable.getRowCount(); j++) {
+                        try {
+                         
+                            // we skip the first sequence authorization if the dollar amount is less than the threshold
+                            // first sequence owner must always be the person making the ultimate decision
+                        if (Double.valueOf(tbamt.getText().toString()) < threshold &&
+                            mytable.getValueAt(j, 3).toString().compareTo("1") == 0) {
+                            continue;
+                        } 
+                        
+                        // this will ensure that the first approver on the list gets the initial email
+                        if (firstapprover.isEmpty()) {
+                        firstapprover = mytable.getValueAt(j,1).toString();
+                        sendemail = Boolean.valueOf(mytable.getValueAt(j, 4).toString());
+                        }
+                        
+                        st.executeUpdate("insert into req_task "
+                        + "(reqt_id, reqt_owner, reqt_status, reqt_sequence, reqt_email "
+                        + ") "
+                        + " values ( " + "'" + mytable.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(j, 1).toString() + "'" + ","
+                        + "'" + mystatus + "'" + ","
+                        + "'" + mytable.getValueAt(j, 3).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(j, 4).toString() + "'"
+                        + ")"
+                        + ";");
+                        
+                        } catch (SQLException s) {
+                            MainFrame.bslog(s);
+                        bsmf.MainFrame.show("cannot insert req_task");
+                        }
+                        mystatus = "queued";
+                      }
+                      
+                 
+                    }
+                     /* let send email to first approver */
+                     if (sendemail) {
+                     String subject = "Requisition Approval Alert";
+                     String body = "Requisition number " + tbkey.getText() + " requires your approval";
+                     String requestor = "Requestor = " + tbrequestor.getText();
+                     String amount = "Amount = " + tbamt.getText();
+                     body = body + "\n" + requestor + "\n" + amount;
+                     OVData.sendEmailByID(firstapprover, subject, body, "");
+                     }
+                  
+                  } else {
+                      noApprovalUpdate(tbkey.getText());
+                    
+                  }
+                    
+                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                   
+               
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+         
+         return m;
+     } 
+      
+    public String[] deleteRecord(String[] x) {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        if (proceed) {
+                   try {
+
+                    Class.forName(bsmf.MainFrame.driver).newInstance();
+                    bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+                    try {
+                        Statement st = bsmf.MainFrame.con.createStatement();
+                        ResultSet res = null;
+ 
+                       
+                        st.executeUpdate("delete from req_det where reqd_id = " + "'" + x[0] + "'" + ";"); 
+                        st.executeUpdate("delete from req_task where reqt_id = " + "'" + x[0] + "'" + ";"); 
+                        
+                        
+                        int i = st.executeUpdate("delete from req_mstr where req_id = " + "'" + x[0] + "'" + ";");   
+                            if (i > 0) {
+                                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                            }
+                        } catch (SQLException s) {
+                            MainFrame.bslog(s);
+                        m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
+                    }
+                    bsmf.MainFrame.con.close();
+                } catch (Exception e) {
+                    MainFrame.bslog(e);
+                }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled};  
+        }
+           return m;
+    }
+    
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+       try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
+               
+                boolean isadmin = false;
+       
+       for (String admin : admins) {
+          if (admin.compareTo(bsmf.MainFrame.userid) == 0) {
+              isadmin = true;
+          }  
+        }
+       for (int i = 0; i < reqtask.getRowCount(); i++) {
+           if (reqtask.getValueAt(i, 2).toString().compareTo("approved") == 0) 
+             proceed = false;
+       }
+       
+      
+       if (proceed || isadmin) {
+                
+                 st.executeUpdate("update req_mstr set " + 
+                       " req_desc = " + "'" + tbdesc.getText() + "'" + "," +
+                       " req_vend = " + "'" + ddvend.getSelectedItem() + "'" + "," +
+                       " req_vendnbr = " + "'" + tbvendcode.getText() + "'" + "," +        
+                       " req_type = " + "'" + ddtype.getSelectedItem() + "'" + "," +
+                       " req_dept = " + "'" + dddept.getSelectedItem() + "'" + "," +
+                       " req_amt = " + "'" + tbamt.getText() + "'" + "," +
+                       " req_acct = " + "'" + tbacct.getText() + "'" + "," +
+                       " req_cc = " + "'" + "" + "'" + "," +
+                       " req_AR = " + "'" + tbAR.getText() + "'" + "," +
+                       " req_proj = " + "'" + tbproject.getText() + "'" +                      
+                       " where " + 
+                        " req_id = " + "'" + tbkey.getText() + "'" +  ";");
+
+                 // let's remove all items associated with this req id
+                       st.executeUpdate("delete from req_det where reqd_id = " + "'" + tbkey.getText() + "'" +  ";");
+                    //  now add the new ones just updated
+                       for (int i = 0; i < itemtable.getRowCount(); i++) {
+                        
+                        if (itemtable.getModel().getValueAt(i, 0) == null &&
+                        itemtable.getModel().getValueAt(i, 1) == null &&
+                        itemtable.getModel().getValueAt(i, 2) == null) {
+                        continue;
+                        }        
+                        
+                    st.executeUpdate("insert into req_det "
+                        + "(reqd_id, reqd_item, reqd_qty, reqd_price )"
+                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 0) + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 1) + "'" + ","
+                        + "'" + itemtable.getValueAt(i, 2) + "'"
+                        + ")"
+                        + ";");
+                        
+                    }
+       } // proceed    
+                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+                    
+                    
+                    // btQualProbAdd.setEnabled(false);
+               
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            MainFrame.bslog(e);
+        }
+     return m;
+    }
+         
+    public String[] getRecord(String[] x) {
+        String[] m = new String[2];
+         reqtask.setRowCount(0);
+        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String blanket = "";
+                
+                res = st.executeQuery("select * from req_mstr where req_id = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbdesc.setText(res.getString("req_desc"));
+                    ddvend.setSelectedItem(res.getString("req_vend"));
+                    tbvendcode.setText(res.getString("req_vendnbr"));
+                    ddtype.setSelectedItem(res.getString("req_type"));
+                    dddept.setSelectedItem(res.getString("req_dept"));
+                    tbrequestor.setText(res.getString("req_name"));
+                    caldate.setDate(Date.valueOf(res.getString("req_date")));
+                    tbpo.setText(res.getString("req_po"));
+                    tbstatus.setText(res.getString("req_status"));
+                    tbamt.setText(BlueSeerUtils.currformat(res.getString("req_amt")));
+                    tbAR.setText(res.getString("req_AR"));
+                    tbproject.setText(res.getString("req_proj"));
+                    tbacct.setText(res.getString("req_acct"));
+                    ddsite.setSelectedItem(res.getString("req_site"));
+                    ddsite.setEnabled(false);
+                    if (! x[0].isEmpty()) {
+                        tbkey.setText(x[0]);
+                        approverPanel.setVisible(true);
+                    }
+                    tbkey.setEnabled(false);
+                }
+
+                
+               itemmodel.setRowCount(0);
+                res = st.executeQuery("select * from req_det where reqd_id = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    itemmodel.addRow(new Object[]{res.getString("reqd_item"), res.getString("reqd_qty"), BlueSeerUtils.currformat(res.getString("reqd_price"))}); 
+                }
+                itemtable.setModel(itemmodel);
+                
+                
+                res = st.executeQuery("select * from req_task where reqt_id = " + "'" + x[0] + "'" + " order by reqt_sequence ;" );
+                while (res.next()) {
+                reqtask.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("reqt_owner"), res.getString("reqt_status"), res.getString("reqt_sequence")});
+                }
+                
+             //   jTable1.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
+             //   jTable1.getColumn("Sequence").setCellEditor(
+             //           new ButtonEditor(new JCheckBox()));
+               
+                
+                 for (int j = 0; j < approverTable.getRowCount(); j++) {
+                    if (approverTable.getModel().getValueAt(j, 2).toString().compareTo("approved") == 0) {
+                   // jTable1.getColumn("Sequence").setCellEditor(null);
+                        if (! isadmin())
+                        btupdate.setEnabled(false);
+                    }
+                 }
+                
+               // set Action if Record found (i > 0)
+                m = setAction(i);
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
+        }
+     return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean proceed = true;
+                
+        if ( ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty() ) {
+           bsmf.MainFrame.show("must choose a vendor");
+           proceed = false;
+            ddvend.requestFocus();
+            return false;
+        }
+         
+                    
+        return proceed;
+    }
+    
+    
+     // additional functions        
     public void sendEmailToRequestor(String myid, String mypo) {
         
        int i = 0;
@@ -519,7 +802,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         }
        
     }
-      
          
     public boolean isadmin() {
         boolean myreturn = false;
@@ -548,7 +830,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                        admins = res.getString("req_admins").split(",");
                        for (String thisuser : admins) {
                            if (thisuser.compareTo(bsmf.MainFrame.userid) == 0) {
-                                tbcc.setEnabled(true);
                                 tbacct.setEnabled(true);
                                 override.setEnabled(true);
                            }    
@@ -634,105 +915,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         tbamt.setText(String.valueOf(df.format(totamt)));
     }
     
-    
-    public void getreqmstrinfo(String myid) {
-        
-        try {
-            
-            /* set the admins from the req_ctrl file */
-            
-           btPurchReqEdit.setEnabled(true);
-           
-            reqtask.setRowCount(0);
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
-            int d = 0;
-            String uniqpo = null;
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-
-                res = st.executeQuery("select * from req_mstr where req_id = " + "'" + myid + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("req_desc"));
-                    ddvend.setSelectedItem(res.getString("req_vend"));
-                    ddtype.setSelectedItem(res.getString("req_type"));
-                    dddept.setSelectedItem(res.getString("req_dept"));
-                    tbrequestor.setText(res.getString("req_name"));
-                    caldate.setDate(Date.valueOf(res.getString("req_date")));
-                    tbpo.setText(res.getString("req_po"));
-                    tbstatus.setText(res.getString("req_status"));
-                    tbamt.setText(res.getString("req_amt"));
-                    tbAR.setText(res.getString("req_AR"));
-                    tbproject.setText(res.getString("req_proj"));
-                    tbacct.setText(res.getString("req_acct"));
-                    tbcc.setText(res.getString("req_cc"));
-                    tbsite.setText(res.getString("req_site"));
-                    tbsite.setEnabled(false);
-                    if (!myid.isEmpty()) {
-                        tbnbr.setText(myid);
-                        jScrollPane2.setVisible(true);
-                    }
-                    tbnbr.setEnabled(false);
-                }
-
-                
-               itemmodel.setRowCount(0);
-                res = st.executeQuery("select * from req_det where reqd_id = " + "'" + myid + "'" + ";");
-                while (res.next()) {
-                    itemmodel.addRow(new Object[]{res.getString("reqd_item"), res.getString("reqd_qty"), res.getString("reqd_price")}); 
-                }
-                itemtable.setModel(itemmodel);
-                
-                
-                res = st.executeQuery("select * from req_task where reqt_id = " + "'" + myid + "'" + " order by reqt_sequence ;" );
-                while (res.next()) {
-                reqtask.addRow(new Object[]{res.getString("reqt_id"), res.getString("reqt_owner"), res.getString("reqt_status"), res.getString("reqt_sequence")});
-                }
-                jTable1.setModel(reqtask);
-                jTable1.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
-                jTable1.getColumn("Sequence").setCellEditor(
-                        new ButtonEditor(new JCheckBox()));
-               
-                
-                 for (int j = 0; j < jTable1.getRowCount(); j++) {
-                    if (jTable1.getModel().getValueAt(j, 2).toString().compareTo("approved") == 0) {
-                   // jTable1.getColumn("Sequence").setCellEditor(null);
-                        if (! isadmin())
-                        btPurchReqEdit.setEnabled(false);
-                    }
-                 }
-                
-                
-                if (i > 0) {
-                    btPurchReqNew.setEnabled(false);
-                    btPurchReqAdd.setEnabled(false);
-                    btPurchReqGet.setEnabled(false);
-                     if (tbstatus.getText().compareTo("approved") == 0 ) {
-                         tbstatus.setForeground(Color.green);
-                         btPurchReqEdit.setEnabled(false);
-                     }
-                    if (tbstatus.getText().compareTo("pending") == 0 ) {
-                    tbstatus.setForeground(Color.red);
-                    }
-                }
-               
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to retrieve requisition record");
-               
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    
-    
     public void noApprovalUpdate(String myid) {
         int mypo = OVData.getNextNbr("PO");
                          bsmf.MainFrame.show("Req is approved....PO Number = " + String.valueOf(mypo));
@@ -764,7 +946,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                          
     }
     
-      public void approvereq(String myid, String thissequence) {
+    public void approvereq(String myid, String thissequence) {
         
         try {
             
@@ -867,12 +1049,12 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                  // reinit the task list
                 res = st.executeQuery("select * from req_task where reqt_id = " + "'" + myid + "'" + " order by reqt_sequence ;");
                 while (res.next()) {
-                reqtask.addRow(new Object[]{res.getString("reqt_id"), res.getString("reqt_owner"), res.getString("reqt_status"), res.getString("reqt_sequence")});
+                reqtask.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("reqt_owner"), res.getString("reqt_status"), res.getString("reqt_sequence")});
                 }
-                jTable1.setModel(reqtask);
-                jTable1.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
-                jTable1.getColumn("Sequence").setCellEditor(
-                        new ButtonEditor(new JCheckBox()));
+                
+              //  jTable1.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
+               // jTable1.getColumn("Sequence").setCellEditor(
+               //         new ButtonEditor(new JCheckBox()));
                
                 
 
@@ -886,6 +1068,30 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         }
     }
     
+    public void vendChangeEvent(String mykey) {
+      try {
+             Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                tbvendcode.setText("");
+                res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
+                while (res.next()) {
+                    tbvendcode.setText(res.getString("vd_addr"));
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Cannot access vd_addr");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -897,8 +1103,8 @@ public class ReqMaintPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        tbnbr = new javax.swing.JTextField();
-        btPurchReqNew = new javax.swing.JButton();
+        tbkey = new javax.swing.JTextField();
+        btnew = new javax.swing.JButton();
         tbrequestor = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         ddtype = new javax.swing.JComboBox();
@@ -911,57 +1117,60 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         dddept = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        btPurchReqAdd = new javax.swing.JButton();
-        btPurchReqEdit = new javax.swing.JButton();
-        btPurchReqGet = new javax.swing.JButton();
-        tbacct = new javax.swing.JTextField();
-        tbcc = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        btadd = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        btbrowse = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         itemtable = new javax.swing.JTable();
-        tbitem = new javax.swing.JTextField();
-        tbqty = new javax.swing.JTextField();
-        tbprice = new javax.swing.JTextField();
-        btAddItem = new javax.swing.JButton();
-        btdelitem = new javax.swing.JButton();
-        tbpo = new javax.swing.JTextField();
-        tbstatus = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbdesc = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
-        tbvendnbr = new javax.swing.JTextField();
-        tbAR = new javax.swing.JTextField();
-        tbproject = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        tbvendcode = new javax.swing.JTextField();
+        btprint = new javax.swing.JButton();
+        approverPanel = new javax.swing.JScrollPane();
+        approverTable = new javax.swing.JTable();
+        jLabel18 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
+        btAddItem = new javax.swing.JButton();
+        tbitem = new javax.swing.JTextField();
+        btdelitem = new javax.swing.JButton();
+        tbprice = new javax.swing.JTextField();
+        tbqty = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        tbpo = new javax.swing.JTextField();
+        tbacct = new javax.swing.JTextField();
+        tbproject = new javax.swing.JTextField();
         override = new javax.swing.JCheckBox();
-        btprint = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        tbsite = new javax.swing.JTextField();
-        jLabel18 = new javax.swing.JLabel();
+        tbAR = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        tbstatus = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        btdelete = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Requisition Maintenance"));
         jPanel1.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
 
-        jLabel1.setText("Requested By:");
+        jLabel1.setText("Req By:");
 
-        btPurchReqNew.setText("New");
-        btPurchReqNew.addActionListener(new java.awt.event.ActionListener() {
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPurchReqNewActionPerformed(evt);
+                btnewActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Req Number:");
+        jLabel2.setText("Req Nbr:");
 
         jLabel3.setText("Req Type:");
 
@@ -982,34 +1191,30 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel6.setText("Vendor:");
+        jLabel6.setText("VendName:");
 
         jLabel7.setText("Dept:");
 
-        btPurchReqAdd.setText("Submit");
-        btPurchReqAdd.addActionListener(new java.awt.event.ActionListener() {
+        btadd.setText("Submit");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPurchReqAddActionPerformed(evt);
+                btaddActionPerformed(evt);
             }
         });
 
-        btPurchReqEdit.setText("Edit");
-        btPurchReqEdit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPurchReqEditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
-        btPurchReqGet.setText("Get");
-        btPurchReqGet.addActionListener(new java.awt.event.ActionListener() {
+        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPurchReqGetActionPerformed(evt);
+                btbrowseActionPerformed(evt);
             }
         });
-
-        jLabel11.setText("Acct:");
-
-        jLabel12.setText("CC:");
 
         itemtable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1031,51 +1236,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(itemtable);
 
-        tbitem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbitemActionPerformed(evt);
-            }
-        });
-
-        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbqtyFocusLost(evt);
-            }
-        });
-
-        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbpriceFocusLost(evt);
-            }
-        });
-
-        btAddItem.setText("AddItem");
-        btAddItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAddItemActionPerformed(evt);
-            }
-        });
-
-        btdelitem.setText("DelItem");
-        btdelitem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdelitemActionPerformed(evt);
-            }
-        });
-
-        tbpo.setEditable(false);
-
-        tbstatus.setEditable(false);
-        tbstatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbstatusActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setText("PO:");
-
-        jLabel9.setText("Status");
-
         tbdesc.setColumns(20);
         tbdesc.setLineWrap(true);
         tbdesc.setRows(5);
@@ -1084,18 +1244,6 @@ public class ReqMaintPanel extends javax.swing.JPanel {
 
         jLabel10.setText("Remarks");
 
-        jLabel13.setText("AR#");
-
-        jLabel14.setText("Project");
-
-        jLabel15.setText("Item");
-
-        jLabel16.setText("Qty");
-
-        jLabel17.setText("Price");
-
-        override.setText("Override");
-
         btprint.setText("Print");
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1103,7 +1251,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        approverTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -1122,9 +1270,182 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        approverTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                approverTableMouseClicked(evt);
+            }
+        });
+        approverPanel.setViewportView(approverTable);
 
         jLabel18.setText("Site");
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        ddsite.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btAddItem.setText("AddItem");
+        btAddItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAddItemActionPerformed(evt);
+            }
+        });
+
+        tbitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbitemActionPerformed(evt);
+            }
+        });
+
+        btdelitem.setText("DelItem");
+        btdelitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdelitemActionPerformed(evt);
+            }
+        });
+
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpriceFocusLost(evt);
+            }
+        });
+
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
+
+        jLabel15.setText("Item");
+
+        jLabel16.setText("Qty");
+
+        jLabel17.setText("Price");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel15)
+                        .addGap(5, 5, 5))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37)
+                        .addComponent(btAddItem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelitem))
+                    .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAddItem)
+                    .addComponent(btdelitem)
+                    .addComponent(jLabel17))
+                .addContainerGap())
+        );
+
+        jLabel14.setText("Project");
+
+        tbpo.setEditable(false);
+
+        override.setText("Override");
+
+        jLabel11.setText("Acct:");
+
+        jLabel8.setText("PO:");
+
+        jLabel13.setText("Auth:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel11))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel13)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel14))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tbAR, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                        .addComponent(tbpo, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(override)
+                    .addComponent(tbproject, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(tbproject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(override))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbAR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addContainerGap())
+        );
+
+        tbstatus.setEditable(false);
+        tbstatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbstatusActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Status");
+
+        btdelete.setText("Delete");
+
+        jLabel12.setText("VendCode:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1135,426 +1456,158 @@ public class ReqMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addGap(4, 4, 4))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel13))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbAR)
-                            .addComponent(tbpo, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbacct, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbstatus, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-                            .addComponent(tbproject))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(override)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel12))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnew)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btclear))
+                                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tbvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel18))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btprint)
+                                        .addComponent(caldate, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btPurchReqEdit)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btPurchReqAdd)))
-                                .addContainerGap())))
+                                        .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(34, 34, 34)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(10, 10, 10))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(btPurchReqNew)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(btPurchReqGet)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel18)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(28, 28, 28))
-                                        .addComponent(jLabel10)
-                                        .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel15)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(btAddItem)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btdelitem))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                    .addGap(35, 35, 35)
-                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                            .addComponent(jLabel7)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                            .addComponent(jLabel6)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(tbvendnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(ddvend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(caldate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                            .addComponent(jLabel1)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                            .addComponent(jLabel2)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                            .addComponent(jLabel3)
-                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addGap(66, 66, 66)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel16)
-                                                            .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(jLabel17))
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addGap(241, 241, 241)
-                                                        .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                            .addGap(11, 11, 11)))))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 3, Short.MAX_VALUE))))
+                            .addComponent(approverPanel)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(79, 79, 79)
+                                .addComponent(btprint)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btadd)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel18)
+                    .addComponent(btnew)
+                    .addComponent(btbrowse)
+                    .addComponent(btclear)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btPurchReqNew)
-                            .addComponent(btPurchReqGet))
-                        .addGap(90, 90, 90)
-                        .addComponent(jLabel10)
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel18))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbrequestor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1))
+                            .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(tbvendnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)
-                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(caldate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btdelitem)
-                    .addComponent(btAddItem))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btPurchReqEdit)
-                            .addComponent(btPurchReqAdd)
-                            .addComponent(btprint))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9))))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbAR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbproject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14)
-                    .addComponent(override))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(caldate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)))))
+                    .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btupdate)
+                    .addComponent(btadd)
+                    .addComponent(btprint)
+                    .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(btdelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(approverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btPurchReqGetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPurchReqGetActionPerformed
-        enableall_onGet();
-        getreqmstrinfo(tbnbr.getText().toString());
-        btPurchReqAdd.setEnabled(false);
-        jScrollPane2.setVisible(true);
-       this.revalidate();
-    }//GEN-LAST:event_btPurchReqGetActionPerformed
+    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
+       reinitpanels("BrowseUtil", true, new String[]{"reqmaint","req_id"});
+    }//GEN-LAST:event_btbrowseActionPerformed
 
-    private void btPurchReqNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPurchReqNewActionPerformed
-        
-                tbnbr.setText(String.valueOf(OVData.getNextNbr("purchreq")));
-                tbnbr.setEnabled(false);
-                java.util.Date now = new java.util.Date();
-                caldate.setDate(now);
-               
-                tbrequestor.setText(bsmf.MainFrame.userid.toString());
-          
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("purchreq");
+    }//GEN-LAST:event_btnewActionPerformed
 
-                enableall_onNew();
-
-              //  this.revalidate();
-
-          
-    }//GEN-LAST:event_btPurchReqNewActionPerformed
-
-    private void btPurchReqAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPurchReqAddActionPerformed
-       try {
-           boolean canproceed = true;
-           boolean preapproved = false;
-           String mystatus = "";
-           String firstapprover = "";
-           boolean sendemail = false;
-           
-            for (int i = 0; i < itemtable.getRowCount(); i++) {
-             if (itemtable.getModel().getValueAt(i, 0) == null || itemtable.getModel().getValueAt(i, 0).toString().isEmpty()) {
-            bsmf.MainFrame.show("If any cell is occupied...all must be occupied");
-            canproceed = false;    
-            break;    
-            }
-            }
-           
-           
-           if (canproceed) {
-               
-               
-            javax.swing.JTable mytable = new javax.swing.JTable();
-                    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{
-                   "id", "owner", "status", "Sequence", "Email"
-                   });
-           
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                double threshold = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-                
-                 for (i = 0; i < itemtable.getRowCount(); i++) {
-                        if (itemtable.getModel().getValueAt(i, 0) == null &&
-                        itemtable.getModel().getValueAt(i, 1) == null &&
-                        itemtable.getModel().getValueAt(i, 2) == null) {
-                       ((javax.swing.table.DefaultTableModel) itemtable.getModel()).removeRow(i);
-                        }      
-                 }
-                
-                
-                String status = "pending";
-                if (isadmin()) {
-                    preapproved = true;
-                    status = "approved";
-                }
-                
-                
-                // lets trim remarks/desc to 300 chars only
-                String rmks = "";
-                if (tbdesc.getText().length() > 300) {
-                   rmks = tbdesc.getText().substring(0, 300).replace("'", "");
-                } else {
-                    rmks = tbdesc.getText().replace("'", "");
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("insert into req_mstr "
-                        + "(req_id, req_name, req_date, req_vend, "
-                        + "req_type, req_dept, req_amt,  req_desc, req_acct, req_cc, req_po, req_status, req_site, req_vendnbr )"
-                        + " values ( " + "'" + tbnbr.getText().toString() + "'" + ","
-                        + "'" + tbrequestor.getText() + "'" + ","
-                        + "'" + dfdate.format(caldate.getDate()).toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem() + "'" + ","
-                        + "'" + ddtype.getSelectedItem() + "'" + ","
-                        + "'" + dddept.getSelectedItem() + "'" + ","
-                        + "'" + tbamt.getText() + "'" + ","
-                        + "'" + rmks + "'" + ","
-                            + "''" + ","
-                            + "''" + ","
-                            + "''" + ","
-                        + "'" + status.toString() + "'"  + ","
-                        + "'" + tbsite.getText() + "'" + ","
-                        + "'" + tbvendnbr.getText() + "'"
-                        + ")"
-                        + ";");
-                    
-                    for (i = 0; i < itemtable.getRowCount(); i++) {
-                        
-                        if (itemtable.getModel().getValueAt(i, 0) == null &&
-                        itemtable.getModel().getValueAt(i, 1) == null &&
-                        itemtable.getModel().getValueAt(i, 2) == null) {
-                        continue;
-                        }        
-                        
-                    st.executeUpdate("insert into req_det "
-                        + "(reqd_id, reqd_item, reqd_qty, reqd_price )"
-                        + " values ( " + "'" + tbnbr.getText().toString() + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 0).toString().replace("'", "") + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 1) + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 2) + "'"
-                        + ")"
-                        + ";");
-                        
-                    }
-                    
-                  if (! preapproved) {
-                    res = st.executeQuery("select reqa_owner, reqa_sequence, req_amt_threshold, reqa_email from req_auth inner join req_ctrl where reqa_enabled = '1' order by reqa_sequence ;");
-                   
-                    while (res.next()) {
-                        threshold = res.getDouble("req_amt_threshold");
-                         mymodel.addRow(new Object[]{tbnbr.getText().toString(), res.getString("reqa_owner"), "queued", res.getString("reqa_sequence"), res.getString("reqa_email") }); 
-                    }
-                    mytable.setModel(mymodel);
-                    
-                    if (mytable.getRowCount() > 0 ) {
-                     mystatus = "pending";
-                     
-                     for (int j = 0; j < mytable.getRowCount(); j++) {
-                        try {
-                         
-                            // we skip the first sequence authorization if the dollar amount is less than the threshold
-                            // first sequence owner must always be the person making the ultimate decision
-                        if (Double.valueOf(tbamt.getText().toString()) < threshold &&
-                            mytable.getValueAt(j, 3).toString().compareTo("1") == 0) {
-                            continue;
-                        } 
-                        
-                        // this will ensure that the first approver on the list gets the initial email
-                        if (firstapprover.isEmpty()) {
-                        firstapprover = mytable.getValueAt(j,1).toString();
-                        sendemail = Boolean.valueOf(mytable.getValueAt(j, 4).toString());
-                        }
-                        
-                        st.executeUpdate("insert into req_task "
-                        + "(reqt_id, reqt_owner, reqt_status, reqt_sequence, reqt_email "
-                        + ") "
-                        + " values ( " + "'" + mytable.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + mytable.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + mystatus + "'" + ","
-                        + "'" + mytable.getValueAt(j, 3).toString() + "'" + ","
-                        + "'" + mytable.getValueAt(j, 4).toString() + "'"
-                        + ")"
-                        + ";");
-                        
-                        } catch (SQLException s) {
-                            MainFrame.bslog(s);
-                        bsmf.MainFrame.show("cannot insert req_task");
-                        }
-                        mystatus = "queued";
-                      }
-                      
-                 
-                    }
-                     /* let send email to first approver */
-                     if (sendemail) {
-                     String subject = "Requisition Approval Alert";
-                     String body = "Requisition number " + tbnbr.getText() + " requires your approval";
-                     String requestor = "Requestor = " + tbrequestor.getText();
-                     String amount = "Amount = " + tbamt.getText();
-                     body = body + "\n" + requestor + "\n" + amount;
-                     OVData.sendEmailByID(firstapprover, subject, body, "");
-                     }
-                  bsmf.MainFrame.show("Added Requisition Record");    
-                  } else {
-                      noApprovalUpdate(tbnbr.getText());
-                    
-                  }
-                    
-                    
-                    itemmodel.setNumRows(0);
-                    initvars(null);
-                    disableall();
-                    //OVData.sendEmail("terry.vaughn@avmind.com", "test", "test", "");
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add ReqMstr");
-            }
-             bsmf.MainFrame.con.close();
-             
-             
-             
-           } // if can proceed
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_btPurchReqAddActionPerformed
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+       if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btaddActionPerformed
 
     private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed
         // TODO add your handling code here:
@@ -1614,8 +1667,11 @@ public class ReqMaintPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tbstatusActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
-         
-       
+        if (! isLoad) {
+         if (ddvend.getItemCount() > 0) {
+            vendChangeEvent(ddvend.getSelectedItem().toString());
+         } // if ddvend has a list
+        }
     }//GEN-LAST:event_ddvendActionPerformed
 
     private void ddvendItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddvendItemStateChanged
@@ -1631,7 +1687,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
               
                 res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString().replace("'", "") + "'"  + ";");
                 while (res.next()) {
-                tbvendnbr.setText(res.getString("vd_addr"));
+                tbvendcode.setText(res.getString("vd_addr"));
                     
                 }
 
@@ -1646,82 +1702,13 @@ public class ReqMaintPanel extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_ddvendItemStateChanged
 
-    private void btPurchReqEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPurchReqEditActionPerformed
-       boolean canproceed = true;
-       boolean isadmin = false;
-       
-       for (String admin : admins) {
-          if (admin.compareTo(bsmf.MainFrame.userid) == 0) {
-              isadmin = true;
-          }  
-        }
-       for (int i = 0; i < reqtask.getRowCount(); i++) {
-           if (reqtask.getValueAt(i, 2).toString().compareTo("approved") == 0) 
-             canproceed = false;
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+          if (! validateInput("updateRecord")) {
+           return;
        }
-       
-      
-       if (canproceed || isadmin) {
-           
-           try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-               st.executeUpdate("update req_mstr set " + 
-                       " req_desc = " + "'" + tbdesc.getText() + "'" + "," +
-                       " req_vend = " + "'" + ddvend.getSelectedItem() + "'" + "," +
-                       " req_type = " + "'" + ddtype.getSelectedItem() + "'" + "," +
-                       " req_dept = " + "'" + dddept.getSelectedItem() + "'" + "," +
-                       " req_amt = " + "'" + tbamt.getText() + "'" + "," +
-                       " req_acct = " + "'" + tbacct.getText() + "'" + "," +
-                       " req_cc = " + "'" + tbcc.getText() + "'" + "," +
-                       " req_AR = " + "'" + tbAR.getText() + "'" + "," +
-                       " req_proj = " + "'" + tbproject.getText() + "'" +                      
-                       " where " + 
-                        " req_id = " + "'" + tbnbr.getText() + "'" +  ";");
-
-                 // let's remove all items associated with this req id
-                       st.executeUpdate("delete from req_det where reqd_id = " + "'" + tbnbr.getText() + "'" +  ";");
-                    //  now add the new ones just updated
-                       for (int i = 0; i < itemtable.getRowCount(); i++) {
-                        
-                        if (itemtable.getModel().getValueAt(i, 0) == null &&
-                        itemtable.getModel().getValueAt(i, 1) == null &&
-                        itemtable.getModel().getValueAt(i, 2) == null) {
-                        continue;
-                        }        
-                        
-                    st.executeUpdate("insert into req_det "
-                        + "(reqd_id, reqd_item, reqd_qty, reqd_price )"
-                        + " values ( " + "'" + tbnbr.getText().toString() + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 0) + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 1) + "'" + ","
-                        + "'" + itemtable.getValueAt(i, 2) + "'"
-                        + ")"
-                        + ";");
-                        
-                    }
-               
-               
-               bsmf.MainFrame.show("Updated Requisition Successfully");
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get selected vd_name");
-            }
-              } catch (Exception e) {
-            MainFrame.bslog(e);
-        }   
-                
-           
-       } else {
-           bsmf.MainFrame.show("Partially or Completely approved...cannot edit");
-       }
-       
-       
-    }//GEN-LAST:event_btPurchReqEditActionPerformed
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
@@ -1734,7 +1721,7 @@ public class ReqMaintPanel extends javax.swing.JPanel {
 
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
-                hm.put("myid",  tbnbr.getText().toString());
+                hm.put("myid",  tbkey.getText().toString());
                 hm.put("imagepath", "images/avmlogo.png");
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -1784,18 +1771,41 @@ public class ReqMaintPanel extends javax.swing.JPanel {
             tbqty.setBackground(Color.white);
         }
     }//GEN-LAST:event_tbqtyFocusLost
+
+    private void approverTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_approverTableMouseClicked
+        int row = approverTable.rowAtPoint(evt.getPoint());
+        int col = approverTable.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+            if (approverTable.getModel().getValueAt(row, 2).toString().compareTo("pending") == 0) {
+               if (approverTable.getModel().getValueAt(row, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) {
+                approvereq(tbkey.getText(), approverTable.getValueAt(row, 3).toString());
+               } else {
+                bsmf.MainFrame.show("you do not have access to approve this action");  
+               }
+            }
+        }
+    }//GEN-LAST:event_approverTableMouseClicked
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JScrollPane approverPanel;
+    public javax.swing.JTable approverTable;
     private javax.swing.JButton btAddItem;
-    private javax.swing.JButton btPurchReqAdd;
-    private javax.swing.JButton btPurchReqEdit;
-    private javax.swing.JButton btPurchReqGet;
-    private javax.swing.JButton btPurchReqNew;
+    private javax.swing.JButton btadd;
+    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btprint;
+    private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser caldate;
     private javax.swing.JComboBox dddept;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JComboBox ddvend;
     private javax.swing.JTable itemtable;
@@ -1818,25 +1828,23 @@ public class ReqMaintPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    public javax.swing.JTable jTable1;
     private javax.swing.JCheckBox override;
     private javax.swing.JTextField tbAR;
     private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbamt;
-    private javax.swing.JTextField tbcc;
     private javax.swing.JTextArea tbdesc;
     private javax.swing.JTextField tbitem;
-    private javax.swing.JTextField tbnbr;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbproject;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrequestor;
-    private javax.swing.JTextField tbsite;
     private javax.swing.JTextField tbstatus;
-    private javax.swing.JTextField tbvendnbr;
+    private javax.swing.JTextField tbvendcode;
     // End of variables declaration//GEN-END:variables
 }

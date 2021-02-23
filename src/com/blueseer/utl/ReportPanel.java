@@ -115,11 +115,12 @@ public int[] mywidth;
              TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
-        if (arg[0].equals("ReqBrowseAll")) {
+         if (arg[0].equals("ReqBrowseAll")) {
              mymodel = DTData.getReqAll();
-              TableReport.setModel(mymodel);
+             TableReport.setModel(mymodel);
              TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
+       
         if (arg[0].equals("ReqPendRpt1")) {
              mymodel = DTData.getReqPending();
               TableReport.setModel(mymodel);

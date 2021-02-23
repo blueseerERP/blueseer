@@ -968,7 +968,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void vendChangeEvent(String mykey) {
         
-       
+        // reset
+        lbvend.setText("");
+        ddshipvia.setSelectedIndex(0);
+        ddcurr.setSelectedIndex(0);
       try {
 
              Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1715,11 +1718,12 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_ddpartActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
-
+    if (! isLoad) {
         if (ddvend.getItemCount() > 0) {
            jTabbedPane1.setEnabledAt(1, true);
            vendChangeEvent(ddvend.getSelectedItem().toString());
         } // if ddvend has a list
+    }
     }//GEN-LAST:event_ddvendActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed

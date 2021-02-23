@@ -4365,20 +4365,18 @@ public class DTData {
            return mymodel;
        }  
        
-        public static DefaultTableModel getReqAll() {
+       public static DefaultTableModel getReqAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"select", "ReqID", "Requestor", "Date", "PO", "Vend", "Amt", "Status"}) 
-                   {
+                    {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 6 )       
-                            return Double.class;  
-                        else if (col == 0) 
-                            return ImageIcon.class;
+                        if (col == 0)       
+                            return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
-                        };
+                        }; 
            
            try{
             Class.forName(driver).newInstance();
@@ -4387,17 +4385,22 @@ public class DTData {
             ResultSet res = null;
             try{
 
-             res = st.executeQuery("SELECT * FROM req_mstr order by req_id desc;");
-
+            
+                    res = st.executeQuery(" select * " +
+                        " FROM  req_mstr order by req_id desc ;");
+               
+                
+                  
                 while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
-                                res.getString("req_name"),
-                                res.getString("req_date"),
-                                res.getString("req_po"),
-                                res.getString("req_vend"),
-                                res.getDouble("req_amt"),
-                                res.getString("req_status")
-                                });
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("req_id"),
+                        res.getString("req_name"),
+                        res.getString("req_date"),
+                        res.getString("req_po"),
+                        res.getString("req_vend"),
+                        res.getDouble("req_amt"),
+                        res.getString("req_status")
+                        });
                 }
                
            }
@@ -4412,9 +4415,69 @@ public class DTData {
         catch (Exception e){
             MainFrame.bslog(e);
         }
+           return mymodel;
+       } 
+        
+       
+        public static DefaultTableModel getReqBrowseUtil(String str, int state, String myfield) {
            
+           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"select", "ReqID", "Requestor", "Date", "PO", "Vend", "Amt", "Status"}) 
+                    {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
            
-           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+
+             if (state == 1) { // begins
+                    res = st.executeQuery(" select * " +
+                        " FROM  req_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by req_id desc ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("select * " +
+                        " FROM  req_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by req_id desc ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select *  " +
+                        " FROM  req_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by req_id desc ;");
+                 }   
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("req_id"),
+                        res.getString("req_name"),
+                        res.getString("req_date"),
+                        res.getString("req_po"),
+                        res.getString("req_vend"),
+                        res.getDouble("req_amt"),
+                        res.getString("req_status")
+                        });
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+          } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
            return mymodel;
        } 
         
