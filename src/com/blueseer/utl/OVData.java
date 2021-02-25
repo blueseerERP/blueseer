@@ -4813,8 +4813,9 @@ public class OVData {
 
                     if (j == 0) {
                         st.executeUpdate(" insert into cm_mstr "
-                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, "
-                                + " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                                + "(cm_code, cm_site, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, " +
+                                  " cm_dateadd, cm_datemod, cm_usermod, "
+                                + " cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
                                 + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
                                 + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
                                 + " values ( "
@@ -4827,10 +4828,10 @@ public class OVData {
                                 + "'" + ld[6] + "'" + ","
                                 + "'" + ld[7] + "'" + ","
                                 + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'" + ","        
                                 + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
                                 + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
                                 + "'" + bsmf.MainFrame.userid + "'" + ","
-                                + "'" + ld[9] + "'" + ","
                                 + "'" + ld[10] + "'" + ","
                                 + "'" + ld[11] + "'" + ","
                                 + "'" + ld[12] + "'" + ","
@@ -4852,7 +4853,8 @@ public class OVData {
                                 + "'" + ld[28] + "'" + ","
                                 + "'" + ld[29] + "'" + ","
                                 + "'" + ld[30] + "'" + ","
-                                + "'" + ld[31] + "'"
+                                + "'" + ld[31] + "'" + ","
+                                + "'" + ld[32] + "'"
                                 + " );"
                         );
 
