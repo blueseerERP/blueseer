@@ -47,7 +47,7 @@ del my.cnf >nul 2>&1
 
 @echo "creating database schema...."
 mysql --defaults-extra-file=my.cnf -e "drop database if exists %DB%;"  
-mysql --defaults-extra-file=my.cnf -e "create database if not exists %DB%;"
+mysql --defaults-extra-file=my.cnf -e "create database if not exists %DB% character set utf8mb4 collate utf8mb4_unicode_ci;"
 mysql --defaults-extra-file=my.cnf %DB%  <blueseer.schema 
 
 
