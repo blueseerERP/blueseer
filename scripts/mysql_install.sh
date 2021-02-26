@@ -62,7 +62,7 @@ cd data
 
 echo "creating database schema...."
 mysql -e "drop database if exists $DB;" -u $ROOT  
-mysql -e "create database if not exists $DB;" -u $ROOT  
+mysql -e "create database if not exists $DB character set utf8mb4 collate utf8mb4_unicode_ci;" -u $ROOT  
 #  The next line loads the database and table definitions
 mysql $DB -u $ROOT  <blueseer.schema 
 
