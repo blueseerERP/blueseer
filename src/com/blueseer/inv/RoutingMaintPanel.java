@@ -201,10 +201,10 @@ public class RoutingMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setText("");
         ddop.removeAllItems();
         tbopdesc.setText("");
-        tbrunhoursinverted.setText("");
+        tbrunhoursinverted.setText("0.00");
        
         tbrunhours.setText("");
-        tbsetuphours.setText("");
+        tbsetuphours.setText("0.00");
         cbmilestone.setSelected(false);
         
         ddsite.removeAllItems();
