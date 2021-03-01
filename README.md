@@ -2,7 +2,7 @@
 <!-- <img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP"> -->
 <h3>Developer: Terry Vaughn</h3>
 <h3>latest release version: 5.0</h3>
-<h3>latest release date: 2021-02-13</h3>
+<h3>latest release date: 2021-02-10</h3>
 <h3>programming language: Java programming language</h3> 
 <h3>operating system: Cross-Platform</h3>
 <h3>genre:  Enterprise Resource Planning (ERP), Accounting, Personal Finance</h3> 
