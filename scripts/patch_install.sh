@@ -20,9 +20,10 @@ then
 	echo "copying zebra directory..."
 	sleep 2
 	cp -r $currdir/zebra ../../zebra
-	echo "copying blueseer.jar..."
+	echo "copying jar files..."
 	sleep 2
 	cp -r $currdir/blueseer.jar ../../dist/
+	cp -r $currdir/bsmf.jar ../../dist/
 	echo "copying patch number..."
 	sleep 2
 	cp -r $currdir/.patch ../../

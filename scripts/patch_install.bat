@@ -40,8 +40,9 @@ exit
 copy %~dp0\jasper ..\..\jasper
 @echo "BlueSeer PATCH NOTE:  copying zebra directory to installation folder"
 copy %~dp0\zebra ..\..\zebra
-@echo "BlueSeer PATCH NOTE:  copying jar to dist folder"
+@echo "BlueSeer PATCH NOTE:  copying jars to dist folder"
 copy %~dp0\blueseer.jar ..\..\dist\
+copy %~dp0\bsmf.jar ..\..\dist\
 @echo "BlueSeer PATCH NOTE:  copying .patch file to root folder"
 copy %~dp0\.patch ..\..\
 
