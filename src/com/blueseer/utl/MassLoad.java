@@ -262,7 +262,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("ps_child,s,18,mandatory,validated");
         list.add("ps_type,s,10,mandatory,validated (P or M or A)");
         list.add("ps_qty_per,d,10,mandatory,unvalidated");
-        list.add("ps_desc,s,30,mandatory,validated");
+        list.add("ps_desc,s,30,mandatory,unvalidated");
         list.add("ps_op,s,3,mandatory,validated");
         list.add("ps_sequence,i,4,optional,unvalidated");
         list.add("ps_userid,s,8,optional,unvalidated");
@@ -294,7 +294,7 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                 }
                 if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
-                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer (set 0 if unknown)" + "\n" );
                        proceed = false;
                 }
                 if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {

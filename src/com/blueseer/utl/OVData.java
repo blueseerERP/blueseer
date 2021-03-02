@@ -9909,7 +9909,7 @@ public class OVData {
                                     " where sod_part = " + "'" + item + "'" + 
                                     " AND so_status <> 'close' " + 
                                     " AND so_site = " + "'" + site + "'" +   
-                                    " AND so_nbr <> " + "'" + currentorder + "'" +
+                                  //  " AND so_nbr <> " + "'" + currentorder + "'" +
                                     " group by sod_part ;");
 
                     while (res.next()) {

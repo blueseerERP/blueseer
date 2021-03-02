@@ -3206,7 +3206,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
            double qty = 0.0;
            String prefix = "";
-           if (OVData.isOrderAutoAllocate()) {
+           if (cbisallocated.isSelected()) {
                prefix = "QOH Unallocated=";
            qty = OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
            
