@@ -10,7 +10,7 @@ read dbtype
 
 currdir=$(pwd)
 
-if [[ -d "../../jasper ]];
+if [[ -d "../../jasper" ]];
 then
 	echo "matched directory for patch install "
 	sleep 3
@@ -41,7 +41,7 @@ then
 else
 	echo "loading mysql relevant schema changes ..."
 	sleep 2
-	./mysql_install.sh
+	./mysql_patch.sh
 fi
 
 echo ""
@@ -49,4 +49,3 @@ echo ""
 echo "Patch Install complete!"
 echo ""
 echo ""
-
