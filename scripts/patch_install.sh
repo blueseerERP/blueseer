@@ -10,6 +10,12 @@ read dbtype
 
 currdir=$(pwd)
 
+cd ../../data
+datadir=$(pwd)
+
+cd $currdir
+cp .patchsqlv50 /$datadir/
+
 if [[ -d "../../jasper" ]];
 then
 	echo "matched directory for patch install "
@@ -37,7 +43,9 @@ if [[ dbtype == "1" ]];
 then
 	echo "loading sqlite relevant schema changes ..."
 	sleep 2
-	../../data/sqlite3 bsdb.db <.patchsqlv50
+	cd $datadir
+	./sqlite3 bsdb.db <.patchsqlv50
+	cd $currdir
 else
 	echo "loading mysql relevant schema changes ..."
 	sleep 2
