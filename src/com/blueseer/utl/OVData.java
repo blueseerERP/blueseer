@@ -3670,7 +3670,7 @@ public class OVData {
 
             
     public static boolean addItemMaster(ArrayList<String> list) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                  
                  java.util.Date now = new java.util.Date();
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -3749,7 +3749,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
           } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -3763,7 +3763,7 @@ public class OVData {
              
              
     public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost, String date) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -3832,7 +3832,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -3845,7 +3845,7 @@ public class OVData {
              }
              
     public static boolean addGenericCode(ArrayList<String> list) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -3883,7 +3883,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -3897,7 +3897,7 @@ public class OVData {
              
     
     public static boolean addCarrier(ArrayList<String> list) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -3942,7 +3942,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -3955,7 +3955,7 @@ public class OVData {
              } 
     
     public static boolean addEDIAttributeRecord(String tp, String doc, String dir, String key, String value) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -3990,7 +3990,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4004,7 +4004,7 @@ public class OVData {
     
               
     public static boolean addEDIMstrRecord(ArrayList<String> list) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4065,7 +4065,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4078,7 +4078,7 @@ public class OVData {
              } 
     
     public static boolean addBOMMstrRecord(ArrayList<String> list) {
-        boolean myreturn = true;
+        boolean myreturn = false;
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4125,7 +4125,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                 if (res != null) {
                     res.close();
@@ -4145,7 +4145,7 @@ public class OVData {
 
 
     public static boolean addCustXref(ArrayList<String> list) {
-                 boolean myreturn = true;
+                 boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4190,7 +4190,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4203,7 +4203,7 @@ public class OVData {
              } 
              
     public static boolean addVendXref(ArrayList<String> list) {
-                   boolean myreturn = true;
+                   boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4248,7 +4248,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4261,7 +4261,7 @@ public class OVData {
              } 
            
      public static boolean addGLAcctBalances(ArrayList<String> list) {
-            boolean myreturn = true;
+            boolean myreturn = false;
                   
             DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -4295,7 +4295,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             }
             con.close();
         } catch (Exception e) {
@@ -4307,7 +4307,7 @@ public class OVData {
    
                
     public static boolean addInvAdjustments(ArrayList<String> list) {
-                   boolean myreturn = true;
+                   boolean myreturn = false;
                    boolean isError = false;
                    
                    String op = "";
@@ -4382,7 +4382,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             }
             con.close();
         } catch (Exception e) {
@@ -4392,7 +4392,7 @@ public class OVData {
              } 
              
     public static boolean addCustPriceList(ArrayList<String> list) {
-                  boolean myreturn = true;
+                  boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4441,7 +4441,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4454,7 +4454,7 @@ public class OVData {
              } 
               
     public static boolean addVendPriceList(ArrayList<String> list) {
-                   boolean myreturn = true;
+                   boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4502,7 +4502,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4515,7 +4515,7 @@ public class OVData {
              } 
               
     public static boolean addVendMstr(ArrayList<String> list) {
-        boolean myreturn = true;
+        boolean myreturn = false;
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4582,7 +4582,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                 if (res != null) {
                     res.close();
@@ -4601,7 +4601,7 @@ public class OVData {
     }
 
     public static boolean addCustMstr(ArrayList<String> list) {
-        boolean myreturn = true;
+        boolean myreturn = false;
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4675,7 +4675,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                 if (res != null) {
                     res.close();
@@ -4792,7 +4792,7 @@ public class OVData {
 
     
     public static boolean addCustMstrWShipTo(ArrayList<String> list) {
-        boolean myreturn = true;
+        boolean myreturn = false;
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4868,14 +4868,14 @@ public class OVData {
                                 + " values ( "
                                 + "'" + ld[0] + "'" + ","
                                 + "'" + ld[0] + "'" + ","
-                                + "'" + ld[1] + "'" + ","
                                 + "'" + ld[2] + "'" + ","
                                 + "'" + ld[3] + "'" + ","
                                 + "'" + ld[4] + "'" + ","
                                 + "'" + ld[5] + "'" + ","
                                 + "'" + ld[6] + "'" + ","
                                 + "'" + ld[7] + "'" + ","
-                                + "'" + ld[8] + "'"
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'"
                                 + " );"
                         );
 
@@ -4885,7 +4885,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                 if (res != null) {
                     res.close();
@@ -4904,7 +4904,7 @@ public class OVData {
     }
 
     public static boolean addCustShipToMstr(ArrayList<String> list) {
-        boolean myreturn = true;
+        boolean myreturn = false;
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -4954,7 +4954,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = false;
+                myreturn = true;
             } finally {
                 if (res != null) {
                     res.close();
@@ -9911,7 +9911,7 @@ public class OVData {
                                     " where sod_part = " + "'" + item + "'" + 
                                     " AND so_status <> 'close' " + 
                                     " AND so_site = " + "'" + site + "'" +   
-                                    " AND so_nbr <> " + "'" + currentorder + "'" +
+                                  //  " AND so_nbr <> " + "'" + currentorder + "'" +
                                     " group by sod_part ;");
 
                     while (res.next()) {

@@ -248,7 +248,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(OVData.addItemMaster(list))
+                   if(! OVData.addItemMaster(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -262,7 +262,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("ps_child,s,18,mandatory,validated");
         list.add("ps_type,s,10,mandatory,validated (P or M or A)");
         list.add("ps_qty_per,d,10,mandatory,unvalidated");
-        list.add("ps_desc,s,30,mandatory,validated");
+        list.add("ps_desc,s,30,mandatory,unvalidated");
         list.add("ps_op,s,3,mandatory,validated");
         list.add("ps_sequence,i,4,optional,unvalidated");
         list.add("ps_userid,s,8,optional,unvalidated");
@@ -294,7 +294,7 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                 }
                 if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
-                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer (set 0 if unknown)" + "\n" );
                        proceed = false;
                 }
                 if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
@@ -339,7 +339,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addBOMMstrRecord(list)) 
+                   if (! OVData.addBOMMstrRecord(list)) 
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -422,7 +422,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             
              if (proceed) {
-                   if(OVData.addGLAcctBalances(list))
+                   if(! OVData.addGLAcctBalances(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -496,7 +496,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             
              if (proceed) {
-                   if(OVData.addGenericCode(list))
+                   if(! OVData.addGenericCode(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -592,7 +592,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addCustXref(list))
+                   if (! OVData.addCustXref(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -660,7 +660,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addCarrier(list)) 
+                   if (! OVData.addCarrier(list)) 
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -742,7 +742,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addEDIMstrRecord(list)) 
+                   if (! OVData.addEDIMstrRecord(list)) 
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -838,7 +838,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
            fsr.close();
              if (proceed) {
-                   if(OVData.addVendXref(list))
+                   if(! OVData.addVendXref(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -959,7 +959,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(OVData.addInvAdjustments(list))
+                   if(! OVData.addInvAdjustments(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -1056,7 +1056,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addCustPriceList(list))
+                   if (! OVData.addCustPriceList(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -1151,7 +1151,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addVendPriceList(list))
+                   if (! OVData.addVendPriceList(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -1277,7 +1277,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addVendMstr(list))
+                   if (! OVData.addVendMstr(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -1411,7 +1411,7 @@ public class MassLoad extends javax.swing.JPanel {
             
             
              if (proceed) {
-                   if (OVData.addCustMstrWShipTo(list))
+                   if (! OVData.addCustMstrWShipTo(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
@@ -1448,7 +1448,6 @@ public class MassLoad extends javax.swing.JPanel {
                    proceed = false;
         }
         
-       
         
         if (rs.length == list.size()) {
             // now check individual fields
@@ -1510,7 +1509,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if (OVData.addCustShipToMstr(list))
+                   if (! OVData.addCustShipToMstr(list))
                    bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
             } else {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");

@@ -1,0 +1,5 @@
+/* updates for patch 9 */
+insert into jasp_mstr (jasp_func) select 'itemQOHRange' as jasp_func from jasp_mstr where not exists (select * from jasp_mstr where jasp_func = 'itemQOHRange') limit 1;
+update jasp_mstr set jasp_desc = 'Item QOH By Item', jasp_group = 'InvRptGroup', jasp_sequence = '4', jasp_format = 'L6' where jasp_func = 'itemQOHRange';
+insert into jasp_mstr (jasp_func) select 'itemAllocatedToOrder' as jasp_func from jasp_mstr where not exists (select * from jasp_mstr where jasp_func = 'itemAllocatedToOrder') limit 1;
+update jasp_mstr set jasp_desc = 'Order Allocations By Item', jasp_group = 'InvRptGroup', jasp_sequence = '5', jasp_format = 'L7' where jasp_func = 'itemAllocatedToOrder';

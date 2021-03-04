@@ -3206,7 +3206,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
            double qty = 0.0;
            String prefix = "";
-           if (OVData.isOrderAutoAllocate()) {
+           if (cbisallocated.isSelected()) {
                prefix = "QOH Unallocated=";
            qty = OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
            
@@ -3230,8 +3230,22 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void btaddshiptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddshiptoActionPerformed
         // + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode, cms_contact, cms_phone, cms_email, cms_misc ) " 
        
+        boolean error = false;
+        
         if (tbshiptocode.getText().isEmpty()) {
             bsmf.MainFrame.show("Must enter a legitimate value in the code field");
+            return;
+        }
+        if (tbshiptocode.getText().length() > 10) {
+            bsmf.MainFrame.show("ship to code cannot be larger than 10 chars");
+            return;
+        }
+        if (tbzip.getText().length() > 10) {
+            bsmf.MainFrame.show("zip code cannot be larger than 10 chars");
+            return;
+        }
+        if (tbname.getText().length() > 50) {
+            bsmf.MainFrame.show("ship to name cannot be larger than 10 chars");
             return;
         }
         
@@ -3258,10 +3272,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             
             st.add(list);
            
-            OVData.addCustShipToMstr(st);
+           error = OVData.addCustShipToMstr(st);
+           if (! error) {
             bsmf.MainFrame.show("Added shipto code");
             reinitCustandShip(ddcust.getSelectedItem().toString(), tbshiptocode.getText()); 
-            
+           }
         }
     }//GEN-LAST:event_btaddshiptoActionPerformed
 

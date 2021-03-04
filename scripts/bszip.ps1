@@ -14,12 +14,15 @@ $patchzip = "blueseer.patch.ver.50." + $pc + ".zip"
 mkdir $patchdir
 cp .patch $patchdir\
 cp .patch ..\
-cp .patchsqlitev50 $patchdir\
+cp .patchsqlv50 $patchdir\
 cp patch_install.bat $patchdir\
+cp patch_install.sh $patchdir\
+cp ..\sf\patches\patch_instructions.pdf $patchdir\
 cp ..\dist\blueseer.jar $patchdir\
+cp ..\dist\bsmf.jar $patchdir\
 cp ..\sf\jasper $patchdir\ -recurse
 cp ..\sf\zebra $patchdir\ -recurse
-compress-archive -path $patchdir -destinationpath $wip\$patchzip
+compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
 rmdir $patchdir -force -recurse
 
 rm $wip\blueseer.mysql.win.v50.zip
