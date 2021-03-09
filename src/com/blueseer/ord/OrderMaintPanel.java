@@ -29,9 +29,17 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,11 +58,14 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
@@ -81,8 +92,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
-                
-               
+     
+                public static JFrame frame = new JFrame("Choose Item:");
+                public static javax.swing.table.DefaultTableModel lookUpModel = null;
+                public static JTable lookUpTable = new JTable();
+                public static MouseListener mllu = null;
     
     // global datatablemodel declarations
     OrderMaintPanel.MyTableModel myorddetmodel = new OrderMaintPanel.MyTableModel(new Object[][]{},
@@ -1729,6 +1743,112 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
       return canproceed;   
     }
     
+    public static void lookUpFrameCustItem() {
+        if (frame != null) {
+            frame.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        }
+        //MouseListener[] mllist = lookUpTable.getMouseListeners();
+       // for (MouseListener ml : mllist) {  
+       //     System.out.println(ml.toString());
+            // lookUpTable.removeMouseListener(ml);
+       // }
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        lookUpModel = DTData.getCustXrefBrowseUtil(input.getText(), 0, "cup_citem");
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            frame.setTitle("No Records Found!");
+        } else {
+            frame.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            JTable target = (JTable)e.getSource();
+            int row = target.getSelectedRow();
+            int column = target.getSelectedColumn();
+            if ( column == 0) {
+            ddpart.setSelectedItem(target.getValueAt(row,3).toString());
+            frame.dispose();
+            }
+        }
+        };
+       lookUpTable.addMouseListener(mllu);
+        frame = new JFrame("Enter Search Text:");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.add(input, BorderLayout.NORTH);
+        frame.add( scrollPane );
+        frame.pack();
+        frame.setLocationRelativeTo( null );
+        frame.setVisible(true);
+    }
+
+    public static void lookUpFrameItemDesc() {
+        if (frame != null) {
+            frame.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        }
+        // MouseListener[] mllist = lookUpTable.getMouseListeners();
+       // for (MouseListener ml : mllist) {
+        //    System.out.println(ml.toString());
+            //lookUpTable.removeMouseListener(ml);
+       // }
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            frame.setTitle("No Records Found!");
+        } else {
+            frame.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ddpart.setSelectedItem(target.getValueAt(row,1).toString());
+                frame.dispose();
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        frame = new JFrame("Enter Search Text:");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.add(input, BorderLayout.NORTH);
+        frame.add( scrollPane );
+        frame.pack();
+        frame.setLocationRelativeTo( null );
+        frame.setVisible(true);
+    }
+
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1834,6 +1954,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lbqtyavailable = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
+        btLookUpCustItem = new javax.swing.JButton();
+        btLookUpItemDesc = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel89 = new javax.swing.JLabel();
         jLabel80 = new javax.swing.JLabel();
@@ -2526,6 +2648,20 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel9.setText("Description");
 
+        btLookUpCustItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpCustItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpCustItemActionPerformed(evt);
+            }
+        });
+
+        btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpItemDescActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -2544,10 +2680,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(custnumber)
                             .addComponent(tbdesc)
                             .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel5)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel5))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(btLookUpCustItem, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dduom, 0, 67, Short.MAX_VALUE))
+                        .addComponent(dduom, 0, 65, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17)
@@ -2557,14 +2700,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCustItemAndDesc))
+                    .addComponent(lblCustItemAndDesc)
+                    .addComponent(btLookUpCustItem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btLookUpItemDesc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2577,7 +2723,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel84))
                     .addComponent(lbqtyavailable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jLabel89.setText("NetPrice");
@@ -3471,7 +3617,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }//GEN-LAST:event_btupdateitemActionPerformed
 
+    private void btLookUpCustItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpCustItemActionPerformed
+        lookUpFrameCustItem();
+    }//GEN-LAST:event_btLookUpCustItemActionPerformed
+
+    private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
+        lookUpFrameItemDesc();
+    }//GEN-LAST:event_btLookUpItemDescActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpCustItem;
+    private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btaddshipto;
@@ -3499,7 +3655,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox<String> ddloc;
-    private javax.swing.JComboBox ddpart;
+    private static javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox<String> ddsactype;
     private javax.swing.JComboBox ddship;
     private javax.swing.JComboBox ddshipvia;
