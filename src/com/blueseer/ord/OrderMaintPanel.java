@@ -58,6 +58,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -93,10 +94,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
      
-                public static JFrame frame = new JFrame("Choose Item:");
                 public static javax.swing.table.DefaultTableModel lookUpModel = null;
                 public static JTable lookUpTable = new JTable();
                 public static MouseListener mllu = null;
+                public static JDialog dialog = new JDialog();
     
     // global datatablemodel declarations
     OrderMaintPanel.MyTableModel myorddetmodel = new OrderMaintPanel.MyTableModel(new Object[][]{},
@@ -1744,8 +1745,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public static void lookUpFrameCustItem() {
-        if (frame != null) {
-            frame.dispose();
+        if (dialog != null) {
+            dialog.dispose();
         }
         if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
         lookUpModel.setRowCount(0);
@@ -1764,9 +1765,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpTable.setModel(lookUpModel);
         lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (lookUpModel.getRowCount() < 1) {
-            frame.setTitle("No Records Found!");
+            dialog.setTitle("No Records Found!");
         } else {
-            frame.setTitle(lookUpModel.getRowCount() + " Records Found!");
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
         }
         }
         });
@@ -1781,23 +1782,24 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             int column = target.getSelectedColumn();
             if ( column == 0) {
             ddpart.setSelectedItem(target.getValueAt(row,3).toString());
-            frame.dispose();
+            dialog.dispose();
             }
         }
         };
        lookUpTable.addMouseListener(mllu);
-        frame = new JFrame("Enter Search Text:");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.add(input, BorderLayout.NORTH);
-        frame.add( scrollPane );
-        frame.pack();
-        frame.setLocationRelativeTo( null );
-        frame.setVisible(true);
+        dialog = new JDialog();
+        dialog.setTitle("Enter Search Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(input, BorderLayout.NORTH);
+        dialog.add( scrollPane );
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible(true);
     }
 
     public static void lookUpFrameItemDesc() {
-        if (frame != null) {
-            frame.dispose();
+        if (dialog != null) {
+            dialog.dispose();
         }
         if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
         lookUpModel.setRowCount(0);
@@ -1815,9 +1817,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpTable.setModel(lookUpModel);
         lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (lookUpModel.getRowCount() < 1) {
-            frame.setTitle("No Records Found!");
+            dialog.setTitle("No Records Found!");
         } else {
-            frame.setTitle(lookUpModel.getRowCount() + " Records Found!");
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
         }
         }
         });
@@ -1832,19 +1834,21 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ddpart.setSelectedItem(target.getValueAt(row,1).toString());
-                frame.dispose();
+                dialog.dispose();
                 }
             }
         };
         lookUpTable.addMouseListener(mllu);
       
-        frame = new JFrame("Enter Search Text:");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.add(input, BorderLayout.NORTH);
-        frame.add( scrollPane );
-        frame.pack();
-        frame.setLocationRelativeTo( null );
-        frame.setVisible(true);
+        
+        dialog = new JDialog();
+        dialog.setTitle("Enter Search Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(input, BorderLayout.NORTH);
+        dialog.add( scrollPane );
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible(true);
     }
 
     
