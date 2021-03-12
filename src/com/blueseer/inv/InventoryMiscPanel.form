@@ -53,21 +53,28 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="tbrmks" min="-2" pref="280" max="-2" attributes="0"/>
                       <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="ddwh" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddcc" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddacct" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddtype" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="tbpart" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddsite" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ddloc" alignment="1" max="32767" attributes="0"/>
-                          <Component id="tbqty" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                          <Component id="dcdate" alignment="0" max="32767" attributes="0"/>
-                          <Component id="tblotserial" alignment="0" max="32767" attributes="0"/>
-                          <Component id="tbref" alignment="0" pref="147" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="ddwh" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddcc" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddacct" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddtype" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Component id="tbpart" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddsite" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddloc" alignment="1" max="32767" attributes="0"/>
+                              <Component id="tbqty" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                              <Component id="dcdate" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tblotserial" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tbref" alignment="0" pref="147" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btLookUpItemDesc" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btLookUpAcctDesc" min="-2" pref="27" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -82,9 +89,12 @@
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btLookUpItemDesc" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -102,9 +112,12 @@
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="ddacct" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="ddacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btLookUpAcctDesc" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -150,6 +163,9 @@
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbpartFocusLost"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -253,6 +269,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblacct">
           <Properties>
@@ -286,6 +305,26 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Warehouse:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btLookUpItemDesc">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpItemDescActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btLookUpAcctDesc">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpAcctDescActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
