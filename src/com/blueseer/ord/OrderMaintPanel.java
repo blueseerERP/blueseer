@@ -1813,6 +1813,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
         if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
         lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
         }
         // MouseListener[] mllist = lookUpTable.getMouseListeners();
        // for (MouseListener ml : mllist) {
@@ -1823,7 +1824,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         final JTextField input = new JTextField(20);
         input.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-        lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_item");
+        } else {
+         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");   
+        }
         lookUpTable.setModel(lookUpModel);
         lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (lookUpModel.getRowCount() < 1) {
@@ -1851,11 +1856,48 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpTable.addMouseListener(mllu);
       
         
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("item");
+        rb2 = new JRadioButton("description");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
         dialog = new JDialog();
-        dialog.setTitle("Enter Search Text:");
+        dialog.setTitle("Search By Text:");
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.add(input, BorderLayout.NORTH);
-        dialog.add( scrollPane );
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
         dialog.pack();
         dialog.setLocationRelativeTo( null );
         dialog.setVisible(true);

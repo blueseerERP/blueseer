@@ -53,6 +53,9 @@ import javax.swing.table.DefaultTableModel;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -60,7 +63,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
@@ -88,6 +94,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public static JTable lookUpTable = new JTable();
     public static MouseListener mllu = null;
     public static JDialog dialog = new JDialog();
+    
+    public static ButtonGroup bg = null;
+    public static JRadioButton rb1 = null;
+    public static JRadioButton rb2 = null;
      
      // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -1108,6 +1118,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
         if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
         lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
         }
         // MouseListener[] mllist = lookUpTable.getMouseListeners();
        // for (MouseListener ml : mllist) {
@@ -1118,7 +1129,11 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         final JTextField input = new JTextField(20);
         input.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-        lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_item");
+        } else {
+         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");   
+        }
         lookUpTable.setModel(lookUpModel);
         lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (lookUpModel.getRowCount() < 1) {
@@ -1146,16 +1161,149 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpTable.addMouseListener(mllu);
       
         
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("item");
+        rb2 = new JRadioButton("description");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
         dialog = new JDialog();
-        dialog.setTitle("Enter Search Text:");
+        dialog.setTitle("Search By Text:");
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.add(input, BorderLayout.NORTH);
-        dialog.add( scrollPane );
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
         dialog.pack();
         dialog.setLocationRelativeTo( null );
         dialog.setVisible(true);
     }
 
+   public static void lookUpFrameVendor() {
+        if (dialog != null) {
+            dialog.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
+        }
+        // MouseListener[] mllist = lookUpTable.getMouseListeners();
+       // for (MouseListener ml : mllist) {
+        //    System.out.println(ml.toString());
+            //lookUpTable.removeMouseListener(ml);
+       // }
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getVendBrowseUtil(input.getText(), 0, "vd_name"); 
+        } else {
+         lookUpModel = DTData.getVendBrowseUtil(input.getText(), 0, "vd_zip");   
+        }
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            dialog.setTitle("No Records Found!");
+        } else {
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ddvend.setSelectedItem(target.getValueAt(row,1).toString());
+                dialog.dispose();
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("Name");
+        rb2 = new JRadioButton("Zip");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
+        dialog = new JDialog();
+        dialog.setTitle("Search By Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible(true);
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1200,6 +1348,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         ddcurr = new javax.swing.JComboBox<>();
         lbvend = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btLookUpVendor = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelSchedule = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1343,6 +1492,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        btLookUpVendor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpVendor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpVendorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1373,7 +1529,9 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbblanket)
                                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(16, 16, 16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLookUpVendor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1407,7 +1565,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(btupdate)
                         .addGap(10, 10, 10)
                         .addComponent(btadd)))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1445,26 +1603,29 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGap(6, 6, 6)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel82))
-                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel78))))
-                .addGap(4, 4, 4)
-                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelMainLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel90))
-                    .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel82))
+                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel78))))
                         .addGap(4, 4, 4)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel83))))
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel90))
+                            .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel83)))))
+                    .addComponent(btLookUpVendor))
                 .addGap(5, 5, 5)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -2064,9 +2225,14 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpFrameItemDesc();
     }//GEN-LAST:event_btLookUpItemDescActionPerformed
 
+    private void btLookUpVendorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpVendorActionPerformed
+        lookUpFrameVendor();
+    }//GEN-LAST:event_btLookUpVendorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
+    private javax.swing.JButton btLookUpVendor;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
@@ -2085,7 +2251,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddstatus;
     private javax.swing.JComboBox<String> dduom;
-    private javax.swing.JComboBox ddvend;
+    private static javax.swing.JComboBox ddvend;
     private javax.swing.JTextField discount;
     private com.toedter.calendar.JDateChooser duedate;
     private javax.swing.JLabel jLabel1;
