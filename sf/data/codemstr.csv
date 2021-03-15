@@ -118,3 +118,244 @@ jasper,L7,genericJTableL7.jasper,1
 jasper,L7C,genericJTableL7C.jasper,1
 jasper,L8,genericJTableL8.jasper,1
 jasper,L8C,genericJTableL8C.jasper,1
+country,ISO3,Country Name,0
+country,AFG,Afghanistan,0
+country,ALB,Albania,0
+country,DZA,Algeria,0
+country,ASM,American Samoa,0
+country,AND,Andorra,0
+country,AGO,Angola,0
+country,AIA,Anguilla,0
+country,ATA,Antarctica,0
+country,ATG,Antigua and Barbuda,0
+country,ARG,Argentina,0
+country,ARM,Armenia,0
+country,ABW,Aruba,0
+country,AUS,Australia,0
+country,AUT,Austria,0
+country,AZE,Azerbaijan,0
+country,BHS,Bahamas,0
+country,BHR,Bahrain,0
+country,BGD,Bangladesh,0
+country,BRB,Barbados,0
+country,BLR,Belarus,0
+country,BEL,Belgium,0
+country,BLZ,Belize,0
+country,BEN,Benin,0
+country,BMU,Bermuda,0
+country,BTN,Bhutan,0
+country,BOL,Bolivia,0
+country,BIH,Bosnia and Herzegovina,0
+country,BWA,Botswana,0
+country,BRA,Brazil,0
+country,IOT,British Indian Ocean Territory,0
+country,VGB,British Virgin Islands,0
+country,BRN,Brunei,0
+country,BGR,Bulgaria,0
+country,BFA,Burkina Faso,0
+country,BDI,Burundi,0
+country,KHM,Cambodia,0
+country,CMR,Cameroon,0
+country,CAN,Canada,0
+country,CPV,Cape Verde,0
+country,CYM,Cayman Islands,0
+country,CAF,Central African Republic,0
+country,TCD,Chad,0
+country,CHL,Chile,0
+country,CHN,China,0
+country,CXR,Christmas Island,0
+country,CCK,Cocos Islands,0
+country,COL,Colombia,0
+country,COM,Comoros,0
+country,COK,Cook Islands,0
+country,CRI,Costa Rica,0
+country,HRV,Croatia,0
+country,CUB,Cuba,0
+country,CUW,Curacao,0
+country,CYP,Cyprus,0
+country,CZE,Czech Republic,0
+country,COD,Democratic Republic of the Congo,0
+country,DNK,Denmark,0
+country,DJI,Djibouti,0
+country,DMA,Dominica,0
+country,DOM,Dominican Republic,0
+country,TLS,East Timor,0
+country,ECU,Ecuador,0
+country,EGY,Egypt,0
+country,SLV,El Salvador,0
+country,GNQ,Equatorial Guinea,0
+country,ERI,Eritrea,0
+country,EST,Estonia,0
+country,ETH,Ethiopia,0
+country,FLK,Falkland Islands,0
+country,FRO,Faroe Islands,0
+country,FJI,Fiji,0
+country,FIN,Finland,0
+country,FRA,France,0
+country,PYF,French Polynesia,0
+country,GAB,Gabon,0
+country,GMB,Gambia,0
+country,GEO,Georgia,0
+country,DEU,Germany,0
+country,GHA,Ghana,0
+country,GIB,Gibraltar,0
+country,GRC,Greece,0
+country,GRL,Greenland,0
+country,GRD,Grenada,0
+country,GUM,Guam,0
+country,GTM,Guatemala,0
+country,GGY,Guernsey,0
+country,GIN,Guinea,0
+country,GNB,Guinea-Bissau,0
+country,GUY,Guyana,0
+country,HTI,Haiti,0
+country,HND,Honduras,0
+country,HKG,Hong Kong,0
+country,HUN,Hungary,0
+country,ISL,Iceland,0
+country,IND,India,0
+country,IDN,Indonesia,0
+country,IRN,Iran,0
+country,IRQ,Iraq,0
+country,IRL,Ireland,0
+country,IMN,Isle of Man,0
+country,ISR,Israel,0
+country,ITA,Italy,0
+country,CIV,Ivory Coast,0
+country,JAM,Jamaica,0
+country,JPN,Japan,0
+country,JEY,Jersey,0
+country,JOR,Jordan,0
+country,KAZ,Kazakhstan,0
+country,KEN,Kenya,0
+country,KIR,Kiribati,0
+country,XKX,Kosovo,0
+country,KWT,Kuwait,0
+country,KGZ,Kyrgyzstan,0
+country,LAO,Laos,0
+country,LVA,Latvia,0
+country,LBN,Lebanon,0
+country,LSO,Lesotho,0
+country,LBR,Liberia,0
+country,LBY,Libya,0
+country,LIE,Liechtenstein,0
+country,LTU,Lithuania,0
+country,LUX,Luxembourg,0
+country,MAC,Macau,0
+country,MKD,Macedonia,0
+country,MDG,Madagascar,0
+country,MWI,Malawi,0
+country,MYS,Malaysia,0
+country,MDV,Maldives,0
+country,MLI,Mali,0
+country,MLT,Malta,0
+country,MHL,Marshall Islands,0
+country,MRT,Mauritania,0
+country,MUS,Mauritius,0
+country,MYT,Mayotte,0
+country,MEX,Mexico,0
+country,FSM,Micronesia,0
+country,MDA,Moldova,0
+country,MCO,Monaco,0
+country,MNG,Mongolia,0
+country,MNE,Montenegro,0
+country,MSR,Montserrat,0
+country,MAR,Morocco,0
+country,MOZ,Mozambique,0
+country,MMR,Myanmar,0
+country,NAM,Namibia,0
+country,NRU,Nauru,0
+country,NPL,Nepal,0
+country,NLD,Netherlands,0
+country,ANT,Netherlands Antilles,0
+country,NCL,New Caledonia,0
+country,NZL,New Zealand,0
+country,NIC,Nicaragua,0
+country,NER,Niger,0
+country,NGA,Nigeria,0
+country,NIU,Niue,0
+country,PRK,North Korea,0
+country,MNP,Northern Mariana Islands,0
+country,NOR,Norway,0
+country,OMN,Oman,0
+country,PAK,Pakistan,0
+country,PLW,Palau,0
+country,PSE,Palestine,0
+country,PAN,Panama,0
+country,PNG,Papua New Guinea,0
+country,PRY,Paraguay,0
+country,PER,Peru,0
+country,PHL,Philippines,0
+country,PCN,Pitcairn,0
+country,POL,Poland,0
+country,PRT,Portugal,0
+country,PRI,Puerto Rico,0
+country,QAT,Qatar,0
+country,COG,Republic of the Congo,0
+country,REU,Reunion,0
+country,ROU,Romania,0
+country,RUS,Russia,0
+country,RWA,Rwanda,0
+country,BLM,Saint Barthelemy,0
+country,SHN,Saint Helena,0
+country,KNA,Saint Kitts and Nevis,0
+country,LCA,Saint Lucia,0
+country,MAF,Saint Martin,0
+country,SPM,Saint Pierre and Miquelon,0
+country,VCT,Saint Vincent and the Grenadines,0
+country,WSM,Samoa,0
+country,SMR,San Marino,0
+country,STP,Sao Tome and Principe,0
+country,SAU,Saudi Arabia,0
+country,SEN,Senegal,0
+country,SRB,Serbia,0
+country,SYC,Seychelles,0
+country,SLE,Sierra Leone,0
+country,SGP,Singapore,0
+country,SXM,Sint Maarten,0
+country,SVK,Slovakia,0
+country,SVN,Slovenia,0
+country,SLB,Solomon Islands,0
+country,SOM,Somalia,0
+country,ZAF,South Africa,0
+country,KOR,South Korea,0
+country,SSD,South Sudan,0
+country,ESP,Spain,0
+country,LKA,Sri Lanka,0
+country,SDN,Sudan,0
+country,SUR,Suriname,0
+country,SJM,Svalbard and Jan Mayen,0
+country,SWZ,Swaziland,0
+country,SWE,Sweden,0
+country,CHE,Switzerland,0
+country,SYR,Syria,0
+country,TWN,Taiwan,0
+country,TJK,Tajikistan,0
+country,TZA,Tanzania,0
+country,THA,Thailand,0
+country,TGO,Togo,0
+country,TKL,Tokelau,0
+country,TON,Tonga,0
+country,TTO,Trinidad and Tobago,0
+country,TUN,Tunisia,0
+country,TUR,Turkey,0
+country,TKM,Turkmenistan,0
+country,TCA,Turks and Caicos Islands,0
+country,TUV,Tuvalu,0
+country,VIR,U.S. Virgin Islands,0
+country,UGA,Uganda,0
+country,UKR,Ukraine,0
+country,ARE,United Arab Emirates,0
+country,GBR,United Kingdom,0
+country,USA,United States,0
+country,URY,Uruguay,0
+country,UZB,Uzbekistan,0
+country,VUT,Vanuatu,0
+country,VAT,Vatican,0
+country,VEN,Venezuela,0
+country,VNM,Vietnam,0
+country,WLF,Wallis and Futuna,0
+country,ESH,Western Sahara,0
+country,YEM,Yemen,0
+country,ZMB,Zambia,0
+country,ZWE,Zimbabwe,0

@@ -217,11 +217,14 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         
-       if (ddcountry.getItemCount() == 0)
-       for (int i = 0; i < OVData.countries.length; i++) {
-            ddcountry.addItem(OVData.countries[i]);
+       ddcountry.removeAllItems();
+        ArrayList countries = OVData.getCodeMstrKeyList("country");
+        for (int i = 0; i < countries.size(); i++) {
+            ddcountry.addItem(countries.get(i).toString());
         }
-       ddcountry.setSelectedItem("USA");
+        if (ddcountry.getItemCount() > 0) {
+           ddcountry.setSelectedItem("USA"); 
+        }
          
          
         ddsite.removeAllItems();

@@ -1009,14 +1009,23 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         } else {
            ddstate.setSelectedIndex(0);
        }
-        */
+        
         
        if (ddcountry.getItemCount() == 0)
        for (int i = 0; i < OVData.countries.length; i++) {
             ddcountry.addItem(OVData.countries[i]);
         }
        ddcountry.setSelectedItem("USA");
+       */
        
+       ddcountry.removeAllItems();
+        ArrayList countries = OVData.getCodeMstrKeyList("country");
+        for (int i = 0; i < countries.size(); i++) {
+            ddcountry.addItem(countries.get(i).toString());
+        }
+        if (ddcountry.getItemCount() > 0) {
+           ddcountry.setSelectedItem("USA"); 
+        }
        
         
         

@@ -222,7 +222,14 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
            ddstate.setSelectedIndex(0); 
         }
         
-       
+       ddcountry.removeAllItems();
+        ArrayList countries = OVData.getCodeMstrKeyList("country");
+        for (int i = 0; i < countries.size(); i++) {
+            ddcountry.addItem(countries.get(i).toString());
+        }
+        if (ddcountry.getItemCount() > 0) {
+           ddcountry.setSelectedItem("USA"); 
+        }
         
        isLoad = false;
     }
@@ -317,6 +324,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     tbline3.setText(res.getString("site_line3"));
                     tbcity.setText(res.getString("site_city"));
                     ddstate.setSelectedItem(res.getString("site_state"));
+                    ddcountry.setSelectedItem(res.getString("site_country"));
                     tbzip.setText(res.getString("site_zip"));
                     tblogo.setText(res.getString("site_logo"));
                     tb_iv_generic.setText(res.getString("site_iv_jasper"));
@@ -368,7 +376,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into site_mstr "
-                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper   ) "
+                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_country, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper   ) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString().replace("'","''") + "'" + ","
                             + "'" + tbline1.getText().toString().replace("'","''") + "'" + ","
@@ -376,6 +384,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + tbline3.getText().toString().replace("'","''") + "'" + ","    
                             + "'" + tbcity.getText().toString().replace("'","''") + "'" + ","
                             + "'" + ddstate.getSelectedItem().toString() + "'" + ","
+                            + "'" + ddcountry.getSelectedItem().toString() + "'" + ","        
                             + "'" + tbzip.getText().toString() + "'" + ","
                                 + "'" + tblogo.getText().toString() + "'" + ","
                                 + "'" + tb_iv_generic.getText().toString() + "'" + ","
@@ -437,7 +446,8 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                             + "site_po_jasper = " + "'" + tb_po_generic.getText() + "'" + ","
                             + "site_or_jasper = " + "'" + tb_or_generic.getText() + "'" + ","        
                             + "site_pos_jasper = " + "'" + tb_pos_generic.getText() + "'" + ","
-                            + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'"
+                            + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + ","
+                            + "site_country = " + "'" + ddcountry.getSelectedItem().toString() + "'"    
                             + " where site_site = " + "'" + tbkey.getText() + "'"                             
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -526,6 +536,8 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        ddcountry = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -591,21 +603,24 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel15.setText("Country");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel15))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -627,7 +642,8 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear)))
+                        .addComponent(btclear))
+                    .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -670,6 +686,10 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
                 .addContainerGap())
         );
 
@@ -786,7 +806,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(btadd)
                     .addComponent(btupdate)
                     .addComponent(btdelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -812,7 +832,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -869,6 +889,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JComboBox<String> ddcountry;
     private javax.swing.JComboBox ddstate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -876,6 +897,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
