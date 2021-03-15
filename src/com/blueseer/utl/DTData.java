@@ -1072,6 +1072,68 @@ public class DTData {
         
          } 
         
+        public static DefaultTableModel getShipToBrowseSoloUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT cms_shipto, cms_code, cms_name, cms_line1, cms_city, cms_state, cms_zip, cms_country  " +
+                        " FROM  cms_det where " + myfield + " like " + "'" + str + "%'" +
+                        " order by cms_shipto ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT cms_shipto, cms_code, cms_name, cms_line1, cms_city, cms_state, cms_zip, cms_country  " +
+                        " FROM  cms_det where " + myfield + " like " + "'%" + str + "'" +
+                        " order by cms_shipto ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT cms_shipto, cms_code, cms_name, cms_line1, cms_city, cms_state, cms_zip, cms_country  " +
+                        " FROM  cms_det where cms_code = "+ myfield + " like " + "'%" + str + "%'" +
+                        " order by cms_shipto ;");
+                 }
+                
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cms_shipto"),
+                                   res.getString("cms_code"),
+                                   res.getString("cms_name"),
+                                   res.getString("cms_line1"),
+                                   res.getString("cms_city"),
+                                   res.getString("cms_state"),
+                                   res.getString("cms_zip"),
+                                   res.getString("cms_country")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+        
          public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "RoutingID", "Operation", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"})
