@@ -1033,6 +1033,8 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="ddaccountexpense" min="-2" pref="180" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btLookUpExpAccount" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbacct2" min="-2" pref="190" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btexpenseAddAccount" min="-2" max="-2" attributes="0"/>
@@ -1050,7 +1052,7 @@
                               <Component id="tbexpensePrice" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
                               <Component id="tbexpenseDesc" alignment="0" min="-2" pref="417" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="60" max="32767" attributes="0"/>
+                          <EmptySpace pref="29" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1065,6 +1067,7 @@
                               </Group>
                               <Component id="lbacct2" min="-2" pref="20" max="-2" attributes="0"/>
                               <Component id="btexpenseAddAccount" min="-2" max="-2" attributes="0"/>
+                              <Component id="btLookUpExpAccount" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -1141,6 +1144,7 @@
                   </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JButton" name="btdeleteItemExpense">
@@ -1199,6 +1203,16 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="PO# (optional)"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="btLookUpExpAccount">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/images/find.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpExpAccountActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

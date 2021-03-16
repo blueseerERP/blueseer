@@ -124,7 +124,9 @@
                                   <Component id="jLabel49" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
                                   <Component id="ddacct" min="-2" pref="138" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btLookUpAccount" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbacct" min="-2" pref="280" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
@@ -213,6 +215,7 @@
                                   <Component id="jLabel49" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="ddacct" min="-2" max="-2" attributes="0"/>
+                              <Component id="btLookUpAccount" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -448,6 +451,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddacctActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddcc">
           <Properties>
@@ -489,6 +495,16 @@
         <Component class="javax.swing.JLabel" name="lbacct">
         </Component>
         <Component class="javax.swing.JLabel" name="lbcc">
+        </Component>
+        <Component class="javax.swing.JButton" name="btLookUpAccount">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpAccountActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

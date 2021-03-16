@@ -28,6 +28,7 @@ package com.blueseer.fgl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -82,15 +83,25 @@ import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -118,6 +129,15 @@ public class CashTran extends javax.swing.JPanel {
                 boolean isLoad = false;
                 String partnumber = "";
                 String newFileName = "";
+                
+                public static javax.swing.table.DefaultTableModel lookUpModel = null;
+                public static JTable lookUpTable = new JTable();
+                public static MouseListener mllu = null;
+                public static JDialog dialog = new JDialog();
+                
+                public static ButtonGroup bg = null;
+                public static JRadioButton rb1 = null;
+                public static JRadioButton rb2 = null;
                 
                 javax.swing.table.DefaultTableModel sellmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -2017,8 +2037,104 @@ public class CashTran extends javax.swing.JPanel {
         }
     }
       
-   
+   public static void lookUpFrameAcctDesc() {
+        if (dialog != null) {
+            dialog.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
+        }
+        // MouseListener[] mllist = lookUpTable.getMouseListeners();
+       // for (MouseListener ml : mllist) {
+        //    System.out.println(ml.toString());
+            //lookUpTable.removeMouseListener(ml);
+       // }
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getAcctBrowseUtil(input.getText(), 0, "ac_id");
+        } else {
+         lookUpModel = DTData.getAcctBrowseUtil(input.getText(), 0, "ac_desc");   
+        }
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            dialog.setTitle("No Records Found!");
+        } else {
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ddaccountexpense.setSelectedItem(target.getValueAt(row,1).toString());
+                dialog.dispose();
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("AcctNbr");
+        rb2 = new JRadioButton("Description");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
+        dialog = new JDialog();
+        dialog.setTitle("Search By Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible(true);
+    }
 
+
+    
      
       
  
@@ -2131,6 +2247,7 @@ public class CashTran extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         tbexpensePO = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        btLookUpExpAccount = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane9 = new javax.swing.JScrollPane();
         expenseTable = new javax.swing.JTable();
@@ -2834,6 +2951,13 @@ public class CashTran extends javax.swing.JPanel {
 
         jLabel14.setText("PO# (optional)");
 
+        btLookUpExpAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpExpAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpExpAccountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -2853,6 +2977,8 @@ public class CashTran extends javax.swing.JPanel {
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(ddaccountexpense, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btLookUpExpAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbacct2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btexpenseAddAccount))
@@ -2867,7 +2993,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addComponent(btdeleteItemExpense))
                     .addComponent(tbexpensePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbexpenseDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2878,7 +3004,8 @@ public class CashTran extends javax.swing.JPanel {
                         .addComponent(jLabel17)
                         .addComponent(ddaccountexpense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lbacct2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btexpenseAddAccount))
+                    .addComponent(btexpenseAddAccount)
+                    .addComponent(btLookUpExpAccount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbitem2)
@@ -4542,7 +4669,12 @@ public class CashTran extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ddrexpsiteActionPerformed
 
+    private void btLookUpExpAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpExpAccountActionPerformed
+        lookUpFrameAcctDesc();
+    }//GEN-LAST:event_btLookUpExpAccountActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpExpAccount;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadd1;
     private javax.swing.JButton btaddItemExpense;
@@ -4578,7 +4710,7 @@ public class CashTran extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcdate1;
     private com.toedter.calendar.JDateChooser dcdateExpense;
     private com.toedter.calendar.JDateChooser dcdateIncome;
-    private javax.swing.JComboBox<String> ddaccountexpense;
+    private static javax.swing.JComboBox<String> ddaccountexpense;
     private javax.swing.JComboBox<String> ddaccountincome;
     private javax.swing.JComboBox ddentity;
     private javax.swing.JComboBox ddentity1;

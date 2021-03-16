@@ -52,8 +52,26 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.DTData;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -67,6 +85,16 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     Double positiveamt = 0.00;
     String type = "";
+    
+    public static javax.swing.table.DefaultTableModel lookUpModel = null;
+                public static JTable lookUpTable = new JTable();
+                public static MouseListener mllu = null;
+                public static JDialog dialog = new JDialog();
+                
+                public static ButtonGroup bg = null;
+                public static JRadioButton rb1 = null;
+                public static JRadioButton rb2 = null;
+    
            DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -285,7 +313,102 @@ public class GLTranMaint extends javax.swing.JPanel {
             
     }
     
-    
+    public static void lookUpFrameAcctDesc() {
+        if (dialog != null) {
+            dialog.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
+        }
+        // MouseListener[] mllist = lookUpTable.getMouseListeners();
+       // for (MouseListener ml : mllist) {
+        //    System.out.println(ml.toString());
+            //lookUpTable.removeMouseListener(ml);
+       // }
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getAcctBrowseUtil(input.getText(), 0, "ac_id");
+        } else {
+         lookUpModel = DTData.getAcctBrowseUtil(input.getText(), 0, "ac_desc");   
+        }
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            dialog.setTitle("No Records Found!");
+        } else {
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ddacct.setSelectedItem(target.getValueAt(row,1).toString());
+                dialog.dispose();
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("AcctNbr");
+        rb2 = new JRadioButton("Description");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
+        dialog = new JDialog();
+        dialog.setTitle("Search By Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible(true);
+    }
+
     
     
     /**
@@ -333,6 +456,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         lbacct = new javax.swing.JLabel();
         lbcc = new javax.swing.JLabel();
+        btLookUpAccount = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -474,6 +598,13 @@ public class GLTranMaint extends javax.swing.JPanel {
 
         jLabel5.setText("Control Amt");
 
+        btLookUpAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpAccountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -556,7 +687,9 @@ public class GLTranMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel49)
                                 .addGap(5, 5, 5)
                                 .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(21, 21, 21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLookUpAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel48)
@@ -621,7 +754,8 @@ public class GLTranMaint extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
                                 .addComponent(jLabel49))
-                            .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btLookUpAccount)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1008,7 +1142,12 @@ public class GLTranMaint extends javax.swing.JPanel {
        }
     }//GEN-LAST:event_tbdescFocusLost
 
+    private void btLookUpAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpAccountActionPerformed
+        lookUpFrameAcctDesc();
+    }//GEN-LAST:event_btLookUpAccountActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpAccount;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
@@ -1016,7 +1155,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btsubmit;
     private javax.swing.JTextField dateentered;
-    private javax.swing.JComboBox ddacct;
+    private static javax.swing.JComboBox ddacct;
     private javax.swing.JComboBox ddcc;
     private javax.swing.JComboBox ddcurr;
     private javax.swing.JComboBox ddsite;

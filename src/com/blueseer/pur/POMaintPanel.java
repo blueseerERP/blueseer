@@ -1342,13 +1342,14 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btbrowse = new javax.swing.JButton();
         tbbuyer = new javax.swing.JTextField();
         jLabel92 = new javax.swing.JLabel();
-        btpovendbrowse = new javax.swing.JButton();
+        btbrowseduedate = new javax.swing.JButton();
         jLabel83 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         ddcurr = new javax.swing.JComboBox<>();
         lbvend = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
         btLookUpVendor = new javax.swing.JButton();
+        btbrowsevendor = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelSchedule = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1469,10 +1470,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel92.setText("Buyer");
 
-        btpovendbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btpovendbrowse.addActionListener(new java.awt.event.ActionListener() {
+        btbrowseduedate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowseduedate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btpovendbrowseActionPerformed(evt);
+                btbrowseduedateActionPerformed(evt);
             }
         });
 
@@ -1496,6 +1497,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btLookUpVendor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btLookUpVendorActionPerformed(evt);
+            }
+        });
+
+        btbrowsevendor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btbrowsevendor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbrowsevendorActionPerformed(evt);
             }
         });
 
@@ -1525,10 +1533,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbbuyer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbblanket)
-                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelMainLayout.createSequentialGroup()
+                                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btbrowsevendor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btLookUpVendor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1553,7 +1564,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btpovendbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btbrowseduedate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1565,7 +1576,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(btupdate)
                         .addGap(10, 10, 10)
                         .addComponent(btadd)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1583,7 +1594,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGap(5, 5, 5)
                             .addComponent(jLabel81))
                         .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btpovendbrowse))
+                        .addComponent(btbrowseduedate))
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btbrowse)
@@ -1613,8 +1624,9 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addGap(2, 2, 2)
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel78))))
-                        .addGap(4, 4, 4)
+                                    .addComponent(jLabel78)))
+                            .addComponent(btbrowsevendor))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addGap(3, 3, 3)
@@ -2101,9 +2113,9 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_nbr"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
-    private void btpovendbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpovendbrowseActionPerformed
-       reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_vend"});
-    }//GEN-LAST:event_btpovendbrowseActionPerformed
+    private void btbrowseduedateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseduedateActionPerformed
+       reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_due_date"});
+    }//GEN-LAST:event_btbrowseduedateActionPerformed
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
        setPrice();
@@ -2229,6 +2241,10 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpFrameVendor();
     }//GEN-LAST:event_btLookUpVendorActionPerformed
 
+    private void btbrowsevendorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowsevendorActionPerformed
+        reinitpanels("BrowseUtil", true, new String[]{"pomaint","po_vend"});
+    }//GEN-LAST:event_btbrowsevendorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
@@ -2236,12 +2252,13 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btbrowseduedate;
+    private javax.swing.JButton btbrowsevendor;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
-    private javax.swing.JButton btpovendbrowse;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
