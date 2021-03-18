@@ -1445,8 +1445,9 @@ CREATE TABLE "dod_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ship_det" (
   "shd_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "shd_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_line" int(8) NOT NULL DEFAULT '0',
+  "shd_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shd_soline" int(8) NOT NULL DEFAULT '0',
   "shd_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_qty" int(11) NOT NULL DEFAULT '0',

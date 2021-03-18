@@ -960,7 +960,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                 res = st.executeQuery("SELECT sod_nbr, shd_po, sh_id, sh_shipdate,  " +
                     " sod_ord_qty, shd_qty, shd_part, shd_desc, sh_rmks " +
                     " from ship_det inner join ship_mstr on sh_id = shd_id " +
-                    " inner join sod_det on sod_nbr = shd_so and sod_line = shd_line" + 
+                    " inner join sod_det on sod_nbr = shd_so and sod_line = shd_soline" + 
                     " where " +
                     " shd_po >= " + "'" + frompo + "'" +
                     " and shd_po <= " + "'" + topo + "'" +  

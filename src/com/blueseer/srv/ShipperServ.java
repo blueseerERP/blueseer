@@ -138,7 +138,7 @@ public static String getShipperJSON(String id) {
                     }
                     
                     res = st.executeQuery("select shd_part as 'ItemNumber', shd_desc as 'ItemDescription',  " +
-               " shd_line as 'Line', shd_so as 'Order', shd_po as 'PO', shd_qty as 'ShipQty', shd_uom as 'UOM', shd_custpart as 'CustItem',  " +
+               " shd_soline as 'Line', shd_so as 'Order', shd_po as 'PO', shd_qty as 'ShipQty', shd_uom as 'UOM', shd_custpart as 'CustItem',  " +
                " shd_sku as 'SkuItem', shd_sku as 'UpcItem', shd_qty as 'ShipQty', " +
                " shd_listprice as 'ListPrice', shd_netprice as 'NetPrice', shd_disc as 'Discount', shd_taxamt as 'TaxAmt', " +
                " shd_loc as 'LineLocation', shd_wh as 'LineWarehouse' " +   

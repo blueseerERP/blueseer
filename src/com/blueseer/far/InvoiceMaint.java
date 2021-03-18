@@ -452,7 +452,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     st.executeUpdate("delete from ship_det where shd_id = " + "'" + tbkey.getText() + "'"  );
                     for (int j = 0; j < tabledetail.getRowCount(); j++) {
                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty,"
+                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty,"
                             + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_site ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","
@@ -526,7 +526,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    ArrayList<String[]> orderlines = new ArrayList<String[]>();
                      res = st.executeQuery("select sod_nbr, sod_line, so_status, sod_status, sod_ord_qty, sod_shipped_qty, shd_qty " +
                               " from so_mstr inner join sod_det on sod_nbr = so_nbr " +
-                              " inner join ship_det on shd_so = sod_nbr and shd_line = sod_line " +
+                              " inner join ship_det on shd_so = sod_nbr and shd_soline = sod_line " +
                               " where ship_det.shd_id =  " + "'" + x[0] + "'" + ";");
                      while (res.next()) {
                       _order = res.getString("sod_nbr");
@@ -617,12 +617,15 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 String order = "";
                 String po = "";
                 
-                 res = st.executeQuery("select * from ship_det where shd_id = " + "'" + x[0] + "'" + ";");
+                 res = st.executeQuery("select shd_soline, shd_part, shd_so, shd_po, sum(shd_qty) as sumqty, shd_netprice, shd_desc, " +
+                         " shd_wh, shd_loc, shd_disc, shd_listprice, shd_taxamt " +
+                         " from ship_det where shd_id = " + "'" + x[0] + "'" +
+                                       " group by shd_so, shd_soline " + ";");
                 while (res.next()) {
-                  myshipdetmodel.addRow(new Object[]{res.getString("shd_line"), res.getString("shd_part"), 
+                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
                       res.getString("shd_so"), 
                       res.getString("shd_po"), 
-                      res.getString("shd_qty"), 
+                      res.getString("sumqty"), 
                       res.getString("shd_netprice"),
                       res.getString("shd_desc"),
                       res.getString("shd_wh"),

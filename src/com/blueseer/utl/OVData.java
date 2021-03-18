@@ -13901,7 +13901,7 @@ public class OVData {
                         qty = res.getInt("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
-                        line = res.getInt("shd_line");
+                        line = res.getInt("shd_soline");
                         lot = res.getString("shd_lot");
                         loc = res.getString("shd_loc");
                         jobnbr = res.getString("shd_jobnbr");
@@ -14119,7 +14119,7 @@ public class OVData {
                         qty = res.getInt("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
-                        line = res.getInt("shd_line");
+                        line = res.getInt("shd_soline");
                         lot = res.getString("shd_lot");
                         loc = res.getString("shd_loc");
                         jobnbr = res.getString("shd_jobnbr");
@@ -20144,12 +20144,14 @@ public class OVData {
                 ArrayList linestatus = new ArrayList();
                 ArrayList ordernbr = new ArrayList();
                 
-                 res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_qty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
-                         " sod_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
-                   " where shd_id = " + "'" + shipper + "'" +";");
+                 res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_part, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
+                         " sod_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+                   " where shd_id = " + "'" + shipper + "'" + 
+                   " group by shd_part " +                        
+                   ";");
                    while (res.next()) {
                        shippedqty.add(res.getString("sod_shipped_qty"));
-                       qty.add(res.getString("shd_qty"));
+                       qty.add(res.getString("sumqty"));
                        ordqty.add(res.getString("sod_ord_qty"));
                        linestatus.add(res.getString("sod_status"));
                        line.add(res.getString("sod_line"));
@@ -20173,13 +20175,13 @@ public class OVData {
                               ";" );
                   }
             //   st.executeUpdate(
-           //              " update sod_det set sod_shipped_qty = where sod_line in inner join ship_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
+           //              " update sod_det set sod_shipped_qty = where sod_line in inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
            //              " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
           //                " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
           //           " where shd_id = " + "'" + shipper + "'" + ";" );
               } else {
                   st.executeUpdate(
-                         " update sod_det inner join ship_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
+                         " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
                          " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
                           " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
                      " where shd_id = " + "'" + shipper + "'" + ";" );
@@ -20248,7 +20250,7 @@ public class OVData {
                 Statement st = con.createStatement();
                 String ordernbr = "";
                  res = st.executeQuery("select svd_nbr from ship_det inner join " +
-                         " svd_det on shd_part = svd_item and shd_line = svd_line and shd_so = svd_nbr " +
+                         " svd_det on shd_part = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
                    " where shd_id = " + "'" + shipper + "'" +";");
                    while (res.next()) {
                        ordernbr = res.getString("svd_nbr");
@@ -20283,7 +20285,7 @@ public class OVData {
                 Statement st = con.createStatement();
                // res = st.executeQuery("select shd_part from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
                    st.executeUpdate(
-                         " update sod_det inner join ship_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
+                         " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
                          " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
                           " set sod_shipped_qty = sod_shipped_qty - shd_qty, sod_status = 'open' ) " +
                      " where shd_id = " + "'" + shipper + "'" + ";" );
@@ -22437,7 +22439,7 @@ public class OVData {
                     //ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
 	            for (String[] s : detail) {
                     st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
                             + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + s[2] + "'" + ","
@@ -22623,7 +22625,7 @@ public class OVData {
 
                 if (proceed) {
                         st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
                             + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + line + "'" + ","
@@ -22668,7 +22670,7 @@ public class OVData {
                 if (proceed) {
                     for (int j = 0; j < dettable.getRowCount(); j++) {
                         st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
+                            + "(shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
                             + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
                             + " values ( " + "'" + shippernbr + "'" + ","
                             + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","

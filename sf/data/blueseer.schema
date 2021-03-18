@@ -1172,8 +1172,9 @@ CREATE TABLE IF NOT EXISTS `ship_ctrl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_id` varchar(8) NOT NULL  DEFAULT '',
-  `shd_so` varchar(30) NOT NULL  DEFAULT '',
   `shd_line` int(8) NOT NULL DEFAULT '0',
+  `shd_so` varchar(30) NOT NULL  DEFAULT '',
+  `shd_soline` int(8) NOT NULL DEFAULT '0',
   `shd_po` varchar(30) NOT NULL  DEFAULT '',
   `shd_part` varchar(100) NOT NULL  DEFAULT '',
   `shd_qty` int(11) NOT NULL DEFAULT '0',

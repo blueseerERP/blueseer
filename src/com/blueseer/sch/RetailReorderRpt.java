@@ -250,7 +250,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                     //    " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
-                        " AND so_status <> 'close' " +           
+                        " AND so_status <> 'closed' " +           
                         " order by sod_nbr ;"); 
                      while (res.next()) {
                           demandmodel.addRow(new Object[]{
@@ -715,7 +715,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                        // " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
-                        " AND so_status <> 'close' " +           
+                        " AND so_status <> 'closed' " +           
                         " group by sod_part ;"); 
                      while (res.next()) {
                          fwdqty = res.getInt("fwdqty");

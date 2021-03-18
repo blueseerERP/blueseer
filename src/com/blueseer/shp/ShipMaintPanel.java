@@ -125,7 +125,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     
     javax.swing.table.DefaultTableModel myshipdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                 "Line", "Part", "SO", "PO", "Qty", "Price", "Desc", "WH", "LOC", "Disc", "ListPrice", "MatlTax", "Cont", "Serial"
+                 "Line", "Part", "SO", "SOLine", "PO", "Qty", "Price", "Desc", "WH", "LOC", "Disc", "ListPrice", "MatlTax", "Cont", "Serial"
             });
     
   
@@ -149,7 +149,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
      public void sumqty() {
         int qty = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(tabledetail.getValueAt(j, 4).toString()); 
+             qty = qty + Integer.valueOf(tabledetail.getValueAt(j, 5).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -158,7 +158,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(tabledetail.getValueAt(j, 4).toString()) * Double.valueOf(tabledetail.getValueAt(j, 5).toString()) ); 
+             dol = dol + ( Double.valueOf(tabledetail.getValueAt(j, 5).toString()) * Double.valueOf(tabledetail.getValueAt(j, 6).toString()) ); 
          }
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
@@ -309,12 +309,12 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tabledetail.setModel(myshipdetmodel);
         myshipdetmodel.setRowCount(0);
-        tabledetail.getColumnModel().getColumn(9).setMaxWidth(0);
-        tabledetail.getColumnModel().getColumn(9).setMinWidth(0);
-        tabledetail.getColumnModel().getColumn(9).setPreferredWidth(0);
         tabledetail.getColumnModel().getColumn(10).setMaxWidth(0);
         tabledetail.getColumnModel().getColumn(10).setMinWidth(0);
         tabledetail.getColumnModel().getColumn(10).setPreferredWidth(0);
+        tabledetail.getColumnModel().getColumn(11).setMaxWidth(0);
+        tabledetail.getColumnModel().getColumn(11).setMinWidth(0);
+        tabledetail.getColumnModel().getColumn(11).setPreferredWidth(0);
         
         disableLowerInputs();
      
@@ -559,7 +559,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
 
                 res = st.executeQuery("select * from ship_det where shd_id = " + "'" + myshipper + "'" + ";");
                 while (res.next()) {
-                  myshipdetmodel.addRow(new Object[]{res.getString("shd_line"), res.getString("shd_part"), 
+                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
                       res.getString("shd_so"), 
                       res.getString("shd_po"), 
                       res.getString("shd_qty"), 
@@ -1862,7 +1862,10 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         boolean canproceed = true;
         tabledetail.setModel(myshipdetmodel);
         String part = "";
+        
         int line = 0;
+        line = getmaxline();
+        line++;
         
          Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbprice.getText());
@@ -1877,14 +1880,11 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             bsmf.MainFrame.show("Invalid Qty");
             canproceed = false;
         }
-        line = getmaxline();
-        line++;
-        
-       
-       
+         
         if (canproceed) {
-            myshipdetmodel.addRow(new Object[]{dditemline.getSelectedItem(), tbitem.getText(), 
+            myshipdetmodel.addRow(new Object[]{line, tbitem.getText(), 
                 dditemorder.getSelectedItem(), 
+                dditemline.getSelectedItem(),
                 tbpo.getText(), 
                 tbqty.getText(), 
                 tbprice.getText(),
@@ -1928,26 +1928,26 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                    // lets collect single or multiple PO status
                    for (int j = 0; j < tabledetail.getRowCount(); j++) {
                      if (d > 0) {
-                       if ( uniqpo.compareTo(tabledetail.getValueAt(j, 3).toString()) != 0) {
+                       if ( uniqpo.compareTo(tabledetail.getValueAt(j, 4).toString()) != 0) {
                        uniqpo = "multi-PO";
                        break;
                        }
                      }
                      d++;
-                     uniqpo = tabledetail.getValueAt(j, 3).toString();
+                     uniqpo = tabledetail.getValueAt(j, 4).toString();
                    }
 
                     // lets collect single or multiple Warehouse status
                     d = 0;
                    for (int j = 0; j < tabledetail.getRowCount(); j++) {
                      if (d > 0) {
-                       if ( uniqwh.compareTo(tabledetail.getValueAt(j, 7).toString()) != 0) {
+                       if ( uniqwh.compareTo(tabledetail.getValueAt(j, 8).toString()) != 0) {
                        uniqwh = "multi-WH";
                        break;
                        }
                      }
                      d++;
-                     uniqwh = tabledetail.getValueAt(j, 7).toString();
+                     uniqwh = tabledetail.getValueAt(j, 8).toString();
                    }
 
                   
@@ -1985,24 +1985,25 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 for (int j = 0; j < tabledetail.getRowCount(); j++) {
 
                     st.executeUpdate("insert into ship_det "
-                        + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty,"
+                        + "(shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
                         + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site ) "
                         + " values ( " + "'" + tbshipper.getText() + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 3).toString() + "'" + ","        
                         + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","        
-                        + "'" + tabledetail.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 4).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 5).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 9).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 6).toString() + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 10).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 6).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 7).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 11).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 7).toString().replace("'", "") + "'" + ","
                         + "'" + tabledetail.getValueAt(j, 8).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 11).toString() + "'" + ","   
-                        + "'" + tabledetail.getValueAt(j, 12).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 13).toString() + "'" + ","        
+                        + "'" + tabledetail.getValueAt(j, 9).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 12).toString() + "'" + ","   
+                        + "'" + tabledetail.getValueAt(j, 13).toString() + "'" + ","
+                        + "'" + tabledetail.getValueAt(j, 14).toString() + "'" + ","        
                         + "'" + ddsite.getSelectedItem().toString() + "'"
                         + ")"
                         + ";");
@@ -2076,13 +2077,13 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                      // lets collect single or multiple PO status
                        for (int j = 0; j < tabledetail.getRowCount(); j++) {
                          if (d > 0) {
-                           if ( uniqpo.compareTo(tabledetail.getValueAt(j, 3).toString()) != 0) {
+                           if ( uniqpo.compareTo(tabledetail.getValueAt(j, 4).toString()) != 0) {
                            uniqpo = "multi-PO";
                            break;
                            }
                          }
                          d++;
-                         uniqpo = tabledetail.getValueAt(j, 3).toString();
+                         uniqpo = tabledetail.getValueAt(j, 4).toString();
                        }
                    
                     st.executeUpdate("update ship_mstr set " 
@@ -2100,24 +2101,25 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     st.executeUpdate("delete from ship_det where shd_id = " + "'" + tbshipper.getText() + "'"  );
                     for (int j = 0; j < tabledetail.getRowCount(); j++) {
                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_date, shd_po, shd_qty,"
+                            + "(shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
                             + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site ) "
                             + " values ( " + "'" + tbshipper.getText() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","        
                             + "'" + tabledetail.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","        
                             + "'" + tabledetail.getValueAt(j, 4).toString() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + tabledetail.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + tabledetail.getValueAt(j, 10).toString() + "'" + ","        
                             + "'" + tabledetail.getValueAt(j, 6).toString() + "'" + ","
+                            + "'" + tabledetail.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + tabledetail.getValueAt(j, 11).toString() + "'" + ","        
                             + "'" + tabledetail.getValueAt(j, 7).toString() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + tabledetail.getValueAt(j, 11).toString() + "'" + ","   
-                            + "'" + tabledetail.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + tabledetail.getValueAt(j, 13).toString() + "'" + ","         
+                            + "'" + tabledetail.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + tabledetail.getValueAt(j, 12).toString() + "'" + ","   
+                            + "'" + tabledetail.getValueAt(j, 13).toString() + "'" + ","
+                            + "'" + tabledetail.getValueAt(j, 14).toString() + "'" + ","         
                             + "'" + ddsite.getSelectedItem().toString() + "'" 
                             + ")"
                             + ";");
