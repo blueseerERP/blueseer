@@ -3190,7 +3190,7 @@ public class OVData {
                         " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
                         + " select sod_part, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
                         + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' " 
-                        + " and sod_status <> 'close' "        
+                        + " and sod_status <> 'closed' "        
                         + " and sod_site = " + "'" + site + "'" + ";");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -9909,7 +9909,7 @@ public class OVData {
                 res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + item + "'" + 
-                                    " AND so_status <> 'close' " + 
+                                    " AND so_status <> 'closed' " + 
                                     " AND so_site = " + "'" + site + "'" +   
                                   //  " AND so_nbr <> " + "'" + currentorder + "'" +
                                     " group by sod_part ;");
@@ -10763,7 +10763,7 @@ public class OVData {
         
     }
 
-    public static ArrayList getItemsByType() {
+    public static ArrayList getItemsByType(String type) {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
@@ -10772,7 +10772,9 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select it_item from item_mstr where it_type = 'CONT' order by it_item ;");
+                res = st.executeQuery("select it_item from item_mstr where it_type = " + "'" + type + "'" +
+                        " order by it_item ;");
+                
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
                     
@@ -20161,7 +20163,7 @@ public class OVData {
                   for (int j = 0; j < line.size(); j++) {
                       total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(shippedqty.get(j).toString());
                       if (total >= Integer.valueOf(ordqty.get(j).toString())) {
-                          status = "close";
+                          status = "closed";
                       } else {
                           status = linestatus.get(j).toString();
                       }
@@ -20173,13 +20175,13 @@ public class OVData {
             //   st.executeUpdate(
            //              " update sod_det set sod_shipped_qty = where sod_line in inner join ship_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
            //              " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
-          //                " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'close' else sod_status end) " +
+          //                " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
           //           " where shd_id = " + "'" + shipper + "'" + ";" );
               } else {
                   st.executeUpdate(
                          " update sod_det inner join ship_det on shd_part = sod_part and shd_line = sod_line and shd_so = sod_nbr " +
                          " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
-                          " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'close' else sod_status end) " +
+                          " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
                      " where shd_id = " + "'" + shipper + "'" + ";" );
               }
                     // now let's select the unique orders involved in that shipper
@@ -20203,14 +20205,14 @@ public class OVData {
                            if (res.getString("sod_status").equals("open")) {
                                    partial = true;
                                 }
-                           if (! res.getString("sod_status").equals("close")) {
+                           if (! res.getString("sod_status").equals("closed")) {
                                    complete = false;
                                 }
                         }
 
                        
                        if (complete) {
-                        st.executeUpdate( "update so_mstr set so_status  = 'close' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update so_mstr set so_status  = 'closed' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");
@@ -20307,14 +20309,14 @@ public class OVData {
                            if (res.getString("sod_status").equals("open")) {
                                    partial = true;
                                 }
-                           if (! res.getString("sod_status").equals("close")) {
+                           if (! res.getString("sod_status").equals("closed")) {
                                    complete = false;
                                 }
                         }
 
                        
                        if (complete) {
-                        st.executeUpdate( "update so_mstr set so_status = 'close' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update so_mstr set so_status = 'closed' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");

@@ -505,7 +505,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     refreshDisplayTotals();
                     
-                    if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
+                    if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0) {
                              lblstatus.setText("Order has been invoiced and is now closed.");
                              lblstatus.setForeground(Color.blue);
                              setPanelComponentState(this, false);
@@ -702,7 +702,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> 'close' " + 
+                                    " AND so_status <> 'closed' " + 
                                     " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +          
                                     " group by sod_part ;");
 
@@ -909,7 +909,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
-                        if (orddet.getValueAt(j, 11).toString().equals("close"))
+                        if (orddet.getValueAt(j, 11).toString().equals("closed"))
                             continue;
                         
                         
@@ -935,7 +935,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> 'close' " + 
+                                    " AND so_status <> 'closed' " + 
                                     " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +   
                                     " AND so_nbr <> " + "'" + tbkey.getText() + "'" +
                                     " group by sod_part ;");
@@ -2344,7 +2344,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel90.setText("ShipVia");
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "cancel", "error", "hold", "open", "backorder", "close", "" }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "cancel", "error", "hold", "open", "backorder", "closed", " " }));
 
         jLabel83.setText("PO Number");
 
@@ -3426,7 +3426,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
-            if (orddet.getValueAt(i, 11).toString().equals("close") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+            if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
                 bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
                 return;
             } else {
@@ -3859,7 +3859,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 return;
         }
         for (int i : rows) {
-            if (orddet.getValueAt(i, 11).toString().equals("close") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+            if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
                 bsmf.MainFrame.show("Cannot Update Closed or Partial Item");
                 return;
             } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {

@@ -22,7 +22,7 @@
 		<![CDATA[select shd_id, sh_curr, it_desc, cm_terms,
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax') as charges, 
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt)  end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax') as taxes,
-sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
+sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String"/>
 	<field name="sh_curr" class="java.lang.Object"/>
@@ -61,6 +61,7 @@ sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_boxes, sh_pallets,
 	<field name="sh_bol" class="java.lang.String"/>
 	<field name="sh_ref" class="java.lang.String"/>
 	<field name="cm_terms" class="java.lang.String"/>
+	<field name="shd_serial" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
 	</variable>
@@ -420,6 +421,13 @@ sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_boxes, sh_pallets,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_taxamt}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="189" y="16" width="217" height="16" uuid="8cc82b22-607e-435c-9767-53bdb1fbfad0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tracking/Serial: " + $F{shd_serial}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
@@ -482,21 +490,6 @@ sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_boxes, sh_pallets,
 				<reportElement x="70" y="40" width="71" height="20" uuid="9a938cf1-ba7a-469e-9946-542741c922d7"/>
 				<textFieldExpression><![CDATA[$F{sh_pallets}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="149" y="11" width="178" height="87" uuid="7ed0fe99-eecf-4bcc-9468-556cb256eff6"/>
-				<subreportParameter name="myid">
-					<subreportParameterExpression><![CDATA[$F{shd_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "tracking.jasper"]]></subreportExpression>
-			</subreport>
-			<staticText>
-				<reportElement x="149" y="0" width="81" height="11" uuid="98ff6c23-f1c0-4468-bc49-d01c7ab5718d"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Tracking Numbers:]]></text>
-			</staticText>
 		</band>
 	</lastPageFooter>
 	<summary>

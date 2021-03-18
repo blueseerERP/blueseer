@@ -435,7 +435,7 @@ try {
                 while (res.next()) {
                     if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
                         continue;
-                    if (! cbclose.isSelected() && res.getString("so_status").equals("close"))
+                    if (! cbclose.isSelected() && res.getString("so_status").equals("closed"))
                         continue;
                     if (! cbbackorder.isSelected() && res.getString("so_status").equals("backorder"))
                         continue;

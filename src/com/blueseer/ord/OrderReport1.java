@@ -162,7 +162,7 @@ public class OrderReport1 extends javax.swing.JPanel {
          if ("error".equals(status)) {
             c.setBackground(Color.red);
             c.setForeground(Color.WHITE);
-        } else if ("close".equals(status)) {
+        } else if ("closed".equals(status)) {
             c.setBackground(Color.blue);
             c.setForeground(Color.WHITE);
         } else if ("backorder".equals(status)) {
@@ -550,7 +550,7 @@ try {
                     
                     if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
                         continue;
-                    if (! cbclose.isSelected() && res.getString("so_status").equals("close"))
+                    if (! cbclose.isSelected() && res.getString("so_status").equals("closed"))
                         continue;
                     if (! cbbackorder.isSelected() && res.getString("so_status").equals("backorder"))
                         continue;

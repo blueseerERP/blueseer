@@ -540,8 +540,8 @@
                     <StringItem index="2" value="hold"/>
                     <StringItem index="3" value="open"/>
                     <StringItem index="4" value="backorder"/>
-                    <StringItem index="5" value="close"/>
-                    <StringItem index="6" value=""/>
+                    <StringItem index="5" value="closed"/>
+                    <StringItem index="6" value=" "/>
                   </StringArray>
                 </Property>
               </Properties>
