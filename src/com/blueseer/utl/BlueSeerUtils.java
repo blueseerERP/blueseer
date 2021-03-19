@@ -29,6 +29,14 @@ import bsmf.MainFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -41,9 +49,17 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -109,6 +125,219 @@ public class BlueSeerUtils {
     
     public static String SuccessBit = "0";
     public static String ErrorBit = "1";
+    
+    // lookup variables
+        public static javax.swing.table.DefaultTableModel luModel = null;
+        public static JTable luTable = new JTable();
+        public static MouseListener luml = null;
+        public static ActionListener lual = null;
+        public static JDialog ludialog = new JDialog();
+        public static ButtonGroup lubg = null;
+        public static JRadioButton lurb1 = null;
+        public static JRadioButton lurb2 = null;
+        public static JRadioButton lurb3 = null;
+        public static JRadioButton lurb4 = null;
+        public static JTextField luinput = new JTextField(20);
+    
+    public static void callDialog(String rb1, String rb2) {
+        
+         if (ludialog != null) {
+            ludialog.dispose();
+        }
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        
+        luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+        JPanel rbpanel = new JPanel();
+        lubg = new ButtonGroup();
+        lurb1 = new JRadioButton(rb1);
+        lurb2 = new JRadioButton(rb2);
+        lurb1.setSelected(true);
+        lurb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(lurb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(lurb2);
+        lubg.add(lurb1);
+        lubg.add(lurb2);
+        
+        
+        ludialog = new JDialog();
+        ludialog.setTitle("Search By Text:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(luinput, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+    } 
+     
+    public static void callDialog(String rb1, String rb2, String rb3) {
+        
+         if (ludialog != null) {
+            ludialog.dispose();
+        }
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        
+        luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+        JPanel rbpanel = new JPanel();
+        
+        lubg = new ButtonGroup();
+        lurb1 = new JRadioButton(rb1);
+        lurb2 = new JRadioButton(rb2);
+        lurb3 = new JRadioButton(rb3);
+        
+        lurb1.setSelected(true);
+        lurb2.setSelected(false);
+        lurb3.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(lurb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(lurb2);
+        rbpanel.add(spacer);
+        rbpanel.add(lurb3);
+        lubg.add(lurb1);
+        lubg.add(lurb2);
+        lubg.add(lurb3);
+        
+        
+        ludialog = new JDialog();
+        ludialog.setTitle("Search By Text:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(luinput, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+    } 
+    
+    public static void callDialog(String rb1, String rb2, String rb3, String rb4) {
+        
+         if (ludialog != null) {
+            ludialog.dispose();
+        }
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        
+        luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+        JPanel rbpanel = new JPanel();
+        
+        lubg = new ButtonGroup();
+        lurb1 = new JRadioButton(rb1);
+        lurb2 = new JRadioButton(rb2);
+        lurb3 = new JRadioButton(rb3);
+        lurb4 = new JRadioButton(rb4);
+        
+        lurb1.setSelected(true);
+        lurb2.setSelected(false);
+        lurb3.setSelected(false);
+        lurb4.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(lurb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(lurb2);
+        rbpanel.add(spacer);
+        rbpanel.add(lurb3);
+        rbpanel.add(spacer);
+        rbpanel.add(lurb4);
+        lubg.add(lurb1);
+        lubg.add(lurb2);
+        lubg.add(lurb3);
+        lubg.add(lurb4);
+        
+        
+        ludialog = new JDialog();
+        ludialog.setTitle("Search By Text:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(luinput, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+    } 
+    
     
     public static String bsformat(String type, String invalue, String precision) {
         String outvalue = "";

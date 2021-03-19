@@ -27,6 +27,14 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -502,96 +510,43 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
     }
     
     public void lookUpFrame() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-      
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (rb1.isSelected()) {  
-         lookUpModel = DTData.getGenCodeBrowseUtil(input.getText(),0, "code_code");
-        } else {
-         lookUpModel = DTData.getGenCodeBrowseUtil(input.getText(),0, "code_key");   
-        }
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
         
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(500,200));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getGenCodeBrowseUtil(luinput.getText(),0, "code_code");
+        } else {
+         luModel = DTData.getGenCodeBrowseUtil(luinput.getText(),0, "code_key");  
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 JTable target = (JTable)e.getSource();
                 int row = target.getSelectedRow();
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
-                dialog.dispose();
+                ludialog.dispose();
                 initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
                 }
             }
         };
-        lookUpTable.addMouseListener(mllu);
+        luTable.addMouseListener(luml);
       
-        
-        JPanel rbpanel = new JPanel();
-        bg = new ButtonGroup();
-        rb1 = new JRadioButton("GenCode");
-        rb2 = new JRadioButton("GenKey");
-        rb1.setSelected(true);
-        rb2.setSelected(false);
-        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
-        rbpanel.setLayout(radiobuttonpanellayout);
-        rbpanel.add(rb1);
-        JLabel spacer = new JLabel("   ");
-        rbpanel.add(spacer);
-        rbpanel.add(rb2);
-        bg.add(rb1);
-        bg.add(rb2);
+        callDialog("GenCode", "GenKey"); 
         
         
-        dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-      
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(input, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add( scrollPane, gbc );
-        
-        dialog.add(panel);
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setResizable(false);
-        dialog.setVisible(true);
     }
 
     
