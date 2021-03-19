@@ -911,17 +911,17 @@ public class DTData {
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT site_site, site_desc, site_line1, site_city, site_state, site_zip, site_logo  " +
                         " FROM  site_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by site_site ;");
+                        " order by site_site limit 300 ;");
                 }
                 if (state == 2) { // ends
                     res = st.executeQuery("SELECT site_site, site_desc, site_line1, site_city, site_state, site_zip, site_logo   " +
                         " FROM  site_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by site_site ;");
+                        " order by site_site limit 300 ;");
                 }
                  if (state == 0) { // match
                  res = st.executeQuery("SELECT site_site, site_desc, site_line1, site_city, site_state, site_zip, site_logo   " +
                         " FROM  site_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by site_site ;");
+                        " order by site_site limit 300 ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
@@ -4698,7 +4698,7 @@ public class DTData {
         public static DefaultTableModel getItemDescBrowse(String str, String myfield) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc"})
+                        new String[]{"select", "Item", "Desc", "Class", "Type"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4715,13 +4715,15 @@ public class DTData {
             ResultSet res = null;
             try{
 
-              res = st.executeQuery(" select *  " +
+              res = st.executeQuery(" select it_item, it_desc, it_code, it_type  " +
                         " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by it_item;");  
+                        " order by it_item limit 300;");  
                 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
-                                res.getString("it_desc")
+                                res.getString("it_desc"),
+                                res.getString("it_code"),
+                                res.getString("it_type")
                                 });
                 }
 

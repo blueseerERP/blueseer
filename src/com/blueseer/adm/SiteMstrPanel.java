@@ -28,22 +28,36 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 
@@ -56,6 +70,16 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
     // global variable declarations
                 boolean isLoad = false;
     
+               
+    // lookup variables
+        public static javax.swing.table.DefaultTableModel lookUpModel = null;
+        public static JTable lookUpTable = new JTable();
+        public static MouseListener mllu = null;
+        public static JDialog dialog = new JDialog();
+        public static ButtonGroup bg = null;
+        public static JRadioButton rb1 = null;
+        public static JRadioButton rb2 = null;
+                
    // global datatablemodel declarations    
         
     
@@ -291,7 +315,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         
         
         
@@ -505,7 +529,100 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
      return m;
     }
    
-   
+    public void lookUpFrame() {
+        if (dialog != null) {
+            dialog.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
+        }
+      
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getSiteBrowseUtil(input.getText(),0, "site_site");
+        } else {
+         lookUpModel = DTData.getSiteBrowseUtil(input.getText(),0, "site_desc");   
+        }
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            dialog.setTitle("No Records Found!");
+        } else {
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                dialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString()});
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("site");
+        rb2 = new JRadioButton("description");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
+        dialog = new JDialog();
+        dialog.setTitle("Search By Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setResizable(false);
+        dialog.setVisible(true);
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -533,11 +650,11 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tbkey = new javax.swing.JTextField();
-        btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         ddcountry = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
+        btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -582,13 +699,6 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -604,6 +714,13 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel15.setText("Country");
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -638,8 +755,8 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
@@ -654,10 +771,10 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
-                    .addComponent(btbrowse)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
-                        .addComponent(btclear)))
+                        .addComponent(btclear))
+                    .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -864,10 +981,6 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         executeTask("delete" ,new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"sitemaint","site_site"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
@@ -881,12 +994,16 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddcountry;

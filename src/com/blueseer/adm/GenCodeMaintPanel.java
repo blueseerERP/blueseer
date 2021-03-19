@@ -26,22 +26,36 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 
@@ -51,8 +65,17 @@ import javax.swing.SwingWorker;
  */
 public class GenCodeMaintPanel extends javax.swing.JPanel    {
 
-     // global variable declarations
-                boolean isLoad = false;
+    // global variable declarations
+    boolean isLoad = false;
+    
+    // lookup variables
+    public static javax.swing.table.DefaultTableModel lookUpModel = null;
+    public static JTable lookUpTable = new JTable();
+    public static MouseListener mllu = null;
+    public static JDialog dialog = new JDialog();
+    public static ButtonGroup bg = null;
+    public static JRadioButton rb1 = null;
+    public static JRadioButton rb2 = null;
     
    // global datatablemodel declarations    
         
@@ -270,7 +293,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         cbsystem.setEnabled(false);
         // this is a two key data record
         if (arg != null && arg.length > 1) {
@@ -478,6 +501,100 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
 
     }
     
+    public void lookUpFrame() {
+        if (dialog != null) {
+            dialog.dispose();
+        }
+        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
+        lookUpModel.setRowCount(0);
+        lookUpModel.setColumnCount(0);
+        }
+      
+       lookUpTable.removeMouseListener(mllu);
+        final JTextField input = new JTextField(20);
+        input.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (rb1.isSelected()) {  
+         lookUpModel = DTData.getGenCodeBrowseUtil(input.getText(),0, "code_code");
+        } else {
+         lookUpModel = DTData.getGenCodeBrowseUtil(input.getText(),0, "code_key");   
+        }
+        lookUpTable.setModel(lookUpModel);
+        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (lookUpModel.getRowCount() < 1) {
+            dialog.setTitle("No Records Found!");
+        } else {
+            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
+        }
+        }
+        });
+        
+       
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(lookUpTable);
+        mllu = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                dialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        lookUpTable.addMouseListener(mllu);
+      
+        
+        JPanel rbpanel = new JPanel();
+        bg = new ButtonGroup();
+        rb1 = new JRadioButton("GenCode");
+        rb2 = new JRadioButton("GenKey");
+        rb1.setSelected(true);
+        rb2.setSelected(false);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(rb1);
+        JLabel spacer = new JLabel("   ");
+        rbpanel.add(spacer);
+        rbpanel.add(rb2);
+        bg.add(rb1);
+        bg.add(rb2);
+        
+        
+        dialog = new JDialog();
+        dialog.setTitle("Search By Text:");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(input, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        dialog.add(panel);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo( null );
+        dialog.setResizable(false);
+        dialog.setVisible(true);
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -498,10 +615,9 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         tbvalue = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
-        btbrowsekey = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         cbsystem = new javax.swing.JCheckBox();
+        btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -553,20 +669,6 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
-        btbrowsekey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowsekey.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowsekeyActionPerformed(evt);
-            }
-        });
-
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -575,6 +677,13 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         });
 
         cbsystem.setText("System Use");
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -597,16 +706,13 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                                    .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btbrowsekey, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(22, 22, 22)
                             .addComponent(btnew)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btclear))
@@ -617,20 +723,18 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addComponent(btbrowse))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
-                    .addComponent(btbrowsekey))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(btlookup))
+                .addGap(8, 8, 8)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbkey2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbvalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -641,7 +745,7 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -671,15 +775,6 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         executeTask("delete", new String[]{tbkey.getText(), tbkey2.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"gencodemaint","code_code"});
-        
-    }//GEN-LAST:event_btbrowseActionPerformed
-
-    private void btbrowsekeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowsekeyActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"gencodemaint","code_key"});
-    }//GEN-LAST:event_btbrowsekeyActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
@@ -697,13 +792,16 @@ public class GenCodeMaintPanel extends javax.swing.JPanel    {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
-    private javax.swing.JButton btbrowsekey;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbsystem;
