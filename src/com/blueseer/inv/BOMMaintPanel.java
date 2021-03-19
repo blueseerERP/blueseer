@@ -635,6 +635,12 @@ public void bind_tree(String parentpart) {
 
         jLabel5.setText("Reference");
 
+        tbqtyper.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyperFocusLost(evt);
+            }
+        });
+
         jLabel1.setText("Parent Item");
 
         ddcomp.addActionListener(new java.awt.event.ActionListener() {
@@ -1601,6 +1607,19 @@ public void bind_tree(String parentpart) {
        OVData.setStandardCosts(site, parent);
        getCostSets(parent);
     }//GEN-LAST:event_btrollActionPerformed
+
+    private void tbqtyperFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyperFocusLost
+         String x = BlueSeerUtils.bsformat("", tbqtyper.getText(), "5");
+        if (x.equals("error")) {
+            tbqtyper.setText("");
+            tbqtyper.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbqtyper.requestFocus();
+        } else {
+            tbqtyper.setText(x);
+            tbqtyper.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbqtyperFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
