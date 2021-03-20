@@ -139,6 +139,62 @@ public class BlueSeerUtils {
         public static JRadioButton lurb4 = null;
         public static JTextField luinput = new JTextField(20);
     
+    public static void callDialog(String rb1) {
+        
+         if (ludialog != null) {
+            ludialog.dispose();
+        }
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        
+        luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+        JPanel rbpanel = new JPanel();
+        lubg = new ButtonGroup();
+        lurb1 = new JRadioButton(rb1);
+        lurb1.setSelected(true);
+        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
+        rbpanel.setLayout(radiobuttonpanellayout);
+        rbpanel.add(lurb1);
+        lubg.add(lurb1);
+        lubg.add(lurb2);
+        
+        
+        ludialog = new JDialog();
+        ludialog.setTitle("Search By Text:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(luinput, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(rbpanel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+    } 
+        
+        
     public static void callDialog(String rb1, String rb2) {
         
          if (ludialog != null) {

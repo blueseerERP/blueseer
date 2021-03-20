@@ -28,7 +28,20 @@ package com.blueseer.dst;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +53,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 
 /**
@@ -60,7 +74,7 @@ public class DOMaint extends javax.swing.JPanel {
         
         initvars(null);
         
-        btbrowse.setEnabled(false);
+        btlookup.setEnabled(false);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
         btadd.setEnabled(false);
@@ -188,7 +202,7 @@ public class DOMaint extends javax.swing.JPanel {
         tbtotqty.setEnabled(true);
        
         
-          btbrowse.setEnabled(true);
+          btlookup.setEnabled(true);
         
           btpoprint.setEnabled(true);
         btnew.setEnabled(true);
@@ -222,7 +236,7 @@ public class DOMaint extends javax.swing.JPanel {
         tbtotqty.setEnabled(false);
        
         
-          btbrowse.setEnabled(false);
+          btlookup.setEnabled(false);
          
           btpoprint.setEnabled(false);
         btnew.setEnabled(false);
@@ -252,7 +266,7 @@ public class DOMaint extends javax.swing.JPanel {
         orddet.setModel(myorddetmodel);
        
         
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
         btadd.setEnabled(true);
@@ -304,12 +318,54 @@ public class DOMaint extends javax.swing.JPanel {
         } else {
               disableAll();
               btnew.setEnabled(true);
-              btbrowse.setEnabled(true);
+              btlookup.setEnabled(true);
               ordernbr.setEnabled(true);
           }
           
           
     }
+    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getDOBrowseUtil(luinput.getText(),0, "do_nbr");
+        } else {
+         luModel = DTData.getDOBrowseUtil(luinput.getText(),0, "do_wh_from");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Nbr", "From WH"); 
+        
+        
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -356,9 +412,9 @@ public class DOMaint extends javax.swing.JPanel {
         ddwhto = new javax.swing.JComboBox();
         jLabel91 = new javax.swing.JLabel();
         btpoprint = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
         tbref = new javax.swing.JTextField();
         jLabel92 = new javax.swing.JLabel();
+        btlookup = new javax.swing.JButton();
 
         jLabel4.setText("jLabel4");
 
@@ -489,14 +545,9 @@ public class DOMaint extends javax.swing.JPanel {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         jLabel92.setText("Reference");
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -542,7 +593,7 @@ public class DOMaint extends javax.swing.JPanel {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnew)
                                         .addGap(0, 0, Short.MAX_VALUE))
@@ -592,12 +643,15 @@ public class DOMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel76)
-                                .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btbrowse))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel76)
+                                    .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnew)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btlookup)
+                                    .addComponent(btnew))
                                 .addGap(13, 13, 13)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(ddwhfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -679,7 +733,7 @@ public class DOMaint extends javax.swing.JPanel {
                 
                 ddstatus.setEnabled(false);
                 btnew.setEnabled(false);
-                btbrowse.setEnabled(false);
+                btlookup.setEnabled(false);
                 btedit.setEnabled(false);
                 btpoprint.setEnabled(false);
                
@@ -806,16 +860,12 @@ public class DOMaint extends javax.swing.JPanel {
        OVData.printPurchaseOrder(ordernbr.getText());
     }//GEN-LAST:event_btpoprintActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"domaint","do_nbr"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
     private javax.swing.JComboBox ddpart;

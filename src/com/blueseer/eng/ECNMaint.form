@@ -81,8 +81,8 @@
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Component id="tbkey" min="-2" pref="63" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                               <Component id="btnew" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btclear" min="-2" max="-2" attributes="0"/>
@@ -164,14 +164,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="ddstatus" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel36" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="btbrowse" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="tbkey" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel24" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="btnew" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="btclear" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -421,16 +421,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnotesActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btbrowse">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/lookup.png"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btclear">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear"/>
@@ -445,6 +435,16 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btlookup">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/find.png"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

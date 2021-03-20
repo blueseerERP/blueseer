@@ -466,7 +466,7 @@ public class DTData {
     
     public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "ID", "REF", "Acct", "CC", "Site", "EffDate", "EntDate", "Desc", "Amount", "UserID"})
+                      new String[]{"select", "ID", "Ref", "Acct", "CC", "Site", "EffDate", "EntDate", "Desc", "Amount", "UserID"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1720,6 +1720,63 @@ public class DTData {
         
          } 
         
+        public static DefaultTableModel getFreightBrowseUtil(String str, int state, String myfield) {
+              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Code", "Desc", "Apply?"})
+                      {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+             
+       try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                    if (state == 1) { // begins
+                    res = st.executeQuery(" select * " +
+                        " FROM  frt_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by frt_code ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select task_id, task_desc, task_class, task_creator, task_status " +
+                        " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by frt_code ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select task_id, task_desc, task_class, task_creator, task_status  " +
+                        " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by frt_code ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
+                            res.getString("frt_code"),
+                            res.getString("frt_desc"),
+                            res.getString("frt_apply")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         }
+         
           public static DefaultTableModel getTaxBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "TaxCode", "Desc", "UserID"})
@@ -5797,7 +5854,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         
          }
             
-             public static DefaultTableModel getFreightAll() {
+        public static DefaultTableModel getFreightAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "Code", "Desc", "Apply?"})
                       {

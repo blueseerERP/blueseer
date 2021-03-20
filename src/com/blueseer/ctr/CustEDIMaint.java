@@ -30,13 +30,27 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JTable;
 
 /**
  *
@@ -175,7 +189,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btnew.setEnabled(true);
         btupdate.setEnabled(true);
         btdelete.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         btdeleteattribute.setEnabled(true);
         btaddattribute.setEnabled(true);
         tbisa.setEnabled(true);
@@ -206,7 +220,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
           btnew.setEnabled(false);
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        btbrowse.setEnabled(false);
+        btlookup.setEnabled(false);
         btdeleteattribute.setEnabled(false);
         btaddattribute.setEnabled(false);
         tbisa.setEnabled(false);
@@ -238,7 +252,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
        disableAll();
        
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
        
         if (arg != null && arg.length > 0) {
             getCustEDI(arg[0], arg[1], arg[2]);
@@ -247,6 +261,46 @@ public class CustEDIMaint extends javax.swing.JPanel {
        
     }
     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getEDICustBrowseUtil(luinput.getText(),0, "edi_id");
+        } else {
+         luModel = DTData.getEDICustBrowseUtil(luinput.getText(),0, "edi_doc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString(), target.getValueAt(row,3).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("ID", "DocType", "Direction"); 
+        
+        
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -278,12 +332,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
         jLabel16 = new javax.swing.JLabel();
         tbovisaq = new javax.swing.JTextField();
         tbmap = new javax.swing.JTextField();
-        btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         dddoc = new javax.swing.JComboBox<>();
         rbin = new javax.swing.JRadioButton();
         rbout = new javax.swing.JRadioButton();
         tbisa = new javax.swing.JTextField();
+        btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tbfilepath = new javax.swing.JTextField();
@@ -353,13 +407,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
         jLabel16.setText("BS Q");
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -370,6 +417,13 @@ public class CustEDIMaint extends javax.swing.JPanel {
         rbin.setText("Inbound");
 
         rbout.setText("Outbound");
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -408,9 +462,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             .addComponent(tbovgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
                                 .addComponent(btnew))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(rbin)
@@ -428,11 +482,11 @@ public class CustEDIMaint extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btbrowse)
                     .addComponent(btnew)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbin)
@@ -893,16 +947,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"edicustmaint","edi_id"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         clearAll();
         enableAll();
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        btbrowse.setEnabled(false);
+        btlookup.setEnabled(false);
         btnew.setEnabled(false);
     }//GEN-LAST:event_btnewActionPerformed
 
@@ -1004,13 +1054,17 @@ public class CustEDIMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeleteattributeActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattribute;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteattribute;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.ButtonGroup buttonGroup1;

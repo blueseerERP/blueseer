@@ -28,6 +28,15 @@ package com.blueseer.fap;
 import com.blueseer.utl.OVData;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,6 +91,7 @@ import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.JTable;
 
 
 /**
@@ -132,7 +142,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         btadd.setEnabled(false);
         btedit.setEnabled(false);
         btnew.setEnabled(false);
-        btbrowse.setEnabled(false);
+        btlookup.setEnabled(false);
         btadditem.setEnabled(false);
         btdeleteitem.setEnabled(false);
        btadd.setEnabled(false);
@@ -170,7 +180,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         btadd.setEnabled(true);
         btedit.setEnabled(true);
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
        
         btadditem.setEnabled(true);
         btdeleteitem.setEnabled(true);
@@ -249,13 +259,53 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         disableAll();
         
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         
          if (arg != null && arg.length > 0) {
             getvoucherinfo(arg[0]);
         }
     }
     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getVoucherBrowseUtil(luinput.getText(),0, "vod_id");
+        } else {
+         luModel = DTData.getVoucherBrowseUtil(luinput.getText(),0, "ap_vend");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Nbr", "VendCode"); 
+        
+        
+    }
+
     
     javax.swing.table.DefaultTableModel receivermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -479,8 +529,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         ddsite = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
-        btbrowse = new javax.swing.JButton();
         lbvendor = new javax.swing.JLabel();
+        btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -621,10 +671,10 @@ public class VouchMaintPanel extends javax.swing.JPanel {
 
         jLabel10.setText("Site");
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
+                btlookupActionPerformed(evt);
             }
         });
 
@@ -691,8 +741,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                         .addComponent(vouchernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(13, 13, 13)
                                                         .addComponent(btnew)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(jLabel27)))
@@ -747,7 +797,7 @@ public class VouchMaintPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(vouchernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -756,8 +806,8 @@ public class VouchMaintPanel extends javax.swing.JPanel {
                         .addComponent(jLabel27)
                         .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel28))
-                    .addComponent(btbrowse))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(btlookup))
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel37)
@@ -1192,17 +1242,17 @@ public class VouchMaintPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_ddsiteActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"vouchmaint","vod_id"});
-    }//GEN-LAST:event_btbrowseActionPerformed
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
     private javax.swing.JButton btadditem;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btedit;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox ddpo;

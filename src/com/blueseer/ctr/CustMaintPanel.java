@@ -29,10 +29,25 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.ord.OrderMaintPanel;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.lurb3;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -232,10 +247,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void initvars(String[] arg) {
         
-        // do this for shipto only and bail
-        if (arg != null && arg.length == 2) {
-            executeTask("getShipTo", arg);
-        } else {
+       
            setPanelComponentState(mainPanel, false); 
            setPanelComponentState(shiptoPanel, false); 
            setPanelComponentState(contactPanel, false); 
@@ -243,19 +255,17 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
            setComponentDefaultValues();
            btnew.setEnabled(true);
-           btcustcodebrowse.setEnabled(true);
-           btcustzipbrowse.setEnabled(true);
-           btcustnamebrowse.setEnabled(true);
+           btlookup.setEnabled(true);
            tbkey.requestFocus();
        
         
-          if (arg != null && arg.length == 1) {
+           if (arg != null && arg.length > 0) {
             executeTask("get", arg);
           } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
           }
-        }
+       
         
     }
         
@@ -596,7 +606,66 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
               return r;
      }
      
-    
+    public void lookUpFrame(String option) {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (option.equals("shipto")) {
+            if (lurb1.isSelected()) {  
+             luModel = DTData.getShipToBrowseUtil(luinput.getText(),0, "cms_shipto", tbkey.getText());
+            } else if (lurb2.isSelected()) {
+             luModel = DTData.getShipToBrowseUtil(luinput.getText(),0, "cms_name", tbkey.getText());   
+            } else if (lurb3.isSelected()) {
+             luModel = DTData.getShipToBrowseUtil(luinput.getText(),0, "cms_line1", tbkey.getText());
+            } else {
+             luModel = DTData.getShipToBrowseUtil(luinput.getText(),0, "cms_zip", tbkey.getText());   
+            }
+        } else {
+            if (lurb1.isSelected()) {  
+             luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_code");
+            } else if (lurb2.isSelected()) {
+             luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_name");   
+            } else if (lurb3.isSelected()) {
+             luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_line1");
+            } else {
+             luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_zip");   
+            }
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                    ludialog.dispose();
+                    if (option.equals("shipto")) {
+                        getShipTo(new String[]{target.getValueAt(row,2).toString(), target.getValueAt(row,1).toString()});
+                    } else {
+                    initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                    }
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Code", "Name", "AddrLine", "Zip"); 
+        
+        
+    }
+
     
     // additional functions 
      public void overrideComponentState() {
@@ -1071,19 +1140,17 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        btcustcodebrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbremarks = new javax.swing.JTextArea();
         jLabel29 = new javax.swing.JLabel();
-        btcustnamebrowse = new javax.swing.JButton();
-        btcustzipbrowse = new javax.swing.JButton();
         tbmainphone = new javax.swing.JTextField();
         tbmainemail = new javax.swing.JTextField();
         jLabel44 = new javax.swing.JLabel();
         jLabel45 = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbdatemod = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -1148,9 +1215,9 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel38 = new javax.swing.JLabel();
         btshipadd = new javax.swing.JButton();
         btshipedit = new javax.swing.JButton();
-        btshiptobrowse = new javax.swing.JButton();
         btshipnew = new javax.swing.JButton();
         tbshipcode = new javax.swing.JTextField();
+        btlookupShipTo = new javax.swing.JButton();
         contactPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contacttable = new javax.swing.JTable();
@@ -1191,13 +1258,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel6.setText("City");
 
-        btcustcodebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btcustcodebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btcustcodebrowseActionPerformed(evt);
-            }
-        });
-
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1217,20 +1277,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel29.setText("Remarks");
 
-        btcustnamebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btcustnamebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btcustnamebrowseActionPerformed(evt);
-            }
-        });
-
-        btcustzipbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btcustzipbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btcustzipbrowseActionPerformed(evt);
-            }
-        });
-
         jLabel44.setText("Phone");
 
         jLabel45.setText("Email");
@@ -1239,6 +1285,13 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
             }
         });
 
@@ -1265,30 +1318,21 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbline3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btcustnamebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbline3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btcustzipbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btcustcodebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnew)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btclear)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)))
+                        .addContainerGap(24, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(tbmainemail)
@@ -1303,19 +1347,17 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btcustcodebrowse)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
-                        .addComponent(btclear)))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
-                    .addComponent(btcustnamebrowse))
+                        .addComponent(btclear))
+                    .addComponent(btlookup))
+                .addGap(17, 17, 17)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1336,12 +1378,10 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8))
-                    .addComponent(btcustzipbrowse))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1634,17 +1674,17 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btshiptobrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btshiptobrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btshiptobrowseActionPerformed(evt);
-            }
-        });
-
         btshipnew.setText("New");
         btshipnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btshipnewActionPerformed(evt);
+            }
+        });
+
+        btlookupShipTo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupShipTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupShipToActionPerformed(evt);
             }
         });
 
@@ -1660,8 +1700,8 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbshipcode, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btshiptobrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookupShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
                         .addComponent(btshipnew))
                     .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(shiptoPanelLayout.createSequentialGroup()
@@ -1700,9 +1740,9 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addContainerGap()
                 .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel36)
-                    .addComponent(btshiptobrowse)
                     .addComponent(btshipnew)
-                    .addComponent(tbshipcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbshipcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btlookupShipTo))
                 .addGap(15, 15, 15)
                 .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbshipname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1956,10 +1996,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
     }//GEN-LAST:event_btshipeditActionPerformed
 
-    private void btcustcodebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustcodebrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_code"});
-    }//GEN-LAST:event_btcustcodebrowseActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         if (OVData.isAutoCust()) {
           newAction("customer");
@@ -1970,10 +2006,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
       
         
     }//GEN-LAST:event_btnewActionPerformed
-
-    private void btshiptobrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiptobrowseActionPerformed
-        bsmf.MainFrame.reinitpanels("BrowseUtil", true, new String[]{"shiptomaint","cms_shipto",tbkey.getText()}); 
-    }//GEN-LAST:event_btshiptobrowseActionPerformed
 
     private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
         clearShipTo();
@@ -2011,14 +2043,6 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }//GEN-LAST:event_contacttableMouseClicked
 
-    private void btcustnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustnamebrowseActionPerformed
-       reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_name"});
-    }//GEN-LAST:event_btcustnamebrowseActionPerformed
-
-    private void btcustzipbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcustzipbrowseActionPerformed
-       reinitpanels("BrowseUtil", true, new String[]{"custmaint","cm_zip"});
-    }//GEN-LAST:event_btcustzipbrowseActionPerformed
-
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
           if (! validateInput("deleteRecord")) {
            return;
@@ -2037,21 +2061,27 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame("");
+    }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btlookupShipToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupShipToActionPerformed
+        lookUpFrame("shipto");
+    }//GEN-LAST:event_btlookupShipToActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddcontact;
     private javax.swing.JButton btclear;
-    private javax.swing.JButton btcustcodebrowse;
-    private javax.swing.JButton btcustnamebrowse;
-    private javax.swing.JButton btcustzipbrowse;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeletecontact;
     private javax.swing.JButton bteditcontact;
+    private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupShipTo;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btshipadd;
     private javax.swing.JButton btshipedit;
     private javax.swing.JButton btshipnew;
-    private javax.swing.JButton btshiptobrowse;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbonhold;
     private javax.swing.JCheckBox cbshipto;

@@ -117,7 +117,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="ordernbr" min="-2" pref="72" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
+                                              <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="btnew" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -186,13 +186,18 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                      <Component id="jLabel76" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="ordernbr" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btbrowse" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="jLabel76" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ordernbr" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="btlookup" min="-2" max="-2" attributes="0"/>
+                                          <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="ddwhfrom" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -487,21 +492,18 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpoprintActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btbrowse">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/lookup.png"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JTextField" name="tbref">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel92">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reference"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btlookup">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/find.png"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
