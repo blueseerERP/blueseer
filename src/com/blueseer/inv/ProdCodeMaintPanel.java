@@ -30,9 +30,22 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -450,7 +463,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -690,7 +703,46 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
       return m;
     }
     
-    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getProdCodeBrowseUtil(luinput.getText(),0, "pl_line");
+        } else {
+         luModel = DTData.getProdCodeBrowseUtil(luinput.getText(),0, "pl_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Code", "Description"); 
+        
+        
+    }
+
     // custom funcs
     
     
@@ -766,10 +818,10 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         tbmtlusagevaracct = new javax.swing.JTextField();
         tbjobstockacct = new javax.swing.JTextField();
         jLabel94 = new javax.swing.JLabel();
-        btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -853,13 +905,6 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
 
         jLabel94.setText("Job Stock Acct");
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -878,6 +923,13 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
             }
         });
 
@@ -952,7 +1004,8 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                                     .addComponent(jLabel84, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(7, 7, 7)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1002,8 +1055,8 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(44, 44, 44)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel67)
@@ -1011,8 +1064,8 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                         .addComponent(jLabel66)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addComponent(btbrowse))
-                .addGap(18, 18, 18)
+                    .addComponent(btlookup))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1131,10 +1184,6 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"prodcodemaint","pl_line"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         newAction("");
     }//GEN-LAST:event_btnewActionPerformed
@@ -1156,12 +1205,16 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JLabel jLabel66;

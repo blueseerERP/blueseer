@@ -30,11 +30,24 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -280,7 +293,7 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                              lbstatus.setForeground(Color.blue);
                              setPanelComponentState(this, false);
                              btnew.setEnabled(true);
-                             btbrowse.setEnabled(true);
+                             btlookup.setEnabled(true);
                              btadd.setEnabled(false);
                              btupdate.setEnabled(false);
                              btdelete.setEnabled(false);
@@ -329,7 +342,7 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -602,7 +615,46 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
       return m;
     }
     
-    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_part");
+        } else {
+         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_part_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Part", "Part Description"); 
+        
+        
+    }
+
    
     public QPRMaintPanel() {
         
@@ -720,11 +772,11 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbSuppNbr = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
         dccreate = new com.toedter.calendar.JDateChooser();
         dcupdate = new com.toedter.calendar.JDateChooser();
         dcclose = new com.toedter.calendar.JDateChooser();
         lbstatus = new javax.swing.JLabel();
+        btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -857,18 +909,18 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         dccreate.setDateFormatString("yyyy-MM-dd");
 
         dcupdate.setDateFormatString("yyyy-MM-dd");
 
         dcclose.setDateFormatString("yyyy-MM-dd");
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -953,8 +1005,8 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                                                 .addGap(60, 60, 60))
                                                             .addComponent(tbkey, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(13, 13, 13)
                                                         .addComponent(btnew)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addComponent(btclear)
@@ -976,9 +1028,8 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                                 .addComponent(jLabel14)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(dcclose, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbScrapped)
-                                        .addComponent(cbExternal))
+                                    .addComponent(cbScrapped)
+                                    .addComponent(cbExternal)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(cbDeviation)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1008,17 +1059,17 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btclear, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btbrowse, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dccreate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbkey, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnew, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tbOriginator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btclear)
+                    .addComponent(dccreate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnew)
+                    .addComponent(jLabel2)
+                    .addComponent(tbOriginator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(btlookup))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1360,10 +1411,6 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }// TODO add your handling code here:
     }//GEN-LAST:event_btprintActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"qprmaint","qual_id"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
         if (! validateInput("deleteRecord")) {
            return;
@@ -1381,12 +1428,16 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprint;
     private javax.swing.JButton btupdate;

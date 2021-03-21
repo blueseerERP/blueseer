@@ -51,7 +51,21 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -442,9 +456,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btbrowse.setEnabled(true);
-        btlnamebrowse.setEnabled(true);
-        btfnamebrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -764,7 +776,48 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
       return m;
     }
     
-    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getEmpBrowseUtil(luinput.getText(),0, "emp_nbr");
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getEmpBrowseUtil(luinput.getText(),0, "emp_lname");   
+        } else {
+         luModel = DTData.getEmpBrowseUtil(luinput.getText(),0, "emp_fname");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("EmpNbr", "LastName", "FirstName"); 
+        
+        
+    }
+
     
     // custom funcs
     public void getEarnings(String empnbr, String checknbr) {
@@ -1167,8 +1220,6 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         cbautoclock = new javax.swing.JCheckBox();
-        btlnamebrowse = new javax.swing.JButton();
-        btfnamebrowse = new javax.swing.JButton();
         cbactive = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -1186,9 +1237,9 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         ddsite = new javax.swing.JComboBox<>();
         jLabel28 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
         tbclear = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         jPanelPay = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -1409,20 +1460,6 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
 
         cbautoclock.setText("AutoClock");
 
-        btlnamebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btlnamebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btlnamebrowseActionPerformed(evt);
-            }
-        });
-
-        btfnamebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btfnamebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btfnamebrowseActionPerformed(evt);
-            }
-        });
-
         cbactive.setText("Active?");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -1474,11 +1511,7 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(middlename, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(dcdob, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btlnamebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btfnamebrowse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(48, 48, 48))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1489,14 +1522,10 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(lastname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel47))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(btlnamebrowse)
-                                .addGap(16, 16, 16)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(firstname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel49)))
-                            .addComponent(btfnamebrowse))
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(firstname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel49))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(middlename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1636,13 +1665,6 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1654,6 +1676,13 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         tbclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbclearActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
             }
         });
 
@@ -1679,8 +1708,8 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbclear)
@@ -1704,10 +1733,10 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel46))
-                    .addComponent(btbrowse)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
-                        .addComponent(tbclear)))
+                        .addComponent(tbclear))
+                    .addComponent(btlookup))
                 .addGap(12, 12, 12)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
@@ -2039,18 +2068,6 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         executeTask("delete", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_nbr"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
-    private void btlnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlnamebrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_lname"});
-    }//GEN-LAST:event_btlnamebrowseActionPerformed
-
-    private void btfnamebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfnamebrowseActionPerformed
-         reinitpanels("BrowseUtil", true, new String[]{"empmaint","emp_fname"});
-    }//GEN-LAST:event_btfnamebrowseActionPerformed
-
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         newAction("");
     }//GEN-LAST:event_btnewActionPerformed
@@ -2147,14 +2164,16 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
     }//GEN-LAST:event_tbclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btexcadd;
     private javax.swing.JButton btexcdelete;
-    private javax.swing.JButton btfnamebrowse;
-    private javax.swing.JButton btlnamebrowse;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btsummary;
     private javax.swing.JButton btupdate;

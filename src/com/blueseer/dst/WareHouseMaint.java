@@ -501,7 +501,7 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         if (lurb1.isSelected()) {  
          luModel = DTData.getWareHouseBrowseUtil(luinput.getText(),0, "wh_id");
         } else {
-         luModel = DTData.getWareHouseBrowseUtil(luinput.getText(),0, "wh_desc");   
+         luModel = DTData.getWareHouseBrowseUtil(luinput.getText(),0, "wh_name");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);

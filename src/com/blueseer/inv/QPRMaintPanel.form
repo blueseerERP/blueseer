@@ -128,8 +128,8 @@
                                                               <Component id="tbkey" alignment="1" min="-2" pref="48" max="-2" attributes="0"/>
                                                           </Group>
                                                           <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="btbrowse" min="-2" pref="32" max="-2" attributes="0"/>
-                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
+                                                          <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                                                           <Component id="btnew" min="-2" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="btclear" min="-2" max="-2" attributes="0"/>
@@ -203,10 +203,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="btclear" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="btbrowse" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="dccreate" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="tbkey" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -214,6 +213,7 @@
                       <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="tbOriginator" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -649,16 +649,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btbrowse">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/lookup.png"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dccreate">
           <Properties>
             <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
@@ -675,6 +665,16 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbstatus">
+        </Component>
+        <Component class="javax.swing.JButton" name="btlookup">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -31,9 +31,21 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -169,7 +181,7 @@ public class FOMaint extends javax.swing.JPanel {
         
         initvars(null);
         
-        btbrowse.setEnabled(false);
+        btlookup.setEnabled(false);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
         btadd.setEnabled(false);
@@ -589,7 +601,7 @@ public class FOMaint extends javax.swing.JPanel {
         totweight.setEnabled(true);
        
         
-          btbrowse.setEnabled(true);
+          btlookup.setEnabled(true);
         
           btpoprint.setEnabled(true);
         btnew.setEnabled(true);
@@ -655,7 +667,7 @@ public class FOMaint extends javax.swing.JPanel {
         totweight.setEnabled(false);
        
         
-          btbrowse.setEnabled(false);
+          btlookup.setEnabled(false);
          
           btpoprint.setEnabled(false);
         btnew.setEnabled(false);
@@ -694,7 +706,7 @@ public class FOMaint extends javax.swing.JPanel {
         orddet.setModel(myorddetmodel);
        
         
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         btnew.setEnabled(true);
         btedit.setEnabled(true);
         btadd.setEnabled(true);
@@ -795,11 +807,53 @@ public class FOMaint extends javax.swing.JPanel {
         } else {
               disableAll();
               btnew.setEnabled(true);
-              btbrowse.setEnabled(true);
+              btlookup.setEnabled(true);
         }
           
           
     }
+    
+     public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getFOBrowseUtil(luinput.getText(),0, "fo_nbr");
+        } else {
+         luModel = DTData.getFOBrowseUtil(luinput.getText(),0, "fo_carrier");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("FONbr", "Carrier"); 
+        
+        
+    }
+
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -829,7 +883,6 @@ public class FOMaint extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btpoprint = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbweight = new javax.swing.JTextField();
         jLabel83 = new javax.swing.JLabel();
@@ -888,6 +941,7 @@ public class FOMaint extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         btaccept = new javax.swing.JButton();
         btdecline = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanelLoad = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -1009,13 +1063,6 @@ public class FOMaint extends javax.swing.JPanel {
         btpoprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpoprintActionPerformed(evt);
-            }
-        });
-
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
             }
         });
 
@@ -1349,6 +1396,13 @@ public class FOMaint extends javax.swing.JPanel {
             }
         });
 
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1384,8 +1438,8 @@ public class FOMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
                         .addComponent(btnew)
                         .addGap(26, 26, 26)
                         .addComponent(jLabel87)
@@ -1406,23 +1460,28 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addContainerGap()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(bttender)
                         .addComponent(btquote)
                         .addComponent(btaccept)
                         .addComponent(btdecline))
-                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanelMainLayout.createSequentialGroup()
-                            .addGap(3, 3, 3)
-                            .addComponent(jLabel76))
-                        .addComponent(btbrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel87))
-                        .addComponent(btnew)
-                        .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanelMainLayout.createSequentialGroup()
+                                    .addGap(3, 3, 3)
+                                    .addComponent(jLabel76))
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel87))
+                                .addComponent(btnew)
+                                .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addComponent(btlookup)
+                                .addGap(3, 3, 3)))
+                        .addGap(2, 2, 2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1822,7 +1881,7 @@ public class FOMaint extends javax.swing.JPanel {
                 
                 ddstatus.setEnabled(false);
                 btnew.setEnabled(false);
-                btbrowse.setEnabled(false);
+                btlookup.setEnabled(false);
                 btedit.setEnabled(false);
                 btpoprint.setEnabled(false);
                 ddshipfrom.setEnabled(false); 
@@ -2081,10 +2140,6 @@ public class FOMaint extends javax.swing.JPanel {
        OVData.printPurchaseOrder(freightorder.getText());
     }//GEN-LAST:event_btpoprintActionPerformed
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"fomaint","fo_nbr"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void ddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipperActionPerformed
         if (ddshipper.getItemCount() > 0  && ! lock_ddshipper) {
             clearAddrFields();
@@ -2245,6 +2300,10 @@ public class FOMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btdeclineActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel RawFileQuotesPanel;
     private javax.swing.JPanel RawFileStatusPanel;
@@ -2253,7 +2312,6 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JButton btaccept;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btdecline;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
@@ -2261,6 +2319,7 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JButton bthidemap;
     private javax.swing.JButton bthidequotefiles;
     private javax.swing.JButton bthidetendersfiles;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
     private javax.swing.JButton btquote;

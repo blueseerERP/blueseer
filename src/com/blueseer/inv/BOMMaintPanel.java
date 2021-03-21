@@ -30,7 +30,19 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -44,6 +56,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -85,40 +104,143 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         
     }
 
-    public void disableAll() {
-        tbqtyper.setEnabled(false);
-        tbref.setEnabled(false);
-        ddcomp.setEnabled(false);
-        ddop.setEnabled(false);
-        jTree1.setEnabled(false);
-        btdelete.setEnabled(false);
-        btupdate.setEnabled(false);
-        btadd.setEnabled(false);
-        btclear.setEnabled(false);
-        btpdf.setEnabled(false);
-        btroll.setEnabled(false);
-    }
-    
-    public void enableAll() {
-        tbqtyper.setEnabled(true);
-        tbref.setEnabled(true);
-        ddcomp.setEnabled(true);
-        ddop.setEnabled(true);
-        jTree1.setEnabled(true);
-        btdelete.setEnabled(true);
-        btupdate.setEnabled(true);
-        btadd.setEnabled(true);
-        btclear.setEnabled(true);
-        btpdf.setEnabled(true);
-        btroll.setEnabled(true);
-    }
-    
-    public void clearAll() {
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
        
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
        isLoad = true; 
-       tbpart.setText("");
-       tbpart.setEditable(true);
-       tbpart.setForeground(Color.black);    
+       tbkey.setText("");
+       tbkey.setEditable(true);
+       tbkey.setForeground(Color.black);    
        tbparentcostCUR.setBackground(Color.white); 
        tbparentcostSTD.setBackground(Color.white);
        
@@ -168,64 +290,352 @@ public class BOMMaintPanel extends javax.swing.JPanel {
        isLoad = false; 
     }
     
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else if (i == 0) {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        } else {
+            m = new String[]{BlueSeerUtils.ErrorBit, "Item has no Routing"}; 
+                    tbkey.setEditable(true);
+                    tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+               
+         if (tbqtyper.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must enter a Quantity Per");
+                    tbqtyper.requestFocus();
+                    return b;
+                }
+                
+                 if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must enter a Valid Parent");
+                    tbkey.requestFocus();
+                    return b;
+                }
+                 
+                if (! OVData.isValidItem(tbkey.getText())) {
+                    b = false;
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                 if (ddcomp.getSelectedItem() == null) {
+                   b = false;
+                   bsmf.MainFrame.show("Must enter a legitimate component");
+                   ddcomp.requestFocus();
+                   return b;
+               } 
+                 
+                if (! OVData.isValidItem(ddcomp.getSelectedItem().toString())) {
+                    b = false;
+                    ddcomp.requestFocus();
+                    bsmf.MainFrame.show("Must enter a legitimate component");
+                    return b;
+                }
+                
+               
+               if (ddop.getSelectedItem() == null) {
+                   b = false;
+                   bsmf.MainFrame.show("Must enter a legitimate operation");
+                   ddop.requestFocus();
+                   return b;
+               } 
+               
+               if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbkey.getText().toLowerCase())) {
+                   b = false;
+                   bsmf.MainFrame.show("Cannot map parent to parent");
+                   ddcomp.requestFocus();
+                   return b;
+               } 
+               
+        return b;
+    }
+        
     public void initvars(String[] arg) {
-        
-        
-       clearAll();
-       disableAll();
-    
-       btbrowse.setEnabled(true);
-       tbpart.setEnabled(true);
-       
-        
-         
+         setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btlookup.setEnabled(true);
          if (arg != null && arg.length > 0) {
-           tbpart.setText(arg[0]);
-           establishParent(arg[0]);
-         }  
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+       
     }
     
-    public void establishParent(String item) {
-        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-          boolean validItem =  OVData.isValidItem(item);
-            boolean hasRouting =  getRouting(item);
-             if (validItem && hasRouting) {
-              tbpart.setEditable(false);
-              tbpart.setForeground(Color.blue);
-              site = OVData.getDefaultSite();
-              parent = item;
-              lblparent.setText(OVData.getItemDesc(item));
-              tblotsize.setText(OVData.getItemLotSize(item));
-              
-              getComponents(item);
-                  getOPs(item);
-                  bind_tree(item);
+    public String[] getRecord(String[] x) {
+         String[] m = new String[2];
+         
+             boolean hasRouting =  getRouting(x[0]);
+             int i = 0;
+         
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select * from pbm_mstr where ps_parent = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                }
+                if (i > 0) {
+                  site = OVData.getDefaultSite();
+                  parent = x[0];
+                  lblparent.setText(OVData.getItemDesc(x[0]));
+                  tblotsize.setText(OVData.getItemLotSize(x[0]));
+                  getComponents(x[0]);
+                  getOPs(x[0]);
+                  bind_tree(x[0]);
                   callSimulateCost();
-                  getCostSets(item);
-                  ddcomp.removeItem(tbpart.getText());  // remove parent from component list
-                  enableAll();
-                  
-                  
-                  
-                  
-             } else if (validItem && ! hasRouting) {
-               tbpart.setEditable(true);
-               tbpart.setForeground(Color.red);  
-               lblparent.setText("Item has no Routing");
-                disableAll();
+                  getCostSets(x[0]);
+                  ddcomp.removeItem(tbkey.getText());  // remove parent from component list
+                }
+             
+              if (! hasRouting) {
+                  i = -1;
+             } 
+               // set Action if Record found (i > 0)
+                m = setAction(i);
                 
-             } else {
-               tbpart.setEditable(true);
-               tbpart.setForeground(Color.black);    
-               lblparent.setText("Invalid Item");
-                disableAll();
-                
-             }
-             
-             
-             
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
     }
     
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+               
+                int i = 0;
+             
+                boolean proceed = validateInput("addRecord");
+                
+                if (proceed) {
+                String type = OVData.getItemCode(ddcomp.getSelectedItem().toString());
+                    res = st.executeQuery("SELECT ps_child FROM  pbm_mstr where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
+                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" +
+                                          " AND ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
+                    i = 0;
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into pbm_mstr "
+                            + "(ps_parent, ps_child, ps_qty_per, ps_op, ps_type) "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + ddcomp.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbqtyper.getText() + "'" + "," 
+                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
+                            + "'" + type + "'" 
+                            + ")"
+                            + ";");
+                        bind_tree(tbkey.getText());
+                        getComponents(tbkey.getText());
+                        callSimulateCost();
+                        getCostSets(tbkey.getText().toString());
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+          } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+    return m;
+    }
+    
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+      try {
+            boolean proceed = true;
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                // check the site field
+                if (tbkey.getText().isEmpty()) {
+                    proceed = false;
+                    bsmf.MainFrame.show("Must enter a site code");
+                }
+                
+                if (proceed) {
+                    st.executeUpdate("update pbm_mstr set ps_qty_per = " + "'" + tbqtyper.getText() + "'" + ","
+                            + " ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" 
+                            + " where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
+                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" + ";");
+                    bind_tree(tbkey.getText());
+                    getComponents(tbkey.getText());
+                    callSimulateCost();
+                    getCostSets(tbkey.getText().toString());
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                   // initvars(null);
+                  
+                } 
+         
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        }
+    return m;
+    }
+    
+    public String[] deleteRecord(String[] x) {
+    String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+      DefaultMutableTreeNode comp = null;  
+      Object o = jTree1.getLastSelectedPathComponent();
+      if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {
+       comp = (DefaultMutableTreeNode)o;
+      }
+        
+        if (proceed && (comp != null)) {
+            
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                   int i = st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
+                            " AND ps_child = " + "'" + comp.toString() + "'" + ";");
+                   if (i > 0) {
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                    initvars(null);
+                    }
+                } catch (SQLException s) {
+                 MainFrame.bslog(s); 
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        }
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+     return m;
+    }
+   
+    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemMClassBrowseUtil(luinput.getText(),0, "it_item");
+        } else {
+         luModel = DTData.getItemMClassBrowseUtil(luinput.getText(),0, "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Item", "Description"); 
+        
+        
+    }
+
     public void getCostSets(String parent) {
         DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         tbparentcostSTD.setText(String.valueOf(df5.format(OVData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
@@ -295,7 +705,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         if (node != null) {
             
         totalcost = OVData.simulateCost("", 
-                tbpart.getText(), 
+                tbkey.getText(), 
                 node.toString(), 
                 runratesim, 
                 setupratesim,
@@ -339,11 +749,11 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                }
     }
     
-   public static Integer level(TreeNode tree, TreeNode target){
+    public static Integer level(TreeNode tree, TreeNode target){
     return level(tree, target, 0);
 }
 
-private static Integer level(TreeNode tree, TreeNode target, int currentLevel) {
+    public static Integer level(TreeNode tree, TreeNode target, int currentLevel) {
     Integer returnLevel = -1;        
     if(tree.toString().equals(target.toString())) {
         returnLevel = currentLevel;
@@ -360,7 +770,7 @@ private static Integer level(TreeNode tree, TreeNode target, int currentLevel) {
 
 }
     
-public void getComponents(String parent) {
+    public void getComponents(String parent) {
         
          
        String site = OVData.getItemSite(parent);
@@ -416,7 +826,7 @@ public void getComponents(String parent) {
         
     }
     
-public void getComponentDetail(String component) {
+    public void getComponentDetail(String component) {
         DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
         tbcomptype.setText("");
         lblcomp.setText("");
@@ -457,7 +867,7 @@ public void getComponentDetail(String component) {
     }
    
     
-public void setcomponentattributes(String parent, String component, String op) {
+    public void setcomponentattributes(String parent, String component, String op) {
        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));
           tbqtyper.setText("");
           tbref.setText("");
@@ -522,7 +932,7 @@ public void setcomponentattributes(String parent, String component, String op) {
         
     }
     
-public void bind_tree(String parentpart) {
+    public void bind_tree(String parentpart) {
       //  jTree1.setModel(null);
        
        // DefaultMutableTreeNode mynode = OVData.get_nodes_without_op(parentpart);
@@ -561,11 +971,10 @@ public void bind_tree(String parentpart) {
         btadd = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
-        tbpart = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         ddop = new javax.swing.JComboBox<>();
         lblparent = new javax.swing.JLabel();
         lblcomp = new javax.swing.JLabel();
-        btbrowse = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btpdf = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -619,6 +1028,8 @@ public void bind_tree(String parentpart) {
         jLabel21 = new javax.swing.JLabel();
         tbtotmaterialsim = new javax.swing.JTextField();
         btroll = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
@@ -672,21 +1083,14 @@ public void bind_tree(String parentpart) {
             }
         });
 
-        tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbpartFocusLost(evt);
+                tbkeyFocusLost(evt);
             }
         });
-        tbpart.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbpartActionPerformed(evt);
-            }
-        });
-
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
@@ -979,12 +1383,26 @@ public void bind_tree(String parentpart) {
             }
         });
 
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1007,15 +1425,18 @@ public void bind_tree(String parentpart) {
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbqtyper, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbpart)
-                                    .addComponent(ddcomp, 0, 225, Short.MAX_VALUE)
-                                    .addComponent(tbqtyper, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnew, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))
+                            .addComponent(ddcomp, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(20, 20, 20)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1023,16 +1444,13 @@ public void bind_tree(String parentpart) {
                                         .addComponent(lblcomp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                             .addComponent(lblparent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btclear)))
+                                            .addGap(59, 59, 59)))
                                     .addComponent(tbcompcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(29, 29, 29))
+                                    .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1057,18 +1475,20 @@ public void bind_tree(String parentpart) {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btbrowse))
-                        .addGap(2, 2, 2)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btclear)
+                                        .addComponent(btnew))))
+                            .addComponent(btlookup))
+                        .addGap(11, 11, 11)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblparent, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7)))
-                            .addComponent(btclear))
+                            .addComponent(lblparent, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblcomp, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1124,7 +1544,7 @@ public void bind_tree(String parentpart) {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1155,220 +1575,30 @@ public void bind_tree(String parentpart) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                String type = "";
-                
-                
-                if (tbqtyper.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a Quantity Per");
-                    tbqtyper.requestFocus();
-                    return;
-                }
-                
-                 if (tbpart.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a Valid Parent");
-                    tbpart.requestFocus();
-                    return;
-                }
-                 
-                 if (! OVData.isValidItem(tbpart.getText())) {
-                tbpart.requestFocus();
-                proceed = false;
-                return;
-                }
-                
-                 if (ddcomp.getSelectedItem() == null) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Must enter a legitimate component");
-                   ddcomp.requestFocus();
-                   return;
-               } 
-                 
-                if (! OVData.isValidItem(ddcomp.getSelectedItem().toString())) {
-                ddcomp.requestFocus();
-                bsmf.MainFrame.show("Must enter a legitimate component");
-                proceed = false;
-                return;
-                }
-                
-               
-               if (ddop.getSelectedItem() == null) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Must enter a legitimate operation");
-                   ddop.requestFocus();
-                   return;
-               } 
-               
-               if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbpart.getText().toLowerCase())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Cannot map parent to parent");
-                   ddcomp.requestFocus();
-                   return;
-               } 
-                
-                // Check for component item and type value in item master
-                res = st.executeQuery("SELECT it_code FROM  item_mstr where it_item = " + "'" + ddcomp.getSelectedItem().toString() + "';" );
-                while (res.next()) {
-                    i++;
-                    type = res.getString("it_code");
-                }
-                if (i == 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Component item is not defined in item master");
-                    ddcomp.requestFocus();
-                    return;
-                }
-                if (type.isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Component item class is not defined in item master");
-                    ddcomp.requestFocus();
-                    return;
-                }
-                
-                
-                
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT ps_child FROM  pbm_mstr where ps_parent = " + "'" + tbpart.getText().toString() + "'" + 
-                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" +
-                                          " AND ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
-                    i = 0;
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into pbm_mstr "
-                            + "(ps_parent, ps_child, ps_qty_per, ps_op, ps_type) "
-                            + " values ( " + "'" + tbpart.getText() + "'" + ","
-                            + "'" + ddcomp.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbqtyper.getText() + "'" + "," 
-                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
-                            + "'" + type + "'" 
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show("Added BOM Record");
-                        bind_tree(tbpart.getText());
-                        getComponents(tbpart.getText());
-                        callSimulateCost();
-                        getCostSets(tbpart.getText().toString());
-                    } else {
-                        bsmf.MainFrame.show("BOM Record Already Exists");
-                    }
-
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to BOM Master Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-    if (proceed) {
-            
-      Object o = jTree1.getLastSelectedPathComponent();
-      if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {
-      DefaultMutableTreeNode comp = (DefaultMutableTreeNode)o;
-            
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + tbpart.getText().toString() + "'" + 
-                            " AND ps_child = " + "'" + comp.toString() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show("deleted BOM record");
-                    bind_tree(tbpart.getText());
-                    getComponents(tbpart.getText());
-                    getCostSets(tbpart.getText().toString());
-                    
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete BOM Record");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        
-        }
-        }
+    if (! validateInput("deleteRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("delete" ,new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-                if (tbqtyper.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a Quantity Per");
-                    tbqtyper.requestFocus();
-                    return;
-                }
-                
-                if (ddcomp.getSelectedItem() == null) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Must enter a legitimate component");
-                   ddcomp.requestFocus();
-                   return;
-               } 
-                
-                if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbpart.getText().toLowerCase())) {
-                   proceed = false;
-                   bsmf.MainFrame.show("Cannot map parent to parent");
-                   ddcomp.requestFocus();
-                   return;
-               } 
-                
-                
-                
-                if (proceed) {
-                    st.executeUpdate("update pbm_mstr set ps_qty_per = " + "'" + tbqtyper.getText() + "'" + ","
-                            + " ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" 
-                            + " where ps_parent = " + "'" + tbpart.getText().toString() + "'" + 
-                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" + ";");
-                    bsmf.MainFrame.show("Updated BOM Record");
-                    bind_tree(tbpart.getText());
-                    getComponents(tbpart.getText());
-                    callSimulateCost();
-                    getCostSets(tbpart.getText().toString());
-                    
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating pbm_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+         if (! validateInput("updateRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
+    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
       /*
         if (OVData.isValidItem(tbpart.getText())) {
             getComponents(tbpart.getText());
@@ -1380,7 +1610,7 @@ public void bind_tree(String parentpart) {
                 tbpart.requestFocus();
             }
         */
-    }//GEN-LAST:event_tbpartFocusLost
+    }//GEN-LAST:event_tbkeyFocusLost
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
      //  bsmf.MainFrame.show("select:" + jTree1.getLastSelectedPathComponent().toString());
@@ -1417,7 +1647,7 @@ public void bind_tree(String parentpart) {
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
         
         // let's lookup Operation elements if parent operation is clicked on
-        if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 1) && (parent.toString().equals(tbpart.getText()))) {
+        if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 1) && (parent.toString().equals(tbkey.getText()))) {
             String[] e = OVData.getBOMParentOpElements(parent.toString(), node.toString());
             if (e != null) {
                 double pph = Double.valueOf(e[5]);
@@ -1453,7 +1683,7 @@ public void bind_tree(String parentpart) {
         if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2) ) {
            btupdate.setEnabled(true);
            btdelete.setEnabled(true);
-           setcomponentattributes(tbpart.getText(), node.toString(), parent.toString());
+           setcomponentattributes(tbkey.getText(), node.toString(), parent.toString());
         } else {
            btupdate.setEnabled(false);
            btdelete.setEnabled(false); 
@@ -1483,21 +1713,17 @@ public void bind_tree(String parentpart) {
        */
     }//GEN-LAST:event_jTree1ValueChanged
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"bommaint","it_item"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
-    private void tbpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbpartActionPerformed
-        establishParent(tbpart.getText());
-    }//GEN-LAST:event_tbpartActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
-       if (! tbpart.getText().isEmpty())
-        OVData.printBOMJasper(tbpart.getText());
+       if (! tbkey.getText().isEmpty())
+        OVData.printBOMJasper(tbkey.getText());
     }//GEN-LAST:event_btpdfActionPerformed
 
     private void ddcompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcompActionPerformed
@@ -1621,12 +1847,21 @@ public void bind_tree(String parentpart) {
         }
     }//GEN-LAST:event_tbqtyperFocusLost
 
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btlookup;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btpdf;
     private javax.swing.JButton btroll;
     private javax.swing.JButton btupdate;
@@ -1677,11 +1912,11 @@ public void bind_tree(String parentpart) {
     private javax.swing.JTextField tbcomptype;
     private javax.swing.JTextField tbcrewsize;
     private javax.swing.JTextField tbcrewsizesim;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tblotsize;
     private javax.swing.JTextField tbparentcostCUR;
     private javax.swing.JTextField tbparentcostSTD;
     private javax.swing.JTextField tbparentcostsim;
-    private javax.swing.JTextField tbpart;
     private javax.swing.JTextField tbpph;
     private javax.swing.JTextField tbpphsim;
     private javax.swing.JTextField tbpps;

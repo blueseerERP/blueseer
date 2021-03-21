@@ -291,7 +291,7 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
         return m;
     }
     
-     public boolean validateInput(String x) {
+    public boolean validateInput(String x) {
         boolean b = true;
                
                 
@@ -318,9 +318,6 @@ public class SiteMstrPanel extends javax.swing.JPanel implements IBlueSeer {
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
-        
-        
-        
          if (arg != null && arg.length > 0) {
             executeTask("get",arg);
         } else {

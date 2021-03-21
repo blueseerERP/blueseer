@@ -149,6 +149,8 @@ public class BlueSeerUtils {
         luModel.setColumnCount(0);
         }
         
+        luinput.setText("");
+        
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
@@ -163,7 +165,7 @@ public class BlueSeerUtils {
         
         
         ludialog = new JDialog();
-        ludialog.setTitle("Search By Text:");
+        ludialog.setTitle("Search By Text and Press Enter:");
         ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
@@ -204,7 +206,7 @@ public class BlueSeerUtils {
         luModel.setRowCount(0);
         luModel.setColumnCount(0);
         }
-        
+        luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
@@ -224,7 +226,7 @@ public class BlueSeerUtils {
         
         
         ludialog = new JDialog();
-        ludialog.setTitle("Search By Text:");
+        ludialog.setTitle("Search By Text and Press Enter:");
         ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
@@ -264,7 +266,7 @@ public class BlueSeerUtils {
         luModel.setRowCount(0);
         luModel.setColumnCount(0);
         }
-        
+        luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
@@ -291,7 +293,7 @@ public class BlueSeerUtils {
         
         
         ludialog = new JDialog();
-        ludialog.setTitle("Search By Text:");
+        ludialog.setTitle("Search By Text and Press Enter:");
         ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
@@ -331,7 +333,7 @@ public class BlueSeerUtils {
         luModel.setRowCount(0);
         luModel.setColumnCount(0);
         }
-        
+        luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
@@ -363,7 +365,7 @@ public class BlueSeerUtils {
         
         
         ludialog = new JDialog();
-        ludialog.setTitle("Search By Text:");
+        ludialog.setTitle("Search By Text and Press Enter:");
         ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
