@@ -29,6 +29,15 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.BorderLayout;
@@ -510,7 +519,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                              lblstatus.setForeground(Color.blue);
                              setPanelComponentState(this, false);
                              btnew.setEnabled(true);
-                             btordnbrbrowse.setEnabled(true);
+                             btlookup.setEnabled(true);
                              btclear.setEnabled(true);
                              btprintinvoice.setEnabled(true);
                              btprintps.setEnabled(true);
@@ -624,10 +633,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        
        setComponentDefaultValues();
         btnew.setEnabled(true);
-        btordnbrbrowse.setEnabled(true);
-        btordpobrowse.setEnabled(true);
-        btordduebrowse.setEnabled(true);
-        btorddatebrowse.setEnabled(true);
+        btlookup.setEnabled(true);
+        
         
         if (arg != null && arg.length > 0) {
             executeTask("get", arg);
@@ -1179,7 +1186,48 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
       return m;
     }
     
-     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getOrderBrowseUtil(luinput.getText(),0, "so_nbr");
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getOrderBrowseUtil(luinput.getText(),0, "so_po");   
+        } else {
+         luModel = DTData.getOrderBrowseUtil(luinput.getText(),0, "so_cust");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("OrdNbr", "PONbr", "Cust"); 
+        
+        
+    }
+ 
     // custom funcs 
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
@@ -1574,11 +1622,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbtotqty.setEnabled(true);
         tbtotdollars.setEnabled(true);
         
-        btordnbrbrowse.setEnabled(false);
-        btordduebrowse.setEnabled(false);
-        btordpobrowse.setEnabled(false);
-        btordcustbrowse.setEnabled(false);
-        btorddatebrowse.setEnabled(false);
+        btlookup.setEnabled(false);
+       
         
         btnew.setEnabled(true);
         btupdate.setEnabled(false);
@@ -2142,9 +2187,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         cbblanket = new javax.swing.JCheckBox();
         jLabel92 = new javax.swing.JLabel();
         ddsite = new javax.swing.JComboBox();
-        btordduebrowse = new javax.swing.JButton();
-        btorddatebrowse = new javax.swing.JButton();
-        btordpobrowse = new javax.swing.JButton();
         ddtax = new javax.swing.JComboBox<>();
         jLabel93 = new javax.swing.JLabel();
         tbhdrwh = new javax.swing.JTextField();
@@ -2155,8 +2197,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel98 = new javax.swing.JLabel();
         cbisallocated = new javax.swing.JCheckBox();
         btdelete = new javax.swing.JButton();
-        btordnbrbrowse = new javax.swing.JButton();
-        btordcustbrowse = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tbphone = new javax.swing.JTextField();
@@ -2189,6 +2229,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btprintps = new javax.swing.JButton();
         btLookUpBillTo = new javax.swing.JButton();
         btLookUpShipTo = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         jPanelLines = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btadditem = new javax.swing.JButton();
@@ -2368,27 +2409,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btordduebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btordduebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btordduebrowseActionPerformed(evt);
-            }
-        });
-
-        btorddatebrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btorddatebrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btorddatebrowseActionPerformed(evt);
-            }
-        });
-
-        btordpobrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btordpobrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btordpobrowseActionPerformed(evt);
-            }
-        });
-
         ddtax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtaxActionPerformed(evt);
@@ -2426,13 +2446,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbblanket)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(ddshipvia, 0, 162, Short.MAX_VALUE)
-                                            .addComponent(ponbr))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btordpobrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(ddshipvia, 0, 162, Short.MAX_VALUE)
+                                        .addComponent(ponbr)))
+                                .addGap(48, 48, 48)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel85, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel97, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2459,11 +2476,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(orddate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btordduebrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btorddatebrowse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(cbissourced))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -2476,12 +2489,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbblanket)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(ponbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel83))
-                                    .addComponent(btordpobrowse))))
+                                .addGap(40, 40, 40)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ponbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel83))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddshipvia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2496,17 +2507,14 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel85)))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btorddatebrowse)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel81)
-                                        .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btordduebrowse, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel87)
-                                        .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel81)
+                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(11, 11, 11)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel87)
+                                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2539,20 +2547,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
-            }
-        });
-
-        btordnbrbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btordnbrbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btordnbrbrowseActionPerformed(evt);
-            }
-        });
-
-        btordcustbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btordcustbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btordcustbrowseActionPerformed(evt);
             }
         });
 
@@ -2755,6 +2749,13 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -2779,20 +2780,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                                        .addComponent(btordcustbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btLookUpBillTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(btLookUpShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btLookUpShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btLookUpBillTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(42, 42, 42)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblshiptoaddr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lblcustname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(41, 41, 41)
                                 .addComponent(lblshiptoname, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addComponent(btordnbrbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear)
@@ -2827,20 +2825,20 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(57, 57, 57)
                         .addComponent(lblshiptoname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel76))
-                            .addComponent(btordnbrbrowse)
-                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnew)
-                                .addComponent(btclear)))
-                        .addGap(10, 10, 10)
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel76))
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnew)
+                                    .addComponent(btclear)))
+                            .addComponent(btlookup))
+                        .addGap(8, 8, 8)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btordcustbrowse)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel82))
@@ -3578,26 +3576,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        executeTask("delete", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void btordnbrbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordnbrbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_nbr"});
-    }//GEN-LAST:event_btordnbrbrowseActionPerformed
-
-    private void btordcustbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordcustbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_cust"});
-    }//GEN-LAST:event_btordcustbrowseActionPerformed
-
-    private void btordduebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordduebrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_due_date"});
-    }//GEN-LAST:event_btordduebrowseActionPerformed
-
-    private void btorddatebrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btorddatebrowseActionPerformed
-       reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_ord_date"});
-    }//GEN-LAST:event_btorddatebrowseActionPerformed
-
-    private void btordpobrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btordpobrowseActionPerformed
-       reinitpanels("BrowseUtil", true, new String[]{"ordermaint","so_po"});
-    }//GEN-LAST:event_btordpobrowseActionPerformed
-
     private void tbmiscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbmiscActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tbmiscActionPerformed
@@ -3908,6 +3886,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lookUpFrameShipTo();
     }//GEN-LAST:event_btLookUpShipToActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpBillTo;
     private javax.swing.JButton btLookUpCustItem;
@@ -3920,12 +3902,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btinvoice;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btordcustbrowse;
-    private javax.swing.JButton btorddatebrowse;
-    private javax.swing.JButton btordduebrowse;
-    private javax.swing.JButton btordnbrbrowse;
-    private javax.swing.JButton btordpobrowse;
     private javax.swing.JButton btprintinvoice;
     private javax.swing.JButton btprintorder;
     private javax.swing.JButton btprintps;

@@ -29,6 +29,15 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,6 +85,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 import javax.swing.event.PopupMenuEvent;
@@ -297,7 +307,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         tbdesc.setText("");
         tbprice.setText("");
        
-         btbrowse.setEnabled(true);
+         btlookup.setEnabled(true);
          btnewshipper.setEnabled(true);
          btedit.setEnabled(true);
          btadd.setEnabled(true);
@@ -439,7 +449,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
        
         tbprice.setText("");
         tbitem.setText("");
-         btbrowse.setEnabled(false);
+         btlookup.setEnabled(false);
          btnewshipper.setEnabled(false);
          btedit.setEnabled(false);
          btadd.setEnabled(true);
@@ -512,7 +522,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         
         tabledetail.setModel(myshipdetmodel);
         myshipdetmodel.setRowCount(0);
-        btbrowse.setEnabled(true);
+        btlookup.setEnabled(true);
         btnewshipper.setEnabled(true);
         btPrintShp.setEnabled(true);
 
@@ -1055,6 +1065,46 @@ public class ShipMaintPanel extends javax.swing.JPanel {
          }
     }
     
+     public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getShipperBrowseUtil(luinput.getText(),0, "sh_id");
+        } else {
+         luModel = DTData.getShipperBrowseUtil(luinput.getText(),0, "sh_cust");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Nbr", "Cust"); 
+        
+        
+    }
+
     
     
     /**
@@ -1109,8 +1159,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         btconfirm = new javax.swing.JButton();
         rborder = new javax.swing.JRadioButton();
         rbnonorder = new javax.swing.JRadioButton();
-        btbrowse = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
         panelDetail = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         btadditem = new javax.swing.JButton();
@@ -1410,17 +1460,17 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
             }
         });
 
@@ -1433,12 +1483,12 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 .addComponent(jLabel24)
                 .addGap(5, 5, 5)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rbnonorder)
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addComponent(tbshipper, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(rbnonorder))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(13, 13, 13)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rborder)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1471,15 +1521,18 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btbrowse)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnewshipper)
-                                    .addComponent(btclear)))
-                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel24)))
-                        .addGap(7, 7, 7)
+                                    .addComponent(btclear))
+                                .addGap(9, 9, 9))
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tbshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel24))
+                                    .addComponent(btlookup))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rborder)
                             .addComponent(rbnonorder)))
@@ -1849,7 +1902,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 podate = dfdate.format(now);
                 
               
-                btbrowse.setEnabled(false);
+                btlookup.setEnabled(false);
                 btnewshipper.setEnabled(false);
                 btedit.setEnabled(false);
                 btadd.setEnabled(false);
@@ -2201,10 +2254,6 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_rborderStateChanged
 
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"shipmaint","sh_id"});
-    }//GEN-LAST:event_btbrowseActionPerformed
-
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
          if (ddwh.getSelectedItem() != null && ! isLoad) {
              ddloc.removeAllItems();
@@ -2238,6 +2287,10 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ChoicePanel;
     private javax.swing.JPanel HeaderPanel;
@@ -2245,11 +2298,11 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btPrintShp;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
-    private javax.swing.JButton btbrowse;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btconfirm;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnewshipper;
     private javax.swing.JButton btorder;
     private javax.swing.JButton btshipto;
