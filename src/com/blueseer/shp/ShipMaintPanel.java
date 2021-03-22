@@ -350,6 +350,13 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         tbpallets.setEnabled(true);
         tbboxes.setEnabled(true);
        
+        tbtotdollars.setEnabled(true);
+        tbtotqty.setEnabled(true);
+        totlines.setEnabled(true);
+        tbtotdollars.setEditable(false);
+        tbtotqty.setEditable(false);
+        totlines.setEditable(false);
+        
         
         dduom.setEnabled(true);
         dditemline.setEnabled(true);

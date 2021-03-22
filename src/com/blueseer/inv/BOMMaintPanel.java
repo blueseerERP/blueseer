@@ -150,13 +150,13 @@ public class BOMMaintPanel extends javax.swing.JPanel {
            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             initvars(null);  
+             getRecord(new String[]{tbkey.getText()});  
            } else if (this.type.equals("get") && message[0].equals("1")) {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
            } else {
-             initvars(null);  
+             getRecord(new String[]{tbkey.getText()});
            }
            
             
@@ -296,7 +296,6 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -308,14 +307,15 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     
     public String[] setAction(int i) {
         String[] m = new String[2];
+        setPanelComponentState(this, true);
+        btdelete.setEnabled(false);
+        btupdate.setEnabled(false);
         if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
-                   setPanelComponentState(this, true);
-                   btadd.setEnabled(false);
-                   tbkey.setEditable(false);
-                   tbkey.setForeground(Color.blue);
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
+           tbkey.setEditable(false);
+           tbkey.setForeground(Color.blue);
         } else if (i == 0) {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+           m = new String[]{BlueSeerUtils.ErrorBit, "No BOM found for this Item"};  
                    tbkey.setForeground(Color.red); 
         } else {
             m = new String[]{BlueSeerUtils.ErrorBit, "Item has no Routing"}; 
@@ -381,9 +381,8 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     }
         
     public void initvars(String[] arg) {
-         setPanelComponentState(this, false); 
+       setPanelComponentState(this, false); 
        setComponentDefaultValues();
-        btnew.setEnabled(true);
         btlookup.setEnabled(true);
          if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -412,18 +411,23 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 while (res.next()) {
                     i++;
                 }
-                if (i > 0) {
+                res.close();
+                st.close();
+                
+                tbkey.setText(x[0]);
+                getOPs(x[0]);
+                
+               
                   site = OVData.getDefaultSite();
                   parent = x[0];
                   lblparent.setText(OVData.getItemDesc(x[0]));
                   tblotsize.setText(OVData.getItemLotSize(x[0]));
                   getComponents(x[0]);
-                  getOPs(x[0]);
                   bind_tree(x[0]);
                   callSimulateCost();
                   getCostSets(x[0]);
                   ddcomp.removeItem(tbkey.getText());  // remove parent from component list
-                }
+               
              
               if (! hasRouting) {
                   i = -1;
@@ -488,8 +492,8 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
                     }
-
-                   initvars(null);
+                   
+                  // initvars(new String[]{tbkey.getText()});
                    
                 } // if proceed
           } catch (SQLException s) {
@@ -533,7 +537,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     callSimulateCost();
                     getCostSets(tbkey.getText().toString());
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                   // initvars(null);
+                   
                   
                 } 
          
@@ -575,7 +579,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                             " AND ps_child = " + "'" + comp.toString() + "'" + ";");
                    if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
+                    
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
@@ -1028,7 +1032,6 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         jLabel21 = new javax.swing.JLabel();
         tbtotmaterialsim = new javax.swing.JTextField();
         btroll = new javax.swing.JButton();
-        btnew = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -1383,14 +1386,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        btnew.setText("New");
-        btnew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnewActionPerformed(evt);
-            }
-        });
-
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -1402,7 +1398,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1432,8 +1428,6 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnew, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear))
                             .addComponent(ddcomp, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1450,7 +1444,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1475,16 +1469,11 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addGap(2, 2, 2)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btclear)
-                                        .addComponent(btnew))))
-                            .addComponent(btlookup))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btlookup)
+                            .addComponent(btclear))
                         .addGap(11, 11, 11)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblparent, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1847,10 +1836,6 @@ public class BOMMaintPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbqtyperFocusLost
 
-    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        newAction("");
-    }//GEN-LAST:event_btnewActionPerformed
-
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
@@ -1861,7 +1846,6 @@ public class BOMMaintPanel extends javax.swing.JPanel {
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
-    private javax.swing.JButton btnew;
     private javax.swing.JButton btpdf;
     private javax.swing.JButton btroll;
     private javax.swing.JButton btupdate;

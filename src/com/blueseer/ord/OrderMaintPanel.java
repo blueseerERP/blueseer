@@ -1228,6 +1228,48 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }
  
+    public void lookUpFrameBillTo() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_code");
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_name");   
+        } else {
+         luModel = DTData.getCustBrowseUtil(luinput.getText(),0, "cm_zip");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                ddcust.setSelectedItem(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("CustCode", "Name", "Zip"); 
+        
+        
+    }
+ 
     // custom funcs 
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
@@ -1816,7 +1858,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
         input.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-        lookUpModel = DTData.getCustXrefBrowseUtil(input.getText(), 0, "cup_citem");
+        lookUpModel = DTData.getCustXrefBrowseUtil(input.getText(), 0, "cup_citem", ddcust.getSelectedItem().toString());
         lookUpTable.setModel(lookUpModel);
         lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (lookUpModel.getRowCount() < 1) {
@@ -1948,199 +1990,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         dialog.setVisible(true);
     }
 
-    public static void lookUpFrameBillTo() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-        // MouseListener[] mllist = lookUpTable.getMouseListeners();
-       // for (MouseListener ml : mllist) {
-        //    System.out.println(ml.toString());
-            //lookUpTable.removeMouseListener(ml);
-       // }
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (rb1.isSelected()) {  
-         lookUpModel = DTData.getCustBrowseUtil(input.getText(), 0, "cm_name"); 
-        } else {
-         lookUpModel = DTData.getCustBrowseUtil(input.getText(), 0, "cm_zip");   
-        }
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
-        
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ddcust.setSelectedItem(target.getValueAt(row,1).toString());
-                dialog.dispose();
-                }
-            }
-        };
-        lookUpTable.addMouseListener(mllu);
-      
-        
-        JPanel rbpanel = new JPanel();
-        bg = new ButtonGroup();
-        rb1 = new JRadioButton("Name");
-        rb2 = new JRadioButton("Zip");
-        rb1.setSelected(true);
-        rb2.setSelected(false);
-        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
-        rbpanel.setLayout(radiobuttonpanellayout);
-        rbpanel.add(rb1);
-        JLabel spacer = new JLabel("   ");
-        rbpanel.add(spacer);
-        rbpanel.add(rb2);
-        bg.add(rb1);
-        bg.add(rb2);
-        
-        
-        dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-      
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(input, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add( scrollPane, gbc );
-        
-        dialog.add(panel);
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setVisible(true);
-    }
-    
-    public static void lookUpFrameShipTo() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-        // MouseListener[] mllist = lookUpTable.getMouseListeners();
-       // for (MouseListener ml : mllist) {
-        //    System.out.println(ml.toString());
-            //lookUpTable.removeMouseListener(ml);
-       // }
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (rb1.isSelected()) {  
-         lookUpModel = DTData.getShipToBrowseSoloUtil(input.getText(), 0, "cms_name"); 
-        } else {
-         lookUpModel = DTData.getShipToBrowseSoloUtil(input.getText(), 0, "cms_zip");   
-        }
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
-        
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ddcust.setSelectedItem(target.getValueAt(row,2).toString());
-                ddship.setSelectedItem(target.getValueAt(row,1).toString());
-                dialog.dispose();
-                }
-            }
-        };
-        lookUpTable.addMouseListener(mllu);
-      
-        
-        JPanel rbpanel = new JPanel();
-        bg = new ButtonGroup();
-        rb1 = new JRadioButton("Name");
-        rb2 = new JRadioButton("Zip");
-        rb1.setSelected(true);
-        rb2.setSelected(false);
-        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
-        rbpanel.setLayout(radiobuttonpanellayout);
-        rbpanel.add(rb1);
-        JLabel spacer = new JLabel("   ");
-        rbpanel.add(spacer);
-        rbpanel.add(rb2);
-        bg.add(rb1);
-        bg.add(rb2);
-        
-        
-        dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-      
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(input, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add( scrollPane, gbc );
-        
-        dialog.add(panel);
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setVisible(true);
-    }
-
     
     
     /**
@@ -2228,7 +2077,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btprintinvoice = new javax.swing.JButton();
         btprintps = new javax.swing.JButton();
         btLookUpBillTo = new javax.swing.JButton();
-        btLookUpShipTo = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         jPanelLines = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -2742,14 +2590,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btLookUpShipTo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
-        btLookUpShipTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLookUpShipToActionPerformed(evt);
-            }
-        });
-
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -2779,9 +2620,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btLookUpShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btLookUpBillTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btLookUpBillTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(42, 42, 42)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblshiptoaddr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2838,21 +2677,19 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(8, 8, 8)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblcustname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel82))
-                                .addComponent(btLookUpBillTo)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(ddship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel91))
-                                .addComponent(lblshiptoaddr, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addComponent(btLookUpShipTo)
-                                .addGap(7, 7, 7)))))
+                                .addGap(5, 5, 5)
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btLookUpBillTo)
+                                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel82)))))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel91))
+                            .addComponent(lblshiptoaddr, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -3882,10 +3719,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        lookUpFrameBillTo();
     }//GEN-LAST:event_btLookUpBillToActionPerformed
 
-    private void btLookUpShipToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpShipToActionPerformed
-        lookUpFrameShipTo();
-    }//GEN-LAST:event_btLookUpShipToActionPerformed
-
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
@@ -3894,7 +3727,6 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btLookUpBillTo;
     private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
-    private javax.swing.JButton btLookUpShipTo;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btaddshipto;

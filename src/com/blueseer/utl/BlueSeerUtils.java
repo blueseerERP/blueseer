@@ -176,12 +176,12 @@ public class BlueSeerUtils {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(luinput, gbc);
+        panel.add(rbpanel, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
+        panel.add(luinput, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -194,6 +194,7 @@ public class BlueSeerUtils {
         ludialog.setLocationRelativeTo( null );
         ludialog.setResizable(false);
         ludialog.setVisible(true);
+        luinput.requestFocus();
     } 
         
         
@@ -237,12 +238,12 @@ public class BlueSeerUtils {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(luinput, gbc);
+        panel.add(rbpanel, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
+        panel.add(luinput, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -255,6 +256,7 @@ public class BlueSeerUtils {
         ludialog.setLocationRelativeTo( null );
         ludialog.setResizable(false);
         ludialog.setVisible(true);
+        luinput.requestFocus();
     } 
      
     public static void callDialog(String rb1, String rb2, String rb3) {
@@ -304,12 +306,12 @@ public class BlueSeerUtils {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(luinput, gbc);
+        panel.add(rbpanel, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
+        panel.add(luinput, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -322,6 +324,7 @@ public class BlueSeerUtils {
         ludialog.setLocationRelativeTo( null );
         ludialog.setResizable(false);
         ludialog.setVisible(true);
+        luinput.requestFocus();
     } 
     
     public static void callDialog(String rb1, String rb2, String rb3, String rb4) {
@@ -376,12 +379,12 @@ public class BlueSeerUtils {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(luinput, gbc);
+        panel.add(rbpanel, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
+        panel.add(luinput, gbc);
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -394,6 +397,7 @@ public class BlueSeerUtils {
         ludialog.setLocationRelativeTo( null );
         ludialog.setResizable(false);
         ludialog.setVisible(true);
+        luinput.requestFocus();
     } 
     
     

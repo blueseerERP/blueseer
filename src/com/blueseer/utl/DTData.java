@@ -1072,7 +1072,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getShipToBrowseSoloUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{"select", "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"})
                 {
@@ -2060,6 +2060,66 @@ public class DTData {
         return mymodel;
         
          } 
+        
+        public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield, String cust) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{"select", "Cust", "CustItem", "Item"})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " and cup_cust = " + "'" + cust + "'" +        
+                        " order by cup_cust, cup_citem ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'%" + str + "'" +
+                                " and cup_cust = " + "'" + cust + "'" + 
+                        " order by cup_cust, cup_citem ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select cup_cust, cup_citem, cup_item " +
+                        " FROM  cup_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                                " and cup_cust = " + "'" + cust + "'" + 
+                        " order by cup_cust, cup_citem ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cup_cust"),
+                                   res.getString("cup_citem"),
+                                   res.getString("cup_item")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+        
         
         public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

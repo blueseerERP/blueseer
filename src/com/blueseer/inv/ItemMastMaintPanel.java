@@ -30,6 +30,15 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.BorderLayout;
@@ -91,14 +100,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     // global variable declarations
                 boolean isLoad = false;
     
-    // lookup variables
-        public static javax.swing.table.DefaultTableModel lookUpModel = null;
-        public static JTable lookUpTable = new JTable();
-        public static MouseListener mllu = null;
-        public static JDialog dialog = new JDialog();
-        public static ButtonGroup bg = null;
-        public static JRadioButton rb1 = null;
-        public static JRadioButton rb2 = null;
+   
                 
    // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -854,7 +856,46 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
       return m;
     }
     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemBrowseUtil(luinput.getText(), 0, "it_item");
+        } else {
+         luModel = DTData.getItemBrowseUtil(luinput.getText(), 0, "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
       
+        callDialog("Item", "Description"); 
+        
+        
+    }
+   
     // custom functions  
     public void getItemImages(String item) {
         isLoad = true;
@@ -1185,99 +1226,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         return mynode;
      }
     
-    public void lookUpFrameItemDesc() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-      
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (rb1.isSelected()) {  
-         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_item");
-        } else {
-         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");   
-        }
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
-        
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(500,200));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                dialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString()});
-                }
-            }
-        };
-        lookUpTable.addMouseListener(mllu);
-      
-        
-        JPanel rbpanel = new JPanel();
-        bg = new ButtonGroup();
-        rb1 = new JRadioButton("item");
-        rb2 = new JRadioButton("description");
-        rb1.setSelected(true);
-        rb2.setSelected(false);
-        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
-        rbpanel.setLayout(radiobuttonpanellayout);
-        rbpanel.add(rb1);
-        JLabel spacer = new JLabel("   ");
-        rbpanel.add(spacer);
-        rbpanel.add(rb2);
-        bg.add(rb1);
-        bg.add(rb2);
-        
-        
-        dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-      
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(input, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add( scrollPane, gbc );
-        
-        dialog.add(panel);
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setResizable(false);
-        dialog.setVisible(true);
-    }
-
+   
     
     /**
      * This method is called from within the bsmf.MainFrame.constructor to initialize the form.
@@ -1488,7 +1437,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
         });
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -1515,17 +1464,13 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(ddtype, 0, 112, Short.MAX_VALUE)
                             .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(110, 110, 110)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel78, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel72, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel76, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel60, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel34)))
+                    .addComponent(jLabel78)
+                    .addComponent(jLabel72)
+                    .addComponent(jLabel76)
+                    .addComponent(jLabel60)
+                    .addComponent(jLabel34))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbgroup)
@@ -2653,7 +2598,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
-        lookUpFrameItemDesc();
+        lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
 
