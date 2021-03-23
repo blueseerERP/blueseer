@@ -20147,7 +20147,7 @@ public class OVData {
                  res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_part, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
                          " sod_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
                    " where shd_id = " + "'" + shipper + "'" + 
-                   " group by shd_part " +                        
+                   " group by shd_part, sod_nbr, sod_status, sod_line " +                        
                    ";");
                    while (res.next()) {
                        shippedqty.add(res.getString("sod_shipped_qty"));
