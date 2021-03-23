@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Patch Installation for BlueSeer Version 5.0" 
+echo "Patch Installation for BlueSeer Version 5.1" 
 
 echo ""
 echo ""
@@ -14,7 +14,7 @@ cd ../../data
 datadir=$(pwd)
 
 cd $currdir
-cp .patchsqlv50 /$datadir/
+cp .patchsqlv51 /$datadir/
 
 if [[ -d "../../jasper" ]];
 then
@@ -44,7 +44,7 @@ then
 	echo "loading sqlite relevant schema changes ..."
 	sleep 2
 	cd $datadir
-	./sqlite3 bsdb.db <.patchsqlv50
+	./sqlite3 bsdb.db <.patchsqlv51
 	cd $currdir
 else
 	echo "loading mysql relevant schema changes ..."

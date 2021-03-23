@@ -2,7 +2,7 @@
 
 ## creation of generic zip for both sqlite and mysql versions
 bsdir=$(pwd)
-bszip="blueseer.generic.linux.v50.zip"
+bszip="blueseer.generic.linux.v51.zip"
 rm -f $bszip
 cd ../sf
 zip ../scripts/$bszip jasper/*
