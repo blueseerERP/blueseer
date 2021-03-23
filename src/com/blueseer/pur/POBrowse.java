@@ -588,7 +588,7 @@ try {
                         " po_vend <= " + "'" + vendto + "'" + " AND " +
                      " po_nbr >= " + "'" + pofrom + "'" + " AND " +
                         " po_nbr <= " + "'" + poto + "'" + 
-                        " group by po_nbr ;");
+                        " group by po_nbr, po_vend, vd_name, po_ord_date, po_due_date, po_type, po_status ;");
                      
                   
                 

@@ -443,14 +443,14 @@ public class PayRollMaint extends javax.swing.JPanel {
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
                 String codedesc = "";
-                 res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', t.code_id as 't.code_id', " +
-                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
-                           " e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate', clc_code, clc_desc " +
+                 res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
+                           " t.emp_nbr as 't.emp_nbr',  " +
+                           " e.emp_rate as 'e.emp_rate', clc_desc " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
                               " where t.emp_nbr = "  + "'" + empnbr + "'" +
                            " and t.indate >= " + "'" + fromdate + "'" +
                            " and t.indate <= " + "'" + todate + "'" + 
-                                " group by t.code_id " +       
+                                " group by t.code_id, t.emp_nbr, e.emp_rate, clc_desc " +       
                                 " order by t.code_id " +      
                                ";" );
                  html += "<table>";
@@ -1465,14 +1465,14 @@ public class PayRollMaint extends javax.swing.JPanel {
                    String ispaid = isnew ? "0" : "1";
                
                    // Collect hourly/timepunchers first
-                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
+                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs',  " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
                            " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
                               " where t.indate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                                " and t.indate <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
                                 " and t.ispaid =  " + "'" + ispaid + "'" +      
-                                " group by t.emp_nbr " +       
+                                " group by t.emp_nbr, e.emp_lname, e.emp_fname, e.emp_mname, e.emp_jobtitle, e.emp_supervisor, e.emp_type, e.emp_shift, e.emp_profile, e.emp_dept, e.emp_rate " +       
                                 " order by t.emp_nbr " +      
                                ";" );
                      

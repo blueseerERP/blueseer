@@ -130,7 +130,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     
     javax.swing.table.DefaultTableModel myshipdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                 "Line", "Part", "SO", "PO", "Qty", "Price", "Desc", "WH", "LOC", "Disc", "ListPrice", "MatlTax"
+                 "Line", "Part", "SO", "PO", "Qty", "Price", "Desc", "Disc", "ListPrice", "MatlTax"
             });           
                 
     
@@ -627,9 +627,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 String po = "";
                 
                  res = st.executeQuery("select shd_soline, shd_part, shd_so, shd_po, sum(shd_qty) as sumqty, shd_netprice, shd_desc, " +
-                         " shd_wh, shd_loc, shd_disc, shd_listprice, shd_taxamt " +
+                         " shd_disc, shd_listprice, shd_taxamt " +
                          " from ship_det where shd_id = " + "'" + x[0] + "'" +
-                                       " group by shd_so, shd_soline " + ";");
+                                       " group by shd_so, shd_soline, shd_part, shd_po, shd_netprice, shd_desc, shd_disc, shd_listprice, shd_taxamt " + ";");
                 while (res.next()) {
                   myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
                       res.getString("shd_so"), 
@@ -637,8 +637,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                       res.getString("sumqty"), 
                       res.getString("shd_netprice"),
                       res.getString("shd_desc"),
-                      res.getString("shd_wh"),
-                      res.getString("shd_loc"),
                       res.getString("shd_disc"),
                       res.getString("shd_listprice"),
                       res.getString("shd_taxamt")

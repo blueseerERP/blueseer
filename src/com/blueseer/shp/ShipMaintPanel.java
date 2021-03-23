@@ -1994,7 +1994,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 ddloc.getSelectedItem().toString(),
                 0,
                 tbprice.getText(), 
-                "",  // matltax 
+                "0",  // matltax 
                 ddcont.getSelectedItem().toString(),
                 tbserial.getText()
             });
@@ -2012,7 +2012,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     ddloc.getSelectedItem().toString(),
                     0,
                     tbprice.getText(), 
-                    "",  // matltax 
+                    "0",  // matltax 
                     ddcont.getSelectedItem().toString(),
                     tbserial.getText()
                 }); 
@@ -2031,7 +2031,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     ddloc.getSelectedItem().toString(),
                     0,
                     tbprice.getText(), 
-                    "",  // matltax 
+                    "0",  // matltax 
                     ddcont.getSelectedItem().toString(),
                     tbserial.getText()
                 });    
@@ -2089,8 +2089,16 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                      d++;
                      uniqwh = tabledetail.getValueAt(j, 8).toString();
                    }
-
-                  
+                int pallets = 0;
+                if (! tbpallets.getText().isEmpty()) {
+                    pallets = Integer.valueOf(tbpallets.getText());
+                }  
+                
+                int boxes = 0;
+                if (! tbboxes.getText().isEmpty()) {
+                    boxes = Integer.valueOf(tbboxes.getText());
+                }
+                
 
                 st.executeUpdate("insert into ship_mstr " 
                     + " (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes,  sh_shipvia, "
@@ -2100,8 +2108,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     + " values ( " + "'" + tbshipper.getText() + "'" + "," 
                     + "'" + ddbillto.getSelectedItem().toString() + "'" + "," 
                     + "'" + ddshipto.getSelectedItem().toString() + "'" + ","
-                    + "'" + tbpallets.getText() + "'" + "," 
-                    + "'" + tbboxes.getText() + "'" + ","      
+                    + "'" + pallets + "'" + "," 
+                    + "'" + boxes + "'" + ","      
                     + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","         
                     + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                     + "'" + podate + "'" + ","
@@ -2226,13 +2234,23 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                          uniqpo = tabledetail.getValueAt(j, 4).toString();
                        }
                    
+                int pallets = 0;
+                if (! tbpallets.getText().isEmpty()) {
+                    pallets = Integer.valueOf(tbpallets.getText());
+                }  
+                
+                int boxes = 0;
+                if (! tbboxes.getText().isEmpty()) {
+                    boxes = Integer.valueOf(tbboxes.getText());
+                }
+                       
                     st.executeUpdate("update ship_mstr set " 
                         + " sh_shipdate = " + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                         + " sh_ref = " + "'" + tbref.getText() + "'" + ","
                         + " sh_rmks = " + "'" + tbremarks.getText() + "'" + ","
                         + " sh_shipvia = " + "'" + ddshipvia.getSelectedItem() + "'" + ","         
-                        + " sh_pallets = " + "'" + tbpallets.getText() + "'" + ","
-                        + " sh_boxes = " + "'" + tbboxes.getText() + "'" + ","        
+                        + " sh_pallets = " + "'" + pallets + "'" + ","
+                        + " sh_boxes = " + "'" + boxes + "'" + ","        
                         + " sh_site = " + "'" + ddsite.getSelectedItem().toString() + "'"   
                         + " where sh_id = " + "'" + tbshipper.getText().toString() + "'"
                         + ";");

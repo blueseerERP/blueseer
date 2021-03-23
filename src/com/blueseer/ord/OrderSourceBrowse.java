@@ -501,14 +501,14 @@ try {
                  
                  
                  
-             res = st.executeQuery("select so_nbr, so_cust, so_ord_date, so_due_date, so_type, so_status, so_issourced, " +
+             res = st.executeQuery("select so_nbr, so_cust, so_ord_date, so_type, so_status, so_issourced, " +
                       " sum(sod_ord_qty * sod_netprice) as 'total', sum(sod_ord_qty) as 'qty' " +
                          " from so_mstr inner join sod_det on sod_nbr = so_nbr where " +
                         " so_cust >= " + "'" + ddcustfrom.getSelectedItem().toString() + "'" + " AND " +
                         " so_cust <= " + "'" + ddcustto.getSelectedItem().toString() + "'" + " AND " +
                      " so_nbr >= " + "'" + sofrom + "'" + " AND " +
                         " so_nbr <= " + "'" + soto + "'" + 
-                        " group by so_nbr ;");
+                        " group by so_nbr, so_cust, so_ord_date, so_type, so_status, so_issourced ;");
                      
                   
                 

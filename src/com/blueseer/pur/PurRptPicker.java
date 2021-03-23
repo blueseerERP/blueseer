@@ -341,7 +341,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " where po_ord_date >= " + "'" + fromdate + "'" + 
                         " and po_ord_date <= " + "'" + todate + "'" +
-                        " group by po_nbr " +
+                        " group by po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
                         " order by po_nbr desc ;");
                
                 
@@ -435,7 +435,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " where po_vend >= " + "'" + fromvend + "'" +   
                         " and po_vend <= " + "'" + tovend + "'" +          
-                        " group by po_nbr " +
+                        " group by po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
                         " order by po_nbr desc ;");
                
                 
@@ -544,7 +544,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                         " and po_ord_date <= " + "'" + todate + "'" +
                         " and po_vend >= " + "'" + fromvend + "'" +   
                         " and po_vend <= " + "'" + tovend + "'" +          
-                        " group by po_nbr " +
+                        " group by po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
                         " order by po_nbr desc ;");
                
                 
@@ -638,7 +638,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " where po_vend >= " + "'" + fromvend + "'" +   
                         " and po_vend <= " + "'" + tovend + "'" +          
-                        " group by po_nbr " +
+                        " group by po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status " +
                         " order by po_nbr desc ;");
                
                 

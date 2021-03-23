@@ -281,7 +281,7 @@ try {
                         "'" + year + "'" +
                         " and acb_acct >= " + "'" + ddacctfrom.getSelectedItem().toString() + "'" +
                         " and acb_acct <= " + "'" + ddacctto.getSelectedItem().toString() + "'" +
-                        " group by acb_acct " +
+                        " group by acb_acct, ac_desc " +
                         ";");
                 while (res.next()) {
                    

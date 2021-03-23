@@ -375,7 +375,7 @@ public class DTData {
                 
                  res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, sum(in_qoh) as 'sum', it_safestock  " +
                         " FROM  item_mstr inner join in_mstr on in_part = it_item  " +
-                        " group by it_item order by it_item ;");
+                        " group by it_item, it_desc, it_uom, it_type, it_status order by it_item ;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
                                    res.getString("it_desc"),
@@ -5764,14 +5764,14 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             try{
                    double amount = 0.00;
                    
-                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', " +
+                       res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs',  " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
                            " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
                               " where t.indate >= " + "'" + fromdate + "'" +
                                " and t.indate <= " + "'" + todate + "'" + 
                                 " and t.ispaid = '0' " +          
-                                " group by t.emp_nbr " +       
+                                " group by t.emp_nbr, e.emp_lname, e.emp_fname, e.emp_mname, e.emp_jobtitle, e.emp_supervisor, e.emp_type, e.emp_shift, e.emp_profile, e.emp_dept, e.emp_rate " +       
                                 " order by t.emp_nbr " +      
                                ";" );
                      

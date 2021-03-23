@@ -707,7 +707,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                         " and cast(cm_code as decimal) <= " + "'" + to + "'" +
                         " and sh_shipdate >= " + "'" + fromdate + "'" +
                         " and sh_shipdate <= " + "'" + todate + "'" +
-                        " group by cm_code order by cm_code ;");
+                        " group by cm_code, cm_name order by cm_code ;");
 
                 while (res.next()) {
                    

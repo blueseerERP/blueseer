@@ -342,7 +342,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                     " where " +
                     " so_due_date >= " + "'" + fromdate + "'" +
                     " and so_due_date <= " + "'" + todate + "'" +         
-                    " group by so_nbr order by so_nbr ;");
+                    " group by so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name order by so_nbr ;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
@@ -442,7 +442,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                     " where " +
                     " so_ord_date >= " + "'" + fromdate + "'" +
                     " and so_ord_date <= " + "'" + todate + "'" +         
-                    " group by so_nbr order by so_nbr ;");
+                    " group by so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name order by so_nbr ;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
@@ -553,7 +553,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                     " and so_cust <= " + "'" + tocust + "'" +   
                     " and so_ord_date >= " + "'" + fromdate + "'" +
                     " and so_ord_date <= " + "'" + todate + "'" +         
-                    " group by so_nbr order by so_nbr ;");
+                    " group by so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name order by so_nbr ;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
@@ -656,7 +656,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                     " so_cust >= " + "'" + fromcust + "'" +
                     " and so_cust <= " + "'" + tocust + "'" +   
                     " and so_status <> " + "'" + "close" + "'" +       
-                    " group by so_nbr order by so_nbr ;");
+                    " group by so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name order by so_nbr ;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
@@ -862,7 +862,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                     " so_cust >= " + "'" + fromcust + "'" +
                     " and so_cust <= " + "'" + tocust + "'" +   
                     " and so_status = " + "'" + "onhold" + "'" +       
-                    " group by so_nbr order by so_nbr ;");
+                    " group by so_nbr, so_po, so_status, so_ord_date, so_due_date, cm_code, cm_name order by so_nbr ;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 

@@ -280,7 +280,7 @@ public class ReconAccount extends javax.swing.JPanel {
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type = 'expense' " +
                         " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
-                        " group by posd_acct order by posd_acct desc   ;");
+                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                

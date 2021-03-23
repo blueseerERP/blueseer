@@ -474,7 +474,7 @@ try {
                         " do_wh_from <= " + "'" + ddwhto.getSelectedItem().toString() + "'" + " AND " +
                      " do_nbr >= " + "'" + sofrom + "'" + " AND " +
                         " do_nbr <= " + "'" + soto + "'" + 
-                        " group by do_nbr ;");
+                        " group by do_nbr, do_wh_from, do_wh_to, do_shipdate, do_type, do_status ;");
                      
                   
                 

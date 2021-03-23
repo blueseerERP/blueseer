@@ -18156,7 +18156,7 @@ public class OVData {
                         "where acb_year = " + "'" + year + "'" +
                         " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
                         " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
-                        " group by acb_acct " +
+                        " group by acb_acct, ac_desc, ac_type " +
                         ";");
                 while (res.next()) {
                    amt = res.getDouble("sum");
@@ -18228,7 +18228,7 @@ public class OVData {
                         "where acb_year = " + "'" + year + "'" +
                         " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
                         " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
-                        " group by acb_acct " +
+                        " group by acb_acct, ac_desc, ac_type " +
                         ";");
                 while (res.next()) {
                    amt = res.getDouble("sum");
@@ -18566,7 +18566,7 @@ public class OVData {
                            " inner join vd_mstr on vd_addr = apd_vend " +
                            " inner join ap_mstr on ap_nbr = apd_nbr " +
                            " where apd_batch = " + "'" + batchid + "'" +
-                           " group by apd_vend order by apd_vend " + ";");
+                           " group by apd_vend, ap_site, ap_curr order by apd_vend " + ";");
                    // now create the AP_MSTR associated with each record returned...creating a unique check nbr for each...
                    while (res.next()) {
                         vend = res.getString("apd_vend");
@@ -18680,7 +18680,7 @@ public class OVData {
                            " inner join vd_mstr on vd_addr = apd_vend " +
                            " inner join ap_mstr on ap_nbr = apd_nbr " +
                            " where apd_batch = " + "'" + batchid + "'" +
-                           " group by apd_vend order by apd_vend " + ";");
+                           " group by apd_vend, ap_site, ap_ref order by apd_vend " + ";");
                    // now create the AP_MSTR associated with each record returned...creating a unique check nbr for each...
                    while (res.next()) {
                         vend = res.getString("apd_vend");
@@ -25116,7 +25116,7 @@ MainFrame.bslog(e);
                           " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = '1000' " +
                           " where it_prodline >= " + "'" + fromprod + "'" +
                           " and it_prodline <= " + "'" + toprod + "'" + 
-                          " group by it_item " +
+                          " group by it_item, ita_fct, sod_site, in_qoh " +
                                          ";" );
                     while (res.next()) {
                      part = res.getString("it_item");

@@ -581,7 +581,7 @@ try {
                         " sh_cust >= " + "'" + custfrom + "'" + " AND " +
                         " sh_cust <= " + "'" + custto + "'" + " AND " +
                         " sh_status = '1' " +
-                        " group by sh_id;");
+                        " group by sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate;");
                  } else {
                    res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id where " +
@@ -591,7 +591,7 @@ try {
                         " sh_shipdate <= " + "'" + todate + "'" + " AND " +
                         " sh_cust >= " + "'" + custfrom + "'" + " AND " +
                         " sh_cust <= " + "'" + custto + "'"  +
-                        " group by sh_id;");  
+                        " group by sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate;");  
                  }
                 
                        while (res.next()) {

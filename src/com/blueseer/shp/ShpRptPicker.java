@@ -342,7 +342,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where sh_shipdate >= " + "'" + fromdate + "'" +
                         " and sh_shipdate <= " + "'" + todate + "'" +
-                        " group by sh_id " +
+                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status " +
                         " order by sh_id;");
 
                 while (res.next()) {
@@ -442,8 +442,8 @@ public class ShpRptPicker extends javax.swing.JPanel {
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where cast(sh_id as decimal) >= " + "'" + fromnbr + "'" +
                         " and cast(sh_id as decimal) <= " + "'" + tonbr + "'" +
-                        " group by sh_id " +
-                        " order by sh_id;");
+                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status " +
+                         " order by sh_id;");
 
                 while (res.next()) {
                     mymodel.addRow(new Object[]{ 
@@ -556,7 +556,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
                         " and sh_shipdate <= " + "'" + todate + "'" +
                         " and sh_cust >= " + "'" + fromcust + "'" +
                         " and sh_cust <= " + "'" + tocust + "'" +
-                        " group by sh_id " +
+                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status " +
                         " order by sh_id;");
 
                 while (res.next()) {

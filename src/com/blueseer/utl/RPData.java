@@ -749,7 +749,7 @@ public class RPData {
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " where cast(sh_id as decimal) >= " + "'" + from + "'" +
                         " and cast(sh_id as decimal) <= " + "'" + to + "'" +
-                        " group by sh_id " +
+                        " group by sh_id, sh_cust, cm_name, sh_shipdate, sh_type, sh_site, sh_po, sh_so, sh_curr, sh_status  " +
                         " order by sh_id;");
 
                 while (res.next()) {

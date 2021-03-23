@@ -196,7 +196,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         " where sv_create_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND sv_create_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND sv_type = 'quote' AND sv_status <> 'void' " +
-                        " group by sv_cust order by sv_cust desc   ;");
+                        " group by sv_cust, cm_name order by sv_cust desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
@@ -267,7 +267,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         " where sv_create_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND sv_create_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND sv_type = 'order' AND sv_status <> 'void' " +
-                        " group by sv_cust order by sv_cust desc   ;");
+                        " group by sv_cust, cm_name order by sv_cust desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
@@ -749,7 +749,7 @@ try {
                         " inner join svd_det on svd_nbr = sv_nbr " +
                         " where sv_create_date >= " + "'" + fromdate + "'" + 
                         " and sv_create_date <= " + "'" + todate + "'" +
-                        " group by sv_nbr " +
+                        " group by sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched " +
                         " order by sv_nbr desc;");
                 
                 

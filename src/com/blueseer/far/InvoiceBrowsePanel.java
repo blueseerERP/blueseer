@@ -688,7 +688,7 @@ try {
                         " sh_cust >= " + "'" + custfrom + "'" + " AND " +
                         " sh_cust <= " + "'" + custto + "'" + " AND " +
                         " sh_status = '1' " +
-                        " group by sh_id;");
+                        " ;");
                  
                 
                        while (res.next()) {

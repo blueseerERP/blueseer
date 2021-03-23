@@ -815,7 +815,7 @@ try {
                         " inner join cm_mstr on cm_code = ar_cust " +
                         " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
-                         " group by ar_cust order by ar_cust;");
+                         " group by ar_cust, cm_name order by ar_cust;");
                  }  else {
                  res = st.executeQuery("SELECT ar_cust, cm_name, " +
                         " sum(case when ar_duedate > curdate() then ar_open_amt else 0 end) as '0', " +
@@ -827,7 +827,7 @@ try {
                         " inner join cm_mstr on cm_code = ar_cust " +
                          " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
-                         " group by ar_cust order by ar_cust;");
+                         " group by ar_cust, cm_name order by ar_cust;");
                  }
                   while (res.next()) {
                     dol = dol + (res.getDouble("0") + res.getDouble("30") + res.getDouble("60") + res.getDouble("90") + res.getDouble("90p") );

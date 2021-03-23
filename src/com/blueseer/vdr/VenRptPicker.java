@@ -618,7 +618,7 @@ public class VenRptPicker extends javax.swing.JPanel {
                         " and cast(vd_addr as decimal) <= " + "'" + to + "'" +
                         " and rv_recvdate >= " + "'" + fromdate + "'" +
                         " and rv_recvdate <= " + "'" + todate + "'" +
-                        " group by vd_addr order by vd_addr ;");
+                        " group by vd_addr, vd_name order by vd_addr ;");
 
                 while (res.next()) {
                    

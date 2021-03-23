@@ -541,7 +541,7 @@ try {
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " group by so_nbr order by so_nbr desc ;");    
+                         " group by so_nbr, so_rmks, so_cust, so_po, so_ord_date, so_due_date, so_status order by so_nbr desc ;");    
                  
                  
                 while (res.next()) {

@@ -849,9 +849,8 @@ public class EmployeeMaster extends javax.swing.JPanel implements IBlueSeer {
                  html += "<table>";
                 
                 if (type.equals("Hourly")) {
-                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.recid as 't.recid', t.code_id as 't.code_id', " +
-                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
-                           " e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate', clc_code, clc_desc " +
+                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
+                            "  e.emp_rate as 'e.emp_rate', clc_desc " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
                               " where t.emp_nbr = "  + "'" + empnbr + "'" +
                            " and t.checknbr = " + "'" + checknbr + "'" +

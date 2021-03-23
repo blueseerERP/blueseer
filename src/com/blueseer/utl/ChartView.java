@@ -226,7 +226,7 @@ public class ChartView extends javax.swing.JPanel {
                         " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                         " AND ac_type = 'E' " +
-                        " group by glh_acct order by sum desc limit 10  ;");
+                        " group by glh_acct, ac_desc order by sum desc limit 10  ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
