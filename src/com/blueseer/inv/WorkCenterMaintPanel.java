@@ -492,9 +492,9 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel implements IBlueSee
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(),0, "wc_cell");
+         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(), 0, "wc_cell");
         } else {
-         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(),0, "wc_desc");   
+         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(), 0, "wc_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);

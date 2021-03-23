@@ -561,7 +561,7 @@
         <Component class="javax.swing.JButton" name="btlookup">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/find.png"/>
+              <Image iconType="3" name="/images/lookup.png"/>
             </Property>
           </Properties>
           <Events>
@@ -727,7 +727,7 @@
                               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="jPanel7" alignment="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jPanel6" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -749,28 +749,32 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel48" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel42" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel30" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel38" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="tbserial" max="32767" attributes="0"/>
-                                  <Component id="ddcont" max="32767" attributes="0"/>
-                                  <Component id="tbdesc" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="dditemorder" min="-2" pref="117" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="dditemline" min="-2" pref="70" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="tbserial" max="32767" attributes="0"/>
+                                      <Component id="ddcont" max="32767" attributes="0"/>
+                                      <Component id="tbdesc" max="32767" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="dditemorder" min="-2" pref="117" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="dditemline" min="-2" pref="70" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="tbpo" max="32767" attributes="0"/>
+                                      <Component id="tbitem" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="tbpo" max="32767" attributes="0"/>
-                                  <Component id="tbitem" max="32767" attributes="0"/>
+                                  <Component id="tbcontqty" min="-2" pref="96" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -808,10 +812,15 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="tbcontqty" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tbserial" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="42" max="32767" attributes="0"/>
+                              <EmptySpace pref="16" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -856,7 +865,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel11">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="ContID"/>
+                        <Property name="text" type="java.lang.String" value="Cont"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="dditemorder">
@@ -896,6 +905,13 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="tbitem">
                     </Component>
+                    <Component class="javax.swing.JTextField" name="tbcontqty">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel9">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="ContQty"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel6">
@@ -913,16 +929,20 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbqty" min="-2" pref="69" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="lbqtyshipped" pref="60" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <Component id="cbexplode" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                           <Component id="tbprice" alignment="0" max="32767" attributes="0"/>
                                           <Component id="dduom" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="tbqty" min="-2" pref="69" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="lbqtyshipped" pref="60" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -947,6 +967,8 @@
                                   <Component id="dduom" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                              <Component id="cbexplode" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -979,6 +1001,9 @@
                       </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="tbqty">
+                      <Events>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbqtyFocusLost"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel43">
                       <Properties>
@@ -986,6 +1011,11 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbqtyshipped">
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="cbexplode">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Explode"/>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>

@@ -509,15 +509,7 @@
             <Component class="javax.swing.JComboBox" name="ddstatus">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="7">
-                    <StringItem index="0" value="cancel"/>
-                    <StringItem index="1" value="error"/>
-                    <StringItem index="2" value="hold"/>
-                    <StringItem index="3" value="open"/>
-                    <StringItem index="4" value="backorder"/>
-                    <StringItem index="5" value="closed"/>
-                    <StringItem index="6" value=" "/>
-                  </StringArray>
+                  <StringArray count="0"/>
                 </Property>
               </Properties>
             </Component>

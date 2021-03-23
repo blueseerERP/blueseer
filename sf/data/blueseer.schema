@@ -751,7 +751,9 @@ CREATE TABLE IF NOT EXISTS `item_mstr` (
   `it_sched` tinyint(1) NOT NULL DEFAULT '0',
   `it_disc_pct` decimal(10,2) NOT NULL DEFAULT '0.00',
   `it_taxcode` varchar(10) NOT NULL DEFAULT '',
-  `it_createdate` date DEFAULT NULL ) 
+  `it_createdate` date DEFAULT NULL,
+  `it_cont` varchar(30) NOT NULL DEFAULT '',
+  `it_contqty` int(8) NOT NULL DEFAULT '0' ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `itemr_cost` (
   `itr_item` varchar(20) NOT NULL,

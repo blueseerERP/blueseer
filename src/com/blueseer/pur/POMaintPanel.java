@@ -818,6 +818,120 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public void lookUpFrameVendItem() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        luModel = DTData.getVendXrefBrowseUtil(luinput.getText(), 0, "vdp_vitem", ddvend.getSelectedItem().toString());
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                ddpart.setSelectedItem(target.getValueAt(row,1).toString()); }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("VendItem"); 
+        
+        
+    }
+ 
+    public void lookUpFrameItemDesc() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+        } else {
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                ddpart.setSelectedItem(target.getValueAt(row,1).toString());}
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Item", "Description"); 
+        
+        
+    }
+ 
+    public void lookUpFrameVendor() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getVendBrowseUtil(luinput.getText(), 0, "vd_name"); 
+        } else {
+         luModel = DTData.getVendBrowseUtil(luinput.getText(), 0, "vd_zip");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                ddvend.setSelectedItem(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("VendNbr", "VendName"); 
+        
+        
+    }
+ 
        
      // additional functions
     public void setPrice() {
@@ -1100,122 +1214,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          
     }
    
-    public void lookUpFrameVendItem() {
-        
-        luinput.removeActionListener(lual);
-        lual = new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        luModel = DTData.getVendXrefBrowseUtil(luinput.getText(), 0, "vdp_vitem");
-        luTable.setModel(luModel);
-        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
-        } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
-        }
-        }
-        };
-        luinput.addActionListener(lual);
-        
-        luTable.removeMouseListener(luml);
-        luml = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
-                }
-            }
-        };
-        luTable.addMouseListener(luml);
-      
-        callDialog("VendItem"); 
-        
-        
-    }
- 
-    public void lookUpFrameItemDesc() {
-        
-        luinput.removeActionListener(lual);
-        lual = new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (lurb1.isSelected()) {  
-         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
-        } else {
-         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
-        }
-        luTable.setModel(luModel);
-        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
-        } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
-        }
-        }
-        };
-        luinput.addActionListener(lual);
-        
-        luTable.removeMouseListener(luml);
-        luml = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
-                }
-            }
-        };
-        luTable.addMouseListener(luml);
-      
-        callDialog("Item", "Description"); 
-        
-        
-    }
- 
-    public void lookUpFrameVendor() {
-        
-        luinput.removeActionListener(lual);
-        lual = new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (lurb1.isSelected()) {  
-         luModel = DTData.getVendBrowseUtil(luinput.getText(), 0, "vd_name"); 
-        } else {
-         luModel = DTData.getVendBrowseUtil(luinput.getText(), 0, "vd_zip");   
-        }
-        luTable.setModel(luModel);
-        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
-        } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
-        }
-        }
-        };
-        luinput.addActionListener(lual);
-        
-        luTable.removeMouseListener(luml);
-        luml = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
-                }
-            }
-        };
-        luTable.addMouseListener(luml);
-      
-        callDialog("VendNbr", "VendName"); 
-        
-        
-    }
- 
+    
     
     
     /**

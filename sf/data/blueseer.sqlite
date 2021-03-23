@@ -897,7 +897,9 @@ CREATE TABLE "item_mstr" (
   "it_sched" tinyint(1) NOT NULL DEFAULT '0',
   "it_disc_pct" decimal(10,2) NOT NULL DEFAULT '0.00',
   "it_taxcode" varchar(10) NOT NULL DEFAULT '',
-  "it_createdate" date NOT NULL DEFAULT '0000-00-00');
+  "it_createdate" date NOT NULL DEFAULT '0000-00-00',
+  "it_cont" varchar(30) NOT NULL DEFAULT '',
+  "it_contqty" int(8) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
