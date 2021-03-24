@@ -51,7 +51,6 @@ alter table ship_mstr add column sh_boxes int(8) COLLATE NOCASE DEFAULT '0';
 alter table ship_mstr add column sh_pallets int(8) COLLATE NOCASE DEFAULT '0';
 alter table ship_det add column shd_uom varchar(3) COLLATE NOCASE DEFAULT '';
 alter table ship_det add column shd_cont varchar(30) COLLATE NOCASE DEFAULT '';
-alter table ship_det add column shd_soline int(8) COLLATE NOCASE DEFAULT '0';
 alter table tran_mstr add column tr_uom varchar(3) COLLATE NOCASE DEFAULT '';
 alter table tran_mstr add column tr_base_qty decimal(14,5) NOT NULL DEFAULT '0';
 alter table pod_mstr add column pod_uom varchar(3) COLLATE NOCASE DEFAULT '';
@@ -62,13 +61,10 @@ alter table code_mstr add column code_internal tinyint(1) COLLATE NOCASE DEFAULT
 alter table item_mstr add column it_cont varchar(30) NOT NULL DEFAULT '';
 alter table item_mstr add column it_contqty int(8) COLLATE NOCASE DEFAULT '0';
 /* */
-update ship_det set shd_soline = shd_line;
 /* */
 delete from menu_mstr;
 delete from menu_tree;
 delete from panel_mstr;
-delete from perm_mstr;
-delete from code_mstr;
 /* */
 /* */
 .mode csv
@@ -76,4 +72,4 @@ delete from code_mstr;
 .import menutree.csv menu_tree
 .import panelmstr.csv panel_mstr
 .import permmstr.csv perm_mstr
-.import codemstr.csv code_mstr
+
