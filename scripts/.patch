@@ -1,1 +1,7 @@
-2
+# Version 5.1 Patch file
+patch=3
+# Fixed issue with shipper maintenance panel.   The total fields were too low in the parent panel to be seen.  Adjusted the height of
+# the panel.
+# Also adjusted bszip.ps1 to maintain a running account of patches.   All lines in the patch file will be commented out except the
+# current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
+# Once a new patch is added with comments...the previous patch= is commented out

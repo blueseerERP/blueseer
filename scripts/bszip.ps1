@@ -1,12 +1,15 @@
+$wip = "c:\bs\wip"
 
-$pc = 0;
+# get latest patch number
 $filecontent = get-content .patch
 foreach ($line in $filecontent) {
-     $pc = [int]$line + 1
+     if ($line.startsWith("patch=")) {
+     $e = $line -split '='
+     $pc = [int]$e[1]
+     } 
 }
-set-content -Path .patch -Value $pc
 
-$wip = "c:\bs\wip"
+
 
 rm blueseer.patch.*.zip
 $patchdir = "patchV51P" + $pc
