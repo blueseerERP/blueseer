@@ -38,6 +38,8 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.lurb3;
+import static com.blueseer.utl.BlueSeerUtils.lurb4;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -502,9 +504,13 @@ public class CustXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         if (lurb1.isSelected()) {  
          luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_cust");
         } else if (lurb2.isSelected()) {
-         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_citem");   
+         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_citem");  
+        } else if (lurb3.isSelected()) {
+         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_item"); 
+        } else if (lurb4.isSelected()) {
+         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_sku");  
         } else {
-         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_item");   
+         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(),0, "cup_upc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -531,7 +537,7 @@ public class CustXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Cust", "CustItem", "Item"); 
+        callDialog("Cust", "CustItem", "Item", "Sku", "UPC"); 
         
         
     }

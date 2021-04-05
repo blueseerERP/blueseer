@@ -3,6 +3,7 @@ CusRptGroup,Customer Phone Email By ID,custPhoneEmailByRange,1,P4
 CusRptGroup,Customer Finance setup By ID,custFinanceInfoByRange,2,L8
 CusRptGroup,Customer Shipto list By cust,custShipTosByRange,3,L8
 CusRptGroup,Customer Total Sales By Range,custTotalSalesByRange,4,P5C
+CusRptGroup,Customer Item Xref By cust,custXrefByRange,5,L8
 OrdRptGroup,Orders By Due Date Range,ordersDueDateByRange,0,L8C
 OrdRptGroup,Orders By Order Date Range,ordersOrdDateByRange,1,L8C
 OrdRptGroup,Orders By Cust/Date Range,ordersCustDateByRange,2,L8C

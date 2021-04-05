@@ -1,5 +1,9 @@
 # Version 5.1 Patch file
-patch=3
+#
+#
+patch=4
+# Updated customer xref maintenance panel to allow lookup by sku, upc
+#patch=3
 # Fixed issue with shipper maintenance panel.   The total fields were too low in the parent panel to be seen.  Adjusted the height of
 # the panel.
 # Also adjusted bszip.ps1 to maintain a running account of patches.   All lines in the patch file will be commented out except the

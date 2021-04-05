@@ -747,6 +747,95 @@ public class CusRptPicker extends javax.swing.JPanel {
         } // else run report
     }
     
+     /* Customer Xref list by code range */
+    public void custXrefByRange (boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb"});
+           lbkey1.setText("From CustCode:");
+           lbkey2.setText("To CustCode:");
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{"select", "CustCode", "Name", "Item", "CustItem", "SKU", "UPC", "Alt", "Misc"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                 res = st.executeQuery("SELECT cm_code, cm_name,  " +
+                        " cup_item, cup_citem, cup_citem2, cup_sku, cup_upc, cup_misc " +
+                          "from cm_mstr inner join cup_mstr on cup_cust = cm_code " +
+                        " where cast(cm_code as decimal) >= " + "'" + from + "'" +
+                        " and cast(cm_code as decimal) <= " + "'" + to + "'" +
+                        "order by cm_code ;");
+
+                while (res.next()) {
+                   
+                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("cup_item"),
+                        res.getString("cup_citem"),
+                        res.getString("cup_sku"),
+                        res.getString("cup_upc"),
+                        res.getString("cup_citem2"),
+                        res.getString("cup_misc")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (tc.getIdentifier().toString().equals("select")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new CusRptPicker.renderer1());
+             }
+        } // else run report
+    }
     
     /* CUSTOM FUNCTIONS END */
     
@@ -1121,7 +1210,7 @@ public class CusRptPicker extends javax.swing.JPanel {
        int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-            reinitpanels("CustMaint", true, new String[]{tablereport.getValueAt(row, 1).toString()});
+            reinitpanels("CustXrefMaint", true, new String[]{tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 4).toString()});
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
