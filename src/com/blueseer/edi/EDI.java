@@ -72,12 +72,7 @@ import jcifs.smb.SmbFileOutputStream;
  * @author vaughnte
  */
 public class EDI {
-    
-    // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref, outfile
-    // outfile is an optional parameter passed during cmdline processing
-    
-  //  public static String[] controlarray = new String[21];
-    
+       
     public static String[] initEDIControl() {   
         String[] controlarray = new String[23];
              /*  22 elements consisting of:
@@ -390,7 +385,7 @@ public class EDI {
     }
     return m;
     }
-    
+        
     public static String[] processFile(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
         
         
@@ -403,6 +398,77 @@ public class EDI {
          f.read(cbuf); 
          f.close();
          
+         
+          
+         /* lets check to see if its x12 or edifact or csv or xml */
+         /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
+         String[] editype = getEDIType(cbuf, infile);
+         String batchfile = "";
+         
+         
+         
+        // if type is FF
+        if (editype[0].equals("FF")) {
+            // at this stage I should know ff type and ff delimiter
+               
+            StringBuilder segment = new StringBuilder();
+            char segdelim = (char) Integer.valueOf(editype[3]).intValue(); 
+           // for (int i = 0; i < cbuf.length; i++) {
+           ArrayList<String> doc = new ArrayList<String>();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+           // loop through file and count each Doc landmarks of FF type in case of concatenation
+           Map<Integer, ArrayList<String>> docRegister = new HashMap<Integer, ArrayList<String>>();
+           ArrayList<String> singledoc = new ArrayList<String>();
+           int doccount = 0;
+           for (String x : doc) {
+               if (x.startsWith(editype[4]) && doccount == 0) {
+                   singledoc.add(x);  
+                   doccount++;
+               }
+               if (x.startsWith(editype[4]) && doccount > 0) {
+                   docRegister.put(doccount, singledoc);
+                   singledoc.clear();
+                   singledoc.add(x);
+                   doccount++;
+               }
+               if (! x.startsWith(editype[4])) {
+                   singledoc.add(x);
+               }
+               
+           }
+           docRegister.put(max, singledoc);
+           
+           // init control
+         c = initEDIControl();
+                    c[0] = ""; // senderid
+                    c[21] = ""; // receiverid
+                    c[2] = map;
+                    c[3] = infile;
+                    c[4] = ""; //isactrlnbr
+                    c[8] = outfile;
+                    c[9] = editype[3];
+                    c[10] = "";
+                    c[11] = "";
+                    c[12] = isOverride;
+                    c[13] = "";
+                    c[15] = "0"; // inbound
+           
+           processFF(docRegister, c, batchfile);
+           
+        }
+        
+        // if file type is x12 
+        if (editype.equals("X12")) {
+            // create batch file and assign to control replacing infile name 
          // now lets see how many ISAs and STs within those ISAs and write character positions of each
          Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
          int start = 0;
@@ -509,19 +575,7 @@ public class EDI {
                     
                 } 
             }
-       
-            
-         
-         /* lets check to see if its x12 or edifact or csv or xml */
-         /* if type comes back as empty...then file will slip through unnoticed..probably need to come back to this with a finally */
-         String editype = getEDIType(cbuf, infile);
-         String batchfile = "";
-      //   if (editype.equals("EDIFACT")) {
-     //        processEDIFACT(cbuf, filename);
-     //    }
-         
-         if (editype.equals("X12")) {
-            // create batch file and assign to control replacing infile name
+        
             
              if (isOverride.isEmpty()) {
              int filenumber = OVData.getNextNbr("edifile");
@@ -531,7 +585,7 @@ public class EDI {
               processX12(ISAmap, cbuf, infile);   
              }
              
-         }
+         }  // if x12
          
      //    if (editype.equals("CSV")) {
     //         processCSV(cbuf, filename);
@@ -542,7 +596,7 @@ public class EDI {
     //     }
          
         // if type is unknown then bail....otherwise create batch file of infile
-         if (editype.isEmpty()) {
+         if (editype[0].isEmpty()) {
            System.out.println("Unknown file type");
            m = new String[]{"0","Unknown file type"};
          } else {
@@ -554,8 +608,9 @@ public class EDI {
        return m;  
     }
     
-    public static String getEDIType(char[] cbuf, String filename) {
-    String type = "";
+    public static String[] getEDIType(char[] cbuf, String filename) {
+    String[] type = new String[]{"","","",""};
+    // type = filetype, doctype, delimiter, landmark
     String[] filenamesplit = null;
         
      // identification rules for csv and xml are based on filename convention
@@ -566,22 +621,65 @@ public class EDI {
     if (filename.toString().toUpperCase().endsWith(".CSV") || filename.toString().toUpperCase().endsWith(".XML") ) {
         filenamesplit = filename.split("\\.", -1);
         if (filenamesplit.length >= 3 ) {
-                          type = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
-        } else {
-            type = "";
-        }
+                          type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
+        } 
     }
+    
+    // filename check for FlatFile (FF)
     
     // otherwise filename can be anything....so assume EDI x12 or Edifact
     // look at first three characters of file content
     StringBuilder sb = new StringBuilder();
          sb.append(cbuf, 0, 3);
          if (sb.toString().equals("ISA"))
-             type = "X12";
+             type[0] = "X12";
          if (sb.toString().equals("UNB"))
-             type = "EDIFACT";
+             type[0] = "EDIFACT";
     return type;
 }
+    
+    public static String[] getFFInfo(ArrayList<String> docs, HashMap<String, String[]> hm) {
+        // coord is list of variables and coordinates to find variables (f,m) r,c,l
+        // f = fixed, m = regex, r = row, c = column, l = length
+        String[] x = new String[]{"",""}; // doctype, tpid
+        int i = 0;
+        String doctyperectype = hm.get("doctype")[0];
+        int doctyperow = Integer.valueOf(hm.get("doctype")[1]);
+        int doctypecol = Integer.valueOf(hm.get("doctype")[2]);
+        int doctypelength = Integer.valueOf(hm.get("doctype")[3]);
+        String doctypematchString = hm.get("doctype")[4];
+        
+        String tpidrectype = hm.get("tpid")[0];
+        int tpidrow = Integer.valueOf(hm.get("tpid")[1]);
+        int tpidcol = Integer.valueOf(hm.get("tpid")[2]);
+        int tpidlength = Integer.valueOf(hm.get("tpid")[3]);
+        String tpidmatchString = hm.get("tpid")[4];
+        
+        for (String s : docs) {
+            i++;
+            // doctype
+            if (doctyperectype.equals("f") && i == doctyperow) {
+                x[0] = s.substring(doctypecol,(doctypecol + doctypelength));
+            }
+            if (doctyperectype.equals("m") && s.matches(doctypematchString)) {
+                x[0] = s.substring(doctypecol,(doctypecol + doctypelength));
+            }
+            
+            // tpid
+            if (tpidrectype.equals("f") && i == tpidrow) {
+                x[1] = s.substring(tpidcol,(tpidcol + tpidlength));
+            }
+            if (tpidrectype.equals("m") && s.matches(tpidmatchString)) {
+                x[1] = s.substring(tpidcol,(tpidcol + tpidlength));
+            }
+            
+            if (! x[0].isEmpty() && ! x[1].isEmpty()) {
+                break;
+            }
+        }
+        return x;
+    }
+    
     
     public static void processXML(File file, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
@@ -996,6 +1094,70 @@ public class EDI {
   
 }
     
+    public static void processFF(Map<Integer, ArrayList<String>> FFDocs, String[] c, String batchfile)   {
+    
+             
+    for (Map.Entry<Integer, ArrayList<String>> doc : FFDocs.entrySet()) {
+       
+        
+        
+            String doctype = "";
+            String docid = "";
+           
+            c[1] = doctype;
+            c[6] = docid;
+      
+     
+            c[3] = batchfile;
+             
+             
+        // insert isa and st start and stop integer points within the file
+        
+          c[17] = String.valueOf(0);
+          c[18] = String.valueOf(0);
+          c[19] = String.valueOf(0);
+          c[20] = String.valueOf(0);
+          
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+          if (c[12].isEmpty()) {   // if not override
+          int idxnbr = OVData.writeEDIIDX(c);
+          c[16] = String.valueOf(idxnbr);
+          }
+             String map = c[2];
+             
+               if (map.isEmpty() && c[12].isEmpty()) {
+                  map = OVData.getEDIInMap(c[0], c[1]); 
+               } 
+            
+               // if no map then bail
+               if (map.isEmpty() && c[12].isEmpty()) {
+                  OVData.writeEDILog(c, "0", "ERROR", "unable to find map class for " + c[0] + " / " + c[1]); 
+               } else {
+                   
+                   // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                    try {
+                    Class cls = Class.forName(map);
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                    method.invoke(obj, doc, c);
+                  
+                    } catch (IllegalAccessException | ClassNotFoundException |
+                             InstantiationException | NoSuchMethodException |
+                            InvocationTargetException ex) {
+                        if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "0", "ERROR", "unable to load map class for " + c[0] + " / " + c[1]);
+                        }
+                        ex.printStackTrace();
+                    }
+                   
+               }
+              
+     
+    } // FFDocs entries
+   
+  
+}
+   
 
     public static ArrayList<String> getEnvFromFileAsArrayListwRegex(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         
