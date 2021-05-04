@@ -7,6 +7,7 @@ checknumber,checknumber range,100000,900000,123485
 ecn,ecn range,10000,90000,10013
 ediout,edi out file range,10000,90000,100042
 edifile,edifile range,1,100000,1
+edilog,edilog range,300,10000000,1
 expensenumber,expensenumber range,1000000,9000000,1000007
 expenseaccount,expense acct range,99000000,99999999,99000000
 incomeaccount,income acct range,59000000,59999999,59000000

@@ -3954,7 +3954,7 @@ public class OVData {
                   return myreturn;
              } 
     
-    public static boolean addEDIAttributeRecord(String tp, String doc, String dir, String key, String value) {
+    public static boolean addEDIAttributeRecord(String tp, String doc, String key, String value) {
                  boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
@@ -3966,7 +3966,6 @@ public class OVData {
                    res =  st.executeQuery("select exa_tpid from edi_attr where " +
                                            " exa_tpid = " + "'" + tp + "'" + 
                                            " and exa_doc = " + "'" + doc + "'" +
-                                           " and exa_dir = " + "'" + dir + "'" +
                                            " and exa_key = " + "'" + key + "'" +
                                            ";");
                     int j = 0;
@@ -3975,11 +3974,10 @@ public class OVData {
                     }
                     if (j == 0) {
                     st.executeUpdate(" insert into edi_attr " 
-                      + "(exa_tpid, exa_doc, exa_dir, exa_key, exa_value ) " 
+                      + "(exa_tpid, exa_doc, exa_key, exa_value ) " 
                       + " values ( " + 
                     "'" +  tp + "'" + "," + 
                     "'" +  doc + "'" + "," +
-                    "'" +  dir + "'" + "," +  
                     "'" +  key + "'" + "," + 
                     "'" +  value + "'" 
                     +  ");"
@@ -4034,7 +4032,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into edi_mstr " 
-                      + "(edi_id, edi_doc, edi_isa, edi_dir, edi_map, edi_isaq, edi_gs, edi_bsisa, edi_bsq, edi_bsgs, " +
+                      + "(edi_id, edi_doc, edi_isa, edi_map, edi_isaq, edi_gs, edi_bsisa, edi_bsq, edi_bsgs, " +
                         " edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, " +
                         " edi_filesuffix, edi_filepath, edi_version, edi_supcode, edi_fa_required ) "
                    + " values ( " + 
@@ -4055,8 +4053,7 @@ public class OVData {
                     "'" +  ld[14] + "'" + "," +
                     "'" +  ld[15] + "'" + "," +
                     "'" +  ld[16] + "'" + "," + 
-                    "'" +  ld[17] + "'" + "," +        
-                    "'" +  ld[18] + "'"
+                    "'" +  ld[17] + "'"  
                              +  ");"
                            );     
                    }
@@ -5723,7 +5720,7 @@ public class OVData {
     }
        
       
-        public static String[] getDelimiters(String entity, String doctype, String dir) {
+    public static String[] getDelimiters(String entity, String doctype) {
              String [] delimiters = new String[3];  // will hold 3 elements.... sd, ed, ud
            
             try{
@@ -5734,7 +5731,7 @@ public class OVData {
                 ResultSet res = null;
                    
                       res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + entity + "'" + 
-                        " AND edi_doc = " + "'" + doctype + "'" + " AND edi_dir = " + "'" + dir + "'" + ";");
+                        " AND edi_doc = " + "'" + doctype + "'" + ";");
                     while (res.next()) {
                        delimiters[0] = Character.toString((char) res.getInt("edi_segdelim") );
                        delimiters[1] = Character.toString((char) res.getInt("edi_eledelim") );
@@ -5753,7 +5750,122 @@ public class OVData {
         }
           return delimiters;
        }
-       
+    
+    public static HashMap<String, ArrayList<String[]>> getEDIFFSelectionRules() {
+        HashMap<String, ArrayList<String[]>> hm = new HashMap<String, ArrayList<String[]>>();
+        ArrayList<String> keys = new ArrayList<String>();  
+        ArrayList<String[]> x = new ArrayList<String[]>();
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                
+                res = st.executeQuery("select * from edi_doc  " +
+                        " where edd_enabled = '1' "); 
+                while (res.next()) {
+                    keys.add(res.getString("edd_id"));
+                }
+                
+                for (String z : keys) {
+                    res = st.executeQuery("select * from edi_docdet " +
+                            " where edid_enabled = '1' and edid_role = 'selection' and edid_id = " + "'" + z + "'"); 
+                    while (res.next()) {
+                           String[] s = new String[]{res.getString("edid_row"),
+                                                     res.getString("edid_col"),
+                                                     res.getString("edid_length"),
+                                                     res.getString("edid_value")
+                           };
+                           x.add(s);
+                        }
+                    hm.put(z, x);
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return hm;
+       }
+    
+    public static ArrayList<String[]> getEDIFFDataRules(String id) {
+        
+        ArrayList<String[]> x = new ArrayList<String[]>();
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                    res = st.executeQuery("select * from edi_docdet " +
+                            " where edid_enabled = '1' " +
+                            " and edid_role = 'data' " +
+                            " and edid_id = " + "'" + id + "'"); 
+                    while (res.next()) {
+                           String[] s = new String[]{
+                               res.getString("edid_tag"),
+                               res.getString("edid_rectype"),
+                               res.getString("edid_valuetype"),
+                               res.getString("edid_row"),
+                               res.getString("edid_col"),
+                               res.getString("edid_length"),
+                               res.getString("edid_regex"),
+                               res.getString("edid_value")
+                           };
+                           x.add(s);
+                        }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return x;
+       }
+    
+    
+    public static String getEDIFFLandmark(String id) {
+             String x = "";
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                   
+                      res = st.executeQuery("select edd_landmark from edi_doc  " +
+                              " where edd_id = " + "'" + id + "'" + 
+                              ";");
+                    while (res.next()) {
+                       x = res.getString("edd_landmark");
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return x;
+       }
+    
+    
         /** Returns 15 element Array with Customer (billto) specific EDI setup information
          * 
          * @param billto
@@ -5762,10 +5874,10 @@ public class OVData {
          * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
          * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
          */
-        public static String[] getEDIOutCustDefaults(String billto, String doctype, String dir) {
+    public static String[] getEDITPDefaults(String partner, String doctype) {
            
                     
-             String[] mystring = new String[15];
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","",""};
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -5773,8 +5885,8 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + billto + "'" + 
-                        " AND edi_doc = " + "'" + doctype + "'" + " AND edi_dir = " + "'" + dir + "'" + ";");
+                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + partner + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'"  + ";");
                     while (res.next()) {
                        mystring[0] = res.getString("edi_isa");
                         mystring[1] = res.getString("edi_isaq");
@@ -5807,7 +5919,7 @@ public class OVData {
         
          }
     
-    public static ArrayList<String> getEDIAttributesList(String tp, String doctype, String dir) {
+    public static ArrayList<String> getEDIAttributesList(String tp, String doctype) {
            
              ArrayList<String> x = new ArrayList<String>();
         try{
@@ -5818,7 +5930,7 @@ public class OVData {
                 ResultSet res = null;
                    
                       res = st.executeQuery("select * from edi_attr where exa_tpid = " + "'" + tp + "'" + 
-                        " AND exa_doc = " + "'" + doctype + "'" + " AND exa_dir = " + "'" + dir + "'" + ";");
+                        " AND exa_doc = " + "'" + doctype + "'" + ";");
                     while (res.next()) {
                        x.add(res.getString("exa_key") + ":" + res.getString("exa_value"));
                     }
@@ -5849,7 +5961,7 @@ public class OVData {
                 ResultSet res = null;
                    
                       res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + OVData.getDefaultSite() + "'" + 
-                        " AND edi_doc = " + "'" + "997" + "'" + " AND edi_dir = " + "'" + "0" + "'" + ";");
+                        " AND edi_doc = " + "'" + "997" + "'" + ";");
                     while (res.next()) {
                        mystring[0] = res.getString("edi_isa");
                         mystring[1] = res.getString("edi_isaq");
@@ -5913,7 +6025,7 @@ public class OVData {
         
     }
        
-       public static String getEDICustDir(String tp, String doctype, String dir) {
+       public static String getEDICustDir(String tp, String doctype) {
       
            String mystring = "";
         try{
@@ -5925,7 +6037,6 @@ public class OVData {
 
                 res = st.executeQuery("select edi_filepath from edi_mstr where edi_id = " + "'" + tp + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
-                        " AND edi_dir = " + "'" + dir + "'" +
                                 ";");
                while (res.next()) {
                    mystring = res.getString("edi_filepath");
@@ -6030,7 +6141,7 @@ public class OVData {
        
       
        
-       public static String getEDICustFromSenderISA(String isa, String doctype, String dir) {
+       public static String getEDICustFromSenderISA(String isa, String doctype) {
              String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6041,7 +6152,6 @@ public class OVData {
                    
                       res = st.executeQuery("select * from edi_mstr where edi_isa = " + "'" + isa.trim() + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
-                                " AND edi_dir = " + "'" + dir + "'" + 
                                 ";");
                     while (res.next()) {
                        mystring = res.getString("edi_id");
@@ -21708,7 +21818,7 @@ public class OVData {
         
     }
       
-      public static boolean isEDIArchFlag() {
+    public static boolean isEDIArchFlag() {
        boolean isArchive = true;
         try{
             Class.forName(driver).newInstance();
@@ -21735,7 +21845,7 @@ public class OVData {
         
     }
       
-       public static boolean isEDIDeleteFlag() {
+    public static boolean isEDIDeleteFlag() {
        boolean isDelete = true;
         try{
             Class.forName(driver).newInstance();
@@ -21763,7 +21873,7 @@ public class OVData {
     }
       
       
-      public static void updateEDILogWith997(ArrayList<String> docs, String ackdoctype, String ackgsctrlnum, String[] control) {
+    public static void updateEDILogWith997(ArrayList<String> docs, String ackdoctype, String ackgsctrlnum, String[] control) {
           try {
            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -21792,7 +21902,7 @@ public class OVData {
       
       
       
-       public static void writeEDILog(String[] control, String dir, String severity, String message) {
+    public static void writeEDILog(String[] control, String severity, String message) {
           try {
            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -21802,10 +21912,10 @@ public class OVData {
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 
-                        st.executeUpdate("insert into edi_log ( elg_idxnbr, elg_dir, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
                             + " values ( " 
+                            + "'" + c[22] + "'" + ","    
                             + "'" + c[16] + "'" + ","
-                            + "'" + dir + "'" + ","
                             + "'" + severity + "'" + ","
                             + "'" + message + "'" + ","
                             + "'" + c[0] + "'" + ","
@@ -21826,8 +21936,44 @@ public class OVData {
             MainFrame.bslog(e);
         }
       }
-       
-        public static int writeEDIIDX(String[] c) {
+     
+    public static void writeEDILogInit(String[] control, String severity, String message) {
+          try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                String[] c = control;
+              
+                 // elg_init is '1' only for initial encounter of inbound file for purpose of place marker...it is default '0' otherwise
+                        st.executeUpdate("insert into edi_log ( elg_init, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                            + " values ( " 
+                            + "'" + '1' + "'" + ","    
+                            + "'" + c[22] + "'" + ","    
+                            + "'" + c[16] + "'" + ","
+                            + "'" + severity + "'" + ","
+                            + "'" + message + "'" + ","
+                            + "'" + c[0] + "'" + ","
+                            + "'" + c[1] + "'" + ","
+                            + "'" + c[2] + "'" + ","
+                            + "'" + c[3] + "'" + ","
+                            + "'" + c[4] + "'" + ","
+                            + "'" + c[5] + "'" + ","
+                            + "'" + c[6] + "'" + ","
+                            + "'" + c[7] + "'"
+                            + ")"
+                            + ";");
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+      }
+   
+    
+    public static int writeEDIIDX(String[] c) {
             int returnkey = 0;
           try {
            Class.forName(driver).newInstance();
@@ -21835,38 +21981,24 @@ public class OVData {
             try {
                 Statement st = con.createStatement();
                 
-              /*  22 elements consisting of:
-            c[0] = senderid;
-            c[1] = doctype;
-            c[2] = map;
-            c[3] = infile;
-            c[4] = controlnum;
-            c[5] = gsctrlnbr;
-            c[6] = docid;
-            c[7] = ref;
-            c[8] = outfile;
-            c[9] = sd;
-            c[10] = ed;
-            c[11] = ud;
-            c[12] = overideenvelope
-            c[13] = isastring
-            c[14] = gsstring
-            c[15] = dir
-            c[16] = idxnbr
-            c[17] = isastart
-            c[18] = isaend
-            c[19] = docstart
-            c[20] = docend
-            c[21] = receiverid;
-              */
                       if (dbtype.equals("sqlite")) {
-                        st.executeUpdate("insert into edi_idx ( edx_sender, edx_receiver, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
-                                " edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
+                        st.executeUpdate("insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
+                                " edx_infiletype, edx_indoctype, edx_inbatch, " +
+                                " edx_outfiletype, edx_outdoctype, edx_outbatch, " +
+                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
+                                " edx_docstart, edx_docend, edx_ref, " +
+                                " edx_indir, edx_infile, edx_outdir, edx_outfile, " +
+                                " edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
                             + " values ( " 
-                            + "'" + c[0] + "'" + ","
-                            + "'" + c[21] + "'" + ","        
+                            + "'" + c[22] + "'" + ","
+                            + "'" + c[0] + "'" + ","  // sender
+                            + "'" + c[21] + "'" + ","        // receiver
+                            + "'" + c[28] + "'" + ","
                             + "'" + c[1] + "'" + ","
+                            + "'" + c[24] + "'" + ","
+                            + "'" + c[29] + "'" + ","
                             + "'" + c[15] + "'" + ","
+                            + "'" + c[25] + "'" + ","
                             + "'" + c[4] + "'" + ","
                             + "'" + c[5] + "'" + ","
                             + "'" + c[6] + "'" + ","
@@ -21875,7 +22007,10 @@ public class OVData {
                             + "'" + c[19] + "'" + ","
                             + "'" + c[20] + "'" + ","
                             + "'" + c[7] + "'" + "," 
+                            + "'" + c[26] + "'" + ","      
                             + "'" + c[3] + "'" + ","
+                            + "'" + c[27] + "'" + ","      
+                            + "'" + c[8] + "'" + ","        
                             + "'" + "" + "'" + ","  // ack file   ...need to do
                             + "'" + "0" + "'" + ","  // ack yes or no 1 or 0        ....need to do
                             + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
@@ -21885,12 +22020,23 @@ public class OVData {
                             + ")"
                             + ";");
                       } else {
-                          st.executeUpdate("insert into edi_idx ( edx_sender, edx_receiver, edx_doc, edx_dir, edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_ref, edx_file, edx_ackfile, edx_ack ) "
+                          st.executeUpdate("insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
+                                " edx_infiletype, edx_indoctype, edx_inbatch, " +
+                                " edx_outfiletype, edx_outdoctype, edx_outbatch, " +
+                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
+                                " edx_docstart, edx_docend, edx_ref, " +
+                                " edx_indir, edx_infile, edx_outdir, edx_outfile, " +
+                                " edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
                             + " values ( " 
-                            + "'" + c[0] + "'" + ","
-                            + "'" + c[21] + "'" + ","        
+                            + "'" + c[22] + "'" + ","
+                            + "'" + c[0] + "'" + ","  // sender
+                            + "'" + c[21] + "'" + ","        // receiver
+                            + "'" + c[28] + "'" + ","
                             + "'" + c[1] + "'" + ","
+                            + "'" + c[24] + "'" + ","
+                            + "'" + c[29] + "'" + ","
                             + "'" + c[15] + "'" + ","
+                            + "'" + c[25] + "'" + ","
                             + "'" + c[4] + "'" + ","
                             + "'" + c[5] + "'" + ","
                             + "'" + c[6] + "'" + ","
@@ -21899,9 +22045,16 @@ public class OVData {
                             + "'" + c[19] + "'" + ","
                             + "'" + c[20] + "'" + ","
                             + "'" + c[7] + "'" + "," 
+                            + "'" + c[26] + "'" + ","      
                             + "'" + c[3] + "'" + ","
+                            + "'" + c[27] + "'" + ","      
+                            + "'" + c[8] + "'" + ","        
                             + "'" + "" + "'" + ","  // ack file   ...need to do
-                            + "'" + "0" + "'"   // ack yes or no 1 or 0        ....need to do
+                            + "'" + "0" + "'" + ","  // ack yes or no 1 or 0        ....need to do
+                            + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
+                            + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
+                            + "'" + "" + "'"  // status         
                             + ")"
                             + ";", Statement.RETURN_GENERATED_KEYS);
                       }
@@ -21919,7 +22072,81 @@ public class OVData {
         }
           return returnkey;
       }
-       
+     
+    public static void updateEDIIDX(int key, String[] c) {
+            
+          try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                
+                     
+                    st.executeUpdate("update edi_idx set " +
+                            " edx_sender = " + "'" + c[0] + "'" + "," +
+                            " edx_receiver = " + "'" + c[21] + "'" + "," +
+                            " edx_infiletype = " + "'" + c[28] + "'" + "," +
+                            " edx_indoctype = " + "'" + c[1] + "'" + "," +
+                            " edx_inbatch = " + "'" + c[24] + "'" + "," +
+                            " edx_outfiletype = " + "'" + c[29] + "'" + "," +
+                            " edx_outdoctype = " + "'" + c[15] + "'" + "," +
+                            " edx_outbatch = " + "'" + c[25] + "'" + "," +
+                            " edx_ctrlnum = " + "'" + c[4] + "'" + "," +
+                            " edx_gsctrlnum = " + "'" + c[5] + "'" + "," +
+                            " edx_stctrlnum = " + "'" + c[6] + "'" + "," +
+                            " edx_isastart = " + "'" + c[17] + "'" + "," +
+                            " edx_isaend = " + "'" + c[18] + "'" + "," +
+                            " edx_docstart = " + "'" + c[19] + "'" + "," +
+                            " edx_docend = " + "'" + c[20] + "'" + "," +
+                            " edx_ref = " + "'" + c[7] + "'" + "," +
+                            " edx_indir = " + "'" + c[26] + "'" + "," +
+                            " edx_infile = " + "'" + c[3] + "'" + "," +
+                            " edx_outdir = " + "'" + c[27] + "'" + "," +
+                            " edx_outfile = " + "'" + c[8] + "'" + "," +
+                            " edx_ackfile = " + "'" + "" + "'" + "," +
+                            " edx_ack = " + "'" + "0" + "'" + "," +
+                            " edx_segdelim = " + "'" + Integer.valueOf(c[9].toString()) + "'" + "," +
+                            " edx_elmdelim = " + "'" + Integer.valueOf(c[10].toString()) + "'" + "," +  
+                            " edx_subdelim = " + "'" + Integer.valueOf(c[11].toString()) + "'" + "," + 
+                            " edx_status = " + "'" + c[23] + "'"  + 
+                            " where edx_id = " + "'" + key + "'" +        
+                            ";");
+                        
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
+    public static void updateEDIIDXStatus(int key, String status) {
+            
+          try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                
+                     
+                    st.executeUpdate("update edi_idx set " +
+                            " edx_status = " + "'" + status + "'" +
+                            " where edx_id = " + "'" + key + "'" +        
+                            ";");
+                        
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
+   
        
       
        public static boolean CreateShipperHdrEDI(String[] control, String nbr, String bol, String billto, String shipto, String so, String po, String shipdate, String orddate, String remarks, String shipvia ) {
@@ -21996,11 +22223,11 @@ public class OVData {
                 }
                 if (i == 0) {
                     proceed = false;
-                    writeEDILog(control, "0", "ERROR", " Unknown Billto=" + billto);
+                    writeEDILog(control, "ERROR", " Unknown Billto=" + billto);
                 }
                 if (acct.isEmpty() || cc.isEmpty() || terms.isEmpty()) {
                     proceed = false;
-                    writeEDILog(control, "0", "ERROR", "cust " + billto + " Acct or CC or Terms is empty");
+                    writeEDILog(control, "ERROR", "cust " + billto + " Acct or CC or Terms is empty");
                    
                 }
 
@@ -22903,9 +23130,9 @@ public class OVData {
                         
                         // create the fot_det
                         CreateFOTDETFrom204i(control, fo, remarks, custfo );
-                        OVData.writeEDILog(control, "0", "INFO", "FONbr: " + custfo);
+                        OVData.writeEDILog(control, "INFO", "FONbr: " + custfo);
                        } else {
-                           OVData.writeEDILog(control, "0", "INFO", "duplicate: " + custfo);
+                           OVData.writeEDILog(control, "INFO", "duplicate: " + custfo);
                        }
                         
                         
@@ -23194,11 +23421,11 @@ public class OVData {
                 }
                 if (i == 0) {
                     proceed = false;
-                    writeEDILog(control, "0", "ERROR", " Unknown Billto=" + billto);
+                    writeEDILog(control, "ERROR", " Unknown Billto=" + billto);
                 }
                 if (acct.isEmpty() || cc.isEmpty() || terms.isEmpty()) {
                     proceed = false;
-                    writeEDILog(control, "0", "ERROR", "cust " + billto + " Acct or CC or Terms is empty");
+                    writeEDILog(control, "ERROR", "cust " + billto + " Acct or CC or Terms is empty");
                    
                 }
 
@@ -23669,7 +23896,7 @@ public class OVData {
                    i++;
                }
                if (i == 0) {
-                   writeEDILog(control, "0", "ERROR", "No blanket order found for " + shipto  );
+                   writeEDILog(control, "ERROR", "No blanket order found for " + shipto  );
                    proceed = false;
                } else {
                    res = st.executeQuery("select sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
@@ -23683,7 +23910,7 @@ public class OVData {
                    }
                    
                    if (line.isEmpty()) {
-                       writeEDILog(control, "0", "ERROR", "No open order line found for " + order + "/" + shipto + "/" + part + "/" + po  );
+                       writeEDILog(control, "ERROR", "No open order line found for " + order + "/" + shipto + "/" + part + "/" + po  );
                        proceed = false;
                    }
                }

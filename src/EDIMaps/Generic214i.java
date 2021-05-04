@@ -123,13 +123,13 @@ public class Generic214i extends com.blueseer.edi.EDIMap {
          
          
           if (order.isEmpty()) {
-               writeEDILog(c, "0", "ERROR", "No Freight Order found for this 214 in the B10 Segment");
+               writeEDILog(c, "ERROR", "No Freight Order found for this 214 in the B10 Segment");
                error = true;
           }
           
           if (! order.isEmpty()) {
                if (! OVData.isValidFreightOrderNbr(order)) {
-               writeEDILog(c, "0", "ERROR", "Invalid Freight Order found for this 214 in the B10 Segment");
+               writeEDILog(c, "ERROR", "Invalid Freight Order found for this 214 in the B10 Segment");
                error = true;
                }
           }

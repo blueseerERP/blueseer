@@ -1,0 +1,4 @@
+855idoc,selection,fixed,constant,1,40,30,,ORDERS05,,1
+855idoc,selection,fixed,constant,1,130,3,,855,,1
+855idoc,data,regex,variable,0,239,15,^ZE1EDK.*,,TPID,1
+855idoc,data,fixed,constant,0,0,0,,855,DOCTYPE,1

@@ -93,13 +93,8 @@ public class Generic856o extends com.blueseer.edi.EDIMap {
           T.add("CTT" + ed + String.valueOf(i));
      
         
-    // Package it      
-    packagePayload();
-    
-    // Write to outfile
-    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""
-          
-    return c;
+      
+   return packagePayLoad(c);
 }
 
 }

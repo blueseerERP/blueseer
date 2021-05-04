@@ -104,13 +104,13 @@ public class Generic220i {
          }
          
           if (order.isEmpty()) {
-               writeEDILog(control, "0", "ERROR", "No Freight Order found for this 220 in the B9 Segment");
+               writeEDILog(control, "ERROR", "No Freight Order found for this 220 in the B9 Segment");
                error = true;
           }
           
           if (! order.isEmpty()) {
                if (! OVData.isValidFreightOrderNbr(order)) {
-               writeEDILog(control, "0", "ERROR", "Invalid Freight Order found for this 220 in the B9 Segment");
+               writeEDILog(control, "ERROR", "Invalid Freight Order found for this 220 in the B9 Segment");
                error = true;
                }
           }

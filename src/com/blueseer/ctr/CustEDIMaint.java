@@ -83,7 +83,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         return isgood;
     }
     
-    public void getCustEDI(String code, String doctype, String dir) {
+    public void getCustEDI(String code, String doctype) {
         
         try {
 
@@ -95,7 +95,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 int i = 0;
                 res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + code + "'" +
                                       " AND edi_doc = " + "'" + doctype + "'" +
-                                      " AND edi_dir = " + "'" + dir + "'" + 
                                               ";");
                 while (res.next()) {
                     i++;
@@ -117,18 +116,14 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     tbovisaq.setText(res.getString("edi_bsq"));
                     tbsupplier.setText(res.getString("edi_supcode"));
                     cbfa.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edi_fa_required")));
-                    if (res.getString("edi_dir").equals("1")) {
-                        rbin.setSelected(true);
-                    } else {
-                        rbout.setSelected(true);
-                    }
+                   
                     
                 }
                
                 
                 if (i > 0) {
                    enableAll();
-                   getAttributes(code, doctype, dir);
+                   getAttributes(code, doctype);
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
@@ -142,9 +137,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
     }
     
-     public void getAttributes(String code, String doctype, String dir) {
+     public void getAttributes(String code, String doctype) {
         listmodel.removeAllElements();
-        ArrayList<String> list = OVData.getEDIAttributesList(code, doctype, dir);
+        ArrayList<String> list = OVData.getEDIAttributesList(code, doctype);
         for (String x : list) {
             listmodel.addElement(x);
         }
@@ -152,8 +147,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
     
     public void clearAll() {
        
-        buttonGroup1.add(rbin);
-        buttonGroup1.add(rbout);
+      
         
         listAttributes.setModel(listmodel);
         
@@ -209,8 +203,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbfileprefix.setEnabled(true);
         tbfilesuffix.setEnabled(true);
         tbkey.setEnabled(true);
-        rbin.setEnabled(true);
-        rbout.setEnabled(true);
+     
         tbattributekey.setEnabled(true);
         tbattributevalue.setEnabled(true);
     }
@@ -240,8 +233,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbfileprefix.setEnabled(false);
         tbfilesuffix.setEnabled(false);
         tbkey.setEnabled(false);
-         rbin.setEnabled(false);
-        rbout.setEnabled(false);
+      
         tbattributekey.setEnabled(false);
         tbattributevalue.setEnabled(false);
     }
@@ -255,7 +247,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btlookup.setEnabled(true);
        
         if (arg != null && arg.length > 0) {
-            getCustEDI(arg[0], arg[1], arg[2]);
+            getCustEDI(arg[0], arg[1]);
         }
         
        
@@ -334,8 +326,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbmap = new javax.swing.JTextField();
         btnew = new javax.swing.JButton();
         dddoc = new javax.swing.JComboBox<>();
-        rbin = new javax.swing.JRadioButton();
-        rbout = new javax.swing.JRadioButton();
         tbisa = new javax.swing.JTextField();
         btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -414,10 +404,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
             }
         });
 
-        rbin.setText("Inbound");
-
-        rbout.setText("Outbound");
-
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -465,11 +451,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(9, 9, 9)
-                                .addComponent(btnew))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(rbin)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbout))))
+                                .addComponent(btnew))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -487,11 +469,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         .addComponent(jLabel5)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btlookup))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbin)
-                    .addComponent(rbout))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -747,7 +725,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 boolean proceed = true;
-                boolean dir = false;
                 String fa = "";
                 int i = 0;
                 
@@ -757,22 +734,13 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show("Must enter a TP ID");
                     return;
                 }
-                if (tbmap.getText().isEmpty() && rbout.isSelected()) {
+                if (tbmap.getText().isEmpty()) {
                     proceed = false;
                     bsmf.MainFrame.show("Must enter a map name for outbound type");
                     return;
                 }
-                if (! isFile(tbmap.getText()) && rbout.isSelected()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Map does not exist");
-                    return;
-                }
-                
-                if (rbin.isSelected()) {
-                    dir = true;
-                } else {
-                    dir = false;
-                }
+               
+               
                 
                 if ( cbfa.isSelected() ) {
                    fa = "1";    
@@ -785,7 +753,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT edi_id, edi_doc FROM  edi_mstr where edi_id = " + "'" + tbkey.getText() + "'" +
                                           " AND edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" + 
                                           " AND edi_isa = " + "'" + tbisa.getText() + "'" +
-                                          " AND edi_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'" + 
                                           ";");
                     while (res.next()) {
                         i++;
@@ -795,7 +762,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         st.executeUpdate("insert into edi_mstr "
                             + "(edi_id, edi_doc, edi_isa, edi_isaq, " 
                             + "edi_gs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
-                            + "edi_version, edi_bsisa, edi_bsgs, edi_bsq, edi_supcode, edi_dir, edi_fa_required ) "
+                            + "edi_version, edi_bsisa, edi_bsgs, edi_bsq, edi_supcode, edi_fa_required ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                                 + "'" + dddoc.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbisa.getText() + "'" + ","
@@ -813,7 +780,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                 + "'" + tbovgs.getText() + "'" + ","
                                 + "'" + tbovisaq.getText() + "'" + ","
                                 + "'" + tbsupplier.getText() + "'"  + ","
-                                + "'" + BlueSeerUtils.boolToInt(dir) + "'" + ","
                                 + "'" + fa + "'"
                             + ")"
                             + ";");
@@ -838,7 +804,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
        try {
             boolean proceed = true;
-            boolean dir = false;
+           
             String fa = "";
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -863,12 +829,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     return;
                 }
                 
-                if (rbin.isSelected()) {
-                    dir = true;
-                } else {
-                    dir = false;
-                }
-                
+               
                 if ( cbfa.isSelected() ) {
                    fa = "1";    
                 } else {
@@ -894,7 +855,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             + "edi_fa_required = " + "'" + fa + "'"
                             + " where edi_id = " + "'" + tbkey.getText() + "'"     
                             + " AND edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'"
-                            + " AND edi_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'"
                             + ";");
                     bsmf.MainFrame.show("Updated EDI Master");
                     initvars(null);
@@ -913,7 +873,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
          
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        boolean dir = false;
+       
         if (proceed) {
         try {
 
@@ -922,18 +882,13 @@ public class CustEDIMaint extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                  if (rbin.isSelected()) {
-                    dir = true;
-                } else {
-                    dir = false;
-                }
+                 
                 
                    int i = st.executeUpdate("delete from edi_mstr where edi_id = " + "'" + tbkey.getText() + "'" + 
                                             " and edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
-                                            " and edi_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'" +
                                             ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbkey.getText() + "/" + dddoc.getSelectedItem().toString() + "/" + String.valueOf(BlueSeerUtils.boolToInt(dir)));
+                    bsmf.MainFrame.show("deleted code " + tbkey.getText() + "/" + dddoc.getSelectedItem().toString());
                     initvars(null);
                     }
                 } catch (SQLException s) {
@@ -996,14 +951,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbsubFocusLost
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
-        boolean dir = false;
-        if (rbin.isSelected()) {
-                    dir = true;
-                } else {
-                    dir = false;
-                }
-        OVData.addEDIAttributeRecord(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)), tbattributekey.getText(), tbattributevalue.getText());
-        getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)));
+       
+        OVData.addEDIAttributeRecord(tbkey.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
+        getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString());
         tbattributekey.setText("");
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
@@ -1011,12 +961,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private void btdeleteattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattributeActionPerformed
         boolean proceed = true; 
         
-         boolean dir = false;
-        if (rbin.isSelected()) {
-            dir = true;
-        } else {
-            dir = false;
-        }
+      
+       
         
         
         if (listAttributes.isSelectionEmpty()) {
@@ -1036,12 +982,11 @@ public class CustEDIMaint extends javax.swing.JPanel {
               
                    int i = st.executeUpdate("delete from edi_attr where exa_tpid = " + "'" + tbkey.getText() + "'" + 
                                             " and exa_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
-                                            " and exa_dir = " + "'" + BlueSeerUtils.boolToInt(dir) + "'" +
                                             " and exa_key = " + "'" + z[0].toString() + "'" +
                                              ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + listAttributes.getSelectedValue().toString());
-                    getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(dir)));
+                    getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -1093,8 +1038,6 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblsuffix;
     private javax.swing.JList<String> listAttributes;
-    private javax.swing.JRadioButton rbin;
-    private javax.swing.JRadioButton rbout;
     private javax.swing.JTextField tbattributekey;
     private javax.swing.JTextField tbattributevalue;
     private javax.swing.JTextField tbelement;

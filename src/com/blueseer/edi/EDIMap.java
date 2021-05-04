@@ -25,11 +25,22 @@ SOFTWARE.
  */
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
+import com.blueseer.utl.OVData;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jcifs.smb.SmbException;
 
 /**
  *
@@ -68,7 +79,10 @@ public abstract class EDIMap implements EDIMapi {
          public static String doctype = "";
          
          public static String infile = "";
+         public static String outdir = "";
          public static String outfile = "";
+         public static String outputfiletype = "";
+         public static String outputdoctype = "";
          public static String filename = "";
          public static String isactrl = "";
          public static String gsctrl = "";
@@ -102,24 +116,30 @@ public abstract class EDIMap implements EDIMapi {
          return index != null && index >=0 && index < list.size() && list.get(index) != null;
          }
     
-         public static boolean isSet(String[] list, Integer index) {
+        public static boolean isSet(String[] list, Integer index) {
          return index != null && index >=0 && index < list.length && list[index] != null;
          }
     
-         
-         public void setISA (String[] isa) {
+        public void setOutPutFileType(String filetype) {
+            outputfiletype = filetype;
+        }
+        public void setOutPutDocType(String doctype) {
+            outputdoctype = doctype;
+        }
+        
+        public void setISA (String[] isa) {
              isa06 = isa[6].trim();
              isa08 = isa[8].trim();
              isa09 = isa[9].trim();
              isa13 = isa[13].trim();
          }
          
-         public void setGS (String[] gs) {
+        public void setGS (String[] gs) {
              gs02 = gs[2].trim();
              gs03 = gs[3].trim();
          }
          
-         public void setControl(String[] c) {
+        public void setControl(String[] c) {
             sender = c[0];
             doctype = c[1];
             map = c[2];
@@ -146,11 +166,10 @@ public abstract class EDIMap implements EDIMapi {
            content = ISA + GS + ST + header + detail  + trailer + SE + GE + IEA;  
          } 
     
-     
          public void setOutPutEnvelopeStrings(String[] c) { 
          
              if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
-               envelope = EDI.generateEnvelope(sender, doctype, "0"); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+               envelope = EDI.generateEnvelope(sender, doctype); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
                ISA = envelope[0];
                GS = envelope[1];
                GE = envelope[2];
@@ -313,12 +332,80 @@ public abstract class EDIMap implements EDIMapi {
              
          }
          
-         public void packagePayload() {
+         public String[] packagePayLoad(String[] c) {
+             String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
             // Call this function to join H, D, T arrays into H, D, T Strings     
             setHDTStrings();
 
             // concat all into one Output String          
             setFinalOutputString();  
-
+            
+            // get TP/Doc defaults
+            String[] tp = OVData.getEDITPDefaults(sender, doctype);
+            
+            // create out batch file name
+             int filenumber = OVData.getNextNbr("edifile");
+             String batchfile = "X" + String.format("%07d", filenumber);
+            
+            if (outdir.isEmpty()) {
+                outdir = tp[9];
+                if (outdir.isEmpty()) {
+                    outdir = OVData.getEDIOutDir();
+                }
+            }
+            
+            if (outfile.isEmpty()) {
+                outfile = tp[10] + "generic" + "." + tp[11];
+            }
+            
+            c[15] = outputdoctype;
+            c[25] = batchfile;
+            c[27] = outdir;
+            c[29] = outputfiletype;
+           
+                
+         System.out.println(String.join(",", c));
+            
+            // error handling
+            if (batchfile.isEmpty()) {
+                x[0] = "error";
+                x[1] = "batch file is empty";
+                return x;
+            }
+            if (outfile.isEmpty()) {
+                x[0] = "error";
+                x[1] = "batch file is empty";
+                return x;
+            }
+            if (outputfiletype.isEmpty()) {
+                x[0] = "error";
+                x[1] = "output file type unknown";
+                return x;
+            }
+                try {
+                    // Write output batch file
+                    EDI.writeFile(content, OVData.getEDIBatchDir(), batchfile);
+                    // Write to outfile
+                    EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
+                } catch (SmbException ex) {
+                    MainFrame.bslog(ex);
+                } catch (IOException ex) {
+                    MainFrame.bslog(ex);
+                }
+            
+            // need confirmation file was created    
+            File file = new File(outdir + "/" + outfile);
+           
+            if (! file.exists()) {
+                x[0] = "error";
+                x[1] = "output file not created: " + file.getPath().toString();
+                return x; 
+            } else {
+                c[23] = "success";
+            }
+        
+         return x;
          }
+
+
 }

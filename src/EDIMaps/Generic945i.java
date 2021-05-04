@@ -131,14 +131,14 @@ public class Generic945i {
                   // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
                // if here and we have a blank billto...then error out
                if (so.isEmpty()) {
-               writeEDILog(control, "0", "ERROR", "No Sales Order found for this 945");
+               writeEDILog(control, "ERROR", "No Sales Order found for this 945");
                error = true;
                }
                
                
                // make sure this is not a duplicate 945 ...check sh_bol and sh_cust
                if (OVData.isValidShipperByCustAndBOL(segarr[4], h[2])) {
-                  writeEDILog(control, "0", "ERROR", "duplicate 945 so/bol=" + segarr[2] + "/" + segarr[4]);
+                  writeEDILog(control, "ERROR", "duplicate 945 so/bol=" + segarr[2] + "/" + segarr[4]);
                error = true; 
                }
                  
@@ -175,7 +175,7 @@ public class Generic945i {
                   if (isSet(segarr,18)) {
                   line = segarr[18];
                   } else {
-                    writeEDILog(control, "0", "ERROR", "Line Item detail on 945 missing PL info");
+                    writeEDILog(control, "ERROR", "Line Item detail on 945 missing PL info");
                     error = true;  
                   }
                   
@@ -202,7 +202,7 @@ public class Generic945i {
                       }
                   }
                   if (! hasline) {
-                    writeEDILog(control, "0", "ERROR", "Cannot determine original line item from PL: " + line);
+                    writeEDILog(control, "ERROR", "Cannot determine original line item from PL: " + line);
                     error = true;    
                   }
                   

@@ -116,13 +116,13 @@ public class Generic862i {
            if (segarr[0].toString().equals("N1") && segarr[1].toString().equals("ST")) {
                shipto = OVData.getCodeValueByCodeKey("edixref", segarr[4].toString());
                if (shipto.isEmpty()) {
-                 OVData.writeEDILog(control, "0", "ERROR", "No Shipto Found in edi_xref: " + segarr[4].toString()); 
+                 OVData.writeEDILog(control, "ERROR", "No Shipto Found in edi_xref: " + segarr[4].toString()); 
                  return;
                } else {
                 e.setOVShipTo(shipto);
                    billto = OVData.getcustBillTo(shipto);
                    if (billto.isEmpty()) {
-                       OVData.writeEDILog(control, "0", "ERROR", "No Billto Found for shipto: " + shipto.toString());
+                       OVData.writeEDILog(control, "ERROR", "No Billto Found for shipto: " + shipto.toString());
                    } else {
                        e.setOVBillTo(billto);
                    }

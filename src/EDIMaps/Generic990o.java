@@ -58,8 +58,8 @@ public class Generic990o {
      Date now = new Date();
        
        // get delimiters for this trading partner, doctype, docdirection
-        String[] delimiters = OVData.getDelimiters(tp, doctype, "0");
-        String dir = OVData.getEDICustDir(tp, doctype, "0");
+        String[] delimiters = OVData.getDelimiters(tp, doctype);
+        String dir = OVData.getEDICustDir(tp, doctype);
          String sd = delimiters[0];
          String ed = delimiters[1];
          String ud = delimiters[2];
@@ -70,7 +70,7 @@ public class Generic990o {
          int detsegcount = 0;
          
          // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generateEnvelope(tp, doctype, "0");
+         String[] envelope = EDI.generateEnvelope(tp, doctype);
          String ISA = envelope[0];
          String GS = envelope[1];
          String GE = envelope[2];

@@ -103,13 +103,13 @@ public class Generic990i {
          }
          
           if (order.isEmpty()) {
-               writeEDILog(control, "0", "ERROR", "No Freight Order  found for this 990 in the L11 Segment");
+               writeEDILog(control, "ERROR", "No Freight Order  found for this 990 in the L11 Segment");
                error = true;
           }
           
           if (! order.isEmpty()) {
                if (! OVData.isValidFreightOrderNbr(order)) {
-               writeEDILog(control, "0", "ERROR", "Invalid Freight Order " + order + " found for this 990 in the L11 Segment");
+               writeEDILog(control, "ERROR", "Invalid Freight Order " + order + " found for this 990 in the L11 Segment");
                error = true;
                }
           }

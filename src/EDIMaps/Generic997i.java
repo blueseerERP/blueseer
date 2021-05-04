@@ -107,7 +107,7 @@ public class Generic997i {
          /* Load Shipper */
          if (! error) {
              OVData.updateEDILogWith997(ackdocs, ackdoctype, ackgsCtrlNum, control);  
-             OVData.writeEDILog(control, "0", "Info", "");
+             OVData.writeEDILog(control, "Info", "");
          }
          
         

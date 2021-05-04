@@ -674,7 +674,6 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("edi_id,s,30,mandatory,unvalidated");
         list.add("edi_doc,s,10,mandatory,unvalidated");
         list.add("edi_isa,s,15,mandatory,unvalidated");
-        list.add("edi_dir,b,1,mandatory,unvalidated");
         list.add("edi_map,s,30,mandatory,unvalidated");
         list.add("edi_isaq,s,2,mandatory,unvalidated");
         list.add("edi_gs,s,15,mandatory,unvalidated");

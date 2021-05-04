@@ -137,7 +137,7 @@ public class Generic204o extends com.blueseer.edi.EDIMap {
          
             
        // Package it      
-    packagePayload();
+    packagePayLoad(c);
     
     // Write to outfile
     edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""

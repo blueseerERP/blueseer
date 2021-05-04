@@ -344,7 +344,7 @@ CREATE TABLE "cup_mstr" (
   "cup_citem2" varchar(30) COLLATE NOCASE DEFAULT '',
   "cup_upc" varchar(30) COLLATE NOCASE DEFAULT '',
   "cup_userid" varchar(10) COLLATE NOCASE DEFAULT '',
-  "cup_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "cup_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "cup_misc" varchar(30) COLLATE NOCASE DEFAULT '',
   "cup_sku" varchar(30) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -453,6 +453,35 @@ CREATE TABLE "edi_ctrl" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edi_doc" (
+  "edd_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_type" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_subtype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_segdelim" int(1) NOT NULL DEFAULT '0',
+  "edd_priority" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_landmark" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edd_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edi_docdet" (
+  "edid_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_role" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_rectype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_valuetype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_row" int(4) NOT NULL DEFAULT '0',
+  "edid_col" int(4) NOT NULL DEFAULT '0',
+  "edid_length" int(4) NOT NULL DEFAULT '0',
+  "edid_regex" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_value" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_tag" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "jasp_mstr" (
   "jasp_group" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "jasp_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -467,13 +496,13 @@ CREATE TABLE "export_mstr" (
   "export_docnbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "export_doctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "export_edi" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "export_edi_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_edi_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "export_edi_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "export_print" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "export_print_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_print_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "export_print_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "export_email" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "export_email_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "export_email_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "export_email_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -485,7 +514,7 @@ CREATE TABLE "cron_log" (
   "cron_sys" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "cron_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "cron_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
@@ -494,17 +523,19 @@ CREATE TABLE "cron_log" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_log" (
   "elg_id" INTEGER PRIMARY KEY,
+  "elg_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "elg_idxnbr" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
-  "elg_dir" int(1) NOT NULL DEFAULT '0',
+  "elg_init" int(1) NOT NULL DEFAULT '0',
   "elg_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "elg_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "elg_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "elg_isa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_gsctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_stctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "elg_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_order" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_map" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -513,11 +544,16 @@ CREATE TABLE "edi_log" (
 );
 CREATE TABLE "edi_idx" (
   "edx_id" INTEGER PRIMARY KEY,
-  "edx_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "edx_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edx_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "edx_sender" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_receiver" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edx_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edx_dir" int(1) NOT NULL DEFAULT '0',
+  "edx_infiletype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_indoctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_inbatch" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_outfiletype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_outdoctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_outbatch" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_ctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_gsctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_stctrlnum" varchar(9) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -526,7 +562,10 @@ CREATE TABLE "edi_idx" (
   "edx_docstart" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edx_docend" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edx_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edx_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_indir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_infile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_outdir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_outfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_ackfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "edx_ack" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edx_segdelim" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
@@ -751,7 +790,7 @@ CREATE TABLE "gl_hist" (
   "glh_ref" varchar(20) COLLATE NOCASE DEFAULT '',
   "glh_effdate" date COLLATE NOCASE DEFAULT '',
   "glh_entdate" date COLLATE NOCASE DEFAULT '',
-  "glh_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "glh_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "glh_acct" varchar(8) COLLATE NOCASE DEFAULT '',
   "glh_cc" varchar(4) COLLATE NOCASE DEFAULT '',
   "glh_amt" decimal(14,2) NOT NULL DEFAULT '0.00',
@@ -774,7 +813,7 @@ CREATE TABLE "gl_tran" (
   "glt_ref" varchar(20) COLLATE NOCASE DEFAULT '',
   "glt_effdate" date COLLATE NOCASE DEFAULT '',
   "glt_entdate" date COLLATE NOCASE DEFAULT '',
-  "glt_ts" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "glt_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "glt_acct" varchar(8) COLLATE NOCASE DEFAULT '',
   "glt_cc" varchar(4) COLLATE NOCASE DEFAULT '',
   "glt_amt" decimal(14,2) NOT NULL DEFAULT '0.00',
@@ -1005,7 +1044,7 @@ CREATE TABLE "ov_devd" (
   "ovdd_type" varchar(30) COLLATE NOCASE DEFAULT '',
   "ovdd_status" varchar(30) COLLATE NOCASE DEFAULT '',
   "ovdd_user" varchar(30) COLLATE NOCASE DEFAULT '',
-  "ovdd_date" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP);
+  "ovdd_date" timestamp NOT NULL DEFAULT (datetime('now','localtime')));
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2060,7 +2099,7 @@ CREATE TABLE "tran_mstr" (
   "tr_wc" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_wf" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_prodline" varchar(10) COLLATE NOCASE DEFAULT '',
-  "tr_timestamp" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "tr_timestamp" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "tr_actcell" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_export" tinyint(1) COLLATE NOCASE DEFAULT '0',
   "tr_order" varchar(30) COLLATE NOCASE DEFAULT '',

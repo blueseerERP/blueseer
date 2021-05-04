@@ -379,6 +379,29 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0',
   `edic_delete` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_doc` (
+  `edd_id` varchar(30) NOT NULL  DEFAULT '',
+  `edd_desc` varchar(200) NOT NULL  DEFAULT '',
+  `edd_type` varchar(50) NOT NULL  DEFAULT '',
+  `edd_subtype` varchar(50) NOT NULL  DEFAULT '',
+  `edd_segdelim` int(1) NOT NULL  DEFAULT '0',
+  `edd_priority` varchar(3) NOT NULL  DEFAULT '',
+  `edd_landmark` varchar(50) NOT NULL  DEFAULT '',
+  `edd_enabled` tinyint(1) NOT NULL  DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_docdet` (
+  `edid_id` varchar(30) NOT NULL  DEFAULT '',
+  `edid_role` varchar(20) NOT NULL  DEFAULT '',
+  `edid_rectype` varchar(10) NOT NULL  DEFAULT '',
+  `edid_valuetype` varchar(10) NOT NULL  DEFAULT '',
+  `edid_row` int(4) NOT NULL  DEFAULT '0',
+  `edid_col` int(4) NOT NULL  DEFAULT '0',
+  `edid_length` int(4) NOT NULL  DEFAULT '0',
+  `edid_regex` varchar(100) NOT NULL  DEFAULT '',
+  `edid_value` varchar(100) NOT NULL  DEFAULT '',
+  `edid_tag` varchar(100) NOT NULL  DEFAULT '',
+  `edid_enabled` tinyint(1) NOT NULL  DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `export_mstr` (
   `export_docnbr` varchar(30) NOT NULL  DEFAULT '',
   `export_doctype` varchar(30) NOT NULL  DEFAULT '',
@@ -411,8 +434,9 @@ CREATE TABLE IF NOT EXISTS `cron_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `elg_comkey` int(12) NOT NULL DEFAULT '0',
   `elg_idxnbr` varchar(9) NOT NULL  DEFAULT '',
-  `elg_dir` int(1) NOT NULL DEFAULT '0',
+  `elg_init` int(1) NOT NULL DEFAULT '0',
   `elg_severity` varchar(8) NOT NULL  DEFAULT '',
   `elg_desc` varchar(100) NOT NULL  DEFAULT '',
   `elg_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -422,6 +446,7 @@ CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_gsctrlnum` varchar(9) NOT NULL  DEFAULT '',
   `elg_stctrlnum` varchar(9) NOT NULL  DEFAULT '',
   `elg_ref` varchar(30) NOT NULL  DEFAULT '',
+  `elg_filetype` varchar(15) NOT NULL  DEFAULT '',
   `elg_file` varchar(60) NOT NULL  DEFAULT '',
   `elg_order` varchar(30) NOT NULL  DEFAULT '',
   `elg_map` varchar(50) NOT NULL  DEFAULT '',
@@ -430,11 +455,16 @@ CREATE TABLE IF NOT EXISTS `edi_log` (
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `edx_comkey` int(12) NOT NULL DEFAULT '0',
   `edx_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edx_sender` varchar(15) NOT NULL DEFAULT '',
   `edx_receiver` varchar(15) NOT NULL DEFAULT '',
-  `edx_doc` varchar(15) NOT NULL DEFAULT '',
-  `edx_dir` int(1) NOT NULL DEFAULT '0',
+  `edx_infiletype` varchar(15) NOT NULL DEFAULT '',
+  `edx_indoctype` varchar(15) NOT NULL DEFAULT '',
+  `edx_inbatch` varchar(60) NOT NULL DEFAULT '',
+  `edx_outfiletype` varchar(15) NOT NULL DEFAULT '',
+  `edx_outdoctype` varchar(15) NOT NULL DEFAULT '',
+  `edx_outbatch` varchar(60) NOT NULL DEFAULT '',
   `edx_ctrlnum` varchar(9) NOT NULL DEFAULT '',
   `edx_gsctrlnum` varchar(9) NOT NULL DEFAULT '',
   `edx_stctrlnum` varchar(9) NOT NULL DEFAULT '',
@@ -443,7 +473,10 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_docstart` int(9) NOT NULL DEFAULT '0',
   `edx_docend` int(9) NOT NULL DEFAULT '0',
   `edx_ref` varchar(30) NOT NULL DEFAULT '',
-  `edx_file` varchar(60) NOT NULL DEFAULT '',
+  `edx_indir` varchar(100) NOT NULL DEFAULT '',
+  `edx_infile` varchar(60) NOT NULL DEFAULT '',
+  `edx_outdir` varchar(100) NOT NULL DEFAULT '',
+  `edx_outfile` varchar(60) NOT NULL DEFAULT '',
   `edx_ackfile` varchar(60) NOT NULL DEFAULT '',
   `edx_ack` tinyint(1) NOT NULL DEFAULT '0',
   `edx_segdelim` int(9) NOT NULL DEFAULT '0',

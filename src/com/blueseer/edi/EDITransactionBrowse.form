@@ -7,6 +7,8 @@
         <Property name="text" type="java.lang.String" value="jLabel2"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -210,17 +212,28 @@
                               <Component id="tbdoc" min="-2" pref="60" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="dcfrom" min="-2" pref="148" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="dcfrom" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
+                                  <Component id="dcto" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="btRun" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btdetail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="bthidetext" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="cbshowall" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="rbFileLog" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="rbDocLog" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="btRun" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btdetail" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="bthidetext" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="cbshowall" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
-                          <Component id="dcto" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="246" max="32767" attributes="0"/>
                   </Group>
@@ -241,11 +254,17 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                          <Component id="dcto" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                              <Component id="dcto" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="rbFileLog" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbDocLog" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbtradeid" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -319,6 +338,16 @@
             <Component class="javax.swing.JCheckBox" name="cbshowall">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Show Entire File"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbFileLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="FileLogView"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbDocLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="DocLogView"/>
               </Properties>
             </Component>
           </SubComponents>

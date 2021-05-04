@@ -96,8 +96,8 @@ import org.jfree.data.general.DefaultPieDataset;
 public class EDITransactionBrowse extends javax.swing.JPanel {
  
     
-    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "IdxNbr", "SenderID", "ReceiverID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr", "DocBeg", "DocEnd", "Seg"})
+    javax.swing.table.DefaultTableModel docmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -107,8 +107,19 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                       }  
                         };
                 
+    javax.swing.table.DefaultTableModel filemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Select", "LogID", "ComKey", "TimeStamp", "File", "SenderID", "FileType", "DocType", "Status"})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+    
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"IdxNbr", "LogNbr", "Severity", "Desc", "TimeStamp"});
+                        new String[]{"LogID", "ComKey", "Severity", "Desc", "TimeStamp"});
     
    
     
@@ -144,7 +155,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 value, isSelected, hasFocus, row, column);
 
        
-            if (column == 7)
+            if (column == 8)
             c.setForeground(Color.BLUE);
             else
                 c.setBackground(table.getBackground());
@@ -153,11 +164,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     }
     }
            
-    public void getEDIIDX() {
+    public void getDocLogView() {
      
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
-        mymodel.setNumRows(0);
+        docmodel.setNumRows(0);
         tafile.setText("");
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -170,8 +181,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
                 String dir = "0";
                
-                tablereport.setModel(mymodel);
-                 tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
+                tablereport.setModel(docmodel);
+                 tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
                  
@@ -214,26 +225,20 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
                 while (res.next()) {
                     i++;
-                    if (res.getInt("edx_dir") == 0) {
-                     dir = "In";   
-                    } else {
-                     dir = "Out";
-                    }
-                     
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
+                 //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
+                    docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getString("edx_id"),
+                        res.getString("edx_comkey"),
                         res.getString("edx_sender"),
                         res.getString("edx_receiver"),
-                        dir,
-                        res.getString("edx_doc"),
                         res.getString("edx_ts"),
-                        res.getString("edx_file"),
-                        res.getString("edx_ctrlnum"),
-                        res.getString("edx_gsctrlnum"),
-                        res.getString("edx_stctrlnum"),
-                        res.getString("edx_docstart"),
-                        res.getString("edx_docend"),
-                        res.getString("edx_segdelim")
+                        res.getString("edx_infiletype"),
+                        res.getString("edx_indoctype"),
+                        res.getString("edx_inbatch"),
+                        res.getString("edx_outfiletype"),
+                        res.getString("edx_outdoctype"),
+                        res.getString("edx_outbatch"),
+                        res.getString("edx_status")
                     });
                 }
                 
@@ -249,16 +254,111 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         }
    }
     
+    public void getFileLogView() {
+     
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+             
+        filemodel.setNumRows(0);
+        tafile.setText("");
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+
+                int i = 0;
+
+               
+                tablereport.setModel(filemodel);
+                 tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
+               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
+                
+                 
+              
+                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
+                    res = st.executeQuery("SELECT * FROM edi_log  " +
+                    " where elg_isa >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND elg_isa <= " + "'" + tbtradeid.getText() + "'" +        
+                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND elg_init = '1' " +
+                    " order by elg_id desc ;" ) ;
+                    }
+                    
+                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_log  " +
+                    " where " +
+                    " elg_doc >= " + "'" + tbdoc.getText() + "'" +
+                    " AND elg_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND elg_init = '1' " +
+                    " order by elg_id desc ;" ) ;
+                    }
+                    
+                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_log  " +
+                     " where elg_isa >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND elg_isa <= " + "'" + tbtradeid.getText() + "'" +
+                    " AND elg_doc >= " + "'" + tbdoc.getText() + "'" +
+                    " AND elg_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND elg_init = '1' " +
+                    " order by elg_id desc ;" ) ;
+                    }
+                    
+                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_log  " +
+                    " where elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND elg_init = '1' " +
+                    " order by elg_id desc ;" ) ;
+                    }
+                    
+              
+
+                while (res.next()) {
+                    i++;
+                 //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
+                    filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
+                        res.getString("elg_id"),
+                        res.getString("elg_comkey"),
+                        res.getString("elg_ts"),
+                        res.getString("elg_file"),
+                        res.getString("elg_isa"),
+                        res.getString("elg_filetype"),
+                        res.getString("elg_doc"),
+                        res.getString("elg_severity")
+                    });
+                }
+                
+                tbtot.setText(String.valueOf(i));
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Sql code does not execute");
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+   }
+    
+    
      
    
     /**
      * Creates new form ScrapReportPanel
      */
-    public EDITransactionBrowse() {
+    
+
+public EDITransactionBrowse() {
         initComponents();
     }
 
-     public void getdetail(String idx) {
+    public void getdetail(String comkey) {
       
          modeldetail.setNumRows(0);
         
@@ -273,12 +373,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select elg_id, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_idxnbr = " + "'" + idx + "'" +  ";");
+                res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
+                        " where elg_comkey = " + "'" + comkey + "'" +  ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("elg_idxnbr"), 
-                      res.getString("elg_id"),
+                      res.getString("elg_id"), 
+                      res.getString("elg_comkey"),
                       res.getString("elg_severity"),
                       res.getString("elg_desc"),
                       res.getString("elg_ts")
@@ -301,6 +401,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
        
+        buttonGroup1.add(rbDocLog);
+        buttonGroup1.add(rbFileLog);
+        rbFileLog.setSelected(true);
+        
         tbtoterrors.setText("0");
         tbtot.setText("0");
        
@@ -316,9 +420,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
        dcfrom.setDate(now);
         dcto.setDate(now);
                
-        mymodel.setNumRows(0);
+        docmodel.setNumRows(0);
         modeldetail.setNumRows(0);
-        tablereport.setModel(mymodel);
+        tablereport.setModel(docmodel);
         tabledetail.setModel(modeldetail);
         
         tablereport.getTableHeader().setReorderingAllowed(false);
@@ -326,6 +430,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         
         // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+         tabledetail.getColumnModel().getColumn(0).setMaxWidth(100);
+         tabledetail.getColumnModel().getColumn(1).setMaxWidth(100);
+         tabledetail.getColumnModel().getColumn(2).setMaxWidth(100);
+         tabledetail.getColumnModel().getColumn(4).setMaxWidth(200);
        
         
         btdetail.setEnabled(false);
@@ -345,6 +453,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         tablepanel = new javax.swing.JPanel();
         summarypanel = new javax.swing.JPanel();
@@ -369,6 +478,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
         cbshowall = new javax.swing.JCheckBox();
+        rbFileLog = new javax.swing.JRadioButton();
+        rbDocLog = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -475,6 +586,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
         cbshowall.setText("Show Entire File");
 
+        rbFileLog.setText("FileLogView");
+
+        rbDocLog.setText("DocLogView");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -494,16 +609,23 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(31, 31, 31)
-                        .addComponent(btRun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdetail)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bthidetext)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbshowall))
-                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(rbFileLog)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rbDocLog))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btRun)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdetail)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bthidetext)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbshowall)))))
                 .addContainerGap(246, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -519,10 +641,14 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         .addComponent(bthidetext)
                         .addComponent(cbshowall)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel6)
+                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rbFileLog)
+                        .addComponent(rbDocLog)))
+                .addGap(6, 6, 6)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -606,7 +732,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-    getEDIIDX();
+      if (rbDocLog.isSelected()) {
+        getDocLogView();
+      } else {
+        getFileLogView();  
+      }
     }//GEN-LAST:event_btRunActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
@@ -619,21 +749,21 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 1).toString());
+                getdetail(tablereport.getValueAt(row, 2).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
         
-          if ( col == 7) {
+          if ( col == 8) {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
                  ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, col).toString(), 
-                         tablereport.getValueAt(row, 2).toString(),
+                         tablereport.getValueAt(row, 3).toString(),
                          cbshowall.isSelected(),
-                         tablereport.getValueAt(row, 11).toString(),
                          tablereport.getValueAt(row, 12).toString(),
-                         tablereport.getValueAt(row, 13).toString()
+                         tablereport.getValueAt(row, 13).toString(),
+                         tablereport.getValueAt(row, 14).toString()
                          );  
                     for (String segment : segments ) {
                         tafile.append(segment);
@@ -668,6 +798,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton bthidetext;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbshowall;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
@@ -685,6 +816,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JRadioButton rbDocLog;
+    private javax.swing.JRadioButton rbFileLog;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;

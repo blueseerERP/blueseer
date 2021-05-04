@@ -95,7 +95,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            /* because you will not be able to retrieve a billto code from a shipto code that hasn't been previously defined */
             
           
-               e.setOVBillTo(OVData.getEDICustFromSenderISA(isa06, doctype, "1"));   // 3rd parameter '0' is outbound direction '1' is inbound
+               e.setOVBillTo(OVData.getEDICustFromSenderISA(isa06, doctype));   // 3rd parameter '0' is outbound direction '1' is inbound
                
                
                po = x[3];
@@ -155,7 +155,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
                // if here and we have a blank billto...then error out
                if (e.getOVBillTo().isEmpty()) {
-               writeEDILog(c, "0", "ERROR", "No internal Billto Found");
+               writeEDILog(c, "ERROR", "No internal Billto Found");
                error = true;
                }
               

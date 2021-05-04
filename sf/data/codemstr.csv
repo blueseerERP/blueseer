@@ -19,7 +19,10 @@ ItemType,ASSET,Asset,1
 ItemType,SERVICE,Service,1
 edidoctype,850,,1
 edidoctype,810,,1
+edidoctype,812,,1
 edidoctype,856,,1
+edidoctype,855,,1
+edidoctype,820,,1
 edidoctype,940,,1
 edidoctype,943,,1
 edidoctype,944,,1
