@@ -89,7 +89,7 @@
     <path id="runtime.path">
 	    <fileset dir="../dist" includes="*.jar"/>
 	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
-	    <!-- <fileset dir="c:/junk/mytest/dist" includes="*.jar"/> -->
+	    <fileset dir="c:/junk/scratch/dist" includes="*.jar"/>
     </path>
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">

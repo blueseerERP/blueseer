@@ -432,6 +432,17 @@ CREATE TABLE IF NOT EXISTS `cron_log` (
   `cron_ref` varchar(30) NOT NULL  DEFAULT '',
   `cron_status` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_file` (
+  `edf_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `edf_comkey` int(12) NOT NULL DEFAULT '0',
+  `edf_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `edf_file` varchar(60) NOT NULL  DEFAULT '',
+  `edf_dir` varchar(100) NOT NULL  DEFAULT '',
+  `edf_partner` varchar(15) NOT NULL  DEFAULT '',
+  `edf_filetype` varchar(15) NOT NULL  DEFAULT '',
+  `edf_doctype` varchar(15) NOT NULL  DEFAULT '',
+  `edf_status` varchar(15) NOT NULL  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `elg_comkey` int(12) NOT NULL DEFAULT '0',

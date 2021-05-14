@@ -27,7 +27,9 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +40,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jcifs.smb.SmbException;
@@ -50,362 +58,508 @@ public abstract class EDIMap implements EDIMapi {
     
     String[] envelope = null;
          
-         public static  int segcount = 0;
-         
-         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
-         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
-         DateFormat isadftime = new SimpleDateFormat("HHmm");
-         DateFormat gsdftime = new SimpleDateFormat("HHmm");
-         Date now = new Date();
-         
-         public static String ISA = "";
-         public static String GS = "";
-         public static String GE = "";
-         public static String IEA = "";
-         
-         public static String[] isaArray = new String[17];
-         public static String[] gsArray = new String[9];
-         public static String[] stArray = new String[3];
-         public static String[] seArray = new String[3];
-         public static String[] geArray = new String[3];
-         public static String[] ieaArray = new String[3];
-         
-         public static String ST = "";
-         public static String SE = "";
-         
-         public static String sender = "";
-         public static String map = "";
-         public static boolean isOverride = false;
-         public static String doctype = "";
-         
-         public static String infile = "";
-         public static String outdir = "";
-         public static String outfile = "";
-         public static String outputfiletype = "";
-         public static String outputdoctype = "";
-         public static String filename = "";
-         public static String isactrl = "";
-         public static String gsctrl = "";
-         public static String stctrl = "";
-         public static String ref = "";
-         
-         public static String header = "";
-         public static String detail = "";
-         public static String trailer = "";
-         
-         public static String isa06 = "";
-         public static String isa08 = "";
-         public static String isa13 = "";
-         public static String isa09 = "";
-         
-         public static String gs02 = "";
-         public static String gs03 = "";
-         
-         public static ArrayList<String> H = new ArrayList();
-         public static ArrayList<String> D = new ArrayList();
-         public static ArrayList<String> T = new ArrayList();
-         
-         public static String sd = "";
-         public static String ed = "";
-         public static String ud = "";
-         
-         public static String content = "";
-         
-         
-         public static boolean isSet(ArrayList list, Integer index) {
-         return index != null && index >=0 && index < list.size() && list.get(index) != null;
+    public static  int segcount = 0;
+
+    DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+    DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+    DateFormat isadftime = new SimpleDateFormat("HHmm");
+    DateFormat gsdftime = new SimpleDateFormat("HHmm");
+    Date now = new Date();
+
+    public static String ISA = "";
+    public static String GS = "";
+    public static String GE = "";
+    public static String IEA = "";
+
+     public static String[] isaArray = new String[17];
+     public static String[] gsArray = new String[9];
+     public static String[] stArray = new String[3];
+     public static String[] seArray = new String[3];
+     public static String[] geArray = new String[3];
+     public static String[] ieaArray = new String[3];
+
+     public static String ST = "";
+     public static String SE = "";
+
+     public static String sender = "";
+     public static String map = "";
+     public static boolean isOverride = false;
+     public static String doctype = "";
+
+     public static String infile = "";
+     public static String outdir = "";
+     public static String outfile = "";
+     public static String outputfiletype = "";
+     public static String outputdoctype = "";
+     public static String filename = "";
+     public static String isactrl = "";
+     public static String gsctrl = "";
+     public static String stctrl = "";
+     public static String ref = "";
+
+     public static String header = "";
+     public static String detail = "";
+     public static String trailer = "";
+
+     public static String isa06 = "";
+     public static String isa08 = "";
+     public static String isa13 = "";
+     public static String isa09 = "";
+
+     public static String gs02 = "";
+     public static String gs03 = "";
+
+     public static ArrayList<String> H = new ArrayList();
+     public static ArrayList<String> D = new ArrayList();
+     public static ArrayList<String> T = new ArrayList();
+
+     public static String sd = "";
+     public static String ed = "";
+     public static String ud = "";
+
+     public static String content = "";
+
+    public static Map<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static Map<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static Map<String, HashMap<String,String>> MappedData = new LinkedHashMap<String, HashMap<String,String>>();
+
+
+     public static boolean isSet(ArrayList list, Integer index) {
+     return index != null && index >=0 && index < list.size() && list.get(index) != null;
+     }
+
+    public static boolean isSet(String[] list, Integer index) {
+     return index != null && index >=0 && index < list.length && list[index] != null;
+     }
+
+    public void setOutPutFileType(String filetype) {
+        outputfiletype = filetype;
+    }
+    public void setOutPutDocType(String doctype) {
+        outputdoctype = doctype;
+    }
+
+    public void setISA (String[] isa) {
+         isa06 = isa[6].trim();
+         isa08 = isa[8].trim();
+         isa09 = isa[9].trim();
+         isa13 = isa[13].trim();
+     }
+
+    public void setGS (String[] gs) {
+         gs02 = gs[2].trim();
+         gs03 = gs[3].trim();
+     }
+
+    public void setControl(String[] c) {
+        sender = c[0];
+        doctype = c[1];
+        map = c[2];
+        infile = c[3];
+        isactrl = c[4];
+        gsctrl = c[5];
+        stctrl = c[6];
+        ref = c[7];
+        outfile = c[8];
+        sd = delimConvertIntToStr(c[9]);
+        ed = delimConvertIntToStr(c[10]);
+        ud = delimConvertIntToStr(c[11]);
+        isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
+     }
+
+    public String delimConvertIntToStr(String intdelim) {
+    String delim = "";
+    int x = Integer.valueOf(intdelim);
+    delim = String.valueOf(Character.toString((char) x));
+    return delim;
+  }
+
+     
+     public void setOutPutEnvelopeStrings(String[] c) { 
+
+         if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
+           envelope = EDI.generateEnvelope(sender, doctype); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           ISA = envelope[0];
+           GS = envelope[1];
+           GE = envelope[2];
+           IEA = envelope[3];
+           filename = envelope[4];
+           outfile = filename;  
+           isactrl = envelope[5];
+           gsctrl = envelope[6];
+           stctrl = String.format("%09d", Integer.valueOf(gsctrl));
+           ST = "ST" + ed + doctype + ed + stctrl ;
+           SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
+           } else {
+             // you can override elements within the envelope xxArray fields at this point....or merge into segment string
+             // need to figure out what kind of error this bullshit is....
+             ISA = c[13];
+             GS = c[14];
+             GE = "GE" + ed + "1" + ed + c[5];
+             IEA = "IEA" + ed + "1" + ed + c[4];
+             ST = "ST" + ed + doctype + ed + c[6]; 
+             SE = "SE" + ed + "1" + ed + c[6];
+
+             updateISA(9,""); // set date to now
+             updateISA(10,"");  // set time to now
+
+           
+             header = "";
+             detail = "";
+             trailer = "";
+             content = "";
+           }
+
+     }
+
+     public String getISA(int i) {
+         if (i > 16) {
+             return "";
          }
-    
-        public static boolean isSet(String[] list, Integer index) {
-         return index != null && index >=0 && index < list.length && list[index] != null;
+       isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);  
+       return isaArray[i];
+     }
+
+     public String getGS(int i) {
+         if (i > 8) {
+             return "";
          }
-    
-        public void setOutPutFileType(String filetype) {
-            outputfiletype = filetype;
-        }
-        public void setOutPutDocType(String doctype) {
-            outputdoctype = doctype;
+       gsArray = GS.split(EDI.escapeDelimiter(ed), -1);  
+       return gsArray[i];
+     }
+
+
+     public void updateISA(int i, String value) {
+         isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
+         switch (i) {
+           case 1 :
+             isaArray[i] = String.format("%-2s", value);
+             break;
+           case 2 :
+             isaArray[i] = String.format("%-10s", value);
+             break;
+           case 3 :
+             isaArray[i] = String.format("%-2s", value);
+             break;
+           case 4 :
+             isaArray[i] = String.format("%-10s", value);
+             break;
+           case 5 :
+             isaArray[i] = String.format("%-2s", value);
+             break; 
+           case 6 :
+             isaArray[i] = String.format("%-15s", value);
+             break;
+           case 7 :
+             isaArray[i] = String.format("%-2s", value);
+             break;   
+           case 8 :
+             isaArray[i] = String.format("%-15s", value);
+             break;  
+           case 9 :
+             isaArray[i] = isadfdate.format(now);
+             break;  
+           case 10 :
+             isaArray[i] = isadftime.format(now);
+             break;  
+           case 11 :
+             isaArray[i] = String.format("%-1s", value);  
+             break;  
+           case 12 :
+             isaArray[i] = String.format("%-5s", value);  
+             break;  
+           case 13 :
+             isaArray[i] = String.format("%-9s", value);  
+             break;  
+           case 14 :
+             isaArray[i] = String.format("%-1s", value);  
+             break;  
+           case 15 :
+             isaArray[i] = String.format("%-1s", value);  
+             break; 
+             case 16 :
+             isaArray[i] = String.format("%-1s", value);  
+             break; 
+           default :
+           break;
+   }
+
+         ISA = String.join(ed,isaArray);
+     }
+
+     public void updateGS(int i, String value) {
+         if (i > 8) {
+             return;
+         }
+         gsArray = GS.split(EDI.escapeDelimiter(ed), -1);
+         gsArray[i] = String.valueOf(value);
+         GS = String.join(ed,gsArray);
+     }
+
+     public void updateSE() {
+         seArray = SE.split(EDI.escapeDelimiter(ed), -1);
+         seArray[1] = String.valueOf(segcount);
+         SE = String.join(ed,seArray);
+     }
+
+     public void updateGE() {
+         geArray = GE.split(EDI.escapeDelimiter(ed), -1);
+         geArray[1] = String.valueOf(segcount);
+         GE = String.join(ed,geArray);
+     }
+
+     public String[] packagePayLoad(String[] c) {
+         String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
+     
+        
+        if (outputfiletype.equals("X12")) {
+           setOutPutEnvelopeStrings(c);
         }
         
-        public void setISA (String[] isa) {
-             isa06 = isa[6].trim();
-             isa08 = isa[8].trim();
-             isa09 = isa[9].trim();
-             isa13 = isa[13].trim();
-         }
-         
-        public void setGS (String[] gs) {
-             gs02 = gs[2].trim();
-             gs03 = gs[3].trim();
-         }
-         
-        public void setControl(String[] c) {
-            sender = c[0];
-            doctype = c[1];
-            map = c[2];
-            infile = c[3];
-            isactrl = c[4];
-            gsctrl = c[5];
-            stctrl = c[6];
-            ref = c[7];
-            outfile = c[8];
-            sd = delimConvertIntToStr(c[9]);
-            ed = delimConvertIntToStr(c[10]);
-            ud = delimConvertIntToStr(c[11]);
-            isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
-         }
-         
-        public String delimConvertIntToStr(String intdelim) {
-        String delim = "";
-        int x = Integer.valueOf(intdelim);
-        delim = String.valueOf(Character.toString((char) x));
-        return delim;
-      }
-      
-         public void setFinalOutputString() {
-           content = ISA + GS + ST + header + detail  + trailer + SE + GE + IEA;  
-         } 
-    
-         public void setOutPutEnvelopeStrings(String[] c) { 
-         
-             if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
-               envelope = EDI.generateEnvelope(sender, doctype); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
-               ISA = envelope[0];
-               GS = envelope[1];
-               GE = envelope[2];
-               IEA = envelope[3];
-               filename = envelope[4];
-               outfile = filename;  
-               isactrl = envelope[5];
-               gsctrl = envelope[6];
-               stctrl = String.format("%09d", Integer.valueOf(gsctrl));
-               ST = "ST" + ed + doctype + ed + stctrl ;
-               SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
-               } else {
-                 // you can override elements within the envelope xxArray fields at this point....or merge into segment string
-                 // need to figure out what kind of error this bullshit is....
-                 ISA = c[13];
-                 GS = c[14];
-                 GE = "GE" + ed + "1" + ed + c[5];
-                 IEA = "IEA" + ed + "1" + ed + c[4];
-                 ST = "ST" + ed + doctype + ed + c[6]; 
-                 SE = "SE" + ed + "1" + ed + c[6];
-                 
-                 updateISA(9,""); // set date to now
-                 updateISA(10,"");  // set time to now
-                
-                 H.clear();
-                 D.clear();
-                 T.clear();
-                 
-                 header = "";
-                 detail = "";
-                 trailer = "";
-                 content = "";
-               }
-             
-         }
-         
-         public String getISA(int i) {
-             if (i > 16) {
-                 return "";
-             }
-           isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);  
-           return isaArray[i];
-         }
-         
-         public String getGS(int i) {
-             if (i > 8) {
-                 return "";
-             }
-           gsArray = GS.split(EDI.escapeDelimiter(ed), -1);  
-           return gsArray[i];
-         }
-         
-         
-         public void updateISA(int i, String value) {
-             isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
-             switch (i) {
-               case 1 :
-                 isaArray[i] = String.format("%-2s", value);
-                 break;
-               case 2 :
-                 isaArray[i] = String.format("%-10s", value);
-                 break;
-               case 3 :
-                 isaArray[i] = String.format("%-2s", value);
-                 break;
-               case 4 :
-                 isaArray[i] = String.format("%-10s", value);
-                 break;
-               case 5 :
-                 isaArray[i] = String.format("%-2s", value);
-                 break; 
-               case 6 :
-                 isaArray[i] = String.format("%-15s", value);
-                 break;
-               case 7 :
-                 isaArray[i] = String.format("%-2s", value);
-                 break;   
-               case 8 :
-                 isaArray[i] = String.format("%-15s", value);
-                 break;  
-               case 9 :
-                 isaArray[i] = isadfdate.format(now);
-                 break;  
-               case 10 :
-                 isaArray[i] = isadftime.format(now);
-                 break;  
-               case 11 :
-                 isaArray[i] = String.format("%-1s", value);  
-                 break;  
-               case 12 :
-                 isaArray[i] = String.format("%-5s", value);  
-                 break;  
-               case 13 :
-                 isaArray[i] = String.format("%-9s", value);  
-                 break;  
-               case 14 :
-                 isaArray[i] = String.format("%-1s", value);  
-                 break;  
-               case 15 :
-                 isaArray[i] = String.format("%-1s", value);  
-                 break; 
-                 case 16 :
-                 isaArray[i] = String.format("%-1s", value);  
-                 break; 
-               default :
-               break;
-       }
-             
-             ISA = String.join(ed,isaArray);
-         }
-         
-         public void updateGS(int i, String value) {
-             if (i > 8) {
-                 return;
-             }
-             gsArray = GS.split(EDI.escapeDelimiter(ed), -1);
-             gsArray[i] = String.valueOf(value);
-             GS = String.join(ed,gsArray);
-         }
-         
-         public void updateSE() {
-             seArray = SE.split(EDI.escapeDelimiter(ed), -1);
-             seArray[1] = String.valueOf(segcount);
-             SE = String.join(ed,seArray);
-         }
-         
-         public void updateGE() {
-             geArray = GE.split(EDI.escapeDelimiter(ed), -1);
-             geArray[1] = String.valueOf(segcount);
-             GE = String.join(ed,geArray);
-         }
-         
-         public void setHDTStrings() {
-              // first set segment terminator for envelope segments
-                 ISA = ISA + sd;
-                 GS = GS + sd;
-                 ST = ST + sd;
-                 SE = SE + sd;
-                 GE = GE + sd;
-                 IEA = IEA + sd;
-             
-             segcount = 2;  // ST and SE inclusive
-             for (String h : H) {
-                 header += (EDI.trimSegment(h, ed).toUpperCase() + sd);
-                 segcount++;                 
-             }
+         // concatenate all output strings to string variable 'content' 
+        writeDF();
+        
+        // get TP/Doc defaults
+        String[] tp = OVData.getEDITPDefaults(sender, doctype);
 
-             for (String d : D) {
-                 detail += (EDI.trimSegment(d, ed).toUpperCase() + sd);
-                 segcount++;
-             }
+        // create out batch file name
+         int filenumber = OVData.getNextNbr("edifile");
+         String batchfile = "X" + String.format("%07d", filenumber);
 
-             for (String t : T) {
-                 trailer += (EDI.trimSegment(t, ed).toUpperCase() + sd);
-                 segcount++;
-             }
-             updateSE();
-             
-                 
-             
-         }
-         
-         public String[] packagePayLoad(String[] c) {
-             String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
-            // Call this function to join H, D, T arrays into H, D, T Strings     
-            setHDTStrings();
-
-            // concat all into one Output String          
-            setFinalOutputString();  
-            
-            // get TP/Doc defaults
-            String[] tp = OVData.getEDITPDefaults(sender, doctype);
-            
-            // create out batch file name
-             int filenumber = OVData.getNextNbr("edifile");
-             String batchfile = "X" + String.format("%07d", filenumber);
-            
+        if (outdir.isEmpty()) {
+            outdir = tp[9];
             if (outdir.isEmpty()) {
-                outdir = tp[9];
-                if (outdir.isEmpty()) {
-                    outdir = OVData.getEDIOutDir();
-                }
+                outdir = OVData.getEDIOutDir();
             }
-            
-            if (outfile.isEmpty()) {
-                outfile = tp[10] + "generic" + "." + tp[11];
-            }
-            
-            c[15] = outputdoctype;
-            c[25] = batchfile;
-            c[27] = outdir;
-            c[29] = outputfiletype;
-           
-                
-         System.out.println(String.join(",", c));
-            
-            // error handling
-            if (batchfile.isEmpty()) {
-                x[0] = "error";
-                x[1] = "batch file is empty";
-                return x;
-            }
-            if (outfile.isEmpty()) {
-                x[0] = "error";
-                x[1] = "batch file is empty";
-                return x;
-            }
-            if (outputfiletype.isEmpty()) {
-                x[0] = "error";
-                x[1] = "output file type unknown";
-                return x;
-            }
-                try {
-                    // Write output batch file
-                    EDI.writeFile(content, OVData.getEDIBatchDir(), batchfile);
-                    // Write to outfile
-                    EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
-                } catch (SmbException ex) {
-                    MainFrame.bslog(ex);
-                } catch (IOException ex) {
-                    MainFrame.bslog(ex);
-                }
-            
-            // need confirmation file was created    
-            File file = new File(outdir + "/" + outfile);
-           
-            if (! file.exists()) {
-                x[0] = "error";
-                x[1] = "output file not created: " + file.getPath().toString();
-                return x; 
-            } else {
-                c[23] = "success";
-            }
-        
-         return x;
-         }
+        }
+
+        if (outfile.isEmpty()) {
+            outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
+        }
+
+        c[15] = outputdoctype;
+        c[25] = batchfile;
+        c[27] = outdir;
+        c[29] = outputfiletype;
 
 
+     System.out.println(String.join(",", c));
+
+        // error handling
+        if (batchfile.isEmpty()) {
+            x[0] = "error";
+            x[1] = "batch file is empty";
+            return x;
+        }
+        if (outfile.isEmpty()) {
+            x[0] = "error";
+            x[1] = "batch file is empty";
+            return x;
+        }
+        if (outputfiletype.isEmpty()) {
+            x[0] = "error";
+            x[1] = "output file type unknown";
+            return x;
+        }
+            try {
+                // Write output batch file
+                EDI.writeFile(content, OVData.getEDIBatchDir(), batchfile);
+                // Write to outfile
+                EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
+            } catch (SmbException ex) {
+                MainFrame.bslog(ex);
+            } catch (IOException ex) {
+                MainFrame.bslog(ex);
+            }
+
+        // need confirmation file was created    
+        File file = new File(outdir + "/" + outfile);
+
+        if (! file.exists()) {
+            x[0] = "error";
+            x[1] = "output file not created: " + file.getPath().toString();
+            return x; 
+        } else {
+            c[23] = "success";
+        }
+
+     return x;
+     }
+
+    
+     public static void mapSegment(String segment, String x, String y) {
+    	 String[] z = new String[] {x,y};
+    	 // get old arraylist and add to it
+    	 ArrayList<String[]> old = new ArrayList<String[]>();
+    	 if (HASH.get(segment) != null) {
+    		 old = HASH.get(segment);
+    	 }
+    	 old.add(z);
+    	 HASH.put(segment, old);
+     }
+     
+     public static void commitSegment(String segment, int p) {
+    	 // loop through HASH and create t for this segment
+    	 HashMap<String, String> t = new LinkedHashMap<String,String>();
+    	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
+    	 for (Map.Entry<String, ArrayList<String[]>> z : X.entrySet()) {
+    		 if (z.getKey().equals(segment)) {
+    			 ArrayList<String[]> k = z.getValue();
+    			 for (String[] g : k) {
+    				 t.put(g[0], g[1]);
+    			 }
+    			 
+    		 }
+    	 }
+    	// HashMap<String, String> t = new HashMap<String,String>(j);
+    	 if (! MappedData.containsKey(segment)) {
+    		MappedData.put(segment + ":" + p, t);
+    	 }	
+         HASH.clear();
+     }
+     
+     public static Map<String, ArrayList<String[]>> loadSDF(String adf) throws IOException {
+	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
+	        List<String[]> list = new ArrayList<String[]>();
+	        Set<String> set = new LinkedHashSet<String>();
+	        File cf = new File(adf);
+	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (! line.isEmpty()) {
+				String[] t = line.split(",",-1);
+				list.add(t);
+				set.add(t[0]);
+				}
+			}
+			reader.close();
+			
+			
+			for (String s : set) {
+				ArrayList<String[]> x = new ArrayList<String[]>();
+				for (String[] ss : list) {
+					if (ss[0].equals(s)) {
+						x.add(ss);
+					}
+				}
+				hm.put(s, x);
+			}
+			
+			
+	        return hm;
+	    }
+
+     public static String[] writeDF() {
+          String[] r = new String[2];
+    	 String segment = "";
+    	 content = "";
+    	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(MappedData);
+    		
+    	 
+    	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+ 		//	ArrayList<String[]> fields = z.getValue();
+ 			
+                // write out all fields of this segment
+                HashMap<String,String> mapValues = MD.get(z.getKey());
+        //	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
+                // loop through integers
+
+                        segment = z.getKey().split(":")[0];  // start with landmark
+
+                        ArrayList<String[]> fields = OSF.get(segment);
+
+                        for (String[] f : fields) {
+                                if (f[4].equals("+")) {
+                                        f[4] = "";
+                                }
+                                String format = "%" + f[4] + f[3] + "s";
+
+                                // overlay with values that were actually assigned...otherwise blanks
+                                if (mapValues.containsKey(f[1])) {
+                                        if (mapValues.get(f[1]).length() > Integer.valueOf(f[3])) {
+                                                segment += String.format(format, mapValues.get(f[1]).substring(0, Integer.valueOf(f[3]))); // properly formatted
+                                        } else {
+                                                segment += String.format(format, mapValues.get(f[1])); // properly formatted
+                                        }
+
+                                } else {
+                                        segment += String.format(format, ""); // properly formatted
+                                }
+                        }
+                        content += segment + "\n";
+                        segment = ""; // reset the segment string
+
+
+ 			
+ 			
+ 			
+ 		}
+    	 
+    	MappedData.clear();	
+        HASH.clear();
+        OSF.clear();
+    	 
+    	 return r;
+     }
+     
+     /*
+     public static String[] writeDF2() {
+    	 String[] r = new String[2];
+    	 String segment = "";
+    	 content = "";
+    	 Map<String, HashMap<Integer,HashMap<String,String>>> MD = new LinkedHashMap<String, HashMap<Integer,HashMap<String,String>>>(MappedData);
+    		
+    	 
+    	 for (Map.Entry<String, ArrayList<String[]>> z : OSF.entrySet()) {
+ 			ArrayList<String[]> fields = z.getValue();
+ 			
+ 			
+ 			// only print out if map data contains key
+ 			if (MD.containsKey(z.getKey())) {
+ 				// write out all fields of this segment
+ 				HashMap<Integer, HashMap<String,String>> mapValuesLoops = MD.get(z.getKey());
+ 			//	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
+ 				// loop through integers
+ 				for (Map.Entry<Integer, HashMap<String,String>> y : mapValuesLoops.entrySet()) {
+ 					segment = z.getKey();  // start with landmark
+ 					HashMap<String, String> mapValues = mapValuesLoops.get(y.getKey());
+ 					System.out.println("from y.getKey(): " + mapValues.keySet());
+                                        
+ 					for (String[] f : fields) {
+ 						if (f[4].equals("+")) {
+ 							f[4] = "";
+ 						}
+ 						String format = "%" + f[4] + f[3] + "s";
+ 						
+ 						// overlay with values that were actually assigned...otherwise blanks
+ 						if (mapValues.containsKey(f[1])) {
+ 							if (mapValues.get(f[1]).length() > Integer.valueOf(f[3])) {
+ 								segment += String.format(format, mapValues.get(f[1]).substring(0, Integer.valueOf(f[3]))); // properly formatted
+ 							} else {
+ 								segment += String.format(format, mapValues.get(f[1])); // properly formatted
+ 							}
+ 							
+ 						} else {
+ 							segment += String.format(format, ""); // properly formatted
+ 						}
+ 					}
+ 					content += segment + "\n";
+ 					segment = ""; // reset the segment string
+ 				}
+ 				
+ 			}
+ 			
+ 			
+ 		}
+    	 
+    	MappedData.clear();	
+        HASH.clear();
+        OSF.clear();
+    	 
+    	 return r;
+     }
+
+    */
+     
+     
 }

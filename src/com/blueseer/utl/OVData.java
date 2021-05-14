@@ -5994,7 +5994,7 @@ public class OVData {
         
          } 
         
-       public static String getEDIOutMap(String billto, String doctype) {
+       public static String getEDIMap(String code, String doctype) {
       
            String mystring = "";
         try{
@@ -6004,9 +6004,8 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + billto + "'" + 
+                res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + code + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + 
-                        " AND edi_dir = " + "'" + "0" + "'" +
                                 ";");
                while (res.next()) {
                    mystring = res.getString("edi_map");
@@ -6054,35 +6053,7 @@ public class OVData {
         return mystring;
         
     }
-       
-       public static String getEDIInMap(String id, String doctype) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select edi_map from edi_mstr where edi_isa = " + "'" + id + "'" + 
-                        " AND edi_dir = '1' AND edi_doc = " + "'" + doctype + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("edi_map");
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
         
-    }
-       
         public static String getEDIFuncAck(String id, String doctype) {
        String mystring = "";
         try{
@@ -21937,7 +21908,7 @@ public class OVData {
         }
       }
      
-    public static void writeEDILogInit(String[] control, String severity, String message) {
+    public static void writeEDIFileLog(String[] control) {
           try {
            Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -21945,23 +21916,45 @@ public class OVData {
                 Statement st = con.createStatement();
                 String[] c = control;
               
-                 // elg_init is '1' only for initial encounter of inbound file for purpose of place marker...it is default '0' otherwise
-                        st.executeUpdate("insert into edi_log ( elg_init, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                        st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_dir, edf_status ) "
                             + " values ( " 
-                            + "'" + '1' + "'" + ","    
                             + "'" + c[22] + "'" + ","    
-                            + "'" + c[16] + "'" + ","
-                            + "'" + severity + "'" + ","
-                            + "'" + message + "'" + ","
-                            + "'" + c[0] + "'" + ","
-                            + "'" + c[1] + "'" + ","
-                            + "'" + c[2] + "'" + ","
                             + "'" + c[3] + "'" + ","
-                            + "'" + c[4] + "'" + ","
-                            + "'" + c[5] + "'" + ","
-                            + "'" + c[6] + "'" + ","
-                            + "'" + c[7] + "'"
+                            + "'" + c[26] + "'" + ","
+                            + "'" + "info" + "'"  
                             + ")"
+                            + ";");
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+      }
+   
+    public static void updateEDIFileLogStatus(String comkey, String sender, String filetype, String doctype) {
+        String x = "success";  
+        try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                
+                res = st.executeQuery("select elg_severity from edi_log " +
+                        " where elg_comkey = " + "'" + comkey + "'" + ";");
+                while (res.next()) {
+                    if (res.getString("elg_severity").toLowerCase().equals("error")) {
+                        x = "error";
+                    }
+                }
+                        st.executeUpdate("update edi_file set " 
+                            + " edf_status = " + "'" + x + "'" + "," 
+                            + " edf_partner = " + "'" + sender + "'" + "," 
+                            + " edf_filetype = " + "'" + filetype + "'" + "," 
+                            + " edf_doctype = " + "'" + doctype + "'"         
+                            + " where edf_comkey = " + "'" + comkey + "'"  
                             + ";");
             } catch (SQLException s) {
                  MainFrame.bslog(s);

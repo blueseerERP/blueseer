@@ -108,7 +108,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel filemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "LogID", "ComKey", "TimeStamp", "File", "SenderID", "FileType", "DocType", "Status"})
+                        new String[]{"Select", "LogID", "ComKey", "Partner", "FileType", "DocType", "TimeStamp", "File", "Dir", "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -271,7 +271,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
                
                 tablereport.setModel(filemodel);
-                 tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
+               //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
                  
@@ -310,11 +310,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     }
                     
                     if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_log  " +
-                    " where elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
-                    " AND elg_init = '1' " +
-                    " order by elg_id desc ;" ) ;
+                    res = st.executeQuery("SELECT * FROM edi_file  " +
+                    " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " order by edf_id desc ;" ) ;
                     }
                     
               
@@ -323,14 +322,15 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     i++;
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getString("elg_id"),
-                        res.getString("elg_comkey"),
-                        res.getString("elg_ts"),
-                        res.getString("elg_file"),
-                        res.getString("elg_isa"),
-                        res.getString("elg_filetype"),
-                        res.getString("elg_doc"),
-                        res.getString("elg_severity")
+                        res.getString("edf_id"),
+                        res.getString("edf_comkey"),
+                        res.getString("edf_partner"),
+                        res.getString("edf_filetype"),
+                        res.getString("edf_doctype"),
+                        res.getString("edf_ts"),
+                        res.getString("edf_file"),
+                        res.getString("edf_dir"),
+                        res.getString("edf_status")
                     });
                 }
                 

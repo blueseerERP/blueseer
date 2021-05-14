@@ -521,6 +521,20 @@ CREATE TABLE "cron_log" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edi_file" (
+  "edf_id" INTEGER PRIMARY KEY,
+  "edf_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "edf_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "edf_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_dir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_partner" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_status" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_log" (
   "elg_id" INTEGER PRIMARY KEY,
   "elg_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',

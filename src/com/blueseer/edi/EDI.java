@@ -431,24 +431,23 @@ public class EDI {
                     c[11] = "0";
                     c[12] = isOverride;
                     c[13] = "";
-                    c[15] = "0"; // inbound
                     c[22] = String.valueOf(comkey);
+                    c[26] = file.getParent(); // indir
                     c[28] = editype[0];
                     
-        // start initial log entry for file here where elg_init will equal '1' upon write 
-        OVData.writeEDILogInit(c, "info", "Processing file: " + infile ); 
+        // start initial log entry for incoming file here  
+        OVData.writeEDIFileLog(c); 
        
           
           // if type is unknown then bail....otherwise create batch file of infile
          if (editype[0].isEmpty()) {
            m = new String[]{"1","unknown file type: " + infile};
            OVData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
-           return m; 
-         } else {
+          } else {
              OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
          }
              
-         if (isOverride.isEmpty()) {
+         if (isOverride.isEmpty() && ! editype[0].isEmpty() ) {
           int filenumber = OVData.getNextNbr("edifile");
           batchfile = "R" + String.format("%07d", filenumber);   
           Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -634,7 +633,7 @@ public class EDI {
              
          }  // if x12
          
-         
+       OVData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
        return m;  
     }
     
@@ -652,6 +651,7 @@ public class EDI {
         if (filenamesplit.length >= 3 ) {
             type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
         } 
+        return type;
     }
     
     
@@ -663,10 +663,12 @@ public class EDI {
          if (sb.toString().equals("ISA")) {
              type[0] = "X12";
              type[1] = "UNKNOWN";
+             return type;
          }
          if (sb.toString().equals("UNB")) {
              type[0] = "EDIFACT";
              type[1] = "UNKNOWN";
+             return type;
          }
          
     // must be flatfile....let's create arraylist of segments based on assumed newline delimiter     
@@ -769,7 +771,6 @@ public class EDI {
         return x;
     }
     
-    
     public static void processXML(File file, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
     String[] filenamesplit = null;
@@ -806,7 +807,7 @@ public class EDI {
         
         
         // now lets get map
-             map = OVData.getEDIInMap(senderid, doctype);
+             map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -877,7 +878,7 @@ public class EDI {
     }
         
         // now lets get map
-             map = OVData.getEDIInMap(senderid, doctype);
+             map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                     try {
                     Class cls = Class.forName("EDIMaps." + map);
@@ -986,7 +987,7 @@ public class EDI {
             
              
              if (proceed) {
-             map = OVData.getEDIInMap(senderid, doctype);
+             map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -1120,7 +1121,7 @@ public class EDI {
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIInMap(c[0], c[1]); 
+                  map = OVData.getEDIMap(c[0], c[1]); 
                } 
             
                // if no map then bail
@@ -1228,7 +1229,7 @@ public class EDI {
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIOutMap(c[0], c[1]); 
+                  map = OVData.getEDIMap(c[0], c[1]); 
                } 
             
                // if no map then bail
@@ -1263,6 +1264,10 @@ public class EDI {
   
 }
    
+    public static Map<String, ArrayList<String>> loadADF(String adf) {
+        Map<String, ArrayList<String>> hm = new HashMap<String, ArrayList<String>>();
+        return hm;
+    }
 
     public static ArrayList<String> getEnvFromFileAsArrayListwRegex(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         
@@ -1737,7 +1742,7 @@ public class EDI {
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIOutMap(c_in[0], c_in[1]);
+        map = OVData.getEDIMap(c_in[0], c_in[1]);
         
           if (map.isEmpty()) {
             proceed = false;
@@ -1825,7 +1830,7 @@ public class EDI {
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIOutMap(c_in[0], c_in[1]);
+        map = OVData.getEDIMap(c_in[0], c_in[1]);
         
           if (map.isEmpty()) {
             proceed = false;
@@ -1893,7 +1898,7 @@ public class EDI {
          
         for (String w : wh) {   
         
-        map = OVData.getEDIOutMap(w, doctype);
+        map = OVData.getEDIMap(w, doctype);
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
        
@@ -1983,7 +1988,7 @@ public class EDI {
         for (String ca : cars) {   
             
         
-        map = OVData.getEDIOutMap(ca, doctype); 
+        map = OVData.getEDIMap(ca, doctype); 
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
         c_in[0] = ca;
@@ -2068,7 +2073,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIOutMap(tp, doctype); 
+        map = OVData.getEDIMap(tp, doctype); 
         
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
@@ -2154,7 +2159,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIOutMap(ca, doctype);
+        map = OVData.getEDIMap(ca, doctype);
         
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
@@ -2246,7 +2251,7 @@ public class EDI {
          String ed = Character.toString((char) edint );
          String ud = Character.toString((char) udint );
          
-         
+            
        //  if default filename is empty..set as generic
          if (defaults[10].isEmpty()) {
              defaults[10] = "generic";
