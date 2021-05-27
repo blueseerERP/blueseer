@@ -5779,7 +5779,9 @@ public class OVData {
                            };
                            x.add(s);
                         }
-                    hm.put(z, x);
+                    ArrayList<String[]> xcopy = new ArrayList<String[]>(x);
+                    hm.put(z, xcopy);
+                    x.clear();
                 }
            }
             catch (SQLException s){

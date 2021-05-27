@@ -120,8 +120,11 @@ public abstract class EDIMap implements EDIMapi {
      public static String content = "";
 
     public static Map<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static Map<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
     public static Map<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
-    public static Map<String, HashMap<String,String>> MappedData = new LinkedHashMap<String, HashMap<String,String>>();
+    public static ArrayList<String[]> ISF = new  ArrayList<String[]>();
+    public static Map<String, HashMap<String,String>> OMD = new LinkedHashMap<String, HashMap<String,String>>();
+    public static Map<String, HashMap<String,String>> IMD = new LinkedHashMap<String, HashMap<String,String>>();
 
 
      public static boolean isSet(ArrayList list, Integer index) {
@@ -317,7 +320,7 @@ public abstract class EDIMap implements EDIMapi {
         }
         
          // concatenate all output strings to string variable 'content' 
-        writeDF();
+        writeOMD();
         
         // get TP/Doc defaults
         String[] tp = OVData.getEDITPDefaults(sender, doctype);
@@ -412,13 +415,13 @@ public abstract class EDIMap implements EDIMapi {
     		 }
     	 }
     	// HashMap<String, String> t = new HashMap<String,String>(j);
-    	 if (! MappedData.containsKey(segment)) {
-    		MappedData.put(segment + ":" + p, t);
+    	 if (! OMD.containsKey(segment)) {
+    		OMD.put(segment + ":" + p, t);
     	 }	
          HASH.clear();
      }
      
-     public static Map<String, ArrayList<String[]>> loadSDF(String adf) throws IOException {
+     public static Map<String, ArrayList<String[]>> readOSF(String adf) throws IOException {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
@@ -449,11 +452,76 @@ public abstract class EDIMap implements EDIMapi {
 	        return hm;
 	    }
 
-     public static String[] writeDF() {
+     public static ArrayList<String[]> readISF(String[] c, String ifile) throws IOException {
+		String[] s = null;
+		ArrayList<String[]> list = new ArrayList<String[]>();
+		File cf = new File(ifile);
+    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (line.startsWith("#")) {
+				continue;
+			}
+			if (! line.isEmpty()) {
+			String[] t = line.split(",",-1);
+			list.add(t);
+			}
+		}
+		reader.close();
+		
+		
+		return list;
+	}
+     
+     public static Map<String, HashMap<String, String>> readIMD(String adf, ArrayList<String> doc) throws IOException {
+	        Map<String, HashMap<String, String>> hm = new LinkedHashMap<String, HashMap<String, String>>();
+	        HashMap<String, String> data = new LinkedHashMap<String, String>();
+	        
+                List<String[]> list = new ArrayList<String[]>();
+	        Set<String> set = new LinkedHashSet<String>();
+	        File cf = new File(adf);
+	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (! line.isEmpty()) {
+				String[] t = line.split(",",-1);
+				list.add(t);
+				set.add(t[0]);
+				}
+			}
+			reader.close();
+			
+                        for (String r : doc) {
+                            for (String s : set) {
+                                if (r.startsWith(s)) {
+                                    // got def of data record...now fill fields
+                                    int start = 0;
+                                   
+                                    for (String[] ss : list) {
+					if (ss[0].equals(s)) {
+                                              //  System.out.println("field:" + ss[1] + " " + start + "/" + (Integer.valueOf(ss[3]) + start));
+						if (start == 0) {
+                                                    start = ss[0].length();
+                                                }
+                                                data.put(ss[1], r.substring(start,(Integer.valueOf(ss[3]) + start)));
+					        start += Integer.valueOf(ss[3]);
+                                                
+                                        }
+				    }
+                                hm.put(s, data);
+                                break;
+                                }
+                            }
+                        }
+			
+	        return hm;
+	    }
+     
+     public static String[] writeOMD() {
           String[] r = new String[2];
     	 String segment = "";
     	 content = "";
-    	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(MappedData);
+    	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
     		
     	 
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -495,71 +563,62 @@ public abstract class EDIMap implements EDIMapi {
  			
  		}
     	 
-    	MappedData.clear();	
+    	OMD.clear();
+        IMD.clear();
         HASH.clear();
+        ISF.clear();
         OSF.clear();
     	 
     	 return r;
      }
      
-     /*
-     public static String[] writeDF2() {
-    	 String[] r = new String[2];
-    	 String segment = "";
-    	 content = "";
-    	 Map<String, HashMap<Integer,HashMap<String,String>>> MD = new LinkedHashMap<String, HashMap<Integer,HashMap<String,String>>>(MappedData);
-    		
-    	 
-    	 for (Map.Entry<String, ArrayList<String[]>> z : OSF.entrySet()) {
- 			ArrayList<String[]> fields = z.getValue();
- 			
- 			
- 			// only print out if map data contains key
- 			if (MD.containsKey(z.getKey())) {
- 				// write out all fields of this segment
- 				HashMap<Integer, HashMap<String,String>> mapValuesLoops = MD.get(z.getKey());
- 			//	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
- 				// loop through integers
- 				for (Map.Entry<Integer, HashMap<String,String>> y : mapValuesLoops.entrySet()) {
- 					segment = z.getKey();  // start with landmark
- 					HashMap<String, String> mapValues = mapValuesLoops.get(y.getKey());
- 					System.out.println("from y.getKey(): " + mapValues.keySet());
-                                        
- 					for (String[] f : fields) {
- 						if (f[4].equals("+")) {
- 							f[4] = "";
- 						}
- 						String format = "%" + f[4] + f[3] + "s";
- 						
- 						// overlay with values that were actually assigned...otherwise blanks
- 						if (mapValues.containsKey(f[1])) {
- 							if (mapValues.get(f[1]).length() > Integer.valueOf(f[3])) {
- 								segment += String.format(format, mapValues.get(f[1]).substring(0, Integer.valueOf(f[3]))); // properly formatted
- 							} else {
- 								segment += String.format(format, mapValues.get(f[1])); // properly formatted
- 							}
- 							
- 						} else {
- 							segment += String.format(format, ""); // properly formatted
- 						}
- 					}
- 					content += segment + "\n";
- 					segment = ""; // reset the segment string
- 				}
- 				
- 			}
- 			
- 			
- 		}
-    	 
-    	MappedData.clear();	
-        HASH.clear();
-        OSF.clear();
-    	 
-    	 return r;
-     }
+     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
+         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
+                HashMap<String,Integer> keycount = new HashMap<String,Integer>();
+                String parenthead = "";
+                for (String s : data) {
+                        String[] x = s.split("\\*",-1);
+                        for (String[] z : ISF) {
+                                if (x[0].equals(z[0])) {
+                                        boolean foundit = false;
+                                        String[] temp = parenthead.split(":");
+                                        for (int i = temp.length - 1; i >= 0; i--) {
+                                                if (z[1].compareTo(temp[i]) == 0) {
+                                                        foundit = true;
+                                                        String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
+                                                        parenthead = String.join(":", newarray);							
+                                                        break;
+                                                }
+                                        }
+                                        if (! foundit) {
+                                        continue;	
+                                        } else {
+                                                String keyreference = parenthead + ":" + x[0];
+                                                if (keycount.containsKey(keyreference)) {
+                                                        int g = keycount.get(keyreference);
+                                                        g++;
+                                                        keycount.put(keyreference, g);
+                                                } else {
+                                                        keycount.put(keyreference, 1);
+                                                }
 
-    */
+                                                mappedData.put(parenthead + ":" + x[0] + "+" + keycount.get(keyreference) , x);
+                                                if (z[3].equals("yes")) {
+                                                        parenthead = parenthead + (":" + z[0]);
+                                                }
+                                                break;
+                                        }
+                                }
+                        }
+                }
+                return mappedData;
+ }
+	
+     public static String getInput(String segment, Integer loop, Integer element) {
+         String x = "";
+         
+         return x;
+     }
      
      
 }

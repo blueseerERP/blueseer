@@ -31,22 +31,26 @@ import com.blueseer.edi.EDI;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  *
  * @author vaughnte
  */
-public class GenericIDOCto855 extends com.blueseer.edi.EDIMap { 
+public class GenericIDOCto850 extends com.blueseer.edi.EDIMap { 
     
-    public String[] Mapdata(ArrayList doc, String[] c)  {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
     // com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
      String key = doc.get(0).toString();
      
     setOutPutFileType("X12");
-    setOutPutDocType("855");
-     
+    setOutPutDocType("850");
+    OSF = readOSF("c:\\junk\\X12850.csv"); 
+    IMD = readIMD("c:\\junk\\ORDERS05.csv",doc);
+    
      // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setControl(c);    
     
@@ -54,27 +58,27 @@ public class GenericIDOCto855 extends com.blueseer.edi.EDIMap {
     // you can then override individual envelope elements as desired
     setOutPutEnvelopeStrings(c);
         
-       // PRE-loop through IDOC segments and grab relevant values
-       String po = "";
-       String podate = "";
-       for (String s : (ArrayList<String>) doc) {
-           if (s.startsWith("E2EDK02") && s.substring(63, 66).equals("001")) {
-               po = s.substring(66,88).trim();
-               podate = s.substring(107,115).trim();
-               
-              
-           }
-       }
+    
         
        // now create output records based on header and detail landmarks
         for (String s : (ArrayList<String>) doc) {
-            if (s.startsWith("ZE1EDK")) {
-               H.add("BAK" + ed +  "01" + ed + "AC" + ed + po +  ed + podate);
-           
+            if (s.startsWith("E2EDK01")) {
+                mapSegment("BAK","e01","01");
+                mapSegment("BAK","e02",IMD.get("E2EDK01").get("belnr"));
+                commitSegment("BAK",1);
+               // System.out.println("YEP:" + IMD.get("E2EDK01").get("belnr"));
             }
         } 
         
-        
+        for (Map.Entry<String, HashMap<String,String>> z : IMD.entrySet()) {
+            if (z.getKey().equals("E2EDK01")) {
+                HashMap<String,String> h = IMD.get(z.getKey());
+                 for (Map.Entry<String, String> me : h.entrySet()) {
+                     System.out.println(me.getKey() + "/" + me.getValue());
+                 }
+            }
+            System.out.println(z.getKey());
+        }
     return packagePayLoad(c);
 }
 

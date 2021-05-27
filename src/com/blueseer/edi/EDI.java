@@ -691,15 +691,17 @@ public class EDI {
         HashMap<String, ArrayList<String[]>> rules = OVData.getEDIFFSelectionRules();
         for (String s : doc) {
             k++;
+            int rulecount = 0;
+            int matchcount = 0;
             for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
                 String key = z.getKey();
                 ArrayList<String[]> v = z.getValue();
                 // row, column, length, value, id
-                int rulecount = 0;
-                int matchcount = 0;
+                rulecount = 0;
+                matchcount = 0;
                 for (String[] r : v) {
                     rulecount++;
-                   // System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
+                    System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
                      
                     if (Integer.valueOf(r[0]) == k) {
                         if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {

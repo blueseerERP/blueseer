@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author vaughnte
  */
-public class Generic850toIDOC extends com.blueseer.edi.EDIMap { 
+public class Generic850toIDOC1 extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
     // com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
@@ -48,10 +48,12 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
      
     setOutPutFileType("FF");
     setOutPutDocType("850IDOC");
+    
+    ISF = readISF(c, "c:\\junk\\X12850.csv");
+    mappedInput = mapInput(c, doc, ISF);
+    
     OSF = readOSF("c:\\junk\\ORDERS05.csv"); 
     
-    
-   
     setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
     setISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
     setGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
@@ -73,7 +75,37 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
     ArrayList<String[]> addr = new ArrayList<String[]>();
     String addrtype, addrcode, name, line1, line2, city, state, zip, country;
     addrtype = addrcode = name = line1 = line2 = city = state = zip = country = "";
-     for (Object seg : doc) {  // loop through all segments in the input (top down)
+    
+               mapSegment("EDI_DC","tabnam","40_U");
+               mapSegment("EDI_DC","mandt",mandt);
+               mapSegment("EDI_DC","docnum",docnum);
+               mapSegment("EDI_DC","mestyp","ORDERS");
+               mapSegment("EDI_DC","sndpor","SAPPEN");
+               mapSegment("EDI_DC","sndprt","LS");
+               mapSegment("EDI_DC","sndprn","ACME");
+               mapSegment("EDI_DC","idoctyp","ORDERS05");
+               mapSegment("EDI_DC","rcvpor","EDI");
+               mapSegment("EDI_DC","rcvprt","LI");
+               mapSegment("EDI_DC","rcvpfc","LF");
+               mapSegment("EDI_DC","credat",now.substring(0,8));
+               mapSegment("EDI_DC","cretim",now.substring(8,14));
+               commitSegment("EDI_DC",1);
+               
+               segnum++;
+               hlevel++;
+               mapSegment("E2EDK01","mandt",mandt);
+               mapSegment("E2EDK01","docnum",docnum);
+               mapSegment("EDEDK01", "segnum", String.format("%06d",segnum));
+               mapSegment("EDEDK01", "psgnum", String.format("%06d",psgnum));
+               mapSegment("EDEDK01", "hlevel", String.format("%02d",hlevel));
+               mapSegment("E2EDK01","curcy","USD");
+               mapSegment("E2EDK01","hwaer","USD");
+               mapSegment("E2EDK01","belnr",getInput("BEG",1,3));
+               commitSegment("E2EDK01",1);
+               hlevel++;
+    
+    /*
+    for (Object seg : doc) {  // loop through all segments in the input (top down)
         
            // create array of each segment per input delimiter used  
            String x[] = seg.toString().split(EDI.escapeDelimiter(ed), -1);
@@ -295,7 +327,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
            }
            
      } // end of inbound segments
-         
+      */   
         
     return packagePayLoad(c);
 }
