@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
+import static com.blueseer.edi.EDI.trimSegment;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,6 +40,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -124,8 +126,7 @@ public abstract class EDIMap implements EDIMapi {
     public static Map<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static ArrayList<String[]> ISF = new  ArrayList<String[]>();
     public static Map<String, HashMap<String,String>> OMD = new LinkedHashMap<String, HashMap<String,String>>();
-    public static Map<String, HashMap<String,String>> IMD = new LinkedHashMap<String, HashMap<String,String>>();
-
+    public static ArrayList<String> SegmentCounter = new ArrayList<String>();
 
      public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
@@ -315,15 +316,18 @@ public abstract class EDIMap implements EDIMapi {
          String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
      
         
-        if (outputfiletype.equals("X12")) {
-           setOutPutEnvelopeStrings(c);
-        }
         
-         // concatenate all output strings to string variable 'content' 
-        writeOMD();
         
         // get TP/Doc defaults
         String[] tp = OVData.getEDITPDefaults(sender, doctype);
+        
+         // concatenate all output strings to string variable 'content' 
+        writeOMD(c, tp);
+        
+        if (outputfiletype.equals("X12")) {
+           setOutPutEnvelopeStrings(c);
+           content = ISA + sd + GS + sd + ST + sd + content  + SE + sd + GE + sd + IEA + sd;
+        }
 
         // create out batch file name
          int filenumber = OVData.getNextNbr("edifile");
@@ -429,6 +433,9 @@ public abstract class EDIMap implements EDIMapi {
 	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
 			String line;
 			while ((line = reader.readLine()) != null) {
+                                if (line.startsWith("#")) {
+				continue;
+			        }
 				if (! line.isEmpty()) {
 				String[] t = line.split(",",-1);
 				list.add(t);
@@ -517,13 +524,153 @@ public abstract class EDIMap implements EDIMapi {
 	        return hm;
 	    }
      
-     public static String[] writeOMD() {
-          String[] r = new String[2];
+     public static String[] splitFFSegment(String segment) {
+         boolean inside = false;
+         int start = 0;
+         ArrayList<String> list = new ArrayList<String>();
+         for (String[] z : ISF) {
+            // skip non-landmarks
+            if (segment.startsWith(z[0])) {
+                inside = true;
+                 list.add(segment.substring(start,(Integer.valueOf(z[7]) + start)));
+                 start += Integer.valueOf(z[7]);
+            } else {
+                inside = false;
+            }
+            if (! inside && start > 0) {  // should break out if end of target ISF definitions...to improve performance
+                break;
+            }
+         }
+        String[] x = new String[list.size()];
+        x = list.toArray(x);
+         return x;
+     }
+     
+     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
+		 LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
+			HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
+			HashMap<String,Integer> set = new HashMap<String,Integer>();
+			String parenthead = "";
+			String groupkey = "";
+			String previouskey = "";
+			for (String s : data) {
+                                String[] x = null;
+                                if (c[28].equals("FF")) {
+                                    x = splitFFSegment(s);
+                                } else {
+                                    x = s.split("\\*",-1); // if x12
+                                }
+				
+				for (String[] z : ISF) {
+                                    // skip non-landmarks
+                                    if (! z[4].equals("yes")) {
+                                        continue;
+                                    }
+					if (x != null && x[0].equals(z[0])) {
+						boolean foundit = false;
+						boolean hasloop = false;
+						String[] temp = parenthead.split(":");
+						for (int i = temp.length - 1; i >= 0; i--) {
+							if (z[1].compareTo(temp[i]) == 0) {
+								foundit = true;
+								String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
+								parenthead = String.join(":", newarray);							
+								break;
+							}
+						}
+						if (! foundit) {
+						continue;	
+						} else {
+							int loop = 1;
+							String groupparent = parenthead + ":" + x[0];
+							String keyparent = parenthead + ":" + x[0];
+							if (groupcount.containsKey(groupparent)) {
+								int g = groupcount.get(groupparent);
+								
+								if (previouskey.equals(parenthead + ":" + x[0] + "+" + g)) {
+									loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
+									hasloop = true;
+									loop++;
+									set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
+								} else {
+									g++;	
+									groupcount.put(groupparent, g);
+								}
+							} else {
+								groupcount.put(groupparent, 1);
+							}
+							
+							previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
+							if (hasloop) {
+							    groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
+							} else {
+								groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
+							}
+
+							set.put(groupkey, loop);
+							mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+							SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
+							if (z[3].equals("yes")) {
+								parenthead = parenthead + (":" + z[0]);
+							}
+							break;
+						}
+					}
+				}
+			}
+			return mappedData;
+	 }
+	
+     public static String[] writeOMD(String[] c, String[] tp) {
+         String[] r = new String[2];
     	 String segment = "";
     	 content = "";
+        
     	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
-    		
     	 
+    	 if (outputfiletype.equals("X12")) {
+         String s = tp[7]; // segment delimiter
+         String e = tp[6]; // element delimiter
+    	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+ 		//	ArrayList<String[]> fields = z.getValue();
+ 			
+                // write out all fields of this segment
+                HashMap<String,String> mapValues = MD.get(z.getKey());
+                // loop through integers
+
+                        segment = z.getKey().split(":")[0];  // start with landmark
+                
+                        ArrayList<String[]> fields = OSF.get(segment);
+
+                        ArrayList<String> segaccum = new ArrayList<String>();
+                        segaccum.add(segment);
+                        for (String[] f : fields) {
+                                if (f[5].equals("landmark")) {
+                                    continue;
+                                }
+                                // overlay with values that were actually assigned...otherwise blanks
+                                if (mapValues.containsKey(f[5])) {
+                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[8])) {
+                                                segaccum.add(mapValues.get(f[5]).substring(0, Integer.valueOf(f[8])).trim()); // properly formatted
+                                        } else {
+                                                segaccum.add(mapValues.get(f[5]).trim()); // properly formatted
+                                        }
+
+                                } else {
+                                    segaccum.add("");
+                                }
+                        }
+                        
+                        segment = trimSegment(String.join(ed,segaccum), ed);
+                        segcount++;
+                        content += segment + sd;
+                        segment = ""; // reset the segment string
+ 		}
+         segcount += 2; // include ST and SE
+         // wrap content with envelope
+         } // if x12
+         
+         if (outputfiletype.equals("FF")) {
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
  		//	ArrayList<String[]> fields = z.getValue();
  			
@@ -533,21 +680,21 @@ public abstract class EDIMap implements EDIMapi {
                 // loop through integers
 
                         segment = z.getKey().split(":")[0];  // start with landmark
-
+                      //  System.out.println(">:" + segment);
                         ArrayList<String[]> fields = OSF.get(segment);
 
                         for (String[] f : fields) {
-                                if (f[4].equals("+")) {
-                                        f[4] = "";
+                                if (f[9].equals("+")) {
+                                        f[9] = "";
                                 }
-                                String format = "%" + f[4] + f[3] + "s";
+                                String format = "%" + f[9] + f[7] + "s";
 
                                 // overlay with values that were actually assigned...otherwise blanks
-                                if (mapValues.containsKey(f[1])) {
-                                        if (mapValues.get(f[1]).length() > Integer.valueOf(f[3])) {
-                                                segment += String.format(format, mapValues.get(f[1]).substring(0, Integer.valueOf(f[3]))); // properly formatted
+                                if (mapValues.containsKey(f[5])) {
+                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[7])) {
+                                                segment += String.format(format, mapValues.get(f[5]).substring(0, Integer.valueOf(f[7]))); // properly formatted
                                         } else {
-                                                segment += String.format(format, mapValues.get(f[1])); // properly formatted
+                                                segment += String.format(format, mapValues.get(f[5])); // properly formatted
                                         }
 
                                 } else {
@@ -556,15 +703,10 @@ public abstract class EDIMap implements EDIMapi {
                         }
                         content += segment + "\n";
                         segment = ""; // reset the segment string
-
-
- 			
- 			
- 			
  		}
-    	 
+         } // if FF
+         
     	OMD.clear();
-        IMD.clear();
         HASH.clear();
         ISF.clear();
         OSF.clear();
@@ -572,52 +714,125 @@ public abstract class EDIMap implements EDIMapi {
     	 return r;
      }
      
-     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
-         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
-                HashMap<String,Integer> keycount = new HashMap<String,Integer>();
-                String parenthead = "";
-                for (String s : data) {
-                        String[] x = s.split("\\*",-1);
-                        for (String[] z : ISF) {
-                                if (x[0].equals(z[0])) {
-                                        boolean foundit = false;
-                                        String[] temp = parenthead.split(":");
-                                        for (int i = temp.length - 1; i >= 0; i--) {
-                                                if (z[1].compareTo(temp[i]) == 0) {
-                                                        foundit = true;
-                                                        String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
-                                                        parenthead = String.join(":", newarray);							
-                                                        break;
-                                                }
-                                        }
-                                        if (! foundit) {
-                                        continue;	
-                                        } else {
-                                                String keyreference = parenthead + ":" + x[0];
-                                                if (keycount.containsKey(keyreference)) {
-                                                        int g = keycount.get(keyreference);
-                                                        g++;
-                                                        keycount.put(keyreference, g);
-                                                } else {
-                                                        keycount.put(keyreference, 1);
-                                                }
-
-                                                mappedData.put(parenthead + ":" + x[0] + "+" + keycount.get(keyreference) , x);
-                                                if (z[3].equals("yes")) {
-                                                        parenthead = parenthead + (":" + z[0]);
-                                                }
-                                                break;
-                                        }
-                                }
-                        }
-                }
-                return mappedData;
- }
-	
-     public static String getInput(String segment, Integer loop, Integer element) {
-         String x = "";
-         
+    
+     public static String getInput(String segment, String qual, Integer element) {
+        String x = "";
+         int count = 0;
+         String[] q = qual.split(":",-1);
+         String[] k = null;
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 count++;
+                 t = z.getValue();
+                 if (t != null && t.length >= Integer.valueOf(q[0]) && t[Integer.valueOf(q[0])].equals(q[1].toUpperCase())) {
+                     k = t;
+                 }
+             }
+         }
+         if (k != null && k.length > element) {
+          x =  k[element];
+         }
          return x;
+     }
+     
+     public static String getInput(String segment, Integer element) {
+         String x = "";
+         int count = 0;
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 count++;
+                 k = z.getValue();
+             }
+         }
+        // for (String g : k) {
+        //     System.out.println("getInput:" + segment + "/" + g);
+        // }
+         if (k != null && k.length > element) {
+          x =  k[element];
+         }
+        // System.out.println("getInput:" + segment + "/" + x);
+         return x;
+     }
+     
+      public static String getInput(String segment, Integer element, Integer gloop) {
+         String x = "";
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > element) {
+          x =  k[element];
+         }
+         return x;
+     }
+     
+     public static int getGroupCount(String segment) {
+         
+         int count = 0;
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 count++;
+             }
+         }
+        
+         return count;
+     }
+     
+     
+     public static String getLoopInput(String key, Integer element, Integer i) {
+         String x = "";
+         String[] k = null;
+            k = mappedInput.get(key + "+" + i);
+         if (k != null && k.length >= element) {
+          x =  k[element];
+         }
+         return x;
+     }
+     public static String getGroupInput(String key, Integer element) {
+         String x = "";
+         String[] k = null;
+            k = mappedInput.get(key + "+" + "1");
+         if (k != null && k.length >= element) {
+          x =  k[element];
+         }
+         return x;
+     }
+    
+     
+      public static ArrayList<String> getLoopKeys(String segment) {
+         ArrayList<String>k = new ArrayList<String>();
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment)) {
+                 k.add(v[0] + "+" + v[1]);
+             }
+         }
+         return k;
+     }
+    
+     
+     
+     public static int getCount(String segment) {
+         int count = 0;
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 count = Integer.valueOf(z.getKey().split("\\+")[2]);
+             }
+         }
+         return count;
      }
      
      

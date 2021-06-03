@@ -48,8 +48,12 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
      
     setOutPutFileType("X12");
     setOutPutDocType("850");
+  //  OSF = readOSF("c:\\junk\\X12850.csv"); 
+  //  IMD = readIMD("c:\\junk\\ORDERS05.csv",doc);
+    
+    ISF = readISF(c, "c:\\junk\\ORDERS05.csv");
+    mappedInput = mapInput(c, doc, ISF);
     OSF = readOSF("c:\\junk\\X12850.csv"); 
-    IMD = readIMD("c:\\junk\\ORDERS05.csv",doc);
     
      // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setControl(c);    
@@ -57,11 +61,14 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
     // you can then override individual envelope elements as desired
     setOutPutEnvelopeStrings(c);
-        
-    
+     
+    mapSegment("BEG","e01","01");
+    mapSegment("BEG","e02",getInput("E2EDK01",16));
+    commitSegment("BEG",1);
         
        // now create output records based on header and detail landmarks
-        for (String s : (ArrayList<String>) doc) {
+       /* 
+       for (String s : (ArrayList<String>) doc) {
             if (s.startsWith("E2EDK01")) {
                 mapSegment("BAK","e01","01");
                 mapSegment("BAK","e02",IMD.get("E2EDK01").get("belnr"));
@@ -69,16 +76,18 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
                // System.out.println("YEP:" + IMD.get("E2EDK01").get("belnr"));
             }
         } 
-        
-        for (Map.Entry<String, HashMap<String,String>> z : IMD.entrySet()) {
-            if (z.getKey().equals("E2EDK01")) {
-                HashMap<String,String> h = IMD.get(z.getKey());
+        */
+       /*
+        for (Map.Entry<String, HashMap<String,String>> z : OMD.entrySet()) {
+            if (z.getKey().startsWith("BEG")) {
+                HashMap<String,String> h = OMD.get(z.getKey());
                  for (Map.Entry<String, String> me : h.entrySet()) {
-                     System.out.println(me.getKey() + "/" + me.getValue());
+                     System.out.println("OMD:" + me.getKey() + "/" + me.getValue());
                  }
             }
-            System.out.println(z.getKey());
+            System.out.println("OMD Key:" + z.getKey());
         }
+        */
     return packagePayLoad(c);
 }
 
