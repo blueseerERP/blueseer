@@ -42,52 +42,120 @@ import java.util.Map;
 public class GenericIDOCto850 extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
-    // com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = c[1];
-     String key = doc.get(0).toString();
-     
-    setOutPutFileType("X12");
-    setOutPutDocType("850");
-  //  OSF = readOSF("c:\\junk\\X12850.csv"); 
-  //  IMD = readIMD("c:\\junk\\ORDERS05.csv",doc);
     
+    
+      
+    
+    // These 6 global variables must be set for all maps    
+    setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     ISF = readISF(c, "c:\\junk\\ORDERS05.csv");
-    mappedInput = mapInput(c, doc, ISF);
     OSF = readOSF("c:\\junk\\X12850.csv"); 
+    setOutPutFileType("X12");  // X12 of FF
+    setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
+    mappedInput = mapInput(c, doc, ISF);
+    debuginput(mappedInput);
     
-     // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-    setControl(c);    
+    /* a few global variables */
+    int i = 0; // used for all looping ...for loops reset it's initial value each time
     
-    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
-    // you can then override individual envelope elements as desired
-    setOutPutEnvelopeStrings(c);
-     
-    mapSegment("BEG","e01","01");
-    mapSegment("BEG","e02",getInput("E2EDK01",16));
+    /* Begin Mapping Segments */ 
+    mapSegment("BEG","e01","00");
+    mapSegment("BEG","e02",getInput("E2EDK01","belnr"));
+    mapSegment("BEG","e03","NE");
+    mapSegment("BEG","e04","");
+    //mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
+    mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
+    mapSegment("BEG","e10","SP");
     commitSegment("BEG",1);
-        
-       // now create output records based on header and detail landmarks
-       /* 
-       for (String s : (ArrayList<String>) doc) {
-            if (s.startsWith("E2EDK01")) {
-                mapSegment("BAK","e01","01");
-                mapSegment("BAK","e02",IMD.get("E2EDK01").get("belnr"));
-                commitSegment("BAK",1);
-               // System.out.println("YEP:" + IMD.get("E2EDK01").get("belnr"));
-            }
-        } 
-        */
-       /*
-        for (Map.Entry<String, HashMap<String,String>> z : OMD.entrySet()) {
-            if (z.getKey().startsWith("BEG")) {
-                HashMap<String,String> h = OMD.get(z.getKey());
-                 for (Map.Entry<String, String> me : h.entrySet()) {
-                     System.out.println("OMD:" + me.getKey() + "/" + me.getValue());
-                 }
-            }
-            System.out.println("OMD Key:" + z.getKey());
-        }
-        */
+       
+    mapSegment("CUR","e01","BY");
+    mapSegment("CUR","e02","USD");
+    commitSegment("CUR",1);
+    
+    mapSegment("REF","e01","VR");
+    mapSegment("REF","e02",getInput("E2EDK01",25));
+    commitSegment("REF",1);
+    
+    String plant = getInput("E2EDKA1","7:WE",9) + getInput("E2EDK01","belnr");
+    mapSegment("REF","e01","PO");
+    mapSegment("REF","e02",plant);
+    commitSegment("REF",2);
+   
+    mapSegment("N1","e01","BT");
+    mapSegment("N1","e02",getInput("E2EDKA1","7:WE",10));
+    mapSegment("N1","e03","92");
+    mapSegment("N1","e04",getInput("E2EDKA1","7:WE",9));
+    commitSegment("N1",1);
+    
+    mapSegment("N3","e01",getInput("E2EDKA1","7:WE",11));
+    mapSegment("N3","e02",getInput("E2EDKA1","7:WE",14));
+    commitSegment("N3",1);
+    
+    mapSegment("N4","e01",getInput("E2EDKA1","7:WE",17));
+    mapSegment("N4","e02",getInput("E2EDKA1","7:WE",36));
+    mapSegment("N4","e03",getInput("E2EDKA1","7:WE",19));
+    mapSegment("N4","e04",getInput("E2EDKA1","7:WE",21));
+    commitSegment("N4",1);
+    
+    mapSegment("PER","e01","BD");
+    mapSegment("PER","e02",getInput("E2EDKA1","7:AG",42));
+    commitSegment("PER",1);
+    
+    /* Item Loop */
+    DecimalFormat df = new java.text.DecimalFormat("0.#####");
+    int itemcount = getGroupCount("E2EDP01");
+    int itemLoopCount = 0;
+    for (i = 1; i <= itemcount; i++) {
+        itemLoopCount++;
+    mapSegment("PO1","e01",getInput("E2EDP01",7, i));
+    mapSegment("PO1","e02",df.format(Double.valueOf(getInput("E2EDP01",11, i))));
+    mapSegment("PO1","e03",getInput("E2EDP01",14, i));
+    mapSegment("PO1","e04",df.format(Double.valueOf(getInput("E2EDP01",16, i))));
+    mapSegment("PO1","e06","SK");
+    mapSegment("PO1","e07",getInput("E2EDP01:E2EDP19","7:001",8,i));
+    mapSegment("PO1","e08","VN");
+    mapSegment("PO1","e09",getInput("E2EDP01:E2EDP19","7:002",8,i));
+    commitSegment("PO1",i);
+    
+    mapSegment("PID","e01","F");
+    mapSegment("PID","e05",getInput("E2EDP01:E2EDP19","7:001",9,i));
+    commitSegment("PID",i);
+    
+    mapSegment("SAC","e01","N");
+    mapSegment("SAC","e02","B840");
+    mapSegment("SAC","e05", df.format(Double.valueOf(getInput("E2EDP01",18, i)) * 100));
+    commitSegment("SAC",i);
+    
+    
+    mapSegment("DTM","e01","002");
+    mapSegment("DTM","e02",getInput("E2EDP01:E2EDP20",9,i));
+    commitSegment("DTM",i);
+    
+    mapSegment("N1","e01","ST");
+    mapSegment("N1","e02",getInput("E2EDKA1","7:WE",10));
+    mapSegment("N1","e03","92");
+    mapSegment("N1","e04",getInput("E2EDKA1","7:WE",9));
+    commitSegment("N1",i + 1);
+    
+    mapSegment("N2","e01",getInput("E2EDKA1","7:AG",42));
+    mapSegment("N2","e02",getInput("E2EDKA1","7:WE",11));
+    commitSegment("N2",i + 1);
+    
+    mapSegment("N3","e01",getInput("E2EDKA1","7:WE",14));
+    commitSegment("N3",i + 1);
+    
+    mapSegment("N4","e01",getInput("E2EDKA1","7:WE",17));
+    mapSegment("N4","e02",getInput("E2EDKA1","7:WE",36));
+    mapSegment("N4","e03",getInput("E2EDKA1","7:WE",19));
+    mapSegment("N4","e04",getInput("E2EDKA1","7:WE",21));
+    commitSegment("N4",i + 1);
+    
+    }
+    /* end of item loop */
+    
+    mapSegment("CTT","e01",String.valueOf(itemLoopCount));
+    commitSegment("CTT",i);
+   
     return packagePayLoad(c);
 }
 

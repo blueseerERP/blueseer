@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.trimSegment;
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.File;
@@ -128,7 +129,7 @@ public abstract class EDIMap implements EDIMapi {
     public static Map<String, HashMap<String,String>> OMD = new LinkedHashMap<String, HashMap<String,String>>();
     public static ArrayList<String> SegmentCounter = new ArrayList<String>();
 
-     public static boolean isSet(ArrayList list, Integer index) {
+    public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
      }
 
@@ -144,15 +145,19 @@ public abstract class EDIMap implements EDIMapi {
     }
 
     public void setISA (String[] isa) {
+         if (isa != null && isa.length > 13) {
          isa06 = isa[6].trim();
          isa08 = isa[8].trim();
          isa09 = isa[9].trim();
          isa13 = isa[13].trim();
+         }
      }
 
     public void setGS (String[] gs) {
+        if (gs != null && gs.length > 3) {
          gs02 = gs[2].trim();
          gs03 = gs[3].trim();
+        }
      }
 
     public void setControl(String[] c) {
@@ -169,6 +174,10 @@ public abstract class EDIMap implements EDIMapi {
         ed = delimConvertIntToStr(c[10]);
         ud = delimConvertIntToStr(c[11]);
         isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
+        
+        setISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
+        setGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
+        
      }
 
     public String delimConvertIntToStr(String intdelim) {
@@ -177,9 +186,8 @@ public abstract class EDIMap implements EDIMapi {
     delim = String.valueOf(Character.toString((char) x));
     return delim;
   }
-
      
-     public void setOutPutEnvelopeStrings(String[] c) { 
+    public void setOutPutEnvelopeStrings(String[] c) { 
 
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            envelope = EDI.generateEnvelope(sender, doctype); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
@@ -216,7 +224,7 @@ public abstract class EDIMap implements EDIMapi {
 
      }
 
-     public String getISA(int i) {
+    public String getISA(int i) {
          if (i > 16) {
              return "";
          }
@@ -224,7 +232,7 @@ public abstract class EDIMap implements EDIMapi {
        return isaArray[i];
      }
 
-     public String getGS(int i) {
+    public String getGS(int i) {
          if (i > 8) {
              return "";
          }
@@ -232,8 +240,7 @@ public abstract class EDIMap implements EDIMapi {
        return gsArray[i];
      }
 
-
-     public void updateISA(int i, String value) {
+    public void updateISA(int i, String value) {
          isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
          switch (i) {
            case 1 :
@@ -291,7 +298,7 @@ public abstract class EDIMap implements EDIMapi {
          ISA = String.join(ed,isaArray);
      }
 
-     public void updateGS(int i, String value) {
+    public void updateGS(int i, String value) {
          if (i > 8) {
              return;
          }
@@ -300,19 +307,19 @@ public abstract class EDIMap implements EDIMapi {
          GS = String.join(ed,gsArray);
      }
 
-     public void updateSE() {
+    public void updateSE() {
          seArray = SE.split(EDI.escapeDelimiter(ed), -1);
          seArray[1] = String.valueOf(segcount);
          SE = String.join(ed,seArray);
      }
 
-     public void updateGE() {
+    public void updateGE() {
          geArray = GE.split(EDI.escapeDelimiter(ed), -1);
          geArray[1] = String.valueOf(segcount);
          GE = String.join(ed,geArray);
      }
 
-     public String[] packagePayLoad(String[] c) {
+    public String[] packagePayLoad(String[] c) {
          String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
      
         
@@ -392,9 +399,8 @@ public abstract class EDIMap implements EDIMapi {
 
      return x;
      }
-
     
-     public static void mapSegment(String segment, String x, String y) {
+    public static void mapSegment(String segment, String x, String y) {
     	 String[] z = new String[] {x,y};
     	 // get old arraylist and add to it
     	 ArrayList<String[]> old = new ArrayList<String[]>();
@@ -405,7 +411,7 @@ public abstract class EDIMap implements EDIMapi {
     	 HASH.put(segment, old);
      }
      
-     public static void commitSegment(String segment, int p) {
+    public static void commitSegment(String segment, int p) {
     	 // loop through HASH and create t for this segment
     	 HashMap<String, String> t = new LinkedHashMap<String,String>();
     	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
@@ -425,7 +431,7 @@ public abstract class EDIMap implements EDIMapi {
          HASH.clear();
      }
      
-     public static Map<String, ArrayList<String[]>> readOSF(String adf) throws IOException {
+    public static Map<String, ArrayList<String[]>> readOSF(String adf) throws IOException {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
@@ -459,7 +465,7 @@ public abstract class EDIMap implements EDIMapi {
 	        return hm;
 	    }
 
-     public static ArrayList<String[]> readISF(String[] c, String ifile) throws IOException {
+    public static ArrayList<String[]> readISF(String[] c, String ifile) throws IOException {
 		String[] s = null;
 		ArrayList<String[]> list = new ArrayList<String[]>();
 		File cf = new File(ifile);
@@ -480,7 +486,7 @@ public abstract class EDIMap implements EDIMapi {
 		return list;
 	}
      
-     public static Map<String, HashMap<String, String>> readIMD(String adf, ArrayList<String> doc) throws IOException {
+    public static Map<String, HashMap<String, String>> readIMD(String adf, ArrayList<String> doc) throws IOException {
 	        Map<String, HashMap<String, String>> hm = new LinkedHashMap<String, HashMap<String, String>>();
 	        HashMap<String, String> data = new LinkedHashMap<String, String>();
 	        
@@ -524,7 +530,7 @@ public abstract class EDIMap implements EDIMapi {
 	        return hm;
 	    }
      
-     public static String[] splitFFSegment(String segment) {
+    public static String[] splitFFSegment(String segment) {
          boolean inside = false;
          int start = 0;
          ArrayList<String> list = new ArrayList<String>();
@@ -546,7 +552,7 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
      
-     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
+    public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
 		 LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
 			HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
 			HashMap<String,Integer> set = new HashMap<String,Integer>();
@@ -618,10 +624,24 @@ public abstract class EDIMap implements EDIMapi {
 					}
 				}
 			}
+                        
+            
+                        
 			return mappedData;
 	 }
-	
-     public static String[] writeOMD(String[] c, String[] tp) {
+
+    public static void debuginput(Map<String, String[]> mappedData) {
+        for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
+                String value = String.join(",", z.getValue());
+                int i = 0;
+                for (String s : z.getValue()) {
+                 System.out.println("mapInput: " + z.getKey() + " / Field: " + i + " value: " + s);   
+                 i++;
+                }
+            }
+    }
+    
+    public static String[] writeOMD(String[] c, String[] tp) {
          String[] r = new String[2];
     	 String segment = "";
     	 content = "";
@@ -641,9 +661,10 @@ public abstract class EDIMap implements EDIMapi {
                         segment = z.getKey().split(":")[0];  // start with landmark
                 
                         ArrayList<String[]> fields = OSF.get(segment);
-
                         ArrayList<String> segaccum = new ArrayList<String>();
-                        segaccum.add(segment);
+                        segaccum.add(segment); 
+                        
+                        if (fields != null) { 
                         for (String[] f : fields) {
                                 if (f[5].equals("landmark")) {
                                     continue;
@@ -660,7 +681,7 @@ public abstract class EDIMap implements EDIMapi {
                                     segaccum.add("");
                                 }
                         }
-                        
+                        } // if fields not null
                         segment = trimSegment(String.join(ed,segaccum), ed);
                         segcount++;
                         content += segment + sd;
@@ -713,9 +734,8 @@ public abstract class EDIMap implements EDIMapi {
     	 
     	 return r;
      }
-     
-    
-     public static String getInput(String segment, String qual, Integer element) {
+        
+    public static String getInput(String segment, String qual, Integer element) {
         String x = "";
          int count = 0;
          String[] q = qual.split(":",-1);
@@ -726,18 +746,48 @@ public abstract class EDIMap implements EDIMapi {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  count++;
                  t = z.getValue();
-                 if (t != null && t.length >= Integer.valueOf(q[0]) && t[Integer.valueOf(q[0])].equals(q[1].toUpperCase())) {
+                // System.out.println("getInput: " + segment + "/" + qual + "/" + element + "/" + t.length + "/" + t[9]);
+                 if (t != null && t.length >= Integer.valueOf(q[0]) && t[Integer.valueOf(q[0])].trim().equals(q[1].toUpperCase())) {
                      k = t;
                  }
              }
          }
          if (k != null && k.length > element) {
-          x =  k[element];
+          x =  k[element].trim();
+         }
+         
+         return x;
+     }
+    
+    public static String getInput(String segment, String qual, String elementName) {
+        String x = "";
+         int elementNbr = getElementNumber(segment, elementName); 
+         if (elementNbr == 0) {
+             return x;
+         }
+         String[] q = qual.split(":",-1);
+         int qualNbr = getElementNumber(segment,q[0]);
+         if (qualNbr == 0) {
+             return x;
+         }
+         String[] k = null;
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 t = z.getValue();
+                 if (t != null && t.length >= Integer.valueOf(qualNbr) && t[Integer.valueOf(qualNbr)].equals(q[1].toUpperCase())) {
+                     k = t;
+                 }
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
          }
          return x;
      }
-     
-     public static String getInput(String segment, Integer element) {
+        
+    public static String getInput(String segment, Integer element) {
          String x = "";
          int count = 0;
          String[] k = null;
@@ -757,8 +807,59 @@ public abstract class EDIMap implements EDIMapi {
         // System.out.println("getInput:" + segment + "/" + x);
          return x;
      }
-     
-      public static String getInput(String segment, Integer element, Integer gloop) {
+    
+    public static String getInput(String segment, String elementName) {
+         String x = "";
+         int elementNbr = getElementNumber(segment, elementName); 
+         if (elementNbr == 0) {
+             return x;
+         }
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 k = z.getValue();
+             }
+         }
+        // for (String g : k) {
+        //     System.out.println("getInput:" + segment + "/" + g);
+        // }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+        // System.out.println("getInput:" + segment + "/" + x);
+         return x;
+     }
+    
+    public static int getElementNumber(String segment, String element) {
+         boolean inside = false;
+         int x = 0;
+         int r = 0;
+         if (BlueSeerUtils.isParsableToInt(element)) {
+             return Integer.valueOf(element);
+         }
+         
+         for (String[] z : ISF) {
+            if (segment.startsWith(z[0])) {
+                if (! z[5].equals("landmark")) {
+                  x++;
+                }
+                if (element.equals(z[5])) {
+                    r = x;
+                    break;
+                }
+            } else {
+                inside = false;
+            }
+            if (! inside && r > 0) {  // should break out if end of target ISF definitions...to improve performance
+                break;
+            }
+         }
+        // System.out.println("getElementNumber: " + segment + "/" + element + "/" + r);
+         return r;
+     }
+        
+    public static String getInput(String segment, Integer element, Integer gloop) {
          String x = "";
          String[] k = null;
          segment = ":" + segment; // preprend blank
@@ -773,8 +874,34 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-     
-     public static int getGroupCount(String segment) {
+    
+    public static String getInput(String segment, String qual, Integer element, Integer gloop) {
+         String x = "";
+         String[] k = null;
+         String[] q = qual.split(":",-1);
+         int qualNbr = getElementNumber(segment,q[0]);
+         if (qualNbr == 0) {
+             return x;
+         }
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 t = z.getValue();
+                 if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
+                     k = t;
+                 } 
+             }
+         }
+         if (k != null && k.length > element) {
+          x =  k[element];
+         }
+         return x;
+     }
+    
+    
+    public static int getGroupCount(String segment) {
          
          int count = 0;
          String[] k = null;
@@ -787,9 +914,8 @@ public abstract class EDIMap implements EDIMapi {
         
          return count;
      }
-     
-     
-     public static String getLoopInput(String key, Integer element, Integer i) {
+    
+    public static String getLoopInput(String key, Integer element, Integer i) {
          String x = "";
          String[] k = null;
             k = mappedInput.get(key + "+" + i);
@@ -798,7 +924,8 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-     public static String getGroupInput(String key, Integer element) {
+    
+    public static String getGroupInput(String key, Integer element) {
          String x = "";
          String[] k = null;
             k = mappedInput.get(key + "+" + "1");
@@ -807,9 +934,8 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-    
      
-      public static ArrayList<String> getLoopKeys(String segment) {
+    public static ArrayList<String> getLoopKeys(String segment) {
          ArrayList<String>k = new ArrayList<String>();
          segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
@@ -821,19 +947,5 @@ public abstract class EDIMap implements EDIMapi {
          return k;
      }
     
-     
-     
-     public static int getCount(String segment) {
-         int count = 0;
-         String[] k = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             if (z.getKey().split("\\+")[0].equals(segment)) {
-                 count = Integer.valueOf(z.getKey().split("\\+")[2]);
-             }
-         }
-         return count;
-     }
-     
      
 }

@@ -701,13 +701,13 @@ public class EDI {
                 matchcount = 0;
                 for (String[] r : v) {
                     rulecount++;
-                    System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
+                  //  System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
                      
                     if (Integer.valueOf(r[0]) == k) {
                         if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
                           matchcount++;
                         }
-                        System.out.println("here?: " + k + "/" + matchcount + "/" + rulecount + "/" + s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim() + "/" + r[3]);
+                    //    System.out.println("here?: " + k + "/" + matchcount + "/" + rulecount + "/" + s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim() + "/" + r[3]);
                         
                     }
                 }
@@ -1306,24 +1306,13 @@ public class EDI {
           ed = s.substring(103,104);
           ud = s.substring(104,105);
           sd = s.substring(105,106);
-          /*
-          if (sd.toCharArray().length > 1) {
-          if (String.format("%02x", (int) sd.toCharArray()[0]).equals("0d")) {
-              
-          }
-          }
-          */
           
           System.out.println(s);
           System.out.println(sd);
           
-        
-          
           if (sd.equals("\\")) {
             sd = "\\\\";
           }
-          
-       
           segments  = s.split(sd);
           mylist.add(segments);
          }

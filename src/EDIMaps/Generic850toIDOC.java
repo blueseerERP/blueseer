@@ -42,29 +42,20 @@ import java.time.format.DateTimeFormatter;
 public class Generic850toIDOC extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
-    // com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = c[1];
-     
-    setOutPutFileType("FF");
-    setOutPutDocType("850IDOC");
     
+    // These 6 global variables must be set for all maps    
+    setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     ISF = readISF(c, "c:\\junk\\X12850.csv");
-    mappedInput = mapInput(c, doc, ISF);
-    
     OSF = readOSF("c:\\junk\\ORDERS05.csv"); 
-    
-    setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
-    setISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
-    setGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
-      
+    setOutPutFileType("FF");  // X12 of FF
+    setOutPutDocType("850IDOC");  // 850, 856, 850IDOC, etc
+    mappedInput = mapInput(c, doc, ISF);
     
     // set some global variables if necessary
     String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     String mandt = "110";
     String docnum = String.format("%016d",Integer.valueOf(c[4]));
-    String fob = "";
-    String item = "";
-    String custitem = "";
+    
     int segnum = 0;
     int psgnum = 0;
     int hlevel = 0;
