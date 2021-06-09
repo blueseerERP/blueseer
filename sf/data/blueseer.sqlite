@@ -535,6 +535,21 @@ CREATE TABLE "edi_file" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edpd_partner" (
+  "edpd_parent" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edpd_alias" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edpd_default" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edp_partner" (
+  "edp_id" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edp_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_log" (
   "elg_id" INTEGER PRIMARY KEY,
   "elg_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',

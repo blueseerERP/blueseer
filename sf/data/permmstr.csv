@@ -36,6 +36,8 @@ admin,EDIMenu
 admin,EDILog
 admin,EDITransactionLog
 admin,CustEDIMaint
+admin,EDIPartnerMaint
+admin,EDIDocumentMaint
 admin,CustEDIBrowse
 admin,EDILoad
 admin,EDIControl

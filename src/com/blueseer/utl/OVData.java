@@ -4000,7 +4000,79 @@ public class OVData {
                   return myreturn;
              } 
     
-              
+    public static boolean addEDIPartner(ArrayList<String> list) {
+                 boolean myreturn = false;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                    
+                   /* edp_partner */ 
+                   res =  st.executeQuery("select edp_id from edp_partner where " +
+                                           " edp_id = " + "'" + ld[0] + "'" + 
+                                           ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edp_partner " 
+                      + "(edp_id, edp_desc ) " 
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'"  
+                             +  ");"
+                           );     
+                   }
+                    
+                   /* edpd_partner */ 
+                   res =  st.executeQuery("select edpd_parent from edpd_partner where " +
+                                           " edpd_parent = " + "'" + ld[0] + "'" + 
+                                           " and edpd_alias = " + "'" + ld[2] + "'" +
+                                           ";");
+                    j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edpd_partner " 
+                      + "(edpd_parent, edpd_alias, edpd_default ) " 
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[2] + "'" + "," +
+                    "'" + ld[3] + "'"
+                             +  ");"
+                           );     
+                   } 
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+     
+    
     public static boolean addEDIMstrRecord(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
@@ -6112,7 +6184,63 @@ public class OVData {
         
     }
        
-      
+       public static ArrayList getEDIPartners() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edp_id from edp_partner order by edp_id; ");
+               while (res.next()) {
+                   mylist.add(res.getString("edp_id"));
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+       
+       public static String getEDIPartnerFromAlias(String alias) {
+       String x = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edp_id from edp_partner " +
+                        " inner join edpd_partner on edpd_parent = edp_id " +
+                        " where edpd_alias = " + "'" + alias + "'" + 
+                        " order by edp_id; ");
+               while (res.next()) {
+                   x = res.getString("edp_id");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+       
        
        public static String getEDICustFromSenderISA(String isa, String doctype) {
              String mystring = "";
@@ -26255,7 +26383,7 @@ MainFrame.bslog(e);
        String path = "";
         
         
-         path =  OVData.getEDIBatchDir() + "/" + filename; 
+         path =  dir + "/" + filename; 
       
        
        if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type
@@ -26277,12 +26405,12 @@ MainFrame.bslog(e);
            File file = new File(path);
            long max = file.length();
                if (! file.exists()) {
-                 bsmf.MainFrame.show("File is unavailable");
+                 bsmf.MainFrame.show("File is unavailable: " + path);
                  return segments;
                }
              
            int diff = (Integer.valueOf(end) - Integer.valueOf(beg));
-           if (wholefile) {
+           if (wholefile || end.equals("0")) {
                beg = "0";
                diff = (int) max;
            }
@@ -26295,9 +26423,8 @@ MainFrame.bslog(e);
            String delim = "";
            int x = Integer.valueOf(seg);
            delim = String.valueOf((char) x);
-           if (x == 92) {  // if backslash is seg terminator
-	    	delim = "\\" + delim;
-	    }
+           delim = EDI.escapeDelimiter(delim);
+          
 	   
            String[] sarr = DOC.split(delim, -1);
            

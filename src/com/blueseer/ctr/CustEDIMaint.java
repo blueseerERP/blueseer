@@ -356,7 +356,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Entity EDI Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Partner Transaction Maintenance"));
 
         btdelete.setText("delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {

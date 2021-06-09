@@ -423,7 +423,7 @@ public class EDI {
                     c[1] = editype[1];
                     c[21] = ""; // receiverid
                     c[2] = map;
-                    c[3] = infile;
+                    c[3] = file.getName();
                     c[4] = ""; //isactrlnbr
                     c[8] = outfile;
                     c[9] = "10";
@@ -659,15 +659,18 @@ public class EDI {
     // check for EDI x12 or Edifact
     // look at first three characters of file content
     StringBuilder sb = new StringBuilder();
+    StringBuilder gs01 = new StringBuilder();
          sb.append(cbuf, 0, 3);
+         
          if (sb.toString().equals("ISA")) {
+             gs01.append(cbuf,109,2);
              type[0] = "X12";
-             type[1] = "UNKNOWN";
+             type[1] = gs01.toString();
              return type;
          }
          if (sb.toString().equals("UNB")) {
              type[0] = "EDIFACT";
-             type[1] = "UNKNOWN";
+             type[1] = "TBD";
              return type;
          }
          
@@ -701,7 +704,7 @@ public class EDI {
                 matchcount = 0;
                 for (String[] r : v) {
                     rulecount++;
-                  //  System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
+                 //   System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
                      
                     if (Integer.valueOf(r[0]) == k) {
                         if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
@@ -727,7 +730,7 @@ public class EDI {
     public static String[] getFFInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
         // hm is list of variables and coordinates to find variables (f,m) r,c,l
         // f = fixed, m = regex, r = row, c = column, l = length
-        String[] x = new String[]{"",""}; // doctype, tpid
+        String[] x = new String[]{"","",""}; // doctype, tpid, parentpartner
         int i = 0;
         /*
         for (String[] t : tags ) {
@@ -751,6 +754,7 @@ public class EDI {
                     
                 }
                 if (t[0].toLowerCase().equals("tpid")) {
+                  //  System.out.println("getFFInfo:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
                     if (t[2].toLowerCase().equals("constant")) {
                         x[1] = t[7];
                     } else {
@@ -760,6 +764,10 @@ public class EDI {
                         if (t[1].toLowerCase().equals("regex") && s.matches(t[6])) {
                         x[1] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
+                    }
+                    if (! x[1].isEmpty()) {
+                        // look up parent partner
+                        x[2] = OVData.getEDIPartnerFromAlias(x[1]);
                     }
                 }
                 
@@ -1195,6 +1203,12 @@ public class EDI {
             Integer[] positions = FFPositions.get(z.getKey());
             
             String[] x = getFFInfo(doc, tags);
+            
+             if (x[2].isEmpty()) {
+                  OVData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
+             return;  
+             }
+            
             /*
             int j = 0;
             for (String xc : c) {
@@ -1202,10 +1216,10 @@ public class EDI {
             }
             */
             c[1] = x[0];
-            c[0] = x[1];
+            c[0] = x[2];
             c[6] = x[0];
       
-            String[] defaults = OVData.getEDITPDefaults(x[1], x[0]);
+            String[] defaults = OVData.getEDITPDefaults(x[2], x[0]);
             c[9] = defaults[7]; 
             c[10] = defaults[6]; 
             c[11] = defaults[8];   

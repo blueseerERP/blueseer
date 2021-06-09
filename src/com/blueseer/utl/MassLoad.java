@@ -669,32 +669,18 @@ public class MassLoad extends javax.swing.JPanel {
     
     
      // EDI Partner stuff
-    public ArrayList<String> defineEDIPartner() {
+    public ArrayList<String> defineEDIPartners() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("edi_id,s,30,mandatory,unvalidated");
-        list.add("edi_doc,s,10,mandatory,unvalidated");
-        list.add("edi_isa,s,15,mandatory,unvalidated");
-        list.add("edi_map,s,30,mandatory,unvalidated");
-        list.add("edi_isaq,s,2,mandatory,unvalidated");
-        list.add("edi_gs,s,15,mandatory,unvalidated");
-        list.add("edi_bsisa,s,15,mandatory,unvalidated");
-        list.add("edi_bsq,s,2,mandatory,unvalidated");
-        list.add("edi_bsgs,s,15,mandatory,unvalidated");
-        list.add("edi_eledelim,i,3,mandatory,unvalidated");
-        list.add("edi_segdelim,i,3,mandatory,unvalidated");
-        list.add("edi_subdelim,i,3,mandatory,unvalidated");
-        list.add("edi_fileprefix,s,30,mandatory,unvalidated");
-        list.add("edi_filesuffix,s,30,mandatory,unvalidated");
-        list.add("edi_filepath,s,70,mandatory,unvalidated");
-        list.add("edi_version,s,10,mandatory,unvalidated");
-        list.add("edi_supcode,s,30,mandatory,unvalidated");
-        list.add("edi_fa_required,b,1,mandatory,unvalidated");
+        list.add("edp_id,s,15,mandatory,unvalidated");
+        list.add("edp_desc,s,50,mandatory,unvalidated");
+        list.add("edpd_alias,s,15,mandatory,unvalidated");
+        list.add("edpd_default,b,1,mandatory,unvalidated");
         return list;
     }
     
-    public boolean checkEDIPartner(String[] rs, int i) {
+    public boolean checkEDIPartners(String[] rs, int i) {
         boolean proceed = true;
-        ArrayList<String> list = defineEDIPartner();
+        ArrayList<String> list = defineEDIPartners();
         // first check for correct number of fields
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
@@ -721,7 +707,7 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processEDIPartner (File myfile) throws FileNotFoundException, IOException {
+    public void processEDIPartners (File myfile) throws FileNotFoundException, IOException {
          tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
@@ -733,7 +719,88 @@ public class MassLoad extends javax.swing.JPanel {
                 i++;
                 list.add(line);
                String[] recs = line.split(":", -1);
-               temp = checkEDIPartner(recs, i);
+               temp = checkEDIPartners(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (! OVData.addEDIPartner(list))  
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+  
+     // EDI Partner stuff
+    public ArrayList<String> defineEDIPartnerTransactions() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("edi_id,s,30,mandatory,unvalidated");
+        list.add("edi_doc,s,10,mandatory,unvalidated");
+        list.add("edi_isa,s,15,mandatory,unvalidated");
+        list.add("edi_map,s,30,mandatory,unvalidated");
+        list.add("edi_isaq,s,2,mandatory,unvalidated");
+        list.add("edi_gs,s,15,mandatory,unvalidated");
+        list.add("edi_bsisa,s,15,mandatory,unvalidated");
+        list.add("edi_bsq,s,2,mandatory,unvalidated");
+        list.add("edi_bsgs,s,15,mandatory,unvalidated");
+        list.add("edi_eledelim,i,3,mandatory,unvalidated");
+        list.add("edi_segdelim,i,3,mandatory,unvalidated");
+        list.add("edi_subdelim,i,3,mandatory,unvalidated");
+        list.add("edi_fileprefix,s,30,mandatory,unvalidated");
+        list.add("edi_filesuffix,s,30,mandatory,unvalidated");
+        list.add("edi_filepath,s,70,mandatory,unvalidated");
+        list.add("edi_version,s,10,mandatory,unvalidated");
+        list.add("edi_supcode,s,30,mandatory,unvalidated");
+        list.add("edi_fa_required,b,1,mandatory,unvalidated");
+        return list;
+    }
+    
+    public boolean checkEDIPartnerTransactions(String[] rs, int i) {
+        boolean proceed = true;
+        ArrayList<String> list = defineEDIPartnerTransactions();
+        // first check for correct number of fields
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == list.size()) {
+            // now check individual fields
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                j++;
+            } 
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processEDIPartnerTransactions (File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
                        proceed = false;
                    }
@@ -748,7 +815,6 @@ public class MassLoad extends javax.swing.JPanel {
             }
     }
     
-  
     
     
      // vend xref stuff
@@ -1587,8 +1653,14 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                    }
                }
-               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Master") == 0) {
-                   temp = checkEDIPartner(recs, i);
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partners") == 0) {
+                   temp = checkEDIPartners(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Transactions") == 0) {
+                   temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
                        proceed = false;
                    }
@@ -1653,8 +1725,11 @@ public class MassLoad extends javax.swing.JPanel {
                if (ddtable.getSelectedItem().toString().compareTo("Inventory Adjustment") == 0) {
                   processInvAdjustment(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Master") == 0) {
-                  processEDIPartner(myfile);
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partners") == 0) {
+                  processEDIPartners(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Transactions") == 0) {
+                  processEDIPartnerTransactions(myfile);
                }
                if (ddtable.getSelectedItem().toString().compareTo("Carrier Master") == 0) {
                   processCarrier(myfile);
@@ -1734,8 +1809,11 @@ public class MassLoad extends javax.swing.JPanel {
          if (key.compareTo("BOM Master") == 0) { 
              list = defineBOMMaster();
          }
-        if (key.compareTo("EDI Partner Master") == 0) { 
-             list = defineEDIPartner();
+         if (key.compareTo("EDI Partners") == 0) { 
+             list = defineEDIPartners();
+        }
+        if (key.compareTo("EDI Partner Transactions") == 0) { 
+             list = defineEDIPartnerTransactions();
         }
         if (key.compareTo("GL Account Balances") == 0) { 
              list = defineGLAcctBalances();
@@ -1781,7 +1859,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partner Master", "Carrier Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

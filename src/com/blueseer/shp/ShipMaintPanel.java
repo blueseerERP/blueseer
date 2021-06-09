@@ -560,7 +560,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                     i++;
                     
                     tbshipper.setText(res.getString("sh_id"));
-                    ddshipto.setSelectedItem(res.getString("sh_cust"));
+                    ddbillto.setSelectedItem(res.getString("sh_cust"));
                     ddshipto.setSelectedItem(res.getString("sh_ship"));
                     tbref.setText(res.getString("sh_ref"));
                     tbboxes.setText(res.getString("sh_boxes"));
@@ -577,11 +577,12 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 }
                 
                 
-
+         
                 res = st.executeQuery("select * from ship_det where shd_id = " + "'" + myshipper + "'" + ";");
                 while (res.next()) {
                   myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
-                      res.getString("shd_so"), 
+                      res.getString("shd_so"),
+                      res.getString("shd_soline"),
                       res.getString("shd_po"), 
                       res.getString("shd_qty"), 
                       res.getString("shd_netprice"),
@@ -590,7 +591,9 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                       res.getString("shd_loc"),
                       res.getString("shd_disc"),
                       res.getString("shd_listprice"),
-                      res.getString("shd_taxamt")
+                      res.getString("shd_taxamt"),
+                      res.getString("shd_serial"),
+                      res.getString("shd_cont")
                   });
                 
                 }

@@ -164,6 +164,8 @@ LabelsContGeneric,,com.blueseer.lbl.LabelContPanel,JMenuItem,lblc
 LabelBrowse,,com.blueseer.lbl.LabelBrowsePanel,JMenuItem,lblb
 TransBrowse,,com.blueseer.prd.TransBrowsePanel,JMenuItem,tran
 RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
+EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
+EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 CustEDIMaint,,com.blueseer.ctr.CustEDIMaint,JMenuItem,edcm
 CustEDIBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edcmb
 EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
