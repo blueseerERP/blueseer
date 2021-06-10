@@ -4072,6 +4072,96 @@ public class OVData {
                   return myreturn;
              } 
      
+    public static boolean addEDIDocumentStructures(ArrayList<String> list) {
+                 boolean myreturn = false;
+                  try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                    
+                   /* edp_partner */ 
+                   res =  st.executeQuery("select edd_id from edi_doc where " +
+                                           " edd_id = " + "'" + ld[0] + "'" + 
+                                           ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edi_doc " 
+                      + "(edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_priority, edd_landmark, edd_enabled ) " 
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +
+                    "'" +  ld[3] + "'" + "," +
+                    "'" +  ld[4] + "'" + "," +
+                    "'" +  ld[5] + "'" + "," +
+                    "'" +  ld[6] + "'" + "," +
+                    "'" +  ld[7] + "'"         
+                             +  ");"
+                           );     
+                   }
+                    
+                   /* edpd_partner */ 
+                   res =  st.executeQuery("select edid_id from edi_docdet where " +
+                                           " edid_id = " + "'" + ld[0] + "'" + 
+                                           " and edid_role = " + "'" + ld[8] + "'" +
+                                           " and edid_rectype = " + "'" + ld[9] + "'" +
+                                           " and edid_valuetype = " + "'" + ld[10] + "'" +
+                                           " and edid_tag = " + "'" + ld[16] + "'" +
+                                           " and edid_value = " + "'" + ld[15] + "'" +        
+                                           ";");
+                    j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into edi_docdet " 
+                      + "(edid_id, edid_role, edid_rectype, edid_valuetype, edid_row, edid_col, edid_length, edid_regex, edid_value, edid_tag, edid_enabled ) " 
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[8] + "'" + "," +
+                    "'" +  ld[9] + "'" + "," +
+                    "'" +  ld[10] + "'" + "," +
+                    "'" +  ld[11] + "'" + "," +
+                    "'" +  ld[12] + "'" + "," +
+                    "'" +  ld[13] + "'" + "," +
+                    "'" +  ld[14] + "'" + "," +
+                    "'" +  ld[15] + "'" + "," + 
+                    "'" +  ld[16] + "'" + "," +
+                    "'" + ld[17] + "'"
+                             +  ");"
+                           );     
+                   } 
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting edi_doc, edi_docdet...check printStackTrace");
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
     
     public static boolean addEDIMstrRecord(ArrayList<String> list) {
                  boolean myreturn = false;

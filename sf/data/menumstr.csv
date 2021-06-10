@@ -42,8 +42,7 @@ DefaultMaint,,com.blueseer.adm.DefaultMstrPanel,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaintPanel,JMenuItem,depm
 EDILoad,,com.blueseer.edi.EDILoadPanel,JMenuItem,edip
-EDILog,,com.blueseer.edi.EDILogBrowse,JMenuItem,ediz
-EDITransactionLog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
+EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 FileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,orlo
 FreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb

@@ -51,6 +51,8 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
     setOutPutDocType("850IDOC");  // 850, 856, 850IDOC, etc
     mappedInput = mapInput(c, doc, ISF);
     
+    setReference(getInput("BEG",3)); // must be ran after mappedInput
+    
     // set some global variables if necessary
     String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     String mandt = "110";

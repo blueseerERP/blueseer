@@ -668,7 +668,7 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     
-     // EDI Partner stuff
+     // EDI Partners
     public ArrayList<String> defineEDIPartners() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("edp_id,s,15,mandatory,unvalidated");
@@ -707,7 +707,7 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processEDIPartners (File myfile) throws FileNotFoundException, IOException {
+    public void processEDIPartners(File myfile) throws FileNotFoundException, IOException {
          tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
@@ -733,6 +733,89 @@ public class MassLoad extends javax.swing.JPanel {
                 bsmf.MainFrame.show("File has errors...correct file and try again.");
             }
     }
+    
+     // EDI Document Structures
+    public ArrayList<String> defineEDIDocumentStructures() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("edd_id,s,30,mandatory,unvalidated");
+        list.add("edd_desc,s,200,mandatory,unvalidated");
+        list.add("edd_type,s,50,mandatory,unvalidated");
+        list.add("edd_subtype,s,50,mandatory,unvalidated");
+        list.add("edd_segdelim,i,3,mandatory,unvalidated");
+        list.add("edd_priority,i,3,mandatory,unvalidated");
+        list.add("edd_landmark,s,50,mandatory,unvalidated");
+        list.add("edd_enabled,b,1,mandatory,unvalidated");
+        list.add("edid_role,s,20,mandatory,unvalidated");
+        list.add("edid_rectype,s,10,mandatory,unvalidated");
+        list.add("edid_valuetype,s,10,mandatory,unvalidated");
+        list.add("edid_row,i,4,mandatory,unvalidated");
+        list.add("edid_col,i,4,mandatory,unvalidated");
+        list.add("edid_length,i,4,mandatory,unvalidated");
+        list.add("edid_regex,s,100,mandatory,unvalidated");
+        list.add("edid_value,s,100,mandatory,unvalidated");
+        list.add("edid_tag,s,100,mandatory,unvalidated");
+        list.add("edid_enabled,b,1,mandatory,unvalidated");
+        
+        return list;
+    }
+    
+    public boolean checkEDIDocumentStructures(String[] rs, int i) {
+        boolean proceed = true;
+        ArrayList<String> list = defineEDIDocumentStructures();
+        // first check for correct number of fields
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
+                   proceed = false;
+        }
+        
+       
+        
+        if (rs.length == list.size()) {
+            // now check individual fields
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                j++;
+            } 
+        }
+        
+        
+        return proceed;
+    }
+    
+    public void processEDIDocumentStructures(File myfile) throws FileNotFoundException, IOException {
+         tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               temp = checkEDIDocumentStructures(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               
+            }
+            fsr.close();
+             if (proceed) {
+                   if (! OVData.addEDIDocumentStructures(list))  
+                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
+            } else {
+                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            }
+    }
+    
+    
     
   
      // EDI Partner stuff
@@ -1659,6 +1742,12 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                    }
                }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Document Structures") == 0) {
+                   temp = checkEDIDocumentStructures(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
                if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Transactions") == 0) {
                    temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
@@ -1727,6 +1816,9 @@ public class MassLoad extends javax.swing.JPanel {
                }
                if (ddtable.getSelectedItem().toString().compareTo("EDI Partners") == 0) {
                   processEDIPartners(myfile);
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("EDI Document Structures") == 0) {
+                  processEDIDocumentStructures(myfile);
                }
                if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Transactions") == 0) {
                   processEDIPartnerTransactions(myfile);
@@ -1812,6 +1904,9 @@ public class MassLoad extends javax.swing.JPanel {
          if (key.compareTo("EDI Partners") == 0) { 
              list = defineEDIPartners();
         }
+          if (key.compareTo("EDI Document Structures") == 0) { 
+             list = defineEDIDocumentStructures();
+        }
         if (key.compareTo("EDI Partner Transactions") == 0) { 
              list = defineEDIPartnerTransactions();
         }
@@ -1859,7 +1954,7 @@ public class MassLoad extends javax.swing.JPanel {
 
         jLabel1.setText("Master Table:");
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "Carrier Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

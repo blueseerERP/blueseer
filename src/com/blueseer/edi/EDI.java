@@ -1040,30 +1040,7 @@ public class EDI {
     
     public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile)   {
     
-         /*  22 elements consisting of:
-            c[0] = senderid;
-            c[1] = doctype;
-            c[2] = map;
-            c[3] = infile;
-            c[4] = controlnum;
-            c[5] = gsctrlnbr;
-            c[6] = docid;
-            c[7] = ref;
-            c[8] = outfile;
-            c[9] = sd;
-            c[10] = ed;
-            c[11] = ud;
-            c[12] = overideenvelope
-            c[13] = isastring
-            c[14] = gsstring
-            c[15] = dir
-            c[16] = idxnbr
-            c[17] = isastart
-            c[18] = isaend
-            c[19] = docstart
-            c[20] = docend
-            c[21] = receiverid;
-              */
+    int idxnbr = 0;     
     
     // ISAmap is defined as new Integer[] {start, end, (int) s, (int) e, (int) u});
     
@@ -1075,8 +1052,8 @@ public class EDI {
         int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
-        
-       //  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
+               
+//  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
         
         String[] c = (String[]) isa.getValue()[6];
        // ArrayList d = (ArrayList) isa.getValue()[5];
@@ -1137,34 +1114,65 @@ public class EDI {
           c[19] = String.valueOf(k[0]);
           c[20] = String.valueOf(k[1]);
           
+          
+          String gs02 = ""; 
+          int j = Integer.valueOf(c[10]);
+          String delim = String.valueOf(Character.toString((char) j));
+          String[] gs = c[14].split(escapeDelimiter(delim));
+         
+          if (gs != null && gs.length > 2) {
+              gs02 = gs[2];
+          }
+          String parentPartner = OVData.getEDIPartnerFromAlias(gs02);
+          if (parentPartner == null || parentPartner.isEmpty()) {
+             parentPartner = OVData.getEDIPartnerFromAlias(c[0]); 
+          }
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
           if (c[12].isEmpty()) {   // if not override
-          int idxnbr = OVData.writeEDIIDX(c);
+          idxnbr = OVData.writeEDIIDX(c);
           c[16] = String.valueOf(idxnbr);
           }
+          
              String map = c[2];
              
+             
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIMap(c[0], c[1]); 
+                  map = OVData.getEDIMap(parentPartner, c[1]); 
                } 
             
                // if no map then bail
                if (map.isEmpty() && c[12].isEmpty()) {
-                  OVData.writeEDILog(c, "error", "unable to find map class for " + c[0] + " / " + c[1]); 
+                  OVData.writeEDILog(c, "error", "unable to find map class for Parent|isa|gs: " + parentPartner + "|"  + c[0] + "|" + gs02 + " / " + c[1]); 
                } else {
+                  
+                if (GlobalDebug)   
+                System.out.println("Entering Map " + map + " with: " + parentPartner + "|"  + c[0] + "|" + gs02 + " / " + c[1]);    
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                     try {
                     Class cls = Class.forName(map);
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    method.invoke(obj, doc, c);
+                    Object oc = method.invoke(obj, doc, c);
+                    String[] oString = (String[]) oc;
+                    OVData.writeEDILog(c, oString[0], oString[1]);
+                    OVData.updateEDIIDX(idxnbr, c); 
                   
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
+                    } catch (InvocationTargetException ex) {
                         if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "unable to load map class for " + c[0] + " / " + c[1]);
+                        OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        ex.printStackTrace(); 
+                    } catch (ClassNotFoundException ex) {
+                        if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        ex.printStackTrace(); 
+                    } catch (IllegalAccessException |
+                             InstantiationException | NoSuchMethodException ex
+                            ) {
+                        if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
                         ex.printStackTrace();
                     }
@@ -1279,12 +1287,21 @@ public class EDI {
                     String[] oString = (String[]) oc;
                         OVData.writeEDILog(c, oString[0], oString[1]);
                         OVData.updateEDIIDX(idxnbr, c); 
-                        
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
+                    } catch (InvocationTargetException ex) {
                         if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "unable to load map class for " + c[0] + " / " + c[1]);
+                        OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        ex.printStackTrace(); 
+                    } catch (ClassNotFoundException ex) {
+                        if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        ex.printStackTrace(); 
+                    } catch (IllegalAccessException |
+                             InstantiationException | NoSuchMethodException ex
+                            ) {
+                        if (c[12].isEmpty()) {
+                        OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
                         ex.printStackTrace();
                     }

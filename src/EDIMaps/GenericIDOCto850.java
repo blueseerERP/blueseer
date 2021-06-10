@@ -51,7 +51,7 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     setOutPutFileType("X12");  // X12 of FF
     setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
     mappedInput = mapInput(c, doc, ISF);
-    setReference(getInput("E2EDK01","belnr"));
+    setReference(getInput("E2EDK01","belnr")); // must be ran after mappedInput
    // debuginput(mappedInput);
     
     /* a few global variables */

@@ -97,7 +97,7 @@
         <Component class="javax.swing.JComboBox" name="ddtable">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="15">
+              <StringArray count="16">
                 <StringItem index="0" value="Item Master"/>
                 <StringItem index="1" value="BOM Master"/>
                 <StringItem index="2" value="Customer Master"/>
@@ -112,7 +112,8 @@
                 <StringItem index="11" value="Generic Code"/>
                 <StringItem index="12" value="EDI Partners"/>
                 <StringItem index="13" value="EDI Partner Transactions"/>
-                <StringItem index="14" value="Carrier Master"/>
+                <StringItem index="14" value="EDI Document Structures"/>
+                <StringItem index="15" value="Carrier Master"/>
               </StringArray>
             </Property>
           </Properties>

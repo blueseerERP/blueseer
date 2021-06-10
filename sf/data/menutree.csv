@@ -29,14 +29,13 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Vendor Price Maintenance,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
-EDIMenu,EDILoad,1,JMenuItem,EDI Inbound Load,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
-EDIMenu,EDITransactionLog,3,JMenuItem,EDI Trans Log,,,,1,1
-EDIMenu,EDIPartnerMaint,4,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDIMenu,CustEDIMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
-EDIMenu,CustEDIBrowse,6,JMenuItem,EDI Partner Browse,,1,,1,1
-EDIMenu,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
-EDIMenu,EDIControl,8,JMenuItem,EDI Control,,,,1,1
+EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDIMenu,CustEDIMaint,4,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIMenu,CustEDIBrowse,5,JMenuItem,EDI Partner Browse,,1,,1,1
+EDIMenu,EDIDocumentMaint,6,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDIMenu,EDIControl,7,JMenuItem,EDI Control,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Address Labels,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Label Browse,,1,,1,1
