@@ -178,7 +178,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
          */
         @Override
         public Void doInBackground() throws IOException, FileNotFoundException, ClassNotFoundException {
-            EDI.processFile(getFileName(),"","","");
+            EDI.processFile(getFileName(),"","","", cbdebug.isSelected());
             return null;
         }
  
@@ -480,6 +480,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
         btmanual = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         lbcount = new javax.swing.JLabel();
+        cbdebug = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -558,6 +559,8 @@ public class EDILoadPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Files:");
 
+        cbdebug.setText("Debug");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -571,6 +574,8 @@ public class EDILoadPanel extends javax.swing.JPanel {
                         .addComponent(btrefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btProcess)
+                        .addGap(74, 74, 74)
+                        .addComponent(cbdebug)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -590,7 +595,8 @@ public class EDILoadPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btrefresh)
                         .addComponent(jLabel1)
-                        .addComponent(btProcess)))
+                        .addComponent(btProcess)
+                        .addComponent(cbdebug)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btmanual)
                 .addContainerGap())
@@ -625,7 +631,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
                    //  bsmf.MainFrame.show(String.valueOf(i));
                     // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
                     // EDI.processFile(edifile);
-                    String[] m = EDI.processFile(infile,"","","");
+                    String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected());
                     
                     // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -718,6 +724,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
     private javax.swing.JButton btProcess;
     private javax.swing.JButton btmanual;
     private javax.swing.JButton btrefresh;
+    private javax.swing.JCheckBox cbdebug;
     private javax.swing.JCheckBox cbtoggle;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;

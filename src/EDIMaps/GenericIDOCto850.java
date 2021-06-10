@@ -28,6 +28,7 @@ package EDIMaps;
 
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -43,9 +44,6 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
     
-    
-      
-    
     // These 6 global variables must be set for all maps    
     setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     ISF = readISF(c, "c:\\junk\\ORDERS05.csv");
@@ -53,7 +51,8 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     setOutPutFileType("X12");  // X12 of FF
     setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
     mappedInput = mapInput(c, doc, ISF);
-    debuginput(mappedInput);
+    setReference(getInput("E2EDK01","belnr"));
+   // debuginput(mappedInput);
     
     /* a few global variables */
     int i = 0; // used for all looping ...for loops reset it's initial value each time
@@ -110,7 +109,9 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     mapSegment("PO1","e01",getInput("E2EDP01",7, i));
     mapSegment("PO1","e02",df.format(Double.valueOf(getInput("E2EDP01",11, i))));
     mapSegment("PO1","e03",getInput("E2EDP01",14, i));
+    if (BlueSeerUtils.isParsableToDouble(getInput("E2EDP01",16, i))) {
     mapSegment("PO1","e04",df.format(Double.valueOf(getInput("E2EDP01",16, i))));
+    }
     mapSegment("PO1","e06","SK");
     mapSegment("PO1","e07",getInput("E2EDP01:E2EDP19","7:001",8,i));
     mapSegment("PO1","e08","VN");
@@ -123,7 +124,9 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     
     mapSegment("SAC","e01","N");
     mapSegment("SAC","e02","B840");
+    if (BlueSeerUtils.isParsableToDouble(getInput("E2EDP01",18, i))) {
     mapSegment("SAC","e05", df.format(Double.valueOf(getInput("E2EDP01",18, i)) * 100));
+    }
     commitSegment("SAC",i);
     
     

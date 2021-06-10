@@ -332,7 +332,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         i++;
                     }
                     if (i == 0) {
-                        st.executeUpdate("insert into edi_doc (edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_priority, edd_landmark) values (" + 
+                        st.executeUpdate("insert into edi_doc (edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_priority, edd_landmark, edd_enabled) values (" + 
                             "'" + tbkey.getText() + "'" + "," +
                             "'" + tbdesc.getText() + "'"  +  "," + 
                             "'" + tbtype.getText() + "'"  +  "," + 

@@ -46,7 +46,14 @@ public class EDILoad {
     
 public static void main(String args[]) {
  try {
-           bsmf.MainFrame.setConfig();
+     
+            boolean isDebug = false;
+            if (args != null && args.length > 0) {
+                if (args[0].equals("-debug")) {
+                    isDebug = true;
+                }
+            }
+            bsmf.MainFrame.setConfig();
             String inDir = OVData.getEDIInDir();
             String inArch = OVData.getEDIInArch(); 
             String ErrorDir = OVData.getEDIErrorDir(); 
@@ -62,7 +69,7 @@ public static void main(String args[]) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                 String[] m = EDI.processFile(inDir + "/" + listOfFiles[i].getName(),"","","");
+                 String[] m = EDI.processFile(inDir + "/" + listOfFiles[i].getName(),"","","", isDebug);
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {

@@ -62,7 +62,7 @@ public abstract class EDIMap implements EDIMapi {
     String[] envelope = null;
          
     public static  int segcount = 0;
-
+    public static boolean GlobalDebug = false;
     DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
     DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
     DateFormat isadftime = new SimpleDateFormat("HHmm");
@@ -174,12 +174,17 @@ public abstract class EDIMap implements EDIMapi {
         ed = delimConvertIntToStr(c[10]);
         ud = delimConvertIntToStr(c[11]);
         isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
+        GlobalDebug = Boolean.valueOf(c[30]);
         
         setISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
         
      }
 
+    public void setReference(String key) {
+        ref = key;
+    }
+    
     public String delimConvertIntToStr(String intdelim) {
     String delim = "";
     int x = Integer.valueOf(intdelim);
@@ -351,13 +356,14 @@ public abstract class EDIMap implements EDIMapi {
             outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
         }
 
+        c[7] = ref;
         c[15] = outputdoctype;
         c[25] = batchfile;
         c[27] = outdir;
         c[29] = outputfiletype;
 
-
-     System.out.println(String.join(",", c));
+     if (GlobalDebug)
+     System.out.println("Value of c within EDIMap class: " + String.join(",", c));
 
         // error handling
         if (batchfile.isEmpty()) {
@@ -572,7 +578,7 @@ public abstract class EDIMap implements EDIMapi {
                                     if (! z[4].equals("yes")) {
                                         continue;
                                     }
-					if (x != null && x[0].equals(z[0])) {
+					if (x != null && (x.length > 1) && x[0].equals(z[0])) {
 						boolean foundit = false;
 						boolean hasloop = false;
 						String[] temp = parenthead.split(":");

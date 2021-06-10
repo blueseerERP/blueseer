@@ -74,10 +74,11 @@ import jcifs.smb.SmbFileOutputStream;
  * @author vaughnte
  */
 public class EDI {
-       
+    public static boolean GlobalDebug = false;
+    
     public static String[] initEDIControl() {   
-        String[] controlarray = new String[30];
-             /*  30 elements consisting of:
+        String[] controlarray = new String[31];
+             /*  31 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -108,8 +109,9 @@ public class EDI {
             c[27] = outdir
             c[28] = infiletype  // ff, x12, xml, etc
             c[29] = outfiletype  // ff, x12, xml, etc
+            c[30] = debug  true or false
               */
-               for (int i = 0; i < 30; i++) {
+               for (int i = 0; i < 31; i++) {
                     controlarray[i] = "";
                 }
                 return controlarray;
@@ -348,12 +350,12 @@ public class EDI {
          }
          
          
-         
+        
          System.out.println(dfdate.format(now) + "," + infile + "," + filetype + "," + (String)x[3] + "," + c[0] + "," + c[14] + "," + 
                  isa.getKey() + "," + isa.getValue()[0] + "," + isa.getValue()[1] + "," +
                  k[0] + "," + k[1] + "," + (String)x[1] + "," + (String)x[2] + "," + m[4] + "," + isInSet ); 
-      //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
-            
+      
+           //   System.out.println("        Doc: key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + (String)x[1] + "/" + (String)x[2]);
            // Integer[] k = (Integer[])z.getValue()[0];
            // String doctype = (String)z.getValue()[1];
            // String docid = (String)z.getValue()[2];
@@ -395,8 +397,14 @@ public class EDI {
     return m;
     }
         
-    public static String[] processFile(String infile, String map, String outfile, String isOverride) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static String[] processFile(String infile, String map, String outfile, String isOverride, boolean isDebug) throws FileNotFoundException, IOException, ClassNotFoundException {
         
+        if (isDebug) {
+            GlobalDebug = true;
+        }
+        
+        if (GlobalDebug)
+        System.out.println("processFile: entering function with file :" + infile);
         
         String[] m = new String[]{"0",""};
         String[] c = null;  // control values to pass to map and log
@@ -434,6 +442,7 @@ public class EDI {
                     c[22] = String.valueOf(comkey);
                     c[26] = file.getParent(); // indir
                     c[28] = editype[0];
+                    c[30] = String.valueOf(isDebug);
                     
         // start initial log entry for incoming file here  
         OVData.writeEDIFileLog(c); 
@@ -484,17 +493,22 @@ public class EDI {
            int startline = 0;
            for (String x : doc) {
                linecount++;
-               if (x.startsWith(landmark) && doccount == 0) {
+               if (x.startsWith(landmark) && linecount == 1) {
                    singledoc.add(x);  
                    doccount++;
                    startline = linecount;
+                   if (GlobalDebug)
+                   System.out.println("processFF: linecount = " + linecount + "/ landmark=" + landmark );
                }
-               if (x.startsWith(landmark) && doccount > 0) {
+               if (x.startsWith(landmark) && linecount > 1) {
                    docRegister.put(doccount, singledoc);
                    docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});
                    singledoc.clear();
                    singledoc.add(x);
                    doccount++;
+                   if (GlobalDebug)
+                   System.out.println("processFF: linecount = " + linecount + "/ landmark=" + landmark );
+             
                }
                if (! x.startsWith(landmark)) {
                    singledoc.add(x);
@@ -1202,6 +1216,9 @@ public class EDI {
             ArrayList<String> doc = z.getValue();
             Integer[] positions = FFPositions.get(z.getKey());
             
+            if (GlobalDebug)
+            System.out.println("processFF: " + z.getKey());
+            
             String[] x = getFFInfo(doc, tags);
             
              if (x[2].isEmpty()) {
@@ -1321,8 +1338,10 @@ public class EDI {
           ud = s.substring(104,105);
           sd = s.substring(105,106);
           
-          System.out.println(s);
-          System.out.println(sd);
+          if (GlobalDebug) {
+          System.out.println("getSegFromEnvAsArrayList: segment=" + s);
+          System.out.println("getSegFromEnvAsArrayList: segDelimiter=" + sd);
+          }
           
           if (sd.equals("\\")) {
             sd = "\\\\";

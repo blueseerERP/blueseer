@@ -54,6 +54,7 @@ public class EDIbs {
     
     public static DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmm");
     public static Date now = new Date();
+    public static boolean isDebug = false;
     
 public static void main(String args[]) throws IOException {
  
@@ -117,7 +118,8 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e");
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug" );
+     
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
         
@@ -204,6 +206,9 @@ public static void main(String args[]) throws IOException {
                     case "-ad" :
                         vals[8] = args[i+1]; 
                         break;
+                    case "-debug" :
+                        isDebug = true; 
+                        break;    
                     default:
                         System.out.println("Unable to process arguments " + myargs);
                         System.exit(1);
@@ -224,7 +229,7 @@ public static void main(String args[]) throws IOException {
       // case of single input and output file    
     if (! infile.isEmpty() && ! outfile.isEmpty() ) {
         try {
-            EDI.processFile(infile, map, outfile, isOverride); 
+            EDI.processFile(infile, map, outfile, isOverride, isDebug); 
         } catch (IOException ex) {
            ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -249,7 +254,7 @@ public static void main(String args[]) throws IOException {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                  EDI.processFile(listOfFiles[i].getName(), map, "", isOverride);
+                  EDI.processFile(listOfFiles[i].getName(), map, "", isOverride, isDebug);
                   }
                 }
               }

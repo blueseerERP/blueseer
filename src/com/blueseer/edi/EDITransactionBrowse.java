@@ -97,11 +97,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel docmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"})
+                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "Reference", "OutFileType", "OutDocType", "OutBatch",  "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 12)       
+                        if (col == 0 || col == 13)       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -260,6 +260,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         res.getString("edx_infiletype"),
                         res.getString("edx_indoctype"),
                         res.getString("edx_inbatch"),
+                        res.getString("edx_ref"), 
                         res.getString("edx_outfiletype"),
                         res.getString("edx_outdoctype"),
                         res.getString("edx_outbatch"),
@@ -302,36 +303,33 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  
               
                     if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
-                    res = st.executeQuery("SELECT * FROM edi_log  " +
-                    " where elg_isa >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND elg_isa <= " + "'" + tbtradeid.getText() + "'" +        
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
-                    " AND elg_init = '1' " +
-                    " order by elg_id desc ;" ) ;
+                    res = st.executeQuery("SELECT * FROM edi_file  " +
+                    " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +        
+                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " order by edf_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_log  " +
+                    res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where " +
-                    " elg_doc >= " + "'" + tbdoc.getText() + "'" +
-                    " AND elg_doc <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
-                    " AND elg_init = '1' " +
-                    " order by elg_id desc ;" ) ;
+                    " edf_doctype >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " order by edf_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_log  " +
-                     " where elg_isa >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND elg_isa <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND elg_doc >= " + "'" + tbdoc.getText() + "'" +
-                    " AND elg_doc <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
-                    " AND elg_init = '1' " +
-                    " order by elg_id desc ;" ) ;
+                    res = st.executeQuery("SELECT * FROM edi_file  " +
+                     " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +
+                    " AND edf_doctype >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " order by edf_id desc ;" ) ;
                     }
                     
                     if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
@@ -885,8 +883,7 @@ public EDITransactionBrowse() {
         int x = Integer.valueOf(tbsegdelim.getText());
         lbsegdelim.setText(String.valueOf((char) x));
         } else {
-            bsmf.MainFrame.show("must enter an integer");
-            tbsegdelim.requestFocus();
+            tbsegdelim.setText("10");
         }
     }//GEN-LAST:event_tbsegdelimFocusLost
 
