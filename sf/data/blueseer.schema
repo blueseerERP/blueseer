@@ -254,15 +254,16 @@ CREATE TABLE IF NOT EXISTS `cmc_det` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_mstr` (
   `edi_id` varchar(30) NOT NULL  DEFAULT '',
-  `edi_doc` varchar(10) NOT NULL  DEFAULT '',
-  `edi_isa` varchar(15) NOT NULL  DEFAULT '',
+  `edi_doc` varchar(15) NOT NULL  DEFAULT '',
+  `edi_filetype` varchar(10) NOT NULL  DEFAULT '',
+  `edi_sndisa` varchar(15) NOT NULL  DEFAULT '',
   `edi_dir` tinyint(1) NOT NULL  DEFAULT '0',
   `edi_map` varchar(30) NOT NULL  DEFAULT '',
-  `edi_isaq` varchar(2) NOT NULL  DEFAULT '',
-  `edi_gs` varchar(15) NOT NULL  DEFAULT '',
-  `edi_bsisa` varchar(15) NOT NULL  DEFAULT '',
-  `edi_bsq` varchar(2) NOT NULL  DEFAULT '',
-  `edi_bsgs` varchar(15) NOT NULL  DEFAULT '',
+  `edi_sndq` varchar(2) NOT NULL  DEFAULT '',
+  `edi_sndgs` varchar(15) NOT NULL  DEFAULT '',
+  `edi_rcvisa` varchar(15) NOT NULL  DEFAULT '',
+  `edi_rcvq` varchar(2) NOT NULL  DEFAULT '',
+  `edi_rcvgs` varchar(15) NOT NULL  DEFAULT '',
   `edi_eledelim` int(11) NOT NULL DEFAULT '0',
   `edi_segdelim` int(11) NOT NULL DEFAULT '0',
   `edi_subdelim` int(11) NOT NULL DEFAULT '0',
@@ -511,7 +512,8 @@ CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_gsid` varchar(15) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_attr` (
-  `exa_tpid` varchar(15) NOT NULL  DEFAULT '',
+  `exa_sndid` varchar(15) NOT NULL  DEFAULT '',
+  `exa_rcvid` varchar(15) NOT NULL  DEFAULT '',
   `exa_doc` varchar(10) NOT NULL  DEFAULT '',
   `exa_dir` tinyint(1) NOT NULL  DEFAULT '0',
   `exa_key` varchar(50) NOT NULL  DEFAULT '',

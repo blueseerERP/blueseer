@@ -744,7 +744,7 @@ public class EDI {
     public static String[] getFFInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
         // hm is list of variables and coordinates to find variables (f,m) r,c,l
         // f = fixed, m = regex, r = row, c = column, l = length
-        String[] x = new String[]{"","",""}; // doctype, tpid, parentpartner
+        String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
         int i = 0;
         /*
         for (String[] t : tags ) {
@@ -767,7 +767,7 @@ public class EDI {
                     }
                     
                 }
-                if (t[0].toLowerCase().equals("tpid")) {
+                if (t[0].toLowerCase().equals("rcvid")) {
                   //  System.out.println("getFFInfo:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
                     if (t[2].toLowerCase().equals("constant")) {
                         x[1] = t[7];
@@ -784,16 +784,33 @@ public class EDI {
                         x[2] = OVData.getEDIPartnerFromAlias(x[1]);
                     }
                 }
+                 if (t[0].toLowerCase().equals("sndid")) {
+                  //  System.out.println("getFFInfo:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
+                    if (t[2].toLowerCase().equals("constant")) {
+                        x[3] = t[7];
+                    } else {
+                        if (t[1].toLowerCase().equals("fixed") && i == Integer.valueOf(t[3])) {
+                        x[3] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
+                        }
+                        if (t[1].toLowerCase().equals("regex") && s.matches(t[6])) {
+                        x[3] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
+                        }
+                    }
+                }
                 
             }
             
             
-            if (! x[0].isEmpty() && ! x[1].isEmpty()) {
+            if (! x[0].isEmpty() && ! x[1].isEmpty() && ! x[3].isEmpty()) {
                 break;
             }
         }
+        if (GlobalDebug) {
+            System.out.println("getFFInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
+        }
         return x;
     }
+    
     
     public static void processXML(File file, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
@@ -831,7 +848,7 @@ public class EDI {
         
         
         // now lets get map
-             map = OVData.getEDIMap(senderid, doctype);
+          //   map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -902,7 +919,7 @@ public class EDI {
     }
         
         // now lets get map
-             map = OVData.getEDIMap(senderid, doctype);
+        //     map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                     try {
                     Class cls = Class.forName("EDIMaps." + map);
@@ -1011,7 +1028,7 @@ public class EDI {
             
              
              if (proceed) {
-             map = OVData.getEDIMap(senderid, doctype);
+            // map = OVData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -1037,6 +1054,8 @@ public class EDI {
          }
       
 }
+    
+    
     
     public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile)   {
     
@@ -1116,12 +1135,14 @@ public class EDI {
           
           
           String gs02 = ""; 
+          String gs03 = "";
           int j = Integer.valueOf(c[10]);
           String delim = String.valueOf(Character.toString((char) j));
           String[] gs = c[14].split(escapeDelimiter(delim));
          
           if (gs != null && gs.length > 2) {
               gs02 = gs[2];
+              gs03 = gs[3];
           }
           String parentPartner = OVData.getEDIPartnerFromAlias(gs02);
           if (parentPartner == null || parentPartner.isEmpty()) {
@@ -1137,16 +1158,20 @@ public class EDI {
              
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIMap(parentPartner, c[1]); 
+                
+                if (GlobalDebug)   
+                System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
+                
+                  map = OVData.getEDIMap(c[1], gs02, gs03); 
                } 
             
                // if no map then bail
                if (map.isEmpty() && c[12].isEmpty()) {
-                  OVData.writeEDILog(c, "error", "unable to find map class for Parent|isa|gs: " + parentPartner + "|"  + c[0] + "|" + gs02 + " / " + c[1]); 
+                  OVData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
                } else {
                   
                 if (GlobalDebug)   
-                System.out.println("Entering Map " + map + " with: " + parentPartner + "|"  + c[0] + "|" + gs02 + " / " + c[1]);    
+                System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                     try {
@@ -1192,7 +1217,7 @@ public class EDI {
             ArrayList<String> falistcopy = new ArrayList<String>(falist);
             falist.clear();
             
-                if (c[12].isEmpty() && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[0], c[1]))) {
+                if (c[12].isEmpty() && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim()))) {
                     try {
                     String[] _isa = c[13].toString().split(EDI.escapeDelimiter(ed), -1);
                     String[] _gs = c[14].toString().split(EDI.escapeDelimiter(ed), -1);
@@ -1227,7 +1252,7 @@ public class EDI {
             if (GlobalDebug)
             System.out.println("processFF: " + z.getKey());
             
-            String[] x = getFFInfo(doc, tags);
+            String[] x = getFFInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
             
              if (x[2].isEmpty()) {
                   OVData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
@@ -1244,7 +1269,7 @@ public class EDI {
             c[0] = x[2];
             c[6] = x[0];
       
-            String[] defaults = OVData.getEDITPDefaults(x[2], x[0]);
+            String[] defaults = OVData.getEDITPDefaults(x[0], x[3], x[1]);
             c[9] = defaults[7]; 
             c[10] = defaults[6]; 
             c[11] = defaults[8];   
@@ -1270,7 +1295,7 @@ public class EDI {
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIMap(c[0], c[1]); 
+                  map = OVData.getEDIMap(c[1], x[3], x[1]);  
                } 
             
                // if no map then bail
@@ -1741,6 +1766,7 @@ public class EDI {
      
       
     // outbound
+    
     public static int Create856(String shipper)  {
           int errorcode = 0;
         // errorcode = 0 ... clean exit
@@ -1777,13 +1803,13 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(billto, doctype);
+        String[] defaults = OVData.getEDITPDefaults(billto, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIMap(c_in[0], c_in[1]);
+        map = OVData.getEDIMap(c_in[0], c_in[1], "");
         
           if (map.isEmpty()) {
             proceed = false;
@@ -1865,13 +1891,13 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(billto, doctype);
+        String[] defaults = OVData.getEDITPDefaults(billto, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIMap(c_in[0], c_in[1]);
+        map = OVData.getEDIMap(c_in[0], c_in[1], "");
         
           if (map.isEmpty()) {
             proceed = false;
@@ -1939,7 +1965,7 @@ public class EDI {
          
         for (String w : wh) {   
         
-        map = OVData.getEDIMap(w, doctype);
+        map = OVData.getEDIMap(w, doctype, "");
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
        
@@ -1955,7 +1981,7 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(w, doctype);
+        String[] defaults = OVData.getEDITPDefaults(doctype, w, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
@@ -2029,7 +2055,7 @@ public class EDI {
         for (String ca : cars) {   
             
         
-        map = OVData.getEDIMap(ca, doctype); 
+        map = OVData.getEDIMap(ca, doctype, ""); 
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
         c_in[0] = ca;
@@ -2044,7 +2070,7 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(ca, doctype);
+        String[] defaults = OVData.getEDITPDefaults(ca, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
@@ -2114,7 +2140,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIMap(tp, doctype); 
+        map = OVData.getEDIMap(tp, doctype, ""); 
         
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
@@ -2130,7 +2156,7 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(tp, doctype);
+        String[] defaults = OVData.getEDITPDefaults(tp, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
@@ -2200,7 +2226,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIMap(ca, doctype);
+        map = OVData.getEDIMap(ca, doctype, "");
         
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
@@ -2217,7 +2243,7 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(ca, doctype);
+        String[] defaults = OVData.getEDITPDefaults(ca, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
@@ -2265,15 +2291,16 @@ public class EDI {
      }
        
       
+    
      // miscellaneous 
-      public static String[] generateEnvelope(String entity, String doctype) {
+      public static String[] generateEnvelope(String doctype, String sndid, String rcvid) {
         
         String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
-        String[] defaults = OVData.getEDITPDefaults(entity, doctype);
-         ArrayList<String> attrs = OVData.getEDIAttributesList(entity, doctype);
+        String[] defaults = OVData.getEDITPDefaults(doctype, sndid, rcvid);
+         ArrayList<String> attrs = OVData.getEDIAttributesList(doctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);
@@ -2336,7 +2363,10 @@ public class EDI {
          String isa11 = "U";
          if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
          
-         String isa12 = defaults[12].substring(0,5);
+         String isa12 = "     ";  // must be 5 chars long
+         if (defaults[12].length() > 4) {
+         isa12 = defaults[12].substring(0,5);
+         }
          if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
          
          String isa13 = String.format("%09d", filenumber);
@@ -2416,8 +2446,8 @@ public class EDI {
         // get counter for ediout
         int filenumber = OVData.getNextNbr("ediout");
         
-        String[] defaults = OVData.getEDITPDefaults(in_isa[6].trim(), "997");
-        ArrayList<String> attrs = OVData.getEDIAttributesList(in_isa[6].trim(), "997");
+        String[] defaults = OVData.getEDITPDefaults("997", in_isa[6].trim(), in_isa[8].trim());
+        ArrayList<String> attrs = OVData.getEDIAttributesList("997", in_isa[6].trim(), in_isa[8].trim());
       
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {

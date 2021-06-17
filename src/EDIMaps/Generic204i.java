@@ -97,7 +97,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                    e.setCarrier(elementArray[2]);
                    // lets set tpid and cust at this point with ISA sender ID and cross reference lookup into cmedi_mstr
                    e.setTPID(isa[6].trim()); 
-                   e.setCust(OVData.getEDICustFromSenderISA(isa[6].trim(), "204"));
+                   e.setCust(OVData.getEDICustFromSenderISA(isa[6].trim(), "204", ""));
                    break;
                
                case "B2A" :

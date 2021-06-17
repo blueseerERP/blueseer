@@ -2699,7 +2699,7 @@ public class DTData {
           
            public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "CustCode", "DOC", "Dir", "ISA", "GS", "SiteISA", "SiteGS", "Map"})
+                      new String[]{"select", "Code", "DOC", "SndISA", "SndGS", "RcvISA", "RcvGS", "Map"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2716,28 +2716,27 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map " +
+                    res = st.executeQuery(" select edi_id, edi_doc, edi_sndisa, edi_sndgs, edi_rcvisa, edi_rcvgs,  edi_map  " +
                         " FROM  edi_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by edi_id, edi_doc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery(" select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map " +
+                    res = st.executeQuery(" select edi_id, edi_doc, edi_sndisa, edi_sndgs, edi_rcvisa, edi_rcvgs,  edi_map  " +
                         " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by edi_id, edi_doc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("  select edi_id, edi_doc, edi_dir, edi_isa, edi_gs, edi_bsisa, edi_bsgs, edi_map  " +
+                 res = st.executeQuery("  select edi_id, edi_doc, edi_sndisa, edi_sndgs, edi_rcvisa, edi_rcvgs,  edi_map  " +
                         " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by edi_id, edi_doc ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),
-                                   res.getString("edi_dir"),
-                                   res.getString("edi_isa"),
-                                   res.getString("edi_gs"),
-                                   res.getString("edi_bsisa"),
-                                   res.getString("edi_bsgs"),
+                                   res.getString("edi_sndisa"),
+                                   res.getString("edi_sndgs"),
+                                   res.getString("edi_rcvisa"),
+                                   res.getString("edi_rcvgs"),
                                    res.getString("edi_map")
                         });
                     }

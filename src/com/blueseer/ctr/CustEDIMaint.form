@@ -131,14 +131,14 @@
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tbovisaq" min="-2" pref="51" max="-2" attributes="0"/>
+                              <Component id="tbsndq" min="-2" pref="51" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
@@ -147,12 +147,12 @@
                                       <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="tbmap" min="-2" pref="165" max="-2" attributes="0"/>
-                                          <Component id="tbgs" min="-2" pref="122" max="-2" attributes="0"/>
-                                          <Component id="tbovisa" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
+                                          <Component id="tbrcvgs" min="-2" pref="122" max="-2" attributes="0"/>
+                                          <Component id="tbsndisa" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <Component id="tbisaq" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
-                                  <Component id="tbovgs" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
+                                  <Component id="tbrcvq" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
+                                  <Component id="tbsndgs" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="tbkey" min="-2" pref="122" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -165,12 +165,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tbisa" alignment="1" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="tbrcvisa" alignment="1" min="-2" pref="120" max="-2" attributes="0"/>
                                   <Component id="dddoc" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="13" max="32767" attributes="0"/>
+                      <EmptySpace pref="17" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -186,7 +186,7 @@
                           </Group>
                           <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="dddoc" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -194,17 +194,17 @@
                       <EmptySpace min="12" pref="12" max="12" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbisa" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbrcvisa" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbgs" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbrcvgs" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbisaq" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbrcvq" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -214,16 +214,16 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbovisa" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbsndisa" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbovgs" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbsndgs" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbovisaq" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbsndq" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -232,18 +232,18 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JTextField" name="tbovgs">
+            <Component class="javax.swing.JTextField" name="tbsndgs">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="DocType:"/>
+                <Property name="text" type="java.lang.String" value="DocType"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbkey">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Q"/>
+                <Property name="text" type="java.lang.String" value="Rcv Q"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
@@ -251,31 +251,31 @@
                 <Property name="text" type="java.lang.String" value="Code:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbgs">
+            <Component class="javax.swing.JTextField" name="tbrcvgs">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
-                <Property name="text" type="java.lang.String" value="BS GS"/>
+                <Property name="text" type="java.lang.String" value="Snd GS"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="GS"/>
+                <Property name="text" type="java.lang.String" value="Rcv GS"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbisaq">
+            <Component class="javax.swing.JTextField" name="tbrcvq">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="ISA"/>
+                <Property name="text" type="java.lang.String" value="Rcv ISA"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
-                <Property name="text" type="java.lang.String" value="BS ISA"/>
+                <Property name="text" type="java.lang.String" value="Snd ISA"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbovisa">
+            <Component class="javax.swing.JTextField" name="tbsndisa">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
@@ -284,10 +284,10 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
               <Properties>
-                <Property name="text" type="java.lang.String" value="BS Q"/>
+                <Property name="text" type="java.lang.String" value="Snd Q"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbovisaq">
+            <Component class="javax.swing.JTextField" name="tbsndq">
             </Component>
             <Component class="javax.swing.JTextField" name="tbmap">
             </Component>
@@ -309,7 +309,7 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbisa">
+            <Component class="javax.swing.JTextField" name="tbrcvisa">
             </Component>
             <Component class="javax.swing.JButton" name="btlookup">
               <Properties>

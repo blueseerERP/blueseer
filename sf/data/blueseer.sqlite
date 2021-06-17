@@ -281,15 +281,16 @@ CREATE TABLE "cmc_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_mstr" (
   "edi_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_isa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_filetype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_sndisa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edi_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edi_map" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_isaq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_gs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_bsisa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_bsq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_bsgs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_sndq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_sndgs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_rcvisa" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_rcvq" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edi_rcvgs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edi_eledelim" int(11) NOT NULL DEFAULT '0',
   "edi_segdelim" int(11) NOT NULL DEFAULT '0',
   "edi_subdelim" int(11) NOT NULL DEFAULT '0',
@@ -615,7 +616,8 @@ CREATE TABLE "edi_xref" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_attr" (
-  "exa_tpid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_sndid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_rcvid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "exa_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "exa_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "exa_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',

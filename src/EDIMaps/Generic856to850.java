@@ -28,41 +28,47 @@ package EDIMaps;
 
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
+import static com.blueseer.edi.EDIMap.commitSegment;
+import static com.blueseer.edi.EDIMap.getGroupCount;
+import static com.blueseer.edi.EDIMap.getInput;
+import static com.blueseer.edi.EDIMap.mapSegment;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
  *
  * @author vaughnte
  */
-public class GenericIDOCto850 extends com.blueseer.edi.EDIMap { 
+public class Generic856to850 extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
-    
-   
+        
     // These master variables must be set for all maps    
     setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setOutPutFileType("X12");  // X12 of FF
     setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
-    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\ORDERS05.csv");
+    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12856.csv");
     setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv");
     if (isError) { return error;}  // check errors for master variables
     
     mappedInput = mapInput(c, doc, ISF);
-    setReference(getInput("E2EDK01","belnr")); // must be ran after mappedInput
-   // debuginput(mappedInput);
+    setReference(getInput("BSN",2)); // must be ran after mappedInput
+    debuginput(mappedInput);  // for debug purposes
     
-    /* a few global variables */
-    int i = 0; // used for all looping ...for loops reset it's initial value each time
+    // set some global variables if necessary
+    String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    String mandt = "110";
+    String docnum = String.format("%016d",Integer.valueOf(c[4]));
+    int i = 0;
     
-    /* Begin Mapping Segments */ 
+     /* Begin Mapping Segments */ 
     mapSegment("BEG","e01","00");
-    mapSegment("BEG","e02",getInput("E2EDK01","belnr"));
+    mapSegment("BEG","e02",getInput("BSN","e02"));
     mapSegment("BEG","e03","NE");
     mapSegment("BEG","e04","");
     //mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
@@ -161,7 +167,7 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     
     mapSegment("CTT","e01",String.valueOf(itemLoopCount));
     commitSegment("CTT",i);
-   
+        
     return packagePayLoad(c);
 }
 

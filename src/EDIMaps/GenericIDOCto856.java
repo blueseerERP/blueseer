@@ -32,6 +32,8 @@ import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,40 +42,59 @@ import java.util.Map;
  *
  * @author vaughnte
  */
-public class GenericIDOCto850 extends com.blueseer.edi.EDIMap { 
+public class GenericIDOCto856 extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
     
-   
     // These master variables must be set for all maps    
     setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setOutPutFileType("X12");  // X12 of FF
-    setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
-    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\ORDERS05.csv");
-    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv");
+    setOutPutDocType("856");  // 850, 856, ORDERS05, SHPMNT05, etc
+    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\SHPMNT05ngc.csv");
+    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12856.csv");
     if (isError) { return error;}  // check errors for master variables
     
+    // now map input
     mappedInput = mapInput(c, doc, ISF);
-    setReference(getInput("E2EDK01","belnr")); // must be ran after mappedInput
-   // debuginput(mappedInput);
+    setReference(getInput("E2EDT20","TKNUM")); // must be ran after mappedInput
+    debuginput(mappedInput);  // for debug purposes
+   
     
     /* a few global variables */
     int i = 0; // used for all looping ...for loops reset it's initial value each time
+    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+    int hlcounter = 0;
     
     /* Begin Mapping Segments */ 
-    mapSegment("BEG","e01","00");
-    mapSegment("BEG","e02",getInput("E2EDK01","belnr"));
-    mapSegment("BEG","e03","NE");
-    mapSegment("BEG","e04","");
+    mapSegment("BSN","e01","00");
+    mapSegment("BSN","e02",getInput("E2EDT20","tknum"));
+    mapSegment("BSN","e03",now.substring(0,8));
+    mapSegment("BSN","e04",now.substring(8,12));
+    commitSegment("BSN",1);
     //mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
-    mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
-    mapSegment("BEG","e10","SP");
-    commitSegment("BEG",1);
-       
-    mapSegment("CUR","e01","BY");
-    mapSegment("CUR","e02","USD");
-    commitSegment("CUR",1);
+   // mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
+  
     
+    hlcounter++;   
+    mapSegment("HL","e01", String.valueOf(hlcounter));
+    mapSegment("HL","e03","S");
+    mapSegment("HL","e04","1");
+    commitSegment("HL",1);
+    
+    mapSegment("TD1","e01", "PCS25");
+    mapSegment("TD1","e02",getInput("ZE1EDT856","zpackages"));
+    mapSegment("TD1","e06","A3");
+    mapSegment("TD1","e07",getInput("E2EDL20","ntgew"));
+    mapSegment("TD1","e08","LB");
+    commitSegment("TD1",1);
+    
+    mapSegment("TD5","e02", "2");
+    mapSegment("TD5","e03",getInput("ZE1EDT856","zscac"));
+    mapSegment("TD5","e05",getInput("E2ADRM4","partner_q:SP","name1"));
+    mapSegment("TD5","e06","CC");
+    commitSegment("TD5",1);
+    
+    /*
     mapSegment("REF","e01","VR");
     mapSegment("REF","e02",getInput("E2EDK01",25));
     commitSegment("REF",1);
@@ -103,7 +124,7 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     mapSegment("PER","e02",getInput("E2EDKA1","7:AG",42));
     commitSegment("PER",1);
     
-    /* Item Loop */
+    // Item Loop 
     DecimalFormat df = new java.text.DecimalFormat("0.#####");
     int itemcount = getGroupCount("E2EDP01");
     int itemLoopCount = 0;
@@ -157,11 +178,15 @@ public class GenericIDOCto850 extends com.blueseer.edi.EDIMap {
     commitSegment("N4",i + 1);
     
     }
-    /* end of item loop */
+    // end of item loop 
     
     mapSegment("CTT","e01",String.valueOf(itemLoopCount));
     commitSegment("CTT",i);
-   
+    
+   */
+     /* check for error */
+    if (isError) { return error;}
+    
     return packagePayLoad(c);
 }
 

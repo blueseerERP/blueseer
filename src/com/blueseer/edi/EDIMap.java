@@ -31,6 +31,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,6 +64,8 @@ public abstract class EDIMap implements EDIMapi {
          
     public static  int segcount = 0;
     public static boolean GlobalDebug = false;
+    public static boolean isError = false;
+    
     DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
     DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
     DateFormat isadftime = new SimpleDateFormat("HHmm");
@@ -80,6 +83,8 @@ public abstract class EDIMap implements EDIMapi {
      public static String[] seArray = new String[3];
      public static String[] geArray = new String[3];
      public static String[] ieaArray = new String[3];
+     
+     public static String[] error = new String[2];
 
      public static String ST = "";
      public static String SE = "";
@@ -94,6 +99,8 @@ public abstract class EDIMap implements EDIMapi {
      public static String outfile = "";
      public static String outputfiletype = "";
      public static String outputdoctype = "";
+     public static String ifsfile = "";
+     public static String ofsfile = "";
      public static String filename = "";
      public static String isactrl = "";
      public static String gsctrl = "";
@@ -137,6 +144,21 @@ public abstract class EDIMap implements EDIMapi {
      return index != null && index >=0 && index < list.length && list[index] != null;
      }
 
+    public static void setError(String mssg) {
+        isError = true;
+        error = new String[]{"error", mssg};
+    }
+    
+    public void setInputStructureFile(String ifs) {
+        ifsfile = ifs;
+        readISF(ifsfile);
+    }
+    
+    public void setOutputStructureFile(String ofs) {
+        ofsfile = ofs;
+        readOSF(ofsfile);
+    }
+    
     public void setOutPutFileType(String filetype) {
         outputfiletype = filetype;
     }
@@ -195,7 +217,7 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutEnvelopeStrings(String[] c) { 
 
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
-           envelope = EDI.generateEnvelope(sender, doctype); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           envelope = EDI.generateEnvelope(doctype, sender, c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            ISA = envelope[0];
            GS = envelope[1];
            GE = envelope[2];
@@ -331,7 +353,7 @@ public abstract class EDIMap implements EDIMapi {
         
         
         // get TP/Doc defaults
-        String[] tp = OVData.getEDITPDefaults(sender, doctype);
+        String[] tp = OVData.getEDITPDefaults(doctype, sender, c[21] );
         
          // concatenate all output strings to string variable 'content' 
         writeOMD(c, tp);
@@ -437,12 +459,15 @@ public abstract class EDIMap implements EDIMapi {
          HASH.clear();
      }
      
-    public static Map<String, ArrayList<String[]>> readOSF(String adf) throws IOException {
+    public void readOSF(String adf)  {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
 	        File cf = new File(adf);
-	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+	    	BufferedReader reader; 
+        try {
+            reader = new BufferedReader(new FileReader(cf));
+        
 			String line;
 			while ((line = reader.readLine()) != null) {
                                 if (line.startsWith("#")) {
@@ -467,29 +492,49 @@ public abstract class EDIMap implements EDIMapi {
 				hm.put(s, x);
 			}
 			
-			
-	        return hm;
-	    }
+		OSF = hm;
+                } catch (FileNotFoundException ex) {
+             MainFrame.bslog(ex);
+            setError("outbound structure file not found");
+        } catch (IOException ex) {
+             MainFrame.bslog(ex);
+            setError("outbound structure file IOException");
+        }
+}
 
-    public static ArrayList<String[]> readISF(String[] c, String ifile) throws IOException {
-		String[] s = null;
-		ArrayList<String[]> list = new ArrayList<String[]>();
-		File cf = new File(ifile);
-    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+    public static void readISF(String ifile) {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        File cf = new File(ifile);
+    	BufferedReader reader; 
+        try {
+            reader = new BufferedReader(new FileReader(cf));
+         
 		String line;
+                int i = 0;
 		while ((line = reader.readLine()) != null) {
+                    i++;
 			if (line.startsWith("#")) {
 				continue;
 			}
 			if (! line.isEmpty()) {
 			String[] t = line.split(",",-1);
-			list.add(t);
+                        if (GlobalDebug && t.length != 10) {
+                        System.out.println("readISF: line " + i + " delimited count is not 10 " + t.length);
+                        }
+                        list.add(t);
 			}
 		}
 		reader.close();
-		
-		
-		return list;
+		ISF = list;
+                
+                
+        }   catch (FileNotFoundException ex) {
+            MainFrame.bslog(ex);
+            setError("inbound structure file not found");
+        } catch (IOException ex) {
+            MainFrame.bslog(ex);
+            setError("inbound structure file IOException");
+        }
 	}
      
     public static Map<String, HashMap<String, String>> readIMD(String adf, ArrayList<String> doc) throws IOException {
@@ -782,7 +827,7 @@ public abstract class EDIMap implements EDIMapi {
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  t = z.getValue();
-                 if (t != null && t.length >= Integer.valueOf(qualNbr) && t[Integer.valueOf(qualNbr)].equals(q[1].toUpperCase())) {
+                 if (t != null && t.length >= Integer.valueOf(qualNbr) && t[Integer.valueOf(qualNbr)].trim().equals(q[1].toUpperCase())) {
                      k = t;
                  }
              }
@@ -850,7 +895,7 @@ public abstract class EDIMap implements EDIMapi {
                 if (! z[5].equals("landmark")) {
                   x++;
                 }
-                if (element.equals(z[5])) {
+                if (element.toLowerCase().equals(z[5].toLowerCase())) {
                     r = x;
                     break;
                 }

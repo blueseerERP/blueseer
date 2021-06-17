@@ -3954,7 +3954,7 @@ public class OVData {
                   return myreturn;
              } 
     
-    public static boolean addEDIAttributeRecord(String tp, String doc, String key, String value) {
+    public static boolean addEDIAttributeRecord(String sndid, String rcvid, String doc, String key, String value) {
                  boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
@@ -3963,8 +3963,9 @@ public class OVData {
             ResultSet res = null;
             try {
                 int i = 0;
-                   res =  st.executeQuery("select exa_tpid from edi_attr where " +
-                                           " exa_tpid = " + "'" + tp + "'" + 
+                   res =  st.executeQuery("select exa_sndid from edi_attr where " +
+                                           " exa_sndid = " + "'" + sndid + "'" +
+                                           " and exa_rcvid = " + "'" + rcvid + "'" +
                                            " and exa_doc = " + "'" + doc + "'" +
                                            " and exa_key = " + "'" + key + "'" +
                                            ";");
@@ -3974,9 +3975,10 @@ public class OVData {
                     }
                     if (j == 0) {
                     st.executeUpdate(" insert into edi_attr " 
-                      + "(exa_tpid, exa_doc, exa_key, exa_value ) " 
+                      + "(exa_sndid, exa_rcvid, exa_doc, exa_key, exa_value ) " 
                       + " values ( " + 
-                    "'" +  tp + "'" + "," + 
+                    "'" +  sndid + "'" + "," + 
+                    "'" +  rcvid + "'" + "," +
                     "'" +  doc + "'" + "," +
                     "'" +  key + "'" + "," + 
                     "'" +  value + "'" 
@@ -4183,7 +4185,7 @@ public class OVData {
                    res =  st.executeQuery("select edi_id from edi_mstr where " +
                                            " edi_id = " + "'" + ld[0] + "'" + 
                                            " and edi_doc = " + "'" + ld[1] + "'" +
-                                           " and edi_isa = " + "'" + ld[2] + "'" +
+                                           " and edi_sndisa = " + "'" + ld[2] + "'" +
                                            " and edi_dir = " + "'" + ld[3] + "'" +
                                            ";");
                     int j = 0;
@@ -4194,7 +4196,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into edi_mstr " 
-                      + "(edi_id, edi_doc, edi_isa, edi_map, edi_isaq, edi_gs, edi_bsisa, edi_bsq, edi_bsgs, " +
+                      + "(edi_id, edi_doc, edi_sndisa, edi_map, edi_sndq, edi_sndgs, edi_rcvisa, edi_rcvq, edi_rcvgs, " +
                         " edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, " +
                         " edi_filesuffix, edi_filepath, edi_version, edi_supcode, edi_fa_required ) "
                    + " values ( " + 
@@ -6038,7 +6040,7 @@ public class OVData {
          * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
          * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
          */
-    public static String[] getEDITPDefaults(String partner, String doctype) {
+    public static String[] getEDITPDefaults(String doctype, String sndid, String rcvid) {
            
                     
              String[] mystring = new String[]{"","","","","","","0","0","0","","","","","",""};
@@ -6049,15 +6051,18 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + partner + "'" + 
-                        " AND edi_doc = " + "'" + doctype + "'"  + ";");
+                      res = st.executeQuery("select * from edi_mstr where " + 
+                        " edi_doc = " + "'" + doctype + "'" 
+                      +  " AND edi_sndisa = " + "'" + sndid + "'"  
+                      +  " AND edi_rcvisa = " + "'" + rcvid + "'"          
+                        + ";");
                     while (res.next()) {
-                       mystring[0] = res.getString("edi_isa");
-                        mystring[1] = res.getString("edi_isaq");
-                        mystring[2] = res.getString("edi_gs");
-                        mystring[3] = res.getString("edi_bsisa") ;
-                        mystring[4] = res.getString("edi_bsq") ;
-                        mystring[5] = res.getString("edi_bsgs");
+                       mystring[0] = res.getString("edi_sndisa");
+                        mystring[1] = res.getString("edi_sndq");
+                        mystring[2] = res.getString("edi_sndgs");
+                        mystring[3] = res.getString("edi_rcvisa") ;
+                        mystring[4] = res.getString("edi_rcvq") ;
+                        mystring[5] = res.getString("edi_rcvgs");
                         mystring[6] = res.getString("edi_eledelim");
                         mystring[7] = res.getString("edi_segdelim") ;
                         mystring[8] = res.getString("edi_subdelim") ;
@@ -6083,7 +6088,7 @@ public class OVData {
         
          }
     
-    public static ArrayList<String> getEDIAttributesList(String tp, String doctype) {
+    public static ArrayList<String> getEDIAttributesList(String doctype, String sndid, String rcvid) {
            
              ArrayList<String> x = new ArrayList<String>();
         try{
@@ -6093,8 +6098,10 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from edi_attr where exa_tpid = " + "'" + tp + "'" + 
-                        " AND exa_doc = " + "'" + doctype + "'" + ";");
+                      res = st.executeQuery("select * from edi_attr where exa_sndid = " + "'" + sndid + "'" + 
+                        " AND exa_rcvid = " + "'" + rcvid + "'" + 
+                        " AND exa_doc = " + "'" + doctype + "'" +
+                              ";");
                     while (res.next()) {
                        x.add(res.getString("exa_key") + ":" + res.getString("exa_value"));
                     }
@@ -6113,7 +6120,7 @@ public class OVData {
         
          }
         
-         public static String[] getEDI997SystemDefaults() {
+    public static String[] getEDI997SystemDefaults() {
            
                     
              String[] mystring = new String[15];
@@ -6127,12 +6134,12 @@ public class OVData {
                       res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + OVData.getDefaultSite() + "'" + 
                         " AND edi_doc = " + "'" + "997" + "'" + ";");
                     while (res.next()) {
-                       mystring[0] = res.getString("edi_isa");
-                        mystring[1] = res.getString("edi_isaq");
-                        mystring[2] = res.getString("edi_gs");
-                        mystring[3] = res.getString("edi_bsisa") ;
-                        mystring[4] = res.getString("edi_bsq") ;
-                        mystring[5] = res.getString("edi_bsgs");
+                       mystring[0] = res.getString("edi_sndisa");
+                        mystring[1] = res.getString("edi_sndq");
+                        mystring[2] = res.getString("edi_sndgs");
+                        mystring[3] = res.getString("edi_rcvisa") ;
+                        mystring[4] = res.getString("edi_rcvq") ;
+                        mystring[5] = res.getString("edi_rcvgs");
                         mystring[6] = res.getString("edi_eledelim");
                         mystring[7] = res.getString("edi_segdelim") ;
                         mystring[8] = res.getString("edi_subdelim") ;
@@ -6158,7 +6165,7 @@ public class OVData {
         
          } 
         
-       public static String getEDIMap(String code, String doctype) {
+    public static String getEDIMap(String doctype, String sndid, String rcvid) {
       
            String mystring = "";
         try{
@@ -6168,8 +6175,10 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_map from edi_mstr where edi_id = " + "'" + code + "'" + 
-                        " AND edi_doc = " + "'" + doctype + "'" + 
+                res = st.executeQuery("select edi_map from edi_mstr where  " + 
+                        " edi_doc = " + "'" + doctype + "'" + 
+                        " AND edi_sndgs = " + "'" + sndid + "'" + 
+                        " AND edi_rcvgs = " + "'" + rcvid + "'" +         
                                 ";");
                while (res.next()) {
                    mystring = res.getString("edi_map");
@@ -6188,7 +6197,7 @@ public class OVData {
         
     }
        
-       public static String getEDICustDir(String tp, String doctype) {
+    public static String getEDICustDir(String doctype, String sndid, String rcvid) {
       
            String mystring = "";
         try{
@@ -6198,7 +6207,9 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_filepath from edi_mstr where edi_id = " + "'" + tp + "'" + 
+                res = st.executeQuery("select edi_filepath from edi_mstr where " + 
+                        " edi_sndgs = " + "'" + sndid + "'" +
+                        " AND edi_rcvgs = " + "'" + rcvid + "'" +            
                         " AND edi_doc = " + "'" + doctype + "'" + 
                                 ";");
                while (res.next()) {
@@ -6218,7 +6229,7 @@ public class OVData {
         
     }
         
-        public static String getEDIFuncAck(String id, String doctype) {
+    public static String getEDIFuncAck(String doctype, String sndid, String rcvid) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6227,8 +6238,10 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_fa_required from edi_mstr where edi_id = " + "'" + id + "'" + 
-                        " AND edi_dir = '1' AND edi_doc = " + "'" + doctype + "'" + ";");
+                res = st.executeQuery("select edi_fa_required from edi_mstr where edi_sndgs = " + "'" + sndid + "'" + 
+                        " AND edi_rcvgs = " + "'" + rcvid + "'" + 
+                        " AND edi_doc = " + "'" + doctype + "'" +        
+                                ";");
                while (res.next()) {
                    mystring = res.getString("edi_fa_required");
                 }
@@ -6245,9 +6258,8 @@ public class OVData {
         return mystring;
         
     }
-       
-       
-       public static ArrayList getEDIUniqueTPID() {
+              
+    public static ArrayList getEDIUniqueTPID() {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -6256,9 +6268,9 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select edi_isa from edi_mstr group by edi_isa order by edi_isa; ");
+                res = st.executeQuery("select edi_sndisa from edi_mstr group by edi_sndisa order by edi_sndisa; ");
                while (res.next()) {
-                   mylist.add(res.getString("edi_isa"));
+                   mylist.add(res.getString("edi_sndisa"));
                 }
                
            }
@@ -6274,7 +6286,7 @@ public class OVData {
         
     }
        
-       public static ArrayList getEDIPartners() {
+    public static ArrayList getEDIPartners() {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver).newInstance();
@@ -6301,7 +6313,7 @@ public class OVData {
         
     }
        
-       public static String getEDIPartnerFromAlias(String alias) {
+    public static String getEDIPartnerFromAlias(String alias) {
        String x = "";
         try{
             Class.forName(driver).newInstance();
@@ -6330,9 +6342,8 @@ public class OVData {
         return x;
         
     }
-       
-       
-       public static String getEDICustFromSenderISA(String isa, String doctype) {
+             
+    public static String getEDICustFromSenderISA(String doctype, String sndid, String rcvid) {
              String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -6341,8 +6352,9 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                    
-                      res = st.executeQuery("select * from edi_mstr where edi_isa = " + "'" + isa.trim() + "'" + 
-                        " AND edi_doc = " + "'" + doctype + "'" + 
+                      res = st.executeQuery("select * from edi_mstr where edi_sndgs = " + "'" + sndid.trim() + "'" + 
+                        " AND edi_rcvgs = " + "'" + rcvid + "'" +
+                              " AND edi_doc = " + "'" + doctype + "'" + 
                                 ";");
                     while (res.next()) {
                        mystring = res.getString("edi_id");

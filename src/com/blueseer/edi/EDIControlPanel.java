@@ -387,7 +387,7 @@ public class EDIControlPanel extends javax.swing.JPanel {
                 
                     if (i == 0) {
                     st.executeUpdate("insert into edi_mstr (edi_id, edi_doc, edi_isa, edi_isaq, edi_gs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, edi_version, edi_bsisa, edi_bsgs, edi_bsq, edi_supcode, edi_fa_required ) " + 
-                            " select ( " + "'" + ddtopartner.getSelectedItem().toString() + "'" + ", em.edi_doc, em.edi_isa, em.edi_isaq, em.edi_gs, em.edi_map, em.edi_eledelim, em.edi_segdelim, em.edi_subdelim, em.edi_fileprefix, em.edi_filesuffix, em.edi_filepath, em.edi_version, em.edi_bsisa, em.edi_bsgs, em.edi_bsq, em.edi_supcode, em.edi_fa_required) from edi_mstr em " +
+                            " select  " + "'" + ddtopartner.getSelectedItem().toString() + "'" + ", em.edi_doc, em.edi_isa, em.edi_isaq, em.edi_gs, em.edi_map, em.edi_eledelim, em.edi_segdelim, em.edi_subdelim, em.edi_fileprefix, em.edi_filesuffix, em.edi_filepath, em.edi_version, em.edi_bsisa, em.edi_bsgs, em.edi_bsq, em.edi_supcode, em.edi_fa_required from edi_mstr em " +
                             " where em.edi_id = " + "'" + ddfrompartner.getSelectedItem().toString() + "'" +
                             " and em.edi_doc = " + "'" + ddfromdoctype.getSelectedItem().toString() + "'");
                     bsmf.MainFrame.show("Copy Complete");

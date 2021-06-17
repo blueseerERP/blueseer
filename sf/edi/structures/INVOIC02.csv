@@ -1,0 +1,770 @@
+#segment,parent,loopcount,isgroup,islandmark,field,Desc,min,max,align
+EDI_DC,,1,no,yes,landmark,landmark,6,6,-
+EDI_DC,,1,no,no,tabnam,Name of table structure,4,4,-
+EDI_DC,,1,no,no,mandt,Client,3,3,-
+EDI_DC,,1,no,no,docnum,IDoc number,16,16,-
+EDI_DC,,1,no,no,docrel,SAP Release for IDoc,4,4,-
+EDI_DC,,1,no,no,status,Status of IDoc,2,2,-
+EDI_DC,,1,no,no,direct,Direction,1,1,-
+EDI_DC,,1,no,no,outmod,Output mode,1,1,-
+EDI_DC,,1,no,no,exprss,Overriding in inbound processing,1,1,-
+EDI_DC,,1,no,no,test,Test flag,1,1,-
+EDI_DC,,1,no,no,idoctyp,Name of basic type,30,30,-
+EDI_DC,,1,no,no,cimtyp,Extension (defined by customer),30,30,-
+EDI_DC,,1,no,no,mestyp,Message type,30,30,-
+EDI_DC,,1,no,no,mescod,Message code,3,3,-
+EDI_DC,,1,no,no,mesfct,Message Function,3,3,-
+EDI_DC,,1,no,no,std,EDI standard flag,1,1,-
+EDI_DC,,1,no,no,stdvrs,EDI standard version and release,6,6,-
+EDI_DC,,1,no,no,stdmes,EDI message type,6,6,-
+EDI_DC,,1,no,no,sndpor,Sender port (SAP System external subsystem),10,10,-
+EDI_DC,,1,no,no,sndprt,Partner type of sender,2,2,-
+EDI_DC,,1,no,no,sndpfc,Partner Function of Sender,2,2,-
+EDI_DC,,1,no,no,sndprn,Partner Number of Sender,10,10,-
+EDI_DC,,1,no,no,sndsad,Sender address (SADR),21,21,-
+EDI_DC,,1,no,no,sndlad,Logical address of sender,70,70,-
+EDI_DC,,1,no,no,rcvpor,Receiver port,10,10,-
+EDI_DC,,1,no,no,rcvprt,Partner Type of Receiver,2,2,-
+EDI_DC,,1,no,no,rcvpfc,Partner function of recipient,2,2,-
+EDI_DC,,1,no,no,rcvprn,Partner Number of Receiver,10,10,-
+EDI_DC,,1,no,no,rcvsad,Recipient address (SADR),21,21,-
+EDI_DC,,1,no,no,rcvlad,Logical address of recipient,70,70,-
+EDI_DC,,1,no,no,credat,Created on,8,8,-
+EDI_DC,,1,no,no,cretim,Created at,6,6,-
+EDI_DC,,1,no,no,refint,Transmission file (EDI Interchange),14,14,-
+EDI_DC,,1,no,no,refgrp,Message group (EDI Message Group),14,14,-
+EDI_DC,,1,no,no,refmes,Message (EDI Message),14,14,-
+EDI_DC,,1,no,no,arckey,Key for external message archive,70,70,-
+EDI_DC,,1,no,no,serial,Serialization,20,20,-
+E2EDK01,,1,no,yes,landmark,landmark,7,7,-
+E2EDK01,,1,no,no,segnam,Segment,23,23,-
+E2EDK01,,1,no,no,mandt,Client,3,3,-
+E2EDK01,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK01,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK01,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK01,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK01,,1,no,no,ACTION,Action code for the whole EDI message,3,3,-
+E2EDK01,,1,no,no,KZABS,Flag: order acknowledgment required,1,1,-
+E2EDK01,,1,no,no,CURCY,Currency,3,3,-
+E2EDK01,,1,no,no,HWAER,EDI local currency,3,3,-
+E2EDK01,,1,no,no,WKURS,Exchange rate,12,12,-
+E2EDK01,,1,no,no,ZTERM,Terms of payment key,17,17,-
+E2EDK01,,1,no,no,KUNDEUINR,VAT Registration Number,20,20,-
+E2EDK01,,1,no,no,EIGENUINR,VAT Registration Number,20,20,-
+E2EDK01,,1,no,no,BSART,Document type,4,4,-
+E2EDK01,,1,no,no,BELNR,IDOC document number,35,35,-
+E2EDK01,,1,no,no,NTGEW,Net weight,18,18,-
+E2EDK01,,1,no,no,BRGEW,Net weight,18,18,-
+E2EDK01,,1,no,no,GEWEI,Weight unit,3,3,-
+E2EDK01,,1,no,no,FKART_RL,Invoice list type,4,4,-
+E2EDK01,,1,no,no,ABLAD,Unloading Point,25,25,-
+E2EDK01,,1,no,no,BSTZD,Purchase order number supplement,4,4,-
+E2EDK01,,1,no,no,VSART,Shipping Conditions,2,2,-
+E2EDK01,,1,no,no,VSART_BEZ,Description of the Shipping Type,20,20,-
+E2EDK01,,1,no,no,RECIPNT_NO,Number of recipient (for control via the ALE model),10,10,-
+E2EDK01,,1,no,no,KZAZU,Order Combination Indicator,1,1,-
+E2EDK01,,1,no,no,AUTLF,Complete delivery defined for each sales order?,1,1,-
+E2EDK01,,1,no,no,AUGRU,Order reason (reason for the business transaction),3,3,-
+E2EDK01,,1,no,no,AUGRU_BEZ,Description,40,40,-
+E2EDK01,,1,no,no,ABRVW,Usage Indicator,3,3,-
+E2EDK01,,1,no,no,ABRVW_BEZ,Description,20,20,-
+E2EDK01,,1,no,no,FKTYP,Billing category,1,1,-
+E2EDK01,,1,no,no,LIFSK,Delivery block (document header),2,2,-
+E2EDK01,,1,no,no,LIFSK_BEZ,Description,20,20,-
+E2EDK01,,1,no,no,EMPST,Receiving point,25,25,-
+E2EDK01,,1,no,no,ABTNR,Department number,4,4,-
+E2EDK01,,1,no,no,DELCO,Agreed delivery time,3,3,-
+E2EDK01,,1,no,no,WKURS_M,Indirectly quoted exchange rate in an IDoc segment,12,12,-
+E2EDKA1,,1,no,yes,landmark,landmark,7,7,-
+E2EDKA1,,1,no,no,segnam,Segment,23,23,-
+E2EDKA1,,1,no,no,mandt,Client,3,3,-
+E2EDKA1,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDKA1,,1,no,no,segnum,Segment Number,6,6,-
+E2EDKA1,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDKA1,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDKA1,,1,no,no,PARVW,Partner function (e.g. sold-to party ship-to party ...),3,3,-
+E2EDKA1,,1,no,no,PARTN,Partner number,17,17,-
+E2EDKA1,,1,no,no,LIFNR,Vendor number at customer location,17,17,-
+E2EDKA1,,1,no,no,Name,Name 1,35,35,-
+E2EDKA1,,1,no,no,Name,Name 2,35,35,-
+E2EDKA1,,1,no,no,Name,Name 3,35,35,-
+E2EDKA1,,1,no,no,Name,Name 4,35,35,-
+E2EDKA1,,1,no,no,STRAS,Street and house number 1,35,35,-
+E2EDKA1,,1,no,no,STRS2,Street and house number 2,35,35,-
+E2EDKA1,,1,no,no,PFACH,PO Box,35,35,-
+E2EDKA1,,1,no,no,ORT01,City,35,35,-
+E2EDKA1,,1,no,no,COUNC,County code,9,9,-
+E2EDKA1,,1,no,no,PSTLZ,Postal code,9,9,-
+E2EDKA1,,1,no,no,PSTL2,P.O. Box postal code,9,9,-
+E2EDKA1,,1,no,no,LAND1,Country Key,3,3,-
+E2EDKA1,,1,no,no,ABLAD,Unloading Point,35,35,-
+E2EDKA1,,1,no,no,PERNR,Contact person's personnel number,30,30,-
+E2EDKA1,,1,no,no,PARNR,Contact person's number (not personnel number),30,30,-
+E2EDKA1,,1,no,no,TELF1,1st telephone number of contact person,25,25,-
+E2EDKA1,,1,no,no,TELF2,2nd telephone number of contact person,25,25,-
+E2EDKA1,,1,no,no,TELBX,Telebox number,25,25,-
+E2EDKA1,,1,no,no,TELFX,Fax number,25,25,-
+E2EDKA1,,1,no,no,TELTX,Teletex number,25,25,-
+E2EDKA1,,1,no,no,TELX1,Telex number,25,25,-
+E2EDKA1,,1,no,no,SPRAS,Language key,1,1,-
+E2EDKA1,,1,no,no,ANRED,Form of Address,15,15,-
+E2EDKA1,,1,no,no,ORT02,District,35,35,-
+E2EDKA1,,1,no,no,HAUSN,House number,6,6,-
+E2EDKA1,,1,no,no,STOCK,Floor,6,6,-
+E2EDKA1,,1,no,no,REGIO,Region,3,3,-
+E2EDKA1,,1,no,no,PARGE,Partner's gender,1,1,-
+E2EDKA1,,1,no,no,ISOAL,Country ISO code,2,2,-
+E2EDKA1,,1,no,no,ISONU,Country ISO code,2,2,-
+E2EDKA1,,1,no,no,FCODE,Company key (France),20,20,-
+E2EDKA1,,1,no,no,IHREZ,Your reference (Partner),30,30,-
+E2EDKA1,,1,no,no,IDoc,IDoc user name,35,35,-
+E2EDKA1,,1,no,no,PAORG,IDOC organization code,30,30,-
+E2EDKA1,,1,no,no,ORGTX,IDoc organization code text,35,35,-
+E2EDKA1,,1,no,no,PAGRU,IDoc group code,30,30,-
+E2EDKA1,,1,no,no,KNREF,Customer description of partner (plant storage location),30,30,-
+E2EDKA1,,1,no,no,ILNNR,Character field length 70,70,70,-
+E2EDKA1,,1,no,no,PFORT,PO Box city,35,35,-
+E2EDKA1,,1,no,no,SPRAS_ISO,2-Character SAP Language Code,2,2,-
+E2EDKA1,,1,no,no,TITLE,Title,15,15,-
+E2EDK02,,1,no,yes,landmark,landmark,7,7,-
+E2EDK02,,1,no,no,segnam,Segment,23,23,-
+E2EDK02,,1,no,no,mandt,Client,3,3,-
+E2EDK02,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK02,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK02,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK02,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK02,,1,no,no,QUALF,IDOC qualifier reference document,3,3,-
+E2EDK02,,1,no,no,BELNR,IDOC document number,35,35,-
+E2EDK02,,1,no,no,POSNR,Item number,6,6,-
+E2EDK02,,1,no,no,DATUM,IDOC: Date,8,8,-
+E2EDK02,,1,no,no,UZEIT,IDOC: Time,6,6,-
+E2EDK03,,1,no,yes,landmark,landmark,7,7,-
+E2EDK03,,1,no,no,segnam,Segment,23,23,-
+E2EDK03,,1,no,no,mandt,Client,3,3,-
+E2EDK03,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK03,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK03,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK03,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK03,,1,no,no,IDDAT,Qualifier for IDOC date segment,3,3,-
+E2EDK03,,1,no,no,DATUM,IDOC: Date,8,8,-
+E2EDK03,,1,no,no,UZEIT,IDOC: Time,6,6,-
+E2EDK05,,1,no,yes,landmark,landmark,7,7,-
+E2EDK05,,1,no,no,segnam,Segment,23,23,-
+E2EDK05,,1,no,no,mandt,Client,3,3,-
+E2EDK05,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK05,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK05,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK05,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK05,,1,no,no,ALCKZ,Surcharge or discount indicator,3,3,-
+E2EDK05,,1,no,no,KSCHL,Condition type (coded),4,4,-
+E2EDK05,,1,no,no,KOTXT,Condition text,80,80,-
+E2EDK05,,1,no,no,BETRG,Fixed surcharge/discount on total gross,18,18,-
+E2EDK05,,1,no,no,KPERC,Condition percentage rate,8,8,-
+E2EDK05,,1,no,no,KRATE,Condition record per unit,15,15,-
+E2EDK05,,1,no,no,UPRBS,Price unit,9,9,-
+E2EDK05,,1,no,no,MEAUN,Unit of measurement,3,3,-
+E2EDK05,,1,no,no,KOBTR,IDoc condition end amount,18,18,-
+E2EDK05,,1,no,no,MWSKZ,VAT indicator,7,7,-
+E2EDK05,,1,no,no,MSATZ,VAT rate,17,17,-
+E2EDK05,,1,no,no,KOEIN,Currency,3,3,-
+E2EDK04,,1,no,yes,landmark,landmark,7,7,-
+E2EDK04,,1,no,no,segnam,Segment,23,23,-
+E2EDK04,,1,no,no,mandt,Client,3,3,-
+E2EDK04,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK04,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK04,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK04,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK04,,1,no,no,MWSKZ,VAT indicator,7,7,-
+E2EDK04,,1,no,no,MSATZ,VAT rate,17,17,-
+E2EDK04,,1,no,no,MWSBT,Value added tax amount,18,18,-
+E2EDK04,,1,no,no,TXJCD,Tax Jurisdiction,15,15,-
+E2EDK04,,1,no,no,KTEXT,KTEXT Text Field,50,50,-
+E2EDK17,,1,no,yes,landmark,landmark,7,7,-
+E2EDK17,,1,no,no,segnam,Segment,23,23,-
+E2EDK17,,1,no,no,mandt,Client,3,3,-
+E2EDK17,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK17,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK17,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK17,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK17,,1,no,no,QUALF,IDOC qualifier: Terms of delivery,3,3,-
+E2EDK17,,1,no,no,LKOND,IDOC delivery condition code,3,3,-
+E2EDK17,,1,no,no,LKTEXT,LKTEXT IDOC delivery condition text,70,70,-
+E2EDK18,,1,no,yes,landmark,landmark,7,7,-
+E2EDK18,,1,no,no,segnam,Segment,23,23,-
+E2EDK18,,1,no,no,mandt,Client,3,3,-
+E2EDK18,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK18,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK18,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK18,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK18,,1,no,no,QUALF,IDOC qualifier: Terms of payment,3,3,-
+E2EDK18,,1,no,no,TAGE,IDOC Number of days,8,8,-
+E2EDK18,,1,no,no,PRZNT,IDOC percentage for terms of payment,8,8,-
+E2EDK18,,1,no,no,ZTERM_TXT,Text line,70,70,-
+E2EDK23,,1,no,yes,landmark,landmark,7,7,-
+E2EDK23,,1,no,no,segnam,Segment,23,23,-
+E2EDK23,,1,no,no,mandt,Client,3,3,-
+E2EDK23,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK23,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK23,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK23,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK23,,1,no,no,QUALF,Qualifier currency,3,3,-
+E2EDK23,,1,no,no,WAERZ,Three-digit character field for IDocs,3,3,-
+E2EDK23,,1,no,no,WAERQ,Three-digit character field for IDocs,3,3,-
+E2EDK23,,1,no,no,KURS,Character Field of Length 12,12,12,-
+E2EDK23,,1,no,no,DATUM,IDOC: Date,8,8,-
+E2EDK23,,1,no,no,ZEIT,IDOC: Time,6,6,-
+E2EDK23,,1,no,no,KURS_M,Indirectly quoted exchange rate in an IDoc segment,12,12,-
+E2EDK28,,1,no,yes,landmark,landmark,7,7,-
+E2EDK28,,1,no,no,segnam,Segment,23,23,-
+E2EDK28,,1,no,no,mandt,Client,3,3,-
+E2EDK28,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK28,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK28,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK28,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK28,,1,no,no,BCOUN,Country Key,3,3,-
+E2EDK28,,1,no,no,BRNUM,Bank Key,17,17,-
+E2EDK28,,1,no,no,Bank,Bank name,70,70,-
+E2EDK28,,1,no,no,BALOC,Location of bank,70,70,-
+E2EDK28,,1,no,no,ACNUM,Account number in bank data,30,30,-
+E2EDK28,,1,no,no,ACNAM,Account holder in bank data,35,35,-
+E2EDK29,,1,no,yes,landmark,landmark,7,7,-
+E2EDK29,,1,no,no,segnam,Segment,23,23,-
+E2EDK29,,1,no,no,mandt,Client,3,3,-
+E2EDK29,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK29,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK29,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK29,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK29,,1,no,no,EXNUM,Number of foreign trade data in MM and SD documents,10,10,-
+E2EDK29,,1,no,no,ALAND,Departure country (country from which the goods are sent),3,3,-
+E2EDK29,,1,no,no,EXPVZ,Mode of Transport for Foreign Trade,1,1,-
+E2EDK29,,1,no,no,ZOLLA,Customs Office: Office of Exit/Entry for Foreign Trade,6,6,-
+E2EDK29,,1,no,no,ZOLLB,Customs office: Office of destination for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL1,Customs office: Customs office 1 for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL2,Customs office: Customs office 2 for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL3,Customs office: Customs office 3 for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL4,Customs office: Customs office 4 for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL5,Customs office: Customs office 5 for foreign trade,6,6,-
+E2EDK29,,1,no,no,ZOLL6,Customs office: Customs office 6 for foreign trade,6,6,-
+E2EDK29,,1,no,no,KZGBE,Indicator for means of transport crossing the border,30,30,-
+E2EDK29,,1,no,no,KZABE,Indicator for the means of transport at departure,30,30,-
+E2EDK29,,1,no,no,STGBE,Origin of Means of Transport when Crossing the Border,3,3,-
+E2EDK29,,1,no,no,STABE,Country of Origin of the Means of Transport at Departure,3,3,-
+E2EDK29,,1,no,no,CONTA,ID: Goods cross border in a container,1,1,-
+E2EDK29,,1,no,no,GRWCU,Currency of statistical values for foreign trade,5,5,-
+E2EDK29,,1,no,no,GRWRT,Total value of sum segment,18,18,-
+E2EDK29,,1,no,no,LAND1,Country Key,3,3,-
+E2EDK29,,1,no,no,Country,Country Name,15,15,-
+E2EDK29,,1,no,no,LANDA,Alternative Country Key,3,3,-
+E2EDK29,,1,no,no,XEGLD,Indicator: European Union Member?,1,1,-
+E2EDK29,,1,no,no,FREIH,Indicator: Free Trade Area for Legal Control,1,1,-
+E2EDK29,,1,no,no,EWRCO,ID: European Economic Area (rel. for export control),1,1,-
+E2EDK29,,1,no,no,USC05,USA: Five-Digit Country Code (SED: Schedule C Code),5,5,-
+E2EDK29,,1,no,no,JAP05,Japan: Five digit country code (MITI customs declaration),5,5,-
+E2EDK29,,1,no,no,ALANX,Country of dispatch - Description,15,15,-
+E2EDK29,,1,no,no,ALANA,Alternative country key for country of dispatch/export,3,3,-
+E2EDK29,,1,no,no,LASTA,Alt. key to nationality of means of transport (departarture),3,3,-
+E2EDK29,,1,no,no,LASTG,Alt. key for nationality of means of transport at border,3,3,-
+E2EDK29,,1,no,no,ALSCH,Alternative country key for sold-to party,3,3,-
+E2EDK29,,1,no,no,ALSRE,Currency code by country directory,5,5,-
+E2EDK29,,1,no,no,LADEO,Place of loading,15,15,-
+E2EDK29,,1,no,no,IEVER,Domestic Mode of Transport for Foreign Trade,1,1,-
+E2EDK29,,1,no,no,BANR01,FT-EDI: Declarations to the authorities - ID no. 01,16,16,-
+E2EDK29,,1,no,no,BANR02,FT-EDI: Declarations to the authorities: ID no.,3,3,-
+E2EDK29,,1,no,no,BANR03,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR04,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR05,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR06,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR07,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR08,Customs number of exporter,7,7,-
+E2EDK29,,1,no,no,BANR09,FT-EDI: Declarations to the authorities: ID no.,3,3,-
+E2EDK29,,1,no,no,BANR10,FT-EDI: Declarations to the authorities - ID no. 10,8,8,-
+E2EDK29,,1,no,no,WZOCU,Currency of customs values for import procg in foreign trade,5,5,-
+E2EDK29,,1,no,no,EXPVZTX,Description,20,20,-
+E2EDK29,,1,no,no,ZOLLATX,Description,30,30,-
+E2EDK29,,1,no,no,ZOLLBTX,Description,30,30,-
+E2EDK29,,1,no,no,Country,Country Name,15,15,-
+E2EDK29,,1,no,no,Country,Country Name,15,15,-
+E2EDK29,,1,no,no,FREIHTX,Description,20,20,-
+E2EDK29,,1,no,no,LADEL,Place of loading/unloading for foreign trade,40,40,-
+E2EDK29,,1,no,no,TEXT1,TEXT1 Comments: Text for foreign trade processing,40,40,-
+E2EDK29,,1,no,no,TEXT2,TEXT2 Comments: Text for foreign trade processing,40,40,-
+E2EDK29,,1,no,no,TEXT3,TEXT3 Comments: Text for foreign trade processing,40,40,-
+E2EDK29,,1,no,no,GBNUM,Foreign Trade:Customs declaration list no. for Foreign Trade,20,20,-
+E2EDK29,,1,no,no,REGNR,Registration number for import processing in foreign trade,20,20,-
+E2EDK29,,1,no,no,AUSFU,Exporter for import processing in foreign trade,10,10,-
+E2EDK29,,1,no,no,IEVER_TX,Description,20,20,-
+E2EDK29,,1,no,no,LAZL1,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,LAZL2,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,LAZL3,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,LAZL4,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,LAZL5,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,LAZL6,Customs office: Country of customs office for foreign trade,3,3,-
+E2EDK29,,1,no,no,AZOLL,Customs office: Export customs office for foreign trade,6,6,-
+E2EDK29,,1,no,no,AZOLLTX,Description,30,30,-
+E2EDK29,,1,no,no,BFMAR,Foreign Trade: Type of means of transport,6,6,-
+E2EDK29,,1,no,no,FTVBD,Association Indicator for Foreign Trade,1,1,-
+E2EDK29,,1,no,no,CUDCL,Customs declaration type for customs processing in FT,3,3,-
+E2EDK29,,1,no,no,FTUPD,Data service update indicator - Foreign Trade,1,1,-
+E2EDKT1,,1,no,yes,landmark,landmark,7,7,-
+E2EDKT1,,1,no,no,segnam,Segment,23,23,-
+E2EDKT1,,1,no,no,mandt,Client,3,3,-
+E2EDKT1,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDKT1,,1,no,no,segnum,Segment Number,6,6,-
+E2EDKT1,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDKT1,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDKT1,,1,no,no,TDID,Text ID,4,4,-
+E2EDKT1,,1,no,no,TSSPRAS,Language Key,3,3,-
+E2EDKT1,,1,no,no,TSSPRAS_ISO,2-Character SAP Language Code,2,2,-
+E2EDKT1,,1,no,no,TDOBJECT,Texts: Application Object,10,10,-
+E2EDKT1,,1,no,no,Name,Name,70,70,-
+E2EDKT2,,1,no,yes,landmark,landmark,7,7,-
+E2EDKT2,,1,no,no,segnam,Segment,23,23,-
+E2EDKT2,,1,no,no,mandt,Client,3,3,-
+E2EDKT2,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDKT2,,1,no,no,segnum,Segment Number,6,6,-
+E2EDKT2,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDKT2,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDKT2,,1,no,no,TDLINE,Text line,70,70,-
+E2EDKT2,,1,no,no,TDFORMAT,Tag column,2,2,-
+E2EDK14,,1,no,yes,landmark,landmark,7,7,-
+E2EDK14,,1,no,no,segnam,Segment,23,23,-
+E2EDK14,,1,no,no,mandt,Client,3,3,-
+E2EDK14,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDK14,,1,no,no,segnum,Segment Number,6,6,-
+E2EDK14,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDK14,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDK14,,1,no,no,QUALF,IDOC qualifer organization,3,3,-
+E2EDK14,,1,no,no,ORGID,IDOC organization,35,35,-
+E2EDP01,,1,no,yes,landmark,landmark,7,7,-
+E2EDP01,,1,no,no,segnam,Segment,23,23,-
+E2EDP01,,1,no,no,mandt,Client,3,3,-
+E2EDP01,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP01,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP01,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP01,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP01,,1,no,no,POSEX,Item number,6,6,-
+E2EDP01,,1,no,no,ACTION,Action code for the item,3,3,-
+E2EDP01,,1,no,no,PSTYP,Item Category,1,1,-
+E2EDP01,,1,no,no,KZABS,Flag: order acknowledgment required,1,1,-
+E2EDP01,,1,no,no,MENGE,Quantity,15,15,-
+E2EDP01,,1,no,no,MENEE,Unit of measure,3,3,-
+E2EDP01,,1,no,no,BMNG2,Quantity in price unit,15,15,-
+E2EDP01,,1,no,no,PMENE,Price Unit of Measure,3,3,-
+E2EDP01,,1,no,no,ABFTZ,Agreed cumulative quantity,7,7,-
+E2EDP01,,1,no,no,VPREI,Price (net),15,15,-
+E2EDP01,,1,no,no,PEINH,Price unit,9,9,-
+E2EDP01,,1,no,no,NETWR,Item value (net),18,18,-
+E2EDP01,,1,no,no,ANETW,Absolute net value of item,18,18,-
+E2EDP01,,1,no,no,SKFBP,Amount qualifying for cash discount,18,18,-
+E2EDP01,,1,no,no,NTGEW,Net weight,18,18,-
+E2EDP01,,1,no,no,GEWEI,Weight unit,3,3,-
+E2EDP01,,1,no,no,EINKZ,Flag: More than one schedule line for the item,1,1,-
+E2EDP01,,1,no,no,CURCY,Currency,3,3,-
+E2EDP01,,1,no,no,PREIS,Gross price,18,18,-
+E2EDP01,,1,no,no,MATKL,IDOC material class,9,9,-
+E2EDP01,,1,no,no,UEPOS,Higher-Level Item in BOM Structures,6,6,-
+E2EDP01,,1,no,no,GRKOR,Delivery group (items delivered together),3,3,-
+E2EDP01,,1,no,no,EVERS,Shipping instructions,7,7,-
+E2EDP01,,1,no,no,BPUMN,Denominator for Conv. of Order Price Unit into Order Unit,6,6,-
+E2EDP01,,1,no,no,BPUMZ,Numerator for Conversion of Order Price Unit into Order Unit,6,6,-
+E2EDP01,,1,no,no,ABGRU,Reason for rejection of quotations and sales orders,2,2,-
+E2EDP01,,1,no,no,ABGRT,Description,40,40,-
+E2EDP01,,1,no,no,ANTLF,Maximum number of partial deliveries allowed per item,1,1,-
+E2EDP01,,1,no,no,FIXMG,Delivery date and quantity fixed,1,1,-
+E2EDP01,,1,no,no,KZAZU,Order Combination Indicator,1,1,-
+E2EDP01,,1,no,no,BRGEW,Total weight,18,18,-
+E2EDP01,,1,no,no,PSTYV,Sales document item category,4,4,-
+E2EDP01,,1,no,no,EMPST,Receiving point,25,25,-
+E2EDP01,,1,no,no,ABTNR,Department number,4,4,-
+E2EDP01,,1,no,no,ABRVW,Usage Indicator,3,3,-
+E2EDP01,,1,no,no,WERKS,Plant,4,4,-
+E2EDP01,,1,no,no,LPRIO,Delivery Priority,2,2,-
+E2EDP01,,1,no,no,LPRIO_BEZ,Description,20,20,-
+E2EDP01,,1,no,no,ROUTE,Route,6,6,-
+E2EDP01,,1,no,no,ROUTE_BEZ,Description,40,40,-
+E2EDP01,,1,no,no,LGORT,Storage Location,4,4,-
+E2EDP01,,1,no,no,VSTEL,Shipping Point/Receiving Point,4,4,-
+E2EDP01,,1,no,no,DELCO,Agreed delivery time,3,3,-
+E2EDP01,,1,no,no,MATNR,IDOC material ID,35,35,-
+E2EDP01,,1,no,no,VALTG,Additional value days,2,2,-
+E2EDP01,,1,no,no,HIPOS,Superior item in an item hierarchy,6,6,-
+E2EDP01,,1,no,no,HIEVW,Use of Hierarchy Item,1,1,-
+E2EDP01,,1,no,no,POSGUID,ATP: Encryption of DELNR and DELPS,22,22,-
+E2EDP01,,1,no,no,MATNR_EXTERNAL,Material Number,40,40,-
+E2EDP01,,1,no,no,MATNR_VERSION,Version Number for MATNR Field,10,10,-
+E2EDP01,,1,no,no,MATNR_GUID,External GUID for MATNR Field,32,32,-
+E2EDP01,,1,no,no,IUID_RELEVANT,IUID-Relevant,1,1,-
+ZPOSUOM,,1,no,yes,landmark,landmark,7,7,-
+ZPOSUOM,,1,no,no,segnam,Segment,23,23,-
+ZPOSUOM,,1,no,no,mandt,Client,3,3,-
+ZPOSUOM,,1,no,no,docnum,IDOC Number,16,16,-
+ZPOSUOM,,1,no,no,segnum,Segment Number,6,6,-
+ZPOSUOM,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+ZPOSUOM,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+ZPOSUOM,,1,no,no,MEINH,Alternative Unit of Measure for Stockkeeping Unit,3,3,-
+ZPOSUOM,,1,no,no,UMREZ,Numerator for Conversion to Base Units of Measure,6,6,-
+ZPOSUOM,,1,no,no,UMREN,Denominator for conversion to base units of measure,6,6,-
+ZPOSUOM,,1,no,no,EAN11,International Article Number (EAN/UPC),18,18,-
+ZPOSUOM,,1,no,no,ALT_UNIT_ISO,Alternative unit of measure to stockkeeping unit in ISO code,3,3,-
+E2EDP02,,1,no,yes,landmark,landmark,7,7,-
+E2EDP02,,1,no,no,segnam,Segment,23,23,-
+E2EDP02,,1,no,no,mandt,Client,3,3,-
+E2EDP02,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP02,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP02,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP02,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP02,,1,no,no,QUALF,IDOC qualifier reference document,3,3,-
+E2EDP02,,1,no,no,BELNR,IDOC document number,35,35,-
+E2EDP02,,1,no,no,ZEILE,Item number,6,6,-
+E2EDP02,,1,no,no,DATUM,IDOC: Date,8,8,-
+E2EDP02,,1,no,no,UZEIT,IDOC: Time,6,6,-
+E2EDP02,,1,no,no,BSARK,IDOC organization,35,35,-
+E2EDP02,,1,no,no,IHREZ,Your reference (Partner),30,30,-
+Z1ADRM4,,1,no,yes,landmark,landmark,7,7,-
+Z1ADRM4,,1,no,no,segnam,Segment,23,23,-
+Z1ADRM4,,1,no,no,mandt,Client,3,3,-
+Z1ADRM4,,1,no,no,docnum,IDOC Number,16,16,-
+Z1ADRM4,,1,no,no,segnum,Segment Number,6,6,-
+Z1ADRM4,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+Z1ADRM4,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+Z1ADRM4,,1,no,no,PARTNER_Q,Qualifier for partner function,3,3,-
+Z1ADRM4,,1,no,no,ADDRESS_T,Addr. type,1,1,-
+Z1ADRM4,,1,no,no,PARTNER_ID,Partner no. (SAP),17,17,-
+Z1ADRM4,,1,no,no,JURISDIC,Location for tax calculation - Tax Jurisdiction Code,17,17,-
+Z1ADRM4,,1,no,no,LANGUAGE,Language key,2,2,-
+Z1ADRM4,,1,no,no,FORMOFADDR,Form of address,15,15,-
+Z1ADRM4,,1,no,no,Name,Name or address line,40,40,-
+Z1ADRM4,,1,no,no,Name,Name or address line,40,40,-
+Z1ADRM4,,1,no,no,Name,Name or address line,40,40,-
+Z1ADRM4,,1,no,no,Name,Name or address line,40,40,-
+Z1ADRM4,,1,no,no,Name,Name or address line (formatted),50,50,-
+Z1ADRM4,,1,no,no,Subsequent,Subsequent line for name or address (c/o),40,40,-
+Z1ADRM4,,1,no,no,LOCATION,Location description of location,40,40,-
+Z1ADRM4,,1,no,no,BUILDING,Location description: Building,10,10,-
+Z1ADRM4,,1,no,no,FLOOR,Location description: Floor,10,10,-
+Z1ADRM4,,1,no,no,ROOM,Location description: Room,10,10,-
+Z1ADRM4,,1,no,no,STREET1,House number and street,40,40,-
+Z1ADRM4,,1,no,no,STREET2,House number and street,40,40,-
+Z1ADRM4,,1,no,no,STREET3,House number and street,40,40,-
+Z1ADRM4,,1,no,no,HOUSE_SUPL,House number,4,4,-
+Z1ADRM4,,1,no,no,HOUSE_RANG,House no. (interval),10,10,-
+Z1ADRM4,,1,no,no,POSTL_COD1,Postal code,10,10,-
+Z1ADRM4,,1,no,no,POSTL_COD3,Postal code,10,10,-
+Z1ADRM4,,1,no,no,POSTL_AREA,Post delivery district,15,15,-
+Z1ADRM4,,1,no,no,CITY1,Town or city,40,40,-
+Z1ADRM4,,1,no,no,CITY2,Town or city,40,40,-
+Z1ADRM4,,1,no,no,POSTL_PBOX,PO Box,10,10,-
+Z1ADRM4,,1,no,no,POSTL_COD2,Postal code,10,10,-
+Z1ADRM4,,1,no,no,POSTL_CITY,Town or city,40,40,-
+Z1ADRM4,,1,no,no,TELEPHONE1,Telephone number,30,30,-
+Z1ADRM4,,1,no,no,TELEPHONE2,Telephone number,30,30,-
+Z1ADRM4,,1,no,no,TELEFAX,Fax number,30,30,-
+Z1ADRM4,,1,no,no,TELEX,Telex number,30,30,-
+Z1ADRM4,,1,no,no,E_MAIL,E-Mail Address,70,70,-
+Z1ADRM4,,1,no,no,COUNTRY1,Country indicator (ISO alphanumeric),3,3,-
+Z1ADRM4,,1,no,no,COUNTRY2,Country indicator (ISO numeric),3,3,-
+Z1ADRM4,,1,no,no,REGION,Region state,3,3,-
+Z1ADRM4,,1,no,no,COUNTY_COD,County Code (e.g. in USA),3,3,-
+Z1ADRM4,,1,no,no,County,County name (for example in USA),25,25,-
+Z1ADRM4,,1,no,no,TZCODE,Location for time zone (SAP code),6,6,-
+Z1ADRM4,,1,no,no,TZDESC,Location for time zone (external code),35,35,-
+Z1ADRE4,,1,no,yes,landmark,landmark,7,7,-
+Z1ADRE4,,1,no,no,segnam,Segment,23,23,-
+Z1ADRE4,,1,no,no,mandt,Client,3,3,-
+Z1ADRE4,,1,no,no,docnum,IDOC Number,16,16,-
+Z1ADRE4,,1,no,no,segnum,Segment Number,6,6,-
+Z1ADRE4,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+Z1ADRE4,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+Z1ADRE4,,1,no,no,EXTEND_Q,Qualifier for additional data e.g. ILN or D&B number,3,3,-
+Z1ADRE4,,1,no,no,EXTEND_D,Additional data e.g. ILN or D&B no.,70,70,-
+E2EDP03,,1,no,yes,landmark,landmark,7,7,-
+E2EDP03,,1,no,no,segnam,Segment,23,23,-
+E2EDP03,,1,no,no,mandt,Client,3,3,-
+E2EDP03,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP03,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP03,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP03,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP03,,1,no,no,IDDAT,Qualifier for IDOC date segment,3,3,-
+E2EDP03,,1,no,no,DATUM,Date,8,8,-
+E2EDP03,,1,no,no,UZEIT,Time,6,6,-
+E2EDP19,,1,no,yes,landmark,landmark,7,7,-
+E2EDP19,,1,no,no,segnam,Segment,23,23,-
+E2EDP19,,1,no,no,mandt,Client,3,3,-
+E2EDP19,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP19,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP19,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP19,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP19,,1,no,no,QUALF,IDOC object identification such as material no. customer,3,3,-
+E2EDP19,,1,no,no,IDTNR,IDOC material ID,35,35,-
+E2EDP19,,1,no,no,KTEXT,KTEXT IDOC short text,70,70,-
+E2EDP19,,1,no,no,MFRPN,Manufacturer part number,42,42,-
+E2EDP19,,1,no,no,MFRNR,Number of a Manufacturer,10,10,-
+E2EDP19,,1,no,no,IDTNR_EXTERNAL,Length of Material (Future Development) for Field IDTNR,40,40,-
+E2EDP19,,1,no,no,IDTNR_VERSION,Version Number (Future Development) for Field IDTNR,10,10,-
+E2EDP19,,1,no,no,IDTNR_GUID,External GUID (Future Development) for Field IDTNR,32,32,-
+E2EDP26,,1,no,yes,landmark,landmark,7,7,-
+E2EDP26,,1,no,no,segnam,Segment,23,23,-
+E2EDP26,,1,no,no,mandt,Client,3,3,-
+E2EDP26,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP26,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP26,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP26,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP26,,1,no,no,QUALF,Qualifier amount,3,3,-
+E2EDP26,,1,no,no,BETRG,Total value of sum segment,18,18,-
+E2EDPA1,,1,no,yes,landmark,landmark,7,7,-
+E2EDPA1,,1,no,no,segnam,Segment,23,23,-
+E2EDPA1,,1,no,no,mandt,Client,3,3,-
+E2EDPA1,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDPA1,,1,no,no,segnum,Segment Number,6,6,-
+E2EDPA1,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDPA1,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDPA1,,1,no,no,PARVW,Partner function (e.g. sold-to party ship-to party ...),3,3,-
+E2EDPA1,,1,no,no,PARTN,Partner number,17,17,-
+E2EDPA1,,1,no,no,LIFNR,Vendor number at customer location,17,17,-
+E2EDPA1,,1,no,no,Name,Name 1,35,35,-
+E2EDPA1,,1,no,no,Name,Name 2,35,35,-
+E2EDPA1,,1,no,no,Name,Name 3,35,35,-
+E2EDPA1,,1,no,no,Name,Name 4,35,35,-
+E2EDPA1,,1,no,no,STRAS,Street and house number 1,35,35,-
+E2EDPA1,,1,no,no,STRS2,Street and house number 2,35,35,-
+E2EDPA1,,1,no,no,PFACH,PO Box,35,35,-
+E2EDPA1,,1,no,no,ORT01,City,35,35,-
+E2EDPA1,,1,no,no,COUNC,County code,9,9,-
+E2EDPA1,,1,no,no,PSTLZ,Postal code,9,9,-
+E2EDPA1,,1,no,no,PSTL2,P.O. Box postal code,9,9,-
+E2EDPA1,,1,no,no,LAND1,Country Key,3,3,-
+E2EDPA1,,1,no,no,ABLAD,Unloading Point,35,35,-
+E2EDPA1,,1,no,no,PERNR,Contact person's personnel number,30,30,-
+E2EDPA1,,1,no,no,PARNR,Contact person's number (not personnel number),30,30,-
+E2EDPA1,,1,no,no,TELF1,1st telephone number of contact person,25,25,-
+E2EDPA1,,1,no,no,TELF2,2nd telephone number of contact person,25,25,-
+E2EDPA1,,1,no,no,TELBX,Telebox number,25,25,-
+E2EDPA1,,1,no,no,TELFX,Fax number,25,25,-
+E2EDPA1,,1,no,no,TELTX,Teletex number,25,25,-
+E2EDPA1,,1,no,no,TELX1,Telex number,25,25,-
+E2EDPA1,,1,no,no,SPRAS,Language key,1,1,-
+E2EDPA1,,1,no,no,ANRED,Form of Address,15,15,-
+E2EDPA1,,1,no,no,ORT02,District,35,35,-
+E2EDPA1,,1,no,no,HAUSN,House number,6,6,-
+E2EDPA1,,1,no,no,STOCK,Floor,6,6,-
+E2EDPA1,,1,no,no,REGIO,Region,3,3,-
+E2EDPA1,,1,no,no,PARGE,Partner's gender,1,1,-
+E2EDPA1,,1,no,no,ISOAL,Country ISO code,2,2,-
+E2EDPA1,,1,no,no,ISONU,Country ISO code,2,2,-
+E2EDPA1,,1,no,no,FCODE,Company key (France),20,20,-
+E2EDPA1,,1,no,no,IHREZ,Your reference (Partner),30,30,-
+E2EDPA1,,1,no,no,IDoc,IDoc user name,35,35,-
+E2EDPA1,,1,no,no,PAORG,IDOC organization code,30,30,-
+E2EDPA1,,1,no,no,ORGTX,IDoc organization code text,35,35,-
+E2EDPA1,,1,no,no,PAGRU,IDoc group code,30,30,-
+E2EDPA1,,1,no,no,KNREF,Customer description of partner (plant storage location),30,30,-
+E2EDPA1,,1,no,no,ILNNR,Character field length 70,70,70,-
+E2EDPA1,,1,no,no,PFORT,PO Box city,35,35,-
+E2EDPA1,,1,no,no,SPRAS_ISO,2-Character SAP Language Code,2,2,-
+E2EDPA1,,1,no,no,TITLE,Title,15,15,-
+E2EDP05,,1,no,yes,landmark,landmark,7,7,-
+E2EDP05,,1,no,no,segnam,Segment,23,23,-
+E2EDP05,,1,no,no,mandt,Client,3,3,-
+E2EDP05,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP05,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP05,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP05,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP05,,1,no,no,ALCKZ,Surcharge or discount indicator,3,3,-
+E2EDP05,,1,no,no,KSCHL,Condition type (coded),4,4,-
+E2EDP05,,1,no,no,KOTXT,Condition text,80,80,-
+E2EDP05,,1,no,no,BETRG,Fixed surcharge/discount on total gross,18,18,-
+E2EDP05,,1,no,no,KPERC,Condition percentage rate,8,8,-
+E2EDP05,,1,no,no,KRATE,Condition record per unit,15,15,-
+E2EDP05,,1,no,no,UPRBS,Price unit,9,9,-
+E2EDP05,,1,no,no,MEAUN,Unit of measurement,3,3,-
+E2EDP05,,1,no,no,KOBTR,IDoc condition end amount,18,18,-
+E2EDP05,,1,no,no,MENGE,Price scale quantity (SPEC2000),15,15,-
+E2EDP05,,1,no,no,PREIS,Price by unit of measure (SPEC2000),15,15,-
+E2EDP05,,1,no,no,MWSKZ,VAT indicator,7,7,-
+E2EDP05,,1,no,no,MSATZ,VAT rate,17,17,-
+E2EDP05,,1,no,no,KOEIN,Currency,3,3,-
+E2EDP05,,1,no,no,CURTP,Currency Type and Valuation View,2,2,-
+E2EDP05,,1,no,no,KOBAS,Base value to which condition refers,18,18,-
+E2EDP04,,1,no,yes,landmark,landmark,7,7,-
+E2EDP04,,1,no,no,segnam,Segment,23,23,-
+E2EDP04,,1,no,no,mandt,Client,3,3,-
+E2EDP04,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP04,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP04,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP04,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP04,,1,no,no,MWSKZ,VAT indicator,7,7,-
+E2EDP04,,1,no,no,MSATZ,VAT rate,17,17,-
+E2EDP04,,1,no,no,MWSBT,Value added tax amount,18,18,-
+E2EDP04,,1,no,no,TXJCD,Tax Jurisdiction,15,15,-
+E2EDP04,,1,no,no,KTEXT,KTEXT Text Field,50,50,-
+E2EDP28,,1,no,yes,landmark,landmark,7,7,-
+E2EDP28,,1,no,no,segnam,Segment,23,23,-
+E2EDP28,,1,no,no,mandt,Client,3,3,-
+E2EDP28,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP28,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP28,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP28,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP28,,1,no,no,EXNUM,Number of foreign trade data in MM and SD documents,10,10,-
+E2EDP28,,1,no,no,EXPOS,Internal item number for foreign trade data in MM and SD,6,6,-
+E2EDP28,,1,no,no,STAWN,Commodity Code/Import Code Number for Foreign Trade,17,17,-
+E2EDP28,,1,no,no,EXPRF,Export/Import procedure for foreign trade (5 digits),5,5,-
+E2EDP28,,1,no,no,EXART,Business Transaction Type for Foreign Trade,2,2,-
+E2EDP28,,1,no,no,HERKL,Country of origin of the material,3,3,-
+E2EDP28,,1,no,no,HERKR,Region of origin of material (non-preferential origin),3,3,-
+E2EDP28,,1,no,no,HERTA,Alternative country key for country of origin,3,3,-
+E2EDP28,,1,no,no,HERTI,Description of country of export/dispatch,15,15,-
+E2EDP28,,1,no,no,STXT1,Description of commodity code - First line,40,40,-
+E2EDP28,,1,no,no,STXT2,Description of commodity code - Second line,40,40,-
+E2EDP28,,1,no,no,STXT3,Description of commodity code - Third line,40,40,-
+E2EDP28,,1,no,no,STXT4,Description of commodity code - Fourth line,40,40,-
+E2EDP28,,1,no,no,STXT5,Description of commodity code - Fifth line,40,40,-
+E2EDP28,,1,no,no,STXT6,Description of commodity code - Sixth line,40,40,-
+E2EDP28,,1,no,no,STXT7,Description of commodity code - Seventh line,40,40,-
+E2EDP28,,1,no,no,BEMAS,Supplementary unit,5,5,-
+E2EDP28,,1,no,no,PREFE,Preference indicator in export/import,1,1,-
+E2EDP28,,1,no,no,BOLNR,Bill of lading,35,35,-
+E2EDP28,,1,no,no,TRATY,Means-of-Transport Type,4,4,-
+E2EDP28,,1,no,no,TRAID,Means of Transport ID,20,20,-
+E2EDP28,,1,no,no,BRULO,Total weight,18,18,-
+E2EDP28,,1,no,no,NETLO,Net weight,18,18,-
+E2EDP28,,1,no,no,VEMEH,Base Unit of Measure of the Quantity to be Packed (VEMNG),3,3,-
+E2EDP28,,1,no,no,HERBL,State of manufacture,2,2,-
+E2EDP28,,1,no,no,BMGEW,Net weight,18,18,-
+E2EDP28,,1,no,no,TEXT1,TEXT1 Comments: Text for foreign trade processing,40,40,-
+E2EDP28,,1,no,no,TEXT2,TEXT2 Comments: Text for foreign trade processing,40,40,-
+E2EDP28,,1,no,no,TEXT3,TEXT3 Comments: Text for foreign trade processing,40,40,-
+E2EDP28,,1,no,no,COIMP,Code number for import processing in foreign trade,17,17,-
+E2EDP28,,1,no,no,COADI,Anti-dumping code for import processing in foreign trade,6,6,-
+E2EDP28,,1,no,no,COKON,Customs quota code for import processing in foreign trade,6,6,-
+E2EDP28,,1,no,no,COPHA,Pharmaceutical products code (Foreign Trade),6,6,-
+E2EDP28,,1,no,no,CASNR,CAS number for pharmaceutical products in foreign trade,15,15,-
+E2EDP28,,1,no,no,VERLD,Country of dispatch for Foreign Trade,3,3,-
+E2EDP28,,1,no,no,Country,Country Name,15,15,-
+E2EDP28,,1,no,no,HANLD,Trading country for foreign trade,3,3,-
+E2EDP28,,1,no,no,Country,Country Name,15,15,-
+E2EDP28,,1,no,no,EXPRF_TX,Description,30,30,-
+E2EDP28,,1,no,no,EXART_TX,Description,30,30,-
+E2EDP28,,1,no,no,GBNUM,Foreign Trade:Customs declaration list no. for Foreign Trade,20,20,-
+E2EDP28,,1,no,no,REGNR,Registration number for import processing in foreign trade,20,20,-
+E2EDP28,,1,no,no,HERSE,Manufacturer number for import processing in foreign trade,10,10,-
+E2EDP28,,1,no,no,HERKR_TX,Description,20,20,-
+E2EDP28,,1,no,no,COBLD,Import code no. in destination country for foreign trade,17,17,-
+E2EDP28,,1,no,no,EIOKA,EDI: Export/Import customs tariff number for foreign trade,1,1,-
+E2EDP28,,1,no,no,VERFA,Export/Import Procedure for Foreign Trade,8,8,-
+E2EDP28,,1,no,no,PRENC,Exemption certificate: Indicator for legal control,1,1,-
+E2EDP28,,1,no,no,PRENO,Exemption certificate number for legal control,8,8,-
+E2EDP28,,1,no,no,PREND,Exemption certificate: Issue date of exemption certificate,8,8,-
+E2EDP28,,1,no,no,BESMA,Supplementary unit,3,3,-
+E2EDP28,,1,no,no,IMPMA,Second unit of measurement,3,3,-
+E2EDP28,,1,no,no,KTNUM,Quota or Ceiling Number for Import Processing,10,10,-
+E2EDP28,,1,no,no,PLNUM,Quota or Ceiling Number for Import Processing,10,10,-
+E2EDP28,,1,no,no,WKREG,Region in which plant is located,3,3,-
+E2EDP28,,1,no,no,IMGEW,Net weight,18,18,-
+E2EDP08,,1,no,yes,landmark,landmark,7,7,-
+E2EDP08,,1,no,no,segnam,Segment,23,23,-
+E2EDP08,,1,no,no,mandt,Client,3,3,-
+E2EDP08,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP08,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP08,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP08,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP08,,1,no,no,HLNUM,Hierarchy number,12,12,-
+E2EDP08,,1,no,no,PARENT,Hierarchical parent ID,12,12,-
+E2EDP08,,1,no,no,LEVEL,Pack/subpack level ID,12,12,-
+E2EDP08,,1,no,no,EXIDV,External shipping unit ID,45,45,-
+E2EDP08,,1,no,no,VENUM,Internal Handling Unit Number,10,10,-
+E2EDP08,,1,no,no,VEMEH,Base Unit of Measure of the Quantity to be Packed (VEMNG),3,3,-
+E2EDP08,,1,no,no,PCKAR,Packing type,35,35,-
+E2EDP08,,1,no,no,PCKNR,Customer number of shipping unit,35,35,-
+E2EDP08,,1,no,no,ANZAR,Number of products per shipping unit,15,15,-
+E2EDP08,,1,no,no,VBELN,Delivery,35,35,-
+E2EDP08,,1,no,no,POSNR,Delivery item,30,30,-
+E2EDP08,,1,no,no,BTGEW,Total weight,18,18,-
+E2EDP08,,1,no,no,NTGEW,Net weight,18,18,-
+E2EDP08,,1,no,no,TARAG,Tare weight of shipping unit,18,18,-
+E2EDP08,,1,no,no,GEWEI,Weight unit,3,3,-
+E2EDP08,,1,no,no,BTVOL,Total volume of shipping unit,18,18,-
+E2EDP08,,1,no,no,NTVOL,Loading volume of shipping unit,18,18,-
+E2EDP08,,1,no,no,TAVOL,Tare volume of shipping unit,18,18,-
+E2EDP08,,1,no,no,VOLEH,Volume unit,3,3,-
+E2EDP08,,1,no,no,LAENG,Length,18,18,-
+E2EDP08,,1,no,no,BREIT,Width,18,18,-
+E2EDP08,,1,no,no,HOEHE,Height,18,18,-
+E2EDP08,,1,no,no,MEABM,Unit for length/width/height,3,3,-
+E2EDP08,,1,no,no,MEINS,Base unit of measure,3,3,-
+E2EDP08,,1,no,no,VSTEL,Shipping point,17,17,-
+E2EDP08,,1,no,no,LSTEL,Loading point,17,17,-
+E2EDP08,,1,no,no,PKNRS,Shipment number key for VDA/Odette,1,1,-
+Z1EDP08,,1,no,yes,landmark,landmark,7,7,-
+Z1EDP08,,1,no,no,segnam,Segment,23,23,-
+Z1EDP08,,1,no,no,mandt,Client,3,3,-
+Z1EDP08,,1,no,no,docnum,IDOC Number,16,16,-
+Z1EDP08,,1,no,no,segnum,Segment Number,6,6,-
+Z1EDP08,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+Z1EDP08,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+Z1EDP08,,1,no,no,HLNUM,Hierarchy number,12,12,-
+Z1EDP08,,1,no,no,PARENT,Hierarchical parent ID,12,12,-
+Z1EDP08,,1,no,no,LEVEL,Pack/subpack level ID,12,12,-
+Z1EDP08,,1,no,no,EXIDV,External shipping unit ID,45,45,-
+Z1EDP08,,1,no,no,EXIDV2,Handling Unit's 2nd External Identification,20,20,-
+Z1EDP08,,1,no,no,VENUM,Internal Handling Unit Number,10,10,-
+Z1EDP08,,1,no,no,VEMEH,Base Unit of Measure of the Quantity to be Packed (VEMNG),3,3,-
+Z1EDP08,,1,no,no,PCKAR,Packing type,35,35,-
+Z1EDP08,,1,no,no,PCKNR,Customer number of shipping unit,35,35,-
+Z1EDP08,,1,no,no,ANZAR,Number of products per shipping unit,15,15,-
+Z1EDP08,,1,no,no,VBELN,Delivery,35,35,-
+Z1EDP08,,1,no,no,POSNR,Delivery item,30,30,-
+Z1EDP08,,1,no,no,BTGEW,Total weight,18,18,-
+Z1EDP08,,1,no,no,NTGEW,Net weight,18,18,-
+Z1EDP08,,1,no,no,TARAG,Tare weight of shipping unit,18,18,-
+Z1EDP08,,1,no,no,GEWEI,Weight unit,3,3,-
+Z1EDP08,,1,no,no,BTVOL,Total volume of shipping unit,18,18,-
+Z1EDP08,,1,no,no,NTVOL,Loading volume of shipping unit,18,18,-
+Z1EDP08,,1,no,no,TAVOL,Tare volume of shipping unit,18,18,-
+Z1EDP08,,1,no,no,LAENG,Length,18,18,-
+Z1EDP08,,1,no,no,VOLEH,Volume unit,3,3,-
+Z1EDP08,,1,no,no,BREIT,Width,18,18,-
+Z1EDP08,,1,no,no,HOEHE,Height,18,18,-
+Z1EDP08,,1,no,no,MEABM,Unit for length/width/height,3,3,-
+Z1EDP08,,1,no,no,MEINS,Base unit of measure,3,3,-
+Z1EDP08,,1,no,no,VSTEL,Shipping point,17,17,-
+Z1EDP08,,1,no,no,LSTEL,Loading point,17,17,-
+Z1EDP08,,1,no,no,PKNRS,Shipment number key for VDA/Odette,1,1,-
+E2EDP30,,1,no,yes,landmark,landmark,7,7,-
+E2EDP30,,1,no,no,segnam,Segment,23,23,-
+E2EDP30,,1,no,no,mandt,Client,3,3,-
+E2EDP30,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDP30,,1,no,no,segnum,Segment Number,6,6,-
+E2EDP30,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDP30,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDP30,,1,no,no,QUALF,IDOC qualifier reference document,3,3,-
+E2EDP30,,1,no,no,IVKON,30 Characters,30,30,-
+E2EDPT1,,1,no,yes,landmark,landmark,7,7,-
+E2EDPT1,,1,no,no,segnam,Segment,23,23,-
+E2EDPT1,,1,no,no,mandt,Client,3,3,-
+E2EDPT1,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDPT1,,1,no,no,segnum,Segment Number,6,6,-
+E2EDPT1,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDPT1,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDPT1,,1,no,no,TDID,Text ID,4,4,-
+E2EDPT1,,1,no,no,TSSPRAS,Language Key,3,3,-
+E2EDPT1,,1,no,no,TSSPRAS_ISO,2-Character SAP Language Code,2,2,-
+E2EDPT2,,1,no,yes,landmark,landmark,7,7,-
+E2EDPT2,,1,no,no,segnam,Segment,23,23,-
+E2EDPT2,,1,no,no,mandt,Client,3,3,-
+E2EDPT2,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDPT2,,1,no,no,segnum,Segment Number,6,6,-
+E2EDPT2,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDPT2,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDPT2,,1,no,no,TDLINE,Text line,70,70,-
+E2EDPT2,,1,no,no,TDFORMAT,Tag column,2,2,-
+E2EDS01,,1,no,yes,landmark,landmark,7,7,-
+E2EDS01,,1,no,no,segnam,Segment,23,23,-
+E2EDS01,,1,no,no,mandt,Client,3,3,-
+E2EDS01,,1,no,no,docnum,IDOC Number,16,16,-
+E2EDS01,,1,no,no,segnum,Segment Number,6,6,-
+E2EDS01,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+E2EDS01,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+E2EDS01,,1,no,no,SUMID,Qualifier for totals segment for shipping notification,3,3,-
+E2EDS01,,1,no,no,SUMME,Total value of sum segment,18,18,-
+E2EDS01,,1,no,no,SUNIT,Total value unit for totals segment in the shipping notif.,3,3,-
+E2EDS01,,1,no,no,WAERQ,Currency,3,3,-

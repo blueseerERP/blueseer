@@ -42,15 +42,16 @@ import java.time.format.DateTimeFormatter;
 public class Generic850toIDOC extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
-    
-    // These 6 global variables must be set for all maps    
+        
+    // These master variables must be set for all maps    
     setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-    ISF = readISF(c, "c:\\junk\\X12850.csv");
-    OSF = readOSF("c:\\junk\\ORDERS05.csv"); 
     setOutPutFileType("FF");  // X12 of FF
-    setOutPutDocType("850IDOC");  // 850, 856, 850IDOC, etc
-    mappedInput = mapInput(c, doc, ISF);
+    setOutPutDocType("ORDERS05");  // 850, 856, ORDERS05, SHPMNT05, etc
+    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv");
+    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\ORDERS05.csv");
+    if (isError) { return error;}  // check errors for master variables
     
+    mappedInput = mapInput(c, doc, ISF);
     setReference(getInput("BEG",3)); // must be ran after mappedInput
     
     // set some global variables if necessary

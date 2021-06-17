@@ -63,7 +63,7 @@ public class Generic997o  {
      Date now = new Date();
        
        
-         String[] defaults = OVData.getEDITPDefaults(_isa[6].trim(), "997");
+         String[] defaults = OVData.getEDITPDefaults("997", _isa[6].trim(), _isa[8].trim());
         
         String sd = "\n";
         String ed = "*";

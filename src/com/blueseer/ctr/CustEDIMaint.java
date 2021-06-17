@@ -83,7 +83,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         return isgood;
     }
     
-    public void getCustEDI(String code, String doctype) {
+    public void getCustEDI(String code, String doctype, String sndid) {
         
         try {
 
@@ -95,14 +95,15 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 int i = 0;
                 res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + code + "'" +
                                       " AND edi_doc = " + "'" + doctype + "'" +
+                                      " AND edi_sndisa = " + "'" + sndid + "'" +        
                                               ";");
                 while (res.next()) {
                     i++;
                     tbkey.setText(code);
                     dddoc.setSelectedItem(doctype);
-                    tbisa.setText(res.getString("edi_isa"));
-                    tbisaq.setText(res.getString("edi_isaq"));
-                    tbgs.setText(res.getString("edi_gs"));
+                    tbrcvisa.setText(res.getString("edi_rcvisa"));
+                    tbrcvq.setText(res.getString("edi_rcvq"));
+                    tbrcvgs.setText(res.getString("edi_rcvgs"));
                     tbmap.setText(res.getString("edi_map"));
                     tbelement.setText(res.getString("edi_eledelim"));
                     tbsegment.setText(res.getString("edi_segdelim"));
@@ -111,9 +112,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     tbfilesuffix.setText(res.getString("edi_filesuffix"));
                     tbfilepath.setText(res.getString("edi_filepath"));
                     tbversion.setText(res.getString("edi_version"));
-                    tbovisa.setText(res.getString("edi_bsisa"));
-                    tbovgs.setText(res.getString("edi_bsgs"));
-                    tbovisaq.setText(res.getString("edi_bsq"));
+                    tbsndisa.setText(res.getString("edi_sndisa"));
+                    tbsndgs.setText(res.getString("edi_sndgs"));
+                    tbsndq.setText(res.getString("edi_sndq"));
                     tbsupplier.setText(res.getString("edi_supcode"));
                     cbfa.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edi_fa_required")));
                    
@@ -123,7 +124,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 
                 if (i > 0) {
                    enableAll();
-                   getAttributes(code, doctype);
+                   getAttributes(tbsndisa.getText(), tbrcvisa.getText(), doctype);
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
@@ -137,9 +138,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
     }
     
-     public void getAttributes(String code, String doctype) {
+     public void getAttributes(String sndid, String rcvid, String doctype) {
         listmodel.removeAllElements();
-        ArrayList<String> list = OVData.getEDIAttributesList(code, doctype);
+        ArrayList<String> list = OVData.getEDIAttributesList(doctype, sndid, rcvid);
         for (String x : list) {
             listmodel.addElement(x);
         }
@@ -157,12 +158,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
             dddoc.addItem(mylist.get(i));
         }
         
-        tbisa.setText("");
-        tbisaq.setText("");
-        tbgs.setText("");
-        tbovisa.setText("");
-        tbovgs.setText("");
-        tbovisaq.setText("");
+        tbrcvisa.setText("");
+        tbrcvq.setText("");
+        tbrcvgs.setText("");
+        tbsndisa.setText("");
+        tbsndgs.setText("");
+        tbsndq.setText("");
         tbmap.setText("");
         tbversion.setText("");
         tbsupplier.setText("");
@@ -186,12 +187,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btlookup.setEnabled(true);
         btdeleteattribute.setEnabled(true);
         btaddattribute.setEnabled(true);
-        tbisa.setEnabled(true);
-        tbisaq.setEnabled(true);
-        tbgs.setEnabled(true);
-        tbovisa.setEnabled(true);
-        tbovgs.setEnabled(true);
-        tbovisaq.setEnabled(true);
+        tbrcvisa.setEnabled(true);
+        tbrcvq.setEnabled(true);
+        tbrcvgs.setEnabled(true);
+        tbsndisa.setEnabled(true);
+        tbsndgs.setEnabled(true);
+        tbsndq.setEnabled(true);
         tbmap.setEnabled(true);
         dddoc.setEnabled(true);
         tbversion.setEnabled(true);
@@ -216,12 +217,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btlookup.setEnabled(false);
         btdeleteattribute.setEnabled(false);
         btaddattribute.setEnabled(false);
-        tbisa.setEnabled(false);
-        tbisaq.setEnabled(false);
-        tbgs.setEnabled(false);
-        tbovisa.setEnabled(false);
-        tbovgs.setEnabled(false);
-        tbovisaq.setEnabled(false);
+        tbrcvisa.setEnabled(false);
+        tbrcvq.setEnabled(false);
+        tbrcvgs.setEnabled(false);
+        tbsndisa.setEnabled(false);
+        tbsndgs.setEnabled(false);
+        tbsndq.setEnabled(false);
         tbmap.setEnabled(false);
         dddoc.setEnabled(false);
         tbversion.setEnabled(false);
@@ -247,7 +248,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btlookup.setEnabled(true);
        
         if (arg != null && arg.length > 0) {
-            getCustEDI(arg[0], arg[1]);
+            getCustEDI(arg[0], arg[1], arg[2]);
         }
         
        
@@ -288,7 +289,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "DocType", "Direction"); 
+        callDialog("ID", "DocType", "SndID"); 
         
         
     }
@@ -308,25 +309,25 @@ public class CustEDIMaint extends javax.swing.JPanel {
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        tbovgs = new javax.swing.JTextField();
+        tbsndgs = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         tbkey = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        tbgs = new javax.swing.JTextField();
+        tbrcvgs = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        tbisaq = new javax.swing.JTextField();
+        tbrcvq = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        tbovisa = new javax.swing.JTextField();
+        tbsndisa = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        tbovisaq = new javax.swing.JTextField();
+        tbsndq = new javax.swing.JTextField();
         tbmap = new javax.swing.JTextField();
         btnew = new javax.swing.JButton();
         dddoc = new javax.swing.JComboBox<>();
-        tbisa = new javax.swing.JTextField();
+        tbrcvisa = new javax.swing.JTextField();
         btlookup = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -379,23 +380,23 @@ public class CustEDIMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel3.setText("DocType:");
+        jLabel3.setText("DocType");
 
-        jLabel6.setText("Q");
+        jLabel6.setText("Rcv Q");
 
         jLabel5.setText("Code:");
 
-        jLabel15.setText("BS GS");
+        jLabel15.setText("Snd GS");
 
-        jLabel7.setText("GS");
+        jLabel7.setText("Rcv GS");
 
-        jLabel1.setText("ISA");
+        jLabel1.setText("Rcv ISA");
 
-        jLabel13.setText("BS ISA");
+        jLabel13.setText("Snd ISA");
 
         jLabel9.setText("Map");
 
-        jLabel16.setText("BS Q");
+        jLabel16.setText("Snd Q");
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -429,12 +430,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(21, 21, 21)
                         .addComponent(jLabel16)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbovisaq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,10 +443,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                 .addGap(2, 2, 2)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbmap, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbovisa, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(tbisaq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbovgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbrcvgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbsndisa, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tbrcvq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbsndgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -455,9 +456,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbisa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbrcvisa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dddoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,22 +470,22 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         .addComponent(jLabel5)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btlookup))
-                .addGap(27, 27, 27)
+                .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(tbisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbrcvisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbgs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbrcvgs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(tbisaq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbrcvq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -492,14 +493,14 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(tbovisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbsndisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbovgs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbsndgs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbovisaq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addContainerGap())
         );
@@ -752,7 +753,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
                     res = st.executeQuery("SELECT edi_id, edi_doc FROM  edi_mstr where edi_id = " + "'" + tbkey.getText() + "'" +
                                           " AND edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" + 
-                                          " AND edi_isa = " + "'" + tbisa.getText() + "'" +
+                                          " AND edi_sndisa = " + "'" + tbrcvisa.getText() + "'" +
+                                          " AND edi_sndisa = " + "'" + tbsndisa.getText() + "'" +        
                                           ";");
                     while (res.next()) {
                         i++;
@@ -760,14 +762,14 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     if (i == 0) {
                         
                         st.executeUpdate("insert into edi_mstr "
-                            + "(edi_id, edi_doc, edi_isa, edi_isaq, " 
-                            + "edi_gs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
-                            + "edi_version, edi_bsisa, edi_bsgs, edi_bsq, edi_supcode, edi_fa_required ) "
+                            + "(edi_id, edi_doc, edi_sndisa, edi_sndq, " 
+                            + "edi_sndgs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
+                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_fa_required ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                                 + "'" + dddoc.getSelectedItem().toString() + "'" + ","
-                                + "'" + tbisa.getText() + "'" + ","
-                                + "'" + tbisaq.getText() + "'" + ","
-                                + "'" + tbgs.getText() + "'" + ","
+                                + "'" + tbsndisa.getText() + "'" + ","
+                                + "'" + tbsndq.getText() + "'" + ","
+                                + "'" + tbsndgs.getText() + "'" + ","
                                 + "'" + tbmap.getText() + "'" + ","
                                 + "'" + tbelement.getText() + "'" + ","
                                 + "'" + tbsegment.getText() + "'" + ","
@@ -776,9 +778,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                 + "'" + tbfilesuffix.getText() + "'" + ","
                                 + "'" + tbfilepath.getText() + "'" + ","
                                 + "'" + tbversion.getText() + "'" + ","
-                                + "'" + tbovisa.getText() + "'" + ","
-                                + "'" + tbovgs.getText() + "'" + ","
-                                + "'" + tbovisaq.getText() + "'" + ","
+                                + "'" + tbrcvisa.getText() + "'" + ","
+                                + "'" + tbrcvgs.getText() + "'" + ","
+                                + "'" + tbrcvq.getText() + "'" + ","
                                 + "'" + tbsupplier.getText() + "'"  + ","
                                 + "'" + fa + "'"
                             + ")"
@@ -837,9 +839,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                 }
                 
                 if (proceed) {
-                    st.executeUpdate("update edi_mstr set edi_isa = " + "'" + tbisa.getText() + "'" + ","
-                            + "edi_isaq = " + "'" + tbisaq.getText() + "'" + ","
-                            + "edi_gs = " + "'" + tbgs.getText() + "'" + ","
+                    st.executeUpdate("update edi_mstr set edi_sndisa = " + "'" + tbsndisa.getText() + "'" + ","
+                            + "edi_sndq = " + "'" + tbsndq.getText() + "'" + ","
+                            + "edi_sndgs = " + "'" + tbsndgs.getText() + "'" + ","
                             + "edi_map = " + "'" + tbmap.getText() + "'" + ","
                             + "edi_eledelim = " + "'" + tbelement.getText() + "'" + ","
                             + "edi_segdelim = " + "'" + tbsegment.getText() + "'" + ","
@@ -848,9 +850,9 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             + "edi_filesuffix = " + "'" + tbfilesuffix.getText() + "'" + ","
                             + "edi_filepath = " + "'" + tbfilepath.getText() + "'" + ","
                             + "edi_version = " + "'" + tbversion.getText() + "'" + ","
-                            + "edi_bsisa = " + "'" + tbovisa.getText() + "'" + ","
-                            + "edi_bsgs = " + "'" + tbovgs.getText() + "'" + ","
-                            + "edi_bsq = " + "'" + tbovisaq.getText() + "'" + ","
+                            + "edi_rcvisa = " + "'" + tbrcvisa.getText() + "'" + ","
+                            + "edi_rcvgs = " + "'" + tbrcvgs.getText() + "'" + ","
+                            + "edi_rcvq = " + "'" + tbrcvq.getText() + "'" + ","
                             + "edi_supcode = " + "'" + tbsupplier.getText() + "'"  + ","
                             + "edi_fa_required = " + "'" + fa + "'"
                             + " where edi_id = " + "'" + tbkey.getText() + "'"     
@@ -952,8 +954,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
        
-        OVData.addEDIAttributeRecord(tbkey.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
-        getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString());
+        OVData.addEDIAttributeRecord(dddoc.getSelectedItem().toString(), tbsndisa.getText(), tbrcvisa.getText(), tbattributekey.getText(), tbattributevalue.getText());
+        getAttributes(tbsndisa.getText(), tbrcvisa.getText(), dddoc.getSelectedItem().toString());
         tbattributekey.setText("");
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
@@ -986,7 +988,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                              ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + listAttributes.getSelectedValue().toString());
-                    getAttributes(tbkey.getText(), dddoc.getSelectedItem().toString());
+                    getAttributes(tbsndisa.getText(), tbrcvisa.getText(), dddoc.getSelectedItem().toString());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
@@ -1044,15 +1046,15 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbfilepath;
     private javax.swing.JTextField tbfileprefix;
     private javax.swing.JTextField tbfilesuffix;
-    private javax.swing.JTextField tbgs;
-    private javax.swing.JTextField tbisa;
-    private javax.swing.JTextField tbisaq;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbmap;
-    private javax.swing.JTextField tbovgs;
-    private javax.swing.JTextField tbovisa;
-    private javax.swing.JTextField tbovisaq;
+    private javax.swing.JTextField tbrcvgs;
+    private javax.swing.JTextField tbrcvisa;
+    private javax.swing.JTextField tbrcvq;
     private javax.swing.JTextField tbsegment;
+    private javax.swing.JTextField tbsndgs;
+    private javax.swing.JTextField tbsndisa;
+    private javax.swing.JTextField tbsndq;
     private javax.swing.JTextField tbsub;
     private javax.swing.JTextField tbsupplier;
     private javax.swing.JTextField tbversion;
