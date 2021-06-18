@@ -101,6 +101,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     i++;
                     tbkey.setText(code);
                     dddoc.setSelectedItem(doctype);
+                    ddoutdoctype.setSelectedItem(res.getString("edi_doctypeout"));
+                    ddoutfiletype.setSelectedItem(res.getString("edi_filetypeout"));
                     tbrcvisa.setText(res.getString("edi_rcvisa"));
                     tbrcvq.setText(res.getString("edi_rcvq"));
                     tbrcvgs.setText(res.getString("edi_rcvgs"));
@@ -157,6 +159,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
         for (int i = 0; i < mylist.size(); i++) {
             dddoc.addItem(mylist.get(i));
         }
+        ddoutdoctype.removeAllItems();
+        for (int i = 0; i < mylist.size(); i++) {
+            ddoutdoctype.addItem(mylist.get(i));
+        }
         
         tbrcvisa.setText("");
         tbrcvq.setText("");
@@ -195,6 +201,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbsndq.setEnabled(true);
         tbmap.setEnabled(true);
         dddoc.setEnabled(true);
+        ddoutfiletype.setEnabled(true);
+        ddoutdoctype.setEnabled(true);
         tbversion.setEnabled(true);
         tbsupplier.setEnabled(true);
         tbelement.setEnabled(true);
@@ -225,6 +233,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
         tbsndq.setEnabled(false);
         tbmap.setEnabled(false);
         dddoc.setEnabled(false);
+        ddoutfiletype.setEnabled(false);
+        ddoutdoctype.setEnabled(false);
         tbversion.setEnabled(false);
         tbsupplier.setEnabled(false);
         tbelement.setEnabled(false);
@@ -347,6 +357,10 @@ public class CustEDIMaint extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         lblsuffix = new javax.swing.JLabel();
         cbfa = new javax.swing.JCheckBox();
+        ddoutdoctype = new javax.swing.JComboBox<>();
+        ddoutfiletype = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btdeleteattribute = new javax.swing.JButton();
         btaddattribute = new javax.swing.JButton();
@@ -541,6 +555,12 @@ public class CustEDIMaint extends javax.swing.JPanel {
 
         cbfa.setText("Functional Acknowledgement?");
 
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12" }));
+
+        jLabel2.setText("outDocType");
+
+        jLabel8.setText("outFileType");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -548,26 +568,36 @@ public class CustEDIMaint extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblsuffix, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(12, 12, 12)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblsuffix, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(12, 12, 12))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbfa)
                     .addComponent(tbsub, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbsegment, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbfilepath, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbsupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbelement, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(tbfilesuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                        .addComponent(tbfileprefix, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addComponent(tbfileprefix, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ddoutdoctype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tbsupplier, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                    .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -616,7 +646,15 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addComponent(jLabel14)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbfa)
                 .addContainerGap())
         );
@@ -669,7 +707,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                     .addComponent(btaddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btdeleteattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
 
@@ -764,7 +802,7 @@ public class CustEDIMaint extends javax.swing.JPanel {
                         st.executeUpdate("insert into edi_mstr "
                             + "(edi_id, edi_doc, edi_sndisa, edi_sndq, " 
                             + "edi_sndgs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
-                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_fa_required ) "
+                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_fa_required ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                                 + "'" + dddoc.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbsndisa.getText() + "'" + ","
@@ -782,6 +820,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
                                 + "'" + tbrcvgs.getText() + "'" + ","
                                 + "'" + tbrcvq.getText() + "'" + ","
                                 + "'" + tbsupplier.getText() + "'"  + ","
+                                + "'" + ddoutdoctype.getSelectedItem().toString() + "'" + ","
+                                + "'" + ddoutfiletype.getSelectedItem().toString() + "'" + ","        
                                 + "'" + fa + "'"
                             + ")"
                             + ";");
@@ -854,6 +894,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
                             + "edi_rcvgs = " + "'" + tbrcvgs.getText() + "'" + ","
                             + "edi_rcvq = " + "'" + tbrcvq.getText() + "'" + ","
                             + "edi_supcode = " + "'" + tbsupplier.getText() + "'"  + ","
+                            + "edi_doctypeout = " + "'" + ddoutdoctype.getSelectedItem() + "'"  + ","
+                            + "edi_filetypeout = " + "'" + ddoutfiletype.getSelectedItem() + "'"  + ","        
                             + "edi_fa_required = " + "'" + fa + "'"
                             + " where edi_id = " + "'" + tbkey.getText() + "'"     
                             + " AND edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'"
@@ -1017,6 +1059,8 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbfa;
     private javax.swing.JComboBox<String> dddoc;
+    private javax.swing.JComboBox<String> ddoutdoctype;
+    private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1027,11 +1071,13 @@ public class CustEDIMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

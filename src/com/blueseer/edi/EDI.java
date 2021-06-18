@@ -2355,9 +2355,9 @@ public class EDI {
          if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
          
          String isa5 = String.format("%2s", defaults[4]);
-         String isa6 = String.format("%-15s", defaults[3]);
+         String isa6 = String.format("%-15s", defaults[0]);
          String isa7 = String.format("%2s", defaults[1]);
-         String isa8 = String.format("%-15s", defaults[0]);
+         String isa8 = String.format("%-15s", defaults[3]);
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = "U";
@@ -2383,6 +2383,9 @@ public class EDI {
              case "810" :
                  gs1 = "IN";
                  break;
+             case "850" :
+                 gs1 = "PO";
+                 break;     
              case "856" :
                  gs1 = "SH";
                  break;
@@ -2400,10 +2403,10 @@ public class EDI {
          }
         
          
-         String gs2 = defaults[5];
+         String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
          
-         String gs3 = defaults[2];
+         String gs3 = defaults[5];
          if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
          
          String gs4 = gsdfdate.format(now);

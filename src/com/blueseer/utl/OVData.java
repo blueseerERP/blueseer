@@ -6043,7 +6043,7 @@ public class OVData {
     public static String[] getEDITPDefaults(String doctype, String sndid, String rcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","",""};
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -6071,7 +6071,8 @@ public class OVData {
                         mystring[11] = res.getString("edi_filesuffix");
                         mystring[12] = res.getString("edi_version");
                         mystring[13] = res.getString("edi_supcode");
-                        mystring[14] = res.getString("edi_dir");
+                        mystring[14] = res.getString("edi_doctypeout");
+                        mystring[15] = res.getString("edi_filetypeout");
                     }
            }
             catch (SQLException s){

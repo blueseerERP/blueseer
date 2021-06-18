@@ -77,19 +77,23 @@ public abstract class EDIMap implements EDIMapi {
     public static String GE = "";
     public static String IEA = "";
 
-     public static String[] isaArray = new String[17];
-     public static String[] gsArray = new String[9];
-     public static String[] stArray = new String[3];
-     public static String[] seArray = new String[3];
-     public static String[] geArray = new String[3];
-     public static String[] ieaArray = new String[3];
+    
+    public static String[] isaArray = new String[17];
+    public static String[] gsArray = new String[9];
+    public static String[] stArray = new String[3];
+    public static String[] seArray = new String[3];
+    public static String[] geArray = new String[3];
+    public static String[] ieaArray = new String[3];
      
      public static String[] error = new String[2];
 
      public static String ST = "";
      public static String SE = "";
 
-     public static String sender = "";
+     public static String insender = "";
+     public static String inreceiver = "";
+     public static String outsender = "";
+     public static String outreceiver = "";
      public static String map = "";
      public static boolean isOverride = false;
      public static String doctype = "";
@@ -162,8 +166,17 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutFileType(String filetype) {
         outputfiletype = filetype;
     }
-    public void setOutPutDocType(String doctype) {
-        outputdoctype = doctype;
+    
+    public void setOutPutDocType(String doc) {
+        outputdoctype = doc;
+    }
+
+    public void setOutPutSender(String sender) {
+        outsender = sender;
+    }
+
+    public void setOutPutReceiver(String receiver) {
+        outreceiver = receiver;
     }
 
     public void setISA (String[] isa) {
@@ -183,8 +196,12 @@ public abstract class EDIMap implements EDIMapi {
      }
 
     public void setControl(String[] c) {
-        sender = c[0];
+        insender = c[0];
+        inreceiver = c[21];
+        outsender = insender;  // can override within map
+        outreceiver = inreceiver; // can override within map
         doctype = c[1];
+        outputdoctype = c[1]; // can override within map
         map = c[2];
         infile = c[3];
         isactrl = c[4];
@@ -200,6 +217,7 @@ public abstract class EDIMap implements EDIMapi {
         
         setISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
+        
         
      }
 
@@ -217,7 +235,7 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutEnvelopeStrings(String[] c) { 
 
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
-           envelope = EDI.generateEnvelope(doctype, sender, c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           envelope = EDI.generateEnvelope(outputdoctype, outsender, outreceiver); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            ISA = envelope[0];
            GS = envelope[1];
            GE = envelope[2];
@@ -227,7 +245,7 @@ public abstract class EDIMap implements EDIMapi {
            isactrl = envelope[5];
            gsctrl = envelope[6];
            stctrl = String.format("%09d", Integer.valueOf(gsctrl));
-           ST = "ST" + ed + doctype + ed + stctrl ;
+           ST = "ST" + ed + outputdoctype + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            } else {
              // you can override elements within the envelope xxArray fields at this point....or merge into segment string
@@ -236,7 +254,7 @@ public abstract class EDIMap implements EDIMapi {
              GS = c[14];
              GE = "GE" + ed + "1" + ed + c[5];
              IEA = "IEA" + ed + "1" + ed + c[4];
-             ST = "ST" + ed + doctype + ed + c[6]; 
+             ST = "ST" + ed + outputdoctype + ed + c[6]; 
              SE = "SE" + ed + "1" + ed + c[6];
 
              updateISA(9,""); // set date to now
@@ -347,18 +365,25 @@ public abstract class EDIMap implements EDIMapi {
      }
 
     public String[] packagePayLoad(String[] c) {
-         String[] x = new String[]{"success","transaction mapped successfully"};  // error, messg  ... error = 0 = success ; error = 1 = error
      
         
-        
-        
         // get TP/Doc defaults
-        String[] tp = OVData.getEDITPDefaults(doctype, sender, c[21] );
+        String[] tp = OVData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+        
+        if (tp == null || tp.length < 16) {
+            setError("tp defaults is null or empty for: " + outputdoctype + "/" + outsender + "/" + outreceiver);
+            return error;  
+        }
+        
+        if (GlobalDebug) {
+        System.out.println("Getting tp defaults for: " + outputdoctype + "/" + outsender + "/" + outreceiver);
+        System.out.println("Value of tp defaults found: " + String.join(",", tp));
+        }
         
          // concatenate all output strings to string variable 'content' 
         writeOMD(c, tp);
         
-        if (outputfiletype.equals("X12")) {
+        if (tp[15].equals("X12")) {
            setOutPutEnvelopeStrings(c);
            content = ISA + sd + GS + sd + ST + sd + content  + SE + sd + GE + sd + IEA + sd;
         }
@@ -379,29 +404,26 @@ public abstract class EDIMap implements EDIMapi {
         }
 
         c[7] = ref;
-        c[15] = outputdoctype;
+        c[15] = tp[14];
         c[25] = batchfile;
         c[27] = outdir;
-        c[29] = outputfiletype;
+        c[29] = tp[15];
 
      if (GlobalDebug)
      System.out.println("Value of c within EDIMap class: " + String.join(",", c));
 
         // error handling
         if (batchfile.isEmpty()) {
-            x[0] = "error";
-            x[1] = "batch file is empty";
-            return x;
+            setError("batch file is empty");
+            return error;
         }
         if (outfile.isEmpty()) {
-            x[0] = "error";
-            x[1] = "batch file is empty";
-            return x;
+            setError("out file is empty");
+            return error;
         }
-        if (outputfiletype.isEmpty()) {
-            x[0] = "error";
-            x[1] = "output file type unknown";
-            return x;
+        if (tp[15].isEmpty()) {
+            setError("out file type is unknown");
+            return error;
         }
             try {
                 // Write output batch file
@@ -418,14 +440,13 @@ public abstract class EDIMap implements EDIMapi {
         File file = new File(outdir + "/" + outfile);
 
         if (! file.exists()) {
-            x[0] = "error";
-            x[1] = "output file not created: " + file.getPath().toString();
-            return x; 
+            setError("output file not created: " + file.getPath().toString());
+            return error;
         } else {
             c[23] = "success";
         }
 
-     return x;
+     return new String[]{"success","transaction mapped successfully"};
      }
     
     public static void mapSegment(String segment, String x, String y) {
