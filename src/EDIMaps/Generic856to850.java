@@ -27,13 +27,11 @@ SOFTWARE.
 package EDIMaps;
 
 import java.util.ArrayList;
-import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDIMap.commitSegment;
 import static com.blueseer.edi.EDIMap.getGroupCount;
 import static com.blueseer.edi.EDIMap.getInput;
 import static com.blueseer.edi.EDIMap.mapSegment;
 import com.blueseer.utl.BlueSeerUtils;
-import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -58,6 +56,8 @@ public class Generic856to850 extends com.blueseer.edi.EDIMap {
     
     mappedInput = mapInput(c, doc, ISF);
     setReference(getInput("BSN",2)); // must be ran after mappedInput
+    setISA(6,"BOOHOO");
+    setISA(8,"HOOBOO");
     debuginput(mappedInput);  // for debug purposes
     
     // set some global variables if necessary

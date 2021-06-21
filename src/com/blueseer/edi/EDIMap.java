@@ -79,7 +79,9 @@ public abstract class EDIMap implements EDIMapi {
 
     
     public static String[] isaArray = new String[17];
+    public static String[] mapISAArray = new String[]{"","","","","","","","","","","","","","","","",""}; // assigned at map level
     public static String[] gsArray = new String[9];
+    public static String[] mapGSArray = new String[]{"","","","","","","","",""}; // assigned at map level
     public static String[] stArray = new String[3];
     public static String[] seArray = new String[3];
     public static String[] geArray = new String[3];
@@ -179,22 +181,8 @@ public abstract class EDIMap implements EDIMapi {
         outreceiver = receiver;
     }
 
-    public void setISA (String[] isa) {
-         if (isa != null && isa.length > 13) {
-         isa06 = isa[6].trim();
-         isa08 = isa[8].trim();
-         isa09 = isa[9].trim();
-         isa13 = isa[13].trim();
-         }
-     }
-
-    public void setGS (String[] gs) {
-        if (gs != null && gs.length > 3) {
-         gs02 = gs[2].trim();
-         gs03 = gs[3].trim();
-        }
-     }
-
+    
+    
     public void setControl(String[] c) {
         insender = c[0];
         inreceiver = c[21];
@@ -215,8 +203,8 @@ public abstract class EDIMap implements EDIMapi {
         isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
         GlobalDebug = Boolean.valueOf(c[30]);
         
-        setISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
-        setGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
+        setControlISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
+        setControlGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
         
         
      }
@@ -235,9 +223,13 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutEnvelopeStrings(String[] c) { 
 
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
+           
            envelope = EDI.generateEnvelope(outputdoctype, outsender, outreceiver); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           String ed = envelope[8];
            ISA = envelope[0];
+           isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
            GS = envelope[1];
+           gsArray = GS.split(EDI.escapeDelimiter(ed), -1);
            GE = envelope[2];
            IEA = envelope[3];
            filename = envelope[4];
@@ -247,6 +239,11 @@ public abstract class EDIMap implements EDIMapi {
            stctrl = String.format("%09d", Integer.valueOf(gsctrl));
            ST = "ST" + ed + outputdoctype + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
+           
+           overrideISAWithMapEntries(); 
+           overrideGSWithMapEntries();
+           
+           
            } else {
              // you can override elements within the envelope xxArray fields at this point....or merge into segment string
              // need to figure out what kind of error this bullshit is....
@@ -257,8 +254,8 @@ public abstract class EDIMap implements EDIMapi {
              ST = "ST" + ed + outputdoctype + ed + c[6]; 
              SE = "SE" + ed + "1" + ed + c[6];
 
-             updateISA(9,""); // set date to now
-             updateISA(10,"");  // set time to now
+             xsetISA(9,""); // set date to now
+             xsetISA(10,"");  // set time to now
 
            
              header = "";
@@ -269,6 +266,75 @@ public abstract class EDIMap implements EDIMapi {
 
      }
 
+    public void overrideISAWithMapEntries() {
+        for (int i = 1; i < mapISAArray.length; i++ ) { // skip 0 ...ISA landmark element
+            if (mapISAArray[i] != null && ! mapISAArray[i].isEmpty()) {
+               switch (i) {
+               case 1 :
+                 isaArray[i] = String.format("%-2s", mapISAArray[i]);
+                 break;
+               case 2 :
+                 isaArray[i] = String.format("%-10s", mapISAArray[i]);
+                 break;
+               case 3 :
+                 isaArray[i] = String.format("%-2s", mapISAArray[i]);
+                 break;
+               case 4 :
+                 isaArray[i] = String.format("%-10s", mapISAArray[i]);
+                 break;
+               case 5 :
+                 isaArray[i] = String.format("%-2s", mapISAArray[i]);
+                 break; 
+               case 6 :
+                 isaArray[i] = String.format("%-15s", mapISAArray[i]);
+                 break;
+               case 7 :
+                 isaArray[i] = String.format("%-2s", mapISAArray[i]);
+                 break;   
+               case 8 :
+                 isaArray[i] = String.format("%-15s", mapISAArray[i]);
+                 break;  
+               case 9 :
+                 isaArray[i] = isadfdate.format(now);
+                 break;  
+               case 10 :
+                 isaArray[i] = isadftime.format(now);
+                 break;  
+               case 11 :
+                 isaArray[i] = String.format("%-1s", mapISAArray[i]);  
+                 break;  
+               case 12 :
+                 isaArray[i] = String.format("%-5s", mapISAArray[i]);  
+                 break;  
+               case 13 :
+                 isaArray[i] = String.format("%-9s", mapISAArray[i]);  
+                 break;  
+               case 14 :
+                 isaArray[i] = String.format("%-1s", mapISAArray[i]);  
+                 break;  
+               case 15 :
+                 isaArray[i] = String.format("%-1s", mapISAArray[i]);  
+                 break; 
+                 case 16 :
+                 isaArray[i] = String.format("%-1s", mapISAArray[i]);  
+                 break; 
+               default :
+               break;
+               }
+            }
+        }
+        ISA = String.join(ed,isaArray);
+    }
+    
+    public void overrideGSWithMapEntries() {
+        for (int i = 1; i < mapGSArray.length; i++ ) { // skip 0 ...ISA landmark element
+            if (mapGSArray[i] != null && ! mapGSArray[i].isEmpty()) {
+                gsArray[i] = String.valueOf(mapGSArray[i]);
+            }
+        }
+        GS = String.join(ed,gsArray);
+    }
+    
     public String getISA(int i) {
          if (i > 16) {
              return "";
@@ -277,7 +343,7 @@ public abstract class EDIMap implements EDIMapi {
        return isaArray[i];
      }
 
-    public String getGS(int i) {
+    public String xgetGS(int i) {
          if (i > 8) {
              return "";
          }
@@ -285,7 +351,7 @@ public abstract class EDIMap implements EDIMapi {
        return gsArray[i];
      }
 
-    public void updateISA(int i, String value) {
+    public void xsetISA(int i, String value) {
          isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
          switch (i) {
            case 1 :
@@ -343,7 +409,74 @@ public abstract class EDIMap implements EDIMapi {
          ISA = String.join(ed,isaArray);
      }
 
-    public void updateGS(int i, String value) {
+    public void setISA(int i, String value) {
+         switch (i) {
+           case 1 :
+             mapISAArray[i] = String.format("%-2s", value);
+             break;
+           case 2 :
+             mapISAArray[i] = String.format("%-10s", value);
+             break;
+           case 3 :
+             mapISAArray[i] = String.format("%-2s", value);
+             break;
+           case 4 :
+             mapISAArray[i] = String.format("%-10s", value);
+             break;
+           case 5 :
+             mapISAArray[i] = String.format("%-2s", value);
+             break; 
+           case 6 :
+             mapISAArray[i] = String.format("%-15s", value);
+             break;
+           case 7 :
+             mapISAArray[i] = String.format("%-2s", value);
+             break;   
+           case 8 :
+             mapISAArray[i] = String.format("%-15s", value);
+             break;  
+           case 9 :
+             mapISAArray[i] = isadfdate.format(now);
+             break;  
+           case 10 :
+             mapISAArray[i] = isadftime.format(now);
+             break;  
+           case 11 :
+             mapISAArray[i] = String.format("%-1s", value);  
+             break;  
+           case 12 :
+             mapISAArray[i] = String.format("%-5s", value);  
+             break;  
+           case 13 :
+             mapISAArray[i] = String.format("%-9s", value);  
+             break;  
+           case 14 :
+             mapISAArray[i] = String.format("%-1s", value);  
+             break;  
+           case 15 :
+             mapISAArray[i] = String.format("%-1s", value);  
+             break; 
+             case 16 :
+             mapISAArray[i] = String.format("%-1s", value);  
+             break; 
+           default :
+           break;
+   }
+
+         ISA = String.join(ed,mapISAArray);
+     }
+    
+    public void setControlISA (String[] isa) {
+         if (isa != null && isa.length > 13) {
+         isa06 = isa[6].trim();
+         isa08 = isa[8].trim();
+         isa09 = isa[9].trim();
+         isa13 = isa[13].trim();
+         }
+     }
+
+    
+    public void setGS(int i, String value) {
          if (i > 8) {
              return;
          }
@@ -352,13 +485,21 @@ public abstract class EDIMap implements EDIMapi {
          GS = String.join(ed,gsArray);
      }
 
-    public void updateSE() {
+    public void setControlGS (String[] gs) {
+        if (gs != null && gs.length > 3) {
+         gs02 = gs[2].trim();
+         gs03 = gs[3].trim();
+        }
+     }
+
+    
+    public void setSE() {
          seArray = SE.split(EDI.escapeDelimiter(ed), -1);
          seArray[1] = String.valueOf(segcount);
          SE = String.join(ed,seArray);
      }
 
-    public void updateGE() {
+    public void setGE() {
          geArray = GE.split(EDI.escapeDelimiter(ed), -1);
          geArray[1] = String.valueOf(segcount);
          GE = String.join(ed,geArray);
@@ -703,14 +844,16 @@ public abstract class EDIMap implements EDIMapi {
 	 }
 
     public static void debuginput(Map<String, String[]> mappedData) {
-        for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
-                String value = String.join(",", z.getValue());
-                int i = 0;
-                for (String s : z.getValue()) {
-                 System.out.println("mapInput: " + z.getKey() + " / Field: " + i + " value: " + s);   
-                 i++;
-                }
+        if (GlobalDebug) {
+            for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
+                    String value = String.join(",", z.getValue());
+                    int i = 0;
+                    for (String s : z.getValue()) {
+                     System.out.println("mapInput: " + z.getKey() + " / Field: " + i + " value: " + s);   
+                     i++;
+                    }
             }
+        }
     }
     
     public static String[] writeOMD(String[] c, String[] tp) {

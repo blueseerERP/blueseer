@@ -507,6 +507,11 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_subdelim` int(9) NOT NULL DEFAULT '0',
   `edx_status` varchar(10) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_stds` (
+  `eds_doc` varchar(15) NOT NULL  DEFAULT '',
+  `eds_gs` varchar(15) NOT NULL  DEFAULT '',
+  `eds_type` varchar(15) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_tpid` varchar(15) NOT NULL  DEFAULT '',
   `exr_tpaddr` varchar(30) NOT NULL  DEFAULT '',

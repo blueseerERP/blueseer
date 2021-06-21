@@ -672,14 +672,18 @@ public class EDI {
     
     // check for EDI x12 or Edifact
     // look at first three characters of file content
+    int gs01Start = 109;
     StringBuilder sb = new StringBuilder();
     StringBuilder gs01 = new StringBuilder();
          sb.append(cbuf, 0, 3);
          
          if (sb.toString().equals("ISA")) {
-             gs01.append(cbuf,109,2);
+             if ((String.format("%02x",(int) cbuf[106]).equals("0a")) ) {
+                        gs01Start = 110;
+             }
+             gs01.append(cbuf,gs01Start,2);
              type[0] = "X12";
-             type[1] = gs01.toString();
+             type[1] = OVData.getEDIStds(gs01.toString());
              return type;
          }
          if (sb.toString().equals("UNB")) {
@@ -2295,7 +2299,7 @@ public class EDI {
      // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid) {
         
-        String [] envelope = new String[7];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl
+        String [] envelope = new String[9];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
@@ -2378,30 +2382,7 @@ public class EDI {
          
          String isa16 = ud;
          
-         String gs1 = "";
-         switch(doctype) {
-             case "810" :
-                 gs1 = "IN";
-                 break;
-             case "850" :
-                 gs1 = "PO";
-                 break;     
-             case "856" :
-                 gs1 = "SH";
-                 break;
-             case "940" :
-                 gs1 = "OW";
-                 break;
-             case "943" :
-                 gs1 = "AR";
-                 break;
-             case "990" :
-                 gs1 = "GF";
-                 break;
-             default :
-                 gs1 = "XX";
-         }
-        
+         String gs1 = OVData.getEDIStds(doctype); 
          
          String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
@@ -2436,6 +2417,8 @@ public class EDI {
            envelope[4] = filename;
            envelope[5] = String.format("%09d", filenumber);
            envelope[6] = String.valueOf(filenumber);
+           envelope[7] = sd;
+           envelope[8] = ed;
            
             return envelope;
       }

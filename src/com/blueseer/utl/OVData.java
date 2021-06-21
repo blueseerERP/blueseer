@@ -6374,7 +6374,36 @@ public class OVData {
         return mystring;
         
     }
-       
+    
+    public static String getEDIStds(String doc) {
+       String x = "??";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select eds_gs from edi_stds " +
+                        " where eds_doc = " + "'" + doc + "'" + 
+                        " order by eds_doc; ");
+               while (res.next()) {
+                   x = res.getString("eds_gs");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
       
       public static ArrayList getCodeMstr(String type) {
        ArrayList myarray = new ArrayList();

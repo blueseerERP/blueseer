@@ -44,8 +44,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
     public String[] Mapdata(ArrayList doc, String[] c) {
    
     setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
-    setISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
-    setGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
+    setControlISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
+    setControlGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
      
         // set mandatory document wide variables
          edi850 e = null;  // mandatory class creation

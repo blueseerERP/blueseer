@@ -31,6 +31,7 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import curmstr.csv cur_mstr
 .import pos_ctrl.csv pos_ctrl
 .import edictrl.csv edi_ctrl
+.import edistds.csv edi_stds
 .import edidoc.csv edi_doc
 .import edidocdet.csv edi_docdet
 .import deptmstr.csv dept_mstr

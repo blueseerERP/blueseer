@@ -617,6 +617,14 @@ CREATE TABLE "edi_xref" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "edi_stds" (
+  "eds_doc" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "eds_gs" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "eds_type" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edi_attr" (
   "exa_sndid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "exa_rcvid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',

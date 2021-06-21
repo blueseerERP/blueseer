@@ -101,21 +101,46 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 13)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
+                        if (col == 0 || col == 13)  {     
+                            return ImageIcon.class; 
+                        } else if (col == 1 || col == 2) {
+                            return Integer.class;
+                        } else {
+                            return String.class;
+                        }  //other columns accept String values  
+                      }
+                      
+                    @Override
+                    public boolean isCellEditable(int row, int column)
+                    {
+                        // make read only fields except column 0,13,14
+                        return column != 0 ? true : false;
+                    }
                         };
                 
     javax.swing.table.DefaultTableModel filemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "LogID", "ComKey", "Partner", "FileType", "DocType", "TimeStamp", "File", "Dir", "Status"})
+                        new String[]{"Select", "LogID", "ComKey", "Partner", "FileType", "DocType", "TimeStamp", "File", "Dir", "View", "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 9)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
+                        if (col == 0 || col == 9 || col == 10)  {     
+                            return ImageIcon.class; 
+                        } else if (col == 1 || col == 2) {
+                            return Integer.class;
+                        } else {
+                            return String.class;
+                        }  //other columns accept String values  
                       }  
+                      @Override
+                    public boolean isCellEditable(int row, int column)
+                    {
+                        // make read only fields except column 0,13,14
+                        if (column == 0 || column == 9 || column == 10) {                            
+                           return false;
+                        } else {
+                           return true; 
+                        }
+                    }
                         };
     
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -155,7 +180,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 value, isSelected, hasFocus, row, column);
 
        
-            if (column == 8)
+            if (column == 8 || column == 12)
             c.setForeground(Color.BLUE);
             else
                 c.setBackground(table.getBackground());
@@ -203,6 +228,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                
                 tablereport.setModel(docmodel);
                  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
+                 tablereport.getColumnModel().getColumn(12).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
+              
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
                  
@@ -218,8 +245,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where " +
-                    " edx_doc >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -228,8 +255,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                      " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_doc >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_doc <= " + "'" + tbdoc.getText() + "'" +        
+                    " AND edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
+                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -252,8 +279,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                   }
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getString("edx_id"),
-                        res.getString("edx_comkey"),
+                        res.getInt("edx_id"),
+                        res.getInt("edx_comkey"),
                         res.getString("edx_sender"),
                         res.getString("edx_receiver"),
                         res.getString("edx_ts"),
@@ -299,7 +326,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 tablereport.setModel(filemodel);
                //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
-                
+                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                 tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+                 tablereport.getColumnModel().getColumn(2).setMaxWidth(100);
+                 tablereport.getColumnModel().getColumn(9).setMaxWidth(50);
+                 tablereport.getColumnModel().getColumn(10).setMaxWidth(50);
                  
               
                     if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
@@ -350,14 +381,15 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                   }
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getString("edf_id"),
-                        res.getString("edf_comkey"),
+                        res.getInt("edf_id"),
+                        res.getInt("edf_comkey"),
                         res.getString("edf_partner"),
                         res.getString("edf_filetype"),
                         res.getString("edf_doctype"),
                         res.getString("edf_ts"),
                         res.getString("edf_file"),
                         res.getString("edf_dir"),
+                        BlueSeerUtils.clickfind, 
                         statusImage
                     });
                 }
@@ -450,7 +482,7 @@ public EDITransactionBrowse() {
                
         docmodel.setNumRows(0);
         modeldetail.setNumRows(0);
-        tablereport.setModel(docmodel);
+        tablereport.setModel(filemodel);
         tabledetail.setModel(modeldetail);
         
         tablereport.getTableHeader().setReorderingAllowed(false);
@@ -802,15 +834,15 @@ public EDITransactionBrowse() {
                 detailpanel.setVisible(true);
         }
         
-          if ( col == 7 && rbFileLog.isSelected()) {
+          if ( col == 9 && rbFileLog.isSelected()) {
               int k = 10;
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
              try {
                  tafile.setText("");
-                 if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, col).toString(), 
+                 if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
+                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
                          OVData.getEDIInArch(),
                          cbshowall.isSelected(),
                          "0",
@@ -835,7 +867,7 @@ public EDITransactionBrowse() {
              cbshowall.setEnabled(true);
              
         }
-          if ( col == 8 && rbDocLog.isSelected()) {
+          if ( (col == 8 || col == 12) && rbDocLog.isSelected()) {
               int k = 10;
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
