@@ -70,7 +70,7 @@ public class GenericIDOCto856 extends com.blueseer.edi.EDIMap {
     mapSegment("BSN","e02",getInput("E2EDT20","tknum"));
     mapSegment("BSN","e03",now.substring(0,8));
     mapSegment("BSN","e04",now.substring(8,12));
-    commitSegment("BSN",1);
+    commitSegment("BSN");
     //mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
    // mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
   
@@ -79,20 +79,20 @@ public class GenericIDOCto856 extends com.blueseer.edi.EDIMap {
     mapSegment("HL","e01", String.valueOf(hlcounter));
     mapSegment("HL","e03","S");
     mapSegment("HL","e04","1");
-    commitSegment("HL",1);
+    commitSegment("HL");
     
     mapSegment("TD1","e01", "PCS25");
     mapSegment("TD1","e02",getInput("ZE1EDT856","zpackages"));
     mapSegment("TD1","e06","A3");
     mapSegment("TD1","e07",getInput("E2EDL20","ntgew"));
     mapSegment("TD1","e08","LB");
-    commitSegment("TD1",1);
+    commitSegment("TD1");
     
     mapSegment("TD5","e02", "2");
     mapSegment("TD5","e03",getInput("ZE1EDT856","zscac"));
     mapSegment("TD5","e05",getInput("E2ADRM4","partner_q:SP","name1"));
     mapSegment("TD5","e06","CC");
-    commitSegment("TD5",1);
+    commitSegment("TD5");
     
     /*
     mapSegment("REF","e01","VR");

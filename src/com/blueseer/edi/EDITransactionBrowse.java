@@ -97,11 +97,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel docmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "Reference", "OutFileType", "OutDocType", "OutBatch",  "Status"})
+                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "Reference", "OutFileType", "OutDocType", "OutBatch", "InView", "OutView",  "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 13)  {     
+                        if (col == 0 || col == 13 || col == 14 || col == 15)  {     
                             return ImageIcon.class; 
                         } else if (col == 1 || col == 2) {
                             return Integer.class;
@@ -113,8 +113,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     @Override
                     public boolean isCellEditable(int row, int column)
                     {
-                        // make read only fields except column 0,13,14
-                        return column != 0 ? true : false;
+                       // make read only fields except column 0,13,14
+                        if (column == 0 || column == 13 || column == 14 || column == 15) {                            
+                           return false;
+                        } else {
+                           return true; 
+                        }
                     }
                         };
                 
@@ -227,8 +231,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 String dir = "0";
                
                 tablereport.setModel(docmodel);
-                 tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
-                 tablereport.getColumnModel().getColumn(12).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
+                tablereport.getColumnModel().getColumn(13).setMaxWidth(50);
+                tablereport.getColumnModel().getColumn(14).setMaxWidth(50);
+                tablereport.getColumnModel().getColumn(15).setMaxWidth(50);
+                
+              //   tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
+              //   tablereport.getColumnModel().getColumn(12).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
               
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
@@ -291,6 +299,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         res.getString("edx_outfiletype"),
                         res.getString("edx_outdoctype"),
                         res.getString("edx_outbatch"),
+                        BlueSeerUtils.clickleftdoc,
+                        BlueSeerUtils.clickrightdoc,
                         statusImage
                     });
                 }
@@ -325,7 +335,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                
                 tablereport.setModel(filemodel);
                //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
-                 tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
+              //   tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(2).setMaxWidth(100);
@@ -867,15 +877,15 @@ public EDITransactionBrowse() {
              cbshowall.setEnabled(true);
              
         }
-          if ( (col == 8 || col == 12) && rbDocLog.isSelected()) {
+          if ( (col == 13) && rbDocLog.isSelected()) {
               int k = 10;
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
              try {
                  tafile.setText("");
-                 if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, col).toString(), 
+                 if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
+                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
                          OVData.getEDIBatchDir(),
                          cbshowall.isSelected(),
                          "0",
@@ -900,6 +910,40 @@ public EDITransactionBrowse() {
              cbshowall.setEnabled(true);
              
         }
+          
+         if ( (col == 14) && rbDocLog.isSelected()) {
+              int k = 10;
+              if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
+              k = Integer.valueOf(tbsegdelim.getText());
+              }
+             try {
+                 tafile.setText("");
+                 if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
+                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
+                         OVData.getEDIBatchDir(),
+                         cbshowall.isSelected(),
+                         "0",
+                         "99999",
+                         String.valueOf(k)
+                         );  
+                    for (String segment : segments ) {
+                        tafile.append(segment);
+                        tafile.append("\n");
+                    }
+                 }
+             } catch (MalformedURLException ex) {
+                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (SmbException ex) {
+                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (IOException ex) {
+                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+             }
+           
+             textpanel.setVisible(true);
+             bthidetext.setEnabled(true);
+             cbshowall.setEnabled(true);
+             
+        }  
       
     }//GEN-LAST:event_tablereportMouseClicked
 

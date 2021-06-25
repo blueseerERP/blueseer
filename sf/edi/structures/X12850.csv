@@ -14,7 +14,7 @@ CUR,,1,no,yes,landmark,landmark,3,3,-
 CUR,,1,no,no,e01,,2,2,-
 CUR,,1,no,no,e02,,2,20,-
 REF,,5,no,yes,landmark,landmark,3,3,-
-REF,,1,no,no,e01,,2,2,-
+REF,,1,no,no,e01,,2,3,-
 REF,,1,no,no,e02,,2,20,-
 PER,,1,no,yes,landmark,landmark,3,3,-
 PER,,1,no,no,e01,,0,20,-
@@ -47,7 +47,8 @@ N9,,5,yes,yes,landmark,landmark,2,2,-
 N9,,1,no,no,e01,,0,35,-
 N9,,1,no,no,e02,,0,35,-
 MSG,N9,20,no,yes,landmark,landmark,3,3,-
-MSG,,10,no,no,e01,,0,500,-
+MSG,N9,1,no,no,e01,,0,500,-
+MSG,N9,1,no,no,e02,,0,500,-
 N1,,5,no,yes,landmark,landmark,2,2,-
 N1,,1,no,no,e01,,2,2,-
 N1,,1,no,no,e02,,0,35,-
@@ -90,7 +91,14 @@ PID,PO1,1,no,no,e03,,0,35,-
 PID,PO1,1,no,no,e04,,0,35,-
 PID,PO1,1,no,no,e05,,0,35,-
 PID,PO1,1,no,no,e06,,0,35,-
-SAC,,1,no,yes,landmark,landmark,3,3-
+CTP,PO1,5,no,yes,landmark,landmark,3,3,-
+CTP,PO1,1,no,no,e01,,0,35,-
+CTP,PO1,1,no,no,e02,,0,35,-
+CTP,PO1,1,no,no,e03,,0,35,-
+CTP,PO1,1,no,no,e04,,0,35,-
+CTP,PO1,1,no,no,e05,,0,35,-
+CTP,PO1,1,no,no,e06,,0,35,-
+SAC,,1,no,yes,landmark,landmark,3,3,-
 SAC,,1,no,no,e01,,0,35,-
 SAC,,1,no,no,e02,,0,35,-
 SAC,,1,no,no,e03,,0,35,-
@@ -103,6 +111,6 @@ SAC,,1,no,no,e09,,0,35,-
 SAC,,1,no,no,e10,,0,35,-
 SAC,,1,no,no,e11,,0,35,-
 SAC,,1,no,no,e12,,0,35,-
-CTT,,1,no,yes,landmark,landmark,3,3-
+CTT,,1,no,yes,landmark,landmark,3,3,-
 CTT,,1,no,no,e01,,0,35,-
 CTT,,1,no,no,e02,,0,35,-

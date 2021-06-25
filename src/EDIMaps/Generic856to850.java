@@ -74,40 +74,40 @@ public class Generic856to850 extends com.blueseer.edi.EDIMap {
     //mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
     mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
     mapSegment("BEG","e10","SP");
-    commitSegment("BEG",1);
+    commitSegment("BEG");
        
     mapSegment("CUR","e01","BY");
     mapSegment("CUR","e02","USD");
-    commitSegment("CUR",1);
+    commitSegment("CUR");
     
     mapSegment("REF","e01","VR");
     mapSegment("REF","e02",getInput("E2EDK01",25));
-    commitSegment("REF",1);
+    commitSegment("REF");
     
     String plant = getInput("E2EDKA1","7:WE",9) + getInput("E2EDK01","belnr");
     mapSegment("REF","e01","PO");
     mapSegment("REF","e02",plant);
-    commitSegment("REF",2);
+    commitSegment("REF");
    
     mapSegment("N1","e01","BT");
     mapSegment("N1","e02",getInput("E2EDKA1","7:WE",10));
     mapSegment("N1","e03","92");
     mapSegment("N1","e04",getInput("E2EDKA1","7:WE",9));
-    commitSegment("N1",1);
+    commitSegment("N1");
     
     mapSegment("N3","e01",getInput("E2EDKA1","7:WE",11));
     mapSegment("N3","e02",getInput("E2EDKA1","7:WE",14));
-    commitSegment("N3",1);
+    commitSegment("N3");
     
     mapSegment("N4","e01",getInput("E2EDKA1","7:WE",17));
     mapSegment("N4","e02",getInput("E2EDKA1","7:WE",36));
     mapSegment("N4","e03",getInput("E2EDKA1","7:WE",19));
     mapSegment("N4","e04",getInput("E2EDKA1","7:WE",21));
-    commitSegment("N4",1);
+    commitSegment("N4");
     
     mapSegment("PER","e01","BD");
     mapSegment("PER","e02",getInput("E2EDKA1","7:AG",42));
-    commitSegment("PER",1);
+    commitSegment("PER");
     
     /* Item Loop */
     DecimalFormat df = new java.text.DecimalFormat("0.#####");
@@ -125,48 +125,48 @@ public class Generic856to850 extends com.blueseer.edi.EDIMap {
     mapSegment("PO1","e07",getInput("E2EDP01:E2EDP19","7:001",8,i));
     mapSegment("PO1","e08","VN");
     mapSegment("PO1","e09",getInput("E2EDP01:E2EDP19","7:002",8,i));
-    commitSegment("PO1",i);
+    commitSegment("PO1");
     
     mapSegment("PID","e01","F");
     mapSegment("PID","e05",getInput("E2EDP01:E2EDP19","7:001",9,i));
-    commitSegment("PID",i);
+    commitSegment("PID");
     
     mapSegment("SAC","e01","N");
     mapSegment("SAC","e02","B840");
     if (BlueSeerUtils.isParsableToDouble(getInput("E2EDP01",18, i))) {
     mapSegment("SAC","e05", df.format(Double.valueOf(getInput("E2EDP01",18, i)) * 100));
     }
-    commitSegment("SAC",i);
+    commitSegment("SAC");
     
     
     mapSegment("DTM","e01","002");
     mapSegment("DTM","e02",getInput("E2EDP01:E2EDP20",9,i));
-    commitSegment("DTM",i);
+    commitSegment("DTM");
     
     mapSegment("N1","e01","ST");
     mapSegment("N1","e02",getInput("E2EDKA1","7:WE",10));
     mapSegment("N1","e03","92");
     mapSegment("N1","e04",getInput("E2EDKA1","7:WE",9));
-    commitSegment("N1",i + 1);
+    commitSegment("N1");
     
     mapSegment("N2","e01",getInput("E2EDKA1","7:AG",42));
     mapSegment("N2","e02",getInput("E2EDKA1","7:WE",11));
-    commitSegment("N2",i + 1);
+    commitSegment("N2");
     
     mapSegment("N3","e01",getInput("E2EDKA1","7:WE",14));
-    commitSegment("N3",i + 1);
+    commitSegment("N3");
     
     mapSegment("N4","e01",getInput("E2EDKA1","7:WE",17));
     mapSegment("N4","e02",getInput("E2EDKA1","7:WE",36));
     mapSegment("N4","e03",getInput("E2EDKA1","7:WE",19));
     mapSegment("N4","e04",getInput("E2EDKA1","7:WE",21));
-    commitSegment("N4",i + 1);
+    commitSegment("N4");
     
     }
     /* end of item loop */
     
     mapSegment("CTT","e01",String.valueOf(itemLoopCount));
-    commitSegment("CTT",i);
+    commitSegment("CTT");
         
     return packagePayLoad(c);
 }

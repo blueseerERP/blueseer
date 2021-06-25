@@ -6053,8 +6053,8 @@ public class OVData {
                    
                       res = st.executeQuery("select * from edi_mstr where " + 
                         " edi_doc = " + "'" + doctype + "'" 
-                      +  " AND edi_sndisa = " + "'" + sndid + "'"  
-                      +  " AND edi_rcvisa = " + "'" + rcvid + "'"          
+                      +  " AND edi_sndgs = " + "'" + sndid + "'"  
+                      +  " AND edi_rcvgs = " + "'" + rcvid + "'"          
                         + ";");
                     while (res.next()) {
                        mystring[0] = res.getString("edi_sndisa");
@@ -6375,7 +6375,36 @@ public class OVData {
         
     }
     
-    public static String getEDIStds(String doc) {
+    public static String getEDIDocTypeFromStds(String gs) {
+       String x = "??";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select eds_doc from edi_stds " +
+                        " where eds_gs = " + "'" + gs + "'" + 
+                        " order by eds_gs; ");
+               while (res.next()) {
+                   x = res.getString("eds_doc");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    public static String getEDIGSTypeFromStds(String doc) {
        String x = "??";
         try{
             Class.forName(driver).newInstance();

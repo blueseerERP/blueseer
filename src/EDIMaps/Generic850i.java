@@ -80,7 +80,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                 /* We now set the instance object for edi850 class...to be called and updated later on */
                /* this is done once and only once per doc */
                /* the object 'e' will contain cherry-picked information form the raw 850 file ...and passed to the CreateOrder routine */
-               e = new edi850(isa06, isa08, gs02, gs03, isa13, isa09, doctype, stctrl);
+               e = new edi850(getISA(6), getISA(8), getGS(2), getGS(3), getISA(13), getISA(9), doctype, stctrl);
               
               /* If there is a one to one relationship between an ISA sender ID and a billto code in CustMaster...then */
            /* set Customer/TPDOC Maintenance with appropriate values ...example:  if ISA is 'generic' and custmaster billto is 'mycust' */
@@ -95,7 +95,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            /* because you will not be able to retrieve a billto code from a shipto code that hasn't been previously defined */
             
           
-               e.setOVBillTo(OVData.getEDICustFromSenderISA(doctype, isa06, isa08));   // 3rd parameter '0' is outbound direction '1' is inbound
+               e.setOVBillTo(OVData.getEDICustFromSenderISA(doctype, getISA(6), getISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
                
                
                po = x[3];

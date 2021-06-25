@@ -683,7 +683,10 @@ public class EDI {
              }
              gs01.append(cbuf,gs01Start,2);
              type[0] = "X12";
-             type[1] = OVData.getEDIStds(gs01.toString());
+             type[1] = OVData.getEDIDocTypeFromStds(gs01.toString()); 
+             if (GlobalDebug)
+                   System.out.println("getEDIType X12 type in/out: " + gs01 + "/" + type[1] );
+             
              return type;
          }
          if (sb.toString().equals("UNB")) {
@@ -1270,7 +1273,8 @@ public class EDI {
             }
             */
             c[1] = x[0];
-            c[0] = x[2];
+            c[0] = x[3];
+            c[21] = x[1];
             c[6] = x[0];
       
             String[] defaults = OVData.getEDITPDefaults(x[0], x[3], x[1]);
@@ -1299,7 +1303,10 @@ public class EDI {
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                  map = OVData.getEDIMap(c[1], x[3], x[1]);  
+                   if (GlobalDebug)   
+                   System.out.println("Searching for Map (FF in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                
+                   map = OVData.getEDIMap(c[1], x[3], x[1]);  
                } 
             
                // if no map then bail
@@ -2382,7 +2389,7 @@ public class EDI {
          
          String isa16 = ud;
          
-         String gs1 = OVData.getEDIStds(doctype); 
+         String gs1 = OVData.getEDIGSTypeFromStds(doctype); 
          
          String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}

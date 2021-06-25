@@ -76,7 +76,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
        mapSegment("EDI_DC","rcvpfc","LF");
        mapSegment("EDI_DC","credat",now.substring(0,8));
        mapSegment("EDI_DC","cretim",now.substring(8,14));
-       commitSegment("EDI_DC",1);
+       commitSegment("EDI_DC");
 
        segnum++;
        hlevel++;
@@ -89,7 +89,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
        mapSegment("E2EDK01","hwaer","USD");
        mapSegment("E2EDK01","wkurs",getInput("N1","1:ST",4));
        mapSegment("E2EDK01","belnr",getInput("BEG",3));
-       commitSegment("E2EDK01",1);
+       commitSegment("E2EDK01");
 
 
       // E2EDK14 loop
@@ -106,7 +106,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDK14", "hlevel", String.format("%02d",hlevel));
       mapSegment("E2EDK14","qualf",getGroupInput(key,1));
       mapSegment("E2EDK14","orgid",getGroupInput(key,4));
-      commitSegment("E2EDK14",j);  
+      commitSegment("E2EDK14");  
        }
               
                
@@ -124,7 +124,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDK03", "hlevel", String.format("%02d",hlevel));
           mapSegment("E2EDK03","iddat",getLoopInput(key,1,i));
           mapSegment("E2EDK03","datum",getLoopInput(key,2,i));
-          commitSegment("E2EDK03",i);   
+          commitSegment("E2EDK03");   
        }
                
        int m = getGroupCount("N1");
@@ -145,7 +145,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKA1","regio",getInput("N1:N4",2, j));
           mapSegment("E2EDKA1","pstlz",getInput("N1:N4",3, j));
           mapSegment("E2EDKA1","isoal",getInput("N1:N4",4, j));
-          commitSegment("E2EDKA1",j);
+          commitSegment("E2EDKA1");
       }
       segnum++;
       hlevel++;         
@@ -157,7 +157,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDK17","qualf","001");
       mapSegment("E2EDK17","lkond","ZZ");
       mapSegment("E2EDK17","lktxt",getInput("FOB",2));
-      commitSegment("E2EDK17",1);
+      commitSegment("E2EDK17");
 
 
       // comments // E2EDKT1, E2EDKT2 (hard coded source)
@@ -170,7 +170,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDKT1", "hlevel", String.format("%02d",hlevel));
       mapSegment("E2EDKT1","tdid","0001");
       mapSegment("E2EDKT1","tsspras_iso","EN");
-      commitSegment("E2EDKT1",1);
+      commitSegment("E2EDKT1");
 
       ArrayList<String> msg = getLoopKeys("MSG");
        int v = 0;
@@ -184,7 +184,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKT2", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDKT2", "hlevel", String.format("%02d",hlevel));
           mapSegment("E2EDKT2","tdline",getLoopInput(key,2,v));
-          commitSegment("E2EDKT2", v);  
+          commitSegment("E2EDKT2");  
        } 
 
     // line items
@@ -204,7 +204,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP01","vprei",getInput("PO1",4, j));
       mapSegment("E2EDP01","matnr",getInput("PO1",7, j));
       mapSegment("E2EDP01","matnr_external",getInput("PO1",9, j));
-      commitSegment("E2EDP01",j);
+      commitSegment("E2EDP01");
 
       segnum++;
       hlevel++;
@@ -215,7 +215,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP02", "hlevel", String.format("%02d",hlevel));
       mapSegment("E2EDP02", "qualf", "001");
       mapSegment("E2EDP02","belnr",getInput("PO1",7, j));
-      commitSegment("E2EDP02",j);
+      commitSegment("E2EDP02");
 
       segnum++;
       hlevel++;
@@ -225,7 +225,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP20", "psgnum", String.format("%06d",psgnum));
       mapSegment("E2EDP20", "hlevel", String.format("%02d",hlevel));
       mapSegment("E2EDP20", "wmeng", getInput("PO1",2, j));
-      commitSegment("E2EDP20",j);
+      commitSegment("E2EDP20");
 
       segnum++;
       hlevel++;
@@ -242,7 +242,7 @@ public class Generic850toIDOC extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP19", "idtnr", getInput("PO1",9, j));  
       }
       mapSegment("E2EDP19", "ktext", getInput("PO1:PID",5, j));
-      commitSegment("E2EDP19",j + i);
+      commitSegment("E2EDP19");
 
     }
    

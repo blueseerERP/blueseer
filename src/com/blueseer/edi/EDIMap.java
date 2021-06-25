@@ -66,6 +66,8 @@ public abstract class EDIMap implements EDIMapi {
     public static boolean GlobalDebug = false;
     public static boolean isError = false;
     
+    public static int commit = 0;
+    
     DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
     DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
     DateFormat isadftime = new SimpleDateFormat("HHmm");
@@ -77,6 +79,8 @@ public abstract class EDIMap implements EDIMapi {
     public static String GE = "";
     public static String IEA = "";
 
+    public static String[] isaArrayIN = new String[17];
+    public static String[] gsArrayIN = new String[9];
     
     public static String[] isaArray = new String[17];
     public static String[] mapISAArray = new String[]{"","","","","","","","","","","","","","","","",""}; // assigned at map level
@@ -116,15 +120,6 @@ public abstract class EDIMap implements EDIMapi {
      public static String header = "";
      public static String detail = "";
      public static String trailer = "";
-
-     public static String isa06 = "";
-     public static String isa08 = "";
-     public static String isa13 = "";
-     public static String isa09 = "";
-
-     public static String gs02 = "";
-     public static String gs03 = "";
-
      public static ArrayList<String> H = new ArrayList();
      public static ArrayList<String> D = new ArrayList();
      public static ArrayList<String> T = new ArrayList();
@@ -150,6 +145,38 @@ public abstract class EDIMap implements EDIMapi {
      return index != null && index >=0 && index < list.length && list[index] != null;
      }
 
+    public static void resetVariables() {
+    commit = 0;    
+    segcount = 0;
+    isError = false;
+    ISA = "";
+    GS = "";
+    GE = "";
+    IEA = "";
+    ST = "";
+    SE = "";
+
+     insender = "";
+     inreceiver = "";
+     outsender = "";
+     outreceiver = "";
+     map = "";
+     doctype = "";
+
+     infile = "";
+     outdir = "";
+     outfile = "";
+     outputfiletype = "";
+     outputdoctype = "";
+     ifsfile = "";
+     ofsfile = "";
+     filename = "";
+     isactrl = "";
+     gsctrl = "";
+     stctrl = "";
+     ref = "";
+    }
+    
     public static void setError(String mssg) {
         isError = true;
         error = new String[]{"error", mssg};
@@ -184,10 +211,13 @@ public abstract class EDIMap implements EDIMapi {
     
     
     public void setControl(String[] c) {
+        
+        resetVariables();
+        
         insender = c[0];
         inreceiver = c[21];
-        outsender = insender;  // can override within map
-        outreceiver = inreceiver; // can override within map
+     //   outsender = insender;  // can override within map
+    //    outreceiver = inreceiver; // can override within map
         doctype = c[1];
         outputdoctype = c[1]; // can override within map
         map = c[2];
@@ -206,6 +236,13 @@ public abstract class EDIMap implements EDIMapi {
         setControlISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setControlGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
         
+        if (c[28].equals("X12")) {
+        outsender = gsArrayIN[2];
+        outreceiver = gsArrayIN[3];
+        } else {
+        outsender = c[0];
+        outreceiver = c[21]; 
+        }
         
      }
 
@@ -220,8 +257,7 @@ public abstract class EDIMap implements EDIMapi {
     return delim;
   }
      
-    public void setOutPutEnvelopeStrings(String[] c) { 
-
+    public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
            envelope = EDI.generateEnvelope(outputdoctype, outsender, outreceiver); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
@@ -343,7 +379,23 @@ public abstract class EDIMap implements EDIMapi {
        return isaArray[i];
      }
 
-    public String xgetGS(int i) {
+    public String getInputISA(int i) {
+       if (isaArrayIN != null && isaArrayIN.length >= i) {
+       return isaArrayIN[i];
+       } else {
+           return "";
+       }
+     }
+    
+    public String getInputGS(int i) {
+       if (gsArrayIN != null && gsArrayIN.length >= i) {
+       return gsArrayIN[i];
+       } else {
+           return "";
+       }
+     }
+
+    public String getGS(int i) {
          if (i > 8) {
              return "";
          }
@@ -351,6 +403,7 @@ public abstract class EDIMap implements EDIMapi {
        return gsArray[i];
      }
 
+    
     public void xsetISA(int i, String value) {
          isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
          switch (i) {
@@ -467,11 +520,9 @@ public abstract class EDIMap implements EDIMapi {
      }
     
     public void setControlISA (String[] isa) {
-         if (isa != null && isa.length > 13) {
-         isa06 = isa[6].trim();
-         isa08 = isa[8].trim();
-         isa09 = isa[9].trim();
-         isa13 = isa[13].trim();
+        
+         if (isa != null && isa.length > 16) {
+             isaArrayIN = isa;
          }
      }
 
@@ -480,15 +531,13 @@ public abstract class EDIMap implements EDIMapi {
          if (i > 8) {
              return;
          }
-         gsArray = GS.split(EDI.escapeDelimiter(ed), -1);
-         gsArray[i] = String.valueOf(value);
-         GS = String.join(ed,gsArray);
+         mapGSArray[i] = String.valueOf(value);
+         GS = String.join(ed,mapGSArray);
      }
 
     public void setControlGS (String[] gs) {
-        if (gs != null && gs.length > 3) {
-         gs02 = gs[2].trim();
-         gs03 = gs[3].trim();
+        if (gs != null && gs.length > 8) {
+         gsArrayIN = gs;
         }
      }
 
@@ -601,8 +650,9 @@ public abstract class EDIMap implements EDIMapi {
     	 HASH.put(segment, old);
      }
      
-    public static void commitSegment(String segment, int p) {
+    public static void commitSegment(String segment) {
     	 // loop through HASH and create t for this segment
+         commit++;
     	 HashMap<String, String> t = new LinkedHashMap<String,String>();
     	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
     	 for (Map.Entry<String, ArrayList<String[]>> z : X.entrySet()) {
@@ -616,11 +666,13 @@ public abstract class EDIMap implements EDIMapi {
     	 }
     	// HashMap<String, String> t = new HashMap<String,String>(j);
     	 if (! OMD.containsKey(segment)) {
-    		OMD.put(segment + ":" + p, t);
+    		OMD.put(segment + ":" + commit, t);
     	 }	
+         
          HASH.clear();
      }
-     
+    
+    
     public void readOSF(String adf)  {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
@@ -864,6 +916,7 @@ public abstract class EDIMap implements EDIMapi {
     	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
     	 
     	 if (outputfiletype.equals("X12")) {
+         segcount = 0;  // init segment count for this doc
          String s = tp[7]; // segment delimiter
          String e = tp[6]; // element delimiter
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -873,6 +926,9 @@ public abstract class EDIMap implements EDIMapi {
                 HashMap<String,String> mapValues = MD.get(z.getKey());
                 // loop through integers
 
+                if (GlobalDebug) {
+                    System.out.println("OMD: " + z.getKey() + " : " + mapValues);
+                }
                         segment = z.getKey().split(":")[0];  // start with landmark
                 
                         ArrayList<String[]> fields = OSF.get(segment);
@@ -898,6 +954,10 @@ public abstract class EDIMap implements EDIMapi {
                         }
                         } // if fields not null
                         segment = trimSegment(String.join(ed,segaccum), ed);
+                        if (GlobalDebug) {
+                            System.out.println("SegBeforeTrim: " + segaccum);
+                            System.out.println("SegAfterTrim: " + segment);
+                        }
                         segcount++;
                         content += segment + sd;
                         segment = ""; // reset the segment string
@@ -949,7 +1009,34 @@ public abstract class EDIMap implements EDIMapi {
     	 
     	 return r;
      }
+    
+    public static boolean segmentExists(String segment, String qual, String elementName) {
+        boolean segexists = false;
+         int elementNbr = getElementNumber(segment, elementName); 
+         if (elementNbr == 0) {
+             return segexists;
+         }
+         String[] q = qual.split(":",-1);
+         int qualNbr = getElementNumber(segment,q[0]);
+         if (qualNbr == 0) {
+             return segexists;
+         }
         
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 t = z.getValue();
+                 if (t != null && t.length >= Integer.valueOf(qualNbr) && t[Integer.valueOf(qualNbr)].trim().equals(q[1].toUpperCase())) {
+                     segexists = true;
+                     break;
+                 }
+             }
+         }
+         
+        return segexists;
+    }
+    
     public static String getInput(String segment, String qual, Integer element) {
         String x = "";
          int count = 0;
@@ -1042,7 +1129,9 @@ public abstract class EDIMap implements EDIMapi {
          if (k != null && k.length > elementNbr) {
           x =  k[elementNbr];
          }
-        // System.out.println("getInput:" + segment + "/" + x);
+         if (GlobalDebug)
+         System.out.println("getInput:" + segment + "/" + x);
+         
          return x;
      }
     
@@ -1070,7 +1159,9 @@ public abstract class EDIMap implements EDIMapi {
                 break;
             }
          }
-        // System.out.println("getElementNumber: " + segment + "/" + element + "/" + r);
+         if (GlobalDebug) {
+         System.out.println("getElementNumber: " + segment + "/" + element + "/" + r);
+         }
          return r;
      }
         
