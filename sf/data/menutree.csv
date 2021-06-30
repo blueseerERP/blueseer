@@ -32,7 +32,7 @@ VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
 EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDIMenu,CustEDIMaint,4,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIMenu,EDIPartnerDocMaint,4,JMenuItem,Partner Transaction Maintenance,,,,1,1
 EDIMenu,CustEDIBrowse,5,JMenuItem,EDI Partner Browse,,1,,1,1
 EDIMenu,EDIDocumentMaint,6,JMenuItem,Document Recognition Maintenance,,,,1,1
 EDIMenu,EDIControl,7,JMenuItem,EDI Control,,,,1,1

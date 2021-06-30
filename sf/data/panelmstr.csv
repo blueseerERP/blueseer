@@ -18,7 +18,6 @@ com.blueseer.adm.UserMaintPanel,,1
 com.blueseer.adm.UserPermsMaint,,1
 com.blueseer.ctr.CarrierMaintPanel,,1
 com.blueseer.ctr.CustControl,,1
-com.blueseer.ctr.CustEDIMaint,,1
 com.blueseer.ctr.CustMaintPanel,,1
 com.blueseer.ctr.CustPriceMstr,,1
 com.blueseer.ctr.CustPriceRpt1,,1
@@ -36,6 +35,7 @@ com.blueseer.edi.EDI,,1
 com.blueseer.edi.EDIbs,,1
 com.blueseer.edi.EDIControlPanel,,1
 com.blueseer.edi.EDIPartnerMaint,,1
+com.blueseer.edi.EDIPartnerDocMaint,,1
 com.blueseer.edi.EDIDocumentMaint,,1
 com.blueseer.edi.EDILoad,,1
 com.blueseer.edi.EDILoadPanel,,1

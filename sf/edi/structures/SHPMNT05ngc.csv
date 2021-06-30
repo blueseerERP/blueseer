@@ -800,27 +800,27 @@ E2EDL20,,1,no,no,MAX_ERR_TYPE,Maximum Error Type Occurred,1,1,-
 E2EDL20,,1,no,no,LE_SCENARIO,Scenario Logistic Execution,1,1,-
 E2EDL20,,1,no,no,RECIPIENT_CREATE,Created by Receipient,1,1,-
 ZELEDL20,,1,no,yes,landmark,landmark,8,8,-
-ZE2EDL20,,1,no,no,segnam,Segment,22,22,-
-ZE2EDL20,,1,no,no,mandt,Client,3,3,-
-ZE2EDL20,,1,no,no,docnum,IDOC Number,16,16,-
-ZE2EDL20,,1,no,no,segnum,Segment Number,6,6,-
-ZE2EDL20,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
-ZE2EDL20,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
-ZE2EDL20,,1,no,no,ZPACKAGES,packages,8,8,-
-ZE2EDL20,,1,no,no,ZDOC_TYPE,Client,4,4,-
-ZE2EDL20,,1,no,no,ZBP_STOREID,Client,20,20,-
-ZE2EDL20,,1,no,no,ZSH_STOREID,Client,20,20,-
-ZE2EDL20,,1,no,no,ZSHIPMENT,Client,14,14,-
-ZE2EDL20,,1,no,no,ZTRADE_ID,Client,20,20,-
-ZE2EDL20,,1,no,no,ZACCOUNT,Client,6,6,-
-ZE2EDL20,,1,no,no,ZPARTNER_Q_OB,Client,3,3,-
-ZE2EDL20,,1,no,no,ZPARTNER_ID_OB,Client,17,17,-
-ZE2EDL20,,1,no,no,ZNAME_OB,Client,40,40,-
-ZE2EDL20,,1,no,no,ZSTREET_OB,Client,40,40,-
-ZE2EDL20,,1,no,no,ZPOSTL_OB,Client,10,10,-
-ZE2EDL20,,1,no,no,ZCITY_OB,Client,40,40,-
-ZE2EDL20,,1,no,no,ZCOUNTRY_OB,Client,3,3,-
-ZE2EDL20,,1,no,no,ZREGION_OB,Client,40,40,-
+ZELEDL20,,1,no,no,segnam,Segment,22,22,-
+ZELEDL20,,1,no,no,mandt,Client,3,3,-
+ZELEDL20,,1,no,no,docnum,IDOC Number,16,16,-
+ZELEDL20,,1,no,no,segnum,Segment Number,6,6,-
+ZELEDL20,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+ZELEDL20,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+ZELEDL20,,1,no,no,ZPACKAGES,packages,8,8,-
+ZELEDL20,,1,no,no,ZDOC_TYPE,Client,4,4,-
+ZELEDL20,,1,no,no,ZBP_STOREID,Client,20,20,-
+ZELEDL20,,1,no,no,ZSH_STOREID,Client,20,20,-
+ZELEDL20,,1,no,no,ZSHIPMENT,Client,14,14,-
+ZELEDL20,,1,no,no,ZTRADE_ID,Client,20,20,-
+ZELEDL20,,1,no,no,ZACCOUNT,Client,6,6,-
+ZELEDL20,,1,no,no,ZPARTNER_Q_OB,Client,3,3,-
+ZELEDL20,,1,no,no,ZPARTNER_ID_OB,Client,17,17,-
+ZELEDL20,,1,no,no,ZNAME_OB,Client,40,40,-
+ZELEDL20,,1,no,no,ZSTREET_OB,Client,40,40,-
+ZELEDL20,,1,no,no,ZPOSTL_OB,Client,10,10,-
+ZELEDL20,,1,no,no,ZCITY_OB,Client,40,40,-
+ZELEDL20,,1,no,no,ZCOUNTRY_OB,Client,3,3,-
+ZELEDL20,,1,no,no,ZREGION_OB,Client,40,40,-
 E2EDL22,,1,no,yes,landmark,landmark,7,7,-
 E2EDL22,,1,no,no,segnam,Segment,23,23,-
 E2EDL22,,1,no,no,mandt,Client,3,3,-
@@ -1386,14 +1386,25 @@ E2EDL24,,1,no,no,RMA_COMPLETE,RMA completion indicator,1,1,-
 E2EDL24,,1,no,no,EXPIRY_DATE_EXT,End date of validity period of returns delivery,16,16,-
 E2EDL24,,1,no,no,VGBEL,Document number of the reference document,10,10,-
 E2EDL24,,1,no,no,VGPOS,Item number of the reference item,6,6,-
-E2EDL24,,1,no,no,FOLLOW_UP_CODE,Default Follow-Up Activity Code,4,4,-
+E2EDL24,,1,no,no,XXXX,SOME HOLDING code,11,11,-
 E2EDL24,,1,no,no,ORMNG,Original Quantity of Delivery Item,15,15,-
 E2EDL24,,1,no,no,COMPL,Closing Indicator,1,1,-
 E2EDL24,,1,no,no,HOLD,Inbound Delivery Item Not Yet Complete (on Hold),1,1,-
 E2EDL24,,1,no,no,MAX_ERR_TYPE,Maximum Error Type Occurred,1,1,-
 E2EDL24,,1,no,no,LICHN,Vendor Batch Number,15,15,-
 E2EDL24,,1,no,no,RECIPIENT_CREATE,Created by Receipient,1,1,-
-E2EDL24,,1,no,no,EXPIRY_DATE_EXT_B,Begin date of validity period of returns delivery,16,16,-
+E2EDL24,,1,no,no,EXPIRY_DATE_EXT_B,Begin date of validity period of returns delivery,9,9,-
+ZE1EDL856,,1,no,yes,landmark,landmark,9,9,-
+ZE1EDL856,,1,no,no,segnam,Segment,21,21,-
+ZE1EDL856,,1,no,no,mandt,Client,3,3,-
+ZE1EDL856,,1,no,no,docnum,IDOC Number,16,16,-
+ZE1EDL856,,1,no,no,segnum,Segment Number,6,6,-
+ZE1EDL856,,1,no,no,psgnum,Number of Superior parent segments,6,6,-
+ZE1EDL856,,1,no,no,hlevel,Hierarchy level of SAP segment,2,2,-
+ZE1EDL856,,1,no,no,upc,upc,14,14,-
+ZE1EDL856,,1,no,no,something,something code,8,8,-
+ZE1EDL856,,1,no,no,packqty,packqty,5,5,-
+ZE1EDL856,,1,no,no,uom,uom,10,10,-
 E2EDL25,,1,no,yes,landmark,landmark,7,7,-
 E2EDL25,,1,no,no,segnam,Segment,23,23,-
 E2EDL25,,1,no,no,mandt,Client,3,3,-

@@ -252,7 +252,7 @@ public abstract class EDIMap implements EDIMapi {
         ref = key;
     }
     
-    public String delimConvertIntToStr(String intdelim) {
+    public static String delimConvertIntToStr(String intdelim) {
     String delim = "";
     int x = Integer.valueOf(intdelim);
     delim = String.valueOf(Character.toString((char) x));
@@ -577,7 +577,8 @@ public abstract class EDIMap implements EDIMapi {
         
         if (tp[15].equals("X12")) {
            setOutPutEnvelopeStrings(c);
-           content = ISA + sd + GS + sd + ST + sd + content  + SE + sd + GE + sd + IEA + sd;
+           String s = delimConvertIntToStr(tp[7]); // segment delimiter
+           content = ISA + s + GS + s + ST + s + content  + SE + s + GE + s + IEA + s;
         }
 
         // create out batch file name
@@ -959,8 +960,8 @@ public abstract class EDIMap implements EDIMapi {
     	 
     	 if (outputfiletype.equals("X12")) {
          segcount = 0;  // init segment count for this doc
-         String s = tp[7]; // segment delimiter
-         String e = tp[6]; // element delimiter
+         String s = delimConvertIntToStr(tp[7]); // segment delimiter
+         String e = delimConvertIntToStr(tp[6]); // element delimiter
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
  		//	ArrayList<String[]> fields = z.getValue();
  			
@@ -995,13 +996,13 @@ public abstract class EDIMap implements EDIMapi {
                                 }
                         }
                         } // if fields not null
-                        segment = trimSegment(String.join(ed,segaccum), ed);
+                        segment = trimSegment(String.join(e,segaccum), e);
                         if (GlobalDebug) {
                             System.out.println("SegBeforeTrim: " + segaccum);
                             System.out.println("SegAfterTrim: " + segment);
                         }
                         segcount++;
-                        content += segment + sd;
+                        content += segment + s;
                         segment = ""; // reset the segment string
  		}
          segcount += 2; // include ST and SE
@@ -1284,7 +1285,7 @@ public abstract class EDIMap implements EDIMapi {
      }
      
     public static ArrayList<String> getLoopKeys(String segment) {
-         ArrayList<String>k = new ArrayList<String>();
+         ArrayList<String> k = new ArrayList<String>();
          segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");

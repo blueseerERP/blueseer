@@ -4185,8 +4185,8 @@ public class OVData {
                    res =  st.executeQuery("select edi_id from edi_mstr where " +
                                            " edi_id = " + "'" + ld[0] + "'" + 
                                            " and edi_doc = " + "'" + ld[1] + "'" +
-                                           " and edi_sndisa = " + "'" + ld[2] + "'" +
-                                           " and edi_dir = " + "'" + ld[3] + "'" +
+                                           " and edi_sndgs = " + "'" + ld[5] + "'" +
+                                           " and edi_rcvgs = " + "'" + ld[8] + "'" +
                                            ";");
                     int j = 0;
                     while (res.next()) {
@@ -4198,7 +4198,7 @@ public class OVData {
                     st.executeUpdate(" insert into edi_mstr " 
                       + "(edi_id, edi_doc, edi_sndisa, edi_map, edi_sndq, edi_sndgs, edi_rcvisa, edi_rcvq, edi_rcvgs, " +
                         " edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, " +
-                        " edi_filesuffix, edi_filepath, edi_version, edi_supcode, edi_fa_required ) "
+                        " edi_filesuffix, edi_filepath, edi_version, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, edi_fa_required ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -4217,7 +4217,11 @@ public class OVData {
                     "'" +  ld[14] + "'" + "," +
                     "'" +  ld[15] + "'" + "," +
                     "'" +  ld[16] + "'" + "," + 
-                    "'" +  ld[17] + "'"  
+                    "'" +  ld[17] + "'" + "," + 
+                    "'" +  ld[18] + "'" + "," + 
+                    "'" +  ld[19] + "'" + "," + 
+                    "'" +  ld[20] + "'" + "," +         
+                    "'" +  ld[21] + "'"  
                              +  ");"
                            );     
                    }

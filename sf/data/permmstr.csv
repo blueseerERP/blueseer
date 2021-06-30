@@ -34,7 +34,7 @@ admin,VendPriceMaint
 admin,VendPriceRpt1
 admin,EDIMenu
 admin,EDILog
-admin,CustEDIMaint
+admin,EDIPartnerDocMaint
 admin,EDIPartnerMaint
 admin,EDIDocumentMaint
 admin,CustEDIBrowse

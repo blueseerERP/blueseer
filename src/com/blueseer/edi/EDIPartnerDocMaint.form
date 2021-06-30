@@ -348,16 +348,19 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel19" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel20" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="tbOFS" max="32767" attributes="0"/>
                           <Component id="cbfa" min="-2" max="-2" attributes="0"/>
                           <Component id="tbsub" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                           <Component id="tbsegment" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                           <Component id="tbversion" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
-                          <Component id="tbfilepath" alignment="0" min="-2" pref="201" max="-2" attributes="0"/>
+                          <Component id="tbfilepath" alignment="0" pref="201" max="32767" attributes="0"/>
                           <Component id="tbelement" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                               <Component id="tbfilesuffix" alignment="0" pref="83" max="32767" attributes="0"/>
@@ -368,8 +371,9 @@
                               <Component id="tbsupplier" alignment="0" pref="122" max="32767" attributes="0"/>
                           </Group>
                           <Component id="ddoutfiletype" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
+                          <Component id="tbIFS" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -438,12 +442,22 @@
                           <Component id="ddoutdoctype" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddoutfiletype" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbIFS" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbOFS" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="9" max="32767" attributes="0"/>
                       <Component id="cbfa" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -552,6 +566,20 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="outFileType"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbIFS">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbOFS">
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel19">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="IFS File"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel20">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="OFS File"/>
               </Properties>
             </Component>
           </SubComponents>

@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.text.DecimalFormatSymbols;
@@ -479,7 +480,7 @@ public EDITransactionBrowse() {
        
         buttonGroup1.add(rbDocLog);
         buttonGroup1.add(rbFileLog);
-        rbFileLog.setSelected(true);
+        rbDocLog.setSelected(true);
         
         tbtoterrors.setText("0");
         tbtot.setText("0");
@@ -897,7 +898,7 @@ public EDITransactionBrowse() {
              } catch (IOException ex) {
                  Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
              }
-           
+             tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
              cbshowall.setEnabled(true);
@@ -930,7 +931,7 @@ public EDITransactionBrowse() {
              } catch (IOException ex) {
                  Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
              }
-           
+             tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
              cbshowall.setEnabled(true);
@@ -964,7 +965,7 @@ public EDITransactionBrowse() {
              } catch (IOException ex) {
                  Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
              }
-           
+             tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
              cbshowall.setEnabled(true);

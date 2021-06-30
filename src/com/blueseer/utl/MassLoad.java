@@ -838,6 +838,10 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("edi_filepath,s,70,mandatory,unvalidated");
         list.add("edi_version,s,10,mandatory,unvalidated");
         list.add("edi_supcode,s,30,mandatory,unvalidated");
+        list.add("edi_doctypeout,s,10,mandatory,unvalidated");
+        list.add("edi_filetypeout,s,10,mandatory,unvalidated");
+        list.add("edi_ifs,s,50,mandatory,unvalidated");
+        list.add("edi_ofs,s,50,mandatory,unvalidated");
         list.add("edi_fa_required,b,1,mandatory,unvalidated");
         return list;
     }
