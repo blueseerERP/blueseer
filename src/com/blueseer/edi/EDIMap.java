@@ -130,6 +130,8 @@ public abstract class EDIMap implements EDIMapi {
 
      public static String content = "";
 
+    public static Map<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
+		 
     public static Map<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static Map<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
     public static Map<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
@@ -724,18 +726,35 @@ public abstract class EDIMap implements EDIMapi {
             reader = new BufferedReader(new FileReader(cf));
          
 		String line;
+                LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
                 int i = 0;
+                String lastkey = "";
 		while ((line = reader.readLine()) != null) {
-                    i++;
 			if (line.startsWith("#")) {
 				continue;
 			}
+                        
 			if (! line.isEmpty()) {
 			String[] t = line.split(",",-1);
+                             if (i == 0) { lastkey = t[0];}
                         if (GlobalDebug && t.length != 10) {
                         System.out.println("readISF: line " + i + " delimited count is not 10 " + t.length);
                         }
                         list.add(t);
+                        
+                        i++;
+                            if (! t[0].equals(lastkey)) {
+                                LinkedHashMap<Integer, String[]> w = z;
+                                mISF.put(t[0], w);
+                                z = new LinkedHashMap<Integer, String[]>();
+                                i = 0;
+                                z.put(i, t);
+                                
+                            } else {
+                                z.put(i, t);
+                                mISF.put(t[0], z);
+                            }
+                        lastkey = t[0];
 			}
 		}
 		reader.close();
@@ -899,12 +918,35 @@ public abstract class EDIMap implements EDIMapi {
         if (GlobalDebug) {
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
                     String value = String.join(",", z.getValue());
+                    String[] keyx = z.getKey().split("\\+", -1);
+                    String key = "";
+                    if (keyx[0].contains(":")) {
+                        key = keyx[0].substring(1);
+                    } else {
+                        key = keyx[0];
+                    }
+                    
                     int i = 0;
+                    String fieldname = "";
                     for (String s : z.getValue()) {
-                     System.out.println("mapInput: " + z.getKey() + " / Field: " + i + " value: " + s);   
+                     String[] j = mISF.get(key).get(i);
+                     if (j != null && j.length > 4) {
+                         fieldname = j[5];
+                     } else {
+                         fieldname = "unknown";
+                     }
+                     System.out.println("mapInput: " + z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s);   
                      i++;
                     }
             }
+            /*
+            for (Map.Entry<String, HashMap<Integer,String[]>> y : mISF.entrySet()) {
+                HashMap<Integer, String[]> w = y.getValue();
+                for (Map.Entry<Integer, String[]> k : w.entrySet()) {
+                  System.out.println("Extra: " + y.getKey() + " / " + k.getKey() + " / " + k.getValue()[5]);  
+                }
+            }
+            */
         }
     }
     

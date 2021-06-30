@@ -276,6 +276,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
+                    if (! tbref.getText().isEmpty()) {
+                    res = st.executeQuery("SELECT * FROM edi_idx  " +
+                    " where edx_ref like " + "'%" + tbref.getText() + "%'" +
+                    " order by edx_id desc ;" ) ;
+                    }
+                    
               
                 ImageIcon statusImage = null;
                 while (res.next()) {
@@ -553,6 +559,8 @@ public EDITransactionBrowse() {
         tbsegdelim = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         lbsegdelim = new javax.swing.JLabel();
+        tbref = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -660,8 +668,18 @@ public EDITransactionBrowse() {
         cbshowall.setText("Show Entire File");
 
         rbFileLog.setText("FileLogView");
+        rbFileLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbFileLogActionPerformed(evt);
+            }
+        });
 
         rbDocLog.setText("DocLogView");
+        rbDocLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbDocLogActionPerformed(evt);
+            }
+        });
 
         tbsegdelim.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -670,6 +688,8 @@ public EDITransactionBrowse() {
         });
 
         jLabel1.setText("SegDelim (int)");
+
+        jLabel7.setText("Reference");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -688,7 +708,11 @@ public EDITransactionBrowse() {
                         .addGap(36, 36, 36)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -739,11 +763,13 @@ public EDITransactionBrowse() {
                         .addComponent(rbFileLog)
                         .addComponent(rbDocLog)))
                 .addGap(6, 6, 6)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
                     .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7)
+                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -963,6 +989,22 @@ public EDITransactionBrowse() {
         }
     }//GEN-LAST:event_tbsegdelimFocusLost
 
+    private void rbDocLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDocLogActionPerformed
+        if (rbDocLog.isSelected()) {
+            tbref.setEnabled(true);
+        } else {
+            tbref.setEnabled(false);
+        }
+    }//GEN-LAST:event_rbDocLogActionPerformed
+
+    private void rbFileLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFileLogActionPerformed
+          if (rbDocLog.isSelected()) {
+            tbref.setEnabled(true);
+        } else {
+            tbref.setEnabled(false);
+        }
+    }//GEN-LAST:event_rbFileLogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
@@ -980,6 +1022,7 @@ public EDITransactionBrowse() {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -996,6 +1039,7 @@ public EDITransactionBrowse() {
     private javax.swing.JTable tablereport;
     private javax.swing.JTextArea tafile;
     private javax.swing.JTextField tbdoc;
+    private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbsegdelim;
     private javax.swing.JLabel tbtot;
     private javax.swing.JLabel tbtoterrors;
