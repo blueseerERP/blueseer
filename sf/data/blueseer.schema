@@ -389,6 +389,7 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_inarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_outarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_batch` varchar(200) NOT NULL  DEFAULT '',
+  `edic_structure` varchar(200) NOT NULL  DEFAULT '',
   `edic_errordir` varchar(200) NOT NULL  DEFAULT '',
   `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0',
   `edic_delete` tinyint(1) NOT NULL  DEFAULT '0'

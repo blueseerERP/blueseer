@@ -1,2 +1,2 @@
 #!/bin/bash
-jre8/bin/java -cp ".:dist/*" bsmf.MainFrame
+jre16/bin/java -cp ".:dist/*" bsmf.MainFrame

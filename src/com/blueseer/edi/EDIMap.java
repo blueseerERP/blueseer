@@ -246,6 +246,11 @@ public abstract class EDIMap implements EDIMapi {
         outreceiver = c[21]; 
         }
         
+        String[] tp = OVData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+        setOutPutDocType(tp[14]);
+        setOutPutFileType(tp[15]);
+        setInputStructureFile(tp[16]);
+        setOutputStructureFile(tp[17]);
      }
 
     public void setReference(String key) {
@@ -562,7 +567,7 @@ public abstract class EDIMap implements EDIMapi {
         // get TP/Doc defaults
         String[] tp = OVData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
         
-        if (tp == null || tp.length < 16) {
+        if (tp == null || tp.length < 18) {
             setError("tp defaults is null or empty for: " + outputdoctype + "/" + outsender + "/" + outreceiver);
             return error;  
         }
@@ -680,7 +685,7 @@ public abstract class EDIMap implements EDIMapi {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
-	        File cf = new File(adf);
+	        File cf = new File(OVData.getEDIStructureDir() + "/" + adf);
 	    	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));
@@ -721,7 +726,7 @@ public abstract class EDIMap implements EDIMapi {
 
     public static void readISF(String ifile) {
         ArrayList<String[]> list = new ArrayList<String[]>();
-        File cf = new File(ifile);
+        File cf = new File(OVData.getEDIStructureDir() + "/" + ifile);
     	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));

@@ -6047,7 +6047,7 @@ public class OVData {
     public static String[] getEDITPDefaults(String doctype, String sndid, String rcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","",""};
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -6077,6 +6077,8 @@ public class OVData {
                         mystring[13] = res.getString("edi_supcode");
                         mystring[14] = res.getString("edi_doctypeout");
                         mystring[15] = res.getString("edi_filetypeout");
+                        mystring[16] = res.getString("edi_ifs");
+                        mystring[17] = res.getString("edi_ofs");
                     }
            }
             catch (SQLException s){
@@ -21947,7 +21949,7 @@ public class OVData {
         
     }
      
-       public static String getEDIBatchDir() {
+     public static String getEDIBatchDir() {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -21959,6 +21961,33 @@ public class OVData {
                 res = st.executeQuery("select edic_batch from edi_ctrl ;");
                while (res.next()) {
                    mystring = res.getString("edic_batch");
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+     
+     public static String getEDIStructureDir() {
+       String mystring = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select edic_structure from edi_ctrl ;");
+               while (res.next()) {
+                   mystring = res.getString("edic_structure");
                 }
                
            }
