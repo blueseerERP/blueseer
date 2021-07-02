@@ -23,5 +23,5 @@ zip -u $bszip login.sh
 zip -u $bszip mysql_install.sh
 zip -u $bszip controlM.sh
 cd /tmp
-zip -ru $bsdir/$bszip jre8/*
+zip -ru $bsdir/$bszip jre11/*
 

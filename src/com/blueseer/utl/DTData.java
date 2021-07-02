@@ -2642,7 +2642,7 @@ public class DTData {
         
           public static DefaultTableModel getEDITPDOCBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "TPID", "DOC", "Desc", "Map"})
+                      new String[]{"select", "TPID", "DOC", "Map"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2659,24 +2659,23 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select edi_id, edi_doctype, edi_desc, edi_map " +
+                    res = st.executeQuery(" select edi_id, edi_doc,  edi_map " +
                         " FROM  edi_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by edi_id, edi_doctype ;");
+                        " order by edi_id, edi_doc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("  select edi_id, edi_doctype, edi_desc, edi_map " +
+                    res = st.executeQuery("  select edi_id, edi_doc,  edi_map " +
                         " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by edi_id, edi_doctype ;");
+                        " order by edi_id, edi_doc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("  select edi_id, edi_doctype, edi_desc, edi_map  " +
+                 res = st.executeQuery("  select edi_id, edi_doc,  edi_map  " +
                         " FROM  edi_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by edi_id, edi_doctype ;");
+                        " order by edi_id, edi_doc ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
-                                   res.getString("edi_doctype"),
-                                   res.getString("edi_desc"),
+                                   res.getString("edi_doc"),
                                    res.getString("edi_map")
                         });
                     }
@@ -4332,11 +4331,11 @@ public class DTData {
         
          }
     
-     public static DefaultTableModel getCustEDIAll() {
+     public static DefaultTableModel getEDIPartnerDocAll() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Cust", "DocType", "Dir", "Map", "FilePath", "Prefix", "Suffix"})
+                      new String[]{"select", "ID", "Doc", "SndISA", "RcvISA", "Map", "SndGS", "RcvGS", "Prefix", "Version", "OutDocType", "OutFileType", "IFS", "OFS"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4358,11 +4357,17 @@ public class DTData {
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),
-                                   res.getString("edi_dir"),
+                                   res.getString("edi_sndisa"),
+                                   res.getString("edi_rcvisa"),
                                    res.getString("edi_map"),
-                                   res.getString("edi_filepath"),
+                                   res.getString("edi_sndgs"),
+                                   res.getString("edi_rcvgs"),
                                    res.getString("edi_fileprefix"),
-                                   res.getString("edi_filesuffix")
+                                   res.getString("edi_version"),
+                                   res.getString("edi_doctypeout"),
+                                   res.getString("edi_filetypeout"),
+                                   res.getString("edi_ifs"),
+                                   res.getString("edi_ofs")
                                   
                         });
                     }
@@ -6511,7 +6516,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                       res = st.executeQuery("select * from edi_mstr order by edi_id;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
-                                   res.getString("edi_doctype"),
+                                   res.getString("edi_doc"),
                                    res.getString("edi_map"),
                                    res.getString("edi_fa_required"),
                                    res.getString("edi_desc")

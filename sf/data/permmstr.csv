@@ -37,7 +37,7 @@ admin,EDILog
 admin,EDIPartnerDocMaint
 admin,EDIPartnerMaint
 admin,EDIDocumentMaint
-admin,CustEDIBrowse
+admin,EDIPartnerDocBrowse
 admin,EDILoad
 admin,EDIControl
 admin,LabelMenu

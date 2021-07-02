@@ -244,8 +244,8 @@ public int[] mywidth;
         if (arg[0].equals("PrinterBrowse")) {
              mymodel = DTData.getPrintersAll();
         } 
-        if (arg[0].equals("CustEDIBrowse")) {
-             mymodel = DTData.getCustEDIAll();
+        if (arg[0].equals("EDIPartnerDocBrowse")) {
+             mymodel = DTData.getEDIPartnerDocAll();
         } 
         if (arg[0].equals("LabelFileBrowse")) {
              mymodel = DTData.getLabelFileAll();
@@ -514,10 +514,10 @@ public int[] mywidth;
                args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 3).toString()};
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("CustEDIBrowse") == 0) {
-                 mypanel = "CustEDIMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDIPartnerDocBrowse") == 0) {
+                 mypanel = "EDIPartnerDocMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 3).toString()};
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 6).toString(), TableReport.getValueAt(row, 7).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("ShiftBrowse") == 0) {

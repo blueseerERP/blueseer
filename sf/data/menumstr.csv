@@ -166,7 +166,7 @@ RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
 EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
-CustEDIBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edcmb
+EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
 EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav

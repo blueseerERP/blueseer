@@ -30,10 +30,10 @@ cp -R ../sf/temp $bsshare/
 cp -R ../sf/patches $bsshare/
 cp -R ../sf/jasper $bsshare/
 cp -R ../sf/images $bsshare/
-cp -R /home/vcs/jre8 $bsshare/
+cp -R /home/vcs/jre11 $bsshare/
 
 rm -f $bs/usr/bin/blueseer
-echo "cd /usr/share/blueseer; jre8/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
+echo "cd /usr/share/blueseer; jre11/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
 
 chmod -R 0755 $bs
 chmod -R 0777 $bsshare/data

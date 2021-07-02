@@ -36,6 +36,6 @@ compress-archive -update -path mysql_install.bat -destinationpath $wip\blueseer.
 compress-archive -update -path login.bat -destinationpath $wip\blueseer.mysql.win.v51.zip
 compress-archive -update -path bslogging.properties -destinationpath $wip\blueseer.mysql.win.v51.zip
 compress-archive -update -path .patch -destinationpath $wip\blueseer.mysql.win.v51.zip
-compress-archive -update -path ..\jre8 -destinationpath $wip\blueseer.mysql.win.v51.zip
+compress-archive -update -path ..\jre11 -destinationpath $wip\blueseer.mysql.win.v51.zip
 
 
