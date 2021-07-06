@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "BlueSeer"
-#define MyAppVersion "5.1"
+#define MyAppVersion "5.2"
 #define MyAppPublisher "VCSCode"
 #define MyAppURL "http://www.blueseer.com/"
 #define MyAppExeName "javaw"
@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer.sqlite.win.v51
+OutputBaseFilename=blueseer.sqlite.win.v52
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\scripts\bslogging.properties"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\bs\blueseer\scripts\.patch"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\bs\blueseer\.patch"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\scripts\bsconfig.sqlite"; DestDir: "{app}"; DestName: "{#bsconfig}"; Flags: ignoreversion
 Source: "C:\bs\bsmf\documentation\documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\sf\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
