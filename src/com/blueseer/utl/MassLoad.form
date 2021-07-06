@@ -46,8 +46,6 @@
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="btdescribe" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btaudit" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btupload" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jScrollPane1" max="32767" attributes="0"/>
@@ -71,7 +69,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btupload" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btaudit" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdescribe" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cboverride" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -83,7 +80,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btupload">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Audit and Load"/>
+            <Property name="text" type="java.lang.String" value="Upload"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btuploadActionPerformed"/>
@@ -136,14 +133,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btaudit">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Audit Only"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btauditActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btdescribe">
           <Properties>
             <Property name="text" type="java.lang.String" value="Define"/>

@@ -29,6 +29,7 @@ package com.blueseer.utl;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -47,7 +48,14 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -58,6 +66,8 @@ import org.apache.commons.net.ftp.FTPClient;
  */
 public class MassLoad extends javax.swing.JPanel {
 
+     // global variable declarations
+                boolean isLoad = false;
     /**
      * Creates new form FileOrderLoadPanel
      */
@@ -65,60 +75,126 @@ public class MassLoad extends javax.swing.JPanel {
         initComponents();
     }
 
-    
-      public void reinitddcustcode() {
-        try {
-            ddtable.removeAllItems();
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_code from cm_mstr order by cm_code ;");
-                while (res.next()) {
-                    ddtable.addItem(res.getString("cm_code"));
+      public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
                 }
                 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                  bsmf.MainFrame.show("sql problem during execution");
+                component.setEnabled(b);
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
         }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tacomments.setText("");
+       isLoad = false;
     }
     
-    public void initvars(String[] arg) {
+    
+    public void executeTask(String x, File y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
         
+          public Task(String x, File y) { 
+              this.type = type;
+              this.key = key;
+          }
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            message = processfile(x, y);
+             
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+            BlueSeerUtils.endTask(message);
+            // initvars(null);  
+             
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x,y); 
+       z.execute(); 
+       
+    }
+   
+    
+    public void initvars(String[] arg) {
       tacomments.setText("");
     }
     
-    
-    
-    public void ftpfile(String mypath, String myfile) {
-        
-        try {
-         FTPClient client = new FTPClient();
-         client.connect("2.2.2.2");
-         client.login("user", "passwd");
-         client.enterLocalPassiveMode();
-         client.setFileType(FTP.BINARY_FILE_TYPE);
-         FileInputStream file = new FileInputStream(mypath + myfile);
-         client.changeWorkingDirectory("/apps/edi/generic/inqueue");
-         client.storeFile(myfile, file);
-         client.logout();
-         client.disconnect();
-         if (file != null) {
-	  file.close();
-	 }
-         bsmf.MainFrame.show("File has been FTP'd ");
-        } catch (IOException e) {
-            bsmf.MainFrame.show("Unable to FTP file ");
-        }
-         
-    }
     
     // Item master stuff
     public ArrayList<String> defineItemMaster() {
@@ -227,8 +303,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processItemMaster (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processItemMaster (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -243,16 +320,18 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkItemMaster(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                }
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addItemMaster(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
     }
     
      // BOM master stuff
@@ -319,8 +398,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processBOMMaster (File myfile) throws FileNotFoundException, IOException {
-          tacomments.setText("");
+    public String[] processBOMMaster (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2];  
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -334,16 +414,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkBOMMaster(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
-                   if (! OVData.addBOMMstrRecord(list)) 
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                   if(! OVData.addBOMMstrRecord(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+           
     }
     
     
@@ -400,8 +483,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processGLAcctBalances (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processGLAcctBalances (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -416,17 +500,18 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkGLAcctBalances(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                }
             }
             fsr.close();
-            
              if (proceed) {
                    if(! OVData.addGLAcctBalances(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
     }
     
     
@@ -474,8 +559,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processGenericCode (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processGenericCode (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -490,17 +576,19 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkGenericCode(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                }
             }
             fsr.close();
-            
-             if (proceed) {
+            if (proceed) {
                    if(! OVData.addGenericCode(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -572,8 +660,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processCustXref (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processCustXref (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2];
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -587,16 +676,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustXref(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addCustXref(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addCustXref(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
    
       // Carrier stuff
@@ -640,8 +732,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processCarrier(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processCarrier(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -655,16 +748,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCarrier(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addCarrier(list)) 
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addCarrier(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -707,8 +803,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processEDIPartners(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processEDIPartners(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -722,16 +819,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIPartners(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addEDIPartner(list))  
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addEDIPartner(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+           
     }
     
      // EDI Document Structures
@@ -788,8 +888,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processEDIDocumentStructures(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processEDIDocumentStructures(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -803,16 +904,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIDocumentStructures(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addEDIDocumentStructures(list))  
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addEDIDocumentStructures(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -875,8 +979,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processEDIPartnerTransactions (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processEDIPartnerTransactions (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -890,16 +995,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addEDIMstrRecord(list)) 
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addEDIMstrRecord(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -970,8 +1078,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processVendXref (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processVendXref (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -985,16 +1094,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendXref(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
            fsr.close();
-             if (proceed) {
+            if (proceed) {
                    if(! OVData.addVendXref(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -1091,8 +1203,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processInvAdjustment (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processInvAdjustment (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1106,16 +1219,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkInvAdjustment(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
+            if (proceed) {
                    if(! OVData.addInvAdjustments(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+             
     }
     
     
@@ -1188,8 +1304,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processCustPriceList (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processCustPriceList (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1203,16 +1320,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
-                   if (! OVData.addCustPriceList(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                   if(! OVData.addCustPriceList(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+             
     }
     
      // cust price list stuff
@@ -1283,8 +1403,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processVendPriceList (File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processVendPriceList (File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1298,16 +1419,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
-                   if (! OVData.addVendPriceList(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                   if(! OVData.addVendPriceList(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
       // vendor Master
@@ -1409,8 +1533,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processVendMstr(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processVendMstr(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1424,16 +1549,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendMstr(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
-                   if (! OVData.addVendMstr(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                   if(! OVData.addVendMstr(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
         // customer Master
@@ -1541,8 +1669,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processCustMstr(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processCustMstr(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1556,18 +1685,20 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustMstr(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-            
-            
              if (proceed) {
-                   if (! OVData.addCustMstrWShipTo(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+                   if(! OVData.addCustMstrWShipTo(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
+            
     }
     
          // customer shipto
@@ -1641,8 +1772,9 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public void processCustShipToMstr(File myfile) throws FileNotFoundException, IOException {
-         tacomments.setText("");
+    public String[] processCustShipToMstr(File myfile) throws FileNotFoundException, IOException {
+        String[] m = new String[2]; 
+        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1656,16 +1788,19 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustShipToMstr(recs, i);
                    if (! temp) {
                        proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
                    }
                
             }
             fsr.close();
-             if (proceed) {
-                   if (! OVData.addCustShipToMstr(list))
-                   bsmf.MainFrame.show("File is clean " + i + " lines have been loaded");
-            } else {
-                bsmf.MainFrame.show("File has errors...correct file and try again.");
+            if (proceed) {
+                   if(! OVData.addCustShipToMstr(list))
+                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                   } else {
+                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
             }
+             return m;
+            
     }
     
     
@@ -1789,55 +1924,59 @@ public class MassLoad extends javax.swing.JPanel {
        
     }
     
-     public void processfile(File myfile) throws IOException { 
+     public String[] processfile(String x, File myfile) throws IOException { 
+         String[] m = new String[2];
          if (myfile != null) {
-               if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
-                  processItemMaster(myfile);
+               if (x.compareTo("Item Master") == 0) {
+                 m = processItemMaster(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Customer Xref") == 0) {
-                  processCustXref(myfile);
+               if (x.compareTo("Customer Xref") == 0) {
+                m =  processCustXref(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Customer Price List") == 0) {
-                  processCustPriceList(myfile);
+               if (x.compareTo("Customer Price List") == 0) {
+                m =  processCustPriceList(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Vendor Xref") == 0) {
-                  processVendXref(myfile);
+               if (x.compareTo("Vendor Xref") == 0) {
+                m =  processVendXref(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Vendor Price List") == 0) {
-                  processVendPriceList(myfile);
+               if (x.compareTo("Vendor Price List") == 0) {
+                 m = processVendPriceList(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Vendor Master") == 0) {
-                  processVendMstr(myfile);
+               if (x.compareTo("Vendor Master") == 0) {
+                 m = processVendMstr(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Customer Master") == 0) {
-                  processCustMstr(myfile);
+               if (x.compareTo("Customer Master") == 0) {
+                 m = processCustMstr(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Customer ShipTo Master") == 0) {
-                  processCustShipToMstr(myfile);
+               if (x.compareTo("Customer ShipTo Master") == 0) {
+                 m = processCustShipToMstr(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Inventory Adjustment") == 0) {
-                  processInvAdjustment(myfile);
+               if (x.compareTo("Inventory Adjustment") == 0) {
+                 m = processInvAdjustment(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("EDI Partners") == 0) {
-                  processEDIPartners(myfile);
+               if (x.compareTo("EDI Partners") == 0) {
+                 m = processEDIPartners(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("EDI Document Structures") == 0) {
-                  processEDIDocumentStructures(myfile);
+               if (x.compareTo("EDI Document Structures") == 0) {
+                 m = processEDIDocumentStructures(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("EDI Partner Transactions") == 0) {
-                  processEDIPartnerTransactions(myfile);
+               if (x.compareTo("EDI Partner Transactions") == 0) {
+                 m = processEDIPartnerTransactions(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("Carrier Master") == 0) {
-                  processCarrier(myfile);
+               if (x.compareTo("Carrier Master") == 0) {
+                 m = processCarrier(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("BOM Master") == 0) {
-                  processBOMMaster(myfile);
+               if (x.compareTo("BOM Master") == 0) {
+                 m = processBOMMaster(myfile);
                }
-               if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
-                  processGLAcctBalances(myfile);
+               if (x.compareTo("GL Account Balances") == 0) {
+                 m = processGLAcctBalances(myfile);
                }
               
          }
+         
+                  
+         return m; 
     }
     
     public File getfile() {
@@ -1943,13 +2082,12 @@ public class MassLoad extends javax.swing.JPanel {
         ddtable = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         tacomments = new javax.swing.JTextArea();
-        btaudit = new javax.swing.JButton();
         btdescribe = new javax.swing.JButton();
         cboverride = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        btupload.setText("Audit and Load");
+        btupload.setText("Upload");
         btupload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btuploadActionPerformed(evt);
@@ -1968,13 +2106,6 @@ public class MassLoad extends javax.swing.JPanel {
         tacomments.setColumns(20);
         tacomments.setRows(5);
         jScrollPane1.setViewportView(tacomments);
-
-        btaudit.setText("Audit Only");
-        btaudit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btauditActionPerformed(evt);
-            }
-        });
 
         btdescribe.setText("Define");
         btdescribe.addActionListener(new java.awt.event.ActionListener() {
@@ -2004,8 +2135,6 @@ public class MassLoad extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btdescribe)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btaudit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupload))
                             .addComponent(jScrollPane1))))
                 .addContainerGap())
@@ -2022,7 +2151,6 @@ public class MassLoad extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupload)
-                    .addComponent(btaudit)
                     .addComponent(btdescribe)
                     .addComponent(cboverride))
                 .addGap(30, 30, 30))
@@ -2032,33 +2160,21 @@ public class MassLoad extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
-        try {
-            tacomments.setText("");
-            processfile(getfile());
-        } catch (IOException ex) {
-            Logger.getLogger(MassLoad.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        File myfile = getfile();
+        setPanelComponentState(this, false);
+        executeTask(ddtable.getSelectedItem().toString(), myfile);
+        setPanelComponentState(this, true);
     }//GEN-LAST:event_btuploadActionPerformed
 
     private void ddtableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtableActionPerformed
         tacomments.setText("");
     }//GEN-LAST:event_ddtableActionPerformed
 
-    private void btauditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btauditActionPerformed
-         try {
-             tacomments.setText("");
-            auditOnly(getfile());
-        } catch (IOException ex) {
-            Logger.getLogger(MassLoad.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btauditActionPerformed
-
     private void btdescribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdescribeActionPerformed
        describeFile(ddtable.getSelectedItem().toString());
     }//GEN-LAST:event_btdescribeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btaudit;
     private javax.swing.JButton btdescribe;
     private javax.swing.JButton btupload;
     private javax.swing.JCheckBox cboverride;

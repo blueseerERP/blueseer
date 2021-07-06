@@ -476,11 +476,12 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into pbm_mstr "
-                            + "(ps_parent, ps_child, ps_qty_per, ps_op, ps_type) "
+                            + "(ps_parent, ps_child, ps_qty_per, ps_op, ps_ref, ps_type) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                             + "'" + ddcomp.getSelectedItem().toString() + "'" + ","
                             + "'" + tbqtyper.getText() + "'" + "," 
                             + "'" + ddop.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbref.getText() + "'" + ","         
                             + "'" + type + "'" 
                             + ")"
                             + ";");
@@ -528,7 +529,9 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                 }
                 
                 if (proceed) {
-                    st.executeUpdate("update pbm_mstr set ps_qty_per = " + "'" + tbqtyper.getText() + "'" + ","
+                    st.executeUpdate("update pbm_mstr set " +
+                             " ps_qty_per = " + "'" + tbqtyper.getText() + "'" + ","
+                            + " ps_ref = " + "'" + tbref.getText() + "'" + "," 
                             + " ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" 
                             + " where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
                                           " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" + ";");

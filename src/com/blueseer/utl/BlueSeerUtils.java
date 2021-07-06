@@ -781,6 +781,12 @@ public class BlueSeerUtils {
      }
      
      public static void message(String[] message) {
+         
+         if (message.length != 2) {
+           bsmf.MainFrame.messagelabel.setText("message arguments missing: " + message);
+           bsmf.MainFrame.messagelabel.setForeground(Color.RED);  
+           return;
+         }
          bsmf.MainFrame.messagelabel.setText(message[1]);
          if (message[0].equals("1")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.RED); 
