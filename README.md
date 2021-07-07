@@ -5,7 +5,7 @@
 <h3>latest release date: 2021-07-06</h3>
 <h3>programming language: Java programming language</h3> 
 <h3>operating system: Cross-Platform</h3>
-<h3>genre:  Enterprise Resource Planning (ERP), Accounting, Personal Finance</h3> 
+<h3>genre:  Enterprise Resource Planning (ERP), EDI, Accounting, Personal Finance</h3> 
 <h3>license: MIT License</h3>
 <h3>website: www.blueseer.com</h3>
 
@@ -16,7 +16,7 @@
 '''BlueSeer ERP''' is a Free open source ERP software package.  It was designed to meet the needs of
 the manufacturing community for an ERP system that is easily customizable and
 extendable while providing generic functionality that is typically observed in
-most manufacturing environments.   
+most manufacturing environments.  BlueSeer also provides a fully functional EDI mapping tool for EDI translations and file traffic monitoring. 
 BlueSeer is released for free use under the MIT License.   The application and source code
 are available for download at github.com.  The development of BlueSeer
 began in 2005, and the latest 'stable' release of version 5.2 was released on July 6th 2021.</br>
@@ -52,7 +52,7 @@ back-end database server.  MySQL was chosen for it's popularity and excellent
 performance
 reviews.  
 </br>
-BlueSeer is a menu-driven application.  It's "molecular composition" is a collection of Java Swing
+BlueSeer is a menu-driven application.  It's composition is a collection of Java Swing
 JPanel widgets.  Each business function, i.e. Order Entry, Item Master
 Maintenance, etc is a stand-alone JPanel widget.  Each JPanel widget is loaded
 at runtime using Reflection to 'inject' the JPanel
