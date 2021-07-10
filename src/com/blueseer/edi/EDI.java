@@ -26,6 +26,7 @@ SOFTWARE.
 
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import static com.blueseer.edi.EDIMap.ed;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -868,7 +869,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                }   else {
                    OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -938,7 +939,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                }   else {
                    OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -1048,7 +1049,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                }   else {
                    OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -1194,19 +1195,19 @@ public class EDI {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        ex.printStackTrace(); 
+                        MainFrame.bslog(ex); 
                     } catch (ClassNotFoundException ex) {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        ex.printStackTrace(); 
+                        MainFrame.bslog(ex); 
                     } catch (IllegalAccessException |
                              InstantiationException | NoSuchMethodException ex
                             ) {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                    
                }
@@ -1237,7 +1238,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         OVData.writeEDILog(c, "error", "Problem generating 997 for " + c[0] + " / " + c[1]);
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                 }
             
@@ -1272,10 +1273,10 @@ public class EDI {
             System.out.println("HERE:C " + j + "/" + xc);
             }
             */
-            c[1] = x[0];
-            c[0] = x[3];
-            c[21] = x[1];
-            c[6] = x[0];
+            c[1] = x[0];  // doctype
+            c[0] = x[3];  // senderid
+            c[21] = x[1]; // receiverID
+            c[6] = x[0]; // doctype
       
             String[] defaults = OVData.getEDITPDefaults(x[0], x[3], x[1]);
             c[9] = defaults[7]; 
@@ -1306,7 +1307,7 @@ public class EDI {
                    if (GlobalDebug)   
                    System.out.println("Searching for Map (FF in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
                 
-                   map = OVData.getEDIMap(c[1], x[3], x[1]);  
+                   map = OVData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
                } 
             
                // if no map then bail
@@ -1326,20 +1327,20 @@ public class EDI {
                     } catch (InvocationTargetException ex) {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        ex.printStackTrace(); 
+                        } 
+                        MainFrame.bslog(ex);
                     } catch (ClassNotFoundException ex) {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        ex.printStackTrace(); 
+                        MainFrame.bslog(ex); 
                     } catch (IllegalAccessException |
                              InstantiationException | NoSuchMethodException ex
                             ) {
                         if (c[12].isEmpty()) {
                         OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                    
                }
@@ -1854,7 +1855,7 @@ public class EDI {
                         OVData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
                         }
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                   
            }
@@ -1941,7 +1942,7 @@ public class EDI {
                         OVData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
                         }
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                   
            }
@@ -2026,7 +2027,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
                     
                     
@@ -2113,7 +2114,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
         
                    
@@ -2205,7 +2206,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
            
      
@@ -2288,7 +2289,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + c_in + " / " + doctype);
                         errorcode = 3;
-                        ex.printStackTrace();
+                        MainFrame.bslog(ex);
                     }
            
      

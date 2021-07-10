@@ -920,7 +920,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                         qtyavailable = res.getInt("sod_ord_qty") - res.getInt("sod_shipped_qty");
                      myshipdetmodel.addRow(new Object[]{res.getString("sod_line"), 
                          res.getString("sod_part"), 
-                         res.getString("sod_nbr"), 
+                         res.getString("sod_nbr"),
+                         res.getString("sod_line"),
                          res.getString("sod_po"), 
                          String.valueOf(qtyavailable), 
                          res.getString("sod_netprice"),
@@ -930,7 +931,8 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                          res.getString("sod_disc"),
                          res.getString("sod_listprice"),
                          res.getString("sod_taxamt"),
-                         ""
+                         "", // cont
+                         ""  // serialno
                          
                      });
                     }
@@ -1453,7 +1455,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        rborder.setText("Whole Order");
+        rborder.setText("Single Order");
         rborder.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rborderStateChanged(evt);
@@ -1465,7 +1467,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
             }
         });
 
-        rbnonorder.setText("Customer Based");
+        rbnonorder.setText("Multi Order");
         rbnonorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbnonorderActionPerformed(evt);

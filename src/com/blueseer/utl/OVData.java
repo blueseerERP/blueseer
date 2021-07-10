@@ -6035,6 +6035,35 @@ public class OVData {
           return x;
        }
     
+    public static String getEDIFFDocType(String id) {
+             String x = "";
+            try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                   
+                      res = st.executeQuery("select edd_type from edi_doc  " +
+                              " where edd_id = " + "'" + id + "'" + 
+                              ";");
+                    while (res.next()) {
+                       x = res.getString("edd_type");
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return x;
+       }
+    
     
         /** Returns 15 element Array with Customer (billto) specific EDI setup information
          * 

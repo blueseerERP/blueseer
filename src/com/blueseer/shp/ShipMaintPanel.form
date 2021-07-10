@@ -535,7 +535,7 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="rborder">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Whole Order"/>
+            <Property name="text" type="java.lang.String" value="Single Order"/>
           </Properties>
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="rborderStateChanged"/>
@@ -544,7 +544,7 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbnonorder">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Customer Based"/>
+            <Property name="text" type="java.lang.String" value="Multi Order"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbnonorderActionPerformed"/>
