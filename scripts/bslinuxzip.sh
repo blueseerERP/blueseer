@@ -9,8 +9,8 @@ zip ../scripts/$bszip jasper/*
 zip -u ../scripts/$bszip zebra/*
 zip -u ../scripts/$bszip patches/*
 zip -u ../scripts/$bszip temp/*
-zip -u ../scripts/$bszip data/*
-zip -u ../scripts/$bszip edi/*
+zip -r ../scripts/$bszip data/*
+zip -r ../scripts/$bszip edi/*
 zip -u ../scripts/$bszip images/*
 cd ../scripts
 cp bsconfig.sqlite.linux bsconfig
