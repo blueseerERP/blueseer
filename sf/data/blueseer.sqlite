@@ -572,6 +572,7 @@ CREATE TABLE "edi_log" (
   "elg_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "elg_batch" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_order" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_map" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ackfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',

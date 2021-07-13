@@ -69,7 +69,7 @@ public static void main(String args[]) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                 String[] m = EDI.processFile(inDir + "/" + listOfFiles[i].getName(),"","","", isDebug);
+                 String[] m = EDI.processFile(inDir + "/" + listOfFiles[i].getName(),"","","", isDebug, false, 0, 0);
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {

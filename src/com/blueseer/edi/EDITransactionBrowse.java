@@ -562,6 +562,7 @@ public EDITransactionBrowse() {
         lbsegdelim = new javax.swing.JLabel();
         tbref = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        btreprocess = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -692,6 +693,13 @@ public EDITransactionBrowse() {
 
         jLabel7.setText("Reference");
 
+        btreprocess.setText("Reprocess");
+        btreprocess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btreprocessActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -725,17 +733,20 @@ public EDITransactionBrowse() {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rbDocLog))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btRun)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdetail)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bthidetext)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbshowall)
-                                .addGap(68, 68, 68)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btreprocess)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btRun)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btdetail)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bthidetext)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbshowall)
+                                        .addGap(93, 93, 93)
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(44, Short.MAX_VALUE))
@@ -763,14 +774,15 @@ public EDITransactionBrowse() {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rbFileLog)
                         .addComponent(rbDocLog)))
-                .addGap(6, 6, 6)
+                .addGap(5, 5, 5)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel7)
-                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btreprocess))
                 .addContainerGap())
         );
 
@@ -1006,11 +1018,39 @@ public EDITransactionBrowse() {
         }
     }//GEN-LAST:event_rbFileLogActionPerformed
 
+    private void btreprocessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btreprocessActionPerformed
+        //bsmf.MainFrame.show("This functionality is not available yet");
+       // return;
+        
+        int[] rows = tablereport.getSelectedRows();
+        if (rows.length > 1) {
+            bsmf.MainFrame.show("Can only reprocess one at a time");
+            return;
+        }
+        for (int i : rows) {
+            if (tablereport.getValueAt(i, 1) != null && tablereport.getValueAt(i, 2) != null ) {
+                String batch = OVData.getEDIBatchFromLog(tablereport.getValueAt(i,2).toString());
+                if (! batch.isEmpty())
+                    try {
+                        batch = OVData.getEDIBatchDir() + "/" + batch; 
+                       String[] m = EDI.processFile(batch, "", "", "", false, true, Integer.valueOf(tablereport.getValueAt(i, 2).toString()), Integer.valueOf(tablereport.getValueAt(i, 1).toString()));
+                       bsmf.MainFrame.show("reprocess status: " + m[0] + "/" + m[1]);
+                    } catch (IOException ex) {
+                        MainFrame.bslog(ex);
+                    } catch (ClassNotFoundException ex) {
+                        MainFrame.bslog(ex);
+                    }
+            }
+        }
+        
+    }//GEN-LAST:event_btreprocessActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton bthidetext;
+    private javax.swing.JButton btreprocess;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbshowall;
     private com.toedter.calendar.JDateChooser dcfrom;

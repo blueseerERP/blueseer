@@ -22236,7 +22236,7 @@ public class OVData {
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 
-                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
                             + " values ( " 
                             + "'" + c[22] + "'" + ","    
                             + "'" + c[16] + "'" + ","
@@ -22246,6 +22246,7 @@ public class OVData {
                             + "'" + c[1] + "'" + ","
                             + "'" + c[2] + "'" + ","
                             + "'" + c[3] + "'" + ","
+                            + "'" + c[24] + "'" + ","        
                             + "'" + c[4] + "'" + ","
                             + "'" + c[5] + "'" + ","
                             + "'" + c[6] + "'" + ","
@@ -22318,6 +22319,31 @@ public class OVData {
         }
       }
    
+    public static String getEDIBatchFromLog(String comkey) {
+        String x = "";
+        try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+              
+                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                res = st.executeQuery("select elg_batch from edi_log where " +
+                        " elg_comkey = " + "'" + comkey + "'" + 
+                        " and elg_idxnbr = '0' ; " );
+               while (res.next()) {
+                   x = res.getString("elg_batch");
+                }    
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
     
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;

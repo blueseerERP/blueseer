@@ -398,7 +398,7 @@ public class EDI {
     return m;
     }
         
-    public static String[] processFile(String infile, String map, String outfile, String isOverride, boolean isDebug) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static String[] processFile(String infile, String map, String outfile, String isOverride, boolean isDebug, boolean reprocess, int comkey, int idxnbr) throws FileNotFoundException, IOException, ClassNotFoundException {
         
         if (isDebug) {
             GlobalDebug = true;
@@ -417,8 +417,8 @@ public class EDI {
          f.close();
          
          // get comkey that associates all subsequent docs in this file to this log entry
-         int comkey = 0;
-         if (isOverride.isEmpty()) {
+         
+         if (isOverride.isEmpty() && comkey == 0) {
           comkey = OVData.getNextNbr("edilog");
          }
          
@@ -440,6 +440,7 @@ public class EDI {
                     c[11] = "0";
                     c[12] = isOverride;
                     c[13] = "";
+                    c[16] = "0";  // initial idxnbr
                     c[22] = String.valueOf(comkey);
                     c[26] = file.getParent(); // indir
                     c[28] = editype[0];
@@ -454,16 +455,18 @@ public class EDI {
            m = new String[]{"1","unknown file type: " + infile};
            OVData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
           } else {
-             OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+              if (! reprocess) {
+              int filenumber = OVData.getNextNbr("edifile");
+              batchfile = "R" + String.format("%07d", filenumber); 
+              c[24] = batchfile;
+             OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+              } else {
+                  batchfile = file.getName();
+              }
+               
          }
              
-         if (isOverride.isEmpty() && ! editype[0].isEmpty() ) {
-          int filenumber = OVData.getNextNbr("edifile");
-          batchfile = "R" + String.format("%07d", filenumber);   
-          Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-         }
-         
-         
          
         // if type is FF
         if (editype[0].equals("FF")) {
@@ -519,13 +522,7 @@ public class EDI {
            docRegister.put(doccount, singledoc);
            docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});       
            
-           // init control
-       
-                   
-           
-               
-                    
-           processFF(docRegister, docPosition, c, ffdata, batchfile);
+           processFF(docRegister, docPosition, c, ffdata, idxnbr);
            
         }
         
@@ -641,9 +638,9 @@ public class EDI {
         
             
              if (isOverride.isEmpty()) {
-             processX12(ISAmap, cbuf, batchfile);
+             processX12(ISAmap, cbuf, batchfile, idxnbr);
              } else {
-              processX12(ISAmap, cbuf, infile);   
+              processX12(ISAmap, cbuf, infile, idxnbr);   
              }
              
          }  // if x12
@@ -651,6 +648,8 @@ public class EDI {
        OVData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
        return m;  
     }
+    
+    
     
     public static String[] getEDIType(char[] cbuf, String filename) {
     String[] type = new String[]{"",""};
@@ -1065,9 +1064,9 @@ public class EDI {
     
     
     
-    public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile)   {
+    public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile, int idxnbr)   {
     
-    int idxnbr = 0;     
+    
     
     // ISAmap is defined as new Integer[] {start, end, (int) s, (int) e, (int) u});
     
@@ -1157,10 +1156,12 @@ public class EDI {
              parentPartner = OVData.getEDIPartnerFromAlias(c[0]); 
           }
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
-          if (c[12].isEmpty()) {   // if not override
+         
+          if (c[12].isEmpty() && idxnbr == 0) {   // if not override
           idxnbr = OVData.writeEDIIDX(c);
-          c[16] = String.valueOf(idxnbr);
           }
+          
+          c[16] = String.valueOf(idxnbr);
           
              String map = c[2];
              
@@ -1249,9 +1250,8 @@ public class EDI {
   
 }
     
-    public static void processFF(Map<Integer, ArrayList<String>> FFDocs, Map<Integer, Integer[]> FFPositions, String[] c, ArrayList<String[]> tags, String batchfile)   {
+    public static void processFF(Map<Integer, ArrayList<String>> FFDocs, Map<Integer, Integer[]> FFPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
-    int idxnbr = 0;
       
     for (Map.Entry<Integer, ArrayList<String>> z : FFDocs.entrySet()) {
             ArrayList<String> doc = z.getValue();
@@ -1283,9 +1283,6 @@ public class EDI {
             c[10] = defaults[6]; 
             c[11] = defaults[8];   
                  
-            
-            c[24] = batchfile;
-             
              
         // insert isa and st start and stop integer points within the file
         
@@ -1297,10 +1294,12 @@ public class EDI {
           
           
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
-          if (c[12].isEmpty()) {   // if not override
+         
+          if (c[12].isEmpty() && idxnbr == 0) {   // if not override
           idxnbr = OVData.writeEDIIDX(c);
-          c[16] = String.valueOf(idxnbr);
           }
+          
+          c[16] = String.valueOf(idxnbr);
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {

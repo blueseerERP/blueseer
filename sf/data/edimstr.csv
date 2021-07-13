@@ -1,2 +1,1 @@
-acme,850,acme,1,EDIMaps.Generic850i,ZZ,acme,blueseer,ZZ,blueseer,42,10,62,generic,txt,edi/out,004010,,0
-acme,810,acme,0,EDIMaps.Generic810o,ZZ,acme,blueseer,ZZ,blueseer,42,10,62,generic,txt,edi/out,004010,,0
+ACME,850,X12,999999999,0,EDIMaps.ACME850,ZZ,999999999,BLUESEER,ZZ,BLUESEER,42,10,126,850,txt,,004010,,850idoc,FF,X12850.csv,ORDERS05.csv,0

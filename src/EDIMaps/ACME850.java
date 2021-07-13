@@ -39,16 +39,13 @@ import java.time.format.DateTimeFormatter;
  *
  * @author vaughnte
  */
-public class Generic850toIDOC extends com.blueseer.edi.EDIMap { 
+public class ACME850 extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
         
     // These master variables must be set for all maps    
     setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-    setOutPutFileType("FF");  // X12 of FF   not necessary to set...pull from edi_mstr
-    setOutPutDocType("ORDERS05");  // not necessary to set...pull from edi_mstr
-    setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv");
-    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\ORDERS05.csv");
+  
     if (isError) { return error;}  // check errors for master variables
     
     mappedInput = mapInput(c, doc, ISF);

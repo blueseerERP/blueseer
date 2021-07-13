@@ -565,15 +565,15 @@ public abstract class EDIMap implements EDIMapi {
      
         
         // get TP/Doc defaults
-        String[] tp = OVData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+        String[] tp = OVData.getEDITPDefaults(doctype, outsender, outreceiver );
         
         if (tp == null || tp.length < 18) {
-            setError("tp defaults is null or empty for: " + outputdoctype + "/" + outsender + "/" + outreceiver);
+            setError("tp defaults is null or empty for: " + doctype + "/" + outsender + "/" + outreceiver);
             return error;  
         }
         
         if (GlobalDebug) {
-        System.out.println("Getting tp defaults for: " + outputdoctype + "/" + outsender + "/" + outreceiver);
+        System.out.println("Getting tp defaults for: " + doctype + "/" + outsender + "/" + outreceiver);
         System.out.println("Value of tp defaults found: " + String.join(",", tp));
         }
         
@@ -717,7 +717,7 @@ public abstract class EDIMap implements EDIMapi {
 		OSF = hm;
                 } catch (FileNotFoundException ex) {
              MainFrame.bslog(ex);
-            setError("outbound structure file not found");
+            setError("outbound structure file not found: " + OVData.getEDIStructureDir() + "/" + adf);
         } catch (IOException ex) {
              MainFrame.bslog(ex);
             setError("outbound structure file IOException");
