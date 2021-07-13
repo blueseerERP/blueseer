@@ -532,6 +532,7 @@ CREATE TABLE "edi_file" (
   "edf_comkey" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edf_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "edf_file" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_batch" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
   "edf_dir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "edf_partner" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edf_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',

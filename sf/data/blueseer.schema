@@ -452,6 +452,7 @@ CREATE TABLE IF NOT EXISTS `edi_file` (
   `edf_comkey` int(12) NOT NULL DEFAULT '0',
   `edf_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edf_file` varchar(60) NOT NULL  DEFAULT '',
+  `edf_batch` varchar(60) NOT NULL  DEFAULT '',
   `edf_dir` varchar(100) NOT NULL  DEFAULT '',
   `edf_partner` varchar(15) NOT NULL  DEFAULT '',
   `edf_filetype` varchar(15) NOT NULL  DEFAULT '',

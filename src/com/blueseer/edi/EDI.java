@@ -446,28 +446,34 @@ public class EDI {
                     c[28] = editype[0];
                     c[30] = String.valueOf(isDebug);
                     
-        // start initial log entry for incoming file here  
-        OVData.writeEDIFileLog(c); 
-       
+         // create batch file of incoming file
+         
+         // create batch file
+              if (! reprocess) {
+              int filenumber = OVData.getNextNbr("edifile");
+              batchfile = "R" + String.format("%07d", filenumber); 
+              c[24] = batchfile;
+              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+              } else {
+                  batchfile = file.getName();
+              }
           
+          // start initial log entry for incoming file here 
+          if (! reprocess) {
+            OVData.writeEDIFileLog(c);      
+          }
+              
           // if type is unknown then bail....otherwise create batch file of infile
          if (editype[0].isEmpty()) {
            m = new String[]{"1","unknown file type: " + infile};
            OVData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
           } else {
-              if (! reprocess) {
-              int filenumber = OVData.getNextNbr("edifile");
-              batchfile = "R" + String.format("%07d", filenumber); 
-              c[24] = batchfile;
-             OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
-              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-              } else {
-                  batchfile = file.getName();
-              }
-               
+           OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+              
          }
              
-         
+        
+       
         // if type is FF
         if (editype[0].equals("FF")) {
             String landmark = OVData.getEDIFFLandmark(editype[1]);

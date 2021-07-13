@@ -22270,10 +22270,11 @@ public class OVData {
                 Statement st = con.createStatement();
                 String[] c = control;
               
-                        st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_dir, edf_status ) "
+                        st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_batch, edf_dir, edf_status ) "
                             + " values ( " 
                             + "'" + c[22] + "'" + ","    
                             + "'" + c[3] + "'" + ","
+                            + "'" + c[24] + "'" + ","        
                             + "'" + c[26] + "'" + ","
                             + "'" + "info" + "'"  
                             + ")"
@@ -22319,7 +22320,7 @@ public class OVData {
         }
       }
    
-    public static String getEDIBatchFromLog(String comkey) {
+    public static String getEDIBatchFromedi_file(String comkey) {
         String x = "";
         try {
            Class.forName(driver).newInstance();
@@ -22329,11 +22330,11 @@ public class OVData {
                 ResultSet res = null;
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
-                res = st.executeQuery("select elg_batch from edi_log where " +
-                        " elg_comkey = " + "'" + comkey + "'" + 
-                        " and elg_idxnbr = '0' ; " );
+                res = st.executeQuery("select edf_batch from edi_file where " +
+                        " edf_comkey = " + "'" + comkey + "'" + 
+                        ";" );
                while (res.next()) {
-                   x = res.getString("elg_batch");
+                   x = res.getString("edf_batch");
                 }    
             } catch (SQLException s) {
                  MainFrame.bslog(s);
