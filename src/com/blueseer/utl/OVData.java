@@ -22519,6 +22519,34 @@ public class OVData {
          
       }
     
+    public static void updateEDIIDXAcks(ArrayList<String[]> keys) {
+            // keys is a string[] with doctype, groupctrlnum, docctrlnum, ackfile 
+          try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                
+                    for (String[] key : keys) { 
+                    st.executeUpdate("update edi_idx set " +
+                            " edx_ackfile = " + "'" + key[3] + "'" + "," +
+                            " edx_ack = '1' " +        
+                            " where edx_outdoctype = " + "'" + key[0] + "'" +     
+                            " and edx_gsctrlnum = " + "'" + key[1] + "'" +
+                            " and edx_stctrlnum = " + "'" + key[2] + "'" + 
+                            ";");
+                    }
+                        
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
    
        
       

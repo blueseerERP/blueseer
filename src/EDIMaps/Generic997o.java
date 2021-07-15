@@ -136,7 +136,7 @@ public class Generic997o  {
                  
                  // concat and send content to edi.writeFile
                  String content = ISA + GS + ST + Header + SE + GE + IEA;
-                 edi.writeFile(content, "", filename); 
+                 edi.writeFile(content, OVData.getEDIOutDir(), filename); 
                  
         /*
          output.write(ISA);

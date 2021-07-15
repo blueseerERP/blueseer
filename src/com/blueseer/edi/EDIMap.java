@@ -606,6 +606,9 @@ public abstract class EDIMap implements EDIMapi {
         c[25] = batchfile;
         c[27] = outdir;
         c[29] = tp[15];
+        c[6] = stctrl;
+        c[5] = gsctrl;
+        c[4] = isactrl;
 
      if (GlobalDebug)
      System.out.println("Value of c within EDIMap class: " + String.join(",", c));

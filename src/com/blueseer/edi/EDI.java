@@ -57,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jcifs.smb.NtlmPasswordAuthentication;
@@ -463,11 +465,12 @@ public class EDI {
             OVData.writeEDIFileLog(c);      
           }
               
-          // if type is unknown then bail....otherwise create batch file of infile
+          
          if (editype[0].isEmpty()) {
            m = new String[]{"1","unknown file type: " + infile};
            OVData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
-          } else {
+           return m; 
+         } else {
            OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
               
          }
@@ -1118,7 +1121,8 @@ public class EDI {
            
             
          //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
-        falist.add(docid); // add ST doc id to falist for functional acknowledgement
+         if (! doctype.equals("997"))
+         falist.add(docid); // add ST doc id to falist for functional acknowledgement
       //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
        
     //  you are inserting 'segments' into ArrayList doc
@@ -1169,55 +1173,62 @@ public class EDI {
           
           c[16] = String.valueOf(idxnbr);
           
-             String map = c[2];
+         String map = c[2];
              
-             
-               if (map.isEmpty() && c[12].isEmpty()) {
-                
-                if (GlobalDebug)   
-                System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
-                
-                  map = OVData.getEDIMap(c[1], gs02, gs03); 
-               } 
-            
-               // if no map then bail
-               if (map.isEmpty() && c[12].isEmpty()) {
-                  OVData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
-               } else {
-                  
-                if (GlobalDebug)   
-                System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
-                   
-                   // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
-                    try {
-                    Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    Object oc = method.invoke(obj, doc, c);
-                    String[] oString = (String[]) oc;
-                    OVData.writeEDILog(c, oString[0], oString[1]);
-                    OVData.updateEDIIDX(idxnbr, c); 
-                  
-                    } catch (InvocationTargetException ex) {
-                        if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        MainFrame.bslog(ex); 
-                    } catch (ClassNotFoundException ex) {
-                        if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        MainFrame.bslog(ex); 
-                    } catch (IllegalAccessException |
-                             InstantiationException | NoSuchMethodException ex
-                            ) {
-                        if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        MainFrame.bslog(ex);
+          if (doctype.equals("997")) {
+            if (GlobalDebug)   {
+            System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
+            }
+            String[] m = process997(doc, c);
+            OVData.updateEDIIDXStatus(idxnbr, m[0]);
+            continue;
+          }   
+          
+           if (map.isEmpty() && c[12].isEmpty()) {
+            if (GlobalDebug)   
+            System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
+
+              map = OVData.getEDIMap(c[1], gs02, gs03); 
+           } 
+
+           // if no map then bail
+           if (map.isEmpty() && c[12].isEmpty()) {
+              OVData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
+           } else {
+
+            if (GlobalDebug)   
+            System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
+
+               // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                try {
+                Class cls = Class.forName(map);
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
+                OVData.writeEDILog(c, oString[0], oString[1]);
+                OVData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                    OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
                     }
-                   
-               }
+                    MainFrame.bslog(ex); 
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                    }
+                    MainFrame.bslog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
+                    }
+                    MainFrame.bslog(ex);
+                }
+
+           }
                
             
                
@@ -1228,26 +1239,11 @@ public class EDI {
              
        
             // 997
-            
             ArrayList<String> falistcopy = new ArrayList<String>(falist);
             falist.clear();
-            
-                if (c[12].isEmpty() && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim()))) {
-                    try {
-                    String[] _isa = c[13].toString().split(EDI.escapeDelimiter(ed), -1);
-                    String[] _gs = c[14].toString().split(EDI.escapeDelimiter(ed), -1);
-                    Class cls = Class.forName("EDIMaps." + "Generic997o");
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    method.invoke(obj, falistcopy, c);
-                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        OVData.writeEDILog(c, "error", "Problem generating 997 for " + c[0] + " / " + c[1]);
-                        MainFrame.bslog(ex);
-                    }
-                }
+            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim()))) {
+             generate997(falistcopy, c);
+            }
             
      
      
@@ -1282,7 +1278,6 @@ public class EDI {
             c[1] = x[0];  // doctype
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
-            c[6] = x[0]; // doctype
       
             String[] defaults = OVData.getEDITPDefaults(x[0], x[3], x[1]);
             c[9] = defaults[7]; 
@@ -2436,7 +2431,173 @@ public class EDI {
             return envelope;
       }
       
-       public static String[] generate997Envelope(String[] in_isa, String[] in_gs) {
+      public static String[] generate997(ArrayList<String> docs, String[] c) {
+        String[] m = new String[]{"",""};
+        
+        String sd = delimConvertIntToStr(c[9]);
+        String ed = delimConvertIntToStr(c[10]);
+        String ud = delimConvertIntToStr(c[11]);
+        String[] _isa = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+        String[] _gs = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+         
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         DateFormat tsdfdate = new SimpleDateFormat("yyMMddHHmmssSSS");
+         Date now = new Date();
+        int segcount = 0;
+        int hdrsegcount = 0;
+        String stctrl = "00001";
+        int filenumber = OVData.getNextNbr("ediout");
+        String filename = "997_" + c[0] + "_" + tsdfdate.format(now) + ".txt";
+        // create envelope segments
+        
+        
+         
+         String isa1 = _isa[1];
+        // if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
+         
+         String isa2 = _isa[2];
+        // if (attrkeys.containsKey("ISA02")) {isa2 = String.format("%10s",attrkeys.get("ISA02"));}
+         
+         String isa3 = _isa[3];
+         //if (attrkeys.containsKey("ISA03")) {isa3 = String.format("%2s",attrkeys.get("ISA03"));}
+         
+         String isa4 = _isa[4];
+        // if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
+         
+         String isa5 = String.format("%2s", _isa[7]);
+         String isa6 = String.format("%-15s", _isa[8]);
+         String isa7 = String.format("%2s", _isa[5]);
+         String isa8 = String.format("%-15s", _isa[6]);
+         String isa9 = isadfdate.format(now);
+         String isa10 = isadftime.format(now);
+         String isa11 = _isa[11];
+        // if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
+         
+         String isa12 = _isa[12];  // must be 5 chars long
+        // if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
+         
+         String isa13 = String.format("%09d", filenumber);
+         String isa14 = _isa[14];
+         //if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
+         
+         String isa15 = _isa[15];
+        // if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
+         
+         String isa16 = ud;
+         
+         String gs1 = OVData.getEDIGSTypeFromStds("997"); 
+         
+         String gs2 = _gs[3];
+        // if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
+         
+         String gs3 = _gs[2];
+        // if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
+         
+         String gs4 = gsdfdate.format(now);
+         String gs5 = gsdftime.format(now);
+         String gs6 = String.valueOf(filenumber);
+         String gs7 = "X";
+        // if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
+         
+         String gs8 = _gs[8];
+         //if (attrkeys.containsKey("GS08")) {gs8 = attrkeys.get("GS08");}
+          
+         
+        
+        
+       
+          
+           String ISA = "ISA" + ed + isa1 + ed + isa2 + ed + isa3 + ed + isa4 + ed + isa5 + ed + isa6 + ed + isa7 + ed + isa8 + ed + isa9 + ed + 
+                 isa10 + ed + isa11 + ed + isa12 + ed + isa13 + ed + isa14 + ed + isa15 + ed + isa16 ;
+           
+           String GS = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8;
+           
+           String GE = "GE" + ed + "1" + ed + String.valueOf(filenumber);
+           
+           String IEA = "IEA" + ed + "1" + ed + String.format("%09d", filenumber);
+            
+            
+        // now create body
+        String ST = "ST" + ed + "997" + ed + stctrl + sd;
+        hdrsegcount = 2; // "ST and SE" included
+         
+         String Header = "";
+       
+         ArrayList<String> S = new ArrayList();
+         S.add("AK1" + ed + _gs[1] + ed + _gs[6]);
+         hdrsegcount += 1;
+         for (String d : docs) {
+             S.add("AK2" + ed + c[1] + ed + d);
+             S.add("AK5" + ed + "A");
+             hdrsegcount += 2;
+         }
+         
+         S.add("AK9" + ed + "A" + ed + docs.size() + ed + docs.size() + ed + docs.size());
+         hdrsegcount += 1;
+         
+         // now cleanup
+         for (String s : S) {
+             Header += (EDI.trimSegment(s, ed).toUpperCase() + sd);
+         }
+         segcount = hdrsegcount;
+         
+         String SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl + sd;
+                         
+         
+                 
+         // concat and send content to edi.writeFile
+         String content = ISA + sd + GS + sd + ST + Header + SE + GE + sd + IEA + sd;
+         
+         
+        try {
+            // write to file
+            EDI.writeFile(content, OVData.getEDIOutDir(), filename);
+        } catch (SmbException ex) {
+            MainFrame.bslog(ex);
+        } catch (IOException ex) {
+            MainFrame.bslog(ex);
+        }
+         
+         
+         return m;
+      }
+      
+      public static String[] process997(ArrayList<String> docs, String[] c) {
+        
+         String[] _isa = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+         String[] _gs = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);  
+         ArrayList<String[]> docids = new ArrayList<String[]>();
+         String groupid = "";
+         String doctype = "";
+         for (Object seg : docs) {
+            String ea[] = seg.toString().split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+            // in practice...should be only 1 AK1 and 1 or more AK2s
+            if (ea[0] != null && ea.length > 2 && ea[0].equals("AK1")) {
+                groupid = ea[2];
+                doctype = OVData.getEDIDocTypeFromStds(ea[1]);
+            }
+            if (ea[0] != null && ea.length > 2 && ea[0].equals("AK2")) {
+                String[] temp = new String[]{doctype, groupid, ea[2], c[24]};
+               docids.add(temp);
+            }
+         }
+         
+         // find edi_idx record of groupid, doctype, and docid ...for each element of docids
+         OVData.updateEDIIDXAcks(docids);
+         if (groupid.isEmpty() || doctype.isEmpty() || docids.size() == 0) {
+             return new String[]{"error","unrecognized gscntrlnum or missing doc IDs"};
+         } else if (doctype.equals("??")) {
+             return new String[]{"error","unknown doctype in 997"};
+         } else {
+             return new String[]{"success","997 loaded"};
+         }
+         
+      }
+      
+      public static String[] generate997Envelope(String[] in_isa, String[] in_gs) {
         
         
                     
