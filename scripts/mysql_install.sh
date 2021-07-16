@@ -63,11 +63,15 @@ cd data
 echo "creating database schema...."
 mysql -e "drop database if exists $DB;" -u $ROOT  
 mysql -e "create database if not exists $DB character set utf8mb4 collate utf8mb4_unicode_ci;" -u $ROOT  
+mysql -e "drop user if exists 'bs_user'@'%' ;" -u $ROOT 
+mysql -e "create user if not exists 'bs_user'@'%' identified by 'bsPasswd';" -u $ROOT
+mysql -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';"  -u $ROOT
+
 #  The next line loads the database and table definitions
-mysql $DB -u $ROOT  <blueseer.schema 
+mysql --local-infile=1 $DB -u $ROOT  <blueseer.schema 
 
 echo "Loading some data....."
-mysql $DB -u $ROOT <sq_mysql.txt
+mysql --local-infile=1 $DB -u $ROOT <sq_mysql.txt
 
 
 
@@ -85,7 +89,7 @@ echo 'Optionally...you can launch by typing the following at the command line: '
 echo 'NOTE:  make sure you are in the parent blueseer directory!! '
 echo ''
 echo ''
-echo 'jre8/bin/java -cp ".:dist/*" bsmf.MainFrame'
+echo 'jre11/bin/java -cp ".:dist/*" bsmf.MainFrame'
 echo ''
 echo ''
 echo 'NOTE:'
