@@ -292,6 +292,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                   }  else {
                       statusImage = BlueSeerUtils.clicknocheck;
                   }
+                    
+                    if (res.getString("edx_ack").equals("1")) {
+                      statusImage = BlueSeerUtils.clickcheckblue; 
+                    }
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getInt("edx_id"),
@@ -879,6 +883,42 @@ public EDITransactionBrowse() {
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
+        if ( col == 15) {
+                String ackfile = OVData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
+                if (! ackfile.isEmpty()) {
+                int k = 10;
+                      if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
+                      k = Integer.valueOf(tbsegdelim.getText());
+                      }
+                     try {
+                         tafile.setText("");
+                         if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
+                         ArrayList<String> segments = OVData.readEDIRawFileByDoc(ackfile, 
+                                 OVData.getEDIBatchDir(),
+                                 cbshowall.isSelected(),
+                                 "0",
+                                 "0",
+                                 String.valueOf(k)
+                                 );  
+                            tafile.append(ackfile + ":" + "\n");
+                            for (String segment : segments ) {
+                                tafile.append(segment);
+                                tafile.append("\n");
+                            }
+                         }
+                     } catch (MalformedURLException ex) {
+                         bsmf.MainFrame.bslog(ex);
+                     } catch (SmbException ex) {
+                         bsmf.MainFrame.bslog(ex);
+                     } catch (IOException ex) {
+                         bsmf.MainFrame.bslog(ex);
+                     }
+                     tafile.setCaretPosition(0);
+                     textpanel.setVisible(true);
+                     bthidetext.setEnabled(true);
+                     cbshowall.setEnabled(true);
+                }
+        }
         
           if ( col == 9 && rbFileLog.isSelected()) {
               int k = 10;
@@ -901,11 +941,11 @@ public EDITransactionBrowse() {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (IOException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
@@ -934,11 +974,11 @@ public EDITransactionBrowse() {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (IOException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
@@ -968,11 +1008,11 @@ public EDITransactionBrowse() {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              } catch (IOException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
+                 bsmf.MainFrame.bslog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);

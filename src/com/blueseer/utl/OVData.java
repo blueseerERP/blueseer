@@ -22346,6 +22346,33 @@ public class OVData {
         return x;
     }
     
+    public static String getEDIAckFileFromEDIIDX(String key) {
+        String x = "";
+        try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+              
+                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                res = st.executeQuery("select edx_ackfile from edi_idx where " +
+                        " edx_id = " + "'" + key + "'" + 
+                        ";" );
+               while (res.next()) {
+                   x = res.getString("edx_ackfile");
+                }    
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;
           try {
