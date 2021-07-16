@@ -248,7 +248,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
@@ -257,7 +257,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
                     " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
@@ -267,14 +267,14 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " AND edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
                     " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     
                     if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by edx_id desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbref.getText().isEmpty()) {
@@ -359,7 +359,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
                     " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -369,7 +369,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " edf_doctype >= " + "'" + tbdoc.getText() + "'" +
                     " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -380,14 +380,14 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " AND edf_doctype >= " + "'" + tbdoc.getText() + "'" +
                     " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
                     if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + 
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
