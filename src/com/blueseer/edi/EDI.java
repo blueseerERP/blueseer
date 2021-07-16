@@ -418,6 +418,9 @@ public class EDI {
          f.read(cbuf); 
          f.close();
          
+         if (GlobalDebug)
+        System.out.println("File Character length: " + cbuf.length);
+        
          // get comkey that associates all subsequent docs in this file to this log entry
          
          if (isOverride.isEmpty() && comkey == 0) {
@@ -681,6 +684,9 @@ public class EDI {
     
     // check for EDI x12 or Edifact
     // look at first three characters of file content
+    if (GlobalDebug)
+     System.out.println("getEDIType: checking for X12 type... " + filename );
+             
     int gs01Start = 109;
     StringBuilder sb = new StringBuilder();
     StringBuilder gs01 = new StringBuilder();
@@ -703,7 +709,10 @@ public class EDI {
              type[1] = "TBD";
              return type;
          }
-         
+        
+    if (GlobalDebug)
+     System.out.println("getEDIType: checking for FF type... " + filename );     
+    
     // must be flatfile....let's create arraylist of segments based on assumed newline delimiter     
     StringBuilder segment = new StringBuilder();
     char segdelim = (char) Integer.valueOf("10").intValue(); 
@@ -734,7 +743,9 @@ public class EDI {
                 matchcount = 0;
                 for (String[] r : v) {
                     rulecount++;
-                 //   System.out.println("here0:" + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
+                    
+                 if (GlobalDebug)   
+                 System.out.println("getEDIType: FF rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
                      
                     if (Integer.valueOf(r[0]) == k) {
                         if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
