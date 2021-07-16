@@ -7,7 +7,13 @@ load data local infile 'ovctrl.csv' replace into table ov_ctrl fields terminated
 load data local infile 'counter.csv' replace into table counter fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'codemstr.csv' replace into table code_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'labelzebra.csv' replace into table label_zebra fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edpmstr.csv' replace into table edp_partner fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edpdmstr.csv' replace into table edpd_partner fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edidoc.csv' replace into table edi_doc fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edidocdet.csv' replace into table edi_docdet fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edistds.csv' replace into table edi_stds fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'edimstr.csv' replace into table edi_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 insert into car_mstr (car_code, car_desc, car_scac, car_type) values ('USPS','US POSTAL SERVICE','USPS','carrier') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ; 
@@ -22,7 +28,6 @@ load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated
 load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'curmstr.csv' replace into table cur_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'pos_ctrl.csv' replace into table pos_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
-load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'deptmstr.csv' replace into table dept_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'jaspmstr.csv' replace into table jasp_mstr fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'plmstr.csv' replace into table pl_mstr fields terminated by ',' ignore 0 Lines; show errors; 
