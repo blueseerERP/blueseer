@@ -1093,12 +1093,13 @@ public class EDI {
     // loop through ISAMap entries
     
              
-             
+    int callingidxnbr = idxnbr;         
     for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
         int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
-               
+        String gs02 = ""; 
+        String gs03 = "";       
 //  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
         
         String[] c = (String[]) isa.getValue()[6];
@@ -1162,8 +1163,7 @@ public class EDI {
           c[20] = String.valueOf(k[1]);
           
           
-          String gs02 = ""; 
-          String gs03 = "";
+          
           int j = Integer.valueOf(c[10]);
           String delim = String.valueOf(Character.toString((char) j));
           String[] gs = c[14].split(escapeDelimiter(delim));
@@ -1178,7 +1178,7 @@ public class EDI {
           }
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
          
-          if (c[12].isEmpty() && idxnbr == 0) {   // if not override
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
           idxnbr = OVData.writeEDIIDX(c);
           }
           
@@ -1252,7 +1252,10 @@ public class EDI {
             // 997
             ArrayList<String> falistcopy = new ArrayList<String>(falist);
             falist.clear();
-            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim()))) {
+            if (GlobalDebug)   
+            System.out.println("997 potential: " + c[12] + "/" +  (falistcopy.size() > 0) + "/" + BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim())) );    
+
+            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], gs02, gs03))) {
              generate997(falistcopy, c);
             }
             
@@ -1265,7 +1268,7 @@ public class EDI {
     
     public static void processFF(Map<Integer, ArrayList<String>> FFDocs, Map<Integer, Integer[]> FFPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
-      
+    int callingidxnbr = idxnbr;      
     for (Map.Entry<Integer, ArrayList<String>> z : FFDocs.entrySet()) {
             ArrayList<String> doc = z.getValue();
             Integer[] positions = FFPositions.get(z.getKey());
@@ -1307,7 +1310,7 @@ public class EDI {
           
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
          
-          if (c[12].isEmpty() && idxnbr == 0) {   // if not override
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
           idxnbr = OVData.writeEDIIDX(c);
           }
           
@@ -2323,7 +2326,7 @@ public class EDI {
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
         String[] defaults = OVData.getEDITPDefaults(doctype, sndid, rcvid);
-         ArrayList<String> attrs = OVData.getEDIAttributesList(doctype, sndid, rcvid); 
+        ArrayList<String> attrs = OVData.getEDIAttributesList(doctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);
@@ -2343,7 +2346,7 @@ public class EDI {
          String ud = Character.toString((char) udint );
          
             
-       //  if default filename is empty..set as generic
+        //  if default filename is empty..set as generic
          if (defaults[10].isEmpty()) {
              defaults[10] = "generic";
          }
@@ -2445,6 +2448,9 @@ public class EDI {
       public static String[] generate997(ArrayList<String> docs, String[] c) {
         String[] m = new String[]{"",""};
         
+        
+        
+        
         String sd = delimConvertIntToStr(c[9]);
         String ed = delimConvertIntToStr(c[10]);
         String ud = delimConvertIntToStr(c[11]);
@@ -2459,24 +2465,43 @@ public class EDI {
          Date now = new Date();
         int segcount = 0;
         int hdrsegcount = 0;
-        String stctrl = "00001";
+        String stctrl = "0001";
         int filenumber = OVData.getNextNbr("ediout");
         String filename = "997_" + c[0] + "_" + tsdfdate.format(now) + ".txt";
         // create envelope segments
         
-        
+        // 997s are generated first without regards to specific 997 partner relationship setup
+        // if relationship record found...this overrides filename, and various ISA and GS attributes as found
+        String[] defaults = OVData.getEDITPDefaults("997", _gs[2], _gs[3]);
+        ArrayList<String> attrs = OVData.getEDIAttributesList("997", _gs[2], _gs[3]); 
+        Map<String, String> attrkeys = new HashMap<String, String>();
+        for (String x : attrs) {
+            String[] z = x.split(":", -1);
+            if (z != null && ! z[0].isEmpty()) {
+                attrkeys.put(z[0], z[1]);
+            }
+        }
+         
+        //  Override filename with defaults values if found for partner relationship
+         if (! defaults[0].isEmpty()) {
+             filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+             //  if filepath is defined...use this for explicit file path relative to root
+             if (! defaults[9].isEmpty()) {
+                 filename = defaults[9] + "/" + filename;
+             }
+         }
          
          String isa1 = _isa[1];
-        // if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
+         if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
          
          String isa2 = _isa[2];
-        // if (attrkeys.containsKey("ISA02")) {isa2 = String.format("%10s",attrkeys.get("ISA02"));}
+         if (attrkeys.containsKey("ISA02")) {isa2 = String.format("%10s",attrkeys.get("ISA02"));}
          
          String isa3 = _isa[3];
-         //if (attrkeys.containsKey("ISA03")) {isa3 = String.format("%2s",attrkeys.get("ISA03"));}
+         if (attrkeys.containsKey("ISA03")) {isa3 = String.format("%2s",attrkeys.get("ISA03"));}
          
          String isa4 = _isa[4];
-        // if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
+         if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
          
          String isa5 = String.format("%2s", _isa[7]);
          String isa6 = String.format("%-15s", _isa[8]);
@@ -2485,36 +2510,36 @@ public class EDI {
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = _isa[11];
-        // if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
+         if (attrkeys.containsKey("ISA11")) {isa11 = String.format("%1s",attrkeys.get("ISA11"));}
          
          String isa12 = _isa[12];  // must be 5 chars long
-        // if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
+         if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
          
          String isa13 = String.format("%09d", filenumber);
          String isa14 = _isa[14];
-         //if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
+         if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
          
          String isa15 = _isa[15];
-        // if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
+         if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
          
          String isa16 = ud;
          
          String gs1 = OVData.getEDIGSTypeFromStds("997"); 
          
          String gs2 = _gs[3];
-        // if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
+         if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
          
          String gs3 = _gs[2];
-        // if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
+         if (attrkeys.containsKey("GS03")) {gs3 = attrkeys.get("GS03");}
          
          String gs4 = gsdfdate.format(now);
          String gs5 = gsdftime.format(now);
          String gs6 = String.valueOf(filenumber);
          String gs7 = "X";
-        // if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
+         if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
          
          String gs8 = _gs[8];
-         //if (attrkeys.containsKey("GS08")) {gs8 = attrkeys.get("GS08");}
+         if (attrkeys.containsKey("GS08")) {gs8 = attrkeys.get("GS08");}
           
          
         
@@ -2563,9 +2588,30 @@ public class EDI {
          String content = ISA + sd + GS + sd + ST + Header + SE + GE + sd + IEA + sd;
          
          
+        
+         
+         // create batch file
+          String batchfile = "S" + String.format("%07d", filenumber); 
+          
+          
+               // update c for edi_idx
+         String[] cc = c.clone();
+         cc[0] = c[21];
+         cc[1] = "997";
+         cc[15] = "997";
+         cc[8] = filename;
+         cc[21] = c[0];
+         cc[24] = batchfile;
+         cc[25] = batchfile;
+         cc[28] = "X12";
+         cc[29] = "X12";
+         OVData.writeEDIIDX(cc);
+         
         try {
             // write to file
             EDI.writeFile(content, OVData.getEDIOutDir(), filename);
+            Files.copy(new File(OVData.getEDIOutDir() + "/" + filename).toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+           
         } catch (SmbException ex) {
             MainFrame.bslog(ex);
         } catch (IOException ex) {

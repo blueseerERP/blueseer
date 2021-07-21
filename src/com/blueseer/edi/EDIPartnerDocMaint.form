@@ -362,14 +362,10 @@
                           <Component id="tbversion" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
                           <Component id="tbfilepath" alignment="0" pref="201" max="32767" attributes="0"/>
                           <Component id="tbelement" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="tbfilesuffix" alignment="0" pref="83" max="32767" attributes="0"/>
-                              <Component id="tbfileprefix" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="ddoutdoctype" alignment="0" max="32767" attributes="0"/>
-                              <Component id="tbsupplier" alignment="0" pref="122" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="tbfilesuffix" alignment="0" pref="83" max="32767" attributes="0"/>
+                          <Component id="tbfileprefix" alignment="0" max="32767" attributes="0"/>
+                          <Component id="ddoutdoctype" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tbsupplier" alignment="0" pref="122" max="32767" attributes="0"/>
                           <Component id="ddoutfiletype" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
                           <Component id="tbIFS" alignment="0" max="32767" attributes="0"/>
                       </Group>

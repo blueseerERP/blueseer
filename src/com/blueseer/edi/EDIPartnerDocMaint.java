@@ -130,7 +130,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 
                 if (i > 0) {
                    enableAll();
-                   getAttributes(tbsndisa.getText(), tbrcvisa.getText(), doctype);
+                   getAttributes(tbsndgs.getText(), tbrcvgs.getText(), doctype);
                    btadd.setEnabled(false);
                 }
             } catch (SQLException s) {
@@ -892,12 +892,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     return;
                 }
                
-                if (tbmap.getText().isEmpty()) {
+                if (tbmap.getText().isEmpty() && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
                     bsmf.MainFrame.show("Must enter a map name");
                     return;
                 }
-                if (! isFile(tbmap.getText())) {
+                if (! isFile(tbmap.getText()) && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
                     bsmf.MainFrame.show("Map does not exist");
                     return;
@@ -1034,8 +1034,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
        
-        OVData.addEDIAttributeRecord(dddoc.getSelectedItem().toString(), tbsndisa.getText(), tbrcvisa.getText(), tbattributekey.getText(), tbattributevalue.getText());
-        getAttributes(tbsndisa.getText(), tbrcvisa.getText(), dddoc.getSelectedItem().toString());
+        OVData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
+        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
         tbattributekey.setText("");
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
@@ -1062,13 +1062,14 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from edi_attr where exa_tpid = " + "'" + tbkey.getText() + "'" + 
+                   int i = st.executeUpdate("delete from edi_attr where exa_sndid = " + "'" + tbsndgs.getText() + "'" + 
+                                            " and exa_rcvid = " + "'" + tbrcvgs.getText() + "'" +
                                             " and exa_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
                                             " and exa_key = " + "'" + z[0].toString() + "'" +
                                              ";");
                     if (i > 0) {
                     bsmf.MainFrame.show("deleted code " + listAttributes.getSelectedValue().toString());
-                    getAttributes(tbsndisa.getText(), tbrcvisa.getText(), dddoc.getSelectedItem().toString());
+                    getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

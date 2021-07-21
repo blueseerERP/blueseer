@@ -22416,7 +22416,7 @@ public class OVData {
                             + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
                             + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
                             + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
-                            + "'" + "" + "'"  // status         
+                            + "'" + "success" + "'"  // status         
                             + ")"
                             + ";");
                       } else {
@@ -22454,7 +22454,7 @@ public class OVData {
                             + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
                             + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
                             + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
-                            + "'" + "" + "'"  // status         
+                            + "'" + "success" + "'"  // status         
                             + ")"
                             + ";", Statement.RETURN_GENERATED_KEYS);
                       }
