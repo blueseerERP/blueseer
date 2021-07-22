@@ -123,7 +123,12 @@ public class EDI {
             
               */
                for (int i = 0; i < 38; i++) {
+                    if (i == 35 || i == 36 || i== 37 ||
+                         i == 9 || i == 10 || i == 11 ) {
+                        controlarray[i] = "0";
+                    } else {
                     controlarray[i] = "";
+                    }
                 }
                 return controlarray;
     }
@@ -1170,10 +1175,7 @@ public class EDI {
           c[19] = String.valueOf(k[0]);
           c[20] = String.valueOf(k[1]);
           
-          // needed to prevent non-blank integer conversion
-          c[35] = "0";
-          c[36] = "0";
-          c[37] = "0";
+          
           
           int j = Integer.valueOf(c[10]);
           String delim = String.valueOf(Character.toString((char) j));
