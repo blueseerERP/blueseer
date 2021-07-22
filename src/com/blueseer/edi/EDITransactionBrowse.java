@@ -956,6 +956,10 @@ public EDITransactionBrowse() {
           if ( (col == 13) && rbDocLog.isSelected()) {
               int k = 10;
               String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
+              String end = p[3];  // doc end
+              if (tablereport.getValueAt(row, 1).toString().equals("FF")) {
+                  end = p[1];   // file end
+              }
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
@@ -966,7 +970,7 @@ public EDITransactionBrowse() {
                          OVData.getEDIBatchDir(),
                          cbshowall.isSelected(),
                          p[2],
-                         p[3],
+                         end,
                          p[4]
                          );  
                     for (String segment : segments ) {
@@ -1002,7 +1006,7 @@ public EDITransactionBrowse() {
                          OVData.getEDIBatchDir(),
                          cbshowall.isSelected(),
                          "0",
-                         "99999",
+                         "999999",
                          p[4]
                          );  
                     for (String segment : segments ) {
