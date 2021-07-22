@@ -500,6 +500,10 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_isaend` int(9) NOT NULL DEFAULT '0',
   `edx_docstart` int(9) NOT NULL DEFAULT '0',
   `edx_docend` int(9) NOT NULL DEFAULT '0',
+  `edx_outisastart` int(9) NOT NULL DEFAULT '0',
+  `edx_outisaend` int(9) NOT NULL DEFAULT '0',
+  `edx_outdocstart` int(9) NOT NULL DEFAULT '0',
+  `edx_outdocend` int(9) NOT NULL DEFAULT '0',
   `edx_ref` varchar(30) NOT NULL DEFAULT '',
   `edx_indir` varchar(100) NOT NULL DEFAULT '',
   `edx_infile` varchar(60) NOT NULL DEFAULT '',
@@ -510,6 +514,9 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_segdelim` int(9) NOT NULL DEFAULT '0',
   `edx_elmdelim` int(9) NOT NULL DEFAULT '0',
   `edx_subdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_outsegdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_outelmdelim` int(9) NOT NULL DEFAULT '0',
+  `edx_outsubdelim` int(9) NOT NULL DEFAULT '0',
   `edx_status` varchar(10) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_stds` (

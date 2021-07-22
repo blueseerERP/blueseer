@@ -22372,6 +22372,36 @@ public class OVData {
         return x;
     }
     
+    public static String[] getEDIDocPositionEDIIDX(String key) {
+        String[] x = new String[]{"","","","",""};
+        try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+              
+                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
+                        " edx_id = " + "'" + key + "'" + 
+                        ";" );
+               while (res.next()) {
+                   x[0] = res.getString("edx_isastart");
+                   x[1] = res.getString("edx_isaend");
+                   x[2] = res.getString("edx_docstart");
+                   x[3] = res.getString("edx_docend");
+                   x[4] = res.getString("edx_segdelim");
+                }    
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
     
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;
@@ -22385,37 +22415,49 @@ public class OVData {
                         st.executeUpdate("insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
                                 " edx_infiletype, edx_indoctype, edx_inbatch, " +
                                 " edx_outfiletype, edx_outdoctype, edx_outbatch, " +
-                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
-                                " edx_docstart, edx_docend, edx_ref, " +
+                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, " +
+                                " edx_isastart, edx_isaend, edx_docstart, edx_docend, " +
+                                " edx_outisastart, edx_outisaend, edx_outdocstart, edx_outdocend, " + 
+                                "  edx_ref, " +
                                 " edx_indir, edx_infile, edx_outdir, edx_outfile, " +
-                                " edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
+                                " edx_ackfile, edx_ack, " +
+                                " edx_segdelim, edx_elmdelim, edx_subdelim, " +
+                                " edx_outsegdelim, edx_outelmdelim, edx_outsubdelim, " + 
+                                " edx_status ) "
                             + " values ( " 
                             + "'" + c[22] + "'" + ","
                             + "'" + c[0] + "'" + ","  // sender
                             + "'" + c[21] + "'" + ","        // receiver
-                            + "'" + c[28] + "'" + ","
-                            + "'" + c[1] + "'" + ","
-                            + "'" + c[24] + "'" + ","
-                            + "'" + c[29] + "'" + ","
-                            + "'" + c[15] + "'" + ","
-                            + "'" + c[25] + "'" + ","
-                            + "'" + c[4] + "'" + ","
-                            + "'" + c[5] + "'" + ","
-                            + "'" + c[6] + "'" + ","
-                            + "'" + c[17] + "'" + ","
-                            + "'" + c[18] + "'" + ","
-                            + "'" + c[19] + "'" + ","
-                            + "'" + c[20] + "'" + ","
-                            + "'" + c[7] + "'" + "," 
-                            + "'" + c[26] + "'" + ","      
-                            + "'" + c[3] + "'" + ","
-                            + "'" + c[27] + "'" + ","      
-                            + "'" + c[8] + "'" + ","        
+                            + "'" + c[28] + "'" + "," // infiletype
+                            + "'" + c[1] + "'" + ","  // indoctype
+                            + "'" + c[24] + "'" + ","  // inbatch
+                            + "'" + c[29] + "'" + "," // outfiletype
+                            + "'" + c[15] + "'" + ","  // outdoctype
+                            + "'" + c[25] + "'" + ","  // outbatch
+                            + "'" + c[4] + "'" + ","  // isactrlnum
+                            + "'" + c[5] + "'" + ","  // gsctrlnum
+                            + "'" + c[6] + "'" + ","  // st ctrlnum
+                            + "'" + c[17] + "'" + ","  // isastart
+                            + "'" + c[18] + "'" + ","  // isaend
+                            + "'" + c[19] + "'" + ","   // docstart
+                            + "'" + c[20] + "'" + ","  //docend
+                            + "'" + c[31] + "'" + ","  // outisastart
+                            + "'" + c[32] + "'" + ","  // outisaend
+                            + "'" + c[33] + "'" + ","   // outdocstart
+                            + "'" + c[34] + "'" + ","  // outdocend        
+                            + "'" + c[7] + "'" + ","   //ref
+                            + "'" + c[26] + "'" + ","     // indir 
+                            + "'" + c[3] + "'" + ","  // infile
+                            + "'" + c[27] + "'" + ","      // outdir
+                            + "'" + c[8] + "'" + ","       // outfile
                             + "'" + "" + "'" + ","  // ack file   ...need to do
                             + "'" + "0" + "'" + ","  // ack yes or no 1 or 0        ....need to do
                             + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
                             + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
                             + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[35].toString()) + "'" + "," 
+                            + "'" + Integer.valueOf(c[36].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[37].toString()) + "'" + ","        
                             + "'" + "success" + "'"  // status         
                             + ")"
                             + ";");
@@ -22423,11 +22465,15 @@ public class OVData {
                           st.executeUpdate("insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
                                 " edx_infiletype, edx_indoctype, edx_inbatch, " +
                                 " edx_outfiletype, edx_outdoctype, edx_outbatch, " +
-                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, edx_isastart, edx_isaend, " +
-                                " edx_docstart, edx_docend, edx_ref, " +
+                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, " +
+                                " edx_isastart, edx_isaend, edx_docstart, edx_docend, " +
+                                " edx_outisastart, edx_outisaend, edx_outdocstart, edx_outdocend, " + 
+                                "  edx_ref, " +
                                 " edx_indir, edx_infile, edx_outdir, edx_outfile, " +
-                                " edx_ackfile, edx_ack, edx_segdelim, edx_elmdelim, edx_subdelim, edx_status ) "
-                            + " values ( " 
+                                " edx_ackfile, edx_ack, " +
+                                " edx_segdelim, edx_elmdelim, edx_subdelim, " +
+                                " edx_outsegdelim, edx_outelmdelim, edx_outsubdelim, " + 
+                                " edx_status ) " + " values ( " 
                             + "'" + c[22] + "'" + ","
                             + "'" + c[0] + "'" + ","  // sender
                             + "'" + c[21] + "'" + ","        // receiver
@@ -22444,6 +22490,10 @@ public class OVData {
                             + "'" + c[18] + "'" + ","
                             + "'" + c[19] + "'" + ","
                             + "'" + c[20] + "'" + ","
+                            + "'" + c[31] + "'" + ","  // outisastart
+                            + "'" + c[32] + "'" + ","  // outisaend
+                            + "'" + c[33] + "'" + ","   // outdocstart
+                            + "'" + c[34] + "'" + ","  // outdocend                
                             + "'" + c[7] + "'" + "," 
                             + "'" + c[26] + "'" + ","      
                             + "'" + c[3] + "'" + ","
@@ -22454,6 +22504,9 @@ public class OVData {
                             + "'" + Integer.valueOf(c[9].toString()) + "'" + "," 
                             + "'" + Integer.valueOf(c[10].toString()) + "'" + ","
                             + "'" + Integer.valueOf(c[11].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[35].toString()) + "'" + "," 
+                            + "'" + Integer.valueOf(c[36].toString()) + "'" + ","
+                            + "'" + Integer.valueOf(c[37].toString()) + "'" + ","     
                             + "'" + "success" + "'"  // status         
                             + ")"
                             + ";", Statement.RETURN_GENERATED_KEYS);
@@ -22498,6 +22551,10 @@ public class OVData {
                             " edx_isaend = " + "'" + c[18] + "'" + "," +
                             " edx_docstart = " + "'" + c[19] + "'" + "," +
                             " edx_docend = " + "'" + c[20] + "'" + "," +
+                            " edx_outisastart = " + "'" + c[31] + "'" + "," +
+                            " edx_outisaend = " + "'" + c[32] + "'" + "," +
+                            " edx_outdocstart = " + "'" + c[33] + "'" + "," +
+                            " edx_outdocend = " + "'" + c[34] + "'" + "," +        
                             " edx_ref = " + "'" + c[7] + "'" + "," +
                             " edx_indir = " + "'" + c[26] + "'" + "," +
                             " edx_infile = " + "'" + c[3] + "'" + "," +
@@ -22508,6 +22565,9 @@ public class OVData {
                             " edx_segdelim = " + "'" + Integer.valueOf(c[9].toString()) + "'" + "," +
                             " edx_elmdelim = " + "'" + Integer.valueOf(c[10].toString()) + "'" + "," +  
                             " edx_subdelim = " + "'" + Integer.valueOf(c[11].toString()) + "'" + "," + 
+                            " edx_outsegdelim = " + "'" + Integer.valueOf(c[35].toString()) + "'" + "," +
+                            " edx_outelmdelim = " + "'" + Integer.valueOf(c[36].toString()) + "'" + "," +  
+                            " edx_outsubdelim = " + "'" + Integer.valueOf(c[37].toString()) + "'" + "," + 
                             " edx_status = " + "'" + c[23] + "'"  + 
                             " where edx_id = " + "'" + key + "'" +        
                             ";");

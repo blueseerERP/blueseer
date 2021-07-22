@@ -609,6 +609,13 @@ public abstract class EDIMap implements EDIMapi {
         c[6] = stctrl;
         c[5] = gsctrl;
         c[4] = isactrl;
+        c[31] = "0";
+        c[32]  = "99999";
+        c[33] = "0";
+        c[34] = "99999";
+        c[35] = tp[7];
+        c[36] = tp[6];
+        c[37] = tp[8];
 
      if (GlobalDebug)
      System.out.println("Value of c within EDIMap class: " + String.join(",", c));

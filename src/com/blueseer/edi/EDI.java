@@ -80,8 +80,8 @@ public class EDI {
     public static boolean GlobalDebug = false;
     
     public static String[] initEDIControl() {   
-        String[] controlarray = new String[31];
-             /*  31 elements consisting of:
+        String[] controlarray = new String[38];
+             /*  38 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -113,8 +113,16 @@ public class EDI {
             c[28] = infiletype  // ff, x12, xml, etc
             c[29] = outfiletype  // ff, x12, xml, etc
             c[30] = debug  true or false
+            c[31] = outisastart
+            c[32] = outisaend
+            c[33] = outdocstart
+            c[34] = outdocend
+            c[35] = outsegdelim
+            c[36] = outeledelim
+            c[37] = outsubdelim
+            
               */
-               for (int i = 0; i < 31; i++) {
+               for (int i = 0; i < 38; i++) {
                     controlarray[i] = "";
                 }
                 return controlarray;
@@ -1162,7 +1170,10 @@ public class EDI {
           c[19] = String.valueOf(k[0]);
           c[20] = String.valueOf(k[1]);
           
-          
+          // needed to prevent non-blank integer conversion
+          c[35] = "0";
+          c[36] = "0";
+          c[37] = "0";
           
           int j = Integer.valueOf(c[10]);
           String delim = String.valueOf(Character.toString((char) j));
@@ -1179,7 +1190,10 @@ public class EDI {
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
          
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
-          idxnbr = OVData.writeEDIIDX(c);
+              idxnbr = OVData.writeEDIIDX(c);
+              if (GlobalDebug) 
+                  System.out.println("insert edi_idx " + idxnbr + ": " + c);
+              
           }
           
           c[16] = String.valueOf(idxnbr);
@@ -2605,6 +2619,13 @@ public class EDI {
          cc[25] = batchfile;
          cc[28] = "X12";
          cc[29] = "X12";
+         cc[31] = "0";
+         cc[32]  = "99999";
+         cc[33] = "0";
+         cc[34] = "99999";
+         cc[35] = c[9];
+         cc[36] = c[10];
+         cc[37] = c[11];
          OVData.writeEDIIDX(cc);
          
         try {

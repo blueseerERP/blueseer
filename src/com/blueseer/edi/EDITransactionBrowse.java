@@ -955,6 +955,7 @@ public EDITransactionBrowse() {
         }
           if ( (col == 13) && rbDocLog.isSelected()) {
               int k = 10;
+              String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
@@ -964,9 +965,9 @@ public EDITransactionBrowse() {
                  ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
                          OVData.getEDIBatchDir(),
                          cbshowall.isSelected(),
-                         "0",
-                         "99999",
-                         String.valueOf(k)
+                         p[2],
+                         p[3],
+                         p[4]
                          );  
                     for (String segment : segments ) {
                         tafile.append(segment);
@@ -989,6 +990,8 @@ public EDITransactionBrowse() {
           
          if ( (col == 14) && rbDocLog.isSelected()) {
               int k = 10;
+               String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
+             
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
@@ -1000,7 +1003,7 @@ public EDITransactionBrowse() {
                          cbshowall.isSelected(),
                          "0",
                          "99999",
-                         String.valueOf(k)
+                         p[4]
                          );  
                     for (String segment : segments ) {
                         tafile.append(segment);
