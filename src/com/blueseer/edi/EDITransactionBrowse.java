@@ -957,7 +957,7 @@ public EDITransactionBrowse() {
               int k = 10;
               String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
               String end = p[3];  // doc end
-              if (tablereport.getValueAt(row, 1).toString().equals("FF")) {
+              if (tablereport.getValueAt(row, 6).toString().equals("FF")) {
                   end = p[1];   // file end
               }
               if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
