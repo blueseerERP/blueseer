@@ -27,24 +27,11 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
-import com.blueseer.fgl.*;
-import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,42 +40,18 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.mydialog;
-import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import jcifs.smb.SmbException;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -1005,8 +968,8 @@ public EDITransactionBrowse() {
                  ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
                          OVData.getEDIBatchDir(),
                          cbshowall.isSelected(),
-                         "0",
-                         "999999",
+                         p[0],
+                         p[1],
                          p[4]
                          );  
                     for (String segment : segments ) {

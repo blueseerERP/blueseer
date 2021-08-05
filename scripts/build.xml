@@ -93,6 +93,7 @@
     </path>
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">
+	    <!-- <arg value="-ssh"/> -->
 	    <jvmarg value="-Duser.language=en"/>
 	    <jvmarg value="-Duser.country=US"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>

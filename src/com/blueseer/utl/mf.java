@@ -27,6 +27,7 @@ package com.blueseer.utl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.session;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -48,10 +49,7 @@ public class mf {
          */
          
         //</editor-fold>
-        if (args.length > 0) {
-        MainFrame.myargs = args[0];
-        MainFrame.myurl = args[1];
-        }
+        
         
         
         try {
@@ -86,6 +84,8 @@ public class mf {
                 new MainFrame().setVisible(true);
             }
         });
+        
+        
     }
     
 }
