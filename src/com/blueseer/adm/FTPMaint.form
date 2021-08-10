@@ -66,13 +66,13 @@
                           <Component id="cbdelete" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="tbcddir" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tbcddir" alignment="0" pref="218" max="32767" attributes="0"/>
                           <Component id="tboutdir" alignment="0" max="32767" attributes="0"/>
                           <Component id="tbindir" alignment="0" max="32767" attributes="0"/>
                           <Component id="tbpasswd" alignment="0" max="32767" attributes="0"/>
                           <Component id="tbip" alignment="0" max="32767" attributes="0"/>
-                          <Component id="tbdesc" alignment="0" pref="218" max="32767" attributes="0"/>
                           <Component id="tblogin" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tbdesc" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="tbkey" min="-2" pref="123" max="-2" attributes="0"/>
