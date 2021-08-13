@@ -22382,8 +22382,38 @@ public class OVData {
                 ResultSet res = null;
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
-                res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
+                 res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
                         " edx_id = " + "'" + key + "'" + 
+                        ";" );
+               while (res.next()) {
+                   x[0] = res.getString("edx_isastart");
+                   x[1] = res.getString("edx_isaend");
+                   x[2] = res.getString("edx_docstart");
+                   x[3] = res.getString("edx_docend");
+                   x[4] = res.getString("edx_segdelim");
+                }    
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    public static String[] getEDIDocPositionEDIIDXcomkey(String comkey) {
+        String[] x = new String[]{"","","","",""};
+        try {
+           Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try {
+                Statement st = con.createStatement();
+                ResultSet res = null;
+              
+                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                 res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
+                        " edx_comkey = " + "'" + comkey + "'" + 
                         ";" );
                while (res.next()) {
                    x[0] = res.getString("edx_isastart");

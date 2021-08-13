@@ -885,7 +885,14 @@ public EDITransactionBrowse() {
         
           if ( col == 9 && rbFileLog.isSelected()) {
               int k = 10;
-              if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
+              // try to get delimiter from edi_idx (edx_comkey)
+              String[] p = OVData.getEDIDocPositionEDIIDXcomkey(tablereport.getValueAt(row, 2).toString());
+              if (! p[4].isEmpty()) {
+               k = Integer.valueOf(p[4]);
+              }
+              
+              // if textbox segment is occupied...override lookup
+              if (! tbsegdelim.getText().isEmpty() && BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
               k = Integer.valueOf(tbsegdelim.getText());
               }
              try {
@@ -923,9 +930,9 @@ public EDITransactionBrowse() {
               if (tablereport.getValueAt(row, 6).toString().equals("FF")) {
                   end = p[1];   // file end
               }
-              if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-              k = Integer.valueOf(tbsegdelim.getText());
-              }
+             // if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
+            //  k = Integer.valueOf(tbsegdelim.getText());
+            //  }
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
@@ -959,9 +966,9 @@ public EDITransactionBrowse() {
               int k = 10;
                String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
              
-              if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-              k = Integer.valueOf(tbsegdelim.getText());
-              }
+            //  if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
+            //  k = Integer.valueOf(tbsegdelim.getText());
+            //  }
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
