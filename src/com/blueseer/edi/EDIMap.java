@@ -28,6 +28,7 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.trimSegment;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.File;
@@ -246,7 +247,7 @@ public abstract class EDIMap implements EDIMapi {
         outreceiver = c[21]; 
         }
         
-        String[] tp = OVData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+        String[] tp = EDData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
         setOutPutDocType(tp[14]);
         setOutPutFileType(tp[15]);
         setInputStructureFile(tp[16]);
@@ -565,7 +566,7 @@ public abstract class EDIMap implements EDIMapi {
      
         
         // get TP/Doc defaults
-        String[] tp = OVData.getEDITPDefaults(doctype, outsender, outreceiver );
+        String[] tp = EDData.getEDITPDefaults(doctype, outsender, outreceiver );
         
         if (tp == null || tp.length < 18) {
             setError("tp defaults is null or empty for: " + doctype + "/" + outsender + "/" + outreceiver);
@@ -593,7 +594,7 @@ public abstract class EDIMap implements EDIMapi {
         if (outdir.isEmpty()) {
             outdir = tp[9];
             if (outdir.isEmpty()) {
-                outdir = OVData.getEDIOutDir();
+                outdir = EDData.getEDIOutDir();
             }
         }
 
@@ -635,7 +636,7 @@ public abstract class EDIMap implements EDIMapi {
         }
             try {
                 // Write output batch file
-                EDI.writeFile(content, OVData.getEDIBatchDir(), batchfile);
+                EDI.writeFile(content, EDData.getEDIBatchDir(), batchfile);
                 // Write to outfile
                 EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
             } catch (SmbException ex) {
@@ -695,7 +696,7 @@ public abstract class EDIMap implements EDIMapi {
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
-	        File cf = new File(OVData.getEDIStructureDir() + "/" + adf);
+	        File cf = new File(EDData.getEDIStructureDir() + "/" + adf);
 	    	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));
@@ -727,7 +728,7 @@ public abstract class EDIMap implements EDIMapi {
 		OSF = hm;
                 } catch (FileNotFoundException ex) {
              MainFrame.bslog(ex);
-            setError("outbound structure file not found: " + OVData.getEDIStructureDir() + "/" + adf);
+            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + adf);
         } catch (IOException ex) {
              MainFrame.bslog(ex);
             setError("outbound structure file IOException");
@@ -736,7 +737,7 @@ public abstract class EDIMap implements EDIMapi {
 
     public static void readISF(String ifile) {
         ArrayList<String[]> list = new ArrayList<String[]>();
-        File cf = new File(OVData.getEDIStructureDir() + "/" + ifile);
+        File cf = new File(EDData.getEDIStructureDir() + "/" + ifile);
     	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));

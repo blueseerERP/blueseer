@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.EDData;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.BufferedInputStream;
@@ -572,7 +573,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                  ArrayList<String> segments = OVData.readEDIRawFileIntoArrayList(tablereport.getValueAt(row, 5).toString(), tablereport.getValueAt(row, 6).toString());  
+                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tablereport.getValueAt(row, 5).toString(), tablereport.getValueAt(row, 6).toString());  
                     for (String segment : segments ) {
                         tafile.append(segment);
                         tafile.append("\n");

@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -78,9 +79,9 @@ public class EDILoadPanel extends javax.swing.JPanel {
 
       MyTableModel mymodel = new MyTableModel(new Object[][]{},
                     new String[]{"File", "Load?"});
-    String inDir = OVData.getEDIInDir();
-    String inArch = OVData.getEDIInArch(); 
-    String ErrorDir = OVData.getEDIErrorDir(); 
+    String inDir = EDData.getEDIInDir();
+    String inArch = EDData.getEDIInArch(); 
+    String ErrorDir = EDData.getEDIErrorDir(); 
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -204,7 +205,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
 //    File folder = new File("smb://10.17.2.55/edi");
   // File[] listOfFiles = folder.listFiles();
 
-  String inDir = OVData.getEDIInDir();
+  String inDir = EDData.getEDIInDir();
   
     
   SmbFile smbfile = null;
@@ -646,13 +647,13 @@ public class EDILoadPanel extends javax.swing.JPanel {
                     
                      
                          // if delete set in control panel...remove file and continue;
-                         if (OVData.isEDIDeleteFlag()) {
+                         if (EDData.isEDIDeleteFlag()) {
                           Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                           Files.delete(filetodelete);
                          }
                      
                          // now archive file
-                         if (! inArch.isEmpty() && ! OVData.isEDIDeleteFlag() && OVData.isEDIArchFlag() ) {
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
                         // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
@@ -687,7 +688,7 @@ public class EDILoadPanel extends javax.swing.JPanel {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileLiveDirIntoArrayList(tablereport.getValueAt(row, col).toString(), "In");  
+                 ArrayList<String> segments = EDData.readEDIRawFileLiveDirIntoArrayList(tablereport.getValueAt(row, col).toString(), "In");  
                     for (String segment : segments ) {
                         tafile.append(segment);
                         tafile.append("\n");

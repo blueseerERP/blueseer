@@ -40,6 +40,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.EDData;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -146,7 +147,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     
      public void getAttributes(String sndid, String rcvid, String doctype) {
         listmodel.removeAllElements();
-        ArrayList<String> list = OVData.getEDIAttributesList(doctype, sndid, rcvid);
+        ArrayList<String> list = EDData.getEDIAttributesList(doctype, sndid, rcvid);
         for (String x : list) {
             listmodel.addElement(x);
         }
@@ -1034,7 +1035,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
        
-        OVData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
+        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
         getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
         tbattributekey.setText("");
         tbattributevalue.setText("");

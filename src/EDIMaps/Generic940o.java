@@ -41,6 +41,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 
 
 /**
@@ -55,8 +56,8 @@ public class Generic940o {
         
        
        // get delimiters for this trading partner, doctype, docdirection
-        String[] delimiters = OVData.getDelimiters(entity, doctype);
-        String dir = OVData.getEDICustDir(doctype, entity, "");
+        String[] delimiters = EDData.getDelimiters(entity, doctype);
+        String dir = EDData.getEDICustDir(doctype, entity, "");
          String sd = delimiters[0];
          String ed = delimiters[1];
          String ud = delimiters[2];

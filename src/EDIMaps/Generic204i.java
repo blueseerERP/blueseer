@@ -36,7 +36,8 @@ import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDIMap.ed;
-import static com.blueseer.utl.OVData.writeEDILog;
+import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.writeEDILog;
 import java.io.IOException;
 
 
@@ -97,7 +98,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                    e.setCarrier(elementArray[2]);
                    // lets set tpid and cust at this point with ISA sender ID and cross reference lookup into cmedi_mstr
                    e.setTPID(isa[6].trim()); 
-                   e.setCust(OVData.getEDICustFromSenderISA(isa[6].trim(), "204", ""));
+                   e.setCust(EDData.getEDICustFromSenderISA(isa[6].trim(), "204", ""));
                    break;
                
                case "B2A" :
@@ -105,17 +106,17 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
                
                     // if cancellation...cancel original freight order based on custfo number...if status is not 'InTransit'
                    if (purpose.equals("01")) {
-                   OVData.CancelFOFrom204i(custfo);
-                   OVData.writeEDILog(c, "INFO", "204 Cancel");
+                   EDData.CancelFOFrom204i(custfo);
+                   EDData.writeEDILog(c, "INFO", "204 Cancel");
                    break;
                    }
                
                    if (purpose.equals("04")) {
                    origfo = OVData.getFreightOrderNbrFromCustFO(custfo);
                       if (origfo.isEmpty()) {
-                          OVData.writeEDILog(c, "ERROR", "204 Update Orig Not Found");
+                          EDData.writeEDILog(c, "ERROR", "204 Update Orig Not Found");
                       }
-                   OVData.writeEDILog(c, "INFO", "204 Update Not Implemented");
+                   EDData.writeEDILog(c, "INFO", "204 Update Not Implemented");
                    }
                    break;    
                

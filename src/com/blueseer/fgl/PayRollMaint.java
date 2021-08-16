@@ -76,6 +76,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.EDData;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -847,7 +848,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
     // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
    // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
-       String dir = OVData.getEDIOutDir();
+       String dir = EDData.getEDIOutDir();
        String filename = "nacha" + "_" + dfdatetm.format(now) + ".txt";
     
     

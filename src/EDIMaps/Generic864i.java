@@ -32,7 +32,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import com.blueseer.edi.EDI;
-import static com.blueseer.utl.OVData.writeEDILog;
+import static com.blueseer.utl.EDData.writeEDILog;
 
 
 /**

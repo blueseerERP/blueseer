@@ -825,7 +825,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addEDIPartner(list))
+                   if(! EDData.addEDIPartner(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
@@ -910,7 +910,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addEDIDocumentStructures(list))
+                   if(! EDData.addEDIDocumentStructures(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
@@ -1001,7 +1001,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addEDIMstrRecord(list))
+                   if(! EDData.addEDIMstrRecord(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 

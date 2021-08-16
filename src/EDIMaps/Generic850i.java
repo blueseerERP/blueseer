@@ -32,7 +32,8 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import com.blueseer.edi.EDI;
-import static com.blueseer.utl.OVData.writeEDILog;
+import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.writeEDILog;
 
 
 /**
@@ -95,7 +96,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
            /* because you will not be able to retrieve a billto code from a shipto code that hasn't been previously defined */
             
           
-               e.setOVBillTo(OVData.getEDICustFromSenderISA(doctype, getISA(6), getISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
+               e.setOVBillTo(EDData.getEDICustFromSenderISA(doctype, getISA(6), getISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
                
                
                po = x[3];

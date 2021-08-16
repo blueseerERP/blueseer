@@ -29,6 +29,7 @@ package com.blueseer.edi;
  *
  * @author vaughnte
  */
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -54,9 +55,9 @@ public static void main(String args[]) {
                 }
             }
             bsmf.MainFrame.setConfig();
-            String inDir = OVData.getEDIInDir();
-            String inArch = OVData.getEDIInArch(); 
-            String ErrorDir = OVData.getEDIErrorDir(); 
+            String inDir = EDData.getEDIInDir();
+            String inArch = EDData.getEDIInArch(); 
+            String ErrorDir = EDData.getEDIErrorDir(); 
                String archpath = inArch;
                File folder = new File(inDir);
                File[] listOfFiles = folder.listFiles();
@@ -83,13 +84,13 @@ public static void main(String args[]) {
                     }
                     
                     // if delete set in control panel...remove file and continue;
-                         if (OVData.isEDIDeleteFlag()) {
+                         if (EDData.isEDIDeleteFlag()) {
                           Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + listOfFiles[i].getName());
                           Files.delete(filetodelete);
                          }
                     
                     // now archive file
-                         if (! inArch.isEmpty() && ! OVData.isEDIDeleteFlag() && OVData.isEDIArchFlag() ) {
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + listOfFiles[i].getName());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + listOfFiles[i].getName());
                         // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());

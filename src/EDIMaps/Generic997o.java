@@ -42,6 +42,7 @@ import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
 import static com.blueseer.edi.EDI.delimConvertIntToStr;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 
 
 /**
@@ -63,7 +64,7 @@ public class Generic997o  {
      Date now = new Date();
        
        
-         String[] defaults = OVData.getEDITPDefaults("997", _isa[6].trim(), _isa[8].trim());
+         String[] defaults = EDData.getEDITPDefaults("997", _isa[6].trim(), _isa[8].trim());
         
         String sd = "\n";
         String ed = "*";
@@ -136,7 +137,7 @@ public class Generic997o  {
                  
                  // concat and send content to edi.writeFile
                  String content = ISA + GS + ST + Header + SE + GE + IEA;
-                 edi.writeFile(content, OVData.getEDIOutDir(), filename); 
+                 edi.writeFile(content, EDData.getEDIOutDir(), filename); 
                  
         /*
          output.write(ISA);

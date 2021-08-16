@@ -35,6 +35,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 
 
 /**
@@ -116,13 +117,13 @@ public class Generic862i {
            if (segarr[0].toString().equals("N1") && segarr[1].toString().equals("ST")) {
                shipto = OVData.getCodeValueByCodeKey("edixref", segarr[4].toString());
                if (shipto.isEmpty()) {
-                 OVData.writeEDILog(control, "ERROR", "No Shipto Found in edi_xref: " + segarr[4].toString()); 
+                 EDData.writeEDILog(control, "ERROR", "No Shipto Found in edi_xref: " + segarr[4].toString()); 
                  return;
                } else {
                 e.setOVShipTo(shipto);
                    billto = OVData.getcustBillTo(shipto);
                    if (billto.isEmpty()) {
-                       OVData.writeEDILog(control, "ERROR", "No Billto Found for shipto: " + shipto.toString());
+                       EDData.writeEDILog(control, "ERROR", "No Billto Found for shipto: " + shipto.toString());
                    } else {
                        e.setOVBillTo(billto);
                    }

@@ -28,8 +28,9 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDIMap.ed;
-import com.blueseer.utl.OVData;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -471,23 +472,23 @@ public class EDI {
               int filenumber = OVData.getNextNbr("edifile");
               batchfile = "R" + String.format("%07d", filenumber); 
               c[24] = batchfile;
-              Files.copy(file.toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+              Files.copy(file.toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
               } else {
                   batchfile = file.getName();
               }
           
           // start initial log entry for incoming file here 
           if (! reprocess) {
-            OVData.writeEDIFileLog(c);      
+            EDData.writeEDIFileLog(c);      
           }
               
           
          if (editype[0].isEmpty()) {
            m = new String[]{"1","unknown file type: " + infile};
-           OVData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           EDData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
            return m; 
          } else {
-           OVData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
+           EDData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
               
          }
              
@@ -495,8 +496,8 @@ public class EDI {
        
         // if type is FF
         if (editype[0].equals("FF")) {
-            String landmark = OVData.getEDIFFLandmark(editype[1]);
-            ArrayList<String[]> ffdata = OVData.getEDIFFDataRules(editype[1]);
+            String landmark = EDData.getEDIFFLandmark(editype[1]);
+            ArrayList<String[]> ffdata = EDData.getEDIFFDataRules(editype[1]);
             
             StringBuilder segment = new StringBuilder();
             char segdelim = (char) Integer.valueOf("10").intValue(); 
@@ -670,7 +671,7 @@ public class EDI {
              
          }  // if x12
          
-       OVData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
+       EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
        return m;  
     }
     
@@ -711,7 +712,7 @@ public class EDI {
              }
              gs01.append(cbuf,gs01Start,2);
              type[0] = "X12";
-             type[1] = OVData.getEDIDocTypeFromStds(gs01.toString()); 
+             type[1] = EDData.getEDIDocTypeFromStds(gs01.toString()); 
              if (GlobalDebug)
                    System.out.println("getEDIType X12 type in/out: " + gs01 + "/" + type[1] );
              
@@ -743,7 +744,7 @@ public class EDI {
         // now run doc array through rules engine to determine doctype
         int k = 0; 
         boolean match = false;
-        HashMap<String, ArrayList<String[]>> rules = OVData.getEDIFFSelectionRules();
+        HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
         for (String s : doc) {
             k++;
             int rulecount = 0;
@@ -821,7 +822,7 @@ public class EDI {
                     }
                     if (! x[1].isEmpty()) {
                         // look up parent partner
-                        x[2] = OVData.getEDIPartnerFromAlias(x[1]);
+                        x[2] = EDData.getEDIPartnerFromAlias(x[1]);
                     }
                 }
                  if (t[0].toLowerCase().equals("sndid")) {
@@ -880,7 +881,7 @@ public class EDI {
             control[6] = "-1";
             control[7] = "";
     if (senderid.isEmpty()) {
-        OVData.writeEDILog(control, "error", "XML file with no senderid " + filename);
+        EDData.writeEDILog(control, "error", "XML file with no senderid " + filename);
         proceed = false;
     }
     
@@ -888,7 +889,7 @@ public class EDI {
         
         
         // now lets get map
-          //   map = OVData.getEDIMap(senderid, doctype);
+          //   map = EDData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -900,11 +901,11 @@ public class EDI {
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
                         MainFrame.bslog(ex);
                     }
                }   else {
-                   OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
+                   EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
                    return;
                }
              }
@@ -941,7 +942,7 @@ public class EDI {
             control[7] = "";
     
     if (senderid.isEmpty()) {
-        OVData.writeEDILog(control, "error", "CSV file with no senderid " + filename);
+        EDData.writeEDILog(control, "error", "CSV file with no senderid " + filename);
         proceed = false;
     }
     
@@ -959,22 +960,22 @@ public class EDI {
     }
         
         // now lets get map
-        //     map = OVData.getEDIMap(senderid, doctype);
+        //     map = EDData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                     try {
                     Class cls = Class.forName("EDIMaps." + map);
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("MapCSVdata", ArrayList.class, String.class, String.class);
                     method.invoke(obj, doc, control, senderid);
-                   // OVData.writeEDILog(control, "INFO", "processing inbound file");
+                   // EDData.writeEDILog(control, "INFO", "processing inbound file");
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
                         MainFrame.bslog(ex);
                     }
                }   else {
-                   OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
+                   EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
                    return;
                }
              }
@@ -1053,7 +1054,7 @@ public class EDI {
              
               // skip if this is an acknowledgement and/or rip n read type doc
              if ( doctype.equals("APERAK") ) {
-             OVData.writeEDILog(control, "INFO", "read only");
+             EDData.writeEDILog(control, "INFO", "read only");
              proceed = false;
              }
              
@@ -1068,7 +1069,7 @@ public class EDI {
             
              
              if (proceed) {
-            // map = OVData.getEDIMap(senderid, doctype);
+            // map = EDData.getEDIMap(senderid, doctype);
                if (! map.isEmpty()) {
                    control[2] = map;
                     try {
@@ -1076,15 +1077,15 @@ public class EDI {
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String.class, String.class, String.class);
                     method.invoke(obj, thisdoc, flddelim_str, subdelim_str, control);
-                    OVData.writeEDILog(control, "INFO", "processing inbound file");
+                    EDData.writeEDILog(control, "INFO", "processing inbound file");
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
                         MainFrame.bslog(ex);
                     }
                }   else {
-                   OVData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
+                   EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
                    return;
                }
              }
@@ -1185,14 +1186,14 @@ public class EDI {
               gs02 = gs[2];
               gs03 = gs[3];
           }
-          String parentPartner = OVData.getEDIPartnerFromAlias(gs02);
+          String parentPartner = EDData.getEDIPartnerFromAlias(gs02);
           if (parentPartner == null || parentPartner.isEmpty()) {
-             parentPartner = OVData.getEDIPartnerFromAlias(c[0]); 
+             parentPartner = EDData.getEDIPartnerFromAlias(c[0]); 
           }
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
          
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
-              idxnbr = OVData.writeEDIIDX(c);
+              idxnbr = EDData.writeEDIIDX(c);
               if (GlobalDebug) 
                   System.out.println("insert edi_idx " + idxnbr + ": " + c);
               
@@ -1207,7 +1208,7 @@ public class EDI {
             System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
             }
             String[] m = process997(doc, c);
-            OVData.updateEDIIDXStatus(idxnbr, m[0]);
+            EDData.updateEDIIDXStatus(idxnbr, m[0]);
             continue;
           }   
           
@@ -1215,12 +1216,12 @@ public class EDI {
             if (GlobalDebug)   
             System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
 
-              map = OVData.getEDIMap(c[1], gs02, gs03); 
+              map = EDData.getEDIMap(c[1], gs02, gs03); 
            } 
 
            // if no map then bail
            if (map.isEmpty() && c[12].isEmpty()) {
-              OVData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
+              EDData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
            } else {
 
             if (GlobalDebug)   
@@ -1233,24 +1234,24 @@ public class EDI {
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
-                OVData.writeEDILog(c, oString[0], oString[1]);
-                OVData.updateEDIIDX(idxnbr, c); 
+                EDData.writeEDILog(c, oString[0], oString[1]);
+                EDData.updateEDIIDX(idxnbr, c); 
 
                 } catch (InvocationTargetException ex) {
                     if (c[12].isEmpty()) {
-                    OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                    EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
                     }
                     MainFrame.bslog(ex); 
                 } catch (ClassNotFoundException ex) {
                     if (c[12].isEmpty()) {
-                    OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                    EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
                     }
                     MainFrame.bslog(ex); 
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                     if (c[12].isEmpty()) {
-                    OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
+                    EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                     }
                     MainFrame.bslog(ex);
                 }
@@ -1269,9 +1270,9 @@ public class EDI {
             ArrayList<String> falistcopy = new ArrayList<String>(falist);
             falist.clear();
             if (GlobalDebug)   
-            System.out.println("997 potential: " + c[12] + "/" +  (falistcopy.size() > 0) + "/" + BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim())) );    
+            System.out.println("997 potential: " + c[12] + "/" +  (falistcopy.size() > 0) + "/" + BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim())) );    
 
-            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(OVData.getEDIFuncAck(c[1], gs02, gs03))) {
+            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], gs02, gs03))) {
              generate997(falistcopy, c);
             }
             
@@ -1295,7 +1296,7 @@ public class EDI {
             String[] x = getFFInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
             
              if (x[2].isEmpty()) {
-                  OVData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
+                  EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
              return;  
              }
             
@@ -1309,7 +1310,7 @@ public class EDI {
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
-            String[] defaults = OVData.getEDITPDefaults(x[0], x[3], x[1]);
+            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             c[9] = defaults[7]; 
             c[10] = defaults[6]; 
             c[11] = defaults[8];   
@@ -1327,7 +1328,7 @@ public class EDI {
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
          
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
-          idxnbr = OVData.writeEDIIDX(c);
+          idxnbr = EDData.writeEDIIDX(c);
           }
           
           c[16] = String.valueOf(idxnbr);
@@ -1337,12 +1338,12 @@ public class EDI {
                    if (GlobalDebug)   
                    System.out.println("Searching for Map (FF in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
                 
-                   map = OVData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
                } 
             
                // if no map then bail
                if (map.isEmpty() && c[12].isEmpty()) {
-                  OVData.writeEDILog(c, "error", "unable to find map class for " + c[0] + " / " + c[1]); 
+                  EDData.writeEDILog(c, "error", "unable to find map class for " + c[0] + " / " + c[1]); 
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
@@ -1352,23 +1353,23 @@ public class EDI {
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                     Object oc = method.invoke(obj, doc, c);
                     String[] oString = (String[]) oc;
-                        OVData.writeEDILog(c, oString[0], oString[1]);
-                        OVData.updateEDIIDX(idxnbr, c); 
+                        EDData.writeEDILog(c, oString[0], oString[1]);
+                        EDData.updateEDIIDX(idxnbr, c); 
                     } catch (InvocationTargetException ex) {
                         if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                        EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
                         } 
                         MainFrame.bslog(ex);
                     } catch (ClassNotFoundException ex) {
                         if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                        EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
                         }
                         MainFrame.bslog(ex); 
                     } catch (IllegalAccessException |
                              InstantiationException | NoSuchMethodException ex
                             ) {
                         if (c[12].isEmpty()) {
-                        OVData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
+                        EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
                         MainFrame.bslog(ex);
                     }
@@ -1450,16 +1451,16 @@ public class EDI {
         String line = "";
         
             control[7] = e.ov_shipto;
-           OVData.writeEDILog(control, "INFO", "Load");
+           EDData.writeEDILog(control, "INFO", "Load");
             // control = e.isaSenderID + "," + e.doctype + "," + e.isaCtrlNum + "," + e.po ;
              
              
              
-             //OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
+             //EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
                for (int j = 0; j < e.getDetCount(); j++ ) {
                   
                // find the blanket order type with key shipto, part, po ...if not availabe raise error and next loop    
-               orderline = OVData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
+               orderline = EDData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
                
                
                    if (! orderline.isEmpty()) {
@@ -1501,16 +1502,16 @@ public class EDI {
         String line = "";
         
          control[7] = e.ov_shipto;
-        OVData.writeEDILog(control, "INFO", "Load");
+        EDData.writeEDILog(control, "INFO", "Load");
         //   control = e.isaSenderID + "," + e.doctype + "," + e.isaCtrlNum + "," + e.po ;
              
              
              
-             //OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
+             //EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks);
                for (int j = 0; j < e.getDetCount(); j++ ) {
                   
                // find the blanket order type with key shipto, part, po ...if not availabe raise error and next loop    
-               orderline = OVData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
+               orderline = EDData.GetBlanketOrderLine(control, e.ov_shipto, e.getDetItem(j), e.getDetPO(j));
                
                
                    if (! orderline.isEmpty()) {
@@ -1552,7 +1553,7 @@ public class EDI {
        
             error = false;
              sonbr = OVData.getNextNbr("order");
-             OVData.writeEDILog(control, "INFO", "Load");
+             EDData.writeEDILog(control, "INFO", "Load");
            //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
              
              if (e.ov_shipto.isEmpty())
@@ -1560,7 +1561,7 @@ public class EDI {
              else
                  shipto = e.ov_shipto;
              
-             error = OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks, e.shipmethod); 
+             error = EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks, e.shipmethod); 
              if (! error) {  
              for (int j = 0; j < e.getDetCount(); j++ ) {
                  
@@ -1572,7 +1573,7 @@ public class EDI {
                    if ( Double.valueOf(e.getDetNetPrice(j)) == 0)
                       error = true;
                   
-               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+               EDData.CreateSalesOrderDet(String.valueOf(sonbr), 
                        e.ov_billto,
                        e.getDetItem(j), 
                        e.getDetCustItem(j), 
@@ -1604,7 +1605,7 @@ public class EDI {
             error = false;
              shipperid = OVData.getNextNbr("shipper");
              control[7] = String.valueOf(shipperid);
-             OVData.writeEDILog(control, "INFO", "Load");
+             EDData.writeEDILog(control, "INFO", "Load");
            //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
              
              if (e.ov_shipto.isEmpty())
@@ -1612,7 +1613,7 @@ public class EDI {
              else
                  shipto = e.ov_shipto; 
              
-             error = OVData.CreateShipperHdrEDI(control, String.valueOf(shipperid), e.shipper, e.ov_billto, shipto, e.so, e.po, e.shipdate, e.podate, e.remarks, e.shipmethod);     
+             error = EDData.CreateShipperHdrEDI(control, String.valueOf(shipperid), e.shipper, e.ov_billto, shipto, e.so, e.po, e.shipdate, e.podate, e.remarks, e.shipmethod);     
              if (! error) {  
              for (int j = 0; j < e.getDetCount(); j++ ) {
                  
@@ -1652,23 +1653,23 @@ public class EDI {
       
     public static void createFOTDETFrom990(edi990 e, String[] control) {
              control[7] = e.order;
-             OVData.writeEDILog(control, "INFO", "Load");
-             OVData.CreateFOTDETFrom990i(control, e.order, e.scac, e.yesno, e.reasoncode);  
+             EDData.writeEDILog(control, "INFO", "Load");
+             EDData.CreateFOTDETFrom990i(control, e.order, e.scac, e.yesno, e.reasoncode);  
     
     }
      
     public static void createFOTDETFrom220(edi220 e, String[] control) {
              control[7] = e.order;
-             OVData.writeEDILog(control, "INFO", "Load");
-             OVData.CreateFOTDETFrom220i(control, e.order, e.scac, e.yesno, e.remarks, e.amount);   
+             EDData.writeEDILog(control, "INFO", "Load");
+             EDData.CreateFOTDETFrom220i(control, e.order, e.scac, e.yesno, e.remarks, e.amount);   
     
     }
     
     public static void createFOMSTRFrom204i(edi204i e, String[] control) {
              control[7] = e.custfo;
-             String fo = OVData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid, e.weight, e.ref);  
+             String fo = EDData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid, e.weight, e.ref);  
              for (int j = 0; j < e.getDetCount(); j++ ) {
-               OVData.CreateFODDETFrom204i(fo,
+               EDData.CreateFODDETFrom204i(fo,
                        e.getDetLine(j), 
                        e.getDetType(j), 
                        e.getDetShipper(j),
@@ -1698,8 +1699,8 @@ public class EDI {
      
     public static void createFOTDETFrom214(edi214 e, String[] control) {
              control[7] = e.order;
-             OVData.writeEDILog(control, "INFO", "Load");
-             OVData.CreateFOTDETFrom214i(control, e.order, e.scac, e.pronbr, e.status, e.remarks, e.lat, e.lon, e.equipmentnbr, e.equipmenttype, e.apptdate, e.appttime);   
+             EDData.writeEDILog(control, "INFO", "Load");
+             EDData.CreateFOTDETFrom214i(control, e.order, e.scac, e.pronbr, e.status, e.remarks, e.lat, e.lon, e.equipmentnbr, e.equipmenttype, e.apptdate, e.appttime);   
     
     }
       
@@ -1714,7 +1715,7 @@ public class EDI {
             error = false;
              sonbr = OVData.getNextNbr("order");
              control[7] = ((edi850) e.get(i)).po;
-             OVData.writeEDILog(control, "INFO", "Load");
+             EDData.writeEDILog(control, "INFO", "Load");
            //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
              
              if (((edi850) e.get(i)).ov_shipto.isEmpty())
@@ -1722,7 +1723,7 @@ public class EDI {
              else
                  shipto = ((edi850) e.get(i)).ov_shipto;
              
-             OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
+             EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
                for (int j = 0; j < ((edi850) e.get(i)).getDetCount(); j++ ) {
                  
                    // error trigger logic ...missing internal item
@@ -1733,7 +1734,7 @@ public class EDI {
                    if ( Double.valueOf(((edi850) e.get(i)).getDetNetPrice(j)) == 0)
                       error = true;
                   
-               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+               EDData.CreateSalesOrderDet(String.valueOf(sonbr), 
                        ((edi850) e.get(i)).ov_billto,
                        ((edi850) e.get(i)).getDetItem(j), 
                        ((edi850) e.get(i)).getDetCustItem(j), 
@@ -1765,7 +1766,7 @@ public class EDI {
             error = false;
              sonbr = OVData.getNextNbr("order");
              control[7] = ((edi850) e.get(i)).po;
-             OVData.writeEDILog(control, "INFO", "Load");
+             EDData.writeEDILog(control, "INFO", "Load");
            //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
              
              if (((edi850) e.get(i)).ov_shipto.isEmpty())
@@ -1773,7 +1774,7 @@ public class EDI {
              else
                  shipto = ((edi850) e.get(i)).ov_shipto;
              
-             OVData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
+             EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), ((edi850) e.get(i)).ov_billto, shipto, ((edi850) e.get(i)).po, ((edi850) e.get(i)).duedate, ((edi850) e.get(i)).podate, ((edi850) e.get(i)).remarks, ((edi850) e.get(i)).shipmethod);
                for (int j = 0; j < ((edi850) e.get(i)).getDetCount(); j++ ) {
                  
                    // error trigger logic ...missing internal item
@@ -1784,7 +1785,7 @@ public class EDI {
                    if ( Double.valueOf(((edi850) e.get(i)).getDetNetPrice(j)) == 0)
                       error = true;
                   
-               OVData.CreateSalesOrderDet(String.valueOf(sonbr), 
+               EDData.CreateSalesOrderDet(String.valueOf(sonbr), 
                        ((edi850) e.get(i)).ov_billto,
                        ((edi850) e.get(i)).getDetItem(j), 
                        ((edi850) e.get(i)).getDetCustItem(j), 
@@ -1845,18 +1846,18 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(billto, doctype, "");
+        String[] defaults = EDData.getEDITPDefaults(billto, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIMap(c_in[0], c_in[1], "");
+        map = EDData.getEDIMap(c_in[0], c_in[1], "");
         
           if (map.isEmpty()) {
             proceed = false;
             errorcode = 1;
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + billto + " / " + doctype); 
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + billto + " / " + doctype); 
                    return errorcode;
         } 
         
@@ -1877,12 +1878,12 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                          if (c_in[12].isEmpty()) {
-                        OVData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
+                        EDData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
                         }
                         errorcode = 3;
                         MainFrame.bslog(ex);
@@ -1933,18 +1934,18 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(billto, doctype, "");
+        String[] defaults = EDData.getEDITPDefaults(billto, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         // lets determine if an ASN map is available for this billto of this shipper
-        map = OVData.getEDIMap(c_in[0], c_in[1], "");
+        map = EDData.getEDIMap(c_in[0], c_in[1], "");
         
           if (map.isEmpty()) {
             proceed = false;
             errorcode = 1;
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + billto + " / " + doctype); 
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + billto + " / " + doctype); 
                    return errorcode;
         } 
         
@@ -1964,12 +1965,12 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                          if (c_in[12].isEmpty()) {
-                        OVData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
+                        EDData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
                         }
                         errorcode = 3;
                         MainFrame.bslog(ex);
@@ -2007,7 +2008,7 @@ public class EDI {
          
         for (String w : wh) {   
         
-        map = OVData.getEDIMap(w, doctype, "");
+        map = EDData.getEDIMap(w, doctype, "");
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
        
@@ -2023,14 +2024,14 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(doctype, w, "");
+        String[] defaults = EDData.getEDITPDefaults(doctype, w, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + w + " / " + doctype);
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + w + " / " + doctype);
             errorcode = 1;
                    continue;
         } 
@@ -2048,14 +2049,14 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
-                    OVData.CreateFreightEDIRecs(c_in, nbr);
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.CreateFreightEDIRecs(c_in, nbr);
                     
 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
+                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
                         errorcode = 3;
                         MainFrame.bslog(ex);
                     }
@@ -2066,7 +2067,7 @@ public class EDI {
         
         // now lets set the order issourced flag if errorcode still equals 0
         if (errorcode == 0) {
-           // OVData.updateOrderSourceFlag(nbr);
+           // EDData.updateOrderSourceFlag(nbr);
         }
         
         return errorcode;
@@ -2097,7 +2098,7 @@ public class EDI {
         for (String ca : cars) {   
             
         
-        map = OVData.getEDIMap(ca, doctype, ""); 
+        map = EDData.getEDIMap(ca, doctype, ""); 
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
         c_in[0] = ca;
@@ -2112,13 +2113,13 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(ca, doctype, "");
+        String[] defaults = EDData.getEDITPDefaults(ca, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + ca + " / " + doctype);
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + ca + " / " + doctype);
             errorcode = 1;
                    continue;
         } 
@@ -2136,13 +2137,13 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
-                    OVData.CreateFreightEDIRecs(c_in, nbr);
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.CreateFreightEDIRecs(c_in, nbr);
 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
+                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
                         errorcode = 3;
                         MainFrame.bslog(ex);
                     }
@@ -2155,7 +2156,7 @@ public class EDI {
         
         // now lets set the order issourced flag if errorcode still equals 0
         if (errorcode == 0) {
-           // OVData.updateOrderSourceFlag(nbr);
+           // EDData.updateOrderSourceFlag(nbr);
         }
         
         return errorcode;
@@ -2182,7 +2183,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIMap(tp, doctype, ""); 
+        map = EDData.getEDIMap(tp, doctype, ""); 
         
         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
@@ -2198,19 +2199,19 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(tp, doctype, "");
+        String[] defaults = EDData.getEDITPDefaults(tp, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         if (tp.isEmpty()) {
-            OVData.writeEDILog(c_in, "error", "no carrier for this freight order " + tp + " / " + doctype);
+            EDData.writeEDILog(c_in, "error", "no carrier for this freight order " + tp + " / " + doctype);
             errorcode = 1;
             return errorcode;
         } 
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + tp + " / " + doctype);
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + tp + " / " + doctype);
             errorcode = 1;
             return errorcode;
         } 
@@ -2228,13 +2229,13 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
-                    OVData.CreateFreightEDIRecs(c_out, nbr);
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.CreateFreightEDIRecs(c_out, nbr);
 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
+                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
                         errorcode = 3;
                         MainFrame.bslog(ex);
                     }
@@ -2243,7 +2244,7 @@ public class EDI {
         
         // now lets set the order issourced flag if errorcode still equals 0
         if (errorcode == 0) {
-           // OVData.updateOrderSourceFlag(nbr);
+           // EDData.updateOrderSourceFlag(nbr);
         }
         
         return errorcode;
@@ -2268,7 +2269,7 @@ public class EDI {
        
             
         
-        map = OVData.getEDIMap(ca, doctype, "");
+        map = EDData.getEDIMap(ca, doctype, "");
         
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
@@ -2285,14 +2286,14 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = OVData.getEDITPDefaults(ca, doctype, "");
+        String[] defaults = EDData.getEDITPDefaults(ca, doctype, "");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
         
         if (map.isEmpty()) {
-            OVData.writeEDILog(c_in, "error", "no edi_mstr map for " + c_in + " / " + doctype);
+            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + c_in + " / " + doctype);
             errorcode = 1;
             return errorcode;
         } 
@@ -2311,13 +2312,13 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    OVData.writeEDILog(c_out, "INFO", "Export"); 
-                    OVData.CreateFreightEDIRecs(c_out, nbr); 
+                    EDData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.CreateFreightEDIRecs(c_out, nbr); 
 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        OVData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + c_in + " / " + doctype);
+                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + c_in + " / " + doctype);
                         errorcode = 3;
                         MainFrame.bslog(ex);
                     }
@@ -2326,7 +2327,7 @@ public class EDI {
         
         // now lets set the order issourced flag if errorcode still equals 0
         if (errorcode == 0) {
-           // OVData.updateOrderSourceFlag(nbr);
+           // EDData.updateOrderSourceFlag(nbr);
         }
         
         return errorcode;
@@ -2341,8 +2342,8 @@ public class EDI {
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
-        String[] defaults = OVData.getEDITPDefaults(doctype, sndid, rcvid);
-        ArrayList<String> attrs = OVData.getEDIAttributesList(doctype, sndid, rcvid); 
+        String[] defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid);
+        ArrayList<String> attrs = EDData.getEDIAttributesList(doctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);
@@ -2420,7 +2421,7 @@ public class EDI {
          
          String isa16 = ud;
          
-         String gs1 = OVData.getEDIGSTypeFromStds(doctype); 
+         String gs1 = EDData.getEDIGSTypeFromStds(doctype); 
          
          String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
@@ -2488,8 +2489,8 @@ public class EDI {
         
         // 997s are generated first without regards to specific 997 partner relationship setup
         // if relationship record found...this overrides filename, and various ISA and GS attributes as found
-        String[] defaults = OVData.getEDITPDefaults("997", _gs[2], _gs[3]);
-        ArrayList<String> attrs = OVData.getEDIAttributesList("997", _gs[2], _gs[3]); 
+        String[] defaults = EDData.getEDITPDefaults("997", _gs[2], _gs[3]);
+        ArrayList<String> attrs = EDData.getEDIAttributesList("997", _gs[2], _gs[3]); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);
@@ -2540,7 +2541,7 @@ public class EDI {
          
          String isa16 = ud;
          
-         String gs1 = OVData.getEDIGSTypeFromStds("997"); 
+         String gs1 = EDData.getEDIGSTypeFromStds("997"); 
          
          String gs2 = _gs[3];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
@@ -2628,12 +2629,12 @@ public class EDI {
          cc[35] = c[9];
          cc[36] = c[10];
          cc[37] = c[11];
-         OVData.writeEDIIDX(cc);
+         EDData.writeEDIIDX(cc);
          
         try {
             // write to file
-            EDI.writeFile(content, OVData.getEDIOutDir(), filename);
-            Files.copy(new File(OVData.getEDIOutDir() + "/" + filename).toPath(), new File(OVData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            EDI.writeFile(content, EDData.getEDIOutDir(), filename);
+            Files.copy(new File(EDData.getEDIOutDir() + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
             MainFrame.bslog(ex);
@@ -2657,7 +2658,7 @@ public class EDI {
             // in practice...should be only 1 AK1 and 1 or more AK2s
             if (ea[0] != null && ea.length > 2 && ea[0].equals("AK1")) {
                 groupid = ea[2];
-                doctype = OVData.getEDIDocTypeFromStds(ea[1]);
+                doctype = EDData.getEDIDocTypeFromStds(ea[1]);
             }
             if (ea[0] != null && ea.length > 2 && ea[0].equals("AK2")) {
                 String[] temp = new String[]{doctype, groupid, ea[2], c[24]};
@@ -2666,7 +2667,7 @@ public class EDI {
          }
          
          // find edi_idx record of groupid, doctype, and docid ...for each element of docids
-         OVData.updateEDIIDXAcks(docids);
+         EDData.updateEDIIDXAcks(docids);
          if (groupid.isEmpty() || doctype.isEmpty() || docids.size() == 0) {
              return new String[]{"error","unrecognized gscntrlnum or missing doc IDs"};
          } else if (doctype.equals("??")) {
@@ -2686,8 +2687,8 @@ public class EDI {
         // get counter for ediout
         int filenumber = OVData.getNextNbr("ediout");
         
-        String[] defaults = OVData.getEDITPDefaults("997", in_isa[6].trim(), in_isa[8].trim());
-        ArrayList<String> attrs = OVData.getEDIAttributesList("997", in_isa[6].trim(), in_isa[8].trim());
+        String[] defaults = EDData.getEDITPDefaults("997", in_isa[6].trim(), in_isa[8].trim());
+        ArrayList<String> attrs = EDData.getEDIAttributesList("997", in_isa[6].trim(), in_isa[8].trim());
       
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
@@ -2864,7 +2865,7 @@ public class EDI {
     
         
     Path path = Paths.get(dir + "/" + filename);
-    Path archpath = Paths.get(OVData.getEDIOutArch() + "/" + filename);
+    Path archpath = Paths.get(EDData.getEDIOutArch() + "/" + filename);
     
     
     BufferedWriter output;

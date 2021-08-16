@@ -40,6 +40,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.EDData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -2166,7 +2167,7 @@ public class FOMaint extends javax.swing.JPanel {
         if ( col == 0) {
              try {
                  tafilequotes.setText("");
-                  ArrayList<String> segments = OVData.readEDIRawFileIntoArrayList(tablequotes.getValueAt(row, 5).toString(), tablequotes.getValueAt(row, 6).toString());  
+                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tablequotes.getValueAt(row, 5).toString(), tablequotes.getValueAt(row, 6).toString());  
                     for (String segment : segments ) {
                         tafilequotes.append(segment);
                         tafilequotes.append("\n");
@@ -2194,7 +2195,7 @@ public class FOMaint extends javax.swing.JPanel {
         if ( col == 0) {
              try {
                   tafiletenders.setText("");
-                  ArrayList<String> segments = OVData.readEDIRawFileIntoArrayList(tabletenders.getValueAt(row, 5).toString(), tabletenders.getValueAt(row, 6).toString());  
+                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tabletenders.getValueAt(row, 5).toString(), tabletenders.getValueAt(row, 6).toString());  
                     for (String segment : segments ) {
                         tafiletenders.append(segment);
                         tafiletenders.append("\n");
@@ -2222,7 +2223,7 @@ public class FOMaint extends javax.swing.JPanel {
         if ( col == 0) {
              try {
                  tafilestatus.setText("");
-                  ArrayList<String> segments = OVData.readEDIRawFileIntoArrayList(tablestatus.getValueAt(row, 5).toString(), tablestatus.getValueAt(row, 10).toString());  
+                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tablestatus.getValueAt(row, 5).toString(), tablestatus.getValueAt(row, 10).toString());  
                     for (String segment : segments ) {
                         tafilestatus.append(segment);
                         tafilestatus.append("\n");

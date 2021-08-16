@@ -35,7 +35,7 @@ import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import bsmf.MainFrame;
-import static com.blueseer.utl.OVData.writeEDILog;
+import static com.blueseer.utl.EDData.writeEDILog;
 
 
 /**

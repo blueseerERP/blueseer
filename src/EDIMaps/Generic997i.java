@@ -35,7 +35,8 @@ import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.isSet;
 import com.blueseer.edi.EDI;
 import bsmf.MainFrame;
-import static com.blueseer.utl.OVData.writeEDILog;
+import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.writeEDILog;
 
 
 /**
@@ -106,8 +107,8 @@ public class Generic997i {
          
          /* Load Shipper */
          if (! error) {
-             OVData.updateEDILogWith997(ackdocs, ackdoctype, ackgsCtrlNum, control);  
-             OVData.writeEDILog(control, "Info", "");
+             EDData.updateEDILogWith997(ackdocs, ackdoctype, ackgsCtrlNum, control);  
+             EDData.writeEDILog(control, "Info", "");
          }
          
         

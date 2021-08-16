@@ -27,7 +27,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
-import com.blueseer.utl.OVData;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
 import java.awt.Component;
@@ -681,8 +681,8 @@ public EDITransactionBrowse() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
+                        .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -847,7 +847,7 @@ public EDITransactionBrowse() {
                 detailpanel.setVisible(true);
         }
         if ( col == 15) {
-                String ackfile = OVData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
+                String ackfile = EDData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
                 if (! ackfile.isEmpty()) {
                 int k = 10;
                       if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
@@ -856,8 +856,8 @@ public EDITransactionBrowse() {
                      try {
                          tafile.setText("");
                          if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
-                         ArrayList<String> segments = OVData.readEDIRawFileByDoc(ackfile, 
-                                 OVData.getEDIBatchDir(),
+                         ArrayList<String> segments = EDData.readEDIRawFileByDoc(ackfile, 
+                                 EDData.getEDIBatchDir(),
                                  cbshowall.isSelected(),
                                  "0",
                                  "0",
@@ -886,7 +886,7 @@ public EDITransactionBrowse() {
           if ( col == 9 && rbFileLog.isSelected()) {
               int k = 10;
               // try to get delimiter from edi_idx (edx_comkey)
-              String[] p = OVData.getEDIDocPositionEDIIDXcomkey(tablereport.getValueAt(row, 2).toString());
+              String[] p = EDData.getEDIDocPositionEDIIDXcomkey(tablereport.getValueAt(row, 2).toString());
               if (! p[4].isEmpty()) {
                k = Integer.valueOf(p[4]);
               }
@@ -898,8 +898,8 @@ public EDITransactionBrowse() {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
-                         OVData.getEDIInArch(),
+                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
+                         EDData.getEDIInArch(),
                          cbshowall.isSelected(),
                          "0",
                          "0",
@@ -925,7 +925,7 @@ public EDITransactionBrowse() {
         }
           if ( (col == 13) && rbDocLog.isSelected()) {
               int k = 10;
-              String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
+              String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
               String end = p[3];  // doc end
               if (tablereport.getValueAt(row, 6).toString().equals("FF")) {
                   end = p[1];   // file end
@@ -936,8 +936,8 @@ public EDITransactionBrowse() {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
-                         OVData.getEDIBatchDir(),
+                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
+                         EDData.getEDIBatchDir(),
                          cbshowall.isSelected(),
                          p[2],
                          end,
@@ -964,7 +964,7 @@ public EDITransactionBrowse() {
           
          if ( (col == 14) && rbDocLog.isSelected()) {
               int k = 10;
-               String[] p = OVData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
+               String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
              
             //  if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
             //  k = Integer.valueOf(tbsegdelim.getText());
@@ -972,8 +972,8 @@ public EDITransactionBrowse() {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
-                 ArrayList<String> segments = OVData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
-                         OVData.getEDIBatchDir(),
+                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
+                         EDData.getEDIBatchDir(),
                          cbshowall.isSelected(),
                          p[0],
                          p[1],
@@ -1047,10 +1047,10 @@ public EDITransactionBrowse() {
         }
         for (int i : rows) {
             if (tablereport.getValueAt(i, 1) != null && tablereport.getValueAt(i, 2) != null ) {
-                String batch = OVData.getEDIBatchFromedi_file(tablereport.getValueAt(i,2).toString());
+                String batch = EDData.getEDIBatchFromedi_file(tablereport.getValueAt(i,2).toString());
                 if (! batch.isEmpty())
                     try {
-                        batch = OVData.getEDIBatchDir() + "/" + batch; 
+                        batch = EDData.getEDIBatchDir() + "/" + batch; 
                        String[] m = EDI.processFile(batch, "", "", "", false, true, Integer.valueOf(tablereport.getValueAt(i, 2).toString()), Integer.valueOf(tablereport.getValueAt(i, 1).toString()));
                        bsmf.MainFrame.show("reprocess complete: " + m[0] + "/" + m[1]);
                     } catch (IOException ex) {
