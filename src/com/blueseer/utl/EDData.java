@@ -66,9 +66,9 @@ public class EDData {
     
        
     public static boolean addEDIAttributeRecord(String sndid, String rcvid, String doc, String key, String value) {
-                 boolean myreturn = false;
-                  try {
-            Class.forName(driver).newInstance();
+        boolean myreturn = false;
+          try {
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -357,11 +357,12 @@ public class EDData {
              String [] delimiters = new String[3];  // will hold 3 elements.... sd, ed, ud
            
             try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + entity + "'" + 
                         " AND edi_doc = " + "'" + doctype + "'" + ";");
@@ -370,12 +371,13 @@ public class EDData {
                        delimiters[1] = Character.toString((char) res.getInt("edi_eledelim") );
                        delimiters[2] = Character.toString((char) res.getInt("edi_subdelim") );
                     }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -389,11 +391,12 @@ public class EDData {
         ArrayList<String> keys = new ArrayList<String>();  
         ArrayList<String[]> x = new ArrayList<String[]>();
             try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 
                 res = st.executeQuery("select * from edi_doc  " +
                         " where edd_enabled = '1' "); 
@@ -416,12 +419,13 @@ public class EDData {
                     hm.put(z, xcopy);
                     x.clear();
                 }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -434,11 +438,12 @@ public class EDData {
         
         ArrayList<String[]> x = new ArrayList<String[]>();
             try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                     res = st.executeQuery("select * from edi_docdet " +
                             " where edid_enabled = '1' " +
                             " and edid_role = 'data' " +
@@ -456,12 +461,13 @@ public class EDData {
                            };
                            x.add(s);
                         }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -474,11 +480,12 @@ public class EDData {
     public static String getEDIFFLandmark(String id) {
              String x = "";
             try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select edd_landmark from edi_doc  " +
                               " where edd_id = " + "'" + id + "'" + 
@@ -486,12 +493,13 @@ public class EDData {
                     while (res.next()) {
                        x = res.getString("edd_landmark");
                     }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -503,11 +511,12 @@ public class EDData {
     public static String getEDIFFDocType(String id) {
              String x = "";
             try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select edd_type from edi_doc  " +
                               " where edd_id = " + "'" + id + "'" + 
@@ -515,12 +524,13 @@ public class EDData {
                     while (res.next()) {
                        x = res.getString("edd_type");
                     }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -543,11 +553,12 @@ public class EDData {
                     
              String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","",""};
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select * from edi_mstr where " + 
                         " edi_doc = " + "'" + doctype + "'" 
@@ -575,11 +586,13 @@ public class EDData {
                         mystring[17] = res.getString("edi_ofs");
                     }
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -593,11 +606,12 @@ public class EDData {
            
              ArrayList<String> x = new ArrayList<String>();
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select * from edi_attr where exa_sndid = " + "'" + sndid + "'" + 
                         " AND exa_rcvid = " + "'" + rcvid + "'" + 
@@ -607,11 +621,13 @@ public class EDData {
                        x.add(res.getString("exa_key") + ":" + res.getString("exa_value"));
                     }
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -626,11 +642,12 @@ public class EDData {
                     
              String[] mystring = new String[15];
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + OVData.getDefaultSite() + "'" + 
                         " AND edi_doc = " + "'" + "997" + "'" + ";");
@@ -652,11 +669,13 @@ public class EDData {
                         mystring[14] = res.getString("edi_dir");
                     }
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -670,11 +689,12 @@ public class EDData {
       
            String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edi_map from edi_mstr where  " + 
                         " edi_doc = " + "'" + doctype + "'" + 
@@ -686,10 +706,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -702,11 +725,12 @@ public class EDData {
       
            String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edi_filepath from edi_mstr where " + 
                         " edi_sndgs = " + "'" + sndid + "'" +
@@ -718,10 +742,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -733,11 +760,12 @@ public class EDData {
     public static String getEDIFuncAck(String doctype, String sndid, String rcvid) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edi_fa_required from edi_mstr where edi_sndgs = " + "'" + sndid + "'" + 
                         " AND edi_rcvgs = " + "'" + rcvid + "'" + 
@@ -748,10 +776,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -763,11 +794,12 @@ public class EDData {
     public static ArrayList getEDIUniqueTPID() {
        ArrayList mylist = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edi_sndisa from edi_mstr group by edi_sndisa order by edi_sndisa; ");
                while (res.next()) {
@@ -775,10 +807,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -790,11 +825,12 @@ public class EDData {
     public static ArrayList getEDIPartners() {
        ArrayList mylist = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edp_id from edp_partner order by edp_id; ");
                while (res.next()) {
@@ -802,10 +838,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -817,11 +856,12 @@ public class EDData {
     public static String getEDIPartnerFromAlias(String alias) {
        String x = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edp_id from edp_partner " +
                         " inner join edpd_partner on edpd_parent = edp_id " +
@@ -832,10 +872,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -847,11 +890,12 @@ public class EDData {
     public static String getEDICustFromSenderISA(String doctype, String sndid, String rcvid) {
              String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                    
                       res = st.executeQuery("select * from edi_mstr where edi_sndgs = " + "'" + sndid.trim() + "'" + 
                         " AND edi_rcvgs = " + "'" + rcvid + "'" +
@@ -861,11 +905,13 @@ public class EDData {
                        mystring = res.getString("edi_id");
                     }
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -878,11 +924,12 @@ public class EDData {
     public static String getEDIDocTypeFromStds(String gs) {
        String x = "??";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select eds_doc from edi_stds " +
                         " where eds_gs = " + "'" + gs + "'" + 
@@ -892,10 +939,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -907,11 +957,12 @@ public class EDData {
     public static String getEDIGSTypeFromStds(String doc) {
        String x = "??";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select eds_gs from edi_stds " +
                         " where eds_doc = " + "'" + doc + "'" + 
@@ -921,10 +972,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1075,11 +1129,12 @@ public class EDData {
     public static String getEDIOutDir() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_outdir from edi_ctrl ;");
                while (res.next()) {
@@ -1087,10 +1142,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1102,11 +1160,12 @@ public class EDData {
     public static String getEDIBatchDir() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_batch from edi_ctrl ;");
                while (res.next()) {
@@ -1114,10 +1173,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1129,11 +1191,12 @@ public class EDData {
     public static String getEDIStructureDir() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_structure from edi_ctrl ;");
                while (res.next()) {
@@ -1141,10 +1204,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1157,11 +1223,12 @@ public class EDData {
     public static String getEDIInDir() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_indir from edi_ctrl ;");
                while (res.next()) {
@@ -1169,10 +1236,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1184,11 +1254,12 @@ public class EDData {
     public static String getEDIInArch() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_inarch from edi_ctrl ;");
                while (res.next()) {
@@ -1196,10 +1267,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1211,11 +1285,12 @@ public class EDData {
     public static String getEDIErrorDir() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_errordir from edi_ctrl ;");
                while (res.next()) {
@@ -1223,10 +1298,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1239,11 +1317,12 @@ public class EDData {
     public static String getEDIOutArch() {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_outarch from edi_ctrl ;");
                while (res.next()) {
@@ -1251,10 +1330,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1266,11 +1348,12 @@ public class EDData {
     public static boolean isEDIArchFlag() {
        boolean isArchive = true;
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_archyesno from edi_ctrl ;");
                while (res.next()) {
@@ -1278,10 +1361,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1293,11 +1379,12 @@ public class EDData {
     public static boolean isEDIDeleteFlag() {
        boolean isDelete = true;
         try{
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 res = st.executeQuery("select edic_delete from edi_ctrl ;");
                while (res.next()) {
@@ -1305,10 +1392,13 @@ public class EDData {
                 }
                
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1320,10 +1410,12 @@ public class EDData {
       
     public static void updateEDILogWith997(ArrayList<String> docs, String ackdoctype, String ackgsctrlnum, String[] control) {
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
+                
                 // control = senderid + "," + doctype + "," + controlnum + "," + stctrlnum + "," + filename + "," + gsctrlnum; 
                 String[] c = control;
                 for (String doc : docs) {
@@ -1337,9 +1429,12 @@ public class EDData {
                             + ";");
                 }
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1349,10 +1444,12 @@ public class EDData {
       
     public static void writeEDILog(String[] control, String severity, String message) {
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
+                
                 String[] c = control;
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
@@ -1385,10 +1482,11 @@ public class EDData {
      
     public static void writeEDIFileLog(String[] control) {
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
+                
                 String[] c = control;
               
                         st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_batch, edf_dir, edf_status ) "
@@ -1401,9 +1499,11 @@ public class EDData {
                             + ")"
                             + ";");
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1412,11 +1512,12 @@ public class EDData {
     public static void updateEDIFileLogStatus(String comkey, String sender, String filetype, String doctype) {
         String x = "success";  
         try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 
                 res = st.executeQuery("select elg_severity from edi_log " +
                         " where elg_comkey = " + "'" + comkey + "'" + ";");
@@ -1444,11 +1545,12 @@ public class EDData {
     public static String getEDIBatchFromedi_file(String comkey) {
         String x = "";
         try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 res = st.executeQuery("select edf_batch from edi_file where " +
@@ -1458,9 +1560,12 @@ public class EDData {
                    x = res.getString("edf_batch");
                 }    
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1470,11 +1575,12 @@ public class EDData {
     public static String getEDIAckFileFromEDIIDX(String key) {
         String x = "";
         try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 res = st.executeQuery("select edx_ackfile from edi_idx where " +
@@ -1484,9 +1590,12 @@ public class EDData {
                    x = res.getString("edx_ackfile");
                 }    
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1496,11 +1605,12 @@ public class EDData {
     public static String[] getEDIDocPositionEDIIDX(String key) {
         String[] x = new String[]{"","","","",""};
         try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                  res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
@@ -1514,9 +1624,12 @@ public class EDData {
                    x[4] = res.getString("edx_segdelim");
                 }    
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1526,11 +1639,12 @@ public class EDData {
     public static String[] getEDIDocPositionEDIIDXcomkey(String comkey) {
         String[] x = new String[]{"","","","",""};
         try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                  res = st.executeQuery("select edx_isastart, edx_isaend, edx_docstart, edx_docend, edx_segdelim from edi_idx where " +
@@ -1544,9 +1658,12 @@ public class EDData {
                    x[4] = res.getString("edx_segdelim");
                 }    
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1557,10 +1674,11 @@ public class EDData {
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
+                
                 
                       if (dbtype.equals("sqlite")) {
                         st.executeUpdate("insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
@@ -1668,9 +1786,11 @@ public class EDData {
                         }
                         
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1680,10 +1800,11 @@ public class EDData {
     public static void updateEDIIDX(int key, String[] c) {
             
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
+                
                 
                      
                     st.executeUpdate("update edi_idx set " +
@@ -1724,9 +1845,11 @@ public class EDData {
                             ";");
                         
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1736,10 +1859,11 @@ public class EDData {
     public static void updateEDIIDXStatus(int key, String status) {
             
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
+                
                 
                      
                     st.executeUpdate("update edi_idx set " +
@@ -1748,9 +1872,11 @@ public class EDData {
                             ";");
                         
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1760,10 +1886,11 @@ public class EDData {
     public static void updateEDIIDXAcks(ArrayList<String[]> keys) {
             // keys is a string[] with doctype, groupctrlnum, docctrlnum, ackfile 
           try {
-           Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
+                
                 
                     for (String[] key : keys) { 
                     st.executeUpdate("update edi_idx set " +
@@ -1776,9 +1903,11 @@ public class EDData {
                     }
                         
             } catch (SQLException s) {
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1891,12 +2020,13 @@ public class EDData {
           
           try {
 
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1999,10 +2129,13 @@ public class EDData {
                     isError = true;
                 }
             } catch (SQLException s) {
-                isError = true;
                 MainFrame.bslog(s);
+                isError = true;
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2013,12 +2146,13 @@ public class EDData {
        public static void CreateFOTDETFrom990i(String[] control, String nbr, String scac, String yesno, String reasoncode ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2057,8 +2191,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2067,12 +2204,13 @@ public class EDData {
         public static void CreateFOTDETFrom204i(String[] control, String nbr, String remarks, String custfo ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2097,8 +2235,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2107,12 +2248,13 @@ public class EDData {
        public static void CreateFOTDETFrom220i(String[] control, String nbr, String scac, String yesno, String remarks, String amount ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2149,8 +2291,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2160,12 +2305,13 @@ public class EDData {
            String fo = "";           
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2217,8 +2363,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2229,12 +2378,13 @@ public class EDData {
            String fo = "";           
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 String status = "";
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2258,8 +2408,11 @@ public class EDData {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2273,12 +2426,13 @@ public class EDData {
                 String units, String boxes, String weight, String weightuom, String ref, String remarks ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2321,8 +2475,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2331,12 +2488,13 @@ public class EDData {
        public static void CreateFOTDETFrom214i(String[] control, String nbr, String scac, String pronbr, String status, String remarks, String lat, String lon, String equipmentnbr, String equipmenttype, String apptdate, String appttime ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2385,8 +2543,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2395,12 +2556,13 @@ public class EDData {
        public static void CreateFreightEDIRecs(String[] c, String nbr ) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2422,8 +2584,11 @@ public class EDData {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2435,12 +2600,13 @@ public class EDData {
           
           try {
 
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2543,10 +2709,13 @@ public class EDData {
                     isError = true;
                 }
             } catch (SQLException s) {
-                isError = true;
                 MainFrame.bslog(s);
+                isError = true;
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2556,12 +2725,13 @@ public class EDData {
       public static void CreateSalesOrderDet(String nbr, String billto, String part, String custpart, String skupart, String po, String qty, String listprice, String discpercent, String netprice, String duedate, String ref, String line) {
            try {
 
-         Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
           
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -2586,10 +2756,13 @@ public class EDData {
                             + ")"
                             + ";");
                 } // if proceed
-            } catch (SQLException s) {
+            }  catch (SQLException s) {
                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2602,12 +2775,12 @@ public class EDData {
           String line = "";
           try {
 
-            Class.forName(driver).newInstance();
+            Class.forName(driver);
             con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 
                 // determine sales order number from shipto and blanket type  NOTE:  shipto/blanket should be unique
@@ -2638,13 +2811,16 @@ public class EDData {
                    }
                }
                
-              if (proceed)
+            if (proceed)
                   myreturn = order + "," + line;
               
-            } catch (SQLException s) {
+            }  catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

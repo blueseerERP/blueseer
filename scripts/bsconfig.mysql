@@ -5,3 +5,6 @@ PASS=bspasswd
 IP=localhost
 PORT=3306
 DRIVER=com.mysql.cj.jdbc.Driver
+SSHLPORT=55555
+SSHRPORT=3306
+SSHRHOST=000.000.000.000
