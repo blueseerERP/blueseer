@@ -1506,7 +1506,7 @@ public class Scheduler extends javax.swing.JPanel {
     }//GEN-LAST:event_cbclosedActionPerformed
 
     private void jcPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jcPropertyChange
-       if (! evt.getPropertyName().toLowerCase().equals("ancestor")) {
+       if (evt.getOldValue() != null && evt.getNewValue() != null && ! evt.getPropertyName().toLowerCase().equals("ancestor")) {
            String[] o = evt.getOldValue().toString().split(",");
            String[] n = evt.getNewValue().toString().split(",");
            
