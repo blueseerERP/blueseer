@@ -4,5 +4,9 @@
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
-patch=0
+#patch=0
 # First release of 5.2
+patch=1
+# JCalendar null issue on getOldValue() getNewValue() return values
+# This was causing the Scheduler menu to free upon initial invocation
+# Problem appears to stem from JRE 8 to JRE 11 migration
