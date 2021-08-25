@@ -94,8 +94,8 @@
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">
 	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=en"/>
-	    <jvmarg value="-Duser.country=US"/>
+	    <jvmarg value="-Duser.language=fr"/>
+	    <jvmarg value="-Duser.country=FR"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
