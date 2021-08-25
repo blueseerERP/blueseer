@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -766,8 +767,31 @@ public class BlueSeerUtils {
 	}
 }
   
+     public static String getMessageTag(int key) {
+         String tag = "";
+          if (tags.containsKey("global.message." + key)) {
+            tag = tags.getString("global.message." + key);
+          }
+         return tag;
+     }
     
+     public static String getGlobalLabelTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.label." + key)) {
+            tag = tags.getString("global.label." + key);
+          }
+         return tag;
+     }
     
+     public static String getClassLabelTag(String key, String thisclass) {
+         String tag = "";
+          if (tags.containsKey(thisclass + ".label." + key)) {
+            tag = tags.getString(thisclass + ".label." + key);
+          }
+         return tag;
+     }
+    
+     
      public static void startTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);

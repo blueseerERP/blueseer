@@ -46,6 +46,9 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -527,9 +530,9 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(luModel.getRowCount() + " " + getMessageTag(1002));
         }
         }
         };
@@ -549,7 +552,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Acct", "Description"); 
+        callDialog(getClassLabelTag("lblaccount", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
         
         
     }
@@ -784,19 +787,19 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
 
     private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
         if (ddtype.getSelectedItem().toString().equals("E")) {
-            lbaccountname.setText("Expense Account");
+            lbaccountname.setText(getGlobalLabelTag("ExpenseType"));
         } else if (ddtype.getSelectedItem().toString().equals("A")) {
-            lbaccountname.setText("Asset Account");
+            lbaccountname.setText(getGlobalLabelTag("AssetType"));
         } else if (ddtype.getSelectedItem().toString().equals("I")) {
-            lbaccountname.setText("Income Account");
+            lbaccountname.setText(getGlobalLabelTag("IncomeType"));
         } else if (ddtype.getSelectedItem().toString().equals("L")) {
-            lbaccountname.setText("Liability Account");
+            lbaccountname.setText(getGlobalLabelTag("LiabilityType"));
         } else if (ddtype.getSelectedItem().toString().equals("O")) {
-            lbaccountname.setText("Owners Equity Account");
+            lbaccountname.setText(getGlobalLabelTag("OwnersEquityType"));
         } else if (ddtype.getSelectedItem().toString().equals("M")) {
-            lbaccountname.setText("Miscellaneous Account");    
+            lbaccountname.setText(getGlobalLabelTag("MiscellaneousType"));    
         } else {
-            lbaccountname.setText("Uknown Account Type");
+            lbaccountname.setText(getGlobalLabelTag("UnknownAccountType"));
         }
     }//GEN-LAST:event_ddtypeActionPerformed
 
@@ -814,7 +817,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         if (x.equals("error")) {
             tbkey.setText("");
             tbkey.setBackground(Color.yellow);
-            bsmf.MainFrame.show("non-numeric in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbkey.requestFocus();
         } else {
             tbkey.setText(x);
