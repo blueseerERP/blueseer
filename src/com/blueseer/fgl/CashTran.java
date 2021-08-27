@@ -1097,6 +1097,8 @@ public class CashTran extends javax.swing.JPanel {
                 DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
                     
                 curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+                
                 String site = OVData.getDefaultSite();   
                 String cashacct = OVData.getDefaultBankAcct(OVData.getDefaultARBank());
                 String cc = OVData.getDefaultCC();
@@ -1108,13 +1110,16 @@ public class CashTran extends javax.swing.JPanel {
                        
                           // Credit Income Account
                        st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
                         + " values ( " 
                         + "'" + incomeTable.getValueAt(j, 0).toString() + "'" + ","
                         + "'" + incomeTable.getValueAt(j, 5).toString() + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
                         + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString()) * -1) + "'" + ","
+                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString()) * -1) + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","        
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + "JL" + "'" + ","
@@ -1126,13 +1131,16 @@ public class CashTran extends javax.swing.JPanel {
                     
                        // Debit Cash Account
                         st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
                         + " values ( " 
                         + "'1'" + ","
                         + "'" + cashacct + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
                         + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString())) + "'" + ","
+                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString())) + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","    
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + "JL" + "'" + ","
