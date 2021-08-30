@@ -28,7 +28,7 @@ LedgerBalanceExport,,com.blueseer.fgl.LedgerBalanceExport,JMenuItem,glbe
 About,,com.blueseer.adm.AboutPanel,JMenuItem,about
 SysInfo,,com.blueseer.adm.AboutPanel,JMenuItem,sysi
 AcctBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,accb
-AcctMaint,,com.blueseer.fgl.LedgerAcctMstrPanel,JMenuItem,accm
+AcctMaint,,com.blueseer.fgl.AcctMaint,JMenuItem,accm
 ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
 BOMMaint,,com.blueseer.inv.BOMMaintPanel,JMenuItem,bomm
 BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt

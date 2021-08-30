@@ -83,7 +83,7 @@ com.blueseer.fgl.GLTranMaint,,1
 com.blueseer.fgl.GLTranRpt1,,1
 com.blueseer.fgl.IncomeStatementRpt1,,1
 com.blueseer.fgl.IncomeStatementRptYear,,1
-com.blueseer.fgl.LedgerAcctMstrPanel,,1
+com.blueseer.fgl.AcctMaint,,1
 com.blueseer.fgl.LedgerBalanceExport,,1
 com.blueseer.fgl.PostGLPanel,,1
 com.blueseer.fgl.TaxMaint,,1
