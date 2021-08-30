@@ -598,7 +598,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        panelmaint.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Maintenance"));
         panelmaint.setName("panelmaint"); // NOI18N
 
         lblaccount.setText("Account");
@@ -708,7 +707,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(panelmaintLayout.createSequentialGroup()
                             .addComponent(btdelete)
@@ -723,7 +721,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                                     .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbdisplay))))
+                            .addComponent(cbdisplay)))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
