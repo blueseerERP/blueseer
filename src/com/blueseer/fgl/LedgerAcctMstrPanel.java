@@ -44,6 +44,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData.AcctMstr;
+import static com.blueseer.fgl.fglData.addAcctMstr;
+import static com.blueseer.fgl.fglData.updateAcctMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
@@ -412,85 +415,27 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
       return m;
     }
     
+    public AcctMstr createRecord() {
+        AcctMstr am = new AcctMstr(tbkey.getText().toString(),
+                tbdesc.getText().toString().replace("'", "").toUpperCase(),
+                ddtype.getSelectedItem().toString(),
+                ddcur.getSelectedItem().toString(),
+                BlueSeerUtils.boolToInt(cbdisplay.isSelected())
+                );
+        return am;
+    }
+       
     public String[] addRecord(String[] key) {
          String[] m = new String[2];
-         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-              
-                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
-                            + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcur.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"        
-                            + ")"
-                            + ";");
-                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-               
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
+         m = addAcctMstr(createRecord());
+         initvars(null);
          return m;
     }
-    
+        
     public String[] updateRecord(String[] key) {
          String[] m = new String[2];
-          try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                        st.executeUpdate("update ac_mstr set "
-                            + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
-                            + " ac_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + " ac_cur = " + "'" + ddcur.getSelectedItem().toString() + "'" + ","
-                            + " ac_display = " + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"         
-                            + " where ac_id = " + "'" + tbkey.getText().toString() + "'" 
-                            + ";");
-                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-          
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
+         m = updateAcctMstr(createRecord());
+         initvars(null);
          return m;
     }
     
@@ -568,6 +513,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         
     }
 
+    public record Vehicle(String brand, String licensePlate) {}
     
     /**
      * This method is called from within the constructor to initialize the form.
