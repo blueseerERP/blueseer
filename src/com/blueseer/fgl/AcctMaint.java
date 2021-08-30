@@ -83,7 +83,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer {
+public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // global variable declarations
@@ -91,7 +91,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
     
    // global datatablemodel declarations   
    
-    public LedgerAcctMstrPanel() {
+    public AcctMaint() {
         initComponents();
         setLanguageTags(this);
     }
@@ -513,7 +513,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         
     }
 
-    public record Vehicle(String brand, String licensePlate) {}
     
     /**
      * This method is called from within the constructor to initialize the form.
