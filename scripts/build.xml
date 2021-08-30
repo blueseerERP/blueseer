@@ -33,8 +33,14 @@
     </target>
 
     <!-- Compiles the java code (including the usage of library for JUnit -->
+    <property name="JDK16dir" location="C:\java\jdk-16.0.2+7" />
+    <property name="javac16" location="${JDK16dir}/bin/javac" />
+    <target name="compile16" depends="clean, makedir">
+        <javac executable="${javac1.6}" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        </javac>
+    </target>
     <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        <javac  srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
 
@@ -102,6 +108,9 @@
 
 
     <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+    <target name="main16" depends="compile16, jar">
         <description>Main target</description>
     </target>
 
