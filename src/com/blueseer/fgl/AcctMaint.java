@@ -47,6 +47,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData.AcctMstr;
 import static com.blueseer.fgl.fglData.addAcctMstr;
 import static com.blueseer.fgl.fglData.deleteAcctMstr;
+import static com.blueseer.fgl.fglData.getAcctMstr;
 import static com.blueseer.fgl.fglData.updateAcctMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -62,6 +63,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -84,7 +86,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
+public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {  
 
     
     // global variable declarations
@@ -312,19 +314,15 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
      
     public boolean validateInput(String x) {
@@ -378,52 +376,24 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
     }
    
     public String[] getRecord(String[] key) {
-       String[] m = new String[2];
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from ac_mstr where ac_id = " + "'" + key[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("ac_desc"));
-                    tbkey.setText(res.getString("ac_id"));
-                    ddcur.setSelectedItem(res.getString("ac_cur"));
-                    cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("ac_display")));
-                    ddtype.setSelectedItem(res.getString("ac_type"));
-                }
-              
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+        AcctMstr x = getAcctMstr(key);
+        tbdesc.setText(x.desc());
+        tbkey.setText(x.id());
+        ddcur.setSelectedItem(x.currency());
+        cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbdisplay())));
+        ddtype.setSelectedItem(x.type());
+        setAction(x.m());
+        return x.m();
     }
     
     public AcctMstr createRecord() {
-        AcctMstr am = new AcctMstr(tbkey.getText().toString(),
+        AcctMstr x = new AcctMstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toString().replace("'", "").toUpperCase(),
                 ddtype.getSelectedItem().toString(),
                 ddcur.getSelectedItem().toString(),
                 BlueSeerUtils.boolToInt(cbdisplay.isSelected())
                 );
-        return am;
+        return x;
     }
        
     public String[] addRecord(String[] key) {
@@ -487,7 +457,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblaccount", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
         
         
     }
@@ -503,7 +473,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
     private void initComponents() {
 
         panelmaint = new javax.swing.JPanel();
-        lblaccount = new javax.swing.JLabel();
+        lblid = new javax.swing.JLabel();
         lbldesc = new javax.swing.JLabel();
         ddcur = new javax.swing.JComboBox();
         ddtype = new javax.swing.JComboBox();
@@ -524,8 +494,8 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
 
         panelmaint.setName("panelmaint"); // NOI18N
 
-        lblaccount.setText("Account");
-        lblaccount.setName("lblaccount"); // NOI18N
+        lblid.setText("Account");
+        lblid.setName("lblid"); // NOI18N
 
         lbldesc.setText("Desc");
         lbldesc.setName("lbldesc"); // NOI18N
@@ -617,7 +587,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
             .addGroup(panelmaintLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblaccount)
+                    .addComponent(lblid)
                     .addComponent(lbldesc)
                     .addComponent(lbltype)
                     .addComponent(lblcurrency))
@@ -656,7 +626,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblaccount))
+                        .addComponent(lblid))
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
@@ -778,9 +748,9 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox ddcur;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JLabel lbaccountname;
-    private javax.swing.JLabel lblaccount;
     private javax.swing.JLabel lblcurrency;
     private javax.swing.JLabel lbldesc;
+    private javax.swing.JLabel lblid;
     private javax.swing.JLabel lbltype;
     private javax.swing.JPanel panelmaint;
     private javax.swing.JTextField tbdesc;

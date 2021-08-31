@@ -64,12 +64,20 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -82,7 +90,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "BegBal", "Activity", "EndBal"})
+                        new String[]{getGlobalColumnTag("detail"), getGlobalColumnTag("account"), getGlobalColumnTag("type"), getGlobalColumnTag("currency"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("beginbalance"), getGlobalColumnTag("activity"), getGlobalColumnTag("endbalance")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -94,7 +102,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     
     
     javax.swing.table.DefaultTableModel mymodelCC = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "BegBal", "Activity", "EndBal"})
+                        new String[]{getGlobalColumnTag("detail"), getGlobalColumnTag("account"), getGlobalColumnTag("type"), getGlobalColumnTag("currency"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("beginbalance"), getGlobalColumnTag("activity"), getGlobalColumnTag("endbalance")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -105,7 +113,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Acct", "CC", "Site", "Ref", "Type", "EffDate", "Desc", "Amt"});
+                        new String[]{getGlobalColumnTag("account"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("site"), getGlobalColumnTag("reference"), getGlobalColumnTag("type"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount")});
     
     
    
@@ -157,8 +165,57 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
      */
     public GLAcctBalRpt2() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
      public void getdetail(String acct, String site, String year, String period) {
       
          modeldetail.setNumRows(0);
@@ -203,7 +260,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Account GL detail");
+                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -255,7 +312,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Account GL detail");
+                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -382,7 +439,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Balance Report"));
+        jPanel1.setName("panelmaint"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -439,6 +496,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Acct");
+        jLabel4.setName("lbltoacct"); // NOI18N
 
         btRun.setText("Run");
         btRun.addActionListener(new java.awt.event.ActionListener() {
@@ -448,14 +506,19 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
 
         jLabel1.setText("From Acct");
+        jLabel1.setName("lblfromacct"); // NOI18N
 
         cbzero.setText("Supress Zeros");
+        cbzero.setName("cbsuppresszeros"); // NOI18N
 
         jLabel3.setText("Period");
+        jLabel3.setName("lblperiod"); // NOI18N
 
         jLabel2.setText("Year");
+        jLabel2.setName("lblyear"); // NOI18N
 
         ddperiod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
         ddperiod.addItemListener(new java.awt.event.ItemListener() {
@@ -471,6 +534,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         });
 
         cbcc.setText("CostCenter");
+        cbcc.setName("cbcostcenter"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -542,10 +606,12 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Activity");
+        jLabel8.setName("lblactivity"); // NOI18N
 
         lblactbal.setText("0");
 
         jLabel7.setText("Beginning Balance");
+        jLabel7.setName("lblbegbalance"); // NOI18N
 
         lblbegbal.setText("0");
 
@@ -553,6 +619,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         lblendbal.setText("0");
 
         EndBal.setText("Ending Balance");
+        EndBal.setName("lblendbalance"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -590,6 +657,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         );
 
         jLabel6.setText("Accout Balance");
+        jLabel6.setName("lblaccountbalance"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -600,7 +668,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -623,7 +691,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                             .addComponent(labeldettotal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -996,7 +1064,7 @@ try {
                 lblactbal.setText(df.format(totactivity));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Acct Bal Report");
+                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
             }
             con.close();
         } catch (Exception e) {

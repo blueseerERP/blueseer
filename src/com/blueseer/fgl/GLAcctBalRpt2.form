@@ -33,11 +33,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Account Balance Report"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmaint" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -48,7 +44,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="163" max="32767" attributes="0"/>
+                          <EmptySpace pref="175" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
@@ -80,7 +76,7 @@
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="tablepanel" pref="371" max="32767" attributes="0"/>
+                  <Component id="tablepanel" pref="393" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -286,6 +282,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Acct"/>
+                <Property name="name" type="java.lang.String" value="lbltoacct" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btRun">
@@ -299,26 +296,31 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Site"/>
+                <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Acct"/>
+                <Property name="name" type="java.lang.String" value="lblfromacct" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbzero">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Supress Zeros"/>
+                <Property name="name" type="java.lang.String" value="cbsuppresszeros" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Period"/>
+                <Property name="name" type="java.lang.String" value="lblperiod" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Year"/>
+                <Property name="name" type="java.lang.String" value="lblyear" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddperiod">
@@ -380,6 +382,7 @@
             <Component class="javax.swing.JCheckBox" name="cbcc">
               <Properties>
                 <Property name="text" type="java.lang.String" value="CostCenter"/>
+                <Property name="name" type="java.lang.String" value="cbcostcenter" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -433,6 +436,7 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Activity"/>
+                <Property name="name" type="java.lang.String" value="lblactivity" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblactbal">
@@ -443,6 +447,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Beginning Balance"/>
+                <Property name="name" type="java.lang.String" value="lblbegbalance" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblbegbal">
@@ -461,6 +466,7 @@
             <Component class="javax.swing.JLabel" name="EndBal">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ending Balance"/>
+                <Property name="name" type="java.lang.String" value="lblendbalance" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -470,6 +476,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Accout Balance"/>
+            <Property name="name" type="java.lang.String" value="lblaccountbalance" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

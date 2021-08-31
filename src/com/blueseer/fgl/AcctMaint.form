@@ -32,7 +32,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lblaccount" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblid" min="-2" max="-2" attributes="0"/>
                       <Component id="lbldesc" min="-2" max="-2" attributes="0"/>
                       <Component id="lbltype" min="-2" max="-2" attributes="0"/>
                       <Component id="lblcurrency" min="-2" max="-2" attributes="0"/>
@@ -81,7 +81,7 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblaccount" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblid" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -121,10 +121,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lblaccount">
+        <Component class="javax.swing.JLabel" name="lblid">
           <Properties>
             <Property name="text" type="java.lang.String" value="Account"/>
-            <Property name="name" type="java.lang.String" value="lblaccount" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbldesc">

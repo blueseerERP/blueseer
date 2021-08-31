@@ -43,6 +43,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -774,6 +775,15 @@ public class BlueSeerUtils {
          return tag;
      }
     
+     public static String getMessageTag(int key, String thisclass) {
+         String tag = "";
+          if (tags.containsKey("global.message." + key)) {
+              tag = MessageFormat.format(tags.getString("global.message." + key), thisclass);
+          }
+         return tag;
+     }
+    
+     
      public static String getGlobalLabelTag(String key) {
          String tag = "";
           if (tags.containsKey("global.label." + key)) {
@@ -782,6 +792,15 @@ public class BlueSeerUtils {
          return tag;
      }
     
+     public static String getGlobalColumnTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.column." + key)) {
+            tag = tags.getString("global.column." + key);
+          }
+         return tag;
+     }
+    
+     
      public static String getClassLabelTag(String key, String thisclass) {
          String tag = "";
           if (tags.containsKey(thisclass + ".label." + key)) {

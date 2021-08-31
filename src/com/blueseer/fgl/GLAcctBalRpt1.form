@@ -167,6 +167,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Date"/>
+            <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dcFrom">
@@ -182,6 +183,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Date"/>
+            <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btRun">
@@ -195,21 +197,25 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Acct"/>
+            <Property name="name" type="java.lang.String" value="lblfromacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Acct"/>
+            <Property name="name" type="java.lang.String" value="lbltoacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="From CC"/>
+            <Property name="name" type="java.lang.String" value="lblfromcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="To CC"/>
+            <Property name="name" type="java.lang.String" value="lbltocc" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -250,6 +256,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Beginning Balance"/>
+            <Property name="name" type="java.lang.String" value="lblbegbalance" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblactbal">
@@ -260,6 +267,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Activity"/>
+            <Property name="name" type="java.lang.String" value="lblactivity" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblendbal">
@@ -273,6 +281,7 @@
         <Component class="javax.swing.JLabel" name="EndBal">
           <Properties>
             <Property name="text" type="java.lang.String" value="Ending Balance"/>
+            <Property name="name" type="java.lang.String" value="lblendbalance" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddacctfrom">
@@ -306,6 +315,7 @@
         <Component class="javax.swing.JCheckBox" name="cbzero">
           <Properties>
             <Property name="text" type="java.lang.String" value="Supress Zeros"/>
+            <Property name="name" type="java.lang.String" value="cbsuppress" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

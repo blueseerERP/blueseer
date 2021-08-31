@@ -51,10 +51,21 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import java.awt.Component;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -64,7 +75,7 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Acct", "Desc", "BegBal", "Activity", "EndBal"});
+                        new String[]{getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("beginbalance"), getGlobalColumnTag("activity"), getGlobalColumnTag("endbalance")});
                 
     
     /**
@@ -72,8 +83,58 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
      */
     public GLAcctBalRpt1() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void initvars(String[] arg) {
         
         mymodel.setNumRows(0);
@@ -143,12 +204,14 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jLabel2.setText("From Date");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("To Date");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
         btRun.addActionListener(new java.awt.event.ActionListener() {
@@ -158,12 +221,16 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Acct");
+        jLabel1.setName("lblfromacct"); // NOI18N
 
         jLabel4.setText("To Acct");
+        jLabel4.setName("lbltoacct"); // NOI18N
 
         jLabel5.setText("From CC");
+        jLabel5.setName("lblfromcc"); // NOI18N
 
         jLabel6.setText("To CC");
+        jLabel6.setName("lbltocc"); // NOI18N
 
         tablereport.setAutoCreateRowSorter(true);
         tablereport.setModel(new javax.swing.table.DefaultTableModel(
@@ -189,17 +256,21 @@ public class GLAcctBalRpt1 extends javax.swing.JPanel {
         lblbegbal.setText("0");
 
         jLabel7.setText("Beginning Balance");
+        jLabel7.setName("lblbegbalance"); // NOI18N
 
         lblactbal.setText("0");
 
         jLabel8.setText("Activity");
+        jLabel8.setName("lblactivity"); // NOI18N
 
         lblendbal.setBackground(new java.awt.Color(195, 129, 129));
         lblendbal.setText("0");
 
         EndBal.setText("Ending Balance");
+        EndBal.setName("lblendbalance"); // NOI18N
 
         cbzero.setText("Supress Zeros");
+        cbzero.setName("cbsuppress"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

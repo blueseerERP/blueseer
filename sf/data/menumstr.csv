@@ -144,7 +144,7 @@ TermsBrowse,Terms Browse,com.blueseer.utl.ReportPanel,JMenuItem,termb
 FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,frtb
 CarrierBrowse,Carrier Browse,com.blueseer.utl.ReportPanel,JMenuItem,carb
 ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
-BankMaint,,com.blueseer.fgl.BankMaintPanel,JMenuItem,bank
+BankMaint,,com.blueseer.fgl.BankMaint,JMenuItem,bank
 ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
 InvoiceBrowse,Invoice Browse,com.blueseer.far.InvoiceBrowsePanel,JMenuItem,invb
 AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,lbla
