@@ -84,6 +84,7 @@
         <Component class="javax.swing.JButton" name="btadd1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btadd1ActionPerformed"/>
@@ -436,6 +437,7 @@
         <Component class="javax.swing.JLabel" name="jLabel28">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Amt"/>
+            <Property name="name" type="java.lang.String" value="lbltotal" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -484,6 +486,7 @@
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
             <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
@@ -602,6 +605,7 @@
             <Component class="javax.swing.JLabel" name="lblentity">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Vendor"/>
+                <Property name="name" type="java.lang.String" value="buy_lblvendor" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddentity">
@@ -619,11 +623,13 @@
             <Component class="javax.swing.JLabel" name="jLabel24">
               <Properties>
                 <Property name="text" type="java.lang.String" value="TransNbr"/>
+                <Property name="name" type="java.lang.String" value="buy_lblnumber" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnewbuy">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="name" type="java.lang.String" value="btnew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewbuyActionPerformed"/>
@@ -632,6 +638,7 @@
             <Component class="javax.swing.JLabel" name="jLabel35">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Date"/>
+                <Property name="name" type="java.lang.String" value="buy_lbldate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbtitle">
@@ -644,6 +651,7 @@
             <Component class="javax.swing.JButton" name="btaddentity">
               <Properties>
                 <Property name="text" type="java.lang.String" value="add new vendor"/>
+                <Property name="name" type="java.lang.String" value="btaddvendor" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddentityActionPerformed"/>
@@ -753,11 +761,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Price"/>
+                    <Property name="name" type="java.lang.String" value="buy_lblprice" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Item Description"/>
+                    <Property name="name" type="java.lang.String" value="buy_lblitem" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbitemservice">
@@ -765,6 +775,7 @@
                 <Component class="javax.swing.JButton" name="btdeleteitem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Del Item"/>
+                    <Property name="name" type="java.lang.String" value="btdeleteitem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteitemActionPerformed"/>
@@ -773,6 +784,7 @@
                 <Component class="javax.swing.JButton" name="btadditem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add Item"/>
+                    <Property name="name" type="java.lang.String" value="btadditem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btadditemActionPerformed"/>
@@ -783,6 +795,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Lot# (optional)"/>
+                    <Property name="name" type="java.lang.String" value="buy_lbllot" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbqty">
@@ -793,6 +806,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Qty"/>
+                    <Property name="name" type="java.lang.String" value="buy_lblqty" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbacct">
@@ -802,6 +816,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="PO# (optional)"/>
+                    <Property name="name" type="java.lang.String" value="buy_lblpo" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbrmks">
@@ -809,6 +824,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Rmks (optional)"/>
+                    <Property name="name" type="java.lang.String" value="buy_lblremarks" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -823,6 +839,7 @@
         <Component class="javax.swing.JLabel" name="jLabel27">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Amt"/>
+            <Property name="name" type="java.lang.String" value="lbltotal" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -954,6 +971,7 @@
             <Component class="javax.swing.JLabel" name="lblentity2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Entity"/>
+                <Property name="name" type="java.lang.String" value="expense_lblentity" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddentityExpense">
@@ -971,11 +989,13 @@
             <Component class="javax.swing.JLabel" name="jLabel26">
               <Properties>
                 <Property name="text" type="java.lang.String" value="TransNbr"/>
+                <Property name="name" type="java.lang.String" value="expense_lblnumber" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnewexpense">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="name" type="java.lang.String" value="btnew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewexpenseActionPerformed"/>
@@ -984,6 +1004,7 @@
             <Component class="javax.swing.JLabel" name="jLabel37">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Date"/>
+                <Property name="name" type="java.lang.String" value="expense_lbldate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbtitle2">
@@ -996,12 +1017,16 @@
             <Component class="javax.swing.JButton" name="btexpenseAddEntity">
               <Properties>
                 <Property name="text" type="java.lang.String" value="add new vendor"/>
+                <Property name="name" type="java.lang.String" value="btaddvendor" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexpenseAddEntityActionPerformed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel7">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="" noResource="true"/>
+              </Properties>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -1103,6 +1128,7 @@
                 <Component class="javax.swing.JLabel" name="lbitem2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Description:"/>
+                    <Property name="name" type="java.lang.String" value="expense_lblacctdesc" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbexpensePrice">
@@ -1113,11 +1139,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel16">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Price"/>
+                    <Property name="name" type="java.lang.String" value="expense_lblprice" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel17">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Expense Account:"/>
+                    <Property name="name" type="java.lang.String" value="expense_lblaccount" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbexpenseDesc">
@@ -1139,6 +1167,7 @@
                 <Component class="javax.swing.JButton" name="btdeleteItemExpense">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Del Item"/>
+                    <Property name="name" type="java.lang.String" value="btdeleteitem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteItemExpenseActionPerformed"/>
@@ -1147,6 +1176,7 @@
                 <Component class="javax.swing.JButton" name="btaddItemExpense">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add Item"/>
+                    <Property name="name" type="java.lang.String" value="btadditem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddItemExpenseActionPerformed"/>
@@ -1157,6 +1187,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel18">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Lot# (optional)"/>
+                    <Property name="name" type="java.lang.String" value="expense_lbllot" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbexpenseQty">
@@ -1174,6 +1205,7 @@
                 <Component class="javax.swing.JButton" name="btexpenseAddAccount">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add Account"/>
+                    <Property name="name" type="java.lang.String" value="btaddaccount" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexpenseAddAccountActionPerformed"/>
@@ -1184,6 +1216,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel15">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Rmks (optional)"/>
+                    <Property name="name" type="java.lang.String" value="expense_lblremarks" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbexpensePO">
@@ -1191,6 +1224,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="PO# (optional)"/>
+                    <Property name="name" type="java.lang.String" value="expense_lblpo" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btLookUpExpAccount">
@@ -1267,6 +1301,7 @@
                 <Component class="javax.swing.JButton" name="btaddexpense">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Commit"/>
+                    <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddexpenseActionPerformed"/>
@@ -1275,6 +1310,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel29">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Total:"/>
+                    <Property name="name" type="java.lang.String" value="lbltotal" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -1345,6 +1381,7 @@
         <Component class="javax.swing.JButton" name="btpayselected">
           <Properties>
             <Property name="text" type="java.lang.String" value="Pay Selected Items"/>
+            <Property name="name" type="java.lang.String" value="btpayselecteditems" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpayselectedActionPerformed"/>
@@ -1385,6 +1422,7 @@
         <Component class="javax.swing.JLabel" name="jLabel33">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Recurring Amount:"/>
+            <Property name="name" type="java.lang.String" value="recurexpense_lbltotalamount" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel10">
@@ -1601,6 +1639,7 @@
                         <Component class="javax.swing.JLabel" name="lbitem3">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Expense Acct"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_lblacct" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="tbrexprice">
@@ -1611,11 +1650,13 @@
                         <Component class="javax.swing.JLabel" name="jLabel22">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Price"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_lblprice" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel23">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Expense Desc"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_lbldescription" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="tbrexpensedesc">
@@ -1636,6 +1677,7 @@
                         <Component class="javax.swing.JButton" name="btrexpadditem">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Add Recur Expense"/>
+                            <Property name="name" type="java.lang.String" value="btaddrecurexpense" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrexpadditemActionPerformed"/>
@@ -1656,6 +1698,7 @@
                         <Component class="javax.swing.JCheckBox" name="cbrexpenabled">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Visble"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_cbvisible" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbrexpenabledActionPerformed"/>
@@ -1666,6 +1709,7 @@
                         <Component class="javax.swing.JLabel" name="jLabel32">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="expID"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_lblexpid" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="ddrexpentity">
@@ -1681,6 +1725,7 @@
                         <Component class="javax.swing.JLabel" name="lblentity3">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="VendorCode"/>
+                            <Property name="name" type="java.lang.String" value="recurexpense_lblvendor" noResource="true"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JButton" name="btaddentity3">
@@ -1713,11 +1758,13 @@
                     <Component class="javax.swing.JLabel" name="jLabel1">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Site"/>
+                        <Property name="name" type="java.lang.String" value="recurexpense_lblsite" noResource="true"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JButton" name="btrexpclear">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Clear"/>
+                        <Property name="name" type="java.lang.String" value="btclear" noResource="true"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrexpclearActionPerformed"/>
@@ -1726,6 +1773,7 @@
                     <Component class="javax.swing.JCheckBox" name="cbrexpshowall">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Show All"/>
+                        <Property name="name" type="java.lang.String" value="recurexpense_cbshowall" noResource="true"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbrexpshowallActionPerformed"/>
@@ -1744,6 +1792,7 @@
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>
             <Property name="text" type="java.lang.String" value="Difference:"/>
+            <Property name="name" type="java.lang.String" value="recurexpense_lbldifference" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbrexpincome">
@@ -1754,11 +1803,13 @@
         <Component class="javax.swing.JLabel" name="jLabel21">
           <Properties>
             <Property name="text" type="java.lang.String" value="Enter Monthly Net Income:"/>
+            <Property name="name" type="java.lang.String" value="recurexpense_lblnetincome" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdateincome">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update Income"/>
+            <Property name="name" type="java.lang.String" value="btupdateincome" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateincomeActionPerformed"/>
@@ -1873,11 +1924,13 @@
             <Component class="javax.swing.JLabel" name="jLabel30">
               <Properties>
                 <Property name="text" type="java.lang.String" value="TransNbr"/>
+                <Property name="name" type="java.lang.String" value="income_lblnumber" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnewincome">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="name" type="java.lang.String" value="btnew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewincomeActionPerformed"/>
@@ -1886,6 +1939,7 @@
             <Component class="javax.swing.JLabel" name="jLabel39">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Date"/>
+                <Property name="name" type="java.lang.String" value="income_lbldate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbtitleIncome">
@@ -1972,6 +2026,7 @@
                 <Component class="javax.swing.JLabel" name="lbitem4">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Description:"/>
+                    <Property name="name" type="java.lang.String" value="income_lbldesc" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbincomeAmount">
@@ -1982,11 +2037,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel20">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Amount"/>
+                    <Property name="name" type="java.lang.String" value="income_lblamount" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel31">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Income Account:"/>
+                    <Property name="name" type="java.lang.String" value="income_lblacct" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbincomeDesc">
@@ -2007,6 +2064,7 @@
                 <Component class="javax.swing.JButton" name="btdeleteItemIncome">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Del Item"/>
+                    <Property name="name" type="java.lang.String" value="btdeleteitem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteItemIncomeActionPerformed"/>
@@ -2015,6 +2073,7 @@
                 <Component class="javax.swing.JButton" name="btaddItemIncome">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add Item"/>
+                    <Property name="name" type="java.lang.String" value="btadditem" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddItemIncomeActionPerformed"/>
@@ -2025,6 +2084,7 @@
                 <Component class="javax.swing.JButton" name="btincomeAddAccount">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add Account"/>
+                    <Property name="name" type="java.lang.String" value="btaddaccount" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btincomeAddAccountActionPerformed"/>
@@ -2035,6 +2095,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel40">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Ref (optional)"/>
+                    <Property name="name" type="java.lang.String" value="income_lblref" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -2101,6 +2162,7 @@
                 <Component class="javax.swing.JButton" name="btaddincome">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Commit"/>
+                    <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddincomeActionPerformed"/>
@@ -2109,6 +2171,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel42">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Total:"/>
+                    <Property name="name" type="java.lang.String" value="income_lbltotal" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

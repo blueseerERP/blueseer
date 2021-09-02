@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -1542,11 +1543,11 @@ public class CashTran extends javax.swing.JPanel {
         } 
         isLoad = true;
         if (jTabbedPane1.getTabCount() == 0) {
-        jTabbedPane1.add("misc expense", expensePanel);
-        jTabbedPane1.add("misc income", incomePanel);
-        jTabbedPane1.add("buy asset", buyPanel);
-        jTabbedPane1.add("sell asset", sellPanel);
-        jTabbedPane1.add("recurring expense", expenseRecurPanel);
+        jTabbedPane1.add(getClassLabelTag("tab1",this.getClass().getSimpleName()), expensePanel);
+        jTabbedPane1.add(getClassLabelTag("tab2",this.getClass().getSimpleName()), incomePanel);
+        jTabbedPane1.add(getClassLabelTag("tab3",this.getClass().getSimpleName()), buyPanel);
+        jTabbedPane1.add(getClassLabelTag("tab4",this.getClass().getSimpleName()), sellPanel);
+        jTabbedPane1.add(getClassLabelTag("tab5",this.getClass().getSimpleName()), expenseRecurPanel);
         } else {
             jTabbedPane1.setSelectedIndex(Integer.valueOf(v));
         }
@@ -2392,6 +2393,7 @@ public class CashTran extends javax.swing.JPanel {
         sellPanel.setPreferredSize(new java.awt.Dimension(785, 561));
 
         btadd1.setText("Commit");
+        btadd1.setName("btcommit"); // NOI18N
         btadd1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadd1ActionPerformed(evt);
@@ -2633,6 +2635,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel28.setText("Total Amt");
+        jLabel28.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout sellPanelLayout = new javax.swing.GroupLayout(sellPanel);
         sellPanel.setLayout(sellPanelLayout);
@@ -2671,6 +2674,7 @@ public class CashTran extends javax.swing.JPanel {
         buyPanel.setPreferredSize(new java.awt.Dimension(798, 561));
 
         btadd.setText("Commit");
+        btadd.setName("btcommit"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -2696,6 +2700,7 @@ public class CashTran extends javax.swing.JPanel {
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         lblentity.setText("Vendor");
+        lblentity.setName("buy_lblvendor"); // NOI18N
 
         ddentity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2704,8 +2709,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel24.setText("TransNbr");
+        jLabel24.setName("buy_lblnumber"); // NOI18N
 
         btnewbuy.setText("New");
+        btnewbuy.setName("btnew"); // NOI18N
         btnewbuy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewbuyActionPerformed(evt);
@@ -2713,10 +2720,12 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel35.setText("Date");
+        jLabel35.setName("buy_lbldate"); // NOI18N
 
         lbtitle.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
         btaddentity.setText("add new vendor");
+        btaddentity.setName("btaddvendor"); // NOI18N
         btaddentity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddentityActionPerformed(evt);
@@ -2730,10 +2739,13 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel6.setText("Price");
+        jLabel6.setName("buy_lblprice"); // NOI18N
 
         jLabel5.setText("Item Description");
+        jLabel5.setName("buy_lblitem"); // NOI18N
 
         btdeleteitem.setText("Del Item");
+        btdeleteitem.setName("btdeleteitem"); // NOI18N
         btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteitemActionPerformed(evt);
@@ -2741,6 +2753,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -2748,6 +2761,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Lot# (optional)");
+        jLabel3.setName("buy_lbllot"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2756,10 +2770,13 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel7.setText("Qty");
+        jLabel7.setName("buy_lblqty"); // NOI18N
 
         jLabel2.setText("PO# (optional)");
+        jLabel2.setName("buy_lblpo"); // NOI18N
 
         jLabel4.setText("Rmks (optional)");
+        jLabel4.setName("buy_lblremarks"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -2899,6 +2916,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel27.setText("Total Amt");
+        jLabel27.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout buyPanelLayout = new javax.swing.GroupLayout(buyPanel);
         buyPanel.setLayout(buyPanelLayout);
@@ -2938,6 +2956,7 @@ public class CashTran extends javax.swing.JPanel {
         dcdateExpense.setDateFormatString("yyyy-MM-dd");
 
         lblentity2.setText("Entity");
+        lblentity2.setName("expense_lblentity"); // NOI18N
 
         ddentityExpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2946,8 +2965,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel26.setText("TransNbr");
+        jLabel26.setName("expense_lblnumber"); // NOI18N
 
         btnewexpense.setText("New");
+        btnewexpense.setName("btnew"); // NOI18N
         btnewexpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewexpenseActionPerformed(evt);
@@ -2955,17 +2976,22 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel37.setText("Date");
+        jLabel37.setName("expense_lbldate"); // NOI18N
 
         lbtitle2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
         btexpenseAddEntity.setText("add new vendor");
+        btexpenseAddEntity.setName("btaddvendor"); // NOI18N
         btexpenseAddEntity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexpenseAddEntityActionPerformed(evt);
             }
         });
 
+        jPanel7.setName(""); // NOI18N
+
         lbitem2.setText("Description:");
+        lbitem2.setName("expense_lblacctdesc"); // NOI18N
 
         tbexpensePrice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2974,8 +3000,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel16.setText("Price");
+        jLabel16.setName("expense_lblprice"); // NOI18N
 
         jLabel17.setText("Expense Account:");
+        jLabel17.setName("expense_lblaccount"); // NOI18N
 
         ddaccountexpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2984,6 +3012,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btdeleteItemExpense.setText("Del Item");
+        btdeleteItemExpense.setName("btdeleteitem"); // NOI18N
         btdeleteItemExpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteItemExpenseActionPerformed(evt);
@@ -2991,6 +3020,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btaddItemExpense.setText("Add Item");
+        btaddItemExpense.setName("btadditem"); // NOI18N
         btaddItemExpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddItemExpenseActionPerformed(evt);
@@ -2998,6 +3028,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel18.setText("Lot# (optional)");
+        jLabel18.setName("expense_lbllot"); // NOI18N
 
         tbexpenseQty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -3008,6 +3039,7 @@ public class CashTran extends javax.swing.JPanel {
         jLabel19.setText("Qty");
 
         btexpenseAddAccount.setText("Add Account");
+        btexpenseAddAccount.setName("btaddaccount"); // NOI18N
         btexpenseAddAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexpenseAddAccountActionPerformed(evt);
@@ -3015,8 +3047,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel15.setText("Rmks (optional)");
+        jLabel15.setName("expense_lblremarks"); // NOI18N
 
         jLabel14.setText("PO# (optional)");
+        jLabel14.setName("expense_lblpo"); // NOI18N
 
         btLookUpExpAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpExpAccount.addActionListener(new java.awt.event.ActionListener() {
@@ -3124,6 +3158,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btaddexpense.setText("Commit");
+        btaddexpense.setName("btcommit"); // NOI18N
         btaddexpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddexpenseActionPerformed(evt);
@@ -3131,6 +3166,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel29.setText("Total:");
+        jLabel29.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -3245,6 +3281,7 @@ public class CashTran extends javax.swing.JPanel {
         expenseRecurPanel.setName("panelmaintrecurexpense"); // NOI18N
 
         btpayselected.setText("Pay Selected Items");
+        btpayselected.setName("btpayselecteditems"); // NOI18N
         btpayselected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpayselectedActionPerformed(evt);
@@ -3274,6 +3311,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel33.setText("Total Recurring Amount:");
+        jLabel33.setName("recurexpense_lbltotalamount"); // NOI18N
 
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -3301,6 +3339,7 @@ public class CashTran extends javax.swing.JPanel {
         jPanel8.setName("panelrecurexpensesub"); // NOI18N
 
         lbitem3.setText("Expense Acct");
+        lbitem3.setName("recurexpense_lblacct"); // NOI18N
 
         tbrexprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -3309,8 +3348,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel22.setText("Price");
+        jLabel22.setName("recurexpense_lblprice"); // NOI18N
 
         jLabel23.setText("Expense Desc");
+        jLabel23.setName("recurexpense_lbldescription"); // NOI18N
 
         ddrexpacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3319,6 +3360,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btrexpadditem.setText("Add Recur Expense");
+        btrexpadditem.setName("btaddrecurexpense"); // NOI18N
         btrexpadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrexpadditemActionPerformed(evt);
@@ -3333,6 +3375,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         cbrexpenabled.setText("Visble");
+        cbrexpenabled.setName("recurexpense_cbvisible"); // NOI18N
         cbrexpenabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbrexpenabledActionPerformed(evt);
@@ -3340,6 +3383,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel32.setText("expID");
+        jLabel32.setName("recurexpense_lblexpid"); // NOI18N
 
         ddrexpentity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3348,6 +3392,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         lblentity3.setText("VendorCode");
+        lblentity3.setName("recurexpense_lblvendor"); // NOI18N
 
         btaddentity3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
         btaddentity3.addActionListener(new java.awt.event.ActionListener() {
@@ -3439,8 +3484,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Site");
+        jLabel1.setName("recurexpense_lblsite"); // NOI18N
 
         btrexpclear.setText("Clear");
+        btrexpclear.setName("btclear"); // NOI18N
         btrexpclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrexpclearActionPerformed(evt);
@@ -3448,6 +3495,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         cbrexpshowall.setText("Show All");
+        cbrexpshowall.setName("recurexpense_cbshowall"); // NOI18N
         cbrexpshowall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbrexpshowallActionPerformed(evt);
@@ -3515,6 +3563,7 @@ public class CashTran extends javax.swing.JPanel {
         jPanel10.add(jPanel1);
 
         jLabel11.setText("Difference:");
+        jLabel11.setName("recurexpense_lbldifference"); // NOI18N
 
         tbrexpincome.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -3523,8 +3572,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel21.setText("Enter Monthly Net Income:");
+        jLabel21.setName("recurexpense_lblnetincome"); // NOI18N
 
         btupdateincome.setText("Update Income");
+        btupdateincome.setName("btupdateincome"); // NOI18N
         btupdateincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateincomeActionPerformed(evt);
@@ -3587,8 +3638,10 @@ public class CashTran extends javax.swing.JPanel {
         dcdateIncome.setDateFormatString("yyyy-MM-dd");
 
         jLabel30.setText("TransNbr");
+        jLabel30.setName("income_lblnumber"); // NOI18N
 
         btnewincome.setText("New");
+        btnewincome.setName("btnew"); // NOI18N
         btnewincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewincomeActionPerformed(evt);
@@ -3596,10 +3649,12 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel39.setText("Date");
+        jLabel39.setName("income_lbldate"); // NOI18N
 
         lbtitleIncome.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
         lbitem4.setText("Description:");
+        lbitem4.setName("income_lbldesc"); // NOI18N
 
         tbincomeAmount.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -3608,8 +3663,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel20.setText("Amount");
+        jLabel20.setName("income_lblamount"); // NOI18N
 
         jLabel31.setText("Income Account:");
+        jLabel31.setName("income_lblacct"); // NOI18N
 
         ddaccountincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3618,6 +3675,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btdeleteItemIncome.setText("Del Item");
+        btdeleteItemIncome.setName("btdeleteitem"); // NOI18N
         btdeleteItemIncome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteItemIncomeActionPerformed(evt);
@@ -3625,6 +3683,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btaddItemIncome.setText("Add Item");
+        btaddItemIncome.setName("btadditem"); // NOI18N
         btaddItemIncome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddItemIncomeActionPerformed(evt);
@@ -3632,6 +3691,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btincomeAddAccount.setText("Add Account");
+        btincomeAddAccount.setName("btaddaccount"); // NOI18N
         btincomeAddAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btincomeAddAccountActionPerformed(evt);
@@ -3639,6 +3699,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel40.setText("Ref (optional)");
+        jLabel40.setName("income_lblref"); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -3718,6 +3779,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btaddincome.setText("Commit");
+        btaddincome.setName("btcommit"); // NOI18N
         btaddincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddincomeActionPerformed(evt);
@@ -3725,6 +3787,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel42.setText("Total:");
+        jLabel42.setName("income_lbltotal"); // NOI18N
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
