@@ -27,6 +27,7 @@ package com.blueseer.fgl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
@@ -94,6 +95,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -345,10 +347,7 @@ public class CashTran extends javax.swing.JPanel {
      */
     public CashTran() {
         initComponents();
-      
-        
-       
-       
+        setLanguageTags(this);
     }
    
     public void calcdiff() {
@@ -489,7 +488,7 @@ public class CashTran extends javax.swing.JPanel {
         isLoad = false;
     }
     
-      public void getHistory(String key) {
+    public void getHistory(String key) {
          
         rexpenseHistoryModel.setRowCount(0);
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1431,7 +1430,7 @@ public class CashTran extends javax.swing.JPanel {
         }
     }
     
-     public void addIncomeAccount(String desc) {
+    public void addIncomeAccount(String desc) {
       //  ddrexpacct.removeAllItems();
       //  ddaccountexpense.removeAllItems();
         try {
@@ -1486,6 +1485,53 @@ public class CashTran extends javax.swing.JPanel {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
+    }
+    
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     
@@ -2142,7 +2188,7 @@ public class CashTran extends javax.swing.JPanel {
     }
 
 
-    
+     
      
       
  
@@ -2342,7 +2388,7 @@ public class CashTran extends javax.swing.JPanel {
         });
         add(jTabbedPane1);
 
-        sellPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        sellPanel.setName("panelmaintsell"); // NOI18N
         sellPanel.setPreferredSize(new java.awt.Dimension(785, 561));
 
         btadd1.setText("Commit");
@@ -2365,11 +2411,12 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane8.setViewportView(detailtable1);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Sell Asset Maintenance"));
+        jPanel4.setName("panelsellsub"); // NOI18N
 
         dcdate1.setDateFormatString("yyyy-MM-dd");
 
         lblentity1.setText("Entity");
+        lblentity1.setName("sell_lblentity"); // NOI18N
 
         ddentity1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2378,8 +2425,10 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel25.setText("TransNbr");
+        jLabel25.setName("sell_lblnumber"); // NOI18N
 
         btnewsell.setText("New");
+        btnewsell.setName("btnew"); // NOI18N
         btnewsell.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewsellActionPerformed(evt);
@@ -2387,10 +2436,12 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel36.setText("Date");
+        jLabel36.setName("sell_lbldate"); // NOI18N
 
         lbtitle1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
         btaddentity1.setText("add new customer");
+        btaddentity1.setName("btaddcustomer"); // NOI18N
         btaddentity1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddentity1ActionPerformed(evt);
@@ -2398,6 +2449,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         lbitem1.setText("Item Nbr");
+        lbitem1.setName("sell_lblitem"); // NOI18N
 
         tbprice1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2406,6 +2458,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel10.setText("Price");
+        jLabel10.setName("sell_lblprice"); // NOI18N
 
         dditem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2414,6 +2467,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btdeleteitem1.setText("Del Item");
+        btdeleteitem1.setName("btdeleteitem"); // NOI18N
         btdeleteitem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteitem1ActionPerformed(evt);
@@ -2421,6 +2475,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         btadditem1.setText("Add Item");
+        btadditem1.setName("btadditem"); // NOI18N
         btadditem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditem1ActionPerformed(evt);
@@ -2428,6 +2483,7 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel12.setText("Lot# (optional)");
+        jLabel12.setName("sell_lbllot"); // NOI18N
 
         tbqty1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2436,10 +2492,13 @@ public class CashTran extends javax.swing.JPanel {
         });
 
         jLabel13.setText("Qty");
+        jLabel13.setName("sell_lblqty"); // NOI18N
 
         jLabel8.setText("PO# (optional)");
+        jLabel8.setName("sell_lblpo"); // NOI18N
 
         jLabel9.setText("Rmks (optional)");
+        jLabel9.setName("sell_lblremarks"); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -2469,7 +2528,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addComponent(dditem1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbacct1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(282, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2597,7 +2656,7 @@ public class CashTran extends javax.swing.JPanel {
             .addGroup(sellPanelLayout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sellPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd1)
@@ -2608,7 +2667,7 @@ public class CashTran extends javax.swing.JPanel {
 
         add(sellPanel);
 
-        buyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        buyPanel.setName("panelmaintbuy"); // NOI18N
         buyPanel.setPreferredSize(new java.awt.Dimension(798, 561));
 
         btadd.setText("Commit");
@@ -2631,7 +2690,7 @@ public class CashTran extends javax.swing.JPanel {
         ));
         jScrollPane7.setViewportView(detailtable);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Buy Asset Maintenance"));
+        jPanel3.setName("panelbuysub"); // NOI18N
         jPanel3.setPreferredSize(new java.awt.Dimension(761, 410));
 
         dcdate.setDateFormatString("yyyy-MM-dd");
@@ -2734,7 +2793,7 @@ public class CashTran extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2772,7 +2831,7 @@ public class CashTran extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btadditem)
                             .addComponent(btdeleteitem))))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -2828,7 +2887,7 @@ public class CashTran extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel35)
                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(25, 25, 25))
         );
@@ -2852,7 +2911,7 @@ public class CashTran extends javax.swing.JPanel {
                 .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btadd))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
             .addComponent(jScrollPane7)
         );
         buyPanelLayout.setVerticalGroup(
@@ -2860,7 +2919,7 @@ public class CashTran extends javax.swing.JPanel {
             .addGroup(buyPanelLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(buyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
@@ -2871,10 +2930,10 @@ public class CashTran extends javax.swing.JPanel {
 
         add(buyPanel);
 
-        expensePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        expensePanel.setName("panelmaintexpense"); // NOI18N
         expensePanel.setPreferredSize(new java.awt.Dimension(730, 561));
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc Expense Maintenance"));
+        jPanel6.setName("panelexpensesub"); // NOI18N
 
         dcdateExpense.setDateFormatString("yyyy-MM-dd");
 
@@ -3183,7 +3242,7 @@ public class CashTran extends javax.swing.JPanel {
 
         add(expensePanel);
 
-        expenseRecurPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        expenseRecurPanel.setName("panelmaintrecurexpense"); // NOI18N
 
         btpayselected.setText("Pay Selected Items");
         btpayselected.addActionListener(new java.awt.event.ActionListener() {
@@ -3192,9 +3251,9 @@ public class CashTran extends javax.swing.JPanel {
             }
         });
 
-        jScrollPane10.setBorder(javax.swing.BorderFactory.createTitledBorder("History Of Payment"));
+        jScrollPane10.setBorder(null);
+        jScrollPane10.setName("panelrecurexpensehistory"); // NOI18N
 
-        recurhisttable.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         recurhisttable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -3218,7 +3277,8 @@ public class CashTran extends javax.swing.JPanel {
 
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.LINE_AXIS));
 
-        jScrollPane11.setBorder(javax.swing.BorderFactory.createTitledBorder("Recurring Expenses"));
+        jScrollPane11.setBorder(null);
+        jScrollPane11.setName("panelrecurexpensetable"); // NOI18N
 
         recurexpensetable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -3238,7 +3298,7 @@ public class CashTran extends javax.swing.JPanel {
         });
         jScrollPane11.setViewportView(recurexpensetable);
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Recurring Expense Maintenance"));
+        jPanel8.setName("panelrecurexpensesub"); // NOI18N
 
         lbitem3.setText("Expense Acct");
 
@@ -3519,10 +3579,10 @@ public class CashTran extends javax.swing.JPanel {
 
         add(expenseRecurPanel);
 
-        incomePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Quick Cash"));
+        incomePanel.setName("panelmaintincome"); // NOI18N
         incomePanel.setPreferredSize(new java.awt.Dimension(730, 561));
 
-        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc Income Maintenance"));
+        jPanel12.setName("panelincomesub"); // NOI18N
 
         dcdateIncome.setDateFormatString("yyyy-MM-dd");
 

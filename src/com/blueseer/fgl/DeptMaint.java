@@ -27,8 +27,11 @@ package com.blueseer.fgl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -50,8 +53,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -62,7 +69,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class DeptMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -70,8 +77,9 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
    // global datatablemodel declarations    
                 
     
-    public DeptMaintPanel() {
+    public DeptMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -222,6 +230,54 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
@@ -258,63 +314,63 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
         
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1025));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (! tbcopacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbcopacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbcopacct.requestFocus();
                     return b;
                 }
                 
                 if (! tblbracct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbracct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tblbracct.requestFocus();
                     return b;
                 }
                 
                 if (! tbbdnacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbdnacct.requestFocus();
                     return b;
                 }
                 
                 if (! tblbrusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrusageacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tblbrusageacct.requestFocus();
                     return b;
                 }
                 
                 if (! tblbrrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrrateacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tblbrrateacct.requestFocus();
                     return b;
                 }
                 
                 if (! tbbdnusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnusageacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbdnusageacct.requestFocus();
                     return b;
                 }
                 
                 if (! tbbdnrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnrateacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Account");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbdnrateacct.requestFocus();
                     return b;
                 }
@@ -543,7 +599,8 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Dept", "Description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldescription", this.getClass().getSimpleName())); 
+         
         
         
     }
@@ -589,9 +646,12 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Department / Cost Center Maintenance"));
+        jPanel1.setName("panelmaint"); // NOI18N
+
+        tbcopacct.setName(""); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -599,14 +659,19 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel2.setText("Description:");
+        jLabel2.setName("lbldescription"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
             }
         });
 
+        tbdesc.setName(""); // NOI18N
+
+        tbkey.setName(""); // NOI18N
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
@@ -614,6 +679,7 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -621,22 +687,39 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("Department:");
+        jLabel1.setName("lblid"); // NOI18N
 
         jLabel3.setText("CostOfOperation Acct:");
+        jLabel3.setName("lblacctcost"); // NOI18N
+
+        tblbracct.setName(""); // NOI18N
+
+        tbbdnacct.setName(""); // NOI18N
+
+        tblbrusageacct.setName(""); // NOI18N
+
+        tblbrrateacct.setName(""); // NOI18N
 
         jLabel4.setText("Labor Acct:");
+        jLabel4.setName("lblacctlbr"); // NOI18N
 
         jLabel5.setText("Burden Acct:");
+        jLabel5.setName("lblacctbdn"); // NOI18N
 
         jLabel6.setText("Labor Usage Var Acct:");
+        jLabel6.setName("lblacctlbrusage"); // NOI18N
 
         jLabel7.setText("Labor Rate Var Acct:");
+        jLabel7.setName("lblacctlbrrate"); // NOI18N
 
         jLabel8.setText("Burden Usage Var Acct:");
+        jLabel8.setName("lblacctbdnusage"); // NOI18N
 
         jLabel9.setText("Burden Rate Var Acct:");
+        jLabel9.setName("lblacctbdnrate"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -644,6 +727,7 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -651,6 +735,7 @@ public class DeptMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setName(""); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
