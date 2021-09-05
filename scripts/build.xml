@@ -10,6 +10,10 @@
     <property name="lib.dir" location="../lib" />
     <property name="classpath.property" 
 	    value="dist/" />
+    <property name="JDK16dir" location="C:\java\jdk-16.0.2+7" />
+    <property name="javac16" location="${JDK16dir}/bin/javac" />
+    <property name="java16" location="${JDK16dir}/bin/java" />
+
 
     <path id="build.classpath">
         <fileset dir="${lib.dir}">
@@ -33,8 +37,12 @@
     </target>
 
     <!-- Compiles the java code (including the usage of library for JUnit -->
+    <target name="compile16" depends="clean, makedir">
+        <javac executable="${javac16}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        </javac>
+    </target>
     <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        <javac  srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
 
@@ -42,7 +50,7 @@
     <!--Creates the deployable jar file  -->
     <target name="jar" depends="compile">
         <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
-		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif" />
+		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
             <manifest>
                 <attribute name="Main-Class" value="bsmf" />
@@ -99,9 +107,40 @@
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
+<target name="run_fr">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
+	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
+    </path>
+    <echo>running in ....${test.dir}</echo>
+    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">
+	    <arg value="-debug"/> 
+	    <jvmarg value="-Duser.language=fr"/>
+	    <jvmarg value="-Duser.country=FR"/>
+	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
+        </java>
+</target>
+<target name="run16">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
+	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
+    </path>
+    <echo>running in ....${test.dir}</echo>
+    <java classname="bsmf.MainFrame" jvm="${java16}" fork="true" classpathref="runtime.path" dir="${test.dir}">
+	    <arg value="-debug"/> 
+	    <jvmarg value="-Duser.language=en"/>
+	    <jvmarg value="-Duser.country=US"/>
+	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
+        </java>
+</target>
 
 
     <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+    <target name="main16" depends="compile16, jar">
         <description>Main target</description>
     </target>
 

@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -105,30 +106,29 @@ public class BlueSeerUtils {
     
     
     
-    public static String addRecordInit = "add mode";
+    public static String addRecordInit = getMessageTag(1005);
+    public static String getRecordSuccess = getMessageTag(1006);
+    public static String addRecordSuccess = getMessageTag(1007);
+    public static String updateRecordSuccess = getMessageTag(1008);
+    public static String deleteRecordSuccess = getMessageTag(1009);
     
-    public static String getRecordSuccess = "update mode";
-    public static String addRecordSuccess = "record added successfully";
-    public static String updateRecordSuccess = "record updated successfully";
-    public static String deleteRecordSuccess = "record deleted successfully";
+    public static String getRecordError = getMessageTag(1010);
+    public static String addRecordError = getMessageTag(1011);
+    public static String updateRecordError = getMessageTag(1012);
+    public static String deleteRecordError = getMessageTag(1013);
     
-    public static String getRecordError = "record not found";
-    public static String addRecordError = "record not added";
-    public static String updateRecordError = "record not updated";
-    public static String deleteRecordError = "record not deleted";
+    public static String addRecordAlreadyExists = getMessageTag(1014);
+    public static String deleteRecordCanceled = getMessageTag(1015);
     
-    public static String addRecordAlreadyExists = "record already exists";
-    public static String deleteRecordCanceled = "delete transaction cancelled";
+    public static String getRecordSQLError = getMessageTag(1016);
+    public static String addRecordSQLError = getMessageTag(1017);
+    public static String updateRecordSQLError = getMessageTag(1018);
+    public static String deleteRecordSQLError = getMessageTag(1019);
     
-    public static String getRecordSQLError = "sql error in function getRecord";
-    public static String addRecordSQLError = "sql error in function addRecord";
-    public static String updateRecordSQLError = "sql error in function updateRecord";
-    public static String deleteRecordSQLError = "sql error in function deleteRecord";
-    
-    public static String getRecordConnError = "sql conn error in getRecord";
-    public static String addRecordConnError = "sql conn error in addRecord";
-    public static String updateRecordConnError = "sql conn error in updateRecord";
-    public static String deleteRecordConnError = "sql conn error in deleteRecord";
+    public static String getRecordConnError = getMessageTag(1020);
+    public static String addRecordConnError = getMessageTag(1021);
+    public static String updateRecordConnError = getMessageTag(1022);
+    public static String deleteRecordConnError = getMessageTag(1023);
     
     public static String SuccessBit = "0";
     public static String ErrorBit = "1";
@@ -766,8 +766,31 @@ public class BlueSeerUtils {
 	}
 }
   
+     public static String getMessageTag(int key) {
+         String tag = "";
+          if (tags.containsKey("global.message." + key)) {
+            tag = tags.getString("global.message." + key);
+          }
+         return tag;
+     }
     
+     public static String getGlobalLabelTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.label." + key)) {
+            tag = tags.getString("global.label." + key);
+          }
+         return tag;
+     }
     
+     public static String getClassLabelTag(String key, String thisclass) {
+         String tag = "";
+          if (tags.containsKey(thisclass + ".label." + key)) {
+            tag = tags.getString(thisclass + ".label." + key);
+          }
+         return tag;
+     }
+    
+     
      public static void startTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
