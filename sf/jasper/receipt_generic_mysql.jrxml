@@ -6,8 +6,6 @@
 	<property name="ireport.y" value="48"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="360"/>
-	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="628"/>
 	<parameter name="REPORT_TITLE" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -21,29 +19,15 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select shd_id, sh_curr, it_desc, cm_terms,
-(select case when sum(shs_amt) is null then 0 else sum(shs_amt) end 
-	from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax'
-) as charges, 
-(select case when sum(shs_amt) is null then 0 else sum(shs_amt)  
-	end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax'
-) as taxes,
-sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, 
-sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, 
-shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, 
-shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, 
-cm_line2, cm_city, cm_state, cm_zip, 
-cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, 
+		<![CDATA[select shd_id, sh_curr, sh_ref, it_desc, 
+(select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax') as charges, 
+(select case when sum(shs_amt) is null then 0 else sum(shs_amt)  end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax') as taxes,
+sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, 
+concat(cm_city, " ", cm_state, " ", cm_zip) as bt_citystatezip, 
 cms_name, cms_line1, cms_line2, 
-cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, 
+concat(cms_city, " ", cms_state, " ", cms_zip) as st_citystatezip, 
 site_desc, site_line1, 
-site_city || " " || site_state || " " || site_zip as site_csz from ship_det 
-left outer join item_mstr on it_item = shd_part 
-inner join ship_mstr on sh_id = shd_id 
-inner join cm_mstr on cm_code = sh_cust 
-left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship 
-inner join site_mstr on site_site = sh_site 
-where shd_id =  $P{myid}]]>
+concat(site_city, " ", site_state, " ", site_zip) as site_csz from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String"/>
 	<field name="sh_curr" class="java.lang.Object"/>
@@ -76,13 +60,7 @@ where shd_id =  $P{myid}]]>
 	<field name="sh_confdate" class="java.lang.String"/>
 	<field name="shd_taxamt" class="java.lang.Double"/>
 	<field name="shd_taxpercent" class="java.lang.Double"/>
-	<field name="sh_boxes" class="java.lang.String"/>
-	<field name="sh_pallets" class="java.lang.String"/>
-	<field name="sh_shipvia" class="java.lang.String"/>
-	<field name="sh_bol" class="java.lang.String"/>
 	<field name="sh_ref" class="java.lang.String"/>
-	<field name="cm_terms" class="java.lang.String"/>
-	<field name="shd_serial" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
 	</variable>
@@ -125,7 +103,7 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[INVOICE]]></text>
+				<text><![CDATA[RECEIPT]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="192" y="0" width="152" height="15" uuid="9f662613-b949-47dc-bcb7-81404d37bb2f"/>
@@ -219,7 +197,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{shd_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="9" y="79" width="42" height="11" uuid="2ec49248-6ada-439b-9b0c-a51ea5db2b5e"/>
+				<reportElement x="0" y="79" width="42" height="11" uuid="2ec49248-6ada-439b-9b0c-a51ea5db2b5e"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -229,41 +207,41 @@ where shd_id =  $P{myid}]]>
 				<reportElement x="109" y="79" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="218" y="79" width="102" height="30" uuid="32f41927-cfcd-4724-9eb1-b985fe5fce23"/>
+				<reportElement x="218" y="79" width="109" height="30" uuid="32f41927-cfcd-4724-9eb1-b985fe5fce23"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="320" y="79" width="110" height="30" uuid="d577085f-2bdf-4c2f-a130-29132ba1e927"/>
+				<reportElement x="327" y="79" width="109" height="30" uuid="d577085f-2bdf-4c2f-a130-29132ba1e927"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="430" y="79" width="125" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
+				<reportElement x="436" y="79" width="119" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="120" y="79" width="40" height="11" uuid="b8276b9a-752e-4fdd-a043-1e20c6524afc"/>
+				<reportElement x="109" y="79" width="40" height="11" uuid="b8276b9a-752e-4fdd-a043-1e20c6524afc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Ref Nbr:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="228" y="79" width="63" height="11" uuid="ec9c7ef2-24f1-4033-bd42-89c06d2f1f6f"/>
+				<reportElement x="218" y="79" width="63" height="11" uuid="ec9c7ef2-24f1-4033-bd42-89c06d2f1f6f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[BOL:]]></text>
+				<text><![CDATA[Freight Class:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="327" y="79" width="40" height="11" uuid="235f51fd-75bb-443c-a1f1-0ae09c6b61f0"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Cust Nbr:]]></text>
+				<text><![CDATA[BOL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="437" y="79" width="52" height="11" uuid="e172e171-1d0c-4e40-890d-612cfd30d558"/>
+				<reportElement x="438" y="79" width="40" height="11" uuid="e172e171-1d0c-4e40-890d-612cfd30d558"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Terms:]]></text>
+				<text><![CDATA[Misc:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="66" y="3" width="62" height="17" uuid="c30747ba-2dad-45e3-b4ee-e74a54cc8e1d"/>
@@ -277,7 +255,7 @@ where shd_id =  $P{myid}]]>
 				<text><![CDATA[Remarks:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="54" y="59" width="503" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<reportElement x="54" y="59" width="511" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
 				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -291,41 +269,6 @@ where shd_id =  $P{myid}]]>
 				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
 				<textFieldExpression><![CDATA[$F{sh_confdate}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="437" y="90" width="110" height="20" uuid="9b894070-83ea-4531-b608-e3bb34be614e"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cm_terms}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="327" y="89" width="97" height="20" uuid="802049ad-6fe8-4919-93f9-4bf08c8ac8c7"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sh_cust}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="228" y="90" width="92" height="20" uuid="474db820-d56c-4c60-8006-db1d704c6bb8"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sh_bol}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="120" y="90" width="90" height="20" uuid="de8b92af-5231-4077-9ec0-4d30aab6cd24"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sh_ref}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="9" y="90" width="91" height="20" uuid="a1ba299a-a179-4444-be21-552320c351d6"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sh_shipvia}]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -335,13 +278,13 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Item/CustItem]]></text>
+				<text><![CDATA[Item]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<staticText>
-				<reportElement x="109" y="0" width="155" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<reportElement x="100" y="-1" width="150" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -352,7 +295,7 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[PO Nbr]]></text>
+				<text><![CDATA[Reference]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="360" y="0" width="46" height="20" uuid="30933660-b057-4408-8963-609875170b57"/>
@@ -375,79 +318,35 @@ where shd_id =  $P{myid}]]>
 				</textElement>
 				<text><![CDATA[ExtPrice]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="456" y="1" width="41" height="20" uuid="8bcee860-f0f6-45a8-828f-35beefb1e570"/>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[MatlTax]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="38" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="90" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
+				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="155" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
+				<reportElement x="98" y="2" width="152" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="16" width="161" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{shd_custpart}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="264" y="0" width="94" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{shd_po}]]></textFieldExpression>
+				<reportElement x="264" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<textFieldExpression><![CDATA[$F{sh_ref}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="406" y="0" width="46" height="16" uuid="592ac78d-fe13-4933-a359-766c6b58c1e7"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{shd_netprice}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue())]]></textFieldExpression>
-			</textField>
-			<textField pattern="¤ #,##0.00">
-				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{shd_taxamt}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="189" y="16" width="217" height="16" uuid="8cc82b22-607e-435c-9767-53bdb1fbfad0"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Tracking/Serial: " + $F{shd_serial}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -455,16 +354,16 @@ where shd_id =  $P{myid}]]>
 		<band height="28" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="98" splitType="Stretch">
+		<band height="100" splitType="Stretch">
 			<staticText>
-				<reportElement x="19" y="0" width="120" height="20" uuid="6877cef7-0a17-4c66-a5bf-85e0654b41ed"/>
+				<reportElement x="19" y="0" width="151" height="20" uuid="6877cef7-0a17-4c66-a5bf-85e0654b41ed"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Summary]]></text>
+				<text><![CDATA[Paid in full]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="444" y="78" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
+				<reportElement x="444" y="60" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
 			</textField>
@@ -486,34 +385,21 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="344" y="78" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
-				<textFieldExpression><![CDATA["Total Price (" + $F{sh_curr} + "):"]]></textFieldExpression>
+				<reportElement x="344" y="60" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
+				<textFieldExpression><![CDATA["Net Total (" + $F{sh_curr} + "):"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="69" y="20" width="71" height="20" uuid="cb744843-af64-4348-a91f-870a4bdfd13e"/>
-				<textFieldExpression><![CDATA[$F{sh_boxes}]]></textFieldExpression>
+				<reportElement x="344" y="80" width="100" height="20" uuid="6017144a-6072-41ea-a7e3-58aa54f425e0"/>
+				<textFieldExpression><![CDATA["Net Due  (" + $F{sh_curr} + "):"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="19" y="20" width="41" height="20" uuid="b67200c8-6c5a-4b0d-b88e-6e8412e22bd8"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Boxes:]]></text>
+				<reportElement x="444" y="80" width="123" height="20" uuid="d82c361d-707e-4803-9358-6cef45202aa6"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[0.00]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="19" y="40" width="41" height="20" uuid="b13c6de0-4aaf-4d88-808c-d927703af66e"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Pallets:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="70" y="40" width="71" height="20" uuid="9a938cf1-ba7a-469e-9946-542741c922d7"/>
-				<textFieldExpression><![CDATA[$F{sh_pallets}]]></textFieldExpression>
-			</textField>
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="40" splitType="Stretch"/>
+		<band height="28" splitType="Stretch"/>
 	</summary>
 </jasperReport>

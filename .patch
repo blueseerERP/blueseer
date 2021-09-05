@@ -10,3 +10,11 @@ patch=1
 # JCalendar null issue on getOldValue() getNewValue() return values
 # This was causing the Scheduler menu to free upon initial invocation
 # Problem appears to stem from JRE 8 to JRE 11 migration
+patch=2
+#githubissue=2
+#CashTran panel issue.  Method to generate income transation from within CashTran menu was missing currency and base, causing
+#the transaction to not be displayed in Account Balance Summary Menu
+patch=3
+#githubissue=3
+#jasper file version for mysql missing for service order and receipt.   Updated and added jasper files for all that menus 
+#that contain the concat function
