@@ -791,6 +791,14 @@ public class BlueSeerUtils {
           }
          return tag;
      }
+     
+     public static String getGlobalMenuTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.menu." + key)) {
+            tag = tags.getString("global.menu." + key);
+          }
+         return tag;
+     }
     
      public static String getGlobalColumnTag(String key) {
          String tag = "";

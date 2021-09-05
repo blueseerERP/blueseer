@@ -64,8 +64,11 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormatSymbols;
@@ -74,7 +77,13 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
@@ -97,7 +106,16 @@ public class CashTranBrowse extends javax.swing.JPanel {
     Double inventory = 0.00;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "ID", "Key", "Type", "EntityNbr", "EntityName", "EffDate", "TotalQty", "TotalSales", "Print"})
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("key"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("entitynumber"), 
+                            getGlobalColumnTag("entityname"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("totalqty"), 
+                            getGlobalColumnTag("totalsales"), 
+                            getGlobalColumnTag("print")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -108,7 +126,12 @@ public class CashTranBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Shipper/Receiver", "Item", "Desc", "Ref", "Qty", "NetPrice"});
+                        new String[]{getGlobalColumnTag("shipperreceiver"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("netprice")});
     
    
     
@@ -239,7 +262,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("cannot get pos_det");
+                  bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -305,7 +328,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("cannot get pos_det");
+                  bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -321,9 +344,10 @@ public class CashTranBrowse extends javax.swing.JPanel {
      */
     public CashTranBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String shipper) {
+    public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -359,7 +383,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -367,6 +391,54 @@ public class CashTranBrowse extends javax.swing.JPanel {
         }
 
     }
+    
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] arg) {
         tbtotexpenses.setText("0");
@@ -469,6 +541,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("CashTranBrowse"));
+        jPanel1.setName("panelmaint"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -532,6 +605,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         tablepanel.add(chartpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -539,6 +613,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -546,14 +621,17 @@ public class CashTranBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         tbcsv.setText("CSV");
+        tbcsv.setName("btcsv"); // NOI18N
         tbcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbcsvActionPerformed(evt);
@@ -561,6 +639,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         });
 
         cbchart.setText("Charts");
+        cbchart.setName("cbcharts"); // NOI18N
         cbchart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbchartActionPerformed(evt);
@@ -568,15 +647,16 @@ public class CashTranBrowse extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Site:");
+        jLabel2.setName("lblsite"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -605,13 +685,14 @@ public class CashTranBrowse extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(btdetail)
                         .addComponent(tbcsv)
-                        .addComponent(cbchart)))
+                        .addComponent(cbchart))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel5)
+                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -626,26 +707,32 @@ public class CashTranBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Sales:");
+        jLabel8.setName("lbltotalsales"); // NOI18N
 
         saleslessexp.setText("0");
 
         tbtotsales.setText("0");
 
         jLabel9.setText("DateRange Profit:");
+        jLabel9.setName("lbldaterangeprofit"); // NOI18N
 
         tbtotexpenses.setText("0");
 
         jLabel10.setText("Total Expenses:");
+        jLabel10.setName("lbltotalexpenses"); // NOI18N
 
         tbtotpurch.setText("0");
 
         jLabel11.setText("Total Purchases:");
+        jLabel11.setName("lbltotalpurchases"); // NOI18N
 
         tbinventory.setText("0");
 
         jLabel1.setText("Current Inventory:");
+        jLabel1.setName("lblcurrentinventory"); // NOI18N
 
         jLabel3.setText("Total Misc Income:");
+        jLabel3.setName("lbltotalmiscincome"); // NOI18N
 
         tbincome.setText("0");
 
@@ -880,7 +967,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Cash Trans Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {

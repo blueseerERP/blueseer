@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select shd_id, sh_curr, sh_ref, it_desc, 
+(select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax') as charges, 
+(select case when sum(shs_amt) is null then 0 else sum(shs_amt)  end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax') as taxes,
+sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, 
+concat(cm_city, " ", cm_state, " ", cm_zip) as bt_citystatezip, 
+cms_name, cms_line1, cms_line2, 
+concat(cms_city, " ", cms_state, " ", cms_zip) as st_citystatezip, 
+site_desc, site_line1, 
+concat(site_city, " ", site_state, " ", site_zip) as site_csz from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
+	</queryString>
+	<field name="shd_id" class="java.lang.String"/>
+	<field name="sh_curr" class="java.lang.Object"/>
+	<field name="it_desc" class="java.lang.Object"/>
+	<field name="charges" class="java.lang.Double"/>
+	<field name="taxes" class="java.lang.Double"/>
+	<field name="sh_cust" class="java.lang.Object"/>
+	<field name="sh_rmks" class="java.lang.Object"/>
+	<field name="shd_po" class="java.lang.Object"/>
+	<field name="shd_part" class="java.lang.Object"/>
+	<field name="shd_custpart" class="java.lang.Object"/>
+	<field name="shd_qty" class="java.lang.Double"/>
+	<field name="shd_netprice" class="java.lang.Double"/>
+	<field name="shd_listprice" class="java.lang.Double"/>
+	<field name="cm_code" class="java.lang.Object"/>
+	<field name="cm_name" class="java.lang.Object"/>
+	<field name="cm_line1" class="java.lang.Object"/>
+	<field name="cm_line2" class="java.lang.Object"/>
+	<field name="cm_city" class="java.lang.Object"/>
+	<field name="cm_state" class="java.lang.Object"/>
+	<field name="cm_zip" class="java.lang.Object"/>
+	<field name="bt_citystatezip" class="java.lang.Object"/>
+	<field name="cms_name" class="java.lang.Object"/>
+	<field name="cms_line1" class="java.lang.Object"/>
+	<field name="cms_line2" class="java.lang.Object"/>
+	<field name="st_citystatezip" class="java.lang.Object"/>
+	<field name="site_desc" class="java.lang.Object"/>
+	<field name="site_line1" class="java.lang.Object"/>
+	<field name="site_csz" class="java.lang.Object"/>
+	<field name="sh_confdate" class="java.lang.String"/>
+	<field name="shd_taxamt" class="java.lang.Double"/>
+	<field name="shd_taxpercent" class="java.lang.Double"/>
+	<field name="sh_ref" class="java.lang.String"/>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
+	</variable>
+	<variable name="tax" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($F{taxes}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="charges" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($F{charges}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="mysumprice" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="totalamount" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($V{mysumprice}.doubleValue() + 
+	$V{tax}.doubleValue() + 
+	$V{charges}.doubleValue()
+)]]></variableExpression>
+	</variable>
+	<variable name="gross" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_listprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<image>
+				<reportElement x="20" y="-50" width="119" height="82" uuid="7d194944-b350-420d-ab9b-682f45a43dc9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{shd_id}, false))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="367" y="-36" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[RECEIPT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="192" y="0" width="152" height="15" uuid="9f662613-b949-47dc-bcb7-81404d37bb2f"/>
+				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="15" width="152" height="15" uuid="0ff12bec-f2d6-4f48-9096-2cab307f21df"/>
+				<textFieldExpression><![CDATA[$F{site_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="29" width="152" height="15" uuid="41a902b3-2046-4b7e-9ffd-cd9d1e35d1b8"/>
+				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="115" splitType="Stretch">
+			<textField>
+				<reportElement x="398" y="0" width="80" height="20" uuid="c838f78f-8f27-4e07-b216-d42e6f860995"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="489" y="0" width="40" height="20" uuid="7bb51d99-d65a-48b5-86af-507492912f2e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="16" width="100" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cm_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="27" width="100" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cm_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="39" width="136" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="268" y="2" width="62" height="14" uuid="f6e59878-ac4a-4a2f-b06b-391500f383da"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SHIPTO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="281" y="16" width="100" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cms_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="27" width="100" height="10" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="39" width="136" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{st_citystatezip}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="416" y="39" width="62" height="19" uuid="ff72763b-4033-4879-9b04-d9390211079c"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Inv Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="20" width="62" height="19" uuid="07425326-7b17-4af6-b48b-dc15658ef3ff"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Inv Nbr:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="489" y="20" width="76" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
+				<textFieldExpression><![CDATA[$F{shd_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="79" width="42" height="11" uuid="2ec49248-6ada-439b-9b0c-a51ea5db2b5e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Carrier:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="109" y="79" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="218" y="79" width="109" height="30" uuid="32f41927-cfcd-4724-9eb1-b985fe5fce23"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="327" y="79" width="109" height="30" uuid="d577085f-2bdf-4c2f-a130-29132ba1e927"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="436" y="79" width="119" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="109" y="79" width="40" height="11" uuid="b8276b9a-752e-4fdd-a043-1e20c6524afc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ref Nbr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="218" y="79" width="63" height="11" uuid="ec9c7ef2-24f1-4033-bd42-89c06d2f1f6f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Freight Class:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="79" width="40" height="11" uuid="235f51fd-75bb-443c-a1f1-0ae09c6b61f0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BOL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="79" width="40" height="11" uuid="e172e171-1d0c-4e40-890d-612cfd30d558"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Misc:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="66" y="3" width="62" height="17" uuid="c30747ba-2dad-45e3-b4ee-e74a54cc8e1d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[BILLTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="58" width="54" height="20" uuid="62e6680c-3867-4618-b224-498eb1c18b94"/>
+				<text><![CDATA[Remarks:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="54" y="59" width="511" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="27" width="100" height="12" uuid="68158bb2-f68a-4df8-b71e-53d1d13b26a8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
+				<textFieldExpression><![CDATA[$F{sh_confdate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<staticText>
+				<reportElement x="100" y="-1" width="150" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="0" width="90" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reference]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="0" width="46" height="20" uuid="30933660-b057-4408-8963-609875170b57"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="1" width="45" height="20" uuid="28ab6672-6ecc-44ec-b0d9-75dc3c7ecd69"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NetPrice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="501" y="0" width="64" height="20" uuid="90ad2908-1e89-460a-9e72-64f9dc49aef8"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ExtPrice]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{shd_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="98" y="2" width="152" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<textFieldExpression><![CDATA[$F{sh_ref}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="406" y="0" width="46" height="16" uuid="592ac78d-fe13-4933-a359-766c6b58c1e7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{shd_netprice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue())]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="0" width="151" height="20" uuid="6877cef7-0a17-4c66-a5bf-85e0654b41ed"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Paid in full]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="444" y="60" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="344" y="20" width="221" height="40" uuid="be4e81b6-fece-4304-86cb-d0c966c9c89e"/>
+				<subreportParameter name="myid">
+					<subreportParameterExpression><![CDATA[$F{shd_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sac.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="344" y="0" width="100" height="20" uuid="1100ddfd-fbfd-4a62-aac8-e6c140a3e6cd"/>
+				<text><![CDATA[Total Gross Price:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="444" y="0" width="123" height="20" uuid="48370df4-1abb-4aca-833e-b2cfd15c3273"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="60" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
+				<textFieldExpression><![CDATA["Net Total (" + $F{sh_curr} + "):"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="80" width="100" height="20" uuid="6017144a-6072-41ea-a7e3-58aa54f425e0"/>
+				<textFieldExpression><![CDATA["Net Due  (" + $F{sh_curr} + "):"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="444" y="80" width="123" height="20" uuid="d82c361d-707e-4803-9358-6cef45202aa6"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[0.00]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="28" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -30,6 +30,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -298,7 +299,7 @@ public class CashTran extends javax.swing.JPanel {
                     message = addRecurExpense();
                     break;
                 default:
-                    bsmf.MainFrame.show("unknown transaction");
+                    MainFrame.bslog("unkown switch selection " + this.getClass().getEnclosingMethod().getName());
             }
             return message;
         }
@@ -434,7 +435,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot select from exp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             
@@ -476,7 +477,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot select from exp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             
@@ -512,7 +513,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot select from pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             
@@ -724,7 +725,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -757,7 +758,7 @@ public class CashTran extends javax.swing.JPanel {
                 if (ddentity1.getItemCount() > 0) {
                     entity = ddentity1.getSelectedItem().toString();
                 } else {
-                    bsmf.MainFrame.show("Entity cannot be blank");
+                    bsmf.MainFrame.show(getMessageTag(1016, "ddentity1"));
                     proceed = false;
                 }
               
@@ -927,7 +928,7 @@ public class CashTran extends javax.swing.JPanel {
                   } // 2nd proceed     
                     
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1068,7 +1069,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1201,7 +1202,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1359,7 +1360,7 @@ public class CashTran extends javax.swing.JPanel {
                         
                     
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot insert into pos_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1389,7 +1390,7 @@ public class CashTran extends javax.swing.JPanel {
                 if (acctnbr >= 99000000 && acctnbr <= 99999999) {
                     proceed = true;
                 } else {
-                    bsmf.MainFrame.show("expense account generated number is beyond limits of 99000000 to 99999999");
+                    bsmf.MainFrame.show(getMessageTag(1027));
                     return;
                 }
                 
@@ -1409,13 +1410,12 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + '1' + "'"        
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
                         ddaccountexpense.addItem(String.valueOf(acctnbr));
                         ddaccountexpense.setSelectedItem(String.valueOf(acctnbr));
                         ddrexpacct.addItem(String.valueOf(acctnbr));
                         ddrexpacct.setSelectedItem(String.valueOf(acctnbr));
                     } else {
-                        bsmf.MainFrame.show("Acct Number Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                     //reinitapmvariables();
@@ -1423,7 +1423,7 @@ public class CashTran extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to insert into ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1467,12 +1467,11 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + '1' + "'"        
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Acct Number: " + String.valueOf(acctnbr));
                         ddaccountincome.addItem(String.valueOf(acctnbr));
                         ddaccountincome.setSelectedItem(String.valueOf(acctnbr));
                         
                     } else {
-                        bsmf.MainFrame.show("Acct Number Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                     //reinitapmvariables();
@@ -1480,7 +1479,7 @@ public class CashTran extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to insert into ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2084,7 +2083,7 @@ public class CashTran extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot set vendor variables");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3906,19 +3905,19 @@ public class CashTran extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
        
        if (tbprice.getText().isEmpty()) {
-           bsmf.MainFrame.show("price field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbprice.requestFocus();
            return;
        }
        
        if (tbitemservice.getText().isEmpty()) {
-           bsmf.MainFrame.show("Description field cannot be blank");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbitemservice.requestFocus();
            return;
        }
        
        if (tbqty.getText().isEmpty()) {
-           bsmf.MainFrame.show("qty field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbqty.requestFocus();
            return;
        }
@@ -3978,7 +3977,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get entity name");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -3989,7 +3988,7 @@ public class CashTran extends javax.swing.JPanel {
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = detailtable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
              actamt -= Double.valueOf(detailtable.getModel().getValueAt(i,2).toString()) * Double.valueOf(detailtable.getModel().getValueAt(i,3).toString());
              actqty -= Double.valueOf(detailtable.getModel().getValueAt(i,2).toString());
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
@@ -4011,7 +4010,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbprice.setText("");
             tbprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbprice.requestFocus();
         } else {
             tbprice.setText(x);
@@ -4024,7 +4023,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbqty.requestFocus();
         } else {
             tbqty.setText(x);
@@ -4054,7 +4053,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get entity name");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4092,7 +4091,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbprice1.setText("");
             tbprice1.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbprice1.requestFocus();
         } else {
             tbprice1.setText(x);
@@ -4116,7 +4115,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("cannot select from item_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -4132,12 +4131,12 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btadditem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditem1ActionPerformed
          if (tbprice1.getText().isEmpty()) {
-           bsmf.MainFrame.show("price field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbprice1.requestFocus();
            return;
        }
            if (tbqty1.getText().isEmpty()) {
-           bsmf.MainFrame.show("qty field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbqty1.requestFocus();
            return;
        }
@@ -4179,7 +4178,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbqty1.setText("");
             tbqty1.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbqty1.requestFocus();
         } else {
             tbqty1.setText(x);
@@ -4213,7 +4212,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get entity name");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4249,7 +4248,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbexpensePrice.setText("");
             tbexpensePrice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbexpensePrice.requestFocus();
         } else {
             tbexpensePrice.setText(x);
@@ -4271,7 +4270,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot select from ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4295,19 +4294,19 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btaddItemExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddItemExpenseActionPerformed
         if (tbexpensePrice.getText().isEmpty()) {
-           bsmf.MainFrame.show("price field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbexpensePrice.requestFocus();
            return;
        }
        
         if (tbexpenseQty.getText().isEmpty()) {
-           bsmf.MainFrame.show("qty field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbexpenseQty.requestFocus();
            return;
        }
         
        if (tbexpenseDesc.getText().isEmpty()) {
-           bsmf.MainFrame.show("Description field cannot be blank");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbexpenseDesc.requestFocus();
            return;
        }
@@ -4346,7 +4345,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbexpenseQty.setText("");
             tbexpenseQty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbexpenseQty.requestFocus();
         } else {
             tbexpenseQty.setText(x);
@@ -4384,7 +4383,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get entity name");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4401,7 +4400,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbrexprice.setText("");
             tbrexprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbrexprice.requestFocus();
         } else {
             tbrexprice.setText(x);
@@ -4423,7 +4422,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot select from ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4433,19 +4432,19 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btrexpadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrexpadditemActionPerformed
         if (tbrexprice.getText().isEmpty()) {
-           bsmf.MainFrame.show("price field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbrexprice.requestFocus();
            return;
        }
        
        if (tbrexpensedesc.getText().isEmpty()) {
-           bsmf.MainFrame.show("Description field cannot be blank");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbrexpensedesc.requestFocus();
            return;
        }
        
        if (ddrexpentity.getSelectedItem() == null) {
-          bsmf.MainFrame.show("Entity value must be selected");
+          bsmf.MainFrame.show(getMessageTag(1029));
            ddrexpentity.requestFocus();
            return; 
        }
@@ -4478,12 +4477,12 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + tbrexprice.getText() + "'"  + ","          
                             + "'" + "1" + "'"        // active
                             + " )" + ";");              
-                          bsmf.MainFrame.show("Added Recurring Expense to table");
+                          bsmf.MainFrame.show(getMessageTag(1030));
                 
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot insert into exp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
             getRecurringExpense(cbrexpshowall.isSelected());
@@ -4565,7 +4564,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbrexpincome.setText("");
             tbrexpincome.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbrexpincome.requestFocus();
         } else {
             tbrexpincome.setText(x);
@@ -4619,7 +4618,7 @@ public class CashTran extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot insert into exp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4649,7 +4648,7 @@ public class CashTran extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbincomeAmount.setText("");
             tbincomeAmount.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbincomeAmount.requestFocus();
         } else {
             tbincomeAmount.setText(x);
@@ -4671,7 +4670,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot select from ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -4694,13 +4693,13 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btaddItemIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddItemIncomeActionPerformed
          if (tbincomeAmount.getText().isEmpty()) {
-           bsmf.MainFrame.show("price field must be numeric");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbincomeAmount.requestFocus();
            return;
        }
                
        if (tbincomeDesc.getText().isEmpty()) {
-           bsmf.MainFrame.show("Description field cannot be blank");
+           bsmf.MainFrame.show(getMessageTag(1010));
            tbincomeDesc.requestFocus();
            return;
        }
