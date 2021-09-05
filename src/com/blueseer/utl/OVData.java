@@ -20737,6 +20737,9 @@ public class OVData {
                 }
                 
                String jasperfile = "serviceorder.jasper";
+               if (bsmf.MainFrame.dbtype.equals("mysql")) {
+                   jasperfile = "serviceorder_mysql.jasper";
+               }
                //jasperfile = OVData.getDefaultOrderJasper(site);
                
                imagepath = "images/" + logo;
