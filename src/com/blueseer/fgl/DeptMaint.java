@@ -314,14 +314,14 @@ public class DeptMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
+                    bsmf.MainFrame.show(getMessageTag(1024, "ID"));
                     tbkey.requestFocus();
                     return b;
                 }
         
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show(getMessageTag(1025));
+                    bsmf.MainFrame.show(getMessageTag(1024, "Description"));
                     tbdesc.requestFocus();
                     return b;
                 }

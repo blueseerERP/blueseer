@@ -120,13 +120,13 @@ where shd_id =  $P{myid}]]>
 				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{shd_id}, false))]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="367" y="-36" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+			<textField>
+				<reportElement x="367" y="-36" width="198" height="36" uuid="df5bfe61-737c-4048-8921-aa870ee0c843"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[INVOICE]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.invoice.lblinvoice}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="192" y="0" width="152" height="15" uuid="9f662613-b949-47dc-bcb7-81404d37bb2f"/>
 				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
@@ -173,13 +173,13 @@ where shd_id =  $P{myid}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="268" y="2" width="62" height="14" uuid="f6e59878-ac4a-4a2f-b06b-391500f383da"/>
+			<textField>
+				<reportElement x="268" y="2" width="62" height="14" uuid="2d308b9b-b8e0-434a-8c1f-226e5fbb1a8a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[SHIPTO:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.invoice.lblshipto}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="281" y="16" width="100" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
@@ -265,19 +265,19 @@ where shd_id =  $P{myid}]]>
 				</textElement>
 				<text><![CDATA[Terms:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="66" y="3" width="62" height="17" uuid="c30747ba-2dad-45e3-b4ee-e74a54cc8e1d"/>
+			<textField>
+				<reportElement x="66" y="3" width="62" height="17" uuid="1691e66d-5b7b-4d75-a07d-cd2a556fdf90"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[BILLTO:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="58" width="54" height="20" uuid="62e6680c-3867-4618-b224-498eb1c18b94"/>
-				<text><![CDATA[Remarks:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.invoice.lblbillto}]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="54" y="59" width="503" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<reportElement x="0" y="58" width="66" height="20" uuid="7e9c252e-2f69-4082-b6af-a2a6fdcf82ff"/>
+				<textFieldExpression><![CDATA[$R{jasper.invoice.lblremarks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="59" width="491" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
 				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
