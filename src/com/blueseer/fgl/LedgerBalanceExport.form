@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel2">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
       <SubComponents>
@@ -196,6 +199,7 @@
             <Component class="javax.swing.JButton" name="btview">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View"/>
+                <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btviewActionPerformed"/>
@@ -204,21 +208,25 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Site"/>
+                <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Year"/>
+                <Property name="name" type="java.lang.String" value="lbltoyear" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Year"/>
+                <Property name="name" type="java.lang.String" value="lblfromyear" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btexport">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export"/>
+                <Property name="name" type="java.lang.String" value="btexport" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexportActionPerformed"/>
@@ -229,6 +237,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delimiter"/>
+                <Property name="name" type="java.lang.String" value="lbldelimiter" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddfromper">
@@ -248,11 +257,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Period"/>
+                <Property name="name" type="java.lang.String" value="lblfromperiod" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Period"/>
+                <Property name="name" type="java.lang.String" value="lbltoperiod" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddsite">
@@ -265,6 +276,7 @@
             <Component class="javax.swing.JCheckBox" name="cbzero">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Supress Zeros"/>
+                <Property name="name" type="java.lang.String" value="cbsupresszeros" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
@@ -273,6 +285,7 @@
                   <Color blue="0" green="18" red="ff" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="You must &apos;vew&apos; before &apos;export&apos;"/>
+                <Property name="name" type="java.lang.String" value="lblnote" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblendbal">
@@ -280,11 +293,13 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total:"/>
+                <Property name="name" type="java.lang.String" value="lbltotal" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbbs">
               <Properties>
                 <Property name="text" type="java.lang.String" value="BS Activity"/>
+                <Property name="name" type="java.lang.String" value="lblbsactivity" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

@@ -23,11 +23,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Income Statement By Year"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -88,11 +84,13 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Year"/>
+            <Property name="name" type="java.lang.String" value="lblyear" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btRun">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -212,6 +210,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Site"/>
+            <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddelements">
@@ -224,6 +223,7 @@
         <Component class="javax.swing.JButton" name="btchart">
           <Properties>
             <Property name="text" type="java.lang.String" value="Chart It"/>
+            <Property name="name" type="java.lang.String" value="btchart" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btchartActionPerformed"/>

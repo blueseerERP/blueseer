@@ -23,11 +23,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="PayRoll Control Maintenance"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -121,6 +117,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Labor Acct"/>
+            <Property name="name" type="java.lang.String" value="lbllbracct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbank">
@@ -130,16 +127,19 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Bank"/>
+            <Property name="name" type="java.lang.String" value="lblbank" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Labor CC"/>
+            <Property name="name" type="java.lang.String" value="lbllbrcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -150,6 +150,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Salaried Acct"/>
+            <Property name="name" type="java.lang.String" value="lblsalacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbsalcc">
@@ -157,6 +158,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Salaried CC"/>
+            <Property name="name" type="java.lang.String" value="lblsalcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtaxacct">
@@ -166,11 +168,13 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Taxes Acct"/>
+            <Property name="name" type="java.lang.String" value="lbltaxesacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Taxes CC"/>
+            <Property name="name" type="java.lang.String" value="lbltaxescc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbwithholdacct">
@@ -178,6 +182,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Withholding Acct"/>
+            <Property name="name" type="java.lang.String" value="lblwithholdingacct" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

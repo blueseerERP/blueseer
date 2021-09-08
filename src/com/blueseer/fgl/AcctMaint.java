@@ -234,8 +234,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     } 
     
     public void setLanguageTags(Object myobj) {
-      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
-      
        JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
@@ -250,8 +248,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
        Component[] components = panel.getComponents();
        for (Component component : components) {
-           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
-                if (component instanceof JPanel) {
+           if (component instanceof JPanel) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
                        ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
                     } 

@@ -65,9 +65,12 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -92,7 +95,13 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -420,7 +429,7 @@ public class PayRollMaint extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to update timeclock");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -480,7 +489,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -568,7 +577,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -581,6 +590,7 @@ public class PayRollMaint extends javax.swing.JPanel {
      */
     public PayRollMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     public void getdetail(String empnbr, String fromdate, String todate) {
@@ -639,7 +649,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -696,7 +706,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("unable to select from pay_mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         }
@@ -984,13 +994,58 @@ public class PayRollMaint extends javax.swing.JPanel {
         boolean myreturn = true;
         
         if (tbchecknbr.getText().isEmpty()) {
-            bsmf.MainFrame.show("starting check number must be entered");
+            bsmf.MainFrame.show(getMessageTag(1053));
             tbchecknbr.requestFocus();
             myreturn = false;
         }
         
         return myreturn;
     }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] arg) {
        
@@ -1028,9 +1083,9 @@ public class PayRollMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1050,7 +1105,8 @@ public class PayRollMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "Description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -1110,7 +1166,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Payroll Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1239, 564));
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -1175,6 +1231,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         tablepanel.add(chartpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -1182,6 +1239,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         btrun.setText("Run");
+        btrun.setName("btrun"); // NOI18N
         btrun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrunActionPerformed(evt);
@@ -1189,14 +1247,17 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -1210,8 +1271,10 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         jLabel7.setText("ID:");
+        jLabel7.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1219,6 +1282,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -1226,16 +1290,21 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Site:");
+        jLabel1.setName("lblsite"); // NOI18N
 
         jLabel2.setText("Comments:");
+        jLabel2.setName("lblcomments"); // NOI18N
 
         dcpay.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("PayDate:");
+        jLabel3.setName("lblpaydate"); // NOI18N
 
         jLabel4.setText("Start CheckNbr:");
+        jLabel4.setName("lblstartchecknbr"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1243,6 +1312,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         btnacha.setText("NACHA");
+        btnacha.setName("btnacha"); // NOI18N
         btnacha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnachaActionPerformed(evt);
@@ -1250,8 +1320,10 @@ public class PayRollMaint extends javax.swing.JPanel {
         });
 
         jLabel8.setText("Bank:");
+        jLabel8.setName("lblbank"); // NOI18N
 
         cbsalary.setText("Salaried");
+        cbsalary.setName("cbsalaried"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -1382,6 +1454,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         tbtotpayroll.setText("0");
 
         jLabel11.setText("Total PayRoll:");
+        jLabel11.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1414,7 +1487,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1426,7 +1499,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -1560,7 +1633,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("unable to select pay hours...sql error");
+                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
                  
             }
             con.close();
@@ -1654,14 +1727,14 @@ public class PayRollMaint extends javax.swing.JPanel {
         try {
            boolean r = processNACHAFile(tbid.getText());
            if (r) {
-               bsmf.MainFrame.show("Nacha file created in EDI outbound directory");
+               bsmf.MainFrame.show(getMessageTag(1054));
            }
         } catch (SmbException ex) {
             ex.printStackTrace();
-            bsmf.MainFrame.show("SMB file write exception nacha");
+            bsmf.MainFrame.show(getMessageTag(1055, this.getClass().getEnclosingMethod().getName()));
         } catch (IOException ex) {
             ex.printStackTrace();
-            bsmf.MainFrame.show("IO file write exception nacha");
+            bsmf.MainFrame.show(getMessageTag(1056, this.getClass().getEnclosingMethod().getName()));
         }
     }//GEN-LAST:event_btnachaActionPerformed
 

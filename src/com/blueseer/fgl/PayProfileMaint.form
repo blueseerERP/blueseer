@@ -28,6 +28,7 @@
             <TitledBorder title="Employee Profile Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -73,7 +74,8 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btedit">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
@@ -86,6 +88,7 @@
                 <TitledBorder title="Profile Elements Maintenance"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelelements" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -172,6 +175,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Element"/>
+                <Property name="name" type="java.lang.String" value="lblelement" noResource="true"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -198,11 +202,13 @@
             <Component class="javax.swing.JCheckBox" name="cbenabled">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enabled?"/>
+                <Property name="name" type="java.lang.String" value="cbenabled" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btdeleteelement">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete"/>
+                <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteelementActionPerformed"/>
@@ -213,6 +219,7 @@
             <Component class="javax.swing.JButton" name="btaddelement">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add"/>
+                <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddelementActionPerformed"/>
@@ -221,6 +228,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Percent/Rate"/>
+                <Property name="name" type="java.lang.String" value="lblpercentrate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbelementamt">
@@ -241,6 +249,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Element Type"/>
+                <Property name="name" type="java.lang.String" value="lblelementtype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddamttype">
@@ -269,6 +278,7 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="GL Acct"/>
+                <Property name="name" type="java.lang.String" value="lblglacct" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -280,6 +290,7 @@
                 <TitledBorder title="Master Profile"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelmaster" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -341,11 +352,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Code"/>
+                <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Desc"/>
+                <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbprofilecode">
@@ -367,6 +380,7 @@
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
             <Property name="text" type="java.lang.String" value="Add"/>
+            <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
@@ -375,6 +389,7 @@
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>

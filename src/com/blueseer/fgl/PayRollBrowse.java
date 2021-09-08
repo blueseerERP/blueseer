@@ -67,11 +67,19 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -125,9 +133,10 @@ public class PayRollBrowse extends javax.swing.JPanel {
      */
     public PayRollBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String empnbr, String checknbr) {
+    public void getdetail(String empnbr, String checknbr) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -167,7 +176,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Recv Browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -176,6 +185,49 @@ public class PayRollBrowse extends javax.swing.JPanel {
 
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
      
@@ -280,6 +332,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("PayRoll Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -329,6 +382,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -336,8 +390,10 @@ public class PayRollBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Empnbr");
+        jLabel4.setName("lbltoempnum"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -345,20 +401,26 @@ public class PayRollBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
 
         jLabel1.setText("From Empnbr");
+        jLabel1.setName("lblfromempnum"); // NOI18N
 
         jLabel3.setText("To Date");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         jLabel6.setText("From Date");
+        jLabel6.setName("lblfromdate"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         cbsalary.setText("Salaried");
+        cbsalary.setName("cbsalaried"); // NOI18N
 
         cbhourly.setText("Hourly");
+        cbhourly.setName("cbhourly"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -426,8 +488,10 @@ public class PayRollBrowse extends javax.swing.JPanel {
         );
 
         jLabel2.setText("Line Count");
+        jLabel2.setName("lblcount"); // NOI18N
 
         jLabel7.setText("Total Amount");
+        jLabel7.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -570,7 +634,7 @@ try {
         
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Payroll Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
