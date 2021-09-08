@@ -451,7 +451,7 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (luModel.getRowCount() < 1) {
             ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " " + getMessageTag(1002));
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };

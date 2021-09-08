@@ -170,7 +170,7 @@ EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
 EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
-GLControl,,com.blueseer.fgl.GLControlPanel,JMenuItem,glcc
+GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc
 ScrapPerWeek,,com.blueseer.utl.ChartView,JMenuItem,scrpw
 ARMemoMaint,,com.blueseer.far.ARMemoMaint,JMenuItem,armm
 OrdLineBrowse,,com.blueseer.ord.OrderReport2,JMenuItem,orlb

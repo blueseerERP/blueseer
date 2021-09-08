@@ -90,7 +90,15 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("detail"), getGlobalColumnTag("account"), getGlobalColumnTag("type"), getGlobalColumnTag("currency"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("beginbalance"), getGlobalColumnTag("activity"), getGlobalColumnTag("endbalance")})
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("currency"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("site"), 
+                            getGlobalColumnTag("beginbalance"), 
+                            getGlobalColumnTag("activity"), 
+                            getGlobalColumnTag("endbalance")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -102,7 +110,16 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     
     
     javax.swing.table.DefaultTableModel mymodelCC = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("detail"), getGlobalColumnTag("account"), getGlobalColumnTag("type"), getGlobalColumnTag("currency"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("beginbalance"), getGlobalColumnTag("activity"), getGlobalColumnTag("endbalance")})
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("currency"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("site"), 
+                            getGlobalColumnTag("costcenter"), 
+                            getGlobalColumnTag("beginbalance"), 
+                            getGlobalColumnTag("activity"), 
+                            getGlobalColumnTag("endbalance")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -113,7 +130,14 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("account"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("site"), getGlobalColumnTag("reference"), getGlobalColumnTag("type"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount")});
+                        new String[]{getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("costcenter"), 
+                            getGlobalColumnTag("site"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("amount")});
     
     
    
@@ -260,7 +284,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -312,7 +336,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1066,7 +1090,7 @@ try {
                 lblactbal.setText(df.format(totactivity));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1003, this.getClass().getSimpleName()));
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {

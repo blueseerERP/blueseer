@@ -86,7 +86,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {  
+public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {    
 
     
     // global variable declarations
@@ -386,7 +386,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return x.m();
     }
     
-    public AcctMstr createRecord() {
+    public AcctMstr createRecord() { 
         AcctMstr x = new AcctMstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toString().replace("'", "").toUpperCase(),
                 ddtype.getSelectedItem().toString(),
@@ -437,7 +437,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (luModel.getRowCount() < 1) {
             ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " " + getMessageTag(1002));
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };

@@ -60,13 +60,23 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -90,7 +100,8 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
  
      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ChartIt", "Acct", "Desc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"})
+                        new String[]{"ChartIt", getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("description"), "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -128,6 +139,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
      */
     public GLAcctBalRpt3() {
         initComponents();
+        setLanguageTags(this);
     }
 
     public void chartacct(String acct, ArrayList<String> values) {
@@ -239,7 +251,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("cannot chart...sql error");
+                  bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -247,6 +259,52 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         }
     }
        
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
     
@@ -322,11 +380,13 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Activity By Year"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel2.setText("Year");
+        jLabel2.setName("lblyear"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -334,10 +394,13 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Acct");
+        jLabel1.setName("lblfromacct"); // NOI18N
 
         jLabel4.setText("To Acct");
+        jLabel4.setName("lbltoacct"); // NOI18N
 
         cbzero.setText("Supress Zeros");
+        cbzero.setName("cbsuppresszeros"); // NOI18N
 
         jPanel2.setPreferredSize(new java.awt.Dimension(904, 402));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
@@ -383,6 +446,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         jPanel2.add(chartpanel);
 
         bthidechart.setText("Hide Chart");
+        bthidechart.setName("bthidechart"); // NOI18N
         bthidechart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidechartActionPerformed(evt);
@@ -390,6 +454,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Site");
+        jLabel3.setName("lblsite"); // NOI18N
 
         ddsum.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
         ddsum.addActionListener(new java.awt.event.ActionListener() {
@@ -399,6 +464,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Sum Period");
+        jLabel5.setName("lblsumperiod"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -435,7 +501,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                         .addComponent(cbzero)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelsum, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(424, Short.MAX_VALUE))
+                .addContainerGap(436, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -461,7 +527,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                         .addComponent(cbzero))
                     .addComponent(labelsum, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -627,7 +693,7 @@ try {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Acct Bal Report");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {

@@ -33,11 +33,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Account Activity By Year"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -81,7 +77,7 @@
                           <Component id="labelsum" min="-2" pref="107" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="424" max="32767" attributes="0"/>
+                  <EmptySpace pref="436" max="32767" attributes="0"/>
               </Group>
               <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -112,7 +108,7 @@
                       <Component id="labelsum" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jPanel2" pref="404" max="32767" attributes="0"/>
+                  <Component id="jPanel2" pref="426" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -121,11 +117,13 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Year"/>
+            <Property name="name" type="java.lang.String" value="lblyear" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btRun">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -134,11 +132,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Acct"/>
+            <Property name="name" type="java.lang.String" value="lblfromacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Acct"/>
+            <Property name="name" type="java.lang.String" value="lbltoacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labelsum">
@@ -160,6 +160,7 @@
         <Component class="javax.swing.JCheckBox" name="cbzero">
           <Properties>
             <Property name="text" type="java.lang.String" value="Supress Zeros"/>
+            <Property name="name" type="java.lang.String" value="cbsuppresszeros" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddyear">
@@ -260,6 +261,7 @@
         <Component class="javax.swing.JButton" name="bthidechart">
           <Properties>
             <Property name="text" type="java.lang.String" value="Hide Chart"/>
+            <Property name="name" type="java.lang.String" value="bthidechart" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bthidechartActionPerformed"/>
@@ -275,6 +277,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Site"/>
+            <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddsum">
@@ -303,6 +306,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sum Period"/>
+            <Property name="name" type="java.lang.String" value="lblsumperiod" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

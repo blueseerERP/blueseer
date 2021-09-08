@@ -59,6 +59,8 @@ public interface IBlueSeerT {
     public void newAction(String x);
     
     public void executeTask(String x, String[] y);
+    
+    public Record createRecord();
    
     
 }

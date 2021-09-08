@@ -42,9 +42,11 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -53,10 +55,19 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 /**
@@ -70,8 +81,57 @@ public class GLCalMaint extends javax.swing.JPanel {
      */
     public GLCalMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void initvars(String[] arg) {
        Calendar now = Calendar.getInstance();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -129,12 +189,12 @@ public class GLCalMaint extends javax.swing.JPanel {
                 }
                 
                 if (i == 0) {
-                    bsmf.MainFrame.show("No Calendar Record for selected Year and Period");
+                    bsmf.MainFrame.show(getMessageTag(1037));
                 }
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve gl_cal record");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -208,13 +268,16 @@ public class GLCalMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ledger Calendar Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Year");
+        jLabel1.setName("lblyear"); // NOI18N
 
         jLabel2.setText("Period");
+        jLabel2.setName("lblperiod"); // NOI18N
 
-        btedit.setText("Edit");
+        btedit.setText("Update");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -222,6 +285,7 @@ public class GLCalMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -229,14 +293,17 @@ public class GLCalMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Start");
+        jLabel3.setName("lblstart"); // NOI18N
 
         jLabel4.setText("End");
+        jLabel4.setName("lblend"); // NOI18N
 
         dcstart.setDateFormatString("yyyy-MM-dd");
 
         dcend.setDateFormatString("yyyy-MM-dd");
 
         cbstatus.setText("Closed?");
+        cbstatus.setName("cbclosed"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -293,7 +360,7 @@ public class GLCalMaint extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addGap(6, 6, 6))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -349,9 +416,9 @@ public class GLCalMaint extends javax.swing.JPanel {
                             + ")"
                             + ";" );
                         
-                        bsmf.MainFrame.show("Added Calendar Record");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Calendar Record Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                     //reinitapmvariables();
@@ -359,7 +426,7 @@ public class GLCalMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to insert into ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -395,7 +462,7 @@ public class GLCalMaint extends javax.swing.JPanel {
                             + " where glc_year = " + "'" + ddyear.getSelectedItem().toString() + "'" 
                             + " AND glc_per = " + "'" + ddperiod.getSelectedItem().toString() + "'" 
                                 + ";");
-                        bsmf.MainFrame.show("Edited Calendar Record");
+                        bsmf.MainFrame.show(getMessageTag(1008));
                     
 
                     //reinitapmvariables();
@@ -403,7 +470,7 @@ public class GLCalMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to edit glc_cal");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

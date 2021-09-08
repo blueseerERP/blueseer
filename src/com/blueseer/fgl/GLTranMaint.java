@@ -50,9 +50,13 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -72,13 +76,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
@@ -158,6 +166,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public GLTranMaint() {
         initComponents();
+        setLanguageTags(this);
         
 
     }
@@ -298,13 +307,60 @@ public class GLTranMaint extends javax.swing.JPanel {
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve gl_tran record");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
+    
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+               if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] arg) {
        
@@ -372,8 +428,8 @@ public class GLTranMaint extends javax.swing.JPanel {
         
         JPanel rbpanel = new JPanel();
         bg = new ButtonGroup();
-        rb1 = new JRadioButton("AcctNbr");
-        rb2 = new JRadioButton("Description");
+        rb1 = new JRadioButton(getGlobalLabelTag("lblaccount"));
+        rb2 = new JRadioButton(getGlobalLabelTag("lbldesc"));
         rb1.setSelected(true);
         rb2.setSelected(false);
         BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
@@ -387,7 +443,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         
         
         dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
+        dialog.setTitle(getMessageTag(1049));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         JPanel panel = new JPanel();
@@ -430,9 +486,9 @@ public class GLTranMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -452,7 +508,8 @@ public class GLTranMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Reference", "Account"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lblacct", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -500,16 +557,17 @@ public class GLTranMaint extends javax.swing.JPanel {
         ddcurr = new javax.swing.JComboBox();
         tbcontrolamt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        lbacct = new javax.swing.JLabel();
-        lbcc = new javax.swing.JLabel();
+        lbacctname = new javax.swing.JLabel();
+        lbccname = new javax.swing.JLabel();
         btLookUpAccount = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
-        btsubmit.setText("Submit");
+        btsubmit.setText("Commit");
+        btsubmit.setName("btcommit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -517,6 +575,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         btdeleteALL.setText("Delete");
+        btdeleteALL.setName("btdelete"); // NOI18N
         btdeleteALL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteALLActionPerformed(evt);
@@ -524,16 +583,21 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         jLabel46.setText("Reference");
+        jLabel46.setName("lblid"); // NOI18N
 
         jLabel47.setText("Userid");
+        jLabel47.setName("lbluserid"); // NOI18N
 
         jLabel50.setText("EffectiveDate");
+        jLabel50.setName("lbleffectivedate"); // NOI18N
 
         jLabel2.setText("Entered Date");
+        jLabel2.setName("lblenterdate"); // NOI18N
 
         effdate.setDateFormatString("yyyy-MM-dd");
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -575,6 +639,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         jScrollPane1.setViewportView(transtable);
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -582,6 +647,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -589,8 +655,10 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         jLabel48.setText("cc");
+        jLabel48.setName("lblcc"); // NOI18N
 
         jLabel49.setText("Acct");
+        jLabel49.setName("lblacct"); // NOI18N
 
         tbdesc.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -599,6 +667,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         jLabel51.setText("Amt");
+        jLabel51.setName("lblamt"); // NOI18N
 
         tbamt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -607,16 +676,20 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         jLabel52.setText("Desc");
+        jLabel52.setName("lbldesc"); // NOI18N
 
         labeltotal.setBackground(new java.awt.Color(217, 235, 191));
 
         jLabel1.setText("Site");
+        jLabel1.setName("lblsite"); // NOI18N
 
         jLabel3.setText("Currency");
+        jLabel3.setName("lblcurrency"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "standard", "reversing" }));
 
         jLabel4.setText("Total:");
+        jLabel4.setName("lbltotalamt"); // NOI18N
 
         ddacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -630,6 +703,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
         });
 
+        tbcontrolamt.setName(""); // NOI18N
         tbcontrolamt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tbcontrolamtFocusLost(evt);
@@ -637,6 +711,11 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Control Amt");
+        jLabel5.setName("lblcontrolamt"); // NOI18N
+
+        lbacctname.setName("lblacctname"); // NOI18N
+
+        lbccname.setName("lblccname"); // NOI18N
 
         btLookUpAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpAccount.addActionListener(new java.awt.event.ActionListener() {
@@ -659,21 +738,16 @@ public class GLTranMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(44, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(jLabel52))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(62, 62, 62)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel49)
-                                    .addComponent(jLabel48)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel3))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel46, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel49, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel48, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -706,10 +780,10 @@ public class GLTranMaint extends javax.swing.JPanel {
                                 .addComponent(btdelete))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(35, 35, 35)
-                                .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lbacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(32, 32, 32)
-                                .addComponent(lbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -727,14 +801,8 @@ public class GLTranMaint extends javax.swing.JPanel {
                         .addGap(202, 202, 202)
                         .addComponent(btnew))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(91, 91, 91)
                         .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel46))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(160, 160, 160)
                         .addComponent(jLabel4)
@@ -754,17 +822,13 @@ public class GLTranMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(jLabel46))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(98, 98, 98)
-                        .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(jLabel5))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(btnew))
@@ -778,7 +842,9 @@ public class GLTranMaint extends javax.swing.JPanel {
                         .addGap(61, 61, 61)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btlookup)
-                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel46)))))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dateentered, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -801,20 +867,18 @@ public class GLTranMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btLookUpAccount)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(3, 3, 3)
-                                    .addComponent(jLabel49))
-                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel49)))))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
-                        .addComponent(lbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -823,11 +887,10 @@ public class GLTranMaint extends javax.swing.JPanel {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel52))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
-                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel52)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
                         .addComponent(jLabel51))
@@ -869,26 +932,26 @@ public class GLTranMaint extends javax.swing.JPanel {
                 
                 if (  Double.compare(Double.valueOf(tbcontrolamt.getText().toString()), positiveamt) != 0 ) {
                     proceed = false;
-                    bsmf.MainFrame.show("Control Amount not met " + df.format(Double.valueOf(tbcontrolamt.getText().toString())) + "/" + String.valueOf(df.format(positiveamt)) );
+                    bsmf.MainFrame.show(getMessageTag(1039, df.format(Double.valueOf(tbcontrolamt.getText())) + "/" + String.valueOf(df.format(positiveamt))));
                     return;
                 }
                 
                 if (Double.valueOf(labeltotal.getText().toString()) != 0) {
                     proceed = false;
-                    bsmf.MainFrame.show("Not Balanced...cannot submit");
+                    bsmf.MainFrame.show(getMessageTag(1040));
                     return;
                 }
                    
                 String[] caldate = OVData.getGLCalForDate(dfdate.format(effdate.getDate()));
                 if (caldate == null || caldate[0].isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("No calendar period for effective date");
+                    bsmf.MainFrame.show(getMessageTag(1038));
                     return;
                 }
                 
                 if ( OVData.isGLPeriodClosed(dfdate.format(effdate.getDate()))) {
                     proceed = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
                     
@@ -903,12 +966,12 @@ public class GLTranMaint extends javax.swing.JPanel {
                       ArrayList<String> nextcal = OVData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
                       if (nextcal.isEmpty()) {
                        proceed = false;
-                       bsmf.MainFrame.show("No Calendar for Reversing Period");
+                       bsmf.MainFrame.show(getMessageTag(1042));
                        return;
                       }
                       if (! nextcal.isEmpty() && nextcal.get(4).toString().equals("closed")) {
                        proceed = false;
-                       bsmf.MainFrame.show("Reversing Period is closed");
+                       bsmf.MainFrame.show(getMessageTag(1041));
                        return;
                       }
                       nextstartdate = String.valueOf(nextcal.get(2));
@@ -916,7 +979,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 
                 if (type.equals("RV") && nextstartdate.isEmpty()) {
                      proceed = false;
-                     bsmf.MainFrame.show("Reversing Period start date is blank");
+                     bsmf.MainFrame.show(getMessageTag(1043));
                      return;
                 }
                 
@@ -969,13 +1032,13 @@ public class GLTranMaint extends javax.swing.JPanel {
                             
                         
                     }
-                    bsmf.MainFrame.show("Transactions added successfully");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Add GL Transactions via SQL statement");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
            
@@ -989,7 +1052,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             
             if (! tbref.getText().toString().startsWith("JL")) {
                 proceed = false;
-                bsmf.MainFrame.show("You can only delete 'JL' type transactions created with GL Maintenance Menu");
+                bsmf.MainFrame.show(getMessageTag(1044));
             }
             
         if (proceed) {
@@ -1002,14 +1065,14 @@ public class GLTranMaint extends javax.swing.JPanel {
               
                    int i = st.executeUpdate("delete from gl_tran where glt_ref = " + "'" + tbref.getText() + "'" + ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted " + String.valueOf(i) + " gl_tran records for ref= " + tbref.getText());
+                    bsmf.MainFrame.show(getMessageTag(1045, String.valueOf(i)));
                     initvars(null);
                     } else {
-                     bsmf.MainFrame.show("unable to delete...may have been posted" + tbref.getText());   
+                     bsmf.MainFrame.show(getMessageTag(1047));   
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete GL_TRAN Record");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1027,7 +1090,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         transtable.setModel(transmodel);
         
         if (tbdesc.getText().isEmpty()) {
-             bsmf.MainFrame.show("Desc cannot be blank");
+             bsmf.MainFrame.show(getMessageTag(1024, "description"));
              tbdesc.setBackground(Color.yellow);
             tbdesc.requestFocus();
             return;
@@ -1036,23 +1099,23 @@ public class GLTranMaint extends javax.swing.JPanel {
         
         
         if (tbamt.getText().isEmpty()) {
-             bsmf.MainFrame.show("amount cannot be blank");
+             bsmf.MainFrame.show(getMessageTag(1024, "amount"));
             tbamt.setBackground(Color.yellow);
             tbamt.requestFocus();
             return;
          }
        
         if (! OVData.isAcctNumberValid(ddacct.getSelectedItem().toString()) ) {
-            bsmf.MainFrame.show("Acct is not valid");
+            bsmf.MainFrame.show(getMessageTag(1026));
             return;
         }
         if (! OVData.isCostCenterValid(ddcc.getSelectedItem().toString()) ) {
-            bsmf.MainFrame.show("CostCenter is not valid");
+            bsmf.MainFrame.show(getMessageTag(1048));
             return;
         }
         
         if (effdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(effdate.getDate())) ) {
-            bsmf.MainFrame.show("Date not properly formatted");
+            bsmf.MainFrame.show(getMessageTag(1033, "effective date"));
             return;
         }
         
@@ -1117,11 +1180,11 @@ public class GLTranMaint extends javax.swing.JPanel {
 
                 res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
-                    lbacct.setText(res.getString("ac_desc"));
+                    lbacctname.setText(res.getString("ac_desc"));
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select from ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1142,11 +1205,11 @@ public class GLTranMaint extends javax.swing.JPanel {
 
                 res = st.executeQuery("select dept_desc from dept_mstr where dept_id = " + "'" + ddcc.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
-                    lbcc.setText(res.getString("dept_desc"));
+                    lbccname.setText(res.getString("dept_desc"));
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select from dept_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1159,7 +1222,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbamt.setText("");
             tbamt.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbamt.requestFocus();
         } else {
             tbamt.setText(x);
@@ -1172,7 +1235,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbcontrolamt.setText("");
             tbcontrolamt.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbcontrolamt.requestFocus();
         } else {
             tbcontrolamt.setText(x);
@@ -1226,8 +1289,8 @@ public class GLTranMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labeltotal;
-    private javax.swing.JLabel lbacct;
-    private javax.swing.JLabel lbcc;
+    private javax.swing.JLabel lbacctname;
+    private javax.swing.JLabel lbccname;
     private javax.swing.JTextField tbamt;
     private javax.swing.JTextField tbcontrolamt;
     private javax.swing.JTextField tbdesc;
