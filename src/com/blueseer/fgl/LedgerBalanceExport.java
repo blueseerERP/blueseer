@@ -25,7 +25,11 @@ SOFTWARE.
  */
 package com.blueseer.fgl;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedWriter;
@@ -40,6 +44,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -49,16 +61,67 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
 
     
       javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Site", "Acct", "Desc", "CostCenter", "Period", "Year", "EndBal"});
+                        new String[]{getGlobalColumnTag("site"),
+                            getGlobalColumnTag("account"),
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("costcenter"), 
+                            getGlobalColumnTag("period"),
+                            getGlobalColumnTag("year"),
+                            getGlobalColumnTag("endbalance")});
     
     /**
      * Creates new form LedgerBalanceExport
      */
     public LedgerBalanceExport() {
         initComponents();
+        setLanguageTags(this);
     }
 
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
      
           lblendbal.setText("");
         
@@ -140,6 +203,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel2.setName("panelmain"); // NOI18N
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         tablereport.setAutoCreateRowSorter(true);
@@ -159,6 +223,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -166,12 +231,16 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Site");
+        jLabel3.setName("lblsite"); // NOI18N
 
         jLabel2.setText("To Year");
+        jLabel2.setName("lbltoyear"); // NOI18N
 
         jLabel1.setText("From Year");
+        jLabel1.setName("lblfromyear"); // NOI18N
 
         btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -179,19 +248,26 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Delimiter");
+        jLabel4.setName("lbldelimiter"); // NOI18N
 
         jLabel5.setText("From Period");
+        jLabel5.setName("lblfromperiod"); // NOI18N
 
         jLabel6.setText("To Period");
+        jLabel6.setName("lbltoperiod"); // NOI18N
 
         cbzero.setText("Supress Zeros");
+        cbzero.setName("cbsupresszeros"); // NOI18N
 
         jLabel7.setForeground(new java.awt.Color(255, 24, 0));
         jLabel7.setText("You must 'vew' before 'export'");
+        jLabel7.setName("lblnote"); // NOI18N
 
         jLabel8.setText("Total:");
+        jLabel8.setName("lbltotal"); // NOI18N
 
         cbbs.setText("BS Activity");
+        cbbs.setName("lblbsactivity"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -329,13 +405,13 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
               String detail = "";
               
               output = new BufferedWriter(new FileWriter(f));
-              String myheader = "Site" + tbdelimiter.getText() +
-                      "Account" + tbdelimiter.getText() +
-                      "Description" + tbdelimiter.getText() +
-                      "CostCenter" + tbdelimiter.getText() +
-                      "Period" + tbdelimiter.getText() +
-                      "Year" + tbdelimiter.getText() + 
-                      "Amount"
+              String myheader = getGlobalColumnTag("site") + tbdelimiter.getText() +
+                      getGlobalColumnTag("account") + tbdelimiter.getText() +
+                      getGlobalColumnTag("description") + tbdelimiter.getText() +
+                      getGlobalColumnTag("costcenter") + tbdelimiter.getText() +
+                      getGlobalColumnTag("period") + tbdelimiter.getText() +
+                      getGlobalColumnTag("year") + tbdelimiter.getText() + 
+                      getGlobalColumnTag("amount")
                       ;
               output.write(myheader + '\n');
               
@@ -355,7 +431,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
               
               output.close();
           } catch (IOException ex) {
-              Logger.getLogger(LedgerBalanceExport.class.getName()).log(Level.SEVERE, null, ex);
+              MainFrame.bslog(ex);
           }
     }//GEN-LAST:event_btexportActionPerformed
 

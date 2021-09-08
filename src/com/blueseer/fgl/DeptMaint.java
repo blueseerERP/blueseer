@@ -23,30 +23,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
-import com.blueseer.utl.OVData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.mydialog;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
-import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -58,12 +41,18 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -80,21 +69,21 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer {
+public class DeptMaint extends javax.swing.JPanel implements IBlueSeer {
 
-    
     // global variable declarations
                 boolean isLoad = false;
     
-   // global datatablemodel declarations   
-   
-    public LedgerAcctMstrPanel() {
+   // global datatablemodel declarations    
+                
+    
+    public DeptMaint() {
         initComponents();
         setLanguageTags(this);
     }
 
     
-       // interface functions implemented
+    // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
@@ -184,7 +173,7 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         
             for (Component component : components) {
                 if (component instanceof JLabel || component instanceof JTable ) {
-                     continue;
+                    continue;
                 }
                 if (component instanceof JPanel) {
                     setPanelComponentState((JPanel) component, b);
@@ -226,6 +215,20 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                 }
             }
     } 
+    
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        tbkey.setText("");
+        tbdesc.setText("");
+        tbcopacct.setText("");
+        tblbracct.setText("");
+        tbbdnacct.setText("");
+        tblbrusageacct.setText("");
+        tblbrrateacct.setText("");
+        tbbdnusageacct.setText("");
+        tbbdnrateacct.setText("");
+       isLoad = false;
+    }
     
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
@@ -274,23 +277,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
        }
     }
     
-    public void setComponentDefaultValues() {
-        isLoad = true;
-        tbkey.setText("");
-        tbdesc.setText("");
-        tbkey.setText("");
-        lbaccountname.setText("");
-        cbdisplay.setSelected(false);
-        
-        ddcur.removeAllItems();
-        ArrayList<String> curr = OVData.getCurrlist();
-        for (int i = 0; i < curr.size(); i++) {
-            ddcur.addItem(curr.get(i));
-        }
-        ddcur.setSelectedItem(OVData.getDefaultCurrency());
-        
-       isLoad = false;
-    }
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
@@ -322,34 +308,74 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         }
         return m;
     }
-     
+    
     public boolean validateInput(String x) {
         boolean b = true;
-                if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
+               
+                if (tbkey.getText().isEmpty()) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must choose a currency"});
+                    bsmf.MainFrame.show(getMessageTag(1024, "ID"));
+                    tbkey.requestFocus();
                     return b;
                 }
-               
+        
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must enter a description"});
+                    bsmf.MainFrame.show(getMessageTag(1024, "Description"));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
-                if (tbkey.getText().isEmpty()) {
+                if (! tbcopacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbcopacct.getText())) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must enter a code"});
-                    tbkey.requestFocus();
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbcopacct.requestFocus();
                     return b;
                 }
                 
-                if (Integer.valueOf(tbkey.getText().toString()) >= 99000000 && Integer.valueOf(tbkey.getText().toString()) <= 99999999) {
+                if (! tblbracct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbracct.getText())) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "Account numbers between 99000000 and 99999999 are system reserved"});
-                    tbkey.requestFocus();
-                } 
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tblbracct.requestFocus();
+                    return b;
+                }
+                
+                if (! tbbdnacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbbdnacct.requestFocus();
+                    return b;
+                }
+                
+                if (! tblbrusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrusageacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tblbrusageacct.requestFocus();
+                    return b;
+                }
+                
+                if (! tblbrrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrrateacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tblbrrateacct.requestFocus();
+                    return b;
+                }
+                
+                if (! tbbdnusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnusageacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbbdnusageacct.requestFocus();
+                    return b;
+                }
+                
+                if (! tbbdnrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnrateacct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbbdnrateacct.requestFocus();
+                    return b;
+                }
+                
+                
                 
                
         return b;
@@ -361,8 +387,6 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
-      
-       
         
         if (arg != null && arg.length > 0) {
             executeTask("get",arg);
@@ -372,141 +396,115 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
             tbkey.requestFocus();
         }
     }
-   
-    public String[] getRecord(String[] key) {
-       String[] m = new String[2];
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from ac_mstr where ac_id = " + "'" + key[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("ac_desc"));
-                    tbkey.setText(res.getString("ac_id"));
-                    ddcur.setSelectedItem(res.getString("ac_cur"));
-                    cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("ac_display")));
-                    ddtype.setSelectedItem(res.getString("ac_type"));
-                }
-              
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
-    }
     
-    public String[] addRecord(String[] key) {
-         String[] m = new String[2];
-         try {
+    public String[] addRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
             try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                boolean proceed = true;
                 int i = 0;
-              
-                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + tbkey.getText() + "'" + ";");
+                
+                proceed = validateInput("addRecord");
+                
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT dept_id FROM  dept_mstr where dept_id = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
                     if (i == 0) {
-                        st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
+                        st.executeUpdate("insert into dept_mstr "
+                            + "( dept_id, dept_desc, dept_cop_acct, dept_lbr_acct, dept_bdn_acct, dept_lbr_usg_acct, dept_lbr_rate_acct, dept_bdn_usg_acct, dept_bdn_rate_acct ) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
-                            + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcur.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"        
+                            + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + tbcopacct.getText().toString() + "'" + ","
+                                + "'" + tblbracct.getText().toString() + "'" + ","
+                                + "'" + tbbdnacct.getText().toString() + "'" + ","
+                                + "'" + tblbrusageacct.getText().toString() + "'" + ","
+                                + "'" + tblbrrateacct.getText().toString() + "'" + ","
+                                + "'" + tbbdnusageacct.getText().toString() + "'" + ","
+                                + "'" + tbbdnrateacct.getText().toString() + "'" 
                             + ")"
                             + ";");
-                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                     } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
                     }
 
                    initvars(null);
-               
-           } catch (SQLException s) {
+                   
+                } // if proceed
+            } catch (SQLException s) {
                 MainFrame.bslog(s);
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
             }
+            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
         }
-         return m;
-    }
-    
-    public String[] updateRecord(String[] key) {
-         String[] m = new String[2];
-          try {
-
+     
+     return m;
+     }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[2];
+     
+     try {
+            boolean proceed = true;
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
             try {
-                        st.executeUpdate("update ac_mstr set "
-                            + " ac_desc = " + "'" + tbdesc.getText().toString().replace("'", "").toUpperCase() + "'" + ","
-                            + " ac_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + " ac_cur = " + "'" + ddcur.getSelectedItem().toString() + "'" + ","
-                            + " ac_display = " + "'" + BlueSeerUtils.boolToInt(cbdisplay.isSelected()) + "'"         
-                            + " where ac_id = " + "'" + tbkey.getText().toString() + "'" 
+                Statement st = bsmf.MainFrame.con.createStatement();
+                   
+               proceed = validateInput("updateRecord");
+                
+                if (proceed) {
+                   st.executeUpdate("update dept_mstr set dept_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "dept_cop_acct = " + "'" + tbcopacct.getText() + "'" + ","
+                            + "dept_lbr_acct = " + "'" + tblbracct.getText() + "'" + ","
+                            + "dept_bdn_acct = " + "'" + tbbdnacct.getText() + "'" + ","
+                            + "dept_lbr_usg_acct = " + "'" + tblbrusageacct.getText() + "'" + ","
+                            + "dept_lbr_rate_acct = " + "'" + tblbrrateacct.getText() + "'" + ","
+                            + "dept_bdn_usg_acct = " + "'" + tbbdnusageacct.getText() + "'" + ","
+                            + "dept_bdn_rate_acct = " + "'" + tbbdnrateacct.getText() + "'"                            
+                            + " where dept_id = " + "'" + x[0] + "'"                             
                             + ";");
-                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
-          
+                } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
             }
+            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
         }
-         return m;
-    }
-    
-    public String[] deleteRecord(String[] key) {
-         String[] m = new String[2];
-          boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+     
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
             try {
-                
+                Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from ac_mstr where ac_id = " + "'" + tbkey.getText() + "'" + ";");
+                   int i = st.executeUpdate("delete from dept_mstr where dept_id = " + "'" + x[0] + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);
@@ -514,10 +512,8 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
             }
+            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
@@ -525,7 +521,47 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-         return m;
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+       
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("select * from dept_mstr where dept_id = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbkey.setText(x[0]);
+                    tbdesc.setText(res.getString("dept_desc"));
+                    tbcopacct.setText(res.getString("dept_cop_acct"));
+                    tblbracct.setText(res.getString("dept_lbr_acct"));
+                    tbbdnacct.setText(res.getString("dept_bdn_acct"));
+                    tblbrusageacct.setText(res.getString("dept_lbr_usg_acct"));
+                    tblbrrateacct.setText(res.getString("dept_lbr_rate_acct"));
+                    tbbdnusageacct.setText(res.getString("dept_bdn_usg_acct"));
+                    tbbdnrateacct.setText(res.getString("dept_bdn_rate_acct"));
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
     }
     
     public void lookUpFrame() {
@@ -534,16 +570,16 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_id");
+         luModel = DTData.getDeptCCBrowseUtil(luinput.getText(),0, "dept_id");
         } else {
-         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_desc");   
+         luModel = DTData.getDeptCCBrowseUtil(luinput.getText(),0, "dept_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
             ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " " + getMessageTag(1002));
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -563,11 +599,15 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblaccount", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldescription", this.getClass().getSimpleName())); 
+         
         
         
     }
 
+    
+    // custom funcs
+   
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -578,48 +618,37 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelmaint = new javax.swing.JPanel();
-        lblaccount = new javax.swing.JLabel();
-        lbldesc = new javax.swing.JLabel();
-        ddcur = new javax.swing.JComboBox();
-        ddtype = new javax.swing.JComboBox();
-        btupdate = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        tbcopacct = new javax.swing.JTextField();
         btadd = new javax.swing.JButton();
-        tbkey = new javax.swing.JTextField();
-        lbltype = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        btupdate = new javax.swing.JButton();
         tbdesc = new javax.swing.JTextField();
-        lblcurrency = new javax.swing.JLabel();
-        btnew = new javax.swing.JButton();
+        tbkey = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
-        lbaccountname = new javax.swing.JLabel();
-        cbdisplay = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        tblbracct = new javax.swing.JTextField();
+        tbbdnacct = new javax.swing.JTextField();
+        tblbrusageacct = new javax.swing.JTextField();
+        tblbrrateacct = new javax.swing.JTextField();
+        tbbdnusageacct = new javax.swing.JTextField();
+        tbbdnrateacct = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        panelmaint.setName("panelmaint"); // NOI18N
+        jPanel1.setName("panelmaint"); // NOI18N
 
-        lblaccount.setText("Account");
-        lblaccount.setName("lblaccount"); // NOI18N
-
-        lbldesc.setText("Desc");
-        lbldesc.setName("lbldesc"); // NOI18N
-
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "E", "I", "L", "O", "M" }));
-        ddtype.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddtypeActionPerformed(evt);
-            }
-        });
-
-        btupdate.setText("Update");
-        btupdate.setName("btupdate"); // NOI18N
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
-            }
-        });
+        tbcopacct.setName(""); // NOI18N
 
         btadd.setText("Add");
         btadd.setName("btadd"); // NOI18N
@@ -629,28 +658,23 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
             }
         });
 
-        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbkeyFocusLost(evt);
+        jLabel2.setText("Description:");
+        jLabel2.setName("lbldescription"); // NOI18N
+
+        btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
             }
         });
+
+        tbdesc.setName(""); // NOI18N
+
+        tbkey.setName(""); // NOI18N
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
-            }
-        });
-
-        lbltype.setText("Type");
-        lbltype.setName("lbltype"); // NOI18N
-
-        lblcurrency.setText("Currency");
-        lblcurrency.setName("lblcurrency"); // NOI18N
-
-        btnew.setText("New");
-        btnew.setName("btnew"); // NOI18N
-        btnew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnewActionPerformed(evt);
             }
         });
 
@@ -662,11 +686,43 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
             }
         });
 
-        cbdisplay.setText("Show this account in Expense DropDowns");
-        cbdisplay.setName("cbdisplay"); // NOI18N
-        cbdisplay.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("Department:");
+        jLabel1.setName("lblid"); // NOI18N
+
+        jLabel3.setText("CostOfOperation Acct:");
+        jLabel3.setName("lblacctcost"); // NOI18N
+
+        tblbracct.setName(""); // NOI18N
+
+        tbbdnacct.setName(""); // NOI18N
+
+        tblbrusageacct.setName(""); // NOI18N
+
+        tblbrrateacct.setName(""); // NOI18N
+
+        jLabel4.setText("Labor Acct:");
+        jLabel4.setName("lblacctlbr"); // NOI18N
+
+        jLabel5.setText("Burden Acct:");
+        jLabel5.setName("lblacctbdn"); // NOI18N
+
+        jLabel6.setText("Labor Usage Var Acct:");
+        jLabel6.setName("lblacctlbrusage"); // NOI18N
+
+        jLabel7.setText("Labor Rate Var Acct:");
+        jLabel7.setName("lblacctlbrrate"); // NOI18N
+
+        jLabel8.setText("Burden Usage Var Acct:");
+        jLabel8.setName("lblacctbdnusage"); // NOI18N
+
+        jLabel9.setText("Burden Rate Var Acct:");
+        jLabel9.setName("lblacctbdnrate"); // NOI18N
+
+        btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
+        btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbdisplayActionPerformed(evt);
+                btnewActionPerformed(evt);
             }
         });
 
@@ -679,93 +735,115 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
         });
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btlookup.setName("btlookup"); // NOI18N
+        btlookup.setName(""); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
-        panelmaint.setLayout(panelmaintLayout);
-        panelmaintLayout.setHorizontalGroup(
-            panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelmaintLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblaccount)
-                    .addComponent(lbldesc)
-                    .addComponent(lbltype)
-                    .addComponent(lblcurrency))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelmaintLayout.createSequentialGroup()
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear))
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(panelmaintLayout.createSequentialGroup()
-                            .addComponent(btdelete)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btupdate)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btadd))
-                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelmaintLayout.createSequentialGroup()
-                                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(ddcur, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tblbrrateacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbbdnrateacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbbdnusageacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tblbrusageacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbbdnacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tblbracct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbcopacct, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbdisplay)))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(177, 177, 177)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btadd)))
+                .addContainerGap())
         );
-        panelmaintLayout.setVerticalGroup(
-            panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelmaintLayout.createSequentialGroup()
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblaccount))
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbldesc))
-                .addGap(11, 11, 11)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbltype)))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblcurrency))
-                .addGap(5, 5, 5)
-                .addComponent(cbdisplay)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbcopacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tblbracct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbbdnacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tblbrusageacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tblbrrateacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbbdnusageacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbbdnrateacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
                     .addComponent(btdelete))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        add(panelmaint);
+        add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+       if (! validateInput("addRecord")) {
            return;
        }
         setPanelComponentState(this, false);
@@ -773,70 +851,33 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+        if (! validateInput("updateRecord")) {
            return;
        }
         setPanelComponentState(this, false);
         executeTask("update", new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        newAction("");
-    }//GEN-LAST:event_btnewActionPerformed
-
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+       if (! validateInput("deleteRecord")) {
            return;
        }
         setPanelComponentState(this, false);
         executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
-        if (ddtype.getSelectedItem().toString().equals("E")) {
-            lbaccountname.setText(getClassLabelTag("ExpenseType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("A")) {
-            lbaccountname.setText(getClassLabelTag("AssetType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("I")) {
-            lbaccountname.setText(getClassLabelTag("IncomeType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("L")) {
-            lbaccountname.setText(getClassLabelTag("liabilityType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("O")) {
-            lbaccountname.setText(getClassLabelTag("OwnersEquityType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("M")) {
-            lbaccountname.setText(getClassLabelTag("MiscellaneousType", this.getClass().getSimpleName()));    
-        } else {
-            lbaccountname.setText(getClassLabelTag("UnknownAccountType", this.getClass().getSimpleName()));
-        }
-    }//GEN-LAST:event_ddtypeActionPerformed
-
-    private void cbdisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbdisplayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbdisplayActionPerformed
-
-    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-      if (! btadd.isEnabled())
-        executeTask("get", new String[]{tbkey.getText()});
-    }//GEN-LAST:event_tbkeyActionPerformed
-
-    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
-        String x = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
-        if (x.equals("error")) {
-            tbkey.setText("");
-            tbkey.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbkey.requestFocus();
-        } else {
-            tbkey.setText(x);
-            tbkey.setBackground(Color.white);
-           
-        }
-    }//GEN-LAST:event_tbkeyFocusLost
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
@@ -850,16 +891,24 @@ public class LedgerAcctMstrPanel extends javax.swing.JPanel implements IBlueSeer
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbdisplay;
-    private javax.swing.JComboBox ddcur;
-    private javax.swing.JComboBox ddtype;
-    private javax.swing.JLabel lbaccountname;
-    private javax.swing.JLabel lblaccount;
-    private javax.swing.JLabel lblcurrency;
-    private javax.swing.JLabel lbldesc;
-    private javax.swing.JLabel lbltype;
-    private javax.swing.JPanel panelmaint;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tbbdnacct;
+    private javax.swing.JTextField tbbdnrateacct;
+    private javax.swing.JTextField tbbdnusageacct;
+    private javax.swing.JTextField tbcopacct;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tblbracct;
+    private javax.swing.JTextField tblbrrateacct;
+    private javax.swing.JTextField tblbrusageacct;
     // End of variables declaration//GEN-END:variables
 }

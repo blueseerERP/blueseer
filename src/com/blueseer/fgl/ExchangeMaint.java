@@ -29,6 +29,9 @@ package com.blueseer.fgl;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +39,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -54,6 +65,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
      */
     public ExchangeMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     public void getRates() {
@@ -79,7 +91,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve exc_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -115,7 +127,55 @@ public class ExchangeMaint extends javax.swing.JPanel {
       
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
+    public void initvars(String[] arg) {
           clearAll();
           disableAll();
           exchangemodel.setRowCount(0);
@@ -157,13 +217,16 @@ public class ExchangeMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Exchange Rate Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Base Code:");
+        jLabel1.setName("lblbasecode"); // NOI18N
 
         jLabel2.setText("Foreign Code:");
+        jLabel2.setName("lblforeigncode"); // NOI18N
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -171,6 +234,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -178,6 +242,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -185,6 +250,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Rate:");
+        jLabel3.setName("lblrate"); // NOI18N
 
         ratetable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -268,7 +334,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                 Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
                 Matcher m = p.matcher(tbrate.getText());
                 if (!m.find() || tbrate.getText() == null) {
-                  bsmf.MainFrame.show("Invalid Rate format");
+                  bsmf.MainFrame.show(getMessageTag(1033, "Rate"));
                   proceed = false;
                   return;
                 }
@@ -288,9 +354,9 @@ public class ExchangeMaint extends javax.swing.JPanel {
                             + "'" + tbrate.getText() + "'" 
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Exchange Record");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Exchange Record Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                    initvars(null);
@@ -298,7 +364,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to exc_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -319,7 +385,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                 Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
                 Matcher m = p.matcher(tbrate.getText());
                 if (!m.find() || tbrate.getText() == null) {
-                  bsmf.MainFrame.show("Invalid Rate format");
+                  bsmf.MainFrame.show(getMessageTag(1033, "rate"));
                   proceed = false;
                   return;
                 }
@@ -333,7 +399,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                     }
                     
                     if (i == 0) {
-                        bsmf.MainFrame.show("Exchange record does not exist...must add");
+                        bsmf.MainFrame.show(getMessageTag(1033, "Exchange"));
                         return;
                     } else {
                     
@@ -341,14 +407,14 @@ public class ExchangeMaint extends javax.swing.JPanel {
                             + " where exc_base = " + "'" + tbbasecode.getText() + "'"  
                             + " and exc_foreign = " + "'" + ddforeign.getSelectedItem().toString() + "'"
                             + ";");
-                    bsmf.MainFrame.show("Updated Exchange Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                     }
                 } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating exc_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -374,7 +440,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Exchange Record");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

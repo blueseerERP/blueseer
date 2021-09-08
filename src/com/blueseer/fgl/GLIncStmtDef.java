@@ -26,13 +26,24 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 
 /**
@@ -49,8 +60,56 @@ public class GLIncStmtDef extends javax.swing.JPanel {
      */
     public GLIncStmtDef() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] vars) {
         
@@ -105,7 +164,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Income Statement Category Definitions"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         ddcategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,6 +173,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -121,6 +181,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Category");
+        jLabel1.setName("lblcategory"); // NOI18N
 
         ddacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,12 +190,15 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Accounts");
+        jLabel3.setName("lblaccounts"); // NOI18N
 
         jScrollPane2.setViewportView(assignlist);
 
         jLabel4.setText("Excluded:");
+        jLabel4.setName("lblexcluded"); // NOI18N
 
         btaddassign.setText("Add");
+        btaddassign.setName("btadd"); // NOI18N
         btaddassign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddassignActionPerformed(evt);
@@ -142,6 +206,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         btdeleteassigned.setText("Delete");
+        btdeleteassigned.setName("btdelete"); // NOI18N
         btdeleteassigned.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteassignedActionPerformed(evt);
@@ -149,14 +214,18 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From");
+        jLabel5.setName("lblfrom"); // NOI18N
 
         jLabel6.setText("To");
+        jLabel6.setName("lblto"); // NOI18N
 
         jScrollPane3.setViewportView(excludelist);
 
         jLabel7.setText("Assigned");
+        jLabel7.setName("lblassigned"); // NOI18N
 
         btaddexclude.setText("Add");
+        btaddexclude.setName("btadd"); // NOI18N
         btaddexclude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddexcludeActionPerformed(evt);
@@ -164,6 +233,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         });
 
         btdeleteexclude.setText("Delete");
+        btdeleteexclude.setName("btdelete"); // NOI18N
         btdeleteexclude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteexcludeActionPerformed(evt);
@@ -336,12 +406,12 @@ public class GLIncStmtDef extends javax.swing.JPanel {
                        }
                        
                        
-                        bsmf.MainFrame.show("Updated Record");
+                        bsmf.MainFrame.show(getMessageTag(1008));
                    
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to update glic_accts");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

@@ -31,7 +31,15 @@ import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData.BankMstr;
+import static com.blueseer.fgl.fglData.addBankMstr;
+import static com.blueseer.fgl.fglData.deleteBankMstr;
+import static com.blueseer.fgl.fglData.getBankMstr;
+import static com.blueseer.fgl.fglData.updateBankMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -53,10 +61,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
@@ -64,7 +77,7 @@ import javax.swing.JViewport;
  *
  * @author vaughnte
  */
-public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -73,8 +86,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
       
                 
-    public BankMaintPanel() {
+    public BankMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -212,6 +226,53 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -254,19 +315,15 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
     public boolean validateInput(String x) {
@@ -325,168 +382,58 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         }
     }
     
+    public BankMstr createRecord() {
+        BankMstr x = new BankMstr(null, tbkey.getText().toString(),
+                ddsite.getSelectedItem().toString(),
+                tbdesc.getText().toString().replace("'", "").toUpperCase(),
+                tbacct.getText().toString(),
+                tbroute.getText().toString(),
+                tbassignedID.getText().toString(),
+                ddcurr.getSelectedItem().toString(),
+                BlueSeerUtils.boolToInt(cbactive.isSelected())
+                );
+        return x;
+    }
+   
+    
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                int i = 0;
-
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into bk_mstr "
-                            + "(bk_id, bk_site, bk_desc, bk_acct, bk_cur, bk_active, bk_route, bk_assignedID ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'" + ","
-                            + "'" + tbroute.getText().toString() + "'" + ","
-                            + "'" + tbassignedID.getText().toString() + "'"      
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+        String[] m = new String[2];
+        m = addBankMstr(createRecord());
+        initvars(null);
+        return m;
      }
      
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            try {
-                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
-                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
-                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
-                            + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
-                            + "bk_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
-                            + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where bk_id = " + "'" + x[0] + "'"                             
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+        m = updateBankMstr(createRecord());
+        initvars(null);
+        return m;
      }
      
     public String[] deleteRecord(String[] x) {
-     String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+      String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteBankMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(res.getString("bk_id"));
-                    tbdesc.setText(res.getString("bk_desc"));
-                    tbacct.setText(res.getString("bk_acct"));
-                    tbroute.setText(res.getString("bk_route"));
-                    tbassignedID.setText(res.getString("bk_assignedID"));
-                    ddcurr.setSelectedItem(res.getString("bk_cur"));
-                    ddsite.setSelectedItem(res.getString("bk_site"));
-                    cbactive.setSelected(res.getBoolean("bk_active"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       BankMstr x = getBankMstr(key);
+        tbkey.setText(x.id());
+        tbdesc.setText(x.desc());
+        tbacct.setText(x.account());
+        tbroute.setText(x.routing());
+        tbassignedID.setText(x.assignedID());
+        ddcurr.setSelectedItem(x.currency());
+        ddsite.setSelectedItem(x.site());
+        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbactive())));
+        setAction(x.m());
+        return x.m();
     }
     
     public void lookUpFrame() {
@@ -502,9 +449,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -524,7 +471,8 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "Description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -540,9 +488,9 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        panelmaint = new javax.swing.JPanel();
+        lblid = new javax.swing.JLabel();
+        lbldescription = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
@@ -550,15 +498,15 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         tbkey = new javax.swing.JTextField();
         cbactive = new javax.swing.JCheckBox();
         tbacct = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        lblaccount = new javax.swing.JLabel();
         ddcurr = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
+        lblcurrency = new javax.swing.JLabel();
         tbroute = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        lblrouting = new javax.swing.JLabel();
         tbassignedID = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        lblassignedid = new javax.swing.JLabel();
         ddsite = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
+        lblsite = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
@@ -567,13 +515,16 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Bank Maintenance"));
+        panelmaint.setName("panelmaint"); // NOI18N
 
-        jLabel1.setText("Bank Code:");
+        lblid.setText("Bank Code:");
+        lblid.setName("lblid"); // NOI18N
 
-        jLabel2.setText("Description:");
+        lbldescription.setText("Description:");
+        lbldescription.setName("lbldescription"); // NOI18N
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -581,6 +532,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -588,6 +540,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -601,18 +554,25 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         cbactive.setText("Active?");
+        cbactive.setName("cbactive"); // NOI18N
 
-        jLabel3.setText("Account:");
+        lblaccount.setText("Account:");
+        lblaccount.setName("lblaccount"); // NOI18N
 
-        jLabel4.setText("Currency:");
+        lblcurrency.setText("Currency:");
+        lblcurrency.setName("lblcurrency"); // NOI18N
 
-        jLabel5.setText("Routing:");
+        lblrouting.setText("Routing:");
+        lblrouting.setName("lblrouting"); // NOI18N
 
-        jLabel6.setText("assignedID:");
+        lblassignedid.setText("assignedID:");
+        lblassignedid.setName("lblassignedid"); // NOI18N
 
-        jLabel7.setText("Site:");
+        lblsite.setText("Site:");
+        lblsite.setName("lblsite"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -620,6 +580,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -627,31 +588,32 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setName(""); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
+        panelmaint.setLayout(panelmaintLayout);
+        panelmaintLayout.setHorizontalGroup(
+            panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelmaintLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblid)
+                    .addComponent(lbldescription)
+                    .addComponent(lblaccount)
+                    .addComponent(lblcurrency)
+                    .addComponent(lblrouting)
+                    .addComponent(lblassignedid)
+                    .addComponent(lblsite))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(tbassignedID)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(panelmaintLayout.createSequentialGroup()
                             .addComponent(btadd)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btdelete)
@@ -663,7 +625,7 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tbroute))
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(panelmaintLayout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -673,53 +635,53 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(btclear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelmaintLayout.setVerticalGroup(
+            panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelmaintLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblid))
+                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(lblsite))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(lbldescription))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(lblaccount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbroute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(lblrouting))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbassignedID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(lblassignedid))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(lblcurrency))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbactive)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(jPanel1);
+        add(panelmaint);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -775,15 +737,15 @@ public class BankMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JCheckBox cbactive;
     private javax.swing.JComboBox ddcurr;
     private javax.swing.JComboBox<String> ddsite;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblaccount;
+    private javax.swing.JLabel lblassignedid;
+    private javax.swing.JLabel lblcurrency;
+    private javax.swing.JLabel lbldescription;
+    private javax.swing.JLabel lblid;
+    private javax.swing.JLabel lblrouting;
+    private javax.swing.JLabel lblsite;
+    private javax.swing.JPanel panelmaint;
     private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbassignedID;
     private javax.swing.JTextField tbdesc;

@@ -26,24 +26,36 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class GLControlPanel extends javax.swing.JPanel implements IBlueSeerc {
+public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
 
    
-    public GLControlPanel() {
+    public GLControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -112,6 +124,54 @@ public class GLControlPanel extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           //bsmf.MainFrame.show(component.getClass().getTypeName() + "/" + component.getAccessibleContext().getAccessibleName() + "/" + component.getName());
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -128,37 +188,37 @@ public class GLControlPanel extends javax.swing.JPanel implements IBlueSeerc {
                 
                 if (tbbsfrom.getText().isEmpty() || ! OVData.isValidGLAcct(tbbsfrom.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbsfrom.requestFocus();
                     return b;
                 }
                 if (tbbsto.getText().isEmpty() || ! OVData.isValidGLAcct(tbbsto.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbsto.requestFocus();
                     return b;
                 }
                 if (tbisfrom.getText().isEmpty() || ! OVData.isValidGLAcct(tbisfrom.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbisfrom.requestFocus();
                     return b;
                 }
                 if (tbisto.getText().isEmpty() || ! OVData.isValidGLAcct(tbisto.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbisto.requestFocus();
                     return b;
                 }
                 if (tbearnings.getText().isEmpty() || ! OVData.isValidGLAcct(tbearnings.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbearnings.requestFocus();
                     return b;
                 }
                 if (tbforeignreal.getText().isEmpty() || ! OVData.isValidGLAcct(tbforeignreal.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbforeignreal.requestFocus();
                     return b;
                 }
@@ -311,15 +371,19 @@ public class GLControlPanel extends javax.swing.JPanel implements IBlueSeerc {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("GL Control Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel2.setText("Balance Sheet To Acct");
+        jLabel2.setName("lblbaltoacct"); // NOI18N
 
         jLabel1.setText("Balance Sheet From Acct");
+        jLabel1.setName("lblbalfromacct"); // NOI18N
 
         jLabel3.setText("Income Statement From Acct");
+        jLabel3.setName("lblincfromacct"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -327,12 +391,16 @@ public class GLControlPanel extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         jLabel4.setText("Income Statement To Acct");
+        jLabel4.setName("lblinctoacct"); // NOI18N
 
         jLabel5.setText("Retained Earnings Acct");
+        jLabel5.setName("lblretainearnings"); // NOI18N
 
         jLabel6.setText("Foreign Currency G/L Acct");
+        jLabel6.setName("lblforeigncurrency"); // NOI18N
 
         cbautopost.setText("Auto Post?");
+        cbautopost.setName("cbautopost"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

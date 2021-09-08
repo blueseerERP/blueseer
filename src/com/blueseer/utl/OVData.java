@@ -20238,6 +20238,7 @@ public class OVData {
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
                 hm.put("imagepath", imagepath);
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
@@ -20740,8 +20741,6 @@ public class OVData {
                if (bsmf.MainFrame.dbtype.equals("mysql")) {
                    jasperfile = "serviceorder_mysql.jasper";
                } 
-               
-               //jasperfile = OVData.getDefaultOrderJasper(site);
                
                imagepath = "images/" + logo;
                 HashMap hm = new HashMap();

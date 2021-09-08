@@ -71,10 +71,22 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -200,10 +212,11 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
         
     public IncomeStatementRptYear() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-      public void ChartIt(String element) {
+    public void ChartIt(String element) {
        
 
                 File f = new File(bsmf.MainFrame.temp + "icchart.jpg");
@@ -317,7 +330,53 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
            
      }
     
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+               if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
+      
     public void initvars(String[] arg) {
         
         
@@ -381,11 +440,13 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Income Statement By Year"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel2.setText("Year");
+        jLabel2.setName("lblyear"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -407,8 +468,10 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
         jScrollPane1.setViewportView(mytable);
 
         jLabel4.setText("Site");
+        jLabel4.setName("lblsite"); // NOI18N
 
         btchart.setText("Chart It");
+        btchart.setName("btchart"); // NOI18N
         btchart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btchartActionPerformed(evt);
@@ -474,9 +537,10 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
         try {
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 int qty = 0;
                 double dol = 0;
@@ -567,7 +631,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     sales[y - 1] = (-1 * sales[y - 1]);
                 } // y
 
-                mymodel.addRow(new Object[] { "Sales", sales[0], sales[1], sales[2], sales[3], sales[4], sales[5], sales[6], sales[7], sales[8], sales[9], sales[10], sales[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblsales", this.getClass().getEnclosingMethod().getName()), sales[0], sales[1], sales[2], sales[3], sales[4], sales[5], sales[6], sales[7], sales[8], sales[9], sales[10], sales[11]});
 
                 
                 
@@ -601,14 +665,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     cogs[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Cost Of Goods", cogs[0], cogs[1], cogs[2], cogs[3], cogs[4], cogs[5], cogs[6], cogs[7], cogs[8], cogs[9], cogs[10], cogs[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblcogs", this.getClass().getEnclosingMethod().getName()), cogs[0], cogs[1], cogs[2], cogs[3], cogs[4], cogs[5], cogs[6], cogs[7], cogs[8], cogs[9], cogs[10], cogs[11]});
 
 
                 // Standard Margin = Sales - Cogs
                 for (int y = 1; y <= 12; y++) {
                 stdmargin[y -1] = sales[y -1] - cogs[y -1];
                 }
-                mymodel.addRow(new Object[] { "Standard Margin", stdmargin[0], stdmargin[1], stdmargin[2], stdmargin[3], stdmargin[4], stdmargin[5], stdmargin[6], stdmargin[7], stdmargin[8], stdmargin[9], stdmargin[10], stdmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblstdmargin", this.getClass().getEnclosingMethod().getName()), stdmargin[0], stdmargin[1], stdmargin[2], stdmargin[3], stdmargin[4], stdmargin[5], stdmargin[6], stdmargin[7], stdmargin[8], stdmargin[9], stdmargin[10], stdmargin[11]});
 
 
                
@@ -642,7 +706,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                    mtlvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
                 }
                  } // y
-                mymodel.addRow(new Object[] { "Matl Variance", mtlvar[0], mtlvar[1], mtlvar[2], mtlvar[3], mtlvar[4], mtlvar[5], mtlvar[6], mtlvar[7], mtlvar[8], mtlvar[9], mtlvar[10], mtlvar[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblmtlvar", this.getClass().getEnclosingMethod().getName()), mtlvar[0], mtlvar[1], mtlvar[2], mtlvar[3], mtlvar[4], mtlvar[5], mtlvar[6], mtlvar[7], mtlvar[8], mtlvar[9], mtlvar[10], mtlvar[11]});
                 
 
                 // Labor Variance
@@ -674,7 +738,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     lbrvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
                 }
                  } // y
-                 mymodel.addRow(new Object[] { "Labor Variance", lbrvar[0], lbrvar[1], lbrvar[2], lbrvar[3], lbrvar[4], lbrvar[5], lbrvar[6], lbrvar[7], lbrvar[8], lbrvar[9], lbrvar[10], lbrvar[11]});
+                 mymodel.addRow(new Object[] { getClassLabelTag("lbllbrvar", this.getClass().getEnclosingMethod().getName()), lbrvar[0], lbrvar[1], lbrvar[2], lbrvar[3], lbrvar[4], lbrvar[5], lbrvar[6], lbrvar[7], lbrvar[8], lbrvar[9], lbrvar[10], lbrvar[11]});
                
                 
                
@@ -711,7 +775,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 }
                  } // y
                
-                mymodel.addRow(new Object[] { "Burden Variance", bdnvar[0], bdnvar[1], bdnvar[2], bdnvar[3], bdnvar[4], bdnvar[5], bdnvar[6], bdnvar[7], bdnvar[8], bdnvar[9], bdnvar[10], bdnvar[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblbdnvar", this.getClass().getEnclosingMethod().getName()), bdnvar[0], bdnvar[1], bdnvar[2], bdnvar[3], bdnvar[4], bdnvar[5], bdnvar[6], bdnvar[7], bdnvar[8], bdnvar[9], bdnvar[10], bdnvar[11]});
                
                 
                
@@ -720,7 +784,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 for (int y = 1; y <= 12; y++) {
                 mfggrossmargin[y - 1] = stdmargin[y - 1] - mtlvar[y - 1] - lbrvar[y - 1] - bdnvar[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { "MFG Gross Margin", mfggrossmargin[0], mfggrossmargin[1], mfggrossmargin[2], mfggrossmargin[3], mfggrossmargin[4], mfggrossmargin[5], mfggrossmargin[6], mfggrossmargin[7], mfggrossmargin[8], mfggrossmargin[9], mfggrossmargin[10], mfggrossmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblmfggrossmargin", this.getClass().getEnclosingMethod().getName()), mfggrossmargin[0], mfggrossmargin[1], mfggrossmargin[2], mfggrossmargin[3], mfggrossmargin[4], mfggrossmargin[5], mfggrossmargin[6], mfggrossmargin[7], mfggrossmargin[8], mfggrossmargin[9], mfggrossmargin[10], mfggrossmargin[11]});
 
                 
                 //ProdEng
@@ -752,14 +816,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     prodeng[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Prod Engineering", prodeng[0], prodeng[1], prodeng[2], prodeng[3], prodeng[4], prodeng[5], prodeng[6], prodeng[7], prodeng[8], prodeng[9], prodeng[10], prodeng[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblprodengineering", this.getClass().getEnclosingMethod().getName()), prodeng[0], prodeng[1], prodeng[2], prodeng[3], prodeng[4], prodeng[5], prodeng[6], prodeng[7], prodeng[8], prodeng[9], prodeng[10], prodeng[11]});
 
 
                 // Gross Margin
                 for (int y = 1; y <= 12; y++) {
                 grossmargin[y - 1] = mfggrossmargin[y - 1] - prodeng[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { "Gross Margin", grossmargin[0], grossmargin[1], grossmargin[2], grossmargin[3], grossmargin[4], grossmargin[5], grossmargin[6], grossmargin[7], grossmargin[8], grossmargin[9], grossmargin[10], grossmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblgrossmargin", this.getClass().getEnclosingMethod().getName()), grossmargin[0], grossmargin[1], grossmargin[2], grossmargin[3], grossmargin[4], grossmargin[5], grossmargin[6], grossmargin[7], grossmargin[8], grossmargin[9], grossmargin[10], grossmargin[11]});
 
 
                 //Marketing and sales
@@ -791,7 +855,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     marketingandsales[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Sales and Marketing", marketingandsales[0], marketingandsales[1], marketingandsales[2], marketingandsales[3], marketingandsales[4], marketingandsales[5], marketingandsales[6], marketingandsales[7], marketingandsales[8], marketingandsales[9], marketingandsales[10], marketingandsales[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblsalesmarketing", this.getClass().getEnclosingMethod().getName()), marketingandsales[0], marketingandsales[1], marketingandsales[2], marketingandsales[3], marketingandsales[4], marketingandsales[5], marketingandsales[6], marketingandsales[7], marketingandsales[8], marketingandsales[9], marketingandsales[10], marketingandsales[11]});
 
 
                 //Gen and Admin
@@ -822,14 +886,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     generalandadmin[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
                 }
                 } // y
-              mymodel.addRow(new Object[] { "General Admin", generalandadmin[0], generalandadmin[1], generalandadmin[2], generalandadmin[3], generalandadmin[4], generalandadmin[5], generalandadmin[6], generalandadmin[7], generalandadmin[8], generalandadmin[9], generalandadmin[10], generalandadmin[11]});
+              mymodel.addRow(new Object[] { getClassLabelTag("lblgeneraladmin", this.getClass().getEnclosingMethod().getName()), generalandadmin[0], generalandadmin[1], generalandadmin[2], generalandadmin[3], generalandadmin[4], generalandadmin[5], generalandadmin[6], generalandadmin[7], generalandadmin[8], generalandadmin[9], generalandadmin[10], generalandadmin[11]});
 
 
                 // Profit Before Allocation
                 for (int y = 1; y <= 12; y++) {
                 profitbeforealloc[y - 1] = grossmargin[y - 1] - marketingandsales[y - 1] - generalandadmin[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { "Profit Before Alloc", profitbeforealloc[0], profitbeforealloc[1], profitbeforealloc[2], profitbeforealloc[3], profitbeforealloc[4], profitbeforealloc[5], profitbeforealloc[6], profitbeforealloc[7], profitbeforealloc[8], profitbeforealloc[9], profitbeforealloc[10], profitbeforealloc[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblprofitbeforealloc", this.getClass().getEnclosingMethod().getName()), profitbeforealloc[0], profitbeforealloc[1], profitbeforealloc[2], profitbeforealloc[3], profitbeforealloc[4], profitbeforealloc[5], profitbeforealloc[6], profitbeforealloc[7], profitbeforealloc[8], profitbeforealloc[9], profitbeforealloc[10], profitbeforealloc[11]});
 
 
                 //Interest
@@ -860,7 +924,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     interest[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Interest", interest[0], interest[1], interest[2], interest[3], interest[4], interest[5], interest[6], interest[7], interest[8], interest[9], interest[10], interest[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblinterest", this.getClass().getEnclosingMethod().getName()), interest[0], interest[1], interest[2], interest[3], interest[4], interest[5], interest[6], interest[7], interest[8], interest[9], interest[10], interest[11]});
 
 
                 //Allocations
@@ -891,7 +955,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     alloc[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Allocations", alloc[0], alloc[1], alloc[2], alloc[3], alloc[4], alloc[5], alloc[6], alloc[7], alloc[8], alloc[9], alloc[10], alloc[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblallocations", this.getClass().getEnclosingMethod().getName()), alloc[0], alloc[1], alloc[2], alloc[3], alloc[4], alloc[5], alloc[6], alloc[7], alloc[8], alloc[9], alloc[10], alloc[11]});
 
 
                 //Management Fees
@@ -922,7 +986,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     mgtfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
                 }
                 } // y
-               mymodel.addRow(new Object[] { "Mgmt Fees", mgtfees[0], mgtfees[1], mgtfees[2], mgtfees[3], mgtfees[4], mgtfees[5], mgtfees[6], mgtfees[7], mgtfees[8], mgtfees[9], mgtfees[10], mgtfees[11]});
+               mymodel.addRow(new Object[] { getClassLabelTag("lblmanagementfees", this.getClass().getEnclosingMethod().getName()), mgtfees[0], mgtfees[1], mgtfees[2], mgtfees[3], mgtfees[4], mgtfees[5], mgtfees[6], mgtfees[7], mgtfees[8], mgtfees[9], mgtfees[10], mgtfees[11]});
 
 
                 //Bank Fees
@@ -943,17 +1007,17 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     bankfees[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("bankfee", "out");
+                excludeaccts = OVData.getGLICAccts("bankfees", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
                     bankfees[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("bankfee", "in");
+                includeaccts = OVData.getGLICAccts("bankfees", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
                     bankfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
                 }
                 } // y
-                 mymodel.addRow(new Object[] { "Bank Fees", bankfees[0], bankfees[1], bankfees[2], bankfees[3], bankfees[4], bankfees[5], bankfees[6], bankfees[7], bankfees[8], bankfees[9], bankfees[10], bankfees[11]});
+                 mymodel.addRow(new Object[] { getClassLabelTag("lblbankfees", this.getClass().getEnclosingMethod().getName()), bankfees[0], bankfees[1], bankfees[2], bankfees[3], bankfees[4], bankfees[5], bankfees[6], bankfees[7], bankfees[8], bankfees[9], bankfees[10], bankfees[11]});
 
 
                 //Other income/expense
@@ -984,14 +1048,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     other[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Other Income/Expense", other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblotherincomeexpense", this.getClass().getEnclosingMethod().getName()), other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11]});
 
 
                 // Operational Profit before taxes
                 for (int y = 1; y <= 12; y++) {
                 opprofitbeforetaxes[y - 1] = profitbeforealloc[y - 1] -interest[y - 1] - alloc[y - 1] - mgtfees[y - 1] - bankfees[y - 1] - other[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { "Operation Profit Before Taxes", opprofitbeforetaxes[0], opprofitbeforetaxes[1], opprofitbeforetaxes[2], opprofitbeforetaxes[3], opprofitbeforetaxes[4], opprofitbeforetaxes[5], opprofitbeforetaxes[6], opprofitbeforetaxes[7], opprofitbeforetaxes[8], opprofitbeforetaxes[9], opprofitbeforetaxes[10], opprofitbeforetaxes[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lbloperationbeforetaxes", this.getClass().getEnclosingMethod().getName()), opprofitbeforetaxes[0], opprofitbeforetaxes[1], opprofitbeforetaxes[2], opprofitbeforetaxes[3], opprofitbeforetaxes[4], opprofitbeforetaxes[5], opprofitbeforetaxes[6], opprofitbeforetaxes[7], opprofitbeforetaxes[8], opprofitbeforetaxes[9], opprofitbeforetaxes[10], opprofitbeforetaxes[11]});
 
 
                 //depreciation
@@ -1022,15 +1086,15 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     depreciation[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { "Depreciation", depreciation[0], depreciation[1], depreciation[2], depreciation[3], depreciation[4], depreciation[5], depreciation[6], depreciation[7], depreciation[8], depreciation[9], depreciation[10], depreciation[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lbldepreciation", this.getClass().getEnclosingMethod().getName()), depreciation[0], depreciation[1], depreciation[2], depreciation[3], depreciation[4], depreciation[5], depreciation[6], depreciation[7], depreciation[8], depreciation[9], depreciation[10], depreciation[11]});
 
 
 
-                // EBITDA
+                // EBIT
                for (int y = 1; y <= 12; y++) {
                 ebitda[y - 1] = opprofitbeforetaxes[y - 1] + depreciation[y - 1] + interest[y - 1] + alloc[y - 1] + mgtfees[y - 1] + bankfees[y - 1] + other[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { "EBITDA", ebitda[0], ebitda[1], ebitda[2], ebitda[3], ebitda[4], ebitda[5], ebitda[6], ebitda[7], ebitda[8], ebitda[9], ebitda[10], ebitda[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblEBIT", this.getClass().getName()), ebitda[0], ebitda[1], ebitda[2], ebitda[3], ebitda[4], ebitda[5], ebitda[6], ebitda[7], ebitda[8], ebitda[9], ebitda[10], ebitda[11]});
 
 
              
@@ -1038,9 +1102,12 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for Income Statement Report");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

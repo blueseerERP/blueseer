@@ -43,6 +43,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -774,6 +775,8 @@ public class BlueSeerUtils {
          return tag;
      }
     
+    
+     
      public static String getGlobalLabelTag(String key) {
          String tag = "";
           if (tags.containsKey("global.label." + key)) {
@@ -781,7 +784,24 @@ public class BlueSeerUtils {
           }
          return tag;
      }
+     
+     public static String getGlobalMenuTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.menu." + key)) {
+            tag = tags.getString("global.menu." + key);
+          }
+         return tag;
+     }
     
+     public static String getGlobalColumnTag(String key) {
+         String tag = "";
+          if (tags.containsKey("global.column." + key)) {
+            tag = tags.getString("global.column." + key);
+          }
+         return tag;
+     }
+    
+     
      public static String getClassLabelTag(String key, String thisclass) {
          String tag = "";
           if (tags.containsKey(thisclass + ".label." + key)) {
@@ -790,7 +810,16 @@ public class BlueSeerUtils {
          return tag;
      }
     
+     public static String getMessageTag(int key, String thisclass) {
+         String tag = "";
+          if (tags.containsKey("global.message." + key)) {
+              tag = MessageFormat.format(tags.getString("global.message." + key), thisclass);
+          }
+         return tag;
+     }
+    
      
+    
      public static void startTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
@@ -798,12 +827,13 @@ public class BlueSeerUtils {
         message(message);
      }
      
+     
      public static void endTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(false);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(false);
         message(message);
      }
-     
+          
      public static void message(String[] message) {
          
          if (message.length != 2) {
@@ -825,6 +855,7 @@ public class BlueSeerUtils {
          }
      }
      
+    
      public static void messagereset() {
          bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);
          bsmf.MainFrame.messagelabel.setText("");

@@ -30,7 +30,9 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -41,6 +43,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +56,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 /**
@@ -75,10 +86,11 @@ public class PayProfileMaint extends javax.swing.JPanel {
      */
     public PayProfileMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-     public void getProfile(String code) {
+    public void getProfile(String code) {
          try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -111,7 +123,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve profile master record");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -119,7 +131,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         }
      }
     
-     public void clearAll() {
+    public void clearAll() {
            profilemodel.setRowCount(0);
            tableelement.setModel(profilemodel);
            tbprofilecode.setText("");
@@ -132,7 +144,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
            
      }
      
-     public void enableAll() {
+    public void enableAll() {
          tableelement.setEnabled(true);
          tbprofilecode.setEnabled(true);
          tbdesc.setEnabled(true);
@@ -152,7 +164,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
          ddamttype.setEnabled(true);
      }
     
-        public void disableAll() {
+    public void disableAll() {
          tableelement.setEnabled(false);
          tbprofilecode.setEnabled(false);
          tbdesc.setEnabled(false);
@@ -171,7 +183,52 @@ public class PayProfileMaint extends javax.swing.JPanel {
          ddtype.setEnabled(false);
          ddamttype.setEnabled(false);
      }
-     
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void initvars(String[] arg) {
           
            clearAll();
@@ -270,8 +327,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Employee Profile Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
-        btedit.setText("Edit");
+        btedit.setText("Update");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -279,8 +338,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Profile Elements Maintenance"));
+        jPanel2.setName("panelelements"); // NOI18N
 
         jLabel3.setText("Element");
+        jLabel3.setName("lblelement"); // NOI18N
 
         tableelement.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -296,8 +357,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableelement);
 
         cbenabled.setText("Enabled?");
+        cbenabled.setName("cbenabled"); // NOI18N
 
         btdeleteelement.setText("Delete");
+        btdeleteelement.setName("btdelete"); // NOI18N
         btdeleteelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteelementActionPerformed(evt);
@@ -305,6 +368,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         btaddelement.setText("Add");
+        btaddelement.setName("btadd"); // NOI18N
         btaddelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddelementActionPerformed(evt);
@@ -312,10 +376,12 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Percent/Rate");
+        jLabel4.setName("lblpercentrate"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deduction", "Earning" }));
 
         jLabel7.setText("Element Type");
+        jLabel7.setName("lblelementtype"); // NOI18N
 
         ddamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "percent", "fixed" }));
 
@@ -332,6 +398,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("GL Acct");
+        jLabel1.setName("lblglacct"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -400,6 +467,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Master Profile"));
+        jPanel3.setName("panelmaster"); // NOI18N
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -409,8 +477,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Code");
+        jLabel5.setName("lblid"); // NOI18N
 
         jLabel6.setText("Desc");
+        jLabel6.setName("lbldesc"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -458,6 +528,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         );
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -465,6 +536,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -541,11 +613,11 @@ public class PayProfileMaint extends javax.swing.JPanel {
                         + " );" );
                  }
               
-                 bsmf.MainFrame.show("Updated Profile Master");
+                 bsmf.MainFrame.show(getMessageTag(1008));
                  initvars(null);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating profile master");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -571,11 +643,11 @@ public class PayProfileMaint extends javax.swing.JPanel {
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbelementamt.getText());
         if (!m.find() || tbelementamt.getText() == null) {
-            bsmf.MainFrame.show("Invalid Format");
+            bsmf.MainFrame.show(getMessageTag(1033, "tbelementamt"));
             return;
         }
         if (Double.valueOf(tbelementamt.getText()) == 0) {
-            bsmf.MainFrame.show("Value cannot be zero");
+            bsmf.MainFrame.show(getMessageTag(1036));
             return;
         }
         
@@ -585,7 +657,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private void btdeleteelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteelementActionPerformed
        int[] rows = tableelement.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tableelement.getModel()).removeRow(i);
             
         }
@@ -594,7 +666,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
             
         if (tbprofilecode.getText().isEmpty()) {
-            bsmf.MainFrame.show("Must enter a profile code");
+            bsmf.MainFrame.show(getMessageTag(1024,"tbprofilecode"));
             return;
         }
         
@@ -634,16 +706,16 @@ public class PayProfileMaint extends javax.swing.JPanel {
                             + " );" );
                      }
               
-                bsmf.MainFrame.show("Added Master Profile Record");
+                bsmf.MainFrame.show(getMessageTag(1007));
                 initvars(null);
                 }  else {
-                        bsmf.MainFrame.show("Profile Master already exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                 } 
                  
                  
             } catch (SQLException s) {
                 MainFrame.bslog(s);                  
-                bsmf.MainFrame.show("Problem adding master profile");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -670,19 +742,19 @@ public class PayProfileMaint extends javax.swing.JPanel {
                         k++;
                     }
                     if (k > 0) {
-                        bsmf.MainFrame.show("Cannot delete profile code until removed from all employees");
+                        bsmf.MainFrame.show(getMessageTag(1051));
                         return;
                     }
                     
                     int i = st.executeUpdate("delete from pay_profile where payp_code = " + "'" + tbprofilecode.getText() + "'" + ";");
                     int j = st.executeUpdate("delete from pay_profdet where paypd_parentcode = " + "'" + tbprofilecode.getText() + "'" + ";");
                     if (i > 0 && j > 0) {
-                        bsmf.MainFrame.show("deleted profile code " + tbprofilecode.getText());
+                        bsmf.MainFrame.show(getMessageTag(1009));
                         initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                    bsmf.MainFrame.show("Unable to Delete Profile Code Record");
+                    bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                 }
                 bsmf.MainFrame.con.close();
             } catch (Exception e) {
@@ -694,7 +766,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private void tbacctFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbacctFocusLost
         if (! tbacct.getText().isEmpty()) {
             if (! OVData.isValidGLAcct(tbacct.getText())) {
-                bsmf.MainFrame.show("Invalid GL Acct");
+                bsmf.MainFrame.show(getMessageTag(1052));
                 tbacct.requestFocus();
             }
         }
@@ -703,7 +775,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
     private void tbccFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbccFocusLost
         if (! tbcc.getText().isEmpty()) {
             if (! OVData.isValidGLcc(tbcc.getText())) {
-                bsmf.MainFrame.show("Invalid GL CC");
+                bsmf.MainFrame.show(getMessageTag(1048));
                 tbcc.requestFocus();
             }
         }

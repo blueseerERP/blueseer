@@ -28,6 +28,7 @@ package com.blueseer.far;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
@@ -253,9 +254,10 @@ public class ARAgingView extends javax.swing.JPanel {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String blanket = "";
                 double dol = 0.00;
@@ -341,8 +343,11 @@ public class ARAgingView extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get Detail");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -362,9 +367,10 @@ public class ARAgingView extends javax.swing.JPanel {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String blanket = "";
                 double dol = 0.00;
@@ -405,8 +411,11 @@ public class ARAgingView extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get payment");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -747,13 +756,9 @@ public class ARAgingView extends javax.swing.JPanel {
 try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-               
-            
-                
-                
                 int qty = 0;
                 
                 DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
@@ -863,8 +868,11 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for AR Aging View");
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

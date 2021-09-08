@@ -488,12 +488,12 @@ public class DTData {
                         " order by glt_id desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_useride  " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_userid  " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "'" +
                         " order by glt_id desc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_useride  " +
+                 res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_base_amt, glt_userid  " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "%'" +
                         " order by glt_id desc ;");
                  }

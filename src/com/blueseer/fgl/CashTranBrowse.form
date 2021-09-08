@@ -38,6 +38,7 @@
             <TitledBorder title="CashTranBrowse"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmaint" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -191,9 +192,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -229,13 +230,15 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                          <Component id="dcfrom" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btdetail" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbcsv" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbchart" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                              <Component id="dcfrom" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -260,6 +263,7 @@
             <Component class="javax.swing.JButton" name="btdetail">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hide Detail"/>
+                <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
@@ -268,6 +272,7 @@
             <Component class="javax.swing.JButton" name="btRun">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run"/>
+                <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -278,11 +283,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Date:"/>
+                <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Date:"/>
+                <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="dcfrom">
@@ -298,6 +305,7 @@
             <Component class="javax.swing.JButton" name="tbcsv">
               <Properties>
                 <Property name="text" type="java.lang.String" value="CSV"/>
+                <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
@@ -306,6 +314,7 @@
             <Component class="javax.swing.JCheckBox" name="cbchart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Charts"/>
+                <Property name="name" type="java.lang.String" value="cbcharts" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbchartActionPerformed"/>
@@ -324,6 +333,7 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Site:"/>
+                <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -402,6 +412,7 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Sales:"/>
+                <Property name="name" type="java.lang.String" value="lbltotalsales" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="saleslessexp">
@@ -417,6 +428,7 @@
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
                 <Property name="text" type="java.lang.String" value="DateRange Profit:"/>
+                <Property name="name" type="java.lang.String" value="lbldaterangeprofit" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbtotexpenses">
@@ -427,6 +439,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Expenses:"/>
+                <Property name="name" type="java.lang.String" value="lbltotalexpenses" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbtotpurch">
@@ -437,6 +450,7 @@
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Purchases:"/>
+                <Property name="name" type="java.lang.String" value="lbltotalpurchases" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbinventory">
@@ -447,11 +461,13 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Current Inventory:"/>
+                <Property name="name" type="java.lang.String" value="lblcurrentinventory" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Misc Income:"/>
+                <Property name="name" type="java.lang.String" value="lbltotalmiscincome" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbincome">

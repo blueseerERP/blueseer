@@ -23,11 +23,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="GL Control Maintenance"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -118,6 +114,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Balance Sheet To Acct"/>
+            <Property name="name" type="java.lang.String" value="lblbaltoacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbsfrom">
@@ -127,16 +124,19 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Balance Sheet From Acct"/>
+            <Property name="name" type="java.lang.String" value="lblbalfromacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Income Statement From Acct"/>
+            <Property name="name" type="java.lang.String" value="lblincfromacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -147,6 +147,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Income Statement To Acct"/>
+            <Property name="name" type="java.lang.String" value="lblinctoacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbearnings">
@@ -154,6 +155,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Retained Earnings Acct"/>
+            <Property name="name" type="java.lang.String" value="lblretainearnings" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbforeignreal">
@@ -161,11 +163,13 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Foreign Currency G/L Acct"/>
+            <Property name="name" type="java.lang.String" value="lblforeigncurrency" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbautopost">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Post?"/>
+            <Property name="name" type="java.lang.String" value="cbautopost" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
