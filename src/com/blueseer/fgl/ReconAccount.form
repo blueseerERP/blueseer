@@ -33,11 +33,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Account Reconciliation"/>
-          </Border>
-        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -49,7 +45,7 @@
                       <Component id="tablepanel" alignment="0" pref="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="113" max="32767" attributes="0"/>
+                          <EmptySpace pref="125" max="32767" attributes="0"/>
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -66,7 +62,7 @@
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                  <Component id="tablepanel" pref="371" max="32767" attributes="0"/>
+                  <Component id="tablepanel" pref="393" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -292,6 +288,7 @@
             <Component class="javax.swing.JButton" name="btRun">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run"/>
+                <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -300,11 +297,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Statement Ending Balance:"/>
+                <Property name="name" type="java.lang.String" value="lblendingbalance" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="GL Previous Ending Date:"/>
+                <Property name="name" type="java.lang.String" value="lblendingdate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="dcglprevious">
@@ -330,6 +329,7 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Acct:"/>
+                <Property name="name" type="java.lang.String" value="lblacct" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddacct">
@@ -348,6 +348,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Site:"/>
+                <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbendbalance">
@@ -358,11 +359,13 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="GLTo Date:"/>
+                <Property name="name" type="java.lang.String" value="lblgltodate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btcommit">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Commit"/>
+                <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcommitActionPerformed"/>
@@ -371,6 +374,7 @@
             <Component class="javax.swing.JCheckBox" name="cbtoggle">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Toggle All?"/>
+                <Property name="name" type="java.lang.String" value="cbtoggleall" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbtoggleActionPerformed"/>
@@ -436,6 +440,7 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="GL Previous Ending Balance:"/>
+                <Property name="name" type="java.lang.String" value="lblglpreviousbalance" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbstatementbal">
@@ -451,6 +456,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Difference:"/>
+                <Property name="name" type="java.lang.String" value="lbldifference" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbselecttotal">
@@ -461,6 +467,7 @@
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Selected Total:"/>
+                <Property name="name" type="java.lang.String" value="lblselectedtotal" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbacctbal">
@@ -471,6 +478,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Statement Balance:"/>
+                <Property name="name" type="java.lang.String" value="lblstatementbalance" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

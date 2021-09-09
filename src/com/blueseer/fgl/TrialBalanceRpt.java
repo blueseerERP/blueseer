@@ -64,12 +64,20 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -82,7 +90,14 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "Debits", "Credits"})
+                        new String[]{getGlobalColumnTag("detail"),
+                            getGlobalColumnTag("account"),
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("currency"),
+                            getGlobalColumnTag("description"),
+                            getGlobalColumnTag("site"),
+                            getGlobalColumnTag("debits"),
+                            getGlobalColumnTag("credits")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -94,7 +109,15 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
     
     
     javax.swing.table.DefaultTableModel mymodelCC = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Acct", "Type", "Curr", "Desc", "Site", "CC", "Debits", "Credits"})
+                        new String[]{getGlobalColumnTag("detail"),
+                            getGlobalColumnTag("account"),
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("currency"),
+                            getGlobalColumnTag("description"),
+                            getGlobalColumnTag("site"), 
+                            getGlobalColumnTag("costcenter"), 
+                            getGlobalColumnTag("debits"),
+                            getGlobalColumnTag("credits")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -105,7 +128,14 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Acct", "CC", "Site", "Ref", "Type", "EffDate", "Desc", "Amt"});
+                        new String[]{getGlobalColumnTag("account"),
+                            getGlobalColumnTag("costcenter"), 
+                            getGlobalColumnTag("site"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("effectivedate"),
+                            getGlobalColumnTag("description"),
+                            getGlobalColumnTag("amount")});
     
     
    
@@ -157,9 +187,10 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
      */
     public TrialBalanceRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String acct, String site, String year, String period) {
+    public void getdetail(String acct, String site, String year, String period) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -202,7 +233,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Account GL detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -211,7 +242,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
 
     }
     
-      public void getdetailCC(String acct, String cc, String site, String year, String period) {
+    public void getdetailCC(String acct, String cc, String site, String year, String period) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -254,7 +285,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Account GL detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -262,7 +293,51 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         }
 
     }
-     
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
      
     public void initvars(String[] arg) {
         
@@ -365,7 +440,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trial Balance Report"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -415,6 +490,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -422,6 +498,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -429,12 +506,16 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
 
         cbzero.setText("Supress Zeros");
+        cbzero.setName("cbsuppresszeros"); // NOI18N
 
         jLabel3.setText("Period");
+        jLabel3.setName("lblperiod"); // NOI18N
 
         jLabel2.setText("Year");
+        jLabel2.setName("lblyear"); // NOI18N
 
         ddperiod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
         ddperiod.addItemListener(new java.awt.event.ItemListener() {
@@ -450,6 +531,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         });
 
         cbcc.setText("CostCenter");
+        cbcc.setName("cbcostcenter"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -508,10 +590,12 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Credits");
+        jLabel8.setName("lbltotalcredits"); // NOI18N
 
         lblcredits.setText("0");
 
         jLabel7.setText("Total Debits");
+        jLabel7.setName("lbltotaldebits"); // NOI18N
 
         lbldebits.setText("0");
 
@@ -553,7 +637,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -566,7 +650,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -970,7 +1054,7 @@ try {
                 lblcredits.setText(df.format(totalcredits));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Acct Bal Report");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {

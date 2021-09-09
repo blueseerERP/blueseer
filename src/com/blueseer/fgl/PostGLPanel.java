@@ -31,8 +31,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.setperms;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -45,6 +56,7 @@ public class PostGLPanel extends javax.swing.JPanel {
      */
     public PostGLPanel() {
         initComponents();
+        setLanguageTags(this);
     }
 
     public void enableAll() {
@@ -53,11 +65,56 @@ public class PostGLPanel extends javax.swing.JPanel {
         tbcount.setEnabled(true);
     }
     
-     public void disableAll() {
+    public void disableAll() {
         btpost.setEnabled(false);
         btcount.setEnabled(false);
         tbcount.setEnabled(false);
     }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] args) {
         tbcount.setText("");
@@ -102,9 +159,10 @@ public class PostGLPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Post Ledger"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btcount.setText("Get Count");
+        btcount.setName("btgetcount"); // NOI18N
         btcount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcountActionPerformed(evt);
@@ -112,6 +170,7 @@ public class PostGLPanel extends javax.swing.JPanel {
         });
 
         btpost.setText("Post");
+        btpost.setName("btpost"); // NOI18N
         btpost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpostActionPerformed(evt);
@@ -119,6 +178,7 @@ public class PostGLPanel extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Trans Count:");
+        jLabel1.setName("lblcount"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,7 +194,7 @@ public class PostGLPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tbcount)
                             .addComponent(btcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +217,7 @@ public class PostGLPanel extends javax.swing.JPanel {
      //   MainProgressBar.setVisible(true);
      //   MainProgressBar.setIndeterminate(true);
     
-        BlueSeerUtils.startTask(new String[]{"","Posting..."});
+        BlueSeerUtils.startTask(new String[]{"",getMessageTag(1057)});
         disableAll();
         Task task = new Task();
         task.execute();        

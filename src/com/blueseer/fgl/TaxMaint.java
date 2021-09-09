@@ -30,7 +30,10 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -55,9 +58,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -84,6 +91,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public TaxMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -232,6 +240,51 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
@@ -268,21 +321,21 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024, "tbkey"));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024, "tbdesc"));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tabletax.getRowCount() < 1) {
                     b = false;
-                    bsmf.MainFrame.show("must have at least one tax element in table");
+                    bsmf.MainFrame.show(getMessageTag(1062));
                     tbtaxelement.requestFocus();
                     return b;
                 }
@@ -431,8 +484,8 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
                         k++;
                     }
                     if (k > 0) {
-                        bsmf.MainFrame.show("Cannot delete tax code until removed from all customers");
-                        return new String[] {BlueSeerUtils.ErrorBit, "Cannot delete record"};
+                        bsmf.MainFrame.show(getMessageTag(1063));
+                        return new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1046)};
                     }
                     
                     int i = st.executeUpdate("delete from tax_mstr where tax_code = " + "'" + tbkey.getText() + "'" + ";");
@@ -507,9 +560,9 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -529,7 +582,8 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("TaxID", "Description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+         
         
         
     }
@@ -573,8 +627,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tax Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -582,8 +638,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Tax Elements Add/Delete"));
+        jPanel2.setName("panelelements"); // NOI18N
 
         jLabel3.setText("Tax Element");
+        jLabel3.setName("lbltaxelement"); // NOI18N
 
         tabletax.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -599,8 +657,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1.setViewportView(tabletax);
 
         cbenabled.setText("Enabled?");
+        cbenabled.setName("cbenabled"); // NOI18N
 
         btdeleteelement.setText("DeleteElement");
+        btdeleteelement.setName("btdeleteelement"); // NOI18N
         btdeleteelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteelementActionPerformed(evt);
@@ -608,6 +668,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btaddelement.setText("AddElement");
+        btaddelement.setName("btaddelement"); // NOI18N
         btaddelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddelementActionPerformed(evt);
@@ -615,10 +676,12 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel4.setText("Percent");
+        jLabel4.setName("lblpercent"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OTHER", "FEDERAL", "STATE", "LOCAL" }));
 
         jLabel7.setText("Type");
+        jLabel7.setName("lbltype"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -676,8 +739,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Master Tax Code"));
+        jPanel3.setName("panelmaster"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -685,8 +750,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel5.setText("Tax Code");
+        jLabel5.setName("lblid"); // NOI18N
 
         jLabel6.setText("Desc");
+        jLabel6.setName("lbldesc"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -695,6 +762,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -751,6 +819,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -758,6 +827,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -817,11 +887,11 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbtaxpercent.getText());
         if (!m.find() || tbtaxpercent.getText() == null) {
-            bsmf.MainFrame.show("Invalid Percent Format");
+            bsmf.MainFrame.show(getMessageTag(1033));
             return;
         }
         if (Double.valueOf(tbtaxpercent.getText()) == 0) {
-            bsmf.MainFrame.show("Value cannot be zero");
+            bsmf.MainFrame.show(getMessageTag(1036));
             return;
         }
         
@@ -831,7 +901,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdeleteelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteelementActionPerformed
        int[] rows = tabletax.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tabletax.getModel()).removeRow(i);
             
         }

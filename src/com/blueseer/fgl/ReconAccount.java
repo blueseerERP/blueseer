@@ -64,8 +64,10 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormatSymbols;
@@ -75,8 +77,13 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -324,7 +331,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("cannot get pos_det");
+                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -390,7 +397,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("cannot get pos_det");
+                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -406,6 +413,7 @@ public class ReconAccount extends javax.swing.JPanel {
      */
     public ReconAccount() {
         initComponents();
+        setLanguageTags(this);
     }
 
     public void getdetail(String shipper) {
@@ -444,7 +452,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -493,7 +501,7 @@ public class ReconAccount extends javax.swing.JPanel {
         
     }
     
-     public void updateRecon() {
+    public void updateRecon() {
      
      try {
             
@@ -513,7 +521,7 @@ public class ReconAccount extends javax.swing.JPanel {
                  }
               }
              
-              bsmf.MainFrame.show("reconciliation complete...transactions updated");
+              bsmf.MainFrame.show(getMessageTag(1058));
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -529,6 +537,49 @@ public class ReconAccount extends javax.swing.JPanel {
      
      }
    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
     public void initvars(String[] arg) throws ParseException {
@@ -558,8 +609,6 @@ public class ReconAccount extends javax.swing.JPanel {
         int pyear = cal.get(Calendar.YEAR);
         int pmonth = cal.get(Calendar.MONTH) + 1;
         
-      //  bsmf.MainFrame.show(String.valueOf(pyear) + "/" + String.valueOf(pmonth));
-        
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList glcal = OVData.getGLCalByYearAndPeriod(String.valueOf(pyear), String.valueOf(pmonth));
         java.util.Date prevenddate = dfdate.parse(glcal.get(3).toString());
@@ -573,11 +622,8 @@ public class ReconAccount extends javax.swing.JPanel {
         tablereport.getModel().addTableModelListener(new TableModelListener() {
          public void tableChanged(TableModelEvent e) {
              if (e.getColumn() == 9 && ! isLoad) {
-                 //String value = ((DefaultTableModel) e.getSource()).getValueAt(e.getFirstRow(), e.getColumn()).toString();
-                 // bsmf.MainFrame.show(value);
                  sumtoggle();
              }
-         // your code goes here, whatever you want to do when something changes in the table
          }
          });
         
@@ -669,7 +715,7 @@ public class ReconAccount extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Reconciliation"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -733,6 +779,7 @@ public class ReconAccount extends javax.swing.JPanel {
         tablepanel.add(chartpanel);
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -740,14 +787,17 @@ public class ReconAccount extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Statement Ending Balance:");
+        jLabel5.setName("lblendingbalance"); // NOI18N
 
         jLabel6.setText("GL Previous Ending Date:");
+        jLabel6.setName("lblendingdate"); // NOI18N
 
         dcglprevious.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel2.setText("Acct:");
+        jLabel2.setName("lblacct"); // NOI18N
 
         ddacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -756,6 +806,7 @@ public class ReconAccount extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Site:");
+        jLabel4.setName("lblsite"); // NOI18N
 
         tbendbalance.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -764,8 +815,10 @@ public class ReconAccount extends javax.swing.JPanel {
         });
 
         jLabel1.setText("GLTo Date:");
+        jLabel1.setName("lblgltodate"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -773,6 +826,7 @@ public class ReconAccount extends javax.swing.JPanel {
         });
 
         cbtoggle.setText("Toggle All?");
+        cbtoggle.setName("cbtoggleall"); // NOI18N
         cbtoggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbtoggleActionPerformed(evt);
@@ -856,36 +910,36 @@ public class ReconAccount extends javax.swing.JPanel {
         );
 
         jLabel8.setText("GL Previous Ending Balance:");
+        jLabel8.setName("lblglpreviousbalance"); // NOI18N
 
         lbstatementbal.setText("0");
 
         lbdiff.setText("0");
 
         jLabel10.setText("Difference:");
+        jLabel10.setName("lbldifference"); // NOI18N
 
         lbselecttotal.setText("0");
 
         jLabel11.setText("Selected Total:");
+        jLabel11.setName("lblselectedtotal"); // NOI18N
 
         lbacctbal.setText("0");
 
         jLabel3.setText("Statement Balance:");
+        jLabel3.setName("lblstatementbalance"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(37, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbdiff, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
@@ -926,7 +980,7 @@ public class ReconAccount extends javax.swing.JPanel {
                     .addComponent(tablepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -938,7 +992,7 @@ public class ReconAccount extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -1032,10 +1086,9 @@ try {
                           toggle, status });
                    
                 }
-                
-              // tbtoggletotal.setText(df.format(total));
+               
               lbacctbal.setText(df.format(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
-             // bsmf.MainFrame.show(String.valueOf(toggletotal));
+            
               sumAll(toggletotal);
                
                 chartBuyAndSell();
@@ -1053,7 +1106,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Recon Report");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             con.close();
         } catch (Exception e) {
@@ -1109,18 +1162,18 @@ try {
         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             
                 if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
-                    bsmf.MainFrame.show("Statement Balance is zero");
+                    bsmf.MainFrame.show(getMessageTag(1059));
                     return;
                 }
 
 
                 if (Double.valueOf(lbdiff.getText()) == 0.00) {
-                    boolean sure = bsmf.MainFrame.warn("Are you sure you want to auto-invoice?");     
+                    boolean sure = bsmf.MainFrame.warn(getMessageTag(1060));     
                     if (sure) {
                      updateRecon();
                     }
                 } else {
-                    bsmf.MainFrame.show("Total selected amount does not balance");
+                    bsmf.MainFrame.show(getMessageTag(1061));
                 }
                 
        
@@ -1131,7 +1184,7 @@ try {
         if (x.equals("error")) {
             tbendbalance.setText("");
             tbendbalance.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             lbstatementbal.setText("0.00");
             tbendbalance.requestFocus();
              btRun.setEnabled(false);
@@ -1172,7 +1225,7 @@ try {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot select from ac_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

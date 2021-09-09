@@ -32,7 +32,18 @@ import java.text.SimpleDateFormat;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.setperms;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -46,8 +57,53 @@ public class YearEndClose extends javax.swing.JPanel {
      */
     public YearEndClose() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String args) {
         
@@ -136,7 +192,7 @@ public class YearEndClose extends javax.swing.JPanel {
          * Executed in event dispatch thread
          */
         public void done() {
-            bsmf.MainFrame.show("Year End Closing Complete");
+            bsmf.MainFrame.show(getMessageTag(1064));
             MainProgressBar.setEnabled(false);
             MainProgressBar.setIndeterminate(false);
         }
@@ -173,8 +229,10 @@ public class YearEndClose extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Year End Close"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btreview.setText("Review");
+        btreview.setName("btreview"); // NOI18N
         btreview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btreviewActionPerformed(evt);
@@ -182,16 +240,22 @@ public class YearEndClose extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Site");
+        jLabel3.setName("lblsite"); // NOI18N
 
         jLabel4.setText("Year");
+        jLabel4.setName("lblyear"); // NOI18N
 
         jLabel5.setText("Retained Earnings Before");
+        jLabel5.setName("lblearningsbefore"); // NOI18N
 
         jLabel6.setText("Total Income");
+        jLabel6.setName("lbltotalincome"); // NOI18N
 
         jLabel7.setText("Retained Earnings Final");
+        jLabel7.setName("lblearningsfinal"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -199,8 +263,10 @@ public class YearEndClose extends javax.swing.JPanel {
         });
 
         jLabel8.setText("Total Expense");
+        jLabel8.setName("lbltotalexpense"); // NOI18N
 
         jLabel9.setText("Income Less Expense");
+        jLabel9.setName("lblincomelessexpense"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
