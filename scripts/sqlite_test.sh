@@ -15,7 +15,7 @@ echo "IP=localhost" >>bsconfig
 echo "PORT=3306" >>bsconfig
 echo "DRIVER=org.sqlite.JDBC" >>bsconfig
 
-cd data
+cd data/$1
 
 if [ -f bsdb.db ]; then
 rm -f bsdb.db
@@ -23,9 +23,11 @@ fi
 
 
 echo "creating database schema...."
-sqlite3 bsdb.db <blueseer.sqlite
+sqlite3 bsdb.db <../blueseer.sqlite
 
-sqlite3 bsdb.db <sq.txt
+sqlite3 bsdb.db <../sq.txt
+
+cp bsdb.db ../
 
 echo ""
 echo ""

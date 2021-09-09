@@ -1,6 +1,6 @@
 AcctBalSumYTD,,com.blueseer.fgl.GLAcctBalYTD,JMenuItem,absy
 BrowseUtil,,com.blueseer.utl.Browse,JMenuItem, 
-Address,,,JMenu, 
+Adresse,,,JMenu, 
 Admin,,,JMenu, 
 ReqBrowseApproved,,com.blueseer.utl.ReportPanel,JMenuItem,reqz
 ReqFreqByUserChart,,com.blueseer.utl.ChartView,JMenuItem,requ
@@ -10,7 +10,7 @@ CustPriceMaint,,com.blueseer.ctr.CustPriceMstr,JMenuItem,cprm
 CustXrefMaint,,com.blueseer.ctr.CustXrefMaintPanel,JMenuItem,cupm
 EmpBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,empb
 EmployeeMaster,,com.blueseer.hrm.EmployeeMaster,JMenuItem,empm
-Engineering,,,JMenu, 
+Ingénierie,,,JMenu, 
 Finance,,,JMenu, 
 GLAcctBalSummaryByPeriod,,com.blueseer.fgl.GLAcctBalRpt2,JMenuItem,acba
 GLAcctBalSummaryByYear,,com.blueseer.fgl.GLAcctBalRpt3,JMenuItem,acby
@@ -21,7 +21,7 @@ GLTranMaint,,com.blueseer.fgl.GLTranMaint,JMenuItem,gltr
 GenericCodeMaint,,com.blueseer.adm.GenCodeMaintPanel,JMenuItem,genm
 JasperRptMaint,,com.blueseer.adm.JasperRptMaint,JMenuItem,jasp
 HR,,,JMenu, 
-Inventory,,,JMenu, 
+Inventaire,,,JMenu, 
 ItemLevelCalculate,,com.blueseer.inv.ItemLevelMaint,JMenuItem,mrpx
 ItemSearchMenu,,com.blueseer.inv.ItemMastSearch,JMenuItem,itms
 LedgerBalanceExport,,com.blueseer.fgl.LedgerBalanceExport,JMenuItem,glbe
@@ -109,11 +109,11 @@ UserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb
 UserMaint,,com.blueseer.adm.UserMaintPanel,JMenuItem,usrm
 WorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcb
 WorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,wkcm
-Order,,,JMenu, 
+Ordre,,,JMenu, 
 POMaintMenu,,com.blueseer.pur.POMaintPanel,JMenuItem,purm
 PlantDirectoryMenu,,com.blueseer.utl.ReportPanel,JMenuItem,pdir
-Purchasing,,,JMenu, 
-Quality,,,JMenu, 
+Achat,,,JMenu, 
+Qualité,,,JMenu, 
 ReceiverMaintMenu,,com.blueseer.rcv.RecvMaintPanel,JMenuItem,recm
 ReqAmtByDeptChart,,com.blueseer.utl.ChartView,JMenuItem,req1
 ReqPendingApproval,,com.blueseer.utl.ReportPanel,JMenuItem,req2
@@ -123,7 +123,7 @@ ScrapChartDolByPart,,com.blueseer.utl.ChartView,JMenuItem,scrp3
 ScrapChartQtyByCode,,com.blueseer.utl.ChartView,JMenuItem,scrp4
 ScrapChartQtyByDept,,com.blueseer.utl.ChartView,JMenuItem,scrp5
 ScrapChartQtyByPart,,com.blueseer.utl.ChartView,JMenuItem,scrp6
-Shipping,,Shipping,JMenu, 
+Expédition,,,JMenu, 
 TimeClockAdjust,,com.blueseer.tca.ClockUpdatePanel,JMenuItem,tima
 TimeClockEntry,,com.blueseer.tca.ClockPanel,JMenuItem,time
 TrainingMaint,,com.blueseer.hrm.TrainingMaster,JMenuItem,tram
@@ -231,8 +231,8 @@ CashTran,,com.blueseer.fgl.CashTran,JMenuItem,cash
 CashTranBrowse,,com.blueseer.fgl.CashTranBrowse,JMenuItem,cashb
 menuscreen,,com.blueseer.adm.BackGroundPanel,JMenuItem,blank
 TreeMaint,,com.blueseer.adm.MenuTreeMaint,JMenuItem,tree
-Help,,,JMenu, 
-Custom,,,JMenu, 
+Aider,,,JMenu, 
+Personnalisé,,,JMenu, 
 POSMaint,,com.blueseer.ctr.POSMaint,JMenuItem,posm
 POSControlMaint,,com.blueseer.ctr.POSControlMaint,JMenuItem,posc
 POSBrowse,,com.blueseer.ctr.POSBrowse,JMenuItem,posb

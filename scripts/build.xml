@@ -13,6 +13,7 @@
     <property name="JDK16dir" location="C:\java\jdk-16.0.2+7" />
     <property name="javac16" location="${JDK16dir}/bin/javac" />
     <property name="java16" location="${JDK16dir}/bin/java" />
+    <property name="lang" value="en" />
 
 
     <path id="build.classpath">
@@ -69,7 +70,7 @@
 	<copy file="sqlite_test.bat" todir="${test.dir}" overwrite="true"/>
 	<copy file=".patch" todir="${test.dir}" overwrite="true"/>
 	<exec dir="${test.dir}" executable="cmd">
-		<arg line="/c sqlite_test.bat"/>
+		<arg line="/c sqlite_test.bat ${lang}" />
 	</exec>
 </target>
 
@@ -84,7 +85,7 @@
 	<copy file=".patch" todir="${test.dir}" overwrite="true"/>
         <chmod file="${test.dir}/sqlite_test.sh" perm="777" />
         <chmod file="${test.dir}/data/sqlite3" perm="777" />
-	<exec dir="${test.dir}" executable="./sqlite_test.sh">
+	<exec dir="${test.dir}" executable="./sqlite_test.sh ${lang}">
 	</exec>
 </target>
 

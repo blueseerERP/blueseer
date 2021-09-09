@@ -1,18 +1,18 @@
-00,Successfull clockin & clockout,1,1
-01,Clockin and No Clockout,0,1
-66,Exception - Pending Review,0,1
-14,Tardy,0,1
-20,Medical Leave,0,0
-21,Other - Unpaid,0,0
-24,Holiday - Paid,1,0
-02,Bereavement - Unpaid,0,0
-04,Jury Duty,1,0
-06,Vacation - Unpaid,0,0
-07,Lack of Work - Unpaid,0,0
-25,FMLA - Unpaid,0,0
-27,Disciplinary Layoff - Unpaid,0,0
-96,Termination,0,0
-23,Holiday - Unpaid,0,0
-16,Alternate Schedule,0,1
-13,Early,0,1
-77,Manual Adjustment,1,1
+00,Entrée et sortie réussies,1,1
+01,entrée et pas de sortie,0,1
+66,Exception en attente d'examen,0,1
+14,Tardif,0,1
+20,Congé de maladie,0,0
+21,Autre - impayé,0,0
+24,Congé - payé,1,0
+02,Deuil - Non rémunéré,0,0
+04,service juridique,1,0
+06,vacances - non payées,0,0
+07,manque de travail - non rémunéré,0,0
+25,FMLA - impayé,0,0
+27,licenciement disciplinaire - non rémunéré,0,0
+96,Résiliation,0,0
+23,vacances - non payées,0,0
+16,horaire alternatif,0,1
+13,De bonne heure,0,1
+77,réglage manuel,1,1

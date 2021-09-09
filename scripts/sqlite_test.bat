@@ -17,20 +17,24 @@ set "DB=bsdb"
 @echo PORT=3306>>bsconfig
 @echo DRIVER=org.sqlite.JDBC>>bsconfig
 
-cd data
+cd data/%1
 
+@echo "Current Directory: " %cd%
 if exist bsdb.db del bsdb.db
+
+rem chcp 65001
 
 @echo "creating database schema...."
 if "%computername%" == "CLTSLCDXM0G2" (
 @echo "work around for group policy bs"
-c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <blueseer.sqlite
-c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <sq.txt
+c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <..\blueseer.sqlite
+c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <..\sq.txt
 ) else (
-sqlite3.exe bsdb.db <blueseer.sqlite
-sqlite3.exe bsdb.db <sq.txt
+sqlite3.exe bsdb.db <..\blueseer.sqlite
+sqlite3.exe bsdb.db <..\sq.txt
 )
 
+copy bsdb.db ..\
 
 @echo ""
 @echo ""

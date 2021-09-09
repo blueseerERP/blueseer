@@ -1,14 +1,14 @@
-sales,Sales,1,,50000000,50000000
-cogs,Cost Of Goods Sold,2,,62000000,62005000
-mtlvar,Material Variance,3,,,
-lbrvar,Labor Variance,4,,,
-bdnvar,Burden Variance,5,,,
-prodeng,Production Engineering Costs,6,,, 
-mktsales,Marketing and Sales Costs,7,,, 
-g&a,General Administration Costs,8,,90000000,99999998 
-interest,Interest,9,,, 
+sales,Ventes,1,,50000000,50000000
+cogs,Coût des marchandises vendues,2,,62000000,62005000
+mtlvar,Écart matériel,3,,,
+lbrvar,Écart de main-d'œuvre,4,,,
+bdnvar,Écart de charge,5,,,
+prodeng,Coûts d'ingénierie de production,6,,, 
+mktsales,Coûts de marketing et de vente,7,,, 
+g&a,Frais d'administration générale,8,,90000000,99999998 
+interest,Intérêt,9,,, 
 alloc,Allocations,10,,, 
-mgtfee,Management Fees,11,,, 
-bankfee,Bank Fees,12,,, 
-otherie,Other Income/Expense,13,,, 
-depreciation,Depreciation,14,,, 
+mgtfee,Frais de gestion,11,,, 
+bankfee,Frais bancaires,12,,, 
+otherie,Autres revenus/dépenses,13,,, 
+depreciation,Dépréciation,14,,, 
