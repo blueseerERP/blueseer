@@ -34,10 +34,13 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.lang.invoke.MethodHandles;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  *
@@ -45,83 +48,46 @@ import java.sql.Statement;
  */
 public class fglData {
   
+    
     public static String[] addAcctMstr(AcctMstr x) {
-         String[] m = new String[2];
-         try {
-
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                
-                    res = st.executeQuery("SELECT ac_id FROM  ac_mstr where ac_id = " + "'" + x.id + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ac_mstr "
-                            + "( ac_id, ac_desc, ac_type, ac_cur, ac_display ) "
-                            + " values ( " + "'" + x.id + "'" + ","
-                            + "'" + x.desc + "'" + ","
-                            + "'" + x.type + "'" + ","
-                            + "'" + x.currency + "'" + ","
-                            + "'" + x.cbdisplay + "'"        
-                            + ")"
-                            + ";");
-                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-               
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        String[] m = new String[2];
+        String sql = "insert into ac_mstr (ac_id, ac_desc, ac_type, ac_cur, ac_display)  " +
+                " values (?,?,?,?,?); ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.id);
+        ps.setString(2, x.desc);
+        ps.setString(3, x.type);
+        ps.setString(4, x.currency);
+        ps.setInt(5, x.cbdisplay);
+        
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError}; 
         }
-         return m;
+        return m;
     }
-   
+        
     public static String[] updateAcctMstr(AcctMstr x) {
-         String[] m = new String[2];
-          try {
-
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                        st.executeUpdate("update ac_mstr set "
-                            + " ac_desc = " + "'" + x.desc + "'" + ","
-                            + " ac_type = " + "'" + x.type + "'" + ","
-                            + " ac_cur = " + "'" + x.currency + "'" + ","
-                            + " ac_display = " + "'" + x.cbdisplay + "'"         
-                            + " where ac_id = " + "'" + x.id + "'" 
-                            + ";");
-                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        String[] m = new String[2];
+        String sql = "update ac_mstr set ac_desc = ?, ac_type = ?, ac_cur = ?, " +
+                " ac_display = ? where ac_id = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.desc);
+        ps.setString(2, x.type);
+        ps.setString(3, x.currency);
+        ps.setInt(4, x.cbdisplay);
+        ps.setString(5, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError}; 
         }
-         return m;
+        return m;
     }
     
     public static String[] deleteAcctMstr(AcctMstr x) { 
@@ -150,20 +116,17 @@ public class fglData {
         }
          return m;
     }
-    
+      
     public static AcctMstr getAcctMstr(String[] x) {
         AcctMstr r = null;
         String[] m = new String[2];
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
+        String sql = "select * from ac_mstr where ac_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
                 int i = 0;
-                res = st.executeQuery("select * from ac_mstr where ac_id = " + "'" + x[0] + "'" + " limit 1;");
-                while (res.next()) {
+                while(res.next()) {
                     i++;
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                     r = new AcctMstr(m, res.getString("ac_id"), 
@@ -177,23 +140,15 @@ public class fglData {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
                 r = new AcctMstr(m);
                 }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError}; 
-                r = new AcctMstr(m);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
             }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError}; 
-            r = new AcctMstr(m);
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new AcctMstr(m);
         }
-      
         return r;
     }
+    
     
     public static String[] addBankMstr(BankMstr x) {
          String[] m = new String[2];

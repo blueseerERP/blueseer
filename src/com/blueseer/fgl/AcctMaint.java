@@ -155,7 +155,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -373,7 +372,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        AcctMstr x = getAcctMstr(key);
+        AcctMstr x = getAcctMstr(key);  
         tbdesc.setText(x.desc());
         tbkey.setText(x.id());
         ddcur.setSelectedItem(x.currency());
@@ -385,7 +384,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public AcctMstr createRecord() { 
         AcctMstr x = new AcctMstr(null, tbkey.getText().toString(),
-                tbdesc.getText().toString().replace("'", "").toUpperCase(),
+                tbdesc.getText().toUpperCase(),
                 ddtype.getSelectedItem().toString(),
                 ddcur.getSelectedItem().toString(),
                 BlueSeerUtils.boolToInt(cbdisplay.isSelected())
