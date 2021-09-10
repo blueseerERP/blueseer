@@ -51,21 +51,32 @@ public class fglData {
     
     public static String[] addAcctMstr(AcctMstr x) {
         String[] m = new String[2];
-        String sql = "insert into ac_mstr (ac_id, ac_desc, ac_type, ac_cur, ac_display)  " +
-                " values (?,?,?,?,?); ";
+        String sqlSelect = "select * from ac_mstr where ac_id = ?";
+        String sqlInsert = "insert into ac_mstr (ac_id, ac_desc, ac_type, ac_cur, ac_display)  " +
+                " values (?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.id);
-        ps.setString(2, x.desc);
-        ps.setString(3, x.type);
-        ps.setString(4, x.currency);
-        ps.setInt(5, x.cbdisplay);
-        
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.id);
+            psi.setString(2, x.desc);
+            psi.setString(3, x.type);
+            psi.setString(4, x.currency);
+            psi.setInt(5, x.cbdisplay);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
         } catch (SQLException s) {
 	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError}; 
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
         return m;
     }
@@ -85,36 +96,24 @@ public class fglData {
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
 	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError}; 
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
         return m;
     }
     
     public static String[] deleteAcctMstr(AcctMstr x) { 
-         String[] m = new String[2];
-        try {
-
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                   int i = st.executeUpdate("delete from ac_mstr where ac_id = " + "'" + x.id + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+       String[] m = new String[2];
+        String sql = "delete from ac_mstr where ac_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
-         return m;
+        return m;
     }
       
     public static AcctMstr getAcctMstr(String[] x) {
@@ -125,20 +124,19 @@ public class fglData {
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
-                int i = 0;
-                while(res.next()) {
-                    i++;
-                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new AcctMstr(m, res.getString("ac_id"), 
-                        res.getString("ac_desc"),
-                        res.getString("ac_type"),
-                        res.getString("ac_cur"),
-                        res.getInt("ac_display")
-                    );
-                }
-                if (i == 0) {
+                if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
                 r = new AcctMstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new AcctMstr(m, res.getString("ac_id"), 
+                            res.getString("ac_desc"),
+                            res.getString("ac_type"),
+                            res.getString("ac_cur"),
+                            res.getInt("ac_display")
+                        );
+                    }
                 }
             }
         } catch (SQLException s) {   
@@ -149,170 +147,200 @@ public class fglData {
         return r;
     }
     
-    
     public static String[] addBankMstr(BankMstr x) {
-         String[] m = new String[2];
-     
-     try {
-
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                int i = 0;
-
-                    res = st.executeQuery("SELECT bk_id FROM  bk_mstr where bk_id = " + "'" + x.id + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into bk_mstr "
-                            + "(bk_id, bk_site, bk_desc, bk_acct, bk_cur, bk_active, bk_route, bk_assignedID ) "
-                            + " values ( " + "'" + x.id() + "'" + ","
-                            + "'" + x.site() + "'" + ","
-                            + "'" + x.desc() + "'" + ","
-                            + "'" + x.account() + "'" + ","
-                            + "'" + x.currency() + "'" + ","
-                            + "'" + x.cbactive() + "'" + ","
-                            + "'" + x.routing() + "'" + ","
-                            + "'" + x.assignedID() + "'"      
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+        String[] m = new String[2];
+        String sqlSelect = "select * from bk_mstr where bk_id = ?";
+        String sqlInsert = "insert into bk_mstr (bk_id, bk_site, bk_desc, bk_acct, bk_cur, " +
+                " bk_active, bk_route, bk_assignedID)  " +
+                " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.id);
+            psi.setString(2, x.site);
+            psi.setString(3, x.desc);
+            psi.setString(4, x.account);
+            psi.setString(5, x.currency);
+            psi.setInt(6, x.cbactive);
+            psi.setString(7, x.routing);
+            psi.setString(8, x.assignedID);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
             }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
-     
-     return m;
+        return m;
     }
     
     public static String[] updateBankMstr(BankMstr x) {
-       String[] m = new String[2];
-     
-     try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + x.desc() + "'" + ","
-                            + "bk_acct = " + "'" + x.account() + "'" + ","
-                            + "bk_route = " + "'" + x.routing() + "'" + ","
-                            + "bk_assignedID = " + "'" + x.assignedID() + "'" + ","        
-                            + "bk_cur = " + "'" + x.currency() + "'" + ","
-                            + "bk_site = " + "'" + x.site() + "'" + ","        
-                            + "bk_active = " + "'" + x.cbactive() + "'"
-                            + " where bk_id = " + "'" + x.id() + "'"                             
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+      String[] m = new String[2];
+        String sql = "update bk_mstr set bk_site = ?, bk_desc = ?, bk_acct = ?, bk_cur = ?, " +
+                " bk_active = ?, bk_route = ?, bk_assignedID = ? where ac_id = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.site);
+            ps.setString(2, x.desc);
+            ps.setString(3, x.account);
+            ps.setString(4, x.currency);
+            ps.setInt(5, x.cbactive);
+            ps.setString(6, x.routing);
+            ps.setString(7, x.assignedID);
+            ps.setString(8, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
-     
-     return m;  
+        return m;
     }
     
     public static String[] deleteBankMstr(BankMstr x) {
      String[] m = new String[2];
-        try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                   int i = st.executeUpdate("delete from bk_mstr where bk_id = " + "'" + x.id() + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+        String sql = "delete from bk_mstr where bk_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
-       
-     return m;   
+        return m;
     }
     
     public static BankMstr getBankMstr(String[] x) {
         BankMstr r = null;
         String[] m = new String[2];
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from bk_mstr where bk_id = " + "'" + x[0] + "'" + " limit 1;");
-                while (res.next()) {
-                    i++;
-                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new BankMstr(m, res.getString("bk_id"),
-                    res.getString("bk_site"),
-                    res.getString("bk_desc"),
-                    res.getString("bk_acct"),
-                    res.getString("bk_route"),
-                    res.getString("bk_assignedID"),
-                    res.getString("bk_cur"),
-                    res.getInt("bk_active")
-                    );
-                }
-                if (i == 0) {
+        String sql = "select * from bk_mstr where bk_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
                 r = new BankMstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new BankMstr(m, res.getString("bk_id"), 
+                            res.getString("bk_site"),    
+                            res.getString("bk_desc"),
+                            res.getString("bk_acct"),
+                            res.getString("bk_route"),
+                            res.getString("bk_assignID"),
+                            res.getString("bk_cur"),    
+                            res.getInt("bk_active")
+                        );
+                    }
                 }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError}; 
-                r = new BankMstr(m);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError}; 
-            r = new BankMstr(m);
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new BankMstr(m);
         }
-      
+        return r;
+    }
+    
+    public static String[] addCurrMstr(CurrMstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from cur_mstr where cur_id = ?";
+        String sqlInsert = "insert into cur_mstr (cur_id, cur_desc)  " +
+                " values (?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.id);
+            psi.setString(2, x.desc);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static String[] updateCurrMstr(CurrMstr x) {
+        String[] m = new String[2];
+        String sql = "update cur_mstr set cur_desc = ? " +
+                " where cur_id = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.desc);
+        ps.setString(2, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteCurrMstr(CurrMstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from cur_mstr where cur_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static CurrMstr getCurrMstr(String[] x) {
+        CurrMstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from cur_mstr where cur_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new CurrMstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new CurrMstr(m, res.getString("cur_id"), 
+                            res.getString("cur_desc")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new CurrMstr(m);
+        }
         return r;
     }
     
@@ -322,10 +350,14 @@ public class fglData {
             this(m, "", "", "", "", 0);
         }
     }
-    
     public record BankMstr(String[] m, String id, String site, String desc, String account, String routing, String assignedID, String currency, int cbactive) {
         public BankMstr(String[] m) {
             this(m, "", "", "", "", "", "", "", 0);
+        }
+    }
+    public record CurrMstr(String[] m, String id, String desc) {
+        public CurrMstr(String[] m) {
+            this(m, "", "");
         }
     }
     
