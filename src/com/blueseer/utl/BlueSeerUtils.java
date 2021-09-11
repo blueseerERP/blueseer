@@ -491,9 +491,14 @@ public class BlueSeerUtils {
     public static String bsformat(String type, String invalue, String precision) {
         String outvalue = "";
         DecimalFormat df = null;
-        if (invalue.isEmpty()) {
-            outvalue = "0";
-            return "";
+        if (invalue.isEmpty() && type.equals("s")) {
+           return "";
+        }
+        if (invalue.isEmpty() && type.equals("i")) {
+           return "0";
+        }
+        if (invalue.isEmpty() && type.equals("d")) {
+           invalue = "0"; // for use down below
         }
        
         if (precision.equals("2")) {
@@ -575,6 +580,16 @@ public class BlueSeerUtils {
         return b;
     }
      
+    public static boolean ConvertIntegerToBool(int i) {
+        boolean b;
+        if (i == 1) {
+            b = true;
+        } else {
+            b = false;
+        }
+        return b;
+    }
+    
     public static String ConvertIntToYesNo(int i) {
         String s;
         if (i == 1) {

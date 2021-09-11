@@ -26,19 +26,15 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import java.lang.invoke.MethodHandles;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -350,11 +346,13 @@ public class fglData {
             this(m, "", "", "", "", 0);
         }
     }
+    
     public record BankMstr(String[] m, String id, String site, String desc, String account, String routing, String assignedID, String currency, int cbactive) {
         public BankMstr(String[] m) {
             this(m, "", "", "", "", "", "", "", 0);
         }
     }
+    
     public record CurrMstr(String[] m, String id, String desc) {
         public CurrMstr(String[] m) {
             this(m, "", "");

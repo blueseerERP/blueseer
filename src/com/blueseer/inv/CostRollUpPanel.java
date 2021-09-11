@@ -83,7 +83,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     
     public void settoplowmodeltable() {
         ArrayList<Double> costs = new ArrayList<Double>();
-        costs = OVData.getItemCostStdElements(tbitem.getText(), "standard", thissite);
+        costs = OVData.getItemCostElements(tbitem.getText(), "standard", thissite);
        
         calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("#.0000", new DecimalFormatSymbols(Locale.US)); 

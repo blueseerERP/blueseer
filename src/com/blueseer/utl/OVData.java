@@ -9663,7 +9663,7 @@ public class OVData {
         
     }
          
-    public static ArrayList getItemCostStdElements(String item, String set, String site) {
+    public static ArrayList getItemCostElements(String item, String set, String site) {
            ArrayList<Double> mylist = new ArrayList<Double>();
          try{
             Class.forName(driver).newInstance();
@@ -9686,6 +9686,7 @@ public class OVData {
                 mylist.add(res.getDouble("itc_bdn_top"));
                 mylist.add(res.getDouble("itc_ovh_top"));
                 mylist.add(res.getDouble("itc_out_top"));
+                mylist.add(res.getDouble("itc_total"));
                 
                 }
                

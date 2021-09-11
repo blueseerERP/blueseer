@@ -30,7 +30,15 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData.ItemMstr;
+import static com.blueseer.inv.invData.addItemMstr;
+import static com.blueseer.inv.invData.deleteItemMstr;
+import static com.blueseer.inv.invData.getItemMstr;
+import static com.blueseer.inv.invData.updateItemMstr;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -41,6 +49,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -70,10 +79,13 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.PrintException;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -95,7 +107,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author vaughnte
  */
-public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -110,9 +122,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     javax.swing.table.DefaultTableModel routingmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Op", "Desc", "Mtl", "Lbr", "Bdn", "Ovh", "Svc", "Tot"});
     
-    public ItemMastMaintPanel() {
+    public ItemMaint() {
         initComponents();
-        
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -248,6 +260,51 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void setComponentDefaultValues() {
        isLoad = true;
        
@@ -379,19 +436,15 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
     public boolean validateInput(String x) {
@@ -453,422 +506,132 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
    }
         
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
      
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                String status = "";
-                String uom = "";
-                String type = "";
-                String code = "";
-                String prodcode = "";
-                DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-                    
-                    res = st.executeQuery("SELECT it_item FROM  item_mstr where it_item = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                
-                            if (dduom.getItemCount() > 0)
-                                uom = dduom.getSelectedItem().toString();
-
-                            if (ddcode.getItemCount() > 0)
-                                code = ddcode.getSelectedItem().toString();
-
-                            if (ddtype.getItemCount() > 0)
-                                type = ddtype.getSelectedItem().toString();
-
-                            if (ddstatus.getItemCount() > 0)
-                                status = ddstatus.getSelectedItem().toString();
-
-                            if (ddprodcode.getItemCount() > 0)
-                                prodcode = ddprodcode.getSelectedItem().toString();
-                            double lotsize = 0.00;
-                            if (! tblotsize.getText().isEmpty()) {
-                                lotsize = Double.valueOf(tblotsize.getText());
-                            }
-                            double sellprice = 0.00;
-                            if (! tbsellprice.getText().isEmpty()) {
-                                sellprice = Double.valueOf(tbsellprice.getText());
-                            }
-                            double purprice = 0.00;
-                            if (! tbpurchprice.getText().isEmpty()) {
-                                purprice = Double.valueOf(tbpurchprice.getText());
-                            }
-                              double mtlcost = 0.00;
-                            if (! tbmtlcost.getText().isEmpty()) {
-                                mtlcost = Double.valueOf(tbmtlcost.getText());
-                            }
-                             double ovhcost = 0.00;
-                            if (! tbovhcost.getText().isEmpty()) {
-                                ovhcost = Double.valueOf(tbovhcost.getText());
-                            }
-                             double outcost = 0.00;
-                            if (! tboutcost.getText().isEmpty()) {
-                                outcost = Double.valueOf(tboutcost.getText());
-                            }
-                            double netwgt = 0.00;
-                            if (! tbnetwt.getText().isEmpty()) {
-                                netwgt = Double.valueOf(tbnetwt.getText());
-                            }
-                            double shipwgt = 0.00;
-                            if (! tbshipwt.getText().isEmpty()) {
-                                shipwgt = Double.valueOf(tbshipwt.getText());
-                            }
-                            int contqty = 0;
-                            if (! tbcontqty.getText().isEmpty()) {
-                                contqty = Integer.valueOf(tbcontqty.getText());
-                            }
-                            int leadtime = 0;
-                            if (! tbleadtime.getText().isEmpty()) {
-                                leadtime = Integer.valueOf(tbleadtime.getText());
-                            }
-                            int safestock = 0;
-                            if (! tbsafestock.getText().isEmpty()) {
-                                safestock = Integer.valueOf(tbsafestock.getText());
-                            }
-                            int minordqty = 0;
-                            if (! tbminordqty.getText().isEmpty()) {
-                                minordqty = Integer.valueOf(tbminordqty.getText());
-                            }
-                        st.executeUpdate("insert into item_mstr "
-                            + "(it_item, it_desc, it_lotsize, "
-                            + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
-                            + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
-                            + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
-                            + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate ) "
-                            + " values ( " + "'" + tbkey.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + lotsize + "'" + ","
-                            + "'" + df.format(sellprice) + "'" + ","
-                            + "'" + df.format(purprice) + "'" + ","
-                            + "'" + df.format(ovhcost) + "'" + ","
-                            + "'" + df.format(outcost) + "'" + ","
-                            + "'" + df.format(mtlcost) + "'" + ","
-                            + "'" + code + "'" + ","
-                            + "'" + type + "'" + ","
-                            + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + prodcode + "'" + ","
-                            + "'" + tbdrawing.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddloc.getSelectedItem().toString() + "'" + ","        
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + comments.getText().toString().replace("'", "") + "'" + ","
-                            + "'" + status + "'" + ","
-                            + "'" + uom + "'" + ","
-                            + "'" + netwgt + "'" + ","
-                            + "'" + shipwgt + "'" + ","
-                            + "'" + tbdefaultcont.getText().toString().replace("'", "") + "'" + "," 
-                            + "'" + contqty + "'" + ","        
-                            + "'" + leadtime + "'" + ","
-                            + "'" + safestock + "'" + ","
-                            + "'" + minordqty + "'" + ","    
-                            + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
-                            + "'" + ddrouting.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddtax.getSelectedItem().toString() + "'" + ","
-                            + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'"
-                            + ")"
-                            + ";"); 
-                        
-                        // now add item cost record for later use
-                        OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
-                        
-                        
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+        String[] m = new String[2];
+         m = addItemMstr(createRecord());
+         
+            double mtlcost = 0.00;
+            if (! tbmtlcost.getText().isEmpty()) {
+                mtlcost = Double.valueOf(tbmtlcost.getText());
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+             double ovhcost = 0.00;
+            if (! tbovhcost.getText().isEmpty()) {
+                ovhcost = Double.valueOf(tbovhcost.getText());
+            }
+             double outcost = 0.00;
+            if (! tboutcost.getText().isEmpty()) {
+                outcost = Double.valueOf(tboutcost.getText());
+            }
+          // now add item cost record for later use
+          OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
+                        
+         initvars(null);
+         return m;
+       
      }
    
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-      try {
-            boolean proceed = true;
-            DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));    
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                   
-                    double lotsize = 0.00;
-                if (! tblotsize.getText().isEmpty()) {
-                    lotsize = Double.valueOf(tblotsize.getText());
-                }
-                double sellprice = 0.00;
-                if (! tbsellprice.getText().isEmpty()) {
-                    sellprice = Double.valueOf(tbsellprice.getText());
-                }
-                double purprice = 0.00;
-                if (! tbpurchprice.getText().isEmpty()) {
-                    purprice = Double.valueOf(tbpurchprice.getText());
-                }
-                 double ovhcost = 0.00;
-                if (! tbovhcost.getText().isEmpty()) {
-                    ovhcost = Double.valueOf(tbovhcost.getText());
-                }
-                 double mtlcost = 0.00;
-                if (! tbmtlcost.getText().isEmpty()) {
-                    mtlcost = Double.valueOf(tbmtlcost.getText());
-                }
-                 double outcost = 0.00;
-                if (! tboutcost.getText().isEmpty()) {
-                    outcost = Double.valueOf(tboutcost.getText());
-                }
-                double netwgt = 0.00;
-                if (! tbnetwt.getText().isEmpty()) {
-                    netwgt = Double.valueOf(tbnetwt.getText());
-                }
-                double shipwgt = 0.00;
-                if (! tbshipwt.getText().isEmpty()) {
-                    shipwgt = Double.valueOf(tbshipwt.getText());
-                }
-                int contqty = 0;
-                if (! tbcontqty.getText().isEmpty()) {
-                    contqty = Integer.valueOf(tbcontqty.getText());
-                }
-                int leadtime = 0;
-                if (! tbleadtime.getText().isEmpty()) {
-                    leadtime = Integer.valueOf(tbleadtime.getText());
-                }
-                int safestock = 0;
-                if (! tbsafestock.getText().isEmpty()) {
-                    safestock = Integer.valueOf(tbsafestock.getText());
-                }
-                int minordqty = 0;
-                if (! tbminordqty.getText().isEmpty()) {
-                    minordqty = Integer.valueOf(tbminordqty.getText());
-                }
-                
-                st.executeUpdate("update item_mstr "
-                        + " set it_desc = " + "'" + tbdesc.getText().toString().replace("'", "") + "'" + ","
-                        + "it_lotsize = " + "'" + lotsize + "'" + ","
-                        + "it_sell_price = " + "'" + df.format(sellprice) + "'" + ","
-                        + "it_pur_price = " + "'" + df.format(purprice) + "'" + ","
-                        + "it_ovh_cost = " + "'" + df.format(ovhcost) + "'" + ","
-                        + "it_out_cost = " + "'" + df.format(outcost) + "'" + ","
-                        + "it_mtl_cost = " + "'" + df.format(mtlcost) + "'" + ","
-                        + "it_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                        + "it_code = " + "'" + ddcode.getSelectedItem().toString() + "'" + ","
-                        + "it_group = " + "'" + tbgroup.getText().toString().replace("'", "") + "'" + ","
-                        + "it_prodline = " + "'" + ddprodcode.getSelectedItem().toString() + "'" + ","
-                        + "it_rev = " + "'" + revlevel.getText().toString().replace("'", "") + "'" + ","
-                        + "it_custrev = " + "'" + custrevlevel.getText().toString().replace("'", "") + "'" + ","
-                        + "it_cont = " + "'" + tbdefaultcont.getText().toString().replace("'", "") + "'" + ","
-                        + "it_contqty = " + "'" + contqty + "'" + ","
-                        + "it_net_wt = " + "'" + netwgt + "'" + ","        
-                        + "it_ship_wt = " + "'" + shipwgt + "'" + ","
-                        + "it_loc = " + "'" + ddloc.getSelectedItem().toString() + "'" + ","
-                        + "it_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","        
-                        + "it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "it_wf = " + "'" + ddrouting.getSelectedItem().toString() + "'" + ","  
-                        + "it_leadtime = " + "'" + leadtime + "'" + ","
-                        + "it_safestock = " + "'" + safestock + "'" + ","
-                        + "it_minordqty = " + "'" + minordqty + "'" + ","
-                        + "it_mrp = " + "'" + BlueSeerUtils.boolToInt(cbmrp.isSelected()) + "'" + ","
-                        + "it_plan = " + "'" + BlueSeerUtils.boolToInt(cbplan.isSelected()) + "'" + ","
-                        + "it_sched = " + "'" + BlueSeerUtils.boolToInt(cbschedule.isSelected()) + "'" + ","
-                        + "it_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + "it_comments = " + "'" + comments.getText().toString().replace("'", "") + "'" + ","
-                        + "it_uom = " + "'" + dduom.getSelectedItem().toString() + "'" + ","
-                        + "it_taxcode = " + "'" + ddtax.getSelectedItem().toString() + "'"        
-                        + " where it_item = " + "'" + tbkey.getText().toString() + "'"
-                        + ";");
-                
-                    // also update pbm_mstr (BOM) if item type has changed
-                    // nope...bad idea
-                     // st.executeUpdate("update pbm_mstr set ps_type = " + "'" + ddcode.getSelectedItem().toString() + "'" + ","
-                     //                   + " where ps_child = " + "'" + tbkey.getText().toString() + "'" + ";");
-                 
-                    
-                    
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+      String[] m = new String[2];
+         m = updateItemMstr(createRecord());
+         initvars(null);
+         return m;
     }
     
     public String[] deleteRecord(String[] x) {
-     String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from item_mstr where it_item = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from item_cost where itc_item = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from item_image where iti_item = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from in_mstr where in_part = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from pbm_mstr where ps_child = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from plan_mstr where plan_part = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from pland_mstr where pland_part = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from mrp_mstr where mrp_part = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteItemMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
+        
      }
     
-    public String[] getRecord(String[] x) {
-        String[] m = new String[2];
-       
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                 double mtl = 0.00;
-                double lbr = 0.00;
-                double bdn = 0.00;
-                double ovh = 0.00;
-                double out = 0.00;
-                double tot = 0.00;
-                
-                DecimalFormat df = new DecimalFormat("0.00000" , new DecimalFormatSymbols(Locale.US));
-                 
-                    res = st.executeQuery("SELECT * from item_mstr left outer join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = it_site " +
-                            " where it_item = " + "'" + 
-                            x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                        
-                        mtl = res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top");
-                        lbr = res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top");
-                        bdn = res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top");
-                        ovh = res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top");
-                        out = res.getDouble("itc_out_low") + res.getDouble("itc_out_top");
-                        tot = res.getDouble("itc_total");
-                        tbkey.setText(res.getString("it_item"));
-                        tbdesc.setText(res.getString("it_desc"));
-                      ddprodcode.setSelectedItem(res.getString("it_prodline"));
-                      ddstatus.setSelectedItem(res.getString("it_status"));
-                      ddcode.setSelectedItem(res.getString("it_code"));
-                      dduom.setSelectedItem(res.getString("it_uom"));
-                      ddtax.setSelectedItem(res.getString("it_taxcode"));
-                      ddtype.setSelectedItem(res.getString("it_type"));
-                      comments.setText(res.getString("it_comments"));
-                      tbdrawing.setText(res.getString("it_drawing"));
-                       tbcreatedate.setText(res.getString("it_createdate"));
-                      ddwh.setSelectedItem(res.getString("it_wh"));
-                      ddloc.setSelectedItem(res.getString("it_loc"));
-                      ddrouting.setSelectedItem(res.getString("it_wf"));
-                      revlevel.setText(res.getString("it_rev"));
-                      tbdefaultcont.setText(res.getString("it_cont"));
-                      tbcontqty.setText(res.getString("it_contqty"));
-                      tbshipwt.setText(res.getString("it_ship_wt"));
-                      tbnetwt.setText(res.getString("it_net_wt"));
-                      ddsite.setSelectedItem(res.getString("it_site"));
-                      
-                      
-                      tbminordqty.setText(res.getString("it_minordqty"));
-                      tbsafestock.setText(res.getString("it_safestock"));
-                      tbleadtime.setText(res.getString("it_leadtime"));
-                      cbmrp.setSelected(res.getBoolean("it_mrp"));
-                      cbplan.setSelected(res.getBoolean("it_plan"));
-                      cbschedule.setSelected(res.getBoolean("it_sched")); 
-                      tblotsize.setText(res.getString("it_lotsize"));
-                      tbmtlstd.setText(df.format(mtl));
-                      tblbrstd.setText(df.format(lbr));
-                      tbbdnstd.setText(df.format(bdn));
-                      tbovhstd.setText(df.format(ovh));
-                      tboutstd.setText(df.format(out));
-                      tbtotcoststd.setText(df.format(tot));
-                      
-                      tbsellprice.setText(df.format(Double.valueOf(res.getString("it_sell_price"))));
-                      tbpurchprice.setText(df.format(Double.valueOf(res.getString("it_pur_price"))));
-                      tbmtlcost.setText(df.format(Double.valueOf(res.getString("it_mtl_cost"))));
-                      tbovhcost.setText(df.format(Double.valueOf(res.getString("it_ovh_cost"))));
-                      tboutcost.setText(df.format(Double.valueOf(res.getString("it_out_cost"))));
-                      
-                      
-                  }
-                    if (i > 0) {
-                    bind_tree_op(x[0]);                    
-                    getrecenttrans(x[0]);                    
-                    getlocqty(x[0]);                    
-                    getItemImages(x[0]);
-                    }
-                    
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+        
+        ItemMstr x = getItemMstr(key);  
+        tbkey.setText(x.it_item());
+        tbdesc.setText(x.it_desc());
+        ddprodcode.setSelectedItem(x.it_prodline());
+        ddstatus.setSelectedItem(x.it_status());
+        ddcode.setSelectedItem(x.it_code());
+        dduom.setSelectedItem(x.it_uom());
+        ddtax.setSelectedItem(x.it_taxcode());
+        ddtype.setSelectedItem(x.it_type());
+        comments.setText(x.it_comments());
+        tbdrawing.setText(x.it_drawing());
+        tbcreatedate.setText(x.it_createdate());
+        ddwh.setSelectedItem(x.it_wh());
+        ddloc.setSelectedItem(x.it_loc());
+        ddrouting.setSelectedItem(x.it_wf());
+        revlevel.setText(x.it_rev());
+        tbdefaultcont.setText(x.it_cont());
+        tbcontqty.setText(x.it_contqty());
+        tbshipwt.setText(x.it_ship_wt());
+        tbnetwt.setText(x.it_net_wt());
+        ddsite.setSelectedItem(x.it_site());
+        tbminordqty.setText(x.it_minordqty());
+        tbsafestock.setText(x.it_safestock());
+        tbleadtime.setText(x.it_leadtime());
+        cbmrp.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_mrp()));
+        cbplan.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_plan()));
+        cbschedule.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_sched())); 
+        tblotsize.setText(x.it_lotsize());
+        tbsellprice.setText(x.it_sell_price());
+        tbpurchprice.setText(x.it_pur_price());
+        tbmtlcost.setText(x.it_mtl_cost());
+        tbovhcost.setText(x.it_ovh_cost());
+        tboutcost.setText(x.it_out_cost());
+        bind_tree_op(key[0]);                    
+        getrecenttrans(key[0]);                    
+        getlocqty(key[0]);                    
+        getItemImages(key[0]);
+        setAction(x.m());
+        return x.m();
     }
+    
+    public ItemMstr createRecord() { 
+        ItemMstr x = new ItemMstr(null, tbkey.getText().toString(),
+                tbdesc.getText().toUpperCase(),
+                bsformat("i", tblotsize.getText(), ""),
+                bsformat("d", tbsellprice.getText(), "5"),
+                bsformat("d", tbpurchprice.getText(), "5"),
+                bsformat("d", tbovhcost.getText(), "5"),
+                bsformat("d", tboutcost.getText(), "5"),
+                bsformat("d", tbmtlcost.getText(), "5"),
+                ddcode.getSelectedItem().toString(),
+                ddtype.getSelectedItem().toString(),
+                tbgroup.getText(),
+                ddprodcode.getSelectedItem().toString(),
+                tbdrawing.getText().toString(),
+                revlevel.getText(),
+                custrevlevel.getText(),
+                ddwh.getSelectedItem().toString(),
+                ddloc.getSelectedItem().toString(),        
+                ddsite.getSelectedItem().toString(),
+                comments.getText().toString(),
+                ddstatus.getSelectedItem().toString(),
+                dduom.getSelectedItem().toString(),
+                bsformat("d", tbnetwt.getText(), "2"),
+                bsformat("d", tbshipwt.getText(), "2"),
+                tbdefaultcont.getText(),
+                bsformat("d", tbcontqty.getText(), "0"),
+                bsformat("d", tbleadtime.getText(), "0"),
+                bsformat("d", tbsafestock.getText(), "0"),
+                bsformat("d", tbminordqty.getText(), "0"),
+                BlueSeerUtils.boolToInt(cbmrp.isSelected()),
+                BlueSeerUtils.boolToInt(cbschedule.isSelected()),
+                BlueSeerUtils.boolToInt(cbplan.isSelected()),
+                ddrouting.getSelectedItem().toString(),
+                ddtax.getSelectedItem().toString(),
+                bsmf.MainFrame.dfdate.format(new Date())
+                );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -1168,7 +931,19 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
      tboutcur.setText(df.format(costlist.get(4)));
      tbtotcostcur.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
          }
-         
+    
+    public void getstandardcost(String parentpart) {
+    ArrayList<Double> costs = OVData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
+    DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
+     tbmtlstd.setText(df.format(costs.get(0) + costs.get(5)));
+     tblbrstd.setText(df.format(costs.get(1) + costs.get(6)));
+     tbbdnstd.setText(df.format(costs.get(2) + costs.get(7)));
+     tbovhstd.setText(df.format(costs.get(3) + costs.get(8)));
+     tboutstd.setText(df.format(costs.get(4) + costs.get(9)));
+     tbtotcoststd.setText(df.format(costs.get(10)));
+     }
+        
+    
     public void bind_tree_op(String parentpart) {
       //  jTree1.setModel(null);
        
@@ -1363,6 +1138,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        btstandard = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         ImagePanel = new javax.swing.JPanel();
@@ -2024,7 +1800,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -2099,28 +1875,40 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         jLabel8.setFont(new java.awt.Font("Cantarell", 1, 18)); // NOI18N
         jLabel8.setText("Current");
 
+        btstandard.setText("Standard");
+        btstandard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btstandardActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tboutstd)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbtotcoststd)
-                    .addComponent(tbmtlstd)
-                    .addComponent(tblbrstd)
-                    .addComponent(tbbdnstd)
-                    .addComponent(tbovhstd))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tboutstd)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tbtotcoststd)
+                            .addComponent(tbmtlstd)
+                            .addComponent(tblbrstd)
+                            .addComponent(tbbdnstd)
+                            .addComponent(tbovhstd)))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btstandard)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tblbrcur)
@@ -2171,7 +1959,9 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                     .addComponent(jLabel6)
                     .addComponent(tbtotcostcur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btcurrent)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btcurrent)
+                    .addComponent(btstandard))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -2644,6 +2434,10 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btstandardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btstandardActionPerformed
+        getstandardcost(tbkey.getText());
+    }//GEN-LAST:event_btstandardActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CostBOMPanel;
@@ -2658,6 +2452,7 @@ public class ItemMastMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprintlabel;
+    private javax.swing.JButton btstandard;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbaltbom;
     private javax.swing.JCheckBox cbdefault;
