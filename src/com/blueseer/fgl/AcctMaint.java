@@ -310,6 +310,15 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
      
     public boolean validateInput(String x) {
         boolean b = true;
+        
+                String z = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
+                if (z.equals("error")) {
+                    bsmf.MainFrame.show(getMessageTag(1000));
+                    tbkey.requestFocus();
+                    b = false;
+                    return b;
+                } 
+        
                 if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
                     b = false;
                     BlueSeerUtils.message(new String[] {"1", "must choose a currency"});
@@ -342,10 +351,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void initvars(String[] arg) {
        
-        Window window = SwingUtilities.getWindowAncestor(this);
-        JFrame frame = (JFrame) window;
-        frame.setTitle("BOO HOO!");
-        
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
@@ -510,11 +515,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
-        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbkeyFocusLost(evt);
-            }
-        });
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
@@ -699,20 +699,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
       if (! btadd.isEnabled())
         executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
-
-    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
-        String x = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
-        if (x.equals("error")) {
-            tbkey.setText("");
-            tbkey.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbkey.requestFocus();
-        } else {
-            tbkey.setText(x);
-            tbkey.setBackground(Color.white);
-           
-        }
-    }//GEN-LAST:event_tbkeyFocusLost
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();

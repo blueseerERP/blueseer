@@ -33,12 +33,15 @@ import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.Window;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 /**
@@ -346,6 +349,16 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
       return m;
     }
     
+    public void setColors(String r, String g, String b) {
+       // exhibits inconsistent behaviour for menu backgrounds...dont use
+        Color backgroundcolor = new Color(Integer.valueOf(r),Integer.valueOf(g),Integer.valueOf(b));
+        Window window = SwingUtilities.getWindowAncestor(this);
+        bsmf.MainFrame frame = (bsmf.MainFrame) window;
+        bsmf.MainFrame.backgroundcolor = backgroundcolor;
+        this.setBackground(bsmf.MainFrame.backgroundcolor);
+        //frame.setBackground(backgroundcolor);
+        
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.

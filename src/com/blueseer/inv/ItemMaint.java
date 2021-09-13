@@ -38,6 +38,7 @@ import static com.blueseer.inv.invData.getItemMstr;
 import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -309,9 +310,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
        isLoad = true;
        
        jTabbedPane1.removeAll();
-       jTabbedPane1.add("Main", MainPanel);
-       jTabbedPane1.add("Cost/BOM", CostBOMPanel);
-       jTabbedPane1.add("Images", ImagePanel);
+       jTabbedPane1.add(getClassLabelTag("main", this.getClass().getSimpleName()), MainPanel);
+       jTabbedPane1.add(getClassLabelTag("costbom", this.getClass().getSimpleName()), CostBOMPanel);
+       jTabbedPane1.add(getClassLabelTag("images", this.getClass().getSimpleName()), ImagePanel);
        
        DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
        jTree1.setModel(new DefaultTreeModel(root));
@@ -646,9 +647,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -668,7 +669,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Item", "Description"); 
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -1155,6 +1157,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Master Data"));
+        jPanel1.setName("panelmaster"); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
@@ -1170,16 +1173,22 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane12.setViewportView(comments);
 
         jLabel60.setText("GroupCode");
+        jLabel60.setName("lblgroup"); // NOI18N
 
         jLabel63.setText("Status");
+        jLabel63.setName("lblstatus"); // NOI18N
 
         jLabel28.setText("Comments");
+        jLabel28.setName("lblcomments"); // NOI18N
 
         jLabel34.setText("Prod Code");
+        jLabel34.setName("lblprodcode"); // NOI18N
 
         jLabel88.setText("UnitOfMeas");
+        jLabel88.setName("lbluom"); // NOI18N
 
         jLabel23.setText("Description");
+        jLabel23.setName("lbldesc"); // NOI18N
 
         ddcode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "M", "P" }));
         ddcode.addActionListener(new java.awt.event.ActionListener() {
@@ -1189,10 +1198,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel22.setText("PartNumber");
+        jLabel22.setName("lblitem"); // NOI18N
 
         dduom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EA", "FT" }));
 
         jLabel37.setText("Class Code");
+        jLabel37.setName("lblclass"); // NOI18N
 
         ddwh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1201,14 +1212,19 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel72.setText("LotSize");
+        jLabel72.setName("lbllotsize"); // NOI18N
 
         jLabel38.setText("Site");
+        jLabel38.setName("lblsite"); // NOI18N
 
         jLabel39.setText("Type");
+        jLabel39.setName("lbltype"); // NOI18N
 
         jLabel76.setText("Warehouse");
+        jLabel76.setName("lblwarehouse"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1216,8 +1232,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel78.setText("Location");
+        jLabel78.setName("lblloc"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1354,6 +1372,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel1.add(jPanel2);
 
         cbmrp.setText("MRP");
+        cbmrp.setName("cbmrp"); // NOI18N
         cbmrp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbmrpActionPerformed(evt);
@@ -1367,6 +1386,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel61.setText("Drawing");
+        jLabel61.setName("lbldrawing"); // NOI18N
 
         tbshipwt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1390,6 +1410,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel33.setText("Sell Price");
+        jLabel33.setName("lblsellprice"); // NOI18N
 
         tbleadtime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1398,12 +1419,16 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel62.setText("ShipWt");
+        jLabel62.setName("lblshipwt"); // NOI18N
 
         jLabel67.setText("LeadTime");
+        jLabel67.setName("lblleadtime"); // NOI18N
 
         jLabel68.setText("SafetyStock");
+        jLabel68.setName("lblsafetystock"); // NOI18N
 
         jLabel69.setText("MinOrdQty");
+        jLabel69.setName("lblminordqty"); // NOI18N
 
         tbnetwt.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1412,14 +1437,19 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel70.setText("NetWt");
+        jLabel70.setName("lblnetwt"); // NOI18N
 
         jLabel65.setText("Eng Rev");
+        jLabel65.setName("lblengrev"); // NOI18N
 
         jLabel66.setText("Cust Rev");
+        jLabel66.setName("lblcustrev"); // NOI18N
 
         jLabel71.setText("Routing");
+        jLabel71.setName("lblrouting"); // NOI18N
 
         cbplan.setText("Plan Orders");
+        cbplan.setName("cbplan"); // NOI18N
 
         tbpurchprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1431,6 +1461,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel64.setText("Purch Price");
+        jLabel64.setName("lblpurchprice"); // NOI18N
 
         tbovhcost.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1445,8 +1476,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel73.setText("Overhead Cost");
+        jLabel73.setName("lblovhcost"); // NOI18N
 
         jLabel74.setText("Outside Cost");
+        jLabel74.setName("lbloutcost"); // NOI18N
 
         tbmtlcost.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1455,18 +1488,25 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel75.setText("Material Cost");
+        jLabel75.setName("lblmatcost"); // NOI18N
 
         cbschedule.setText("Scheduled?");
+        cbschedule.setName("cbsched"); // NOI18N
 
         cbaltbom.setText("Alt BOM");
+        cbaltbom.setName("cbaltbom"); // NOI18N
 
         jLabel77.setText("QtyOnHand");
+        jLabel77.setName("lblqoh"); // NOI18N
 
         jLabel79.setText("TaxCode");
+        jLabel79.setName("lbltaxcode"); // NOI18N
 
         jLabel80.setText("CreateDate");
+        jLabel80.setName("lblcreatedate"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1474,6 +1514,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1481,6 +1522,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1488,10 +1530,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel9.setText("DefaultCont");
+        jLabel9.setName("lbldefaultcont"); // NOI18N
 
         jLabel10.setText("ContQty");
+        jLabel10.setName("lblcontqty"); // NOI18N
 
         btprintlabel.setText("Print Label");
+        btprintlabel.setName("btprintlabels"); // NOI18N
         btprintlabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintlabelActionPerformed(evt);
@@ -1680,6 +1725,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel1.add(jPanel4);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Location Quantities"));
+        jPanel6.setName("panellocqty"); // NOI18N
 
         tablelocqty.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1731,6 +1777,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Recent Inventory Transactions"));
+        jPanel7.setName("paneltrans"); // NOI18N
 
         tabletrans.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1825,6 +1872,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         CostBOMPanel.setPreferredSize(new java.awt.Dimension(1041, 631));
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Cost"));
+        jPanel8.setName("panelcost"); // NOI18N
 
         tbmtlstd.setFont(new java.awt.Font("Cantarell", 0, 12)); // NOI18N
 
@@ -1851,6 +1899,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtotcostcur.setFont(new java.awt.Font("Cantarell", 0, 12)); // NOI18N
 
         btcurrent.setText("Current");
+        btcurrent.setName("btcurrent"); // NOI18N
         btcurrent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcurrentActionPerformed(evt);
@@ -1858,24 +1907,33 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel1.setText("Material");
+        jLabel1.setName("lblmat"); // NOI18N
 
         jLabel2.setText("Labor");
+        jLabel2.setName("lbllbr"); // NOI18N
 
         jLabel3.setText("Burden");
+        jLabel3.setName("lblbdn"); // NOI18N
 
         jLabel4.setText("Overhead");
+        jLabel4.setName("lblovh"); // NOI18N
 
         jLabel5.setText("Outside");
+        jLabel5.setName("lblout"); // NOI18N
 
         jLabel6.setText("TotalCost");
+        jLabel6.setName("lbltotal"); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Cantarell", 1, 18)); // NOI18N
         jLabel7.setText("Standard");
+        jLabel7.setName("lblstandard"); // NOI18N
 
         jLabel8.setFont(new java.awt.Font("Cantarell", 1, 18)); // NOI18N
         jLabel8.setText("Current");
+        jLabel8.setName("lblcurrent"); // NOI18N
 
         btstandard.setText("Standard");
+        btstandard.setName("btstandard"); // NOI18N
         btstandard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btstandardActionPerformed(evt);
@@ -1980,7 +2038,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addContainerGap(293, Short.MAX_VALUE))
         );
 
-        jTree1.setBorder(javax.swing.BorderFactory.createTitledBorder("Bill Of Material"));
+        jTree1.setBorder(javax.swing.BorderFactory.createTitledBorder("BOM"));
         jTree1.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
@@ -2025,6 +2083,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         btaddimage.setText("Add Image");
+        btaddimage.setName("btaddimage"); // NOI18N
         btaddimage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddimageActionPerformed(evt);
@@ -2032,6 +2091,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btdeleteimage.setText("Delete Image");
+        btdeleteimage.setName("btdeleteimage"); // NOI18N
         btdeleteimage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteimageActionPerformed(evt);
@@ -2039,6 +2099,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         cbdefault.setText("Default?");
+        cbdefault.setName("cbdefault"); // NOI18N
         cbdefault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbdefaultActionPerformed(evt);
