@@ -131,6 +131,8 @@
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" jvm="${java16}" fork="true" classpathref="runtime.path" dir="${test.dir}">
 	    <arg value="-debug"/> 
+	    <arg value="-setTitle"/> 
+	    <arg value="override"/> 
 	    <jvmarg value="-Duser.language=en"/>
 	    <jvmarg value="-Duser.country=US"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>

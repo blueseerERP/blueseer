@@ -168,7 +168,9 @@ public class invData {
        String[] m = new String[2];
        
         try (Connection con = DriverManager.getConnection(url + db, user, pass);) {
-        PreparedStatement ps = null;     
+        PreparedStatement ps = null;   
+        
+        con.setAutoCommit(false);
         String sql = "delete from item_mstr where it_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
@@ -206,6 +208,8 @@ public class invData {
         ps.setString(1, x.it_item);
         ps.executeUpdate();
         ps.close();
+        con.commit();
+        
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
 	       MainFrame.bslog(s);

@@ -874,6 +874,7 @@ public class BlueSeerUtils {
      public static void messagereset() {
          bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);
          bsmf.MainFrame.messagelabel.setText("");
+         
      }
     
      public static class MessageXML {
