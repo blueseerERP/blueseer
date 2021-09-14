@@ -43,31 +43,84 @@ import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import java.awt.Color;
+import java.awt.Component;
 import java.math.RoundingMode;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.tree.TreeNode;
 
 /**
  *
  * @author vaughnte
  */
-public class CostRollUpPanel extends javax.swing.JPanel {
+public class CostRollMaint extends javax.swing.JPanel {
 
     javax.swing.table.DefaultTableModel costmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-               "Part", "Op", "WC", "Mch", "Desc", "Dept", "Labor", "Burden", "Material", "Overhead", "Service", "SetupRate($)", "LaborRate($)", "BurdenRate($)", "setupHours", "runHours", "Lotsize", "RollCost", "StdCost"
+               getGlobalColumnTag("item"), 
+                getGlobalColumnTag("operation"), 
+                getGlobalColumnTag("workcenter"), 
+                getGlobalColumnTag("machine"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("costcenter"), 
+                getGlobalColumnTag("lbr"), 
+                getGlobalColumnTag("bdn"), 
+                getGlobalColumnTag("mat"), 
+                getGlobalColumnTag("ovh"), 
+                getGlobalColumnTag("out"), 
+                getGlobalColumnTag("setuprate"), 
+                getGlobalColumnTag("laborrate"), 
+                getGlobalColumnTag("burdenrate"), 
+                getGlobalColumnTag("setuphrs"), 
+                getGlobalColumnTag("runhours"), 
+                getGlobalColumnTag("lotsize"), 
+                getGlobalColumnTag("rollcost"), 
+                getGlobalColumnTag("standardcost")
             });
     javax.swing.table.DefaultTableModel subcostmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-               "Part", "Op", "WC", "Mch", "Desc", "Dept", "Labor", "Burden", "Material", "Overhead", "Service", "SetupRate($)", "LaborRate($)", "BurdenRate($)", "setupHours", "runHours", "Lotsize", "RollCost", "StdCost"
+               getGlobalColumnTag("item"), 
+                getGlobalColumnTag("operation"), 
+                getGlobalColumnTag("workcenter"), 
+                getGlobalColumnTag("machine"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("costcenter"), 
+                getGlobalColumnTag("lbr"), 
+                getGlobalColumnTag("bdn"), 
+                getGlobalColumnTag("mat"), 
+                getGlobalColumnTag("ovh"), 
+                getGlobalColumnTag("out"), 
+                getGlobalColumnTag("setuprate"), 
+                getGlobalColumnTag("laborrate"), 
+                getGlobalColumnTag("burdenrate"), 
+                getGlobalColumnTag("setuphrs"), 
+                getGlobalColumnTag("runhours"), 
+                getGlobalColumnTag("lotsize"), 
+                getGlobalColumnTag("rollcost"), 
+                getGlobalColumnTag("standardcost")
             });
     javax.swing.table.DefaultTableModel toplowmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-               "Type", "RollLower", "StdLower", "RollUpper", "StdUpper" , "RollTotal", "StdTotal"
+               getGlobalColumnTag("type"), 
+               getGlobalColumnTag("rolllower"), 
+               getGlobalColumnTag("stdlower"), 
+               getGlobalColumnTag("rollupper"), 
+               getGlobalColumnTag("stdupper") , 
+               getGlobalColumnTag("rolltotal"), 
+               getGlobalColumnTag("stdtotal")
             });
     
     String thissite = "";
@@ -76,10 +129,55 @@ public class CostRollUpPanel extends javax.swing.JPanel {
     /**
      * Creates new form CostRollUpPanel
      */
-    public CostRollUpPanel() {
+    public CostRollMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void settoplowmodeltable() {
         ArrayList<Double> costs = new ArrayList<Double>();
@@ -425,6 +523,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jLabel1.setText("Part");
+        jLabel1.setName("lblitem"); // NOI18N
 
         tbitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -433,20 +532,28 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Roll Cost:");
+        jLabel3.setName("lblrollcost"); // NOI18N
 
         jLabel5.setText("Std Cost:");
+        jLabel5.setName("lblstdcost"); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Component Attributes"));
+        jPanel2.setName("panelcomponents"); // NOI18N
 
         jLabel2.setText("Component");
+        jLabel2.setName("lblcomponent"); // NOI18N
 
         jLabel4.setText("Description");
+        jLabel4.setName("lbldesc"); // NOI18N
 
         jLabel6.setText("Operation");
+        jLabel6.setName("lblop"); // NOI18N
 
         jLabel7.setText("Standard Cost");
+        jLabel7.setName("lblstdcost"); // NOI18N
 
         jLabel8.setText("Qty Per");
+        jLabel8.setName("lblqtyper"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -496,6 +603,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Sub Assembly Routing Cost"));
+        jPanel4.setName("panelsubrouting"); // NOI18N
 
         subcosttable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         subcosttable.setModel(new javax.swing.table.DefaultTableModel(
@@ -528,6 +636,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Parent Routing Cost Structure"));
+        jPanel5.setName("panelrouting"); // NOI18N
 
         costtable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         costtable.setModel(new javax.swing.table.DefaultTableModel(
@@ -560,6 +669,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Parent BOM Cost Structure"));
+        jPanel6.setName("panelbom"); // NOI18N
 
         toplowtable.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         toplowtable.setModel(new javax.swing.table.DefaultTableModel(
@@ -601,6 +711,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Parent Tree Structure"));
+        jPanel7.setName("paneltree"); // NOI18N
 
         jTree1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
@@ -636,7 +747,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -661,6 +772,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         );
 
         btroll.setText("Roll");
+        btroll.setName("btroll"); // NOI18N
         btroll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrollActionPerformed(evt);
@@ -675,6 +787,7 @@ public class CostRollUpPanel extends javax.swing.JPanel {
         });
 
         btclear.setText("clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);

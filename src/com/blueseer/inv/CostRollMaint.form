@@ -84,6 +84,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Part"/>
+            <Property name="name" type="java.lang.String" value="lblitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbitem">
@@ -94,6 +95,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Roll Cost:"/>
+            <Property name="name" type="java.lang.String" value="lblrollcost" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labelcost">
@@ -103,6 +105,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Std Cost:"/>
+            <Property name="name" type="java.lang.String" value="lblstdcost" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel1">
@@ -152,6 +155,7 @@
                     <TitledBorder title="Component Attributes"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelcomponents" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -225,26 +229,31 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Component"/>
+                    <Property name="name" type="java.lang.String" value="lblcomponent" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Description"/>
+                    <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Operation"/>
+                    <Property name="name" type="java.lang.String" value="lblop" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Standard Cost"/>
+                    <Property name="name" type="java.lang.String" value="lblstdcost" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Qty Per"/>
+                    <Property name="name" type="java.lang.String" value="lblqtyper" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -256,6 +265,7 @@
                     <TitledBorder title="Sub Assembly Routing Cost"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelsubrouting" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -313,6 +323,7 @@
                     <TitledBorder title="Parent Routing Cost Structure"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelrouting" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -370,6 +381,7 @@
                     <TitledBorder title="Parent BOM Cost Structure"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelbom" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -429,6 +441,7 @@
                     <TitledBorder title="Parent Tree Structure"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="paneltree" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -483,6 +496,7 @@
         <Component class="javax.swing.JButton" name="btroll">
           <Properties>
             <Property name="text" type="java.lang.String" value="Roll"/>
+            <Property name="name" type="java.lang.String" value="btroll" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrollActionPerformed"/>
@@ -503,6 +517,7 @@
         <Component class="javax.swing.JButton" name="btclear">
           <Properties>
             <Property name="text" type="java.lang.String" value="clear"/>
+            <Property name="name" type="java.lang.String" value="btclear" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>

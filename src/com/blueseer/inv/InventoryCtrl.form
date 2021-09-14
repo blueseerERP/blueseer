@@ -28,6 +28,7 @@
             <TitledBorder title="Inventory Control"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -75,6 +76,7 @@
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -83,21 +85,25 @@
         <Component class="javax.swing.JCheckBox" name="cbdemdtoplan">
           <Properties>
             <Property name="text" type="java.lang.String" value="Demand To Plan"/>
+            <Property name="name" type="java.lang.String" value="cbdemand" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbmultiplan">
           <Properties>
             <Property name="text" type="java.lang.String" value="MultiScan Plan Ticket?"/>
+            <Property name="name" type="java.lang.String" value="cbmultiscan" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbprintsubticket">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print Sub Ticket From Scan?"/>
+            <Property name="name" type="java.lang.String" value="cbprintsubticket" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbautoitem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Item Number Assignment?"/>
+            <Property name="name" type="java.lang.String" value="cbautoitem" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

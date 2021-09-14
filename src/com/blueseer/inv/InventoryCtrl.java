@@ -29,9 +29,12 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -39,6 +42,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -52,6 +63,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     
     public InventoryCtrl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // global variable declarations
@@ -119,6 +131,51 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -168,7 +225,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                             "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" + "," +
                             "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'" +
                             ")"  + ";");              
-                          bsmf.MainFrame.show("Inserting Defaults");
+                          bsmf.MainFrame.show(getMessageTag(1065));
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                 } else {
                     st.executeUpdate("update inv_ctrl set " +
@@ -183,7 +240,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -259,8 +316,10 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Inventory Control"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -268,12 +327,16 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         cbdemdtoplan.setText("Demand To Plan");
+        cbdemdtoplan.setName("cbdemand"); // NOI18N
 
         cbmultiplan.setText("MultiScan Plan Ticket?");
+        cbmultiplan.setName("cbmultiscan"); // NOI18N
 
         cbprintsubticket.setText("Print Sub Ticket From Scan?");
+        cbprintsubticket.setName("cbprintsubticket"); // NOI18N
 
         cbautoitem.setText("Auto Item Number Assignment?");
+        cbautoitem.setName("cbautoitem"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

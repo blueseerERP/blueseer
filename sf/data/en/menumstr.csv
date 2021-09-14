@@ -30,11 +30,11 @@ SysInfo,,com.blueseer.adm.AboutPanel,JMenuItem,sysi
 AcctBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,accb
 AcctMaint,,com.blueseer.fgl.AcctMaint,JMenuItem,accm
 ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
-BOMMaint,,com.blueseer.inv.BOMMaintPanel,JMenuItem,bomm
+BOMMaint,,com.blueseer.inv.BOMMaint,JMenuItem,bomm
 BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt
 BOMBrowse,,com.blueseer.inv.BOMBrowse,JMenuItem,bomb
 CarrierMaint,,com.blueseer.ctr.CarrierMaintPanel,JMenuItem,carm
-CostRoll,,com.blueseer.inv.CostRollUpPanel,JMenuItem,roll
+CostRoll,,com.blueseer.inv.CostRollMaint,JMenuItem,roll
 CostRollRange,,com.blueseer.inv.CostRollRange,JMenuItem,rolr
 CustMaint,,com.blueseer.ctr.CustMaintPanel,JMenuItem,cusm
 CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt1,JMenuItem,cuxb
@@ -46,7 +46,7 @@ EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 FileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,orlo
 FreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
-InventoryAdjustment,,com.blueseer.inv.InventoryMiscPanel,JMenuItem,inva
+InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item
 ItemBrowse,Item Browse primary,com.blueseer.utl.ReportPanel,JMenuItem,itemb
 ItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt1,JMenuItem,itrr

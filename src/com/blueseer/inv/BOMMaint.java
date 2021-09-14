@@ -73,7 +73,7 @@ import javax.swing.tree.TreeNode;
  *
  * @author vaughnte
  */
-public class BOMMaintPanel extends javax.swing.JPanel {
+public class BOMMaint extends javax.swing.JPanel {
 
     /**
      * Creates new form BOMMaintPanel
@@ -97,7 +97,7 @@ public class BOMMaintPanel extends javax.swing.JPanel {
                     }
                 };    
      
-    public BOMMaintPanel() {
+    public BOMMaint() {
         initComponents();
         
         

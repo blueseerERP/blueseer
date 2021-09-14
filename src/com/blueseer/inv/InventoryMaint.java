@@ -26,12 +26,15 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -51,13 +54,17 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -65,7 +72,7 @@ import javax.swing.JTextField;
  *
  * @author vaughnte
  */
-public class InventoryMiscPanel extends javax.swing.JPanel {
+public class InventoryMaint extends javax.swing.JPanel {
 
         public static javax.swing.table.DefaultTableModel lookUpModel = null;
         public static JTable lookUpTable = new JTable();
@@ -79,10 +86,55 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
     /**
      * Creates new form InventoryMiscPanel
      */
-    public InventoryMiscPanel() {
+    public InventoryMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void getiteminfo(String parentpart) {
         try {
@@ -108,7 +160,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
                 }
                 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("unable to get item_mstr info");
+                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
                  MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -374,6 +426,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Inventory Adjustment (Issue / Receipt)"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -382,12 +435,16 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Site:");
+        jLabel3.setName("lblsite"); // NOI18N
 
         lblcc.setText("cc:");
+        lblcc.setName("lblcc"); // NOI18N
 
         jLabel2.setText("Item:");
+        jLabel2.setName("lblitem"); // NOI18N
 
         jLabel6.setText("EffDate");
+        jLabel6.setName("lbleffdate"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -396,8 +453,10 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         });
 
         jLabel7.setText("Serial/Lot:");
+        jLabel7.setName("lblserial"); // NOI18N
 
         jLabel5.setText("Qty:");
+        jLabel5.setName("lblqty"); // NOI18N
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
@@ -409,10 +468,13 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Type:");
+        jLabel1.setName("lbltype"); // NOI18N
 
         jLabel4.setText("Location:");
+        jLabel4.setName("lblloc"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -420,10 +482,13 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         });
 
         lblacct.setText("Acct:");
+        lblacct.setName("lblacct"); // NOI18N
 
         jLabel9.setText("Remarks:");
+        jLabel9.setName("lblremarks"); // NOI18N
 
         jLabel8.setText("Reference:");
+        jLabel8.setName("lblref"); // NOI18N
 
         ddwh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -432,6 +497,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         });
 
         jLabel10.setText("Warehouse:");
+        jLabel10.setName("lblwh"); // NOI18N
 
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
@@ -586,7 +652,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         
         if (tbpart.getText().isEmpty()) {
             tbpart.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Item cannot be blank");
+            bsmf.MainFrame.show(getMessageTag(1024, tbpart.getName()));
             tbpart.requestFocus();
             return;
         }
@@ -595,7 +661,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
             qty = Double.valueOf(tbqty.getText());
         } else {
             tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Qty can not be blank");
+            bsmf.MainFrame.show(getMessageTag(1036));
             tbqty.requestFocus();
             return;
         }
@@ -618,7 +684,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         // check if item exists
         if (! OVData.isValidItem(tbpart.getText())) {
             proceed = false;
-            bsmf.MainFrame.show("Invalid Item " + tbpart.getText());
+            bsmf.MainFrame.show(getMessageTag(1026, tbpart.getText()));
             return;
         }
         
@@ -630,7 +696,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         
         if ( prodline == null || prodline.isEmpty() ) {
             proceed = false;
-            bsmf.MainFrame.show("No Product Line for Part " + tbpart.getText());
+            bsmf.MainFrame.show(getMessageTag(1066, tbpart.getText()));
             return;
         }
         
@@ -638,18 +704,18 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         
         if (invacct.isEmpty()) {
             proceed = false;
-            bsmf.MainFrame.show("No Inventory Account for Product Line " + prodline);
+            bsmf.MainFrame.show(getMessageTag(1067, prodline));
         }
         
         if (cost == 0.00) {
             proceed = false;
-            bsmf.MainFrame.show("Item Standard Cost is zero " + prodline);
+            bsmf.MainFrame.show(getMessageTag(1068));
         }
         
         
         if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
                     proceed = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
         
@@ -663,7 +729,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         if (! isError) {
             isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, Double.valueOf(qty)); 
         } else {
-            bsmf.MainFrame.show("Error during TRHistIssDiscrete");
+            bsmf.MainFrame.show(getMessageTag(1010, "TRHistIssDiscrete"));
         }
         
        
@@ -676,12 +742,12 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
                         dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             }
         } else {
-          bsmf.MainFrame.show("Error during UpdateInventoryDiscrete");  
+          bsmf.MainFrame.show(getMessageTag(1010, "UpdateInventoryDiscrete"));  
         }
         if (! isError)
-            bsmf.MainFrame.show("Adjustment Completed");
+            bsmf.MainFrame.show(getMessageTag(1065));
             else
-            bsmf.MainFrame.show("Error during glentry");
+            bsmf.MainFrame.show(getMessageTag(1010, "glentry"));
         
         } // proceed
         
@@ -693,7 +759,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
     private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
         if (! tbpart.getText().isEmpty()) {
             if (! OVData.isValidItem(tbpart.getText())) {
-                bsmf.MainFrame.show("Invalid Item " + tbpart.getText());
+                bsmf.MainFrame.show(getMessageTag(1021, tbpart.getText()));
                 tbpart.setBackground(Color.yellow);
                 tbpart.requestFocus();
             } else {
@@ -728,7 +794,7 @@ public class InventoryMiscPanel extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbqty.requestFocus();
         } else {
             tbqty.setText(x);

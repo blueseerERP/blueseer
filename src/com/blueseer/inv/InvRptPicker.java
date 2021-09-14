@@ -50,8 +50,11 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
@@ -66,8 +69,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -154,6 +164,7 @@ public class InvRptPicker extends javax.swing.JPanel {
      */
     public InvRptPicker() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -177,6 +188,49 @@ public class InvRptPicker extends javax.swing.JPanel {
         }
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
     public void initvars(String[] arg) {
@@ -267,10 +321,10 @@ public class InvRptPicker extends javax.swing.JPanel {
         lbkey1.setVisible(true);
         lbkey2.setText("");
         lbkey2.setVisible(true);
-        lbkey3.setText("");
-        lbkey3.setVisible(true);
         lbkey4.setText("");
         lbkey4.setVisible(true);
+        lbkey3.setText("");
+        lbkey3.setVisible(true);
         lbddkey1.setText("");
         lbddkey1.setVisible(true);
         lbddkey2.setText("");
@@ -297,8 +351,9 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
+           
           
          } else { // output...fill report
             // colect variables from input
@@ -318,7 +373,18 @@ public class InvRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "CreateDate", "ProdLine", "Code" , "Group", "Loc", "WH",  "SellPrice", "PurchPrice", "Revision"})
+                        new String[]{getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("createdate"), 
+                             getGlobalColumnTag("prodline"), 
+                             getGlobalColumnTag("code") , 
+                             getGlobalColumnTag("group"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse"),  
+                             getGlobalColumnTag("sellprice"), 
+                             getGlobalColumnTag("purchprice"), 
+                             getGlobalColumnTag("revision")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -389,8 +455,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From ProdLine:");
-           lbkey2.setText("To ProdLine:");
+           lbkey1.setText(getClassLabelTag("lblfromprod", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoprod", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -409,8 +475,20 @@ public class InvRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
+            
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "Type", "ProdLine", "Code" , "Group", "Loc", "WH",  "SellPrice", "PurchPrice", "Revision"})
+                        new String[]{getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("type"), 
+                             getGlobalColumnTag("prodline"), 
+                             getGlobalColumnTag("code") , 
+                             getGlobalColumnTag("group"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse"),  
+                             getGlobalColumnTag("sellprice"), 
+                             getGlobalColumnTag("purchprice"), 
+                             getGlobalColumnTag("revision")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -481,8 +559,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -501,8 +579,18 @@ public class InvRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
+            
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "Matl", "Labor", "Burden", "OvhHead", "Service", "Total"})
+                        new String[]{
+                             getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"),
+                             getGlobalColumnTag("mat") , 
+                             getGlobalColumnTag("lbr"), 
+                             getGlobalColumnTag("bdn"), 
+                             getGlobalColumnTag("ovh"),  
+                             getGlobalColumnTag("out"), 
+                             getGlobalColumnTag("total")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -573,8 +661,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -593,7 +681,16 @@ public class InvRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "CustCode", "CustName", "Currency", "UOM", "ItemMstrPrice", "CustSpecifcPrice"})
+                        new String[]{
+                             getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("code"), 
+                             getGlobalColumnTag("name"), 
+                             getGlobalColumnTag("currency"), 
+                             getGlobalColumnTag("uom"), 
+                             getGlobalColumnTag("itemprice"), 
+                             getGlobalColumnTag("custprice")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -668,8 +765,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -689,7 +786,14 @@ public class InvRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "QOH", "Allocated", "Loc", "Warehouse"})
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("qoh"), 
+                             getGlobalColumnTag("allocated"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -766,8 +870,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From Item:");
-           lbkey2.setText("To Item:");
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -787,7 +891,14 @@ public class InvRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
                javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "OrderNbr", "CustName",  "AllocateQty", "Loc", "Warehouse"})
+                        new String[]{getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("order"), 
+                             getGlobalColumnTag("name"),  
+                             getGlobalColumnTag("allocated"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -891,17 +1002,19 @@ public class InvRptPicker extends javax.swing.JPanel {
         lbkey1 = new javax.swing.JLabel();
         tbkey2 = new javax.swing.JTextField();
         paneltb2 = new javax.swing.JPanel();
-        lbkey3 = new javax.swing.JLabel();
-        tbkey3 = new javax.swing.JTextField();
         lbkey4 = new javax.swing.JLabel();
+        tbkey3 = new javax.swing.JTextField();
+        lbkey3 = new javax.swing.JLabel();
         tbkey4 = new javax.swing.JTextField();
         btprint = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Inventory Report Picker"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -915,8 +1028,10 @@ public class InvRptPicker extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Report:");
+        jLabel3.setName("lblreport"); // NOI18N
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -998,8 +1113,10 @@ public class InvRptPicker extends javax.swing.JPanel {
         );
 
         rbinactive.setText("Inactive");
+        rbinactive.setName("cbinactive"); // NOI18N
 
         rbactive.setText("Active");
+        rbactive.setName("cbactive"); // NOI18N
 
         javax.swing.GroupLayout panelrbLayout = new javax.swing.GroupLayout(panelrb);
         panelrb.setLayout(panelrbLayout);
@@ -1055,9 +1172,9 @@ public class InvRptPicker extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        lbkey3.setText("Some Text:");
-
         lbkey4.setText("Some Text:");
+
+        lbkey3.setText("Some Text:");
 
         javax.swing.GroupLayout paneltb2Layout = new javax.swing.GroupLayout(paneltb2);
         paneltb2.setLayout(paneltb2Layout);
@@ -1066,8 +1183,8 @@ public class InvRptPicker extends javax.swing.JPanel {
             .addGroup(paneltb2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneltb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbkey4)
-                    .addComponent(lbkey3))
+                    .addComponent(lbkey3)
+                    .addComponent(lbkey4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneltb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbkey4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1080,11 +1197,11 @@ public class InvRptPicker extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(paneltb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbkey3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbkey4))
+                    .addComponent(lbkey3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paneltb2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbkey4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbkey3))
+                    .addComponent(lbkey4))
                 .addContainerGap())
         );
 
@@ -1115,6 +1232,7 @@ public class InvRptPicker extends javax.swing.JPanel {
         );
 
         btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
