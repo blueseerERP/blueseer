@@ -769,9 +769,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }
      
     public void sumqty() {
-        int qty = 0;
+        double qty = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(tabledetail.getValueAt(j, 4).toString()); 
+             qty = qty + Double.valueOf(tabledetail.getValueAt(j, 4).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }

@@ -28,7 +28,9 @@ package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import com.itextpdf.text.Font;
 import java.awt.Color;
@@ -54,10 +56,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -88,6 +97,7 @@ DefaultTreeModel levelmodel = null;
      */
     public BOMTree() {
         initComponents();
+        setLanguageTags(this);
         DefaultTreeModel model = (DefaultTreeModel)jTree1.getModel();
         Object root = model.getRoot();
         jTree1.setCellRenderer( new CustomCellRenderer() );
@@ -98,6 +108,51 @@ DefaultTreeModel levelmodel = null;
         jTree1.setVisible(false);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void initvars(String[] arg) {
         if (arg != null && arg.length > 0) {
            tbpart.setText(arg[0]);
@@ -112,7 +167,7 @@ DefaultTreeModel levelmodel = null;
        lastlevel = 0;
        calllevel = 0;
        } else {
-           bsmf.MainFrame.show("Must enter a valid item");
+           bsmf.MainFrame.show(getMessageTag(1021,parentitem));
        }
     }
     
@@ -130,7 +185,7 @@ DefaultTreeModel levelmodel = null;
         lastlevel = 0;
         calllevel = 0;
         getMaxLevel(mynode);
-        bsmf.MainFrame.show(String.valueOf(lastlevel) + " / " + tbpart.getText().toString());
+      //  bsmf.MainFrame.show(String.valueOf(lastlevel) + " / " + tbpart.getText().toString());
        
 }
     
@@ -220,8 +275,7 @@ DefaultTreeModel levelmodel = null;
                     mynode.add(mfgnode);
                    if (! myvalue.isEmpty() && ! mytype.equals("FG") ) {
                     DefaultMutableTreeNode newnode = get_parents(myvalue);
-                    if (myvalue.equals("4100"))
-                        bsmf.MainFrame.show("yep");
+                   
                    mynode.add(newnode);
                    }
                     
@@ -410,11 +464,13 @@ DefaultTreeModel levelmodel = null;
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("BOM Tree Lookup"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jTree1.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jScrollPane1.setViewportView(jTree1);
 
         btprint.setText("Indented Print");
+        btprint.setName("btindentedprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
@@ -451,9 +507,8 @@ DefaultTreeModel levelmodel = null;
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btprint))
+                    .addComponent(btprint)
+                    .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(lblevel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btbrowse)))
@@ -468,7 +523,7 @@ DefaultTreeModel levelmodel = null;
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
         if ( tbpart.getText().isEmpty() || ! OVData.isValidItem(tbpart.getText())) {
-            bsmf.MainFrame.show("Must enter a valid item");
+            bsmf.MainFrame.show(getMessageTag(1021, tbpart.getText()));
             return;
         }
         
