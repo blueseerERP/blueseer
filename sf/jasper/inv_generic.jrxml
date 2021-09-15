@@ -393,7 +393,7 @@ where shd_id =  $P{myid}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0">
+			<textField pattern="###0.00">
 				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textElement>
 					<font size="8"/>
