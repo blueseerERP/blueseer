@@ -23,7 +23,6 @@ JasperRptMaint,,com.blueseer.adm.JasperRptMaint,JMenuItem,jasp
 HR,,,JMenu, 
 Inventory,,,JMenu, 
 ItemLevelCalculate,,com.blueseer.inv.ItemLevelMaint,JMenuItem,mrpx
-ItemSearchMenu,,com.blueseer.inv.ItemMastSearch,JMenuItem,itms
 LedgerBalanceExport,,com.blueseer.fgl.LedgerBalanceExport,JMenuItem,glbe
 About,,com.blueseer.adm.AboutPanel,JMenuItem,about
 SysInfo,,com.blueseer.adm.AboutPanel,JMenuItem,sysi
@@ -49,9 +48,9 @@ GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item
 ItemBrowse,Item Browse primary,com.blueseer.utl.ReportPanel,JMenuItem,itemb
-ItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt1,JMenuItem,itrr
+ItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt,JMenuItem,itrr
 LocationBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,locb
-LocationMaint,,com.blueseer.inv.LocationMaintPanel,JMenuItem,locm
+LocationMaint,,com.blueseer.inv.LocationMaint,JMenuItem,locm
 UOMMaint,,com.blueseer.inv.UOMMaint,JMenuItem,uomm
 CurrencyMaint,,com.blueseer.fgl.CurrencyMaint,JMenuItem,curm
 UOMConvMaint,,com.blueseer.inv.UOMConvMaint,JMenuItem,uomc
@@ -68,7 +67,7 @@ FOMaint,,com.blueseer.frt.FOMaint,JMenuItem,form
 FOBrowse,,com.blueseer.frt.FOBrowse,JMenuItem,forb
 WareHouseMaint,,com.blueseer.dst.WareHouseMaint,JMenuItem,wahm
 WareHouseBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wahb
-LocationTransfer,,com.blueseer.inv.LocationTransferPanel,JMenuItem,loaj
+LocationTransfer,,com.blueseer.inv.LocationTransfer,JMenuItem,loaj
 MRPBrowse,,com.blueseer.sch.MRPBrowse1,JMenuItem,mrpb
 OrderBrowse,,com.blueseer.ord.OrderReport1,JMenuItem,ordb
 OrderMaint,,com.blueseer.ord.OrderMaintPanel,JMenuItem,ordm
@@ -78,13 +77,13 @@ PaymentMaint,,com.blueseer.fap.PaymentMaintPanel,JMenuItem,appm
 ReqPendRpt1,,com.blueseer.utl.ReportPanel,JMenuItem,rqpr
 PostGLTrans,,com.blueseer.fgl.PostGLPanel,JMenuItem,post
 ProdCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prcb
-ProdCodeMaint,,com.blueseer.inv.ProdCodeMaintPanel,JMenuItem,prcm
+ProdCodeMaint,,com.blueseer.inv.ProdCodeMaint,JMenuItem,prcm
 Scheduler,,com.blueseer.sch.Scheduler,JMenuItem,schm
 QPRBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,qprb
-QPRMaint,,com.blueseer.inv.QPRMaintPanel,JMenuItem,qprm
+QPRMaint,,com.blueseer.inv.QPRMaint,JMenuItem,qprm
 ReqMaint,,com.blueseer.pur.ReqMaintPanel,JMenuItem,reqm
 RoutingBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,roub
-RoutingMaint,,com.blueseer.inv.RoutingMaintPanel,JMenuItem,roum
+RoutingMaint,,com.blueseer.inv.RoutingMaint,JMenuItem,roum
 SchedOrdBrowse,,com.blueseer.ord.OrderReportSched,JMenuItem,schb
 SchRptPicker,,com.blueseer.sch.SchRptPicker,JMenuItem,rpsc
 InvRptPicker,,com.blueseer.inv.InvRptPicker,JMenuItem,rpin
@@ -108,7 +107,7 @@ UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl
 UserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb
 UserMaint,,com.blueseer.adm.UserMaintPanel,JMenuItem,usrm
 WorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcb
-WorkCellMaint,,com.blueseer.inv.WorkCenterMaintPanel,JMenuItem,wkcm
+WorkCellMaint,,com.blueseer.inv.WorkCenterMaint,JMenuItem,wkcm
 Order,,,JMenu, 
 POMaintMenu,,com.blueseer.pur.POMaintPanel,JMenuItem,purm
 PlantDirectoryMenu,,com.blueseer.utl.ReportPanel,JMenuItem,pdir

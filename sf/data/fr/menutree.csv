@@ -164,10 +164,9 @@ ItemMenu,ItemMaint,1,JMenuItem,Entretien de l'article,,,,1,1
 ItemMenu,ItemBrowse,2,JMenuItem,Parcourir les éléments,,1,,1,1
 ItemMenu,UOMMaint,3,JMenuItem,Maintenance de l'UdM,,,,1,1
 ItemMenu,UOMConvMaint,4,JMenuItem,Maintenance de la conversion UdM,,,,1,1
-ItemMenu,ItemSearchMenu,5,JMenuItem,Parcourir les éléments et sous-rapports,,,,1,1
-ItemMenu,CostRoll,6,JMenuItem,Coût d'entretien,,,,1,1
-ItemMenu,CostRollRange,7,JMenuItem,Analyse des coûts par fourchette,,,,1,1
-ItemMenu,CostReports,8,JMenu,Rapports de coûts,,,,1,1
+ItemMenu,CostRoll,5,JMenuItem,Coût d'entretien,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,Analyse des coûts par fourchette,,,,1,1
+ItemMenu,CostReports,7,JMenu,Rapports de coûts,,,,1,1
 RoutingMenu,WorkCellMaint,1,JMenuItem,Maintenance des cellules de travail,,,,1,1
 RoutingMenu,WorkCellBrowse,2,JMenuItem,Parcourir la cellule de travail,,1,,1,1
 RoutingMenu,RoutingMaint,3,JMenuItem,Maintenance du routage,,,,1,1

@@ -28,6 +28,7 @@
             <TitledBorder title="Warehouse/Location Transfer"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -146,6 +147,7 @@
                     <TitledBorder title="From:"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelfrom" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -208,11 +210,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Site:"/>
+                    <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Location:"/>
+                    <Property name="name" type="java.lang.String" value="lblloc" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="ddwhfrom">
@@ -231,6 +235,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Warehouse:"/>
+                    <Property name="name" type="java.lang.String" value="lblwh" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -242,6 +247,7 @@
                     <TitledBorder title="To:"/>
                   </Border>
                 </Property>
+                <Property name="name" type="java.lang.String" value="panelto" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -346,11 +352,13 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Qty:"/>
+            <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="EffectiveDate:"/>
+            <Property name="name" type="java.lang.String" value="lbleffdate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tblot">
@@ -358,16 +366,19 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Part:"/>
+            <Property name="name" type="java.lang.String" value="lblitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Lot/SerialNo:"/>
+            <Property name="name" type="java.lang.String" value="lblserial" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Remarks:"/>
+            <Property name="name" type="java.lang.String" value="lblremarks" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbqty">
@@ -382,6 +393,7 @@
         <Component class="javax.swing.JButton" name="bttransfer">
           <Properties>
             <Property name="text" type="java.lang.String" value="Transfer"/>
+            <Property name="name" type="java.lang.String" value="bttransfer" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bttransferActionPerformed"/>

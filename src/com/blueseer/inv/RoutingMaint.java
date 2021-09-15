@@ -49,7 +49,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -62,19 +65,17 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
     
-   // global datatablemodel declarations    
+   // global datatablemodel declarations   
                 
-                
-    public LocationMaintPanel() {
+    public RoutingMaint() {
         initComponents();
     }
 
-    
      // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
@@ -211,24 +212,28 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
-        tbdesc.setText("");
-         cbactive.setSelected(false);
-         
-        ddwh.removeAllItems();
-        ArrayList<String> whs = OVData.getWareHouseList();
-        for (String wh : whs) {
-            ddwh.addItem(wh);
-        }
-        ddwh.insertItemAt("", 0);
-        ddwh.setSelectedIndex(0);
-         
-         
+        ddop.removeAllItems();
+        tbopdesc.setText("");
+        tbrunhoursinverted.setText("0.00");
+       
+        tbrunhours.setText("");
+        tbsetuphours.setText("0.00");
+        cbmilestone.setSelected(false);
+        
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String>mylist = OVData.getSiteList();
         for (String code : mylist) {
             ddsite.addItem(code);
         }
-       ddsite.setSelectedItem(OVData.getDefaultSite());
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        ddwc.removeAllItems();
+        ArrayList<String> wc = OVData.getWorkCellList();
+        for (String code : wc) {
+            ddwc.addItem(code);
+        }
+        ddwc.insertItemAt("", 0);
+        ddwc.setSelectedIndex(0);
         
        isLoad = false;
     }
@@ -269,12 +274,21 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show("must choose a site");
+                    ddsite.requestFocus();
                     return b;
                 }
                
-                if (ddwh.getSelectedItem() == null || ddwh.getSelectedItem().toString().isEmpty()) {
+                if (ddop.getSelectedItem() == null || ddop.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a warehouse");
+                    bsmf.MainFrame.show("must choose or assign an operation");
+                    ddop.requestFocus();
+                    return b;
+                }
+                
+                if (ddwc.getSelectedItem() == null || ddwc.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("must choose or assign a Work Cell");
+                    ddwc.requestFocus();
                     return b;
                 }
                 
@@ -285,12 +299,14 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                     return b;
                 }
                 
-                if (tbdesc.getText().isEmpty()) {
+                if (tbopdesc.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show("must enter a description");
-                    tbdesc.requestFocus();
+                    tbopdesc.requestFocus();
                     return b;
                 }
+                
+                
                 
                 
                 
@@ -331,18 +347,22 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 
                 if (proceed) {
 
-                    res = st.executeQuery("SELECT loc_loc FROM  loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                    res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'" + " AND " + 
+                        " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
                     if (i == 0) {
-                        st.executeUpdate("insert into loc_mstr "
-                            + "(loc_loc, loc_desc, loc_site, loc_wh, loc_active ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
+                         st.executeUpdate("insert into wf_mstr "
+                            + " values ( " + "'" + tbkey.getText() + "'" + ","
+                            + "'" + tbopdesc.getText() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
+                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
+                            + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
+                            + "'" + tbopdesc.getText() + "'" + ","
+                            + "'" + ddwc.getSelectedItem().toString() + "'" + ","
+                            + "'" + tbsetuphours.getText() + "'" + ","
+                            + "'" + tbrunhours.getText() + "'" 
                             + ")"
                             + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -379,11 +399,15 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    st.executeUpdate("update loc_mstr set loc_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "loc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "loc_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "loc_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where loc_loc = " + "'" + tbkey.getText() + "'"                             
+                    st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
+                            + "wf_op_desc = " + "'" + tbopdesc.getText() + "'" + "," 
+                            + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
+                            + "wf_cell = " + "'" + ddwc.getSelectedItem().toString() + "'" + ","
+                            + "wf_setup_hours = " + "'" + tbsetuphours.getText() + "'" + ","
+                            + "wf_run_hours = " + "'" + tbrunhours.getText() + "'" + ","
+                            + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
+                            + " where wf_id = " + "'" + x[0] + "'" + " AND "
+                            + " wf_op = " + "'" + x[1] + "'"
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
@@ -413,7 +437,8 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
               
-                   int i = st.executeUpdate("delete from loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                   int i = st.executeUpdate("delete from wf_mstr where wf_id = " + "'" + x[0] + "'" + " AND " +
+                           " wf_op = " + "'" + x[1] + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);
@@ -443,15 +468,45 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
+                double runhours = 0.00;
+                double setuphours = 0.00;
+                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-                res = st.executeQuery("select * from loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
+                 if (x == null && x.length < 1) { return new String[]{}; };
+                 
+                 // lets first get all the ops for this routing ID to populate ddop
+                 assignOPs(x[0]);
+                 
+                 
+                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
+                if (x.length == 1) {
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                } else {
+                 res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + 
+                        " and wf_op = " + "'" + x[1] + "'" +
+                        ";");   
+                }
+               
+                        
                 while (res.next()) {
                     i++;
-                    tbkey.setText(x[0]);
-                    tbdesc.setText(res.getString("loc_desc"));
-                    cbactive.setSelected(res.getBoolean("loc_active"));
-                    ddsite.setSelectedItem(res.getString("loc_site"));
-                    ddwh.setSelectedItem(res.getString("loc_wh"));
+                    
+                    if (res.getDouble("wf_run_hours") > 0)
+                        runhours = 1 / res.getDouble("wf_run_hours");
+                    else
+                        runhours = 0.00;
+                    
+                    
+                    
+                    tbkey.setText(res.getString("wf_id"));
+                    ddwc.setSelectedItem(res.getString("wf_cell"));
+                    tbopdesc.setText(res.getString("wf_desc"));
+                    ddsite.setSelectedItem(res.getString("wf_site"));
+                    ddop.setSelectedItem(res.getString("wf_op"));
+                    tbrunhours.setText(res.getString("wf_run_hours"));
+                    tbsetuphours.setText(res.getString("wf_setup_hours"));
+                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
+                    cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
                
                 // set Action if Record found (i > 0)
@@ -475,9 +530,9 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getLocationBrowseUtil(luinput.getText(),0, "loc_loc");
+         luModel = DTData.getRoutingBrowseUtil(luinput.getText(),0, "wf_id");
         } else {
-         luModel = DTData.getLocationBrowseUtil(luinput.getText(),0, "loc_desc");   
+         luModel = DTData.getRoutingBrowseUtil(luinput.getText(),0, "wf_op");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -504,13 +559,79 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         };
         luTable.addMouseListener(luml);
       
-        callDialog("LocID", "Description"); 
+        callDialog("Routing", "Operation"); 
+        
+        
+    }
+
+    public void lookUpFrameWorkCenter() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(),0, "wc_cell");
+        } else {
+         luModel = DTData.getWorkCenterBrowseUtil(luinput.getText(),0, "wc_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle("No Records Found!");
+        } else {
+            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                ddwc.setSelectedItem(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog("Routing", "Operation"); 
         
         
     }
 
     
- 
+    // custom funcs
+    public void assignOPs(String routing) {
+      
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + routing + "'"  + " order by wf_op;");
+                        
+                while (res.next()) {
+                    i++;
+                    ddop.addItem(res.getString("wf_op"));
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -520,50 +641,42 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        btadd = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        cbactive = new javax.swing.JCheckBox();
-        btupdate = new javax.swing.JButton();
-        tbdesc = new javax.swing.JTextField();
-        tbkey = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        tbopdesc = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        btadd = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        btnew = new javax.swing.JButton();
+        cbmilestone = new javax.swing.JCheckBox();
+        btupdate = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        tbkey = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        ddop = new javax.swing.JComboBox();
+        tbrunhoursinverted = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        tbrunhours = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        tbsetuphours = new javax.swing.JTextField();
         ddsite = new javax.swing.JComboBox<>();
-        ddwh = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
+        btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        ddwc = new javax.swing.JComboBox<>();
         btlookup = new javax.swing.JButton();
+        btlookupWorkCenter = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setBackground(new java.awt.Color(0, 102, 204));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Location Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Routing Maintenance"));
 
-        btadd.setText("Add");
-        btadd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Description:");
-
-        cbactive.setText("Active");
-
-        btupdate.setText("Update");
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
-            }
-        });
-
-        tbkey.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbkeyActionPerformed(evt);
-            }
-        });
+        jLabel5.setText("Set Backflush:");
 
         btdelete.setText("Delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -572,9 +685,64 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
         });
 
-        jLabel1.setText("Location:");
+        btadd.setText("Add");
+        btadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddActionPerformed(evt);
+            }
+        });
 
-        jLabel3.setText("Site:");
+        jLabel3.setText("Operation Desc:");
+
+        cbmilestone.setText("Auto Backflush?");
+
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Routing ID:");
+
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Operation:");
+
+        ddop.setEditable(true);
+        ddop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddopActionPerformed(evt);
+            }
+        });
+
+        tbrunhoursinverted.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbrunhoursinvertedFocusLost(evt);
+            }
+        });
+
+        jLabel7.setText("Work Cell:");
+
+        jLabel10.setText("Run Pieces/Hr");
+
+        jLabel9.setText("Setup Hours Per (lotsize)");
+
+        jLabel2.setText("Site:");
+
+        tbrunhours.setEditable(false);
+
+        jLabel12.setText("Run Hours");
+
+        tbsetuphours.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbsetuphoursFocusLost(evt);
+            }
+        });
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -583,8 +751,6 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
         });
 
-        jLabel4.setText("WareHouse:");
-
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -592,10 +758,17 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
         });
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
+            }
+        });
+
+        btlookupWorkCenter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupWorkCenter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupWorkCenterActionPerformed(evt);
             }
         });
 
@@ -603,69 +776,97 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(93, 93, 93)
-                .addComponent(btdelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btupdate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btadd)
-                .addGap(63, 63, 63))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbactive)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(13, 13, 13)
-                                    .addComponent(btnew)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btclear))
-                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap())
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(81, 81, 81)))))
+                            .addComponent(btdelete)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btupdate)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btadd))
+                        .addComponent(cbmilestone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tbopdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(tbrunhoursinverted, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                .addComponent(tbsetuphours))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                            .addComponent(jLabel12)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tbrunhours, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddwc, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookupWorkCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel1)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
                     .addComponent(btlookup))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel6)
+                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbactive)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbopdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbmilestone)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(ddwc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btlookupWorkCenter))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(tbsetuphours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbrunhoursinverted, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(tbrunhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
@@ -676,6 +877,51 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ddopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddopActionPerformed
+        String[] m = new String[2];
+        if (ddop != null && ddop.getItemCount() > 0) {
+        try {
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                double runhours = 0.00;
+                double setuphours = 0.00;
+                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
+                int i = 0;
+                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'"  + " AND " +
+                        " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
+                        
+                while (res.next()) {
+                    i++;
+                    
+                    if (res.getDouble("wf_run_hours") > 0)
+                        runhours = 1 / res.getDouble("wf_run_hours");
+                    else
+                        runhours = 0.00;
+                    
+                    
+                    ddwc.setSelectedItem(res.getString("wf_cell"));
+                    tbopdesc.setText(res.getString("wf_desc"));
+                    ddsite.setSelectedItem(res.getString("wf_site"));
+                    tbrunhours.setText(res.getString("wf_run_hours"));
+                    tbsetuphours.setText(res.getString("wf_setup_hours"));
+                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
+                    cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
+                }
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+        }
+    }//GEN-LAST:event_ddopActionPerformed
+
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        if (! validateInput("addRecord")) {
            return;
@@ -685,27 +931,64 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+       if (! validateInput("updateRecord")) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask("update", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
-           return;
-       }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask("delete", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
+        DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
+        if (! tbrunhoursinverted.getText().isEmpty() && Double.valueOf(tbrunhoursinverted.getText()) > 0)
+        tbrunhours.setText(df.format(1 / Double.valueOf(tbrunhoursinverted.getText())));
+        else
+            tbrunhours.setText("0.00");
+        
+          String x = BlueSeerUtils.bsformat("", tbrunhoursinverted.getText(), "2");
+        if (x.equals("error")) {
+            tbrunhoursinverted.setText("");
+            tbrunhoursinverted.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbrunhoursinverted.requestFocus();
+        } else {
+            tbrunhoursinverted.setText(x);
+            tbrunhoursinverted.setBackground(Color.white);
+        }
+        if (tbrunhoursinverted.getText().isEmpty()) {
+            tbrunhoursinverted.setText("0.00");
+        }
+        
+        
+    }//GEN-LAST:event_tbrunhoursinvertedFocusLost
+
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       newAction("");
+        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
+    private void tbsetuphoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetuphoursFocusLost
+          String x = BlueSeerUtils.bsformat("", tbsetuphours.getText(), "2");
+        if (x.equals("error")) {
+            tbsetuphours.setText("");
+            tbsetuphours.setBackground(Color.yellow);
+            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            tbsetuphours.requestFocus();
+        } else {
+            tbsetuphours.setText(x);
+            tbsetuphours.setBackground(Color.white);
+        }
+        if (tbsetuphours.getText().isEmpty()) {
+            tbsetuphours.setText("0.00");
+        }
+    }//GEN-LAST:event_tbsetuphoursFocusLost
+
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
-        BlueSeerUtils.messagereset();
+       BlueSeerUtils.messagereset();
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
@@ -717,23 +1000,38 @@ public class LocationMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btlookupWorkCenterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupWorkCenterActionPerformed
+        lookUpFrameWorkCenter();
+    }//GEN-LAST:event_btlookupWorkCenterActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupWorkCenter;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbactive;
+    private javax.swing.JCheckBox cbmilestone;
+    private javax.swing.JComboBox ddop;
     private javax.swing.JComboBox<String> ddsite;
-    private javax.swing.JComboBox<String> ddwh;
+    private javax.swing.JComboBox<String> ddwc;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbopdesc;
+    private javax.swing.JTextField tbrunhours;
+    private javax.swing.JTextField tbrunhoursinverted;
+    private javax.swing.JTextField tbsetuphours;
     // End of variables declaration//GEN-END:variables
 }

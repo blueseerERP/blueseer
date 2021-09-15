@@ -29,8 +29,11 @@ package com.blueseer.inv;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -51,9 +54,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -64,7 +71,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
 
    // global variable declarations
                 boolean isLoad = false;
@@ -73,8 +80,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
      
                 
                 
-    public ProdCodeMaintPanel() {
+    public ProdCodeMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -211,6 +219,51 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -284,171 +337,171 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (! OVData.isValidGLAcct(tbinvacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Inv Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbinvdescrepancyacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Inv Desc Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvdescrepancyacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbwipacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Wip Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbwipacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbwipvaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Wip Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbwipvaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbscrapacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Scrap Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbscrapacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbinvchangeacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Inv Change Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvchangeacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbsalesacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Sales Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbsalesacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbsalesdiscacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbsalesdiscacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcogsmtlacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cogs Mtl Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsmtlacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcogslbracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cogs Lbr Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogslbracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcogsbdnacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cogs Bdn Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsbdnacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcogsovhacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cogs Ovh Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsovhacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcogsoutacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cogs Outside Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsoutacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbpurchacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Purch Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbpurchacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbporcptacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid PO Rcpts Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbporcptacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbpoovhacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid PO Ovh Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbpoovhacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbpopricevaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid PO Price Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbpopricevaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbapusageacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid AP Usage Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbapusageacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbapratevaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid AP Rate Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbapratevaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbjobstockacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid job stock Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbjobstockacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbmtlusagevaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Mtl Usage Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbmtlusagevaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbmtlratevaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Mtl Rate Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbmtlratevaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbmixedvaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Mixed Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbmixedvaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tbcopacct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Cost Of Production Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tbcopacct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tboutusgvaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Outsie Usage Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tboutusgvaracct.requestFocus();
                    return b;
                 }
          if (! OVData.isValidGLAcct(tboutratevaracct.getText().toString())) {
                    b = false;
-                   bsmf.MainFrame.show("Invalid Outside Rate Var Acct Nbr!");
+                   bsmf.MainFrame.show(getMessageTag(1052));
                    tboutratevaracct.requestFocus();
                    return b;
                 }
@@ -481,9 +534,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 
@@ -543,8 +596,11 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
@@ -560,9 +616,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             boolean proceed = true;
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
@@ -603,8 +659,11 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
@@ -621,9 +680,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-              
                    int i = st.executeUpdate("delete from pl_mstr where pl_line = " + "'" + tbkey.getText() + "'" +  ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
@@ -632,8 +691,11 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
@@ -651,9 +713,10 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 res = st.executeQuery("SELECT * FROM  pl_mstr where pl_line = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
@@ -694,8 +757,11 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
@@ -716,9 +782,9 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -738,7 +804,8 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Code", "Description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+         
         
         
     }
@@ -826,14 +893,19 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Product Code Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel75.setText("Inv Descrepancy");
+        jLabel75.setName("lblinvdiscrepancy"); // NOI18N
 
         jLabel71.setText("Wip Variance Acct");
+        jLabel71.setName("lblwipvar"); // NOI18N
 
         jLabel66.setText("ProdCode");
+        jLabel66.setName("lblid"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -841,6 +913,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -848,12 +921,16 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         });
 
         jLabel69.setText("Scrap Acct");
+        jLabel69.setName("lblscrap"); // NOI18N
 
         jLabel73.setText("Sales Acct");
+        jLabel73.setName("lblsales"); // NOI18N
 
         jLabel72.setText("Inventory Change Acct");
+        jLabel72.setName("lblinvchange"); // NOI18N
 
         jLabel70.setText("Wip Acct");
+        jLabel70.setName("lblwip"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -862,50 +939,73 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         });
 
         jLabel74.setText("Sales Discount Acct");
+        jLabel74.setName("lblsalesdisc"); // NOI18N
 
         jLabel67.setText("Description");
+        jLabel67.setName("lbldesc"); // NOI18N
 
         jLabel68.setText("Inventory Acct");
+        jLabel68.setName("lblinv"); // NOI18N
 
         jLabel76.setText("COGS Mtl Acct");
+        jLabel76.setName("lblcogsmtl"); // NOI18N
 
         jLabel77.setText("COGS Lbr Acct");
+        jLabel77.setName("lblcogslbr"); // NOI18N
 
         jLabel78.setText("COGS Bdn Acct");
+        jLabel78.setName("lblcogsbdn"); // NOI18N
 
         jLabel79.setText("COGS Ovh Acct");
+        jLabel79.setName("lblcogsovh"); // NOI18N
 
         jLabel80.setText("COGS Out Acct");
+        jLabel80.setName("lblcogsout"); // NOI18N
 
         jLabel81.setText("Purchases Acct");
+        jLabel81.setName("lblpurchases"); // NOI18N
 
         jLabel82.setText("PO Receipt Acct");
+        jLabel82.setName("lblporeceipt"); // NOI18N
 
         jLabel83.setText("PO Ovh Acct");
+        jLabel83.setName("lblpoovh"); // NOI18N
 
         jLabel84.setText("PO Pricevar Acct");
+        jLabel84.setName("lblpopricevar"); // NOI18N
 
         jLabel85.setText("Matl Usage Var Acct");
+        jLabel85.setName("lblmtlusagevar"); // NOI18N
 
         jLabel86.setText("Matl Rate Var Acct");
+        jLabel86.setName("lblmtlratevar"); // NOI18N
 
         jLabel87.setText("AP Rate Var Acct");
+        jLabel87.setName("lblapratevar"); // NOI18N
 
         jLabel88.setText("TBD");
+        jLabel88.setName("lbltbd"); // NOI18N
 
         jLabel89.setText("Outside Rate Var Acct");
+        jLabel89.setName("lbloutratevar"); // NOI18N
 
         jLabel90.setText("Outside Usage Var Acct");
+        jLabel90.setName("lbloutusagevar"); // NOI18N
 
         jLabel91.setText("Cost Of Prod Acct");
+        jLabel91.setName("lblcostofprod"); // NOI18N
 
         jLabel92.setText("Mixed Var Acct");
+        jLabel92.setName("lblmixedvar"); // NOI18N
 
         jLabel93.setText("AP Usage Acct");
+        jLabel93.setName("lblapusage"); // NOI18N
 
         jLabel94.setText("Job Stock Acct");
+        jLabel94.setName("lbljobstock"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -913,6 +1013,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -920,6 +1021,7 @@ public class ProdCodeMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);

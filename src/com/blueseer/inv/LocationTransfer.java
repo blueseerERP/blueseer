@@ -26,7 +26,11 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,26 +39,39 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author vaughnte
  */
-public class LocationTransferPanel extends javax.swing.JPanel {
+public class LocationTransfer extends javax.swing.JPanel {
 
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Site", "WH", "Loc", "Qty"});
+                    new String[]{
+                        getGlobalColumnTag("site"), 
+                        getGlobalColumnTag("warehouse"), 
+                        getGlobalColumnTag("location"), 
+                        getGlobalColumnTag("qty")});
     
     /**
      * Creates new form LocationTransferPanel
      */
-    public LocationTransferPanel() {
+    public LocationTransfer() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-     public void getlocqty(String parentpart) {
+    public void getlocqty(String parentpart) {
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -90,7 +107,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("unable to select in_mstr info");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -99,6 +116,51 @@ public class LocationTransferPanel extends javax.swing.JPanel {
              
              
          }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] arg) {
         
@@ -190,12 +252,16 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Warehouse/Location Transfer"));
+        jPanel4.setName("panelmain"); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("From:"));
+        jPanel1.setName("panelfrom"); // NOI18N
 
         jLabel6.setText("Site:");
+        jLabel6.setName("lblsite"); // NOI18N
 
         jLabel7.setText("Location:");
+        jLabel7.setName("lblloc"); // NOI18N
 
         ddwhfrom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,6 +270,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         });
 
         jLabel10.setText("Warehouse:");
+        jLabel10.setName("lblwh"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -240,6 +307,7 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("To:"));
+        jPanel2.setName("panelto"); // NOI18N
 
         jLabel8.setText("Site:");
 
@@ -318,18 +386,24 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Qty:");
+        jLabel2.setName("lblqty"); // NOI18N
 
         jLabel3.setText("EffectiveDate:");
+        jLabel3.setName("lbleffdate"); // NOI18N
 
         jLabel1.setText("Part:");
+        jLabel1.setName("lblitem"); // NOI18N
 
         jLabel5.setText("Lot/SerialNo:");
+        jLabel5.setName("lblserial"); // NOI18N
 
         jLabel4.setText("Remarks:");
+        jLabel4.setName("lblremarks"); // NOI18N
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         bttransfer.setText("Transfer");
+        bttransfer.setName("bttransfer"); // NOI18N
         bttransfer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bttransferActionPerformed(evt);
@@ -453,21 +527,21 @@ public class LocationTransferPanel extends javax.swing.JPanel {
         
         if (qty == 0) {
             proceed = false;
-            bsmf.MainFrame.show("Qty cannot be zero");
+            bsmf.MainFrame.show(getMessageTag(1036));
             tbqty.requestFocus();
             return;
         }
         
         if (! OVData.isValidItem(tbpart.getText())) {
             proceed = false;
-            bsmf.MainFrame.show("Part Number invalid");
+            bsmf.MainFrame.show(getMessageTag(1021));
             tbpart.requestFocus();
             return;
         }
         
         if (qty > OVData.getItemQtyByWarehouseAndLocation(tbpart.getText(), sitefrom, whfrom, locfrom) ) {
             proceed = false;
-            bsmf.MainFrame.show("Insufficient Qty at WH/LOC to transfer");
+            bsmf.MainFrame.show(getMessageTag(1074));
             tbqty.requestFocus();
             return;
         }

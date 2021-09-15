@@ -727,7 +727,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
         
         
         
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
             try {
 

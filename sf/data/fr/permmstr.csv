@@ -131,7 +131,6 @@ admin,LocationMaint
 admin,LocationBrowse
 admin,ItemMenu
 admin,ItemMaint
-admin,ItemSearchMenu
 admin,CostRoll
 admin,CostRollRange
 admin,CostReports

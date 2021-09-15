@@ -617,7 +617,7 @@ public class BOMMaint extends javax.swing.JPanel {
     
     public String[] deleteRecord(String[] x) {
     String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
       DefaultMutableTreeNode comp = null;  
       Object o = jTree1.getLastSelectedPathComponent();
       if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {

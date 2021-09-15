@@ -495,7 +495,7 @@ public class DeptMaint extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
         try {
 

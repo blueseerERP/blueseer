@@ -2252,7 +2252,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btaddimageActionPerformed
 
     private void btdeleteimageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteimageActionPerformed
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         
         if (ddimage.getSelectedItem() == null || ddimage.getSelectedItem().toString().isEmpty()) {
             return;

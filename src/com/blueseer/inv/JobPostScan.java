@@ -28,8 +28,11 @@ package com.blueseer.inv;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -47,6 +50,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -72,6 +83,7 @@ String sitecitystatezip = "";
      */
     public JobPostScan() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -96,50 +108,64 @@ String sitecitystatezip = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
+                    bsmf.MainFrame.show(getMessageTag(1002));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
-    
-    public void getPartInfo(String part) {
-         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                                
-                res = st.executeQuery("select * from item_mstr where it_item = " + "'" + part + "'"
-                        + ";");
-                while (res.next()) {
-                    i++;
-                   partnumber = res.getString("it_item");
-                  
+        
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
                 }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show("No Item Master Record found for billto/shipto " + part );
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve item_mstr");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
-      public void initvars(String[] arg) {
+    
+    public void initvars(String[] arg) {
         tbqty.setText("");
         tbscan.setText("");
         ddcell.removeAllItems();
@@ -175,6 +201,7 @@ String sitecitystatezip = "";
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Job Scan"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -186,6 +213,7 @@ String sitecitystatezip = "";
         });
 
         jLabel4.setText("Quantity");
+        jLabel4.setName("lblqty"); // NOI18N
 
         tbscan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,8 +230,10 @@ String sitecitystatezip = "";
         });
 
         jLabel5.setText("Scan");
+        jLabel5.setName("lblscan"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -211,6 +241,7 @@ String sitecitystatezip = "";
         });
 
         jLabel6.setText("Cell:");
+        jLabel6.setName("lblcell"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -269,24 +300,25 @@ String sitecitystatezip = "";
         Pattern p = Pattern.compile("^[0-9]\\d*$");
         Matcher m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid qty");
+            bsmf.MainFrame.show(getMessageTag(1028));
+            tbqty.requestFocus();
             return;
         } else {
             qty = Integer.valueOf(tbqty.getText());
         }
         
         if (! OVData.isPlan(tbscan.getText())) {
-            bsmf.MainFrame.show("Bad Ticket: " + tbscan.getText());
+            bsmf.MainFrame.show(getMessageTag(1070, tbscan.getText()));
             initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
-            bsmf.MainFrame.show("Already Scanned: " + tbscan.getText());
+            bsmf.MainFrame.show(getMessageTag(1071, tbscan.getText()));
             initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
-            bsmf.MainFrame.show("Plan Voided: " + tbscan.getText());
+            bsmf.MainFrame.show(getMessageTag(1072, tbscan.getText()));
             initvars(null);
             return;
         }
@@ -296,7 +328,7 @@ String sitecitystatezip = "";
                
                OVData.updatePlanQty(tbscan.getText(), qty);
                OVData.updatePlanStatus(tbscan.getText(), "1");
-               bsmf.MainFrame.show("Scan Complete!");
+               bsmf.MainFrame.show(getMessageTag(1073));
                initvars(null);
            
            

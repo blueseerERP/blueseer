@@ -1048,7 +1048,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btsubmitActionPerformed
 
     private void btdeleteALLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteALLActionPerformed
-            boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+            boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
             
             if (! tbref.getText().toString().startsWith("JL")) {
                 proceed = false;

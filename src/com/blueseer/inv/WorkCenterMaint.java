@@ -62,7 +62,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class WorkCenterMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
 
      // global variable declarations
                 boolean isLoad = false;
@@ -70,7 +70,7 @@ public class WorkCenterMaintPanel extends javax.swing.JPanel implements IBlueSee
    // global datatablemodel declarations    
                 
                 
-    public WorkCenterMaintPanel() {
+    public WorkCenterMaint() {
         initComponents();
     }
 

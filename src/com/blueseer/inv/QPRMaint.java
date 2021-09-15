@@ -74,7 +74,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
             boolean isLoad = false;
@@ -656,7 +656,7 @@ public class QPRMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
 
    
-    public QPRMaintPanel() {
+    public QPRMaint() {
         
         initComponents();
         
