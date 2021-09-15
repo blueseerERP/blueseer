@@ -73,10 +73,20 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -85,7 +95,14 @@ import javax.swing.ImageIcon;
 public class BOMBrowse extends javax.swing.JPanel {
  
      MyTableModel mymodel = new BOMBrowse.MyTableModel(new Object[][]{},
-                        new String[]{"Select", "Parent", "Desc", "Operation", "Child", "QtyPer", "Ref"})
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("operation"), 
+                            getGlobalColumnTag("component"), 
+                            getGlobalColumnTag("qtyper"), 
+                            getGlobalColumnTag("reference")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -155,8 +172,54 @@ public class BOMBrowse extends javax.swing.JPanel {
         
     public BOMBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void initvars(String[] arg) {
         mymodel.setRowCount(0);
          java.util.Date now = new java.util.Date();
@@ -205,6 +268,7 @@ public class BOMBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -212,8 +276,10 @@ public class BOMBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Item");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         jLabel4.setText("To Item");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         tableorder.setAutoCreateRowSorter(true);
         tableorder.setModel(new javax.swing.table.DefaultTableModel(
@@ -234,8 +300,10 @@ public class BOMBrowse extends javax.swing.JPanel {
         labelcount.setText("0");
 
         jLabel7.setText("Records");
+        jLabel7.setName("lblcount"); // NOI18N
 
         tbprint.setText("PDF");
+        tbprint.setName("btpdf"); // NOI18N
         tbprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbprintActionPerformed(evt);
@@ -243,6 +311,7 @@ public class BOMBrowse extends javax.swing.JPanel {
         });
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -347,7 +416,7 @@ public class BOMBrowse extends javax.swing.JPanel {
 
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                    bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
+                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 }
                 bsmf.MainFrame.con.close();
             } catch (Exception e) {
@@ -440,7 +509,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                 labelcount.setText(String.valueOf(i));
                
             } catch (SQLException s) {
-                bsmf.MainFrame.show("unable to select pbm_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
             }
             con.close();

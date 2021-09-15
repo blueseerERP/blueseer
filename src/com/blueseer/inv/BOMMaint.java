@@ -29,8 +29,12 @@ package com.blueseer.inv;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -55,9 +59,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -85,7 +93,12 @@ public class BOMMaint extends javax.swing.JPanel {
                 String parent = "";
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Comp", "Type", "Op", "QtyPer", "Cost"});
+                    new String[]{
+                        getGlobalColumnTag("item"), 
+                        getGlobalColumnTag("type"), 
+                        getGlobalColumnTag("operation"), 
+                        getGlobalColumnTag("qtyper"), 
+                        getGlobalColumnTag("standardcost")});
       
       javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
                     @Override
@@ -99,9 +112,7 @@ public class BOMMaint extends javax.swing.JPanel {
      
     public BOMMaint() {
         initComponents();
-        
-        
-        
+        setLanguageTags(this); 
     }
 
     public void executeTask(String x, String[] y) { 
@@ -236,6 +247,51 @@ public class BOMMaint extends javax.swing.JPanel {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void setComponentDefaultValues() {
        isLoad = true; 
        tbkey.setText("");
@@ -330,14 +386,14 @@ public class BOMMaint extends javax.swing.JPanel {
                
          if (tbqtyper.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("Must enter a Quantity Per");
+                    bsmf.MainFrame.show(getMessageTag(1024, tbqtyper.getName()));
                     tbqtyper.requestFocus();
                     return b;
                 }
                 
                  if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("Must enter a Valid Parent");
+                    bsmf.MainFrame.show(getMessageTag(1024, tbkey.getName()));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -350,7 +406,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 
                  if (ddcomp.getSelectedItem() == null) {
                    b = false;
-                   bsmf.MainFrame.show("Must enter a legitimate component");
+                   bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
                    ddcomp.requestFocus();
                    return b;
                } 
@@ -358,21 +414,21 @@ public class BOMMaint extends javax.swing.JPanel {
                 if (! OVData.isValidItem(ddcomp.getSelectedItem().toString())) {
                     b = false;
                     ddcomp.requestFocus();
-                    bsmf.MainFrame.show("Must enter a legitimate component");
+                    bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
                     return b;
                 }
                 
                
                if (ddop.getSelectedItem() == null) {
                    b = false;
-                   bsmf.MainFrame.show("Must enter a legitimate operation");
+                   bsmf.MainFrame.show(getMessageTag(1026, ddop.getName()));
                    ddop.requestFocus();
                    return b;
                } 
                
                if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbkey.getText().toLowerCase())) {
                    b = false;
-                   bsmf.MainFrame.show("Cannot map parent to parent");
+                   bsmf.MainFrame.show(getMessageTag(1069));
                    ddcomp.requestFocus();
                    return b;
                } 
@@ -525,7 +581,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 // check the site field
                 if (tbkey.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a site code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                 }
                 
                 if (proceed) {
@@ -616,9 +672,9 @@ public class BOMMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -638,7 +694,8 @@ public class BOMMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Item", "Description"); 
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getClassLabelTag("lblitemdesc", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -823,7 +880,7 @@ public class BOMMaint extends javax.swing.JPanel {
                tbtotmaterial.setText(String.valueOf(df.format(matlcost)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to get pbm_mstr info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             
             bsmf.MainFrame.con.close();
@@ -862,7 +919,7 @@ public class BOMMaint extends javax.swing.JPanel {
                     }
                    
              } catch (SQLException s) {
-                 bsmf.MainFrame.show("Unable to select component detail");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -928,7 +985,7 @@ public class BOMMaint extends javax.swing.JPanel {
                     
                     
              } catch (SQLException s) {
-                 bsmf.MainFrame.show("Unable to select pbm_mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -1045,12 +1102,16 @@ public class BOMMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("BOM Maintenance"));
+        jPanel2.setName("BOM Maintenance"); // NOI18N
 
         jLabel3.setText("Qty Per");
+        jLabel3.setName("lblqtyper"); // NOI18N
 
         jLabel2.setText("Component");
+        jLabel2.setName("lblcomponent"); // NOI18N
 
         jLabel5.setText("Reference");
+        jLabel5.setName("lblref"); // NOI18N
 
         tbqtyper.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1059,6 +1120,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Parent Item");
+        jLabel1.setName("lblitem"); // NOI18N
 
         ddcomp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1067,6 +1129,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1074,6 +1137,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1081,8 +1145,10 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Operation");
+        jLabel4.setName("lbloperation"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1101,6 +1167,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         btclear.setText("clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1108,6 +1175,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         btpdf.setText("PDF");
+        btpdf.setName("btpdf"); // NOI18N
         btpdf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpdfActionPerformed(evt);
@@ -1115,14 +1183,19 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel7.setText("Parent Desc");
+        jLabel7.setName("lblitemdesc"); // NOI18N
 
         jLabel8.setText("Comp Desc");
+        jLabel8.setName("lblcompdesc"); // NOI18N
 
         jLabel6.setText("Comp Cost:");
+        jLabel6.setName("lblcompcost"); // NOI18N
 
         jLabel9.setText("Comp Type:");
+        jLabel9.setName("lblcomptype"); // NOI18N
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Operational WorkCell/Dept"));
+        jPanel5.setName("panelop"); // NOI18N
 
         tbrunratesim.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1131,6 +1204,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel12.setText("BurdenRate");
+        jLabel12.setName("lblburdenrate"); // NOI18N
 
         tbsetupratesim.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1157,22 +1231,31 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel10.setText("RunRate");
+        jLabel10.setName("lblrunrate"); // NOI18N
 
         jLabel11.setText("SetupRate");
+        jLabel11.setName("lblsetuprate"); // NOI18N
 
         jLabel14.setText("Simulation");
+        jLabel14.setName("lblsimulation"); // NOI18N
 
         jLabel15.setText("Production");
+        jLabel15.setName("lblproduction"); // NOI18N
 
         jLabel19.setText("CrewSize");
+        jLabel19.setName("lblcrewsize"); // NOI18N
 
         jLabel20.setText("SetupSize");
+        jLabel20.setName("lblsetupsize"); // NOI18N
 
         jLabel13.setText("pcs/HR");
+        jLabel13.setName("lblpcshour"); // NOI18N
 
         jLabel17.setText("Setup");
+        jLabel17.setName("lblsetup"); // NOI18N
 
         jLabel18.setText("LotSize");
+        jLabel18.setName("lbllotsize"); // NOI18N
 
         tbpphsim.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1305,18 +1388,25 @@ public class BOMMaint extends javax.swing.JPanel {
         );
 
         jLabel22.setText("Sim Cost:");
+        jLabel22.setName("lblsimcost"); // NOI18N
 
         jLabel23.setText("Material:");
+        jLabel23.setName("lblmaterial"); // NOI18N
 
         jLabel25.setText("Sim Mat:");
+        jLabel25.setName("lblsimmat"); // NOI18N
 
         jLabel16.setText("Current Cost:");
+        jLabel16.setName("lblcurrentcost"); // NOI18N
 
         jLabel24.setText("Operational:");
+        jLabel24.setName("lbloperational"); // NOI18N
 
         jLabel26.setText("Sim Oper:");
+        jLabel26.setName("lblsimoper"); // NOI18N
 
         jLabel21.setText("Standard Cost:");
+        jLabel21.setName("lblstandardcost"); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1383,6 +1473,7 @@ public class BOMMaint extends javax.swing.JPanel {
         );
 
         btroll.setText("Roll Cost");
+        btroll.setName("btroll"); // NOI18N
         btroll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrollActionPerformed(evt);
@@ -1728,7 +1819,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbrunratesim.setText("");
             tbrunratesim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbrunratesim.requestFocus();
         } else {
             tbrunratesim.setText(x);
@@ -1742,7 +1833,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbsetupratesim.setText("");
             tbsetupratesim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbsetupratesim.requestFocus();
         } else {
             tbsetupratesim.setText(x);
@@ -1756,7 +1847,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbburdenratesim.setText("");
             tbburdenratesim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbburdenratesim.requestFocus();
         } else {
             tbburdenratesim.setText(x);
@@ -1770,7 +1861,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbcrewsizesim.setText("");
             tbcrewsizesim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbcrewsizesim.requestFocus();
         } else {
             tbcrewsizesim.setText(x);
@@ -1784,7 +1875,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbsetupsizesim.setText("");
             tbsetupsizesim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbsetupsizesim.requestFocus();
         } else {
             tbsetupsizesim.setText(x);
@@ -1798,7 +1889,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbpphsim.setText("");
             tbpphsim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbpphsim.requestFocus();
         } else {
             tbpphsim.setText(x);
@@ -1812,7 +1903,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbppssim.setText("");
             tbppssim.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbppssim.requestFocus();
         } else {
             tbppssim.setText(x);
@@ -1831,7 +1922,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbqtyper.setText("");
             tbqtyper.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbqtyper.requestFocus();
         } else {
             tbqtyper.setText(x);
