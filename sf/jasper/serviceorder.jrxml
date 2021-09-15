@@ -349,7 +349,7 @@ sv_cust,  sv_rmks, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, cm_terms,
 				<reportElement x="19" y="0" width="199" height="30" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{svd_item}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0">
+			<textField pattern="###0.00">
 				<reportElement x="430" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{svd_qty}]]></textFieldExpression>
 			</textField>
