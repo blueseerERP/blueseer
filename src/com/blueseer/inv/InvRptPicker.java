@@ -439,7 +439,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -543,7 +543,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -645,7 +645,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -749,7 +749,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -854,7 +854,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -870,8 +870,8 @@ public class InvRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getName()));
-           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getName()));
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
@@ -956,7 +956,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());

@@ -28,9 +28,12 @@ package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -61,9 +64,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -89,6 +96,12 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
     
     // global datatablemodel declarations       
 
+    public QPRMaint() {
+        initComponents();
+        setLanguageTags(this);
+    }
+
+            
     // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
@@ -222,6 +235,50 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+        
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -311,21 +368,21 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (taComments.getText().length() > 400) {
                     b = false;
-                    bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
+                    bsmf.MainFrame.show(getMessageTag(1075));
                     taComments.requestFocus();
                     return b;
                 }
                 
                 if (taIssue.getText().length() > 400) {
                     b = false;
-                    bsmf.MainFrame.show("SQE Comments cannot be greater than 400 chars");
+                    bsmf.MainFrame.show(getMessageTag(1076));
                     taIssue.requestFocus();
                     return b;
                 }
@@ -430,7 +487,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -438,7 +495,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;
@@ -496,14 +553,14 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (st != null) st.close();
                if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;
@@ -511,7 +568,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
         try {
 
@@ -527,14 +584,14 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (st != null) st.close();
                if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -602,7 +659,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -610,7 +667,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
         }
       return m;
     }
@@ -628,9 +685,9 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -650,20 +707,14 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Part", "Part Description"); 
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getClassLabelTag("lblitemdesc", this.getClass().getSimpleName())); 
+         
         
         
     }
 
    
-    public QPRMaint() {
-        
-        initComponents();
-        
-        this.initvars(null);
-        
-    }
-
+    
     
     // custom funcs
     public void getSiteAddress(String site) {
@@ -691,11 +742,11 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
+                    bsmf.MainFrame.show(getMessageTag(1001));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -781,6 +832,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Quality Problem Report (QPR)"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -789,8 +841,10 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("Complaint#");
+        jLabel1.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -798,83 +852,116 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel2.setText("DateCreated");
+        jLabel2.setName("lblcreatedate"); // NOI18N
 
         jLabel3.setText("CreatedBy");
+        jLabel3.setName("lbluserid"); // NOI18N
 
         cbQPR.setText("QPR 8d req");
+        cbQPR.setName("cbqpr"); // NOI18N
 
         cbInforOnly.setText("Infor Only (no 8d req)");
+        cbInforOnly.setName("cbifoonly"); // NOI18N
 
         cbSendSupp.setText("Send Back To Supplier");
+        cbSendSupp.setName("cbsendback"); // NOI18N
 
         jLabel4.setText("Disposition of Nonconformance");
+        jLabel4.setName("lbldisposition"); // NOI18N
 
         cbSort.setText("Sort");
+        cbSort.setName("cbsort"); // NOI18N
 
         cbRework.setText("Rework");
+        cbRework.setName("cbrework"); // NOI18N
 
         cbScrapped.setText("Scrapped");
+        cbScrapped.setName("cbscrap"); // NOI18N
 
         cbDeviation.setText("Deviation#");
+        cbDeviation.setName("cbdeviation"); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel5.setText("Source Of Reject");
+        jLabel5.setName("lblsourceofreject"); // NOI18N
 
         cbLine.setText("Line");
+        cbLine.setName("cbline"); // NOI18N
 
         cbReceiving.setText("Receiving Inspection");
+        cbReceiving.setName("cbreceiving"); // NOI18N
 
         cbCustomer.setText("Customer");
+        cbCustomer.setName("cbcustomer"); // NOI18N
 
         cbEngineering.setText("Engineering");
+        cbEngineering.setName("cbengineer"); // NOI18N
 
         cbOther.setText("Other");
+        cbOther.setName("cbother"); // NOI18N
 
         jLabel6.setText("Dept#");
+        jLabel6.setName("lbldept"); // NOI18N
 
         cbInternal.setText("Internal Supplier");
+        cbInternal.setName("cbinternalsupplier"); // NOI18N
 
         cbExternal.setText("External Supplier");
+        cbExternal.setName("cbexternalsupplier"); // NOI18N
 
         jLabel7.setText("PartNumber");
+        jLabel7.setName("lblitem"); // NOI18N
 
         jLabel8.setText("Part Desc");
+        jLabel8.setName("lblitemdesc"); // NOI18N
 
         jLabel9.setText("Qty Rejected");
+        jLabel9.setName("lblqty"); // NOI18N
 
         jLabel10.setText("Number of Suspect Containers");
+        jLabel10.setName("lblsuspect"); // NOI18N
 
         jLabel11.setText("Total Qty Found Defective");
+        jLabel11.setName("lbldefective"); // NOI18N
 
         jLabel12.setText("DateUpdated");
+        jLabel12.setName("lblupdatedate"); // NOI18N
 
         jLabel13.setText("SupplierName");
+        jLabel13.setName("lblsupplier"); // NOI18N
 
         jLabel14.setText("DateClosed");
+        jLabel14.setName("lblcloseddate"); // NOI18N
 
         jLabel15.setText("SupplierContact");
+        jLabel15.setName("lblcontact"); // NOI18N
 
         taIssue.setColumns(20);
         taIssue.setRows(5);
         jScrollPane1.setViewportView(taIssue);
 
         jLabel16.setText("Description of Issue:");
+        jLabel16.setName("lblissue"); // NOI18N
 
         jLabel17.setText("Description of History (chargeback/debit memo):");
+        jLabel17.setName("lblhistory"); // NOI18N
 
         taHistory.setColumns(20);
         taHistory.setRows(5);
         jScrollPane2.setViewportView(taHistory);
 
         jLabel18.setText("SQE Comments:");
+        jLabel18.setName("lblcomment"); // NOI18N
 
         taComments.setColumns(20);
         taComments.setRows(5);
         jScrollPane3.setViewportView(taComments);
 
         jLabel19.setText("Total ChargeBack for QPR");
+        jLabel19.setName("lblchargeback"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -882,6 +969,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -889,6 +977,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
@@ -896,6 +985,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -903,6 +993,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);

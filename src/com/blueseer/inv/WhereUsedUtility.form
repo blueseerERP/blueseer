@@ -46,6 +46,7 @@
                 <TitledBorder title="Where-Used Lookup"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -98,10 +99,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace pref="27" max="32767" attributes="0"/>
+                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="tbsearch" min="-2" pref="161" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btWhereUsed" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -114,6 +117,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbsearch" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btWhereUsed" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -126,10 +130,17 @@
                 <Component class="javax.swing.JButton" name="btWhereUsed">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Search"/>
+                    <Property name="name" type="java.lang.String" value="btsearch" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btWhereUsedActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Component"/>
+                    <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

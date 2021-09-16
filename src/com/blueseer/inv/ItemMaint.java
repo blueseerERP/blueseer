@@ -39,6 +39,7 @@ import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -117,11 +118,28 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
    // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"type", "date", "tranID", "qty"});
+                    new String[]{
+                        getGlobalColumnTag("type"), 
+                        getGlobalColumnTag("date"), 
+                        getGlobalColumnTag("id"), 
+                        getGlobalColumnTag("qty")});
     javax.swing.table.DefaultTableModel locmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Site", "Loc", "WH", "Qty", "Date"});
+                    new String[]{
+                        getGlobalColumnTag("site"), 
+                        getGlobalColumnTag("location"), 
+                        getGlobalColumnTag("warehouse"), 
+                        getGlobalColumnTag("qty"), 
+                        getGlobalColumnTag("date")});
     javax.swing.table.DefaultTableModel routingmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"Op", "Desc", "Mtl", "Lbr", "Bdn", "Ovh", "Svc", "Tot"});
+                    new String[]{
+                        getGlobalColumnTag("operation"), 
+                        getGlobalColumnTag("description"), 
+                        getGlobalColumnTag("mtl"), 
+                        getGlobalColumnTag("lbr"), 
+                        getGlobalColumnTag("bdn"), 
+                        getGlobalColumnTag("ovh"), 
+                        getGlobalColumnTag("out"), 
+                        getGlobalColumnTag("total")});
     
     public ItemMaint() {
         initComponents();
