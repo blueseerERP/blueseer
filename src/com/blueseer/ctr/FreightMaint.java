@@ -27,9 +27,8 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
-import com.blueseer.utl.OVData;
-import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -40,6 +39,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -63,19 +63,19 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class FreightMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
     
-    // global datatablemodel declarations    
-                
-    public TermsMaintPanel() {
+    // global datatablemodel declarations       
+   
+    public FreightMaint() {
         initComponents();
     }
 
     
-    // interface functions implemented
+      // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
@@ -210,12 +210,9 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-        tbkey.setText("");
+       tbkey.setText("");
         tbdesc.setText("");
-        duedays.setText("");
-        discduedays.setText("");
-        discpercent.setText("");
-        
+        cbapply.setSelected(false);
        isLoad = false;
     }
     
@@ -252,7 +249,7 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public boolean validateInput(String x) {
         boolean b = true;
-                
+               
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
@@ -268,26 +265,8 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
-                if (! BlueSeerUtils.isParsableToInt(duedays.getText())) {
-                    bsmf.MainFrame.show("Must enter a zero or integer in Due Days");
-                    duedays.requestFocus();
-                    b = false;
-                    
-                }
                 
-                if (! BlueSeerUtils.isParsableToInt(discduedays.getText())) {
-                    bsmf.MainFrame.show("Must enter a zero or integer in Disc Due Days");
-                    discduedays.requestFocus();
-                    b = false;
-                    
-                }
                 
-                if (! BlueSeerUtils.isParsableToInt(discpercent.getText())) {
-                    bsmf.MainFrame.show("Must enter a zero or integer in Disc Percent");
-                    discpercent.requestFocus();
-                    b = false;
-                    
-                }
                
         return b;
     }
@@ -325,18 +304,16 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
 
-                    res = st.executeQuery("SELECT cut_code FROM  cust_term where cut_code = " + "'" + x[0] + "'" + ";");
+                    res = st.executeQuery("SELECT frt_code FROM  frt_mstr where frt_code = " + "'" + tbkey.getText() + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
                     if (i == 0) {
-                        st.executeUpdate("insert into cust_term "
-                            + "(cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent ) "
+                        st.executeUpdate("insert into frt_mstr "
+                            + "(frt_code, frt_desc, frt_apply) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + duedays.getText().toString() + "'" + ","
-                            + "'" + discduedays.getText().toString() + "'" + ","
-                            + "'" + discpercent.getText().toString() + "'" 
+                            + "'" + BlueSeerUtils.boolToInt(cbapply.isSelected()) + "'"
                             + ")"
                             + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -373,11 +350,9 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    st.executeUpdate("update cust_term set cut_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "cut_days = " + "'" + duedays.getText() + "'" + ","
-                            + "cut_discdays = " + "'" + discduedays.getText() + "'" + ","
-                            + "cut_discpercent = " + "'" + discpercent.getText() + "'" 
-                            + " where cut_code = " + "'" + tbkey.getText() + "'"                             
+                    st.executeUpdate("update frt_mstr set frt_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "frt_apply = " + "'" + BlueSeerUtils.boolToInt(cbapply.isSelected()) + "'"
+                            + " where frt_code = " + "'" + tbkey.getText() + "'"                             
                             + ";");
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
@@ -406,22 +381,8 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                 int k = 0;
-                    res = st.executeQuery("SELECT cm_code FROM  cm_mstr where cm_terms = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        k++;
-                    }
-                    res = st.executeQuery("SELECT vd_addr FROM  vd_mstr where vd_terms = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        k++;
-                    }
-                    if (k > 0) {
-                        bsmf.MainFrame.show("Cannot delete terms code until removed from all customers and vendors");
-                        return new String[] {BlueSeerUtils.ErrorBit, "Cannot Delete"};
-                    }
-                
-                   int i = st.executeUpdate("delete from cust_term where cut_code = " + "'" + x[0] + "'" + ";");
+              
+                   int i = st.executeUpdate("delete from frt_mstr where frt_code = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);
@@ -452,15 +413,12 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                res = st.executeQuery("select * from cust_term where cut_code = " + "'" + x[0] + "'" + ";");
+                res = st.executeQuery("select * from frt_mstr where frt_code = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                     i++;
                     tbkey.setText(x[0]);
-                    tbdesc.setText(res.getString("cut_desc"));
-                    duedays.setText(res.getString("cut_days"));
-                    discduedays.setText(res.getString("cut_discdays"));
-                    discpercent.setText(res.getString("cut_discpercent"));
-                   
+                    tbdesc.setText(res.getString("frt_desc"));
+                    cbapply.setSelected(res.getBoolean("frt_apply"));
                 }
                
                 // set Action if Record found (i > 0)
@@ -484,9 +442,9 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getTermBrowseUtil(luinput.getText(),0, "cut_code");
+         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_code");
         } else {
-         luModel = DTData.getTermBrowseUtil(luinput.getText(),0, "cut_desc");   
+         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -518,8 +476,9 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-  
+    
      
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -533,27 +492,29 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
+        btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
-        duedays = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        discduedays = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        discpercent = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        btnew = new javax.swing.JButton();
+        cbapply = new javax.swing.JCheckBox();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Terms Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Maintenance"));
 
-        jLabel1.setText("Terms Code:");
+        jLabel1.setText("Freight Code:");
 
         jLabel2.setText("Description:");
+
+        btnew.setText("New");
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
 
         btdelete.setText("delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -582,18 +543,7 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        jLabel3.setText("Due Days:");
-
-        jLabel4.setText("Disc Due Days:");
-
-        jLabel5.setText("Disc Percent%:");
-
-        btnew.setText("New");
-        btnew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnewActionPerformed(evt);
-            }
-        });
+        cbapply.setText("Apply To Order?");
 
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
@@ -602,7 +552,7 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -617,24 +567,19 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btadd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupdate))
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbapply)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -653,37 +598,30 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
+                        .addComponent(jLabel1)
                         .addComponent(btclear))
                     .addComponent(btlookup))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                .addComponent(cbapply)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        if (! validateInput("addRecord")) {
@@ -694,11 +632,11 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+     if (! validateInput("updateRecord")) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask("update", new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -706,21 +644,17 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});     
+        executeTask("delete", new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
-
-    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-         newAction("");
-    }//GEN-LAST:event_btnewActionPerformed
-
-    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
-    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
@@ -734,14 +668,9 @@ public class TermsMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JTextField discduedays;
-    private javax.swing.JTextField discpercent;
-    private javax.swing.JTextField duedays;
+    private javax.swing.JCheckBox cbapply;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;

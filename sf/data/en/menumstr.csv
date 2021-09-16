@@ -6,8 +6,8 @@ ReqBrowseApproved,,com.blueseer.utl.ReportPanel,JMenuItem,reqz
 ReqFreqByUserChart,,com.blueseer.utl.ChartView,JMenuItem,requ
 ReqAmtByAcctChart,,com.blueseer.utl.ChartView,JMenuItem,req3
 ClockDetailRpt,,com.blueseer.tca.ClockDetailRptPanel,JMenuItem,cldr
-CustPriceMaint,,com.blueseer.ctr.CustPriceMstr,JMenuItem,cprm
-CustXrefMaint,,com.blueseer.ctr.CustXrefMaintPanel,JMenuItem,cupm
+CustPriceMaint,,com.blueseer.ctr.CustPriceMaint,JMenuItem,cprm
+CustXrefMaint,,com.blueseer.ctr.CustXrefMaint,JMenuItem,cupm
 EmpBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,empb
 EmployeeMaster,,com.blueseer.hrm.EmployeeMaster,JMenuItem,empm
 Engineering,,,JMenu, 
@@ -32,10 +32,10 @@ ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
 BOMMaint,,com.blueseer.inv.BOMMaint,JMenuItem,bomm
 BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt
 BOMBrowse,,com.blueseer.inv.BOMBrowse,JMenuItem,bomb
-CarrierMaint,,com.blueseer.ctr.CarrierMaintPanel,JMenuItem,carm
+CarrierMaint,,com.blueseer.ctr.CarrierMaint,JMenuItem,carm
 CostRoll,,com.blueseer.inv.CostRollMaint,JMenuItem,roll
 CostRollRange,,com.blueseer.inv.CostRollRange,JMenuItem,rolr
-CustMaint,,com.blueseer.ctr.CustMaintPanel,JMenuItem,cusm
+CustMaint,,com.blueseer.ctr.CustMaint,JMenuItem,cusm
 CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt1,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMstrPanel,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
@@ -43,7 +43,7 @@ DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
 EDILoad,,com.blueseer.edi.EDILoadPanel,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 FileOrderLoad,,com.blueseer.adm.FileOrderLoadPanel,JMenuItem,orlo
-FreightMaint,,com.blueseer.ctr.FreightMaintPanel,JMenuItem,frtm
+FreightMaint,,com.blueseer.ctr.FreightMaint,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item
@@ -101,7 +101,7 @@ ShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,shcf
 ShipMaint,,com.blueseer.shp.ShipMaintPanel,JMenuItem,shpm
 InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
 SiteMaint,,com.blueseer.adm.SiteMstrPanel,JMenuItem,site
-TermsMaint,,com.blueseer.ctr.TermsMaintPanel,JMenuItem,term
+TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term
 TrainingRpt1,,com.blueseer.hrm.TrainingReport1,JMenuItem,trnr
 UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl
 UserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb

@@ -49,7 +49,7 @@ import java.util.Locale;
  *
  * @author vaughnte
  */
-public class CustPriceMstr extends javax.swing.JPanel {
+public class CustPriceMaint extends javax.swing.JPanel {
 
     DefaultListModel listmodel = new DefaultListModel();
     DefaultListModel pricelistmodel = new DefaultListModel();
@@ -57,7 +57,7 @@ public class CustPriceMstr extends javax.swing.JPanel {
     /**
      * Creates new form CustXrefMaintPanel
      */
-    public CustPriceMstr() {
+    public CustPriceMaint() {
         initComponents();
     }
 

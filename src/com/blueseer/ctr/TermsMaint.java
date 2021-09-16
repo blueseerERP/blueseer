@@ -28,8 +28,8 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import com.blueseer.utl.BlueSeerUtils;
+import static bsmf.MainFrame.reinitpanels;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -51,7 +51,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -64,19 +63,19 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class TermsMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
     
-   // global datatablemodel declarations  
-     DefaultListModel mymodel = new DefaultListModel() ;
-    
-    public CarrierMaintPanel() {
+    // global datatablemodel declarations    
+                
+    public TermsMaint() {
         initComponents();
     }
 
-     // interface functions implemented
+    
+    // interface functions implemented
     public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
@@ -211,19 +210,11 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-         tbkey.setText("");
+        tbkey.setText("");
         tbdesc.setText("");
-        tbphone.setText("");
-        tbcontact.setText("");
-        tbacct.setText("");  
-        tbscaccode.setText("");
-        mymodel.removeAllElements();
-        ddcarrier.removeAllItems();
-        rbcarrier.setSelected(true);
-        ArrayList<String> mylist = OVData.getScacCarrierOnly();
-        for (int i = 0; i < mylist.size(); i++) {
-            ddcarrier.addItem(mylist.get(i));
-        }
+        duedays.setText("");
+        discduedays.setText("");
+        discpercent.setText("");
         
        isLoad = false;
     }
@@ -261,7 +252,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     
     public boolean validateInput(String x) {
         boolean b = true;
-               
+                
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
@@ -277,8 +268,26 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
+                if (! BlueSeerUtils.isParsableToInt(duedays.getText())) {
+                    bsmf.MainFrame.show("Must enter a zero or integer in Due Days");
+                    duedays.requestFocus();
+                    b = false;
+                    
+                }
                 
+                if (! BlueSeerUtils.isParsableToInt(discduedays.getText())) {
+                    bsmf.MainFrame.show("Must enter a zero or integer in Disc Due Days");
+                    discduedays.requestFocus();
+                    b = false;
+                    
+                }
                 
+                if (! BlueSeerUtils.isParsableToInt(discpercent.getText())) {
+                    bsmf.MainFrame.show("Must enter a zero or integer in Disc Percent");
+                    discpercent.requestFocus();
+                    b = false;
+                    
+                }
                
         return b;
     }
@@ -311,43 +320,25 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                String cartype = "";
+                
                 proceed = validateInput("addRecord");
                 
                 if (proceed) {
 
-                    res = st.executeQuery("SELECT car_code FROM  car_mstr where car_code = " + "'" + x[0] + "'" + ";");
+                    res = st.executeQuery("SELECT cut_code FROM  cust_term where cut_code = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
                         i++;
                     }
                     if (i == 0) {
-                        if (rbgroup.isSelected()) {
-                           cartype = "group";
-                        } else {
-                           cartype = "carrier";
-                        }
-                        st.executeUpdate("insert into car_mstr "
-                            + "(car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact) " 
+                        st.executeUpdate("insert into cust_term "
+                            + "(cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent ) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbscaccode.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + tbphone.getText().toString() + "'" + ","
-                            + "'" + cartype + "'" + ","
-                            + "'" + tbcontact.getText().toString() + "'"
+                            + "'" + duedays.getText().toString() + "'" + ","
+                            + "'" + discduedays.getText().toString() + "'" + ","
+                            + "'" + discpercent.getText().toString() + "'" 
                             + ")"
                             + ";");
-                        
-                        if (rbgroup.isSelected()) {
-                           for (int j = 0; j < mymodel.getSize(); j++) {
-                           st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                           }
-                        }
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                     } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
@@ -382,35 +373,12 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                proceed = validateInput("updateRecord");
                 
                 if (proceed) {
-                    String cartype = "";
-                    if (rbgroup.isSelected()) {
-                        cartype = "group";
-                    } else {
-                        cartype = "carrier";
-                    }
-                     st.executeUpdate("update car_mstr set car_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "car_acct = " + "'" + tbacct.getText() + "'" + ","
-                            + "car_scac = " + "'" + tbscaccode.getText() + "'" + ","
-                            + "car_contact = " + "'" + tbcontact.getText() + "'" + ","
-                            + "car_type = " + "'" + cartype + "'" + ","
-                            + "car_phone = " + "'" + tbphone.getText() + "'"
-                            + " where car_code = " + "'" + tbkey.getText() + "'"                             
+                    st.executeUpdate("update cust_term set cut_desc = " + "'" + tbdesc.getText() + "'" + ","
+                            + "cut_days = " + "'" + duedays.getText() + "'" + ","
+                            + "cut_discdays = " + "'" + discduedays.getText() + "'" + ","
+                            + "cut_discpercent = " + "'" + discpercent.getText() + "'" 
+                            + " where cut_code = " + "'" + tbkey.getText() + "'"                             
                             + ";");
-                    
-                    
-                     // erase all assigned carriers to group if this is a group type
-                      if (rbgroup.isSelected()) {
-                      st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
-                    
-                       for (int j = 0; j < mymodel.getSize(); j++) {
-                        st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                       }
-                      }
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                     initvars(null);
                 } 
@@ -438,11 +406,22 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
-              
-                   int i = st.executeUpdate("delete from car_mstr where car_code = " + "'" + tbkey.getText() + "'" + ";");
-                   if (rbgroup.isSelected()) {
-                       st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
-                   }
+                ResultSet res = null;
+                 int k = 0;
+                    res = st.executeQuery("SELECT cm_code FROM  cm_mstr where cm_terms = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        k++;
+                    }
+                    res = st.executeQuery("SELECT vd_addr FROM  vd_mstr where vd_terms = " + "'" + tbkey.getText() + "'" + ";");
+                    while (res.next()) {
+                        k++;
+                    }
+                    if (k > 0) {
+                        bsmf.MainFrame.show("Cannot delete terms code until removed from all customers and vendors");
+                        return new String[] {BlueSeerUtils.ErrorBit, "Cannot Delete"};
+                    }
+                
+                   int i = st.executeUpdate("delete from cust_term where cut_code = " + "'" + x[0] + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
                     initvars(null);
@@ -473,31 +452,15 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-               res = st.executeQuery("select * from car_mstr where car_code = " + "'" + x[0] + "'" + ";");
+                res = st.executeQuery("select * from cust_term where cut_code = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                     i++;
-                    tbdesc.setText(res.getString("car_desc"));
-                    tbacct.setText(res.getString("car_acct"));
-                    tbscaccode.setText(res.getString("car_scac"));
-                    tbphone.setText(res.getString("car_phone"));
-                    tbcontact.setText(res.getString("car_contact"));
-                    tbkey.setText(res.getString("car_code"));
-                    if (res.getString("car_type").equals("group")) {
-                        rbgroup.setSelected(true);
-                        rbcarrier.setSelected(false);
-                    } else {
-                        rbgroup.setSelected(false);
-                        rbcarrier.setSelected(true);
-                    }
-                }
-                
-                if (rbgroup.isSelected()) {
+                    tbkey.setText(x[0]);
+                    tbdesc.setText(res.getString("cut_desc"));
+                    duedays.setText(res.getString("cut_days"));
+                    discduedays.setText(res.getString("cut_discdays"));
+                    discpercent.setText(res.getString("cut_discpercent"));
                    
-                 mymodel.removeAllElements();
-                ArrayList mylist = OVData.getScacsOfGroup(x[0]);
-                for (int j = 0; j < mylist.size(); j++) {
-                 mymodel.addElement(mylist.get(j));
-                }
                 }
                
                 // set Action if Record found (i > 0)
@@ -521,9 +484,9 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getCarrierBrowseUtil(luinput.getText(),0, "car_code");
+         luModel = DTData.getTermBrowseUtil(luinput.getText(),0, "cut_code");
         } else {
-         luModel = DTData.getCarrierBrowseUtil(luinput.getText(),0, "car_desc");   
+         luModel = DTData.getTermBrowseUtil(luinput.getText(),0, "cut_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -555,9 +518,8 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-    
   
-    
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -567,39 +529,29 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
-        tbphone = new javax.swing.JTextField();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         btupdate = new javax.swing.JButton();
-        tbacct = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        tbcontact = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         tbkey = new javax.swing.JTextField();
-        tbscaccode = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        duedays = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        discduedays = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        discpercent = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
-        btaddgroup = new javax.swing.JButton();
-        btdeletegroup = new javax.swing.JButton();
-        rbcarrier = new javax.swing.JRadioButton();
-        rbgroup = new javax.swing.JRadioButton();
-        ddcarrier = new javax.swing.JComboBox<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        carrierlist = new javax.swing.JList<>();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Carrier Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Terms Maintenance"));
 
-        jLabel1.setText("Code:");
+        jLabel1.setText("Terms Code:");
 
         jLabel2.setText("Description:");
 
@@ -617,8 +569,6 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        jLabel3.setText("AcctNbr:");
-
         btupdate.setText("update");
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -626,17 +576,17 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        jLabel4.setText("ContactName:");
-
-        jLabel5.setText("Phone:");
-
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
             }
         });
 
-        jLabel6.setText("scaccode:");
+        jLabel3.setText("Due Days:");
+
+        jLabel4.setText("Disc Due Days:");
+
+        jLabel5.setText("Disc Percent%:");
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -645,26 +595,6 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btaddgroup.setText("add");
-        btaddgroup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddgroupActionPerformed(evt);
-            }
-        });
-
-        btdeletegroup.setText("delete");
-        btdeletegroup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeletegroupActionPerformed(evt);
-            }
-        });
-
-        rbcarrier.setText("Carrier");
-
-        rbgroup.setText("Group");
-
-        jScrollPane2.setViewportView(carrierlist);
-
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -672,7 +602,7 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -684,109 +614,72 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
-                .addComponent(btnew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btclear)
-                .addGap(0, 80, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btadd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btupdate)
-                .addGap(99, 99, 99))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbacct)
-                            .addComponent(tbcontact)
-                            .addComponent(tbscaccode)
-                            .addComponent(tbdesc)
-                            .addComponent(tbphone))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btaddgroup)
-                            .addComponent(btdeletegroup)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbcarrier)
-                                .addGap(18, 18, 18)
-                                .addComponent(rbgroup))
-                            .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(btadd)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate))
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btclear)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btlookup)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbcarrier)
-                    .addComponent(rbgroup))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btlookup))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbscaccode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btaddgroup)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdeletegroup))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap())
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -820,25 +713,14 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
-    private void btaddgroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddgroupActionPerformed
-        if (! mymodel.contains(ddcarrier.getSelectedItem().toString()))
-            mymodel.addElement(ddcarrier.getSelectedItem().toString());
-        else
-            bsmf.MainFrame.show("Cant load twice");
-    }//GEN-LAST:event_btaddgroupActionPerformed
-
-    private void btdeletegroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletegroupActionPerformed
-       mymodel.removeElement(carrierlist.getSelectedValue());  
-    }//GEN-LAST:event_btdeletegroupActionPerformed
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         BlueSeerUtils.messagereset();
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
-
-    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
-    }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
@@ -847,31 +729,21 @@ public class CarrierMaintPanel extends javax.swing.JPanel implements IBlueSeer {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btaddgroup;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btdeletegroup;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JList<String> carrierlist;
-    private javax.swing.JComboBox<String> ddcarrier;
+    private javax.swing.JTextField discduedays;
+    private javax.swing.JTextField discpercent;
+    private javax.swing.JTextField duedays;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JRadioButton rbcarrier;
-    private javax.swing.JRadioButton rbgroup;
-    private javax.swing.JTextField tbacct;
-    private javax.swing.JTextField tbcontact;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
-    private javax.swing.JTextField tbphone;
-    private javax.swing.JTextField tbscaccode;
     // End of variables declaration//GEN-END:variables
 }
