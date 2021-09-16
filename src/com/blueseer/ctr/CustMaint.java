@@ -27,9 +27,12 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.ord.OrderMaintPanel;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -58,9 +61,13 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -86,6 +93,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public CustMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented  
@@ -226,6 +234,50 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
             
             overrideComponentState();
     } 
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void setComponentDefaultValues() {
         isLoad = true;
@@ -374,13 +426,13 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (cbshipto.isSelected())        
                     addShipTo(tbkey.getText(), tbkey.getText()); // cust and ship in cms_det  are the same in this situation
                     
-                     message = new String[]{"0", "Customer has been added"};   
+                     message = new String[]{"0", getMessageTag(1007)};   
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                 message = new String[]{"1", "Customer cannot be added"};   
+                 message = new String[]{"1", getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};   
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -441,14 +493,14 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
               
              } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};   
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
                if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
          }
         } catch (Exception e) {
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
             MainFrame.bslog(e);
         }
      return m;
@@ -456,7 +508,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] deleteRecord(String[] x) {
         String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         
         if (proceed) {
         try {
@@ -478,7 +530,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                  } catch (SQLException s) {
                             MainFrame.bslog(s);
-                        m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
+                        m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
                  } finally {
                    if (res != null) res.close();
                    if (st != null) st.close();
@@ -561,7 +613,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
             
          } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
          } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -569,7 +621,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
          }
         } catch (Exception e) {
             MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
+             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};   
         } 
      return m;
     }
@@ -577,32 +629,42 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
     public boolean validateInput(String action) {
          boolean r = true;
           if ( tbkey.getText().isEmpty()) {
-                  r = false;
-                  bsmf.MainFrame.show("Must provide valid CustCode");
-              }  
-              if (action.equals("add") && OVData.isValidCustomer(tbkey.getText())) {
-                  r = false;
-                  bsmf.MainFrame.show("CustCode already in use");
-                 
-              }  
-              
-              if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
-                  r = false;
-                  bsmf.MainFrame.show("Invalid Account Code");
-                  
-              }
-              
-              if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
-                  r = false;
-                  bsmf.MainFrame.show("Invalid CC / Dept Code");
-                  
-              }
-                
-              if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
               r = false;
-             bsmf.MainFrame.show("Invalid credit limit...must be integer");
-            
-             }
+              bsmf.MainFrame.show(getMessageTag(1024));
+              tbkey.requestFocus();
+              return r;
+              }  
+          if (action.equals("add") && OVData.isValidCustomer(tbkey.getText())) {
+              r = false;
+              bsmf.MainFrame.show(getMessageTag(1014));
+              tbkey.requestFocus();
+              return r;
+
+          }  
+
+          if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+              r = false;
+              bsmf.MainFrame.show(getMessageTag(1052));
+              ddaccount.requestFocus();
+              return r;
+
+          }
+
+          if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+              r = false;
+              bsmf.MainFrame.show(getMessageTag(1048));
+              ddcc.requestFocus();
+              return r;              
+
+          }
+
+          if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
+              r = false;
+              bsmf.MainFrame.show(getMessageTag(1033));
+              tbcreditlimit.requestFocus();
+              return r;
+
+         }
               return r;
      }
      
@@ -635,9 +697,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -660,8 +722,12 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         };
         luTable.addMouseListener(luml);
-      
-        callDialog("Code", "Name", "AddrLine", "Zip"); 
+         
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblname", this.getClass().getSimpleName()),
+                getClassLabelTag("lbladdr1", this.getClass().getSimpleName()),
+                getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
+        
         
         
     }
@@ -709,13 +775,13 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                         + ";");
         
                     if (jTabbedPane1.getSelectedIndex() == 1)
-                    bsmf.MainFrame.show("Added Customer Shipto Record");                  
+                    bsmf.MainFrame.show(getMessageTag(1007));                  
                   
                     
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Customer Shipto");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -749,14 +815,14 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                             + ";");
         
                    
-                    bsmf.MainFrame.show("Added Contact Info");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                     
                   
                     
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Contact Info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -788,14 +854,14 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                             + ";");
         
                    
-                    bsmf.MainFrame.show("Updated Contact Info");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     
                   
                     
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Update Contact Info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -819,11 +885,11 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                     st.executeUpdate("delete from cmc_det where cmc_id = " + "'" + z + "'"
                             + " AND cmc_code = " + "'" + cust + "'"
                             + ";");
-                    bsmf.MainFrame.show("Deleted Contact Info");
+                    bsmf.MainFrame.show(getMessageTag(1009));
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Delete Contact Info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -915,7 +981,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                  } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem retrieving contact list");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1239,26 +1305,37 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         add(jTabbedPane1);
 
         mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Master Maintenance"));
+        mainPanel.setName("panelmain"); // NOI18N
 
         jLabel7.setText("State");
+        jLabel7.setName("lblstate"); // NOI18N
 
         jLabel5.setText("Line3");
+        jLabel5.setName("lbladdr3"); // NOI18N
 
         jLabel8.setText("Zip/PostCode");
+        jLabel8.setName("lblzip"); // NOI18N
 
         jLabel3.setText("Line1");
+        jLabel3.setName("lbladdr1"); // NOI18N
 
         jLabel9.setText("Country");
+        jLabel9.setName("lblcountry"); // NOI18N
 
         jLabel4.setText("Line2");
+        jLabel4.setName("lbladdr2"); // NOI18N
 
         jLabel1.setText("CustCode");
+        jLabel1.setName("lblid"); // NOI18N
 
         jLabel2.setText("Name");
+        jLabel2.setName("lblname"); // NOI18N
 
         jLabel6.setText("City");
+        jLabel6.setName("lblcity"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1276,12 +1353,16 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2.setViewportView(tbremarks);
 
         jLabel29.setText("Remarks");
+        jLabel29.setName("lblremarks"); // NOI18N
 
         jLabel44.setText("Phone");
+        jLabel44.setName("lblphone"); // NOI18N
 
         jLabel45.setText("Email");
+        jLabel45.setName("lblemail"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1406,44 +1487,64 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         tbdatemod.setEnabled(false);
 
         jLabel10.setText("DateAdded");
+        jLabel10.setName("lbldateadded"); // NOI18N
 
         jLabel13.setText("Group");
+        jLabel13.setName("lblgroup"); // NOI18N
 
         cbonhold.setText("On Hold");
+        cbonhold.setName("cbonhold"); // NOI18N
 
         jLabel12.setText("Market");
+        jLabel12.setName("lblmarket"); // NOI18N
 
         jLabel11.setText("LastMod");
+        jLabel11.setName("lbllastmod"); // NOI18N
 
         jLabel14.setText("CreditLimit");
+        jLabel14.setName("lblcreditlimit"); // NOI18N
 
         jLabel15.setText("Terms");
+        jLabel15.setName("lblterms"); // NOI18N
 
         jLabel16.setText("Carrier");
+        jLabel16.setName("lblcarrier"); // NOI18N
 
         jLabel17.setText("Freight Type");
+        jLabel17.setName("lblfreighttype"); // NOI18N
 
         jLabel18.setText("Disc Code");
+        jLabel18.setName("lbldisccode"); // NOI18N
 
         jLabel19.setText("Price Code");
+        jLabel19.setName("lblpricecode"); // NOI18N
 
         jLabel20.setText("Tax Code");
+        jLabel20.setName("lbltaxcode"); // NOI18N
 
         jLabel26.setText("SalesRep");
+        jLabel26.setName("lblsalesrep"); // NOI18N
 
         jLabel27.setText("AR Account");
+        jLabel27.setName("lblaracct"); // NOI18N
 
         jLabel28.setText("CostCenter");
+        jLabel28.setName("lblcostcenter"); // NOI18N
 
         jLabel39.setText("Bank");
+        jLabel39.setName("lblbank"); // NOI18N
 
         jLabel40.setText("Label Format");
+        jLabel40.setName("lbllabelformat"); // NOI18N
 
         jLabel42.setText("Shp Format");
+        jLabel42.setName("lblshipformat"); // NOI18N
 
         jLabel43.setText("Inv Format");
+        jLabel43.setName("lblinvformat"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1451,6 +1552,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1458,8 +1560,10 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         cbshipto.setText("Create Shipto Same as Billto");
+        cbshipto.setName("cbshipto"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1467,6 +1571,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel41.setText("Currency");
+        jLabel41.setName("lblcurrency"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1643,31 +1748,42 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         shiptoPanel.setBackground(new java.awt.Color(220, 220, 220));
 
         jLabel30.setText("State");
+        jLabel30.setName("lblstate"); // NOI18N
 
         jLabel31.setText("Line3");
+        jLabel31.setName("lbladdr3"); // NOI18N
 
         jLabel32.setText("Zip");
+        jLabel32.setName("lblzip"); // NOI18N
 
         jLabel33.setText("Line1");
+        jLabel33.setName("lbladdr1"); // NOI18N
 
         jLabel34.setText("Country");
+        jLabel34.setName("lblcountry"); // NOI18N
 
         jLabel35.setText("Line2");
+        jLabel35.setName("lbladdr2"); // NOI18N
 
         jLabel36.setText("ShipCode");
+        jLabel36.setName("lblshipto"); // NOI18N
 
         jLabel37.setText("Name");
+        jLabel37.setName("lblname"); // NOI18N
 
         jLabel38.setText("City");
+        jLabel38.setName("lblcity"); // NOI18N
 
         btshipadd.setText("Add");
+        btshipadd.setName("btadd"); // NOI18N
         btshipadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btshipaddActionPerformed(evt);
             }
         });
 
-        btshipedit.setText("Edit");
+        btshipedit.setText("Update");
+        btshipedit.setName("btupdate"); // NOI18N
         btshipedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btshipeditActionPerformed(evt);
@@ -1675,6 +1791,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btshipnew.setText("New");
+        btshipnew.setName("btnew"); // NOI18N
         btshipnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btshipnewActionPerformed(evt);
@@ -1820,6 +1937,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1.setViewportView(contacttable);
 
         btdeletecontact.setText("DeleteContact");
+        btdeletecontact.setName("btdelete"); // NOI18N
         btdeletecontact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeletecontactActionPerformed(evt);
@@ -1827,6 +1945,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btaddcontact.setText("AddContact");
+        btaddcontact.setName("btadd"); // NOI18N
         btaddcontact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddcontactActionPerformed(evt);
@@ -1834,18 +1953,24 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel24.setText("ContactType");
+        jLabel24.setName("lbltype"); // NOI18N
 
         jLabel21.setText("ContactName");
+        jLabel21.setName("lblname"); // NOI18N
 
         ddcontacttype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sales", "Finance", "IT", "Admin", "Shipping", "Engineering", "Quality" }));
 
         jLabel23.setText("Email");
+        jLabel23.setName("lblemail"); // NOI18N
 
         jLabel22.setText("Phone");
+        jLabel22.setName("lblphone"); // NOI18N
 
         jLabel25.setText("Fax");
+        jLabel25.setName("lblfax"); // NOI18N
 
         bteditcontact.setText("EditContact");
+        bteditcontact.setName("btupdate"); // NOI18N
         bteditcontact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditcontactActionPerformed(evt);
@@ -1949,17 +2074,17 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btshipaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipaddActionPerformed
        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
-                  bsmf.MainFrame.show("ShipCode already in use");
+                  bsmf.MainFrame.show(getMessageTag(1014));
                   return;
               } 
         addShipTo(tbkey.getText(),tbshipcode.getText());
     }//GEN-LAST:event_btshipaddActionPerformed
 
     private void btshipeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipeditActionPerformed
-        boolean proceed = true;
+       
         java.util.Date now = new java.util.Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-       if (proceed) {
+      
            
            try {
              Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -1981,19 +2106,15 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                        " AND cms_shipto = " + "'" + tbshipcode.getText() + "'" +
                        ";");
                
-               bsmf.MainFrame.show("Updated Customer Shipto Successfully");
+               bsmf.MainFrame.show(getMessageTag(1008));
                           
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get selected cust code");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
               } catch (Exception e) {
             MainFrame.bslog(e);
         }   
-       } else {
-           bsmf.MainFrame.show("Cannot Proceed...Data Field flagged");
-       }
-       
     }//GEN-LAST:event_btshipeditActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed

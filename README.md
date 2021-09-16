@@ -66,6 +66,8 @@ software can be quickly deployed
 given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
-Current development interests are the inclusion of other open
-source database packages for the back-end server.
+Version 6 is currently under development.  This will include considerable
+refactoring of the code base to include an internationalization option to
+provide various language packs.  Target deployment date is scheduled for
+mid-November 2021.
 
