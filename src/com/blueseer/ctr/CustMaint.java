@@ -72,7 +72,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
      boolean editmode = false;
@@ -84,7 +84,7 @@ public class CustMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                "ID", "Type", "Name", "Phone", "Fax", "Email"
             });
     
-    public CustMaintPanel() {
+    public CustMaint() {
         initComponents();
     }
 
