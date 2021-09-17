@@ -25,7 +25,7 @@ com.blueseer.ctr.CustXrefMaint,,1
 com.blueseer.ctr.CustXrefRpt,,1
 com.blueseer.ctr.FreightMaint,,1
 com.blueseer.ctr.POSBrowse,,1
-com.blueseer.ctr.POSControlMaint,,1
+com.blueseer.ctr.POSControl,,1
 com.blueseer.ctr.POSMaint,,1
 com.blueseer.ctr.TermsMaint,,1
 com.blueseer.dst.DOBrowse,,1

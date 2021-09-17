@@ -233,7 +233,7 @@ TreeMaint,,com.blueseer.adm.MenuTreeMaint,JMenuItem,tree
 Help,,,JMenu, 
 Custom,,,JMenu, 
 POSMaint,,com.blueseer.ctr.POSMaint,JMenuItem,posm
-POSControlMaint,,com.blueseer.ctr.POSControlMaint,JMenuItem,posc
+POSControlMaint,,com.blueseer.ctr.POSControl,JMenuItem,posc
 POSBrowse,,com.blueseer.ctr.POSBrowse,JMenuItem,posb
 ReqControl,,com.blueseer.pur.ReqControl,JMenuItem,reqc
 CustomerMenu,,,JMenu, 
