@@ -26,7 +26,9 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -37,6 +39,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -268,6 +272,11 @@ public class invData {
                     0, "", "", "");
         }
     }
+    
+    
+    
+     
+     
     
     
 }

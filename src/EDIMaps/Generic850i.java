@@ -179,7 +179,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                   e.setDetRef(i,x[1]);
 
                   /* lets find the internal part and internal pricing */
-                  part = OVData.getPartFromCustCItem(e.getOVBillTo(), x[7]);
+                  part = OVData.getItemFromCustCItem(e.getOVBillTo(), x[7]);
                   if (part.isEmpty()) {
                       part = x[7];
                       e.setDetItem(i,part);
@@ -190,8 +190,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
 
 
                       /* lets get the internal list price and discounts*/
-                      listprice = OVData.getPartPriceFromCust(e.getOVBillTo(), part, uom, OVData.getCustCurrency(e.getOVBillTo()));
-                      discount = OVData.getPartDiscFromCust(e.getOVBillTo());
+                      listprice = OVData.getItemPriceFromCust(e.getOVBillTo(), part, uom, OVData.getCustCurrency(e.getOVBillTo()));
+                      discount = OVData.getItemDiscFromCust(e.getOVBillTo());
                       netprice = listprice;
 
                       if (discount != 0)

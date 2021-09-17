@@ -1645,7 +1645,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-                discount.setText(df.format(OVData.getPartDiscFromCust(ddcust.getSelectedItem().toString())));
+                discount.setText(df.format(OVData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
                 // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
         }

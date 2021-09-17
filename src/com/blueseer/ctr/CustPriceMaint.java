@@ -315,7 +315,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
          DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = OVData.getPartPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+        double myprice = OVData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
         lbitem.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {
             price.setText("0.0000");

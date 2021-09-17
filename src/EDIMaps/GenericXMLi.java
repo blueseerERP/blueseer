@@ -132,13 +132,13 @@ public class GenericXMLi {
               e.get(i).setDetPO(i,po);
               e.get(i).setDetQty(i,eElement.getElementsByTagName("qtyordered").item(0).getTextContent());
               
-              part = OVData.getPartFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
+              part = OVData.getItemFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = OVData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
-                discount = OVData.getPartDiscFromCust(billto);
+                discount = OVData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
                   e.get(i).setDetNetPrice(i,df.format(netprice));

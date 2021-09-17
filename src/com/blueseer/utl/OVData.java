@@ -42,6 +42,7 @@ import static bsmf.MainFrame.port;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.calcCost;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -324,67 +325,7 @@ public class OVData {
         return myarray;
         
     }
-     
-    public static String getCustEmail(String cust) {
-        String x = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-            
-                res = st.executeQuery("select cm_email from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
-               while (res.next()) {
-                    x = res.getString("cm_email");
-                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-    }
-    
-    public static String getCustEmailByInvoice(String invoice) {
-        String x = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-            
-                res = st.executeQuery("select cm_email from cm_mstr " +
-                        " inner join ship_mstr on sh_cust = cm_code " +
-                        " where sh_id = " + "'" + invoice + "'" + ";");
-               while (res.next()) {
-                    x = res.getString("cm_email");
-                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-    }
-    
+   
     
     public static int getNextPO() {
        int mypo = 0;
@@ -1581,6 +1522,174 @@ public class OVData {
 
     
     /* Customer Related functions */
+    public static String getCustSalesAcct(String cust) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_ar_acct from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("cm_ar_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+                
+    public static String getCustSalesCC(String cust) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_ar_cc from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("cm_ar_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+         
+    public static String getCustCurrency(String cust) {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_curr from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("cm_curr");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+         
+    public static String getCustTerms(String cust) {
+           String myitem = null;
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_terms from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("cm_terms");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+    
+    public static String getCustEmail(String cust) {
+        String x = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+            
+                res = st.executeQuery("select cm_email from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+               while (res.next()) {
+                    x = res.getString("cm_email");
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    public static String getCustEmailByInvoice(String invoice) {
+        String x = "";
+        try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+            
+                res = st.executeQuery("select cm_email from cm_mstr " +
+                        " inner join ship_mstr on sh_cust = cm_code " +
+                        " where sh_id = " + "'" + invoice + "'" + ";");
+               while (res.next()) {
+                    x = res.getString("cm_email");
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+        
     public static ArrayList getcustmstrlist() {
        ArrayList myarray = new ArrayList();
         try{
@@ -1751,7 +1860,293 @@ public class OVData {
         return mystring;
 
     }
- 
+     
+    public static ArrayList getcusttermslist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
+                while (res.next()) {
+                    myarray.add(res.getString("cut_code"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Terms Master");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static String getCustAltItem(String cust, String part) {
+   String mystring = "";
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cup_citem2 from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("cup_citem2");
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}
+
+    public static String getCustSku(String cust, String part) {
+    String mystring = "";
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cup_sku from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("cup_sku");
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+    }
+
+    public static String getCustPartFromPart(String cust, String part) {
+    String mystring = "";
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("cup_citem");
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+    }
+
+    public static String getCustFromOrder(String order) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "';" );
+               while (res.next()) {
+                myitem = res.getString("so_cust");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+          con.close();  
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+              
+    public static String getCustName(String cust) {
+String myitem = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select cm_name from cm_mstr where cm_code = " + "'" + cust + "';" );
+   while (res.next()) {
+    myitem = res.getString("cm_name");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();  
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getCustLabel(String cust) {
+String myitem = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select cm_label from cm_mstr where cm_code = " + "'" + cust + "';" );
+   while (res.next()) {
+    myitem = res.getString("cm_label");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();  
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getCustLogo(String cust) {
+String myitem = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select cm_logo from cm_mstr where cm_code = " + "'" + cust + "';" );
+   while (res.next()) {
+    myitem = res.getString("cm_logo");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();  
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getCustInvoiceJasper(String cust) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_iv_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
+               while (res.next()) {
+                myitem = res.getString("cm_iv_jasper");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+          
+    public static String getCustShipperJasper(String cust) {
+           String myitem = "";
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select cm_ps_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
+               while (res.next()) {
+                myitem = res.getString("cm_ps_jasper");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    } 
+             
+    
     public static ArrayList getpanelslist() {
         ArrayList myarray = new ArrayList();
         try {
@@ -1942,42 +2337,6 @@ public class OVData {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getcusttermslist() {
-        ArrayList myarray = new ArrayList();
-        try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
-                while (res.next()) {
-                    myarray.add(res.getString("cut_code"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Terms Master");
             } finally {
                 if (res != null) {
                     res.close();
@@ -5603,11 +5962,6 @@ public class OVData {
     }
        
     
-       
-    /* EDI related beginning */   
-   
-    /* EDI related end */
-    
     
       public static ArrayList getCodeMstr(String type) {
        ArrayList myarray = new ArrayList();
@@ -5800,7 +6154,8 @@ public class OVData {
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+                 MainFrame.bslog(s);
+                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL can not get Code Mstr");
             }
             con.close();
         }
@@ -5813,27 +6168,29 @@ public class OVData {
       
     public static String getJasperFuncByTitle(String group, String title) {
        String x = "";
-       
         try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
+            PreparedStatement ps = null;
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select * from jasp_mstr " +
-                        " where jasp_group = " + "'" + group + "'" +
-                        " and jasp_desc = " + "'" + title + "'" +
-                        " ;");
-               while (res.next()) {
+                String sql = "select * from jasp_mstr where jasp_group = ? and jasp_desc = ? ;";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, group);
+                ps.setString(2, title);
+                res = ps.executeQuery();
+                while (res.next()) {
                     x = res.getString("jasp_func");
                 }
-               
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+               MainFrame.bslog(s);
+               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) res.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5874,151 +6231,7 @@ public class OVData {
         
     }
       
-        
-        public static ArrayList getPartListFromCustCode(String cust) {
-            ArrayList myarray = new ArrayList();   
-            try {
-         
-               
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                
-                res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust.toString() + "'" + ";");
-                while (res.next()) {
-                    myarray.add(res.getString("cup_item"));
-                }
-              
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL Code does not execute");
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-             return myarray;
-        }
-        
-        
-        public static String getPartFromCustCItem(String cust, String custpart) {
-       String mystring = "";
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_citem = " + "'" + custpart + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_item");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
       
-        public static String getCustAltItem(String cust, String part) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_citem2 from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_citem2");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-        
-         public static String getCustSku(String cust, String part) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_sku from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_sku");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-        
-         public static String getCustPartFromPart(String cust, String part) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_citem");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-        
        public static String getVendPartFromPart(String vend, String part) {
        String mystring = "";
         try{
@@ -6048,202 +6261,10 @@ public class OVData {
         return mystring;
         
     }        
-         
-    public static String getPartFromCustCItem2(String cust, String custpart) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_citem2 = " + "'" + custpart + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_item");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
         
-    }
-         
-    public static String getPartFromCustUpc(String cust, String custpart) {
-       String mystring = "";
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_upc = " + "'" + custpart + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("cup_item");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-         
-    public static Double getPartPriceFromVend(String vend, String part, String uom, String curr) {
-       Double myreturn = 0.00;
-       String pricecode = "";
-      
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
-                 while (res.next()) {
-                   pricecode = res.getString("vd_price_code");
-                }     
-                  // if there is no pricecode....it defaults to billto
-                 if (! pricecode.isEmpty()) {
-                     vend = pricecode;
-                 }
-                 
-                res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + vend + "'" + 
-                                      " AND vpr_item = " + "'" + part + "'" +
-                                      " AND vpr_uom = " + "'" + uom + "'" +
-                                      " AND vpr_curr = " + "'" + curr + "'" +        
-                                      " AND vpr_type = 'LIST' "+ ";");
-               while (res.next()) {
-                   myreturn = res.getDouble("vpr_price");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-         
          
     
          
-    public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
-       
-       // type is either 'c' for customer price or 'v' for vendor price      
-             
-       String[] TypeAndPrice = new String[2];   
-       String Type = "none";
-       Double price = 0.00;
-       String pricecode = "";
-      
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                // customer based pricing
-                if (type.equals("c")) {
-                    res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
-                     while (res.next()) {
-                       pricecode = res.getString("cm_price_code");
-                    }     
-                      // if there is no pricecode....it defaults to billto
-                     if (! pricecode.isEmpty()) {
-                         entity = pricecode;
-                     }
-
-                    res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
-                                          " AND cpr_item = " + "'" + part + "'" +
-                                          " AND cpr_uom = " + "'" + uom + "'" +
-                                          " AND cpr_curr = " + "'" + curr + "'" +
-                                          " AND cpr_type = 'LIST' "+ ";");
-                   while (res.next()) {
-                       price = res.getDouble("cpr_price");
-                       Type = "cust";
-
-                    }
-                }
-                
-                // vendor based pricing
-                if (type.equals("v")) {
-                   res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + entity + "'" + ";");
-                 while (res.next()) {
-                   pricecode = res.getString("vd_price_code");
-                }     
-                  // if there is no pricecode....it defaults to billto
-                 if (! pricecode.isEmpty()) {
-                     entity = pricecode;
-                 }
-                 
-                res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
-                                      " AND vpr_item = " + "'" + part + "'" +
-                                      " AND vpr_uom = " + "'" + uom + "'" +
-                                      " AND vpr_curr = " + "'" + curr + "'" +        
-                                      " AND vpr_type = 'LIST' "+ ";");
-               while (res.next()) {
-                   price = res.getDouble("vpr_price");
-                   Type = "vend";
-                    
-                }
-                }
-                
-                
-               // if there is no customer specific price...then pull price from item master it_sell_price
-                  if ( price <= 0.00 ) {
-                     if (type.equals("c")) { 
-                     res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");
-                     } else {
-                     res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");    
-                     }
-                     while (res.next()) {
-                     price = res.getDouble("itemprice");   
-                     Type = "item";
-                     }
-                  }
-               
-           TypeAndPrice[0] = Type;
-           TypeAndPrice[1] = String.valueOf(price);
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return TypeAndPrice;
-        
-    }
     
     public static Boolean isValidCustPriceRecordExists(String entity, String part, String uom, String curr) {
        
@@ -6344,127 +6365,7 @@ public class OVData {
     
     
     
-    
-    public static Double getPartPriceFromCust(String cust, String part, String uom, String curr) {
-       Double price = 0.00;
-       String pricecode = "";
       
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
-                 while (res.next()) {
-                   pricecode = res.getString("cm_price_code");
-                }     
-                  // if there is no pricecode....it defaults to billto
-                 if (! pricecode.isEmpty()) {
-                     cust = pricecode;
-                 }
-                 
-                res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
-                                      " AND cpr_item = " + "'" + part + "'" +
-                                      " AND cpr_uom = " + "'" + uom + "'" +
-                                      " AND cpr_curr = " + "'" + curr + "'" +
-                                      " AND cpr_type = 'LIST' "+ ";");
-               while (res.next()) {
-                   price = res.getDouble("cpr_price");
-                    
-                }
-               
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return price;
-        
-    }
-         
-         
-          public static Double getPartPriceFromListCode(String code, String part, String uom, String curr) {
-       Double myreturn = 0.00;
-       String pricecode = "";
-      
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null; 
-                res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + code + "'" + 
-                                      " AND cpr_item = " + "'" + part + "'" +
-                                      " AND cpr_uom = " + "'" + uom + "'" +
-                                      " AND cpr_curr = " + "'" + curr + "'" +        
-                                      " AND cpr_type = 'LIST' "+ ";");
-               while (res.next()) {
-                   myreturn = res.getDouble("cpr_price");
-                }
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Cpr_Mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-      
-           public static Double getPartDiscFromCust(String cust) {
-       Double myreturn = 0.00;
-       String disccode = "";
-       int i = 0;
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                 res = st.executeQuery("select cm_disc_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
-                 while (res.next()) {
-                   disccode = res.getString("cm_disc_code");
-                }     
-                  // if there is no pricecode....it defaults to billto
-                 if (! disccode.isEmpty()) {
-                     cust = disccode;
-                 }
-                
-                res = st.executeQuery("select cpr_disc from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
-                                      " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
-               while (res.next()) {
-                       if (i == 0)
-                       myreturn = res.getDouble("cpr_disc");
-                       if (i > 0)
-                       myreturn = myreturn + res.getDouble("cpr_disc");                   
-                   i++;
-                }
-                
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        return myreturn;
-        
-    }
-           
            public static Double getNetPriceFromListAndDisc(Double listprice, Double discount) {
                Double netprice = 0.00;
                
@@ -7307,32 +7208,6 @@ public class OVData {
         
     }
           
-    public static String getCustTerms(String cust) {
-           String myitem = null;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_terms from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_terms");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
          
            public static String getVendTerms(String vend) {
            String myitem = null;
@@ -7445,32 +7320,6 @@ public class OVData {
          
            
          
-          public static String getCustCurrency(String cust) {
-           String myitem = null;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_curr from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_curr");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
          
            public static String getExchangeRate(String base, String foreign) {
            String myitem = "";
@@ -7532,59 +7381,6 @@ public class OVData {
         
     }
            
-         public static String getCustSalesAcct(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ar_acct from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_ar_acct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-                
-         public static String getCustSalesCC(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ar_cc from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_ar_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
                 
          public static String getDefaultARCC() {
            String myitem = "";
@@ -8532,76 +8328,6 @@ public class OVData {
         
          }    
     
-    public static ArrayList getItemMaintInit() {
-           ArrayList myarray = new ArrayList();
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-             
-                
-                res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"prodline",res.getString("pl_line")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select site_site from site_mstr order by site_site ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"site",res.getString("site_site")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select uom_id from uom_mstr order by uom_id ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"uom",res.getString("uom_id")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select tax_code from tax_mstr order by tax_code ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"tax",res.getString("tax_code")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"loc",res.getString("loc_loc")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select wh_id from wh_mstr order by wh_id ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"wh",res.getString("wh_id")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select code_key from code_mstr  where code_code = 'ItemType' order by code_key ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"type",res.getString("code_key")};
-                myarray.add(arr); 
-                }
-                
-                res = st.executeQuery("select wf_id from wf_mstr order by wf_id ;" );
-                while (res.next()) {
-                String[] arr = new String[]{"routing",res.getString("wf_id")};
-                myarray.add(arr); 
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
     
     
     public static ArrayList getProdCodeList() {
@@ -8633,31 +8359,6 @@ public class OVData {
        
        
        
-        public static ArrayList getItemImagesFile(String item) {
-           ArrayList myarray = new ArrayList();
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select iti_file from item_image where iti_item = " + "'" + item + "'" + " order by iti_order ;" );
-               while (res.next()) {
-                myarray.add(res.getString("iti_file"));                    
-                }
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
        
          public static String getDefaultItemImageFile(String item) {
           
@@ -8767,63 +8468,7 @@ public class OVData {
                 return bank;
             }
             
-             public static String getCustInvoiceJasper(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_iv_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_iv_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-       
-          
-       
-             
-             public static String getCustShipperJasper(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ps_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_ps_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    } 
-             
+           
              
               public static Integer getGLTranCount() {
            int mycount = 0;
@@ -8852,114 +8497,7 @@ public class OVData {
         
     }
               
-               public static String getCustFromOrder(String order) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "';" );
-               while (res.next()) {
-                myitem = res.getString("so_cust");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
               
-                  public static String getCustName(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_name from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_name");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-               
-               public static String getCustLabel(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_label from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_label");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-               
-               public static String getCustLogo(String cust) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_logo from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_logo");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-       
                
         public static String[] getBillToAddressArray(String cust) {
             String[] address = new String[9];
@@ -9267,63 +8805,451 @@ public class OVData {
         return myitem;
         
     }
+       
+  /* get Item specific stuff */       
+
+  
+public static ArrayList getItemListFromCustCode(String cust) {
+    ArrayList myarray = new ArrayList();   
+    try {
+
+
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+
+    try {
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust.toString() + "'" + ";");
+        while (res.next()) {
+            myarray.add(res.getString("cup_item"));
+        }
+
+    } catch (SQLException s) {
+        bsmf.MainFrame.show("SQL Code does not execute");
+    }
+    con.close();
+} catch (Exception e) {
+    MainFrame.bslog(e);
+}
+     return myarray;
+}
+
+public static String getItemFromCustCItem(String cust, String custpart) {
+String mystring = "";
+try{
+   Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                              " AND cup_citem = " + "'" + custpart + "'" + ";");
+       while (res.next()) {
+           mystring = res.getString("cup_item");
+
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return mystring;
+
+}
          
-         public static String getItemCode(String mypart) {
-              String myitem = "";
-         try{
+public static Double getItemPriceFromCust(String cust, String part, String uom, String curr) {
+Double price = 0.00;
+String pricecode = "";
+
+try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+         while (res.next()) {
+           pricecode = res.getString("cm_price_code");
+        }     
+          // if there is no pricecode....it defaults to billto
+         if (! pricecode.isEmpty()) {
+             cust = pricecode;
+         }
+
+        res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
+                              " AND cpr_item = " + "'" + part + "'" +
+                              " AND cpr_uom = " + "'" + uom + "'" +
+                              " AND cpr_curr = " + "'" + curr + "'" +
+                              " AND cpr_type = 'LIST' "+ ";");
+       while (res.next()) {
+           price = res.getDouble("cpr_price");
+
+        }
+
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return price;
+
+}
+
+public static Double getItemPriceFromListCode(String code, String part, String uom, String curr) {
+Double myreturn = 0.00;
+String pricecode = "";
+
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null; 
+    res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + code + "'" + 
+                          " AND cpr_item = " + "'" + part + "'" +
+                          " AND cpr_uom = " + "'" + uom + "'" +
+                          " AND cpr_curr = " + "'" + curr + "'" +        
+                          " AND cpr_type = 'LIST' "+ ";");
+   while (res.next()) {
+       myreturn = res.getDouble("cpr_price");
+    }
+}
+catch (SQLException s){
+     bsmf.MainFrame.show("SQL cannot get Cpr_Mstr");
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myreturn;
+
+}
+
+public static Double getItemDiscFromCust(String cust) {
+Double myreturn = 0.00;
+String disccode = "";
+int i = 0;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+     res = st.executeQuery("select cm_disc_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+     while (res.next()) {
+       disccode = res.getString("cm_disc_code");
+    }     
+      // if there is no pricecode....it defaults to billto
+     if (! disccode.isEmpty()) {
+         cust = disccode;
+     }
+
+    res = st.executeQuery("select cpr_disc from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
+                          " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
+   while (res.next()) {
+           if (i == 0)
+           myreturn = res.getDouble("cpr_disc");
+           if (i > 0)
+           myreturn = myreturn + res.getDouble("cpr_disc");                   
+       i++;
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+
+return myreturn;
+
+}
+     
+public static String getItemFromCustCItem2(String cust, String custpart) {
+   String mystring = "";
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_citem2 = " + "'" + custpart + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("cup_item");
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}
+
+public static String getItemFromCustUpc(String cust, String custpart) {
+   String mystring = "";
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_upc = " + "'" + custpart + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("cup_item");
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}
+
+public static Double getItemPriceFromVend(String vend, String part, String uom, String curr) {
+   Double myreturn = 0.00;
+   String pricecode = "";
+
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
+             while (res.next()) {
+               pricecode = res.getString("vd_price_code");
+            }     
+              // if there is no pricecode....it defaults to billto
+             if (! pricecode.isEmpty()) {
+                 vend = pricecode;
+             }
+
+            res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + vend + "'" + 
+                                  " AND vpr_item = " + "'" + part + "'" +
+                                  " AND vpr_uom = " + "'" + uom + "'" +
+                                  " AND vpr_curr = " + "'" + curr + "'" +        
+                                  " AND vpr_type = 'LIST' "+ ";");
+           while (res.next()) {
+               myreturn = res.getDouble("vpr_price");
+
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+         
+public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
+       
+       // type is either 'c' for customer price or 'v' for vendor price      
+             
+       String[] TypeAndPrice = new String[2];   
+       String Type = "none";
+       Double price = 0.00;
+       String pricecode = "";
+      
+        try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+                // customer based pricing
+                if (type.equals("c")) {
+                    res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
+                     while (res.next()) {
+                       pricecode = res.getString("cm_price_code");
+                    }     
+                      // if there is no pricecode....it defaults to billto
+                     if (! pricecode.isEmpty()) {
+                         entity = pricecode;
+                     }
+
+                    res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
+                                          " AND cpr_item = " + "'" + part + "'" +
+                                          " AND cpr_uom = " + "'" + uom + "'" +
+                                          " AND cpr_curr = " + "'" + curr + "'" +
+                                          " AND cpr_type = 'LIST' "+ ";");
+                   while (res.next()) {
+                       price = res.getDouble("cpr_price");
+                       Type = "cust";
+
+                    }
+                }
+                
+                // vendor based pricing
+                if (type.equals("v")) {
+                   res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + entity + "'" + ";");
+                 while (res.next()) {
+                   pricecode = res.getString("vd_price_code");
+                }     
+                  // if there is no pricecode....it defaults to billto
+                 if (! pricecode.isEmpty()) {
+                     entity = pricecode;
+                 }
+                 
+                res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
+                                      " AND vpr_item = " + "'" + part + "'" +
+                                      " AND vpr_uom = " + "'" + uom + "'" +
+                                      " AND vpr_curr = " + "'" + curr + "'" +        
+                                      " AND vpr_type = 'LIST' "+ ";");
                while (res.next()) {
-                myitem = res.getString("it_code");                    
+                   price = res.getDouble("vpr_price");
+                   Type = "vend";
+                    
+                }
+                }
+                
+                
+               // if there is no customer specific price...then pull price from item master it_sell_price
+                  if ( price <= 0.00 ) {
+                     if (type.equals("c")) { 
+                     res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");
+                     } else {
+                     res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");    
+                     }
+                     while (res.next()) {
+                     price = res.getDouble("itemprice");   
+                     Type = "item";
+                     }
+                  }
+               
+           TypeAndPrice[0] = Type;
+           TypeAndPrice[1] = String.valueOf(price);
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return TypeAndPrice;
+        
+    }
+    
+public static ArrayList getItemMaintInit() {
+           ArrayList myarray = new ArrayList();
+         try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+             
+                
+                res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"prodline",res.getString("pl_line")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select site_site from site_mstr order by site_site ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"site",res.getString("site_site")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select uom_id from uom_mstr order by uom_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"uom",res.getString("uom_id")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select tax_code from tax_mstr order by tax_code ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"tax",res.getString("tax_code")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"loc",res.getString("loc_loc")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select wh_id from wh_mstr order by wh_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"wh",res.getString("wh_id")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select code_key from code_mstr  where code_code = 'ItemType' order by code_key ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"type",res.getString("code_key")};
+                myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select wf_id from wf_mstr order by wf_id ;" );
+                while (res.next()) {
+                String[] arr = new String[]{"routing",res.getString("wf_id")};
+                myarray.add(arr); 
                 }
                
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get pm code from item");
             }
             con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myitem;  
-         }
-         
-         public static String getItemTypeByPart(String mypart) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_type from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                myitem = res.getString("it_type");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get type from item");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
+        return myarray;
         
     }
-         
-         public static String getItemSite(String item) {
-           String myreturn = "";
+   
+public static ArrayList getItemImagesFile(String item) {
+           ArrayList myarray = new ArrayList();
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -9331,274 +9257,354 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select it_site from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+                res = st.executeQuery("select iti_file from item_image where iti_item = " + "'" + item + "'" + " order by iti_order ;" );
                while (res.next()) {
-                myreturn = res.getString("it_site");                    
+                myarray.add(res.getString("iti_file"));                    
                 }
-               
            }
             catch (SQLException s){
-                 MainFrame.bslog(s);
+                MainFrame.bslog(s);
             }
             con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myreturn;
+        return myarray;
         
     }
-         
-         public static String getItemLotSize(String item) {
-           String myreturn = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                 
+public static String getItemCode(String mypart) {
+  String myitem = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
 
-                res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
-               while (res.next()) {
-                myreturn = res.getString("it_lotsize");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+    res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+   while (res.next()) {
+    myitem = res.getString("it_code");                    
     }
-         
-         
-         public static String getItemRouting(String item) {
-           String myreturn = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
-               while (res.next()) {
-                myreturn = res.getString("it_wf");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+}
+catch (SQLException s){
+    MainFrame.bslog(s);
+     bsmf.MainFrame.show("SQL cannot get pm code from item");
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myitem;  
+}
+
+public static String getItemTypeByPart(String mypart) {
+String myitem = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select it_type from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+   while (res.next()) {
+    myitem = res.getString("it_type");                    
     }
-         
-         
-       public static Double getItemQOHTotal(String item, String site) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-               res = st.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + item + "'" 
-                                + " and in_site = " + "'" + site + "'"
-                                + ";");
-               while (res.next()) {
-                cost += res.getDouble("in_qoh");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
+}
+catch (SQLException s){
+     bsmf.MainFrame.show("SQL cannot get type from item");
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+public static String getItemSite(String item) {
+String myreturn = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select it_site from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+   while (res.next()) {
+    myreturn = res.getString("it_site");                    
     }
-       
-       
-      public static Double getItemQOHUnallocated(String item, String site, String currentorder) {
-           Double qohu = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-               res = st.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + item + "'" 
-                                + " and in_site = " + "'" + site + "'"
-                                + ";");
-                   while (res.next()) {
-                    qohu += res.getDouble("in_qoh");                    
-                    }
-               
-                res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
-                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
-                                    " where sod_part = " + "'" + item + "'" + 
-                                    " AND so_status <> 'closed' " + 
-                                    " AND so_site = " + "'" + site + "'" +   
-                                  //  " AND so_nbr <> " + "'" + currentorder + "'" +
-                                    " group by sod_part ;");
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myreturn;
 
-                    while (res.next()) {
-                    qohu -= res.getInt("allqty");
-                    }
-               
-               
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return qohu;
-        
-    }   
-       
-         
-      public static Double getItemQtyByWarehouse(String item, String site, String wh) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-               res = st.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + item + "'" 
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + ";");
-               while (res.next()) {
-                cost += res.getDouble("in_qoh");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }   
-       
-      public static Double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+public static String getItemLotSize(String item) {
+String myreturn = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
 
-               res = st.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + item + "'" 
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_loc = " + "'" + loc + "'"
-                                + ";");
-               while (res.next()) {
-                cost += res.getDouble("in_qoh");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }    
-             
-           public static Double getItemPOSPrice(String item) {
-           Double price = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
-               while (res.next()) {
-                price = res.getDouble("it_sell_price");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return price;
-        
+    res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+   while (res.next()) {
+    myreturn = res.getString("it_lotsize");                    
     }
-           
-            public static Double getItemPOSDisc(String item) {
-           Double price = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_disc_pct from item_mstr where it_item = " + "'" + item + "'" + ";" );
-               while (res.next()) {
-                price = res.getDouble("it_disc_pct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return price;
-        
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myreturn;
+
+}
+
+
+public static String getItemRouting(String item) {
+String myreturn = "";
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+   while (res.next()) {
+    myreturn = res.getString("it_wf");                    
     }
-          
-         public static Double getItemCost(String item, String set, String site) {
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return myreturn;
+
+}
+
+
+public static Double getItemQOHTotal(String item, String site) {
+   Double cost = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+       res = st.executeQuery("select in_qoh from in_mstr where "
+                        + " in_part = " + "'" + item + "'" 
+                        + " and in_site = " + "'" + site + "'"
+                        + ";");
+       while (res.next()) {
+        cost += res.getDouble("in_qoh");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return cost;
+
+}
+
+
+public static Double getItemQOHUnallocated(String item, String site, String currentorder) {
+   Double qohu = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+       res = st.executeQuery("select in_qoh from in_mstr where "
+                        + " in_part = " + "'" + item + "'" 
+                        + " and in_site = " + "'" + site + "'"
+                        + ";");
+           while (res.next()) {
+            qohu += res.getDouble("in_qoh");                    
+            }
+
+        res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
+                            " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
+                            " where sod_part = " + "'" + item + "'" + 
+                            " AND so_status <> 'closed' " + 
+                            " AND so_site = " + "'" + site + "'" +   
+                          //  " AND so_nbr <> " + "'" + currentorder + "'" +
+                            " group by sod_part ;");
+
+            while (res.next()) {
+            qohu -= res.getInt("allqty");
+            }
+
+
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return qohu;
+
+}   
+
+
+public static Double getItemQtyByWarehouse(String item, String site, String wh) {
+   Double cost = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+       res = st.executeQuery("select in_qoh from in_mstr where "
+                        + " in_part = " + "'" + item + "'" 
+                        + " and in_site = " + "'" + site + "'"
+                        + " and in_wh = " + "'" + wh + "'"
+                        + ";");
+       while (res.next()) {
+        cost += res.getDouble("in_qoh");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return cost;
+
+}   
+
+public static Double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
+   Double cost = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+       res = st.executeQuery("select in_qoh from in_mstr where "
+                        + " in_part = " + "'" + item + "'" 
+                        + " and in_site = " + "'" + site + "'"
+                        + " and in_wh = " + "'" + wh + "'"
+                        + " and in_loc = " + "'" + loc + "'"
+                        + ";");
+       while (res.next()) {
+        cost += res.getDouble("in_qoh");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return cost;
+
+}    
+
+public static Double getItemPOSPrice(String item) {
+   Double price = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
+       while (res.next()) {
+        price = res.getDouble("it_sell_price");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return price;
+
+}
+
+public static Double getItemPOSDisc(String item) {
+   Double price = 0.00;
+ try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select it_disc_pct from item_mstr where it_item = " + "'" + item + "'" + ";" );
+       while (res.next()) {
+        price = res.getDouble("it_disc_pct");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return price;
+
+}
+
+public static Double getItemCost(String item, String set, String site) {
            Double cost = 0.00;
          try{
             Class.forName(driver).newInstance();
@@ -9627,7 +9633,7 @@ public class OVData {
         
     }
          
-         public static Double getItemCostUpToOp(String item, String set, String site, String op) {
+public static Double getItemCostUpToOp(String item, String set, String site, String op) {
            Double cost = 0.00;
          try{
             Class.forName(driver).newInstance();
@@ -9666,7 +9672,7 @@ public class OVData {
         
     }
          
-    public static ArrayList getItemCostElements(String item, String set, String site) {
+public static ArrayList getItemCostElements(String item, String set, String site) {
            ArrayList<Double> mylist = new ArrayList<Double>();
          try{
             Class.forName(driver).newInstance();
@@ -9706,7 +9712,7 @@ public class OVData {
         
     }
      
-    public static ArrayList<String[]> getItemCostByRange(String item, String from, String set, String site) {
+public static ArrayList<String[]> getItemCostByRange(String item, String from, String set, String site) {
            ArrayList<String[]> mylist = new ArrayList<String[]>();
            String[] myarray = new String[]{"","","","","","",""};
          try{
@@ -9746,357 +9752,719 @@ public class OVData {
     }
     
     
-         public static Double getItemOperationalCost(String item, String set, String site) {
-          double cost = 0.00; 
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                
-                res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
-                        + " itc_set = " + "'" + set + "'" + " AND "
-                        + " itc_site = " + "'" + site + "'" + ";" );
-               while (res.next()) {
-                   cost += res.getDouble("itc_lbr_top") + 
-                           res.getDouble("itc_bdn_top") +
-                           res.getDouble("itc_ovh_top") +
-                           res.getDouble("itc_out_top");
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }
-           
-          public static Double getItemMtlCostStd(String item, String set, String site) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+public static Double getItemOperationalCost(String item, String set, String site) {
+double cost = 0.00; 
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
 
-                res = st.executeQuery("select itc_mtl_top, itc_mtl_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
-                        + " itc_set = " + "'" + set + "'" + " AND "
-                        + " itc_site = " + "'" + site + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("itc_mtl_top") + res.getDouble("itc_mtl_low");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
+    res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+            + " itc_set = " + "'" + set + "'" + " AND "
+            + " itc_site = " + "'" + site + "'" + ";" );
+   while (res.next()) {
+       cost += res.getDouble("itc_lbr_top") + 
+               res.getDouble("itc_bdn_top") +
+               res.getDouble("itc_ovh_top") +
+               res.getDouble("itc_out_top");
     }
-          
-          public static Double getItemMtlCost(String item) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_mtl_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("it_mtl_cost");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }
-         
-           public static Double getItemOvhCostStd(String item, String set, String site) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
 
-                res = st.executeQuery("select itc_ovh_top, itc_ovh_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
-                        + " itc_set = " + "'" + set + "'" + " AND "
-                        + " itc_site = " + "'" + site + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("itc_ovh_top") + res.getDouble("itc_ovh_low");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }
-           
-           public static Double getItemOvhCost(String item) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                res = st.executeQuery("select it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("it_ovh_cost");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }
-         
-          public static Double getItemOutCostStd(String item, String set, String site) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+public static Double getItemMtlCostStd(String item, String set, String site) {
+Double cost = 0.00;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
 
-                res = st.executeQuery("select itc_out_top, itc_out_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
-                        + " itc_set = " + "'" + set + "'" + " AND "
-                        + " itc_site = " + "'" + site + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("itc_out_top") + res.getDouble("itc_out_low");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
+    res = st.executeQuery("select itc_mtl_top, itc_mtl_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+            + " itc_set = " + "'" + set + "'" + " AND "
+            + " itc_site = " + "'" + site + "'" + ";" );
+   while (res.next()) {
+    cost = res.getDouble("itc_mtl_top") + res.getDouble("itc_mtl_low");                    
     }
-          
-    public static Double getItemOutCost(String item) {
-           Double cost = 0.00;
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_out_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
-               while (res.next()) {
-                cost = res.getDouble("it_out_cost");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return cost;
-        
-    }
-           
-    public static String getItemStatusByPart(String mypart) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
 
-                res = st.executeQuery("select it_status from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                myitem = res.getString("it_status");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get info from item");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-    public static String getItemDesc(String mypart) {
-           String myitem = "";
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                myitem = res.getString("it_desc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get desc from item");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
+public static Double getItemMtlCost(String item) {
+Double cost = 0.00;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select it_mtl_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+   while (res.next()) {
+    cost = res.getDouble("it_mtl_cost");                    
     }
-       
-    public static String[] getItemDetail(String mypart) {
-           String[] x = new String[]{"","","","","","","","","",""};
-         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
+
+}
+
+public static Double getItemOvhCostStd(String item, String set, String site) {
+Double cost = 0.00;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select itc_ovh_top, itc_ovh_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+            + " itc_set = " + "'" + set + "'" + " AND "
+            + " itc_site = " + "'" + site + "'" + ";" );
+   while (res.next()) {
+    cost = res.getDouble("itc_ovh_top") + res.getDouble("itc_ovh_low");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
+
+}
+
+public static Double getItemOvhCost(String item) {
+Double cost = 0.00;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+   while (res.next()) {
+    cost = res.getDouble("it_ovh_cost");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
+
+}
+
+public static Double getItemOutCostStd(String item, String set, String site) {
+Double cost = 0.00;
+try{
+Class.forName(driver).newInstance();
+con = DriverManager.getConnection(url + db, user, pass);
+try{
+    Statement st = con.createStatement();
+    ResultSet res = null;
+
+    res = st.executeQuery("select itc_out_top, itc_out_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+            + " itc_set = " + "'" + set + "'" + " AND "
+            + " itc_site = " + "'" + site + "'" + ";" );
+   while (res.next()) {
+    cost = res.getDouble("itc_out_top") + res.getDouble("itc_out_low");                    
+    }
+
+}
+catch (SQLException s){
+     MainFrame.bslog(s);
+}
+con.close();
+}
+catch (Exception e){
+MainFrame.bslog(e);
+}
+return cost;
+
+}
+
+public static Double getItemOutCost(String item) {
+       Double cost = 0.00;
+     try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
             Statement st = con.createStatement();
             ResultSet res = null;
-            try{
-                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                x[0] = res.getString("it_item"); 
-                x[1] = res.getString("it_desc"); 
-                x[2] = res.getString("it_uom"); 
-                x[3] = res.getString("it_prodline"); 
-                x[4] = res.getString("it_code"); 
-                x[5] = res.getString("it_rev"); 
-                x[6] = res.getString("it_status"); 
-                x[7] = res.getString("it_site"); 
-                x[8] = res.getString("it_loc"); 
-                x[9] = res.getString("it_wh"); 
-                }
-          } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Item Master");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-        
-    }
-        
-           
-    public static ArrayList getItemRoutingOPs(String myitem) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                 res = st.executeQuery("SELECT itr_op from itemr_cost where itr_item = " + "'" + myitem.toString() + "'" + " order by itr_op;");
-               while (res.next()) {
-                    myarray.add(res.getString("itr_op"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            res = st.executeQuery("select it_out_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+           while (res.next()) {
+            cost = res.getDouble("it_out_cost");                    
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-     
-    public static ArrayList getItemWFOPs(String myitem) {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                 res = st.executeQuery("SELECT wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + myitem.toString() + "'" + " order by wf_op;");
-               while (res.next()) {
-                    myarray.add(res.getString("wf_op"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-             
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return cost;
+
+}
+
+public static String getItemStatusByPart(String mypart) {
+       String myitem = "";
+     try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_status from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+           while (res.next()) {
+            myitem = res.getString("it_status");                    
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get info from item");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+public static String getItemDesc(String mypart) {
+       String myitem = "";
+     try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+           while (res.next()) {
+            myitem = res.getString("it_desc");                    
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get desc from item");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+public static String[] getItemDetail(String mypart) {
+       String[] x = new String[]{"","","","","","","","","",""};
+     try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+           while (res.next()) {
+            x[0] = res.getString("it_item"); 
+            x[1] = res.getString("it_desc"); 
+            x[2] = res.getString("it_uom"); 
+            x[3] = res.getString("it_prodline"); 
+            x[4] = res.getString("it_code"); 
+            x[5] = res.getString("it_rev"); 
+            x[6] = res.getString("it_status"); 
+            x[7] = res.getString("it_site"); 
+            x[8] = res.getString("it_loc"); 
+            x[9] = res.getString("it_wh"); 
+            }
+      } catch (SQLException s) {
+            MainFrame.bslog(s);
+            bsmf.MainFrame.show("SQL cannot get Item Master");
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    } catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return x;
+
+}
+
+public static ArrayList getItemRoutingOPs(String myitem) {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+             res = st.executeQuery("SELECT itr_op from itemr_cost where itr_item = " + "'" + myitem.toString() + "'" + " order by itr_op;");
+           while (res.next()) {
+                myarray.add(res.getString("itr_op"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static ArrayList getItemWFOPs(String myitem) {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+             res = st.executeQuery("SELECT wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + myitem.toString() + "'" + " order by wf_op;");
+           while (res.next()) {
+                myarray.add(res.getString("wf_op"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static ArrayList getItemMasterSchedlist() {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_sched = '1' order by it_item;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}    
+
+public static ArrayList getItemMasterMCodelist() {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_code = 'M' order by it_item;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+
+public static ArrayList getItemMasterACodelist() {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_code = 'A' order by it_item;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static ArrayList getItemMasterACodeForCashTran() {
+   ArrayList myarray = new ArrayList();
+    try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr  " +
+                    " where it_code = 'A' and it_status = 'ACTIVE' order by it_item;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+
+public static ArrayList getItemMasterRawlist() {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_code = 'P' order by it_item ;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static ArrayList getItemsByType(String type) {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_type = " + "'" + type + "'" +
+                    " order by it_item ;");
+
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+
+public static ArrayList getItemMasterAlllist() {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr order by it_item ;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static ArrayList getItemMasterListBySite(String site) {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr " +
+                    " where it_site = " + "'" + site + "'" + " order by it_item ;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+
+public static ArrayList getItemRange(String site, String fromitem, String toitem) {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
+                    " and it_item <= " + "'" + toitem + "'" + 
+                    " and it_site = " + "'" + site + "'" + " order by it_item ;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+
+public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
+   ArrayList myarray = new ArrayList();
+    try{
+       Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
+                    " and it_item <= " + "'" + toitem + "'" + 
+                    " and it_code = " + "'" + classcode + "'" +        
+                    " and it_site = " + "'" + site + "'" + " order by it_item ;");
+           while (res.next()) {
+                myarray.add(res.getString("it_item"));
+
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+public static Double getItemLbrCost(String part, String op, String site, String set) {
+         Double labor = 0.00;
+          DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+          try{
+        Class.forName(driver).newInstance();
+        con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select itr_lbr_top, itr_lbr_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
+                    " where itr_item = " + "'" + part + "'" +
+                    " AND itr_op = " + "'" + op + "'" + 
+                    " AND itr_site = " + "'" + site + "'" + 
+                    " AND itr_set = " + "'" + set + "'" +
+                    " AND itr_routing = it_wf " +
+                    ";");
+           while (res.next()) {
+                labor += ( res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low") );
+            }
+           labor = Double.valueOf(df.format(labor));
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("SQL cannot get Labor Cost");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return labor;
+     }
+
+public static Double getItemBdnCost(String part, String op, String site, String set) {
+     Double burden = 0.00;
+      DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+      try{
+    Class.forName(driver).newInstance();
+    con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select itr_bdn_top, itr_bdn_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
+                " where itr_item = " + "'" + part + "'" +
+                " AND itr_op = " + "'" + op + "'" + 
+                " AND itr_site = " + "'" + site + "'" + 
+                " AND itr_set = " + "'" + set + "'" +
+                " AND itr_routing = it_wf " +
+                ";");
+       while (res.next()) {
+            burden += ( res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low") );
+        }
+       burden = Double.valueOf(df.format(burden));
+   }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+         bsmf.MainFrame.show("SQL cannot get Labor Cost");
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+     return burden;
+ }
+
+              
     public static boolean isLastOperation(String item, String op) {
        boolean isLast = false;
        String lastopcheck = "";
@@ -10171,302 +10539,6 @@ public class OVData {
         return isGood;
         
     }    
-         
-    public static ArrayList getItemMasterSchedlist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_sched = '1' order by it_item;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }    
-          
-    public static ArrayList getItemMasterMCodelist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_code = 'M' order by it_item;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-      
-      
-    public static ArrayList getItemMasterACodelist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_code = 'A' order by it_item;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-      
-    public static ArrayList getItemMasterACodeForCashTran() {
-       ArrayList myarray = new ArrayList();
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr  " +
-                        " where it_code = 'A' and it_status = 'ACTIVE' order by it_item;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-      
-     
-    public static ArrayList getItemMasterRawlist() {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_code = 'P' order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-
-    public static ArrayList getItemsByType(String type) {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_type = " + "'" + type + "'" +
-                        " order by it_item ;");
-                
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-    
-    
-    public static ArrayList getItemMasterAlllist() {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-        
-    public static ArrayList getItemMasterListBySite(String site) {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr " +
-                        " where it_site = " + "'" + site + "'" + " order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-         
-    public static ArrayList getItemRange(String site, String fromitem, String toitem) {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
-                        " and it_item <= " + "'" + toitem + "'" + 
-                        " and it_site = " + "'" + site + "'" + " order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-         
-         
-    public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
-       ArrayList myarray = new ArrayList();
-        try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
-                        " and it_item <= " + "'" + toitem + "'" + 
-                        " and it_code = " + "'" + classcode + "'" +        
-                        " and it_site = " + "'" + site + "'" + " order by it_item ;");
-               while (res.next()) {
-                    myarray.add(res.getString("it_item"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-         
-          
         
           
             public static boolean isVendItemOnly() {
@@ -11483,74 +11555,7 @@ public class OVData {
             
          }
          
-        public static Double getItemLbrCost(String part, String op, String site, String set) {
-             Double labor = 0.00;
-              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select itr_lbr_top, itr_lbr_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
-                        " where itr_item = " + "'" + part + "'" +
-                        " AND itr_op = " + "'" + op + "'" + 
-                        " AND itr_site = " + "'" + site + "'" + 
-                        " AND itr_set = " + "'" + set + "'" +
-                        " AND itr_routing = it_wf " +
-                        ";");
-               while (res.next()) {
-                    labor += ( res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low") );
-                }
-               labor = Double.valueOf(df.format(labor));
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Labor Cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return labor;
-         }
-         
-        public static Double getItemBdnCost(String part, String op, String site, String set) {
-             Double burden = 0.00;
-              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select itr_bdn_top, itr_bdn_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
-                        " where itr_item = " + "'" + part + "'" +
-                        " AND itr_op = " + "'" + op + "'" + 
-                        " AND itr_site = " + "'" + site + "'" + 
-                        " AND itr_set = " + "'" + set + "'" +
-                        " AND itr_routing = it_wf " +
-                        ";");
-               while (res.next()) {
-                    burden += ( res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low") );
-                }
-               burden = Double.valueOf(df.format(burden));
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Labor Cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return burden;
-         }
-         
+        
         public static Double getLaborWithOutSetup(String part, String op) {
         
              Double labor = 0.0;

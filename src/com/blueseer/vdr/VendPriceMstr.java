@@ -641,7 +641,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
          DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = OVData.getPartPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
+        double myprice = OVData.getItemPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
          lbitem.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {

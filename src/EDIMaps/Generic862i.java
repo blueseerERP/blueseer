@@ -143,7 +143,7 @@ public class Generic862i {
               
              
               /* lets find the internal part and internal pricing */
-              part = OVData.getPartFromCustCItem(billto, segarr[5].toString());
+              part = OVData.getItemFromCustCItem(billto, segarr[5].toString());
               e.setDetItem(part);
               
            }

@@ -106,13 +106,13 @@ public class GenericCSVi {
                 e.get(i).setDetLine(i,segarr[13]);
                 e.get(i).setDetCustItem(i,segarr[14]);
                 e.get(i).setDetQty(i,segarr[15]);
-                 part = OVData.getPartFromCustCItem("", segarr[14]);  // SAI J5R00001...does not have xref tied to billto...tied to blank billto
+                 part = OVData.getItemFromCustCItem("", segarr[14]);  // SAI J5R00001...does not have xref tied to billto...tied to blank billto
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = OVData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
-                discount = OVData.getPartDiscFromCust(billto);
+                discount = OVData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
                   e.get(i).setDetNetPrice(i,df.format(netprice));
@@ -127,13 +127,13 @@ public class GenericCSVi {
                 e.get(i).setDetLine(i,segarr[13]);
                 e.get(i).setDetCustItem(i,segarr[14]);
                 e.get(i).setDetQty(i,segarr[15]);
-                 part = OVData.getPartFromCustCItem(billto, segarr[14]);
+                 part = OVData.getItemFromCustCItem(billto, segarr[14]);
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = OVData.getPartPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = OVData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
-                discount = OVData.getPartDiscFromCust(billto);
+                discount = OVData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
                   e.get(i).setDetNetPrice(i,df.format(netprice));
