@@ -26,8 +26,17 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,8 +49,16 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -53,7 +70,14 @@ public class POSMaint extends javax.swing.JPanel {
    // OVData avmdata = new OVData();
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-               "Nbr", "Line", "Item", "Qty", "ListPrice", "Discount",  "NetPrice", "Tax"
+               getGlobalColumnTag("number"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("discount"),  
+                getGlobalColumnTag("netprice"), 
+                getGlobalColumnTag("tax")
             });
     
     
@@ -132,7 +156,7 @@ public class POSMaint extends javax.swing.JPanel {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -163,7 +187,7 @@ public class POSMaint extends javax.swing.JPanel {
         }
     }
    
-   public void disable() {
+    public void disable() {
        tblistprice.setEnabled(false);
        tbnetprice.setEnabled(false);
        tbtax.setEnabled(false);
@@ -191,7 +215,7 @@ public class POSMaint extends javax.swing.JPanel {
         orddet.setEnabled(false);
    }
     
-     public void enable() {
+    public void enable() {
        tblistprice.setEnabled(true);
        tbnetprice.setEnabled(true);
        tbtax.setEnabled(true);
@@ -217,6 +241,50 @@ public class POSMaint extends javax.swing.JPanel {
         orddet.setEnabled(true);
    }
    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+        
     public void initvars(String[] arg) {
         ArrayList<String> mylist = new ArrayList<String>();
        
@@ -325,19 +393,51 @@ public class POSMaint extends javax.swing.JPanel {
          }
          return dol;
     }
-     public double calcTotalTax(double grossamt) {
+    
+    public double calcTotalTax(double grossamt) {
         double dol = 0;
         double pct = OVData.getPOSSalesTaxPct();
         dol = (pct / 100) * grossamt;
          return dol;
     }
     
+    public void commitTransactions(String nbr) {
+         java.util.Date now = new java.util.Date();
+        Connection bscon = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            OVData.voidGLEntryFromPOS(nbr, now, bscon);
+            OVData.TRHistIssSalesPOS(nbr, now, false, bscon); 
+            OVData.UpdateInventoryFromPOS(nbr, false, bscon);
+            OVData.voidPOSStatus(nbr, bscon);
+            bscon.commit();
+            bsmf.MainFrame.show(getMessageTag(1083));
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    }
   
     /**
      * Creates new form OrderMaintPanel
      */
     public POSMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     /**
@@ -818,29 +918,33 @@ public class POSMaint extends javax.swing.JPanel {
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tblistprice.getText());
         if (!m.find() || tblistprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid List Price format");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            tblistprice.requestFocus();
+            return;
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         m = p.matcher(tbdisc.getText());
         if (!m.find() || tbdisc.getText() == null) {
-            bsmf.MainFrame.show("Invalid Discount format");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            tbdisc.requestFocus();
+            return;
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         m = p.matcher(tbnetprice.getText());
         if (!m.find() || tbnetprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid Net Price format");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            tbnetprice.requestFocus();
+            return;
         }
         
         p = Pattern.compile("^[1-9]\\d*$");
         m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            tbqty.requestFocus();
+            return;
         }
         line = getmaxline();
         line++;
@@ -861,7 +965,7 @@ public class POSMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-         boolean isError = true;
+         boolean isError = false;
          java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -872,7 +976,7 @@ public class POSMaint extends javax.swing.JPanel {
         try {
        
            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
           
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
@@ -898,7 +1002,7 @@ public class POSMaint extends javax.swing.JPanel {
                  if (! tbtottax.getText().isEmpty()) {
                      totalamt = df.format(Double.valueOf(tbtottax.getText()));
                  } else {
-                     bsmf.MainFrame.show("total amount is 0");
+                     bsmf.MainFrame.show(getMessageTag(1087));
                      return;
                  }
                  
@@ -940,40 +1044,22 @@ public class POSMaint extends javax.swing.JPanel {
                             + "'" + orddet.getValueAt(j, 7).toString() + "'"
                             + ")"
                             + ";");
-
                     }
-                    
-                    isError = OVData.glEntryFromPOS(ordernbr.getText(), now);
-                    
-                    if (! isError)
-                    isError = OVData.TRHistIssSalesPOS(ordernbr.getText(), now, false);        
-                    else
-                        bsmf.MainFrame.show("Error inserting GL transaction");
-                    
-                    if (! isError)
-                    isError = OVData.UpdateInventoryFromPOS(ordernbr.getText(), false);
-                    else
-                        bsmf.MainFrame.show("Error inserting transaction history");
-                    
-                    if (! isError)
-                    bsmf.MainFrame.show("Transaction committed successfully");
-                    else 
-                    bsmf.MainFrame.show("Error updating inventory");
-                    
-                    if (! isError)
-                    OVData.printPOS_Jasper(ordernbr.getText());
-                    
-                    initvars(null);
-                    // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
+                isError = true;
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add order");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
+            if (! isError) {
+            commitTransactions(ordernbr.getText());  // commits multiple transactions
+            }
+            initvars(null);
+            
         } catch (Exception e) {
             MainFrame.bslog(e);
-        }
+        } 
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
@@ -981,10 +1067,10 @@ public class POSMaint extends javax.swing.JPanel {
         DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
             if (orddet.getValueAt(i, 10).toString().equals("close") || orddet.getValueAt(i, 10).toString().equals("partial")) {
-                bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
+                bsmf.MainFrame.show(getMessageTag(1088));
                 return;
                             } else {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             }
         }
@@ -1016,7 +1102,7 @@ public class POSMaint extends javax.swing.JPanel {
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
        if (tbqty.getText().isEmpty() || tbqty.getText().equals("0")) {
-           bsmf.MainFrame.show("Qty cannot be 0");
+           bsmf.MainFrame.show(getMessageTag(1036));
             tbqty.requestFocus();
         }
     }//GEN-LAST:event_tbqtyFocusLost

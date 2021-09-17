@@ -48,8 +48,11 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
@@ -62,8 +65,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -150,6 +160,7 @@ public class CusRptPicker extends javax.swing.JPanel {
      */
     public CusRptPicker() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -173,6 +184,49 @@ public class CusRptPicker extends javax.swing.JPanel {
         }
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
     public void initvars(String[] arg) {
@@ -293,8 +347,8 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
         } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -312,7 +366,13 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Line1", "City", "State", "Zip"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("addr1"), 
+                  getGlobalColumnTag("city"), 
+                  getGlobalColumnTag("state"), 
+                  getGlobalColumnTag("zip")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -367,7 +427,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -383,8 +443,8 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -402,7 +462,13 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Phone", "Email"})
+              new String[]{
+                  getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("phone"),
+                  getGlobalColumnTag("email")
+                  })
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -454,7 +520,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -469,8 +535,8 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -488,7 +554,16 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Terms", "Bank", "Curr", "ARAcct", "ARcc", "OnHold"})
+              new String[]{
+                  getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("terms"), 
+                  getGlobalColumnTag("bank"), 
+                  getGlobalColumnTag("currency"), 
+                  getGlobalColumnTag("account"), 
+                  getGlobalColumnTag("costcenter"), 
+                  getGlobalColumnTag("onhold")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -545,7 +620,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -560,8 +635,8 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -579,7 +654,16 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "ShipToCode", "Name", "Addr", "City", "State", "Zip"})
+              new String[]{
+                  getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("shipcode"), 
+                  getGlobalColumnTag("shipname"), 
+                  getGlobalColumnTag("addr1"), 
+                  getGlobalColumnTag("city"), 
+                  getGlobalColumnTag("state"), 
+                  getGlobalColumnTag("zip")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -635,7 +719,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -650,10 +734,10 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb","dc"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
-           lbdate1.setText("From Date:");
-           lbdate2.setText("To Date:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
+           lbdate1.setText(getClassLabelTag("lblfromdate", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltodate", this.getClass().getSimpleName()));
            java.util.Date now = new java.util.Date();
            dcdate1.setDate(now);
            dcdate2.setDate(now);
@@ -681,7 +765,13 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "fromdate", "todate", "TotSales"})
+              new String[]{
+                  getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("fromdate"), 
+                  getGlobalColumnTag("todate"), 
+                  getGlobalColumnTag("totalsales")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -739,7 +829,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -754,8 +844,8 @@ public class CusRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb"});
-           lbkey1.setText("From CustCode:");
-           lbkey2.setText("To CustCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -773,7 +863,16 @@ public class CusRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Item", "CustItem", "SKU", "UPC", "Alt", "Misc"})
+              new String[]{
+                  getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("item"), 
+                  getGlobalColumnTag("custitem"), 
+                  getGlobalColumnTag("skuitem"), 
+                  getGlobalColumnTag("upcitem"), 
+                  getGlobalColumnTag("altitem"), 
+                  getGlobalColumnTag("miscellaneous")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -829,7 +928,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getModelIndex() == 0) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -883,8 +982,10 @@ public class CusRptPicker extends javax.swing.JPanel {
         tablereport = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Report Picker"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -900,6 +1001,7 @@ public class CusRptPicker extends javax.swing.JPanel {
         jLabel3.setText("Report:");
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -981,8 +1083,10 @@ public class CusRptPicker extends javax.swing.JPanel {
         );
 
         rbinactive.setText("Inactive");
+        rbinactive.setName("cbinactive"); // NOI18N
 
         rbactive.setText("Active");
+        rbactive.setName("cbactive"); // NOI18N
 
         javax.swing.GroupLayout panelrbLayout = new javax.swing.GroupLayout(panelrb);
         panelrb.setLayout(panelrbLayout);
@@ -1098,6 +1202,7 @@ public class CusRptPicker extends javax.swing.JPanel {
         );
 
         btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);

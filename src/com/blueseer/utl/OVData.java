@@ -39,6 +39,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static bsmf.MainFrame.port;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.inv.calcCost;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -104,6 +106,7 @@ import java.math.RoundingMode;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
 import java.sql.Savepoint;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
@@ -12720,19 +12723,16 @@ public class OVData {
          }
          
          
-           public static boolean UpdateInventoryFromPOS(String nbr, boolean isVoid) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                Statement st4 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                ResultSet nres = null;
+    public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
+        
+        
+        Statement st = con.createStatement();
+        Statement st2 = con.createStatement();
+        Statement st3 = con.createStatement();
+        Statement st4 = con.createStatement();
+        ResultSet res = null;
+        ResultSet res2 = null;
+        ResultSet nres = null;
                 
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -12835,18 +12835,13 @@ public class OVData {
                         
                 
                     }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
+           if (st != null) {st.close();}
+           if (st2 != null) {st2.close();}
+           if (st3 != null) {st3.close();}
+           if (st4 != null) {st4.close();}
+           if (res != null) {res.close();}
+           if (res2 != null) {res2.close();}
+           if (nres != null) {nres.close();}
         
          }
          
@@ -13503,14 +13498,11 @@ public class OVData {
         
     }
       
-       public static boolean TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid) {
-        boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
+       public static void TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid, Connection bscon) throws SQLException {
+        
+                
+                Statement st = bscon.createStatement();
+                Statement st2 = bscon.createStatement();
                 ResultSet res = null;
                 
                 
@@ -13591,19 +13583,16 @@ public class OVData {
                                 + ";");
                 
                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
+                    if (res != null) {
+                       res.close(); 
+                    }
+                    if (st2 != null) {
+                    st2.close();
+                    }
+                    if (st != null) {
+                    st.close();
+                    }
+                    
     }
     
         public static boolean TRHistIssSalesRV(String shipper, Date effdate) {
@@ -14161,7 +14150,7 @@ public class OVData {
            return mystring;
        }
       
-       public static void glEntry(String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) {
+    public static void glEntry(String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) {
           
            /* any amount = 0 passed to this method will be ignored */
            
@@ -14249,7 +14238,78 @@ public class OVData {
        } // if amount does not equal 0
           
       }
-       
+    
+    public static void glEntryXP(Connection bscon, String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) throws SQLException {
+          
+           /* any amount = 0 passed to this method will be ignored */
+           
+           /* amount passed here will be rounded to 2 decimal places with DecimalFormat func */
+           
+          /*
+          Field count must be 8 fields...
+          0=acct_cr   8 char string
+          1=cc_cr     4 char string
+          2=acct_dr   8 char string
+          3=cc_dr     4 char string
+          4=date      Date format yyyy-MM-dd
+          5=amt       postive or negative digits (no commas) 
+          6=ref       20 char string
+          7=site      10 char string
+          8=type      10 char string
+          9=desc      30 char string
+          
+          */
+           
+          if (ref.length() > 20) {
+              ref = ref.substring(0,20);
+          } 
+          if (desc.length() > 30) {
+              desc = desc.substring(0,30);
+          }
+         
+          String rndamt = "";
+          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+          df.setRoundingMode(RoundingMode.HALF_UP);
+          
+       if ( amt != 0 ) {  
+        Statement st = bscon.createStatement();
+        st.executeUpdate("insert into gl_tran "
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
+                        + " values ( " + "'" + acct_cr + "'" + ","
+                        + "'" + cc_cr + "'" + ","
+                        + "'" + date + "'" + ","
+                        + "'" + df.format(-1 * amt) + "'" + ","
+                        + "'" + df.format(-1 * baseamt) + "'" + ","        
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","
+                        + "'" + ref + "'" + ","        
+                        + "'" + site + "'" + ","
+                        + "'" + type + "'"+ ","
+                        + "'" + desc + "'"
+                        + " )"
+                        + ";" );
+             
+        //      bsmf.MainFrame.show(acct_dr.toString() + "/" + cc_dr + "/" + date + "/" + amt.toString());
+              st.executeUpdate( "insert into gl_tran "
+                        + "(glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
+                        + " values ( " + "'" + acct_dr + "'" + ","
+                        + "'" + cc_dr + "'" + ","
+                        + "'" + date + "'" + ","
+                        + "'" + df.format(amt) + "'" + ","
+                        + "'" + df.format(baseamt) + "'" + ","  
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","        
+                         + "'" + ref + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + type + "'"+ ","
+                        + "'" + desc + "'"
+                        + ")"
+                        + ";"
+                        );
+       st.close();       
+       } // if amount does not equal 0
+      }
+          
         public static boolean glEntryFromVoucher(String voucher, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -14953,16 +15013,10 @@ public class OVData {
        
         
          
-        public static boolean voidGLEntryFromPOS(String batchnbr, Date effdate) {
-                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                
+        public static void voidGLEntryFromPOS(String batchnbr, Date effdate, Connection bscon) throws SQLException {
+            
+               Statement st = bscon.createStatement();
+               ResultSet res = null;
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -15015,21 +15069,11 @@ public class OVData {
                        
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), Double.valueOf(cost.get(j).toString()), Double.valueOf(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), Double.valueOf(cost.get(j).toString()), Double.valueOf(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
+                    
+                    st.close();
+                    res.close();
         }
          
         public static boolean glEntryFromReceiver(String receiver, Date effdate) {
@@ -19625,26 +19669,12 @@ public class OVData {
        }
        
        
-        public static void voidPOSStatus(String nbr)  {
-           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
-           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                           st.executeUpdate(
-                                 " update pos_mstr set pos_status = 'void' " +
-                                 " where pos_nbr = " + "'" + nbr + "'" + ";" );
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
+        public static void voidPOSStatus(String nbr, Connection bscon) throws SQLException {
+         Statement st = bscon.createStatement();
+                   st.executeUpdate(
+                     " update pos_mstr set pos_status = 'void' " +
+                     " where pos_nbr = " + "'" + nbr + "'" + ";" );
+                   if (st != null) {st.close();}
        }
        
         public static void updateShipperStatusRV(String shipper, Date effdate) {

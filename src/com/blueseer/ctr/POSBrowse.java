@@ -43,6 +43,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -62,11 +63,20 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -78,12 +88,27 @@ public class POSBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Detail", "Print", "Nbr", "Date", "Time", "GrossAmt", "Tax", "TotalAmt", "Status", "Void"});
+                        new String[]{
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("print"), 
+                            getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("date"), 
+                            getGlobalColumnTag("time"), 
+                            getGlobalColumnTag("amount"), 
+                            getGlobalColumnTag("tax"), 
+                            getGlobalColumnTag("total"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("void")});
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ID", "Item", "Qty", "ListPrice", "Disc", "NetPrice"});
+                        new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("listprice"), 
+                            getGlobalColumnTag("discount"), 
+                            getGlobalColumnTag("netprice")});
     
-     class ButtonRenderer extends JButton implements TableCellRenderer {
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -146,9 +171,10 @@ public class POSBrowse extends javax.swing.JPanel {
      */
     public POSBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String nbr) {
+    public void getdetail(String nbr) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -186,7 +212,7 @@ public class POSBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get POS detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -195,26 +221,82 @@ public class POSBrowse extends javax.swing.JPanel {
 
     }
     
-     public void voidTransaction(String nbr) {
+    public void voidTransaction(String nbr) {
          boolean isError = true;
          java.util.Date now = new java.util.Date();
-          
-         isError = OVData.voidGLEntryFromPOS(nbr, now);
-          
-          if (! isError)
-          isError = OVData.TRHistIssSalesPOS(nbr, now, true);   
-         
-          if (! isError)
-          isError = OVData.UpdateInventoryFromPOS(nbr, true);
-         
-          if (! isError)
-          OVData.voidPOSStatus(nbr);  
-          
-          if (! isError)
-          bsmf.MainFrame.show("Transaction has been voided");
+        Connection bscon = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            OVData.voidGLEntryFromPOS(nbr, now, bscon);
+            OVData.TRHistIssSalesPOS(nbr, now, true, bscon); 
+            OVData.UpdateInventoryFromPOS(nbr, true, bscon);
+            OVData.voidPOSStatus(nbr, bscon);
+            bscon.commit();
+            bsmf.MainFrame.show(getMessageTag(1083));
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
      }
-     
-     
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+         
     public void initvars(String[] arg) {
         tbdetqty.setText("0");
         tbtotqty.setText("0");
@@ -328,6 +410,7 @@ public class POSBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -335,6 +418,7 @@ public class POSBrowse extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -342,8 +426,10 @@ public class POSBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
@@ -397,10 +483,12 @@ public class POSBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Amount:");
+        jLabel8.setName("lbltotalamt"); // NOI18N
 
         tbtotsales.setText("0");
 
         jLabel7.setText("Total Records:");
+        jLabel7.setName("lbltotalcnt"); // NOI18N
 
         tbtotqty.setText("0");
 
@@ -408,11 +496,13 @@ public class POSBrowse extends javax.swing.JPanel {
         tbdetqty.setText("0");
 
         EndBal.setText("Detail LInes:");
+        EndBal.setName("lbldetailcnt"); // NOI18N
 
         tbdetsales.setBackground(new java.awt.Color(195, 129, 129));
         tbdetsales.setText("0");
 
         EndBal1.setText("Detail Amount:");
+        EndBal1.setName("lbldetailamt"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -580,7 +670,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing POS Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -610,11 +700,11 @@ try {
         }
         if ( col == 9) {
              if (tablereport.getValueAt(row, 8).toString().compareTo("void") == 0) {
-                 bsmf.MainFrame.show("Already Voided");
+                 bsmf.MainFrame.show(getMessageTag(1084));
                  return;
              }
              
-             boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+             boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
              if (proceed) {
                 voidTransaction(tablereport.getValueAt(row, 2).toString());
              }

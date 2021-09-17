@@ -36,7 +36,7 @@ CarrierMaint,,com.blueseer.ctr.CarrierMaint,JMenuItem,carm
 CostRoll,,com.blueseer.inv.CostRollMaint,JMenuItem,roll
 CostRollRange,,com.blueseer.inv.CostRollRange,JMenuItem,rolr
 CustMaint,,com.blueseer.ctr.CustMaint,JMenuItem,cusm
-CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt1,JMenuItem,cuxb
+CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMstrPanel,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
@@ -147,7 +147,7 @@ BankMaint,,com.blueseer.fgl.BankMaint,JMenuItem,bank
 ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
 InvoiceBrowse,Invoice Browse,com.blueseer.far.InvoiceBrowsePanel,JMenuItem,invb
 AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,lbla
-CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt1,JMenuItem,cprb
+CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt,JMenuItem,cprb
 noStdCostBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cosn
 BankBrowse,Browse Bank Menu,com.blueseer.utl.ReportPanel,JMenuItem,bankb
 CalendarBrowse,Calendar browse,com.blueseer.utl.ReportPanel,JMenuItem,calb

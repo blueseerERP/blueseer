@@ -21,7 +21,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
-          <Component id="jScrollPane1" alignment="0" pref="574" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="858" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -30,7 +30,7 @@
               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="364" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="393" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -42,46 +42,61 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="141" pref="141" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                  <Component id="tbtext" min="-2" pref="71" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="rbpart" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="rbcode" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="tbtext" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cbpricelist" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="cbdiscounts" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="btview" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbpart" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
-                  <Component id="rbcustpart" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
-                  <Component id="btview" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btcsv" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btcsv1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="345" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
-                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
+                          <Component id="tbtext" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="rbcode" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbpricelist" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
-                  <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
-                  <Component id="tbtext" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
-                  <Component id="rbpart" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
-                  <Component id="rbcustpart" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
+                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btview" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btcsv" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbdiscounts" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btcsv1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -90,6 +105,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Text Search:"/>
+            <Property name="name" type="java.lang.String" value="lblsearch" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtext">
@@ -100,27 +116,43 @@
         <Component class="javax.swing.JRadioButton" name="rbpart">
           <Properties>
             <Property name="text" type="java.lang.String" value="Part"/>
+            <Property name="name" type="java.lang.String" value="rbitem" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbcustpart">
+        <Component class="javax.swing.JRadioButton" name="rbcode">
           <Properties>
-            <Property name="text" type="java.lang.String" value="CustPart"/>
+            <Property name="text" type="java.lang.String" value="Cust / Group"/>
+            <Property name="name" type="java.lang.String" value="rbcust" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btview">
           <Properties>
             <Property name="text" type="java.lang.String" value="View"/>
+            <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btviewActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btcsv">
+        <Component class="javax.swing.JCheckBox" name="cbdiscounts">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Discounts"/>
+            <Property name="name" type="java.lang.String" value="cbdiscounts" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbpricelist">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Price Lists"/>
+            <Property name="name" type="java.lang.String" value="cbpricelists" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btcsv1">
           <Properties>
             <Property name="text" type="java.lang.String" value="CSV"/>
+            <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsv1ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

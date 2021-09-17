@@ -42,8 +42,19 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import bsmf.MainFrame; 
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -59,11 +70,54 @@ public class CustPriceMaint extends javax.swing.JPanel {
      */
     public CustPriceMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-   
-    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+        
     public void getCustPriceRecord(String cust, String part, String type, String uom, String curr) {
         initvars(null);
         try {
@@ -108,12 +162,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
                
                 
                 if (i == 0) 
-                    bsmf.MainFrame.show("No Price List Found");
+                    bsmf.MainFrame.show(getMessageTag(1001));
                
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve cpr_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -248,7 +302,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Disc List");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -318,7 +372,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Price List");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -377,10 +431,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Pricing Maintenance"));
+        jPanel3.setName("panelmain"); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("List Price Maintenance"));
+        jPanel1.setName("panellist"); // NOI18N
 
         jLabel5.setText("Price");
+        jLabel5.setName("lblprice"); // NOI18N
 
         price.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -392,8 +449,10 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Cust / GroupCode");
+        jLabel3.setName("lblcust"); // NOI18N
 
         btAdd.setText("Add");
+        btAdd.setName("btadd"); // NOI18N
         btAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btAddActionPerformed(evt);
@@ -407,6 +466,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         btDelete.setText("Delete");
+        btDelete.setName("btdelete"); // NOI18N
         btDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btDeleteActionPerformed(evt);
@@ -414,6 +474,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         btUpdate.setText("Update");
+        btUpdate.setName("btupdate"); // NOI18N
         btUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btUpdateActionPerformed(evt);
@@ -421,6 +482,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Item");
+        jLabel2.setName("lblitem"); // NOI18N
 
         pricelist.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -430,6 +492,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jScrollPane2.setViewportView(pricelist);
 
         jLabel4.setText("Applied");
+        jLabel4.setName("lblapplied"); // NOI18N
 
         ddpart.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -444,6 +507,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         jLabel6.setText("UOM");
+        jLabel6.setName("lbluom"); // NOI18N
 
         ddcurr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -452,6 +516,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         jLabel11.setText("Currency");
+        jLabel11.setName("lblcurrency"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -541,6 +606,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Discount Maintenance"));
+        jPanel2.setName("paneldiscount"); // NOI18N
         jPanel2.setPreferredSize(new java.awt.Dimension(414, 350));
 
         ddcustcode_disc.addItemListener(new java.awt.event.ItemListener() {
@@ -552,8 +618,10 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jLabel7.setText("Cust / GroupCode");
 
         jLabel8.setText("Key Desc (unique)");
+        jLabel8.setName("lblkeydesc"); // NOI18N
 
         jLabel9.setText("Disc Percent");
+        jLabel9.setName("lblpercent"); // NOI18N
 
         disclist.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -563,8 +631,10 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jScrollPane1.setViewportView(disclist);
 
         jLabel10.setText("Applied");
+        jLabel10.setName("lblapplied"); // NOI18N
 
         btadddisc.setText("Add");
+        btadddisc.setName("btadd"); // NOI18N
         btadddisc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadddiscActionPerformed(evt);
@@ -572,6 +642,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         btupdatedisc.setText("Update");
+        btupdatedisc.setName("btupdate"); // NOI18N
         btupdatedisc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdatediscActionPerformed(evt);
@@ -579,6 +650,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         });
 
         btdeletedisc.setText("Delete");
+        btdeletedisc.setName("btdelete"); // NOI18N
         btdeletedisc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeletediscActionPerformed(evt);
@@ -679,7 +751,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
              Pattern p = Pattern.compile("^\\d+\\.\\d+$");
              Matcher m = p.matcher(price.getText());
              if (!m.find() || price.getText() == null) {
-             bsmf.MainFrame.show("Invalid Price...must be decimal format");
+             bsmf.MainFrame.show(getMessageTag(1023));
              proceed = false;
              }
 
@@ -694,7 +766,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                while (res.next()) {
                 i++;
                 if (i == 1) 
-                    bsmf.MainFrame.show("Record already exists");
+                    bsmf.MainFrame.show(getMessageTag(1014));
                 proceed = false;             
                }
              
@@ -715,13 +787,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
                     
         
-                    bsmf.MainFrame.show("Added Price Record");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Add Price");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -761,9 +833,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
        boolean proceed = true; 
         if (pricelist.isSelectionEmpty()) {
             proceed = false;
-            bsmf.MainFrame.show("nothing is selected");
+            bsmf.MainFrame.show(getMessageTag(1081));
         } else {
-           proceed = bsmf.MainFrame.warn("Are you sure?");
+           proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         }
         if (proceed) {
             String[] z = pricelist.getSelectedValue().toString().split(":");
@@ -780,12 +852,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
                                             " and cpr_curr = " + "'" + z[2].toString() + "'" +
                                             " and cpr_type = 'LIST' " + ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + pricelist.getSelectedValue().toString());
+                    bsmf.MainFrame.show(getMessageTag(1009));
                     initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                    bsmf.MainFrame.show("Unable to Delete cpr_mstr Record");
+                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -819,15 +891,16 @@ public class CustPriceMaint extends javax.swing.JPanel {
              Pattern p = Pattern.compile("^\\d+\\.\\d{2}$");
              Matcher m = p.matcher(tbdisc.getText());
              if (!m.find() || tbdisc.getText() == null) {
-             bsmf.MainFrame.show("Invalid Discount need x.xx format");
+             bsmf.MainFrame.show(getMessageTag(1023, "2"));
              proceed = false;
              }
 
              p = Pattern.compile(",");
              m = p.matcher(tbdisckey.getText());
              if (m.find()) {
-             bsmf.MainFrame.show("Cannot have commas in key/desc field");
-             proceed = false;
+             bsmf.MainFrame.show(getMessageTag(1082));
+             tbdisckey.requestFocus();
+             return;
              }
             
              
@@ -839,7 +912,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                while (res.next()) {
                 i++;
                 if (i == 1) 
-                    bsmf.MainFrame.show("Record already exists");
+                    bsmf.MainFrame.show(getMessageTag(1014));
                 proceed = false;             
                }
              
@@ -858,13 +931,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
                     
         
-                    bsmf.MainFrame.show("Added Discount Record");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Discount Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -876,9 +949,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
         boolean proceed = true; 
         if (disclist.isSelectionEmpty()) {
             proceed = false;
-            bsmf.MainFrame.show("nothing is selected");
+            bsmf.MainFrame.show(getMessageTag(1081));
         } else {
-           proceed = bsmf.MainFrame.warn("Are you sure?");
+           proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         }
         if (proceed) {
         try {
@@ -892,12 +965,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
                                             " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'" +
                                             " and cpr_type = 'DISCOUNT' " + ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + disclist.getSelectedValue().toString());
+                    bsmf.MainFrame.show(getMessageTag(1009));
                     initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete cpr_mstr Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -923,14 +996,14 @@ public class CustPriceMaint extends javax.swing.JPanel {
              Pattern p = Pattern.compile("^\\d+\\.\\d{2}$");
              Matcher m = p.matcher(tbdisc.getText());
              if (!m.find() || tbdisc.getText() == null) {
-             bsmf.MainFrame.show("Invalid Discount need x.xx format");
+             bsmf.MainFrame.show(getMessageTag(1023,"2"));
              proceed = false;
              }
 
              p = Pattern.compile(",");
              m = p.matcher(tbdisckey.getText());
              if (m.find()) {
-             bsmf.MainFrame.show("Cannot have commas in key/desc field");
+             bsmf.MainFrame.show(getMessageTag(1082));
              proceed = false;
              }
              
@@ -942,13 +1015,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'"  
                         + ";");
 
-                    bsmf.MainFrame.show("Updated Discount Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Update Discount Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -977,7 +1050,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Selected Discount");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1002,8 +1075,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
              Pattern p = Pattern.compile("^\\d+\\.\\d+$");
              Matcher m = p.matcher(price.getText());
              if (!m.find() || price.getText() == null) {
-             bsmf.MainFrame.show("Invalid Price...must be decimal format");
-             proceed = false;
+             bsmf.MainFrame.show(getMessageTag(1033));
+             price.requestFocus();
+             return;
              }
 
              
@@ -1018,13 +1092,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + " and cpr_item = " + "'" + ddpart.getSelectedItem().toString() + "'"  
                         + ";");
 
-                    bsmf.MainFrame.show("Updated Price List Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Update Price List Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1062,7 +1136,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                btDelete.setEnabled(true);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Selected Part Price");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1087,7 +1161,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             price.setText("");
             price.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             price.requestFocus();
         } else {
             price.setText(x);
