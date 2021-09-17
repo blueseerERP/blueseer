@@ -28,6 +28,7 @@ package com.blueseer.dst;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -280,7 +281,7 @@ public class DOMaint extends javax.swing.JPanel {
         
         
         ddpart.removeAllItems();
-         ArrayList<String> parts = OVData.getItemMasterAlllist();
+         ArrayList<String> parts = invData.getItemMasterAlllist();
         for (String code : parts) {
             ddpart.addItem(code);
         }

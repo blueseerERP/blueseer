@@ -32,6 +32,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
@@ -622,7 +623,7 @@ public class WorkOrdServ extends HttpServlet {
         
         
         // create table of data
-        String[] det = OVData.getItemDetail(item); 
+        String[] det = invData.getItemDetail(item); 
         mymodel.addRow(new Object[]{item,
                 "ISS-WIP",
                 operation,
@@ -744,7 +745,7 @@ public class WorkOrdServ extends HttpServlet {
         
         
         // create table of data
-        String[] det = OVData.getItemDetail(item); 
+        String[] det = invData.getItemDetail(item); 
         mymodel.addRow(new Object[]{item,
                 "ISS-WIP",
                 operation,

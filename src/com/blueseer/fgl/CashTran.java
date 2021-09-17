@@ -28,6 +28,7 @@ package com.blueseer.fgl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -1984,7 +1985,7 @@ public class CashTran extends javax.swing.JPanel {
             ddentity1.setSelectedIndex(0);
             
          dditem1.removeAllItems();
-        ArrayList<String> myitems = OVData.getItemMasterACodeForCashTran();
+        ArrayList<String> myitems = invData.getItemMasterACodeForCashTran();
         for (String code : myitems) {
             dditem1.addItem(code);
         }

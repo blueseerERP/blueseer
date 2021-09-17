@@ -231,7 +231,7 @@ public class BOMBrowse extends javax.swing.JPanel {
          
           ddfromitem.removeAllItems();
          ddtoitem.removeAllItems(); 
-         ArrayList items = OVData.getItemMasterAlllist();
+         ArrayList items = invData.getItemMasterAlllist();
         for (int i = 0; i < items.size(); i++) {
             ddfromitem.addItem(items.get(i));
         }

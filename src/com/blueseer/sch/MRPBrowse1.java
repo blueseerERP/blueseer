@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.sch;
 
 import bsmf.MainFrame;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
@@ -291,9 +292,9 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         public void getrecenttrans(String parentpart) {
              
                  
-         tbqtyoh.setText(String.valueOf(OVData.getItemQOHTotal(parentpart, OVData.getDefaultSite())));
-         tbcost.setText(String.valueOf(OVData.getItemCost(parentpart, "standard", OVData.getDefaultSite())));
-         tbtype.setText(OVData.getItemTypeByPart(parentpart));
+         tbqtyoh.setText(String.valueOf(invData.getItemQOHTotal(parentpart, OVData.getDefaultSite())));
+         tbcost.setText(String.valueOf(invData.getItemCost(parentpart, "standard", OVData.getDefaultSite())));
+         tbtype.setText(invData.getItemTypeByPart(parentpart));
                  
                  
        Double opcost = 0.00;
@@ -887,7 +888,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
         
         
         
-        ArrayList<String> items = OVData.getItemRangeByClass(ddsite.getSelectedItem().toString(), frompart, topart, classcode);
+        ArrayList<String> items = invData.getItemRangeByClass(ddsite.getSelectedItem().toString(), frompart, topart, classcode);
         
         
         try {
@@ -1077,7 +1078,7 @@ public class MRPBrowse1 extends javax.swing.JPanel {
                 qe = "0";
                 qf = "0";
                 qg = "0";
-               qoh = OVData.getItemQOHTotal(item, ddsite.getSelectedItem().toString());
+               qoh = invData.getItemQOHTotal(item, ddsite.getSelectedItem().toString());
                cumqoh = qoh;
                cumplan = 0;
                cumdemand = 0;

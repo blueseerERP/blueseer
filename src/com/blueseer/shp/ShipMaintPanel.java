@@ -28,6 +28,7 @@ package com.blueseer.shp;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -232,7 +233,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
         }
         
         ddcont.removeAllItems();
-        ArrayList<String> conts = OVData.getItemsByType("CONT");
+        ArrayList<String> conts = invData.getItemsByType("CONT");
         for (String cont : conts) {
             ddcont.addItem(cont);
         }

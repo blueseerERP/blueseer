@@ -689,7 +689,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         }
         
         // get cost
-        double cost = OVData.getItemCost(tbpart.getText(), "standard", site);
+        double cost = invData.getItemCost(tbpart.getText(), "standard", site);
         
         // lets get the productline of the part being adjusted
         String prodline = OVData.getProdLineFromItem(tbpart.getText());

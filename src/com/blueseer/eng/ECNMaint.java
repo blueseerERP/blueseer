@@ -29,6 +29,7 @@ package com.blueseer.eng;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -629,7 +630,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         ddpart.removeAllItems();
         ddpart.insertItemAt("", 0);
         ddpart.setSelectedIndex(0);
-        ArrayList item = OVData.getItemMasterAlllist();
+        ArrayList item = invData.getItemMasterAlllist();
         for (int i = 0; i < item.size(); i++) {
             ddpart.addItem(item.get(i));
         }

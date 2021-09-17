@@ -39,6 +39,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import bsmf.MainFrame;
+import com.blueseer.inv.invData;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -132,13 +133,13 @@ public class GenericXMLi {
               e.get(i).setDetPO(i,po);
               e.get(i).setDetQty(i,eElement.getElementsByTagName("qtyordered").item(0).getTextContent());
               
-              part = OVData.getItemFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
+              part = invData.getItemFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = OVData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
-                discount = OVData.getItemDiscFromCust(billto);
+                discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
                 netprice = OVData.getNetPriceFromListAndDisc(listprice, discount);
                   e.get(i).setDetNetPrice(i,df.format(netprice));

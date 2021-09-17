@@ -337,7 +337,7 @@ public class BOMMaint extends javax.swing.JPanel {
        
         
           ArrayList<String> mylist = new ArrayList<String>();
-              mylist = OVData.getItemMasterAlllist();
+              mylist = invData.getItemMasterAlllist();
                for (int i = 0; i < mylist.size(); i++) {
                     ddcomp.addItem(mylist.get(i));
                }
@@ -475,8 +475,8 @@ public class BOMMaint extends javax.swing.JPanel {
                
                   site = OVData.getDefaultSite();
                   parent = x[0];
-                  lblparent.setText(OVData.getItemDesc(x[0]));
-                  tblotsize.setText(OVData.getItemLotSize(x[0]));
+                  lblparent.setText(invData.getItemDesc(x[0]));
+                  tblotsize.setText(invData.getItemLotSize(x[0]));
                   getComponents(x[0]);
                   bind_tree(x[0]);
                   callSimulateCost();
@@ -521,7 +521,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 boolean proceed = validateInput("addRecord");
                 
                 if (proceed) {
-                String type = OVData.getItemCode(ddcomp.getSelectedItem().toString());
+                String type = invData.getItemCode(ddcomp.getSelectedItem().toString());
                     res = st.executeQuery("SELECT ps_child FROM  pbm_mstr where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
                                           " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" +
                                           " AND ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
@@ -701,7 +701,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
     public void getCostSets(String parent) {
         DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-        tbparentcostSTD.setText(String.valueOf(df5.format(OVData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
+        tbparentcostSTD.setText(String.valueOf(df5.format(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
              
         calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
@@ -797,7 +797,7 @@ public class BOMMaint extends javax.swing.JPanel {
     public boolean getRouting(String item) {
         boolean hasRouting = false;
         String routing = "";
-        routing = OVData.getItemRouting(item);
+        routing = invData.getItemRouting(item);
         hasRouting = OVData.isValidRouting(routing);
         return hasRouting;
     }
@@ -836,7 +836,7 @@ public class BOMMaint extends javax.swing.JPanel {
     public void getComponents(String parent) {
         
          
-       String site = OVData.getItemSite(parent);
+       String site = invData.getItemSite(parent);
        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
        double matlcost = 0.00;
        tbtotmaterial.setText(String.valueOf(matlcost));

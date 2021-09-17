@@ -43,6 +43,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import bsmf.MainFrame; 
 import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.text.DecimalFormatSymbols;
@@ -224,7 +225,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         }
         
         
-        ArrayList mypart = OVData.getItemMasterAlllist();
+        ArrayList mypart = invData.getItemMasterAlllist();
         ddpart.removeAllItems();
         for (int i = 0; i < mypart.size(); i++) {
             ddpart.addItem(mypart.get(i).toString());
@@ -315,8 +316,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
          DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = OVData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
-        lbitem.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+        double myprice = invData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+        lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {
             price.setText("0.0000");
             btAdd.setEnabled(true);

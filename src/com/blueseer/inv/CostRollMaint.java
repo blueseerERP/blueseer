@@ -181,7 +181,7 @@ public class CostRollMaint extends javax.swing.JPanel {
     
     public void settoplowmodeltable() {
         ArrayList<Double> costs = new ArrayList<Double>();
-        costs = OVData.getItemCostElements(tbitem.getText(), "standard", thissite);
+        costs = invData.getItemCostElements(tbitem.getText(), "standard", thissite);
        
         calcCost cur = new calcCost();
         DecimalFormat df = new DecimalFormat("#.0000", new DecimalFormatSymbols(Locale.US)); 
@@ -411,8 +411,8 @@ public class CostRollMaint extends javax.swing.JPanel {
      
      public void establishParent(String item) {
           boolean validItem =  OVData.isValidItem(item);
-          String desc = OVData.getItemDesc(item);
-          String type = OVData.getItemCode(item);
+          String desc = invData.getItemDesc(item);
+          String type = invData.getItemCode(item);
              if (validItem) {
               tbitem.setEditable(false);
               tbitem.setForeground(Color.blue);
@@ -892,7 +892,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 int i = 0;
                 String perms = "";
                 double itrcost = 0.00;
-                String routing = OVData.getItemRouting(tbitem.getText());
+                String routing = invData.getItemRouting(tbitem.getText());
                 ArrayList<String> ops = OVData.getOperationsByPart(tbitem.getText());
                 // lets do item_cost first 
                 res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + tbitem.getText() + "'" + ";");

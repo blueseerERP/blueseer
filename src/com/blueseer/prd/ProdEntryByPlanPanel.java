@@ -69,6 +69,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.inv.invData;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -175,7 +176,7 @@ String sitecitystatezip = "";
        partlabel.setText(OVData.getPlanPart(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
-       ArrayList mylist = OVData.getItemRoutingOPs(partlabel.getText());
+       ArrayList mylist = invData.getItemRoutingOPs(partlabel.getText());
        for (int i = 0; i < mylist.size(); i++) {
            ddop.addItem(mylist.get(i));
        }

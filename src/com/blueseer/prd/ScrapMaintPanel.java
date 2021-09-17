@@ -26,6 +26,7 @@ SOFTWARE.
 
 package com.blueseer.prd;
 
+import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -330,7 +331,7 @@ public class ScrapMaintPanel extends javax.swing.JPanel {
             canproceed = false;
         }
         
-        status = OVData.getItemStatusByPart(tbpart.getText().toString()).toLowerCase();
+        status = invData.getItemStatusByPart(tbpart.getText().toString()).toLowerCase();
         if (! status.equals("active") && ! status.equals("actphan") ) {
             bsmf.MainFrame.show("Item is Not Active");
             canproceed = false;

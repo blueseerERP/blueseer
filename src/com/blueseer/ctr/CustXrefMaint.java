@@ -29,6 +29,7 @@ package com.blueseer.ctr;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -274,7 +275,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < mycust.size(); i++) {
             ddcust.addItem(mycust.get(i));
         }
-        ArrayList mypart = OVData.getItemMasterMCodelist();
+        ArrayList mypart = invData.getItemMasterMCodelist();
         ddpart.removeAllItems();
         for (int i = 0; i < mypart.size(); i++) {
             ddpart.addItem(mypart.get(i));

@@ -479,9 +479,9 @@ public class GLTranMaint extends javax.swing.JPanel {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glh_ref");
+         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glt_ref");
         } else {
-         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glh_acct");   
+         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glt_acct");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);

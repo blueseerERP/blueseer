@@ -137,7 +137,7 @@ public class CostRollRange extends javax.swing.JPanel {
         }
        
       
-        ArrayList<String> items = OVData.getItemRange(ddsite.getSelectedItem().toString(), fromitem, toitem);
+        ArrayList<String> items = invData.getItemRange(ddsite.getSelectedItem().toString(), fromitem, toitem);
         
           for (String p : items) {
           OVData.setStandardCosts(ddsite.getSelectedItem().toString(), p);

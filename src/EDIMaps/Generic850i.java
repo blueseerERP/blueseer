@@ -32,6 +32,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import com.blueseer.edi.EDI;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.writeEDILog;
 
@@ -179,7 +180,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                   e.setDetRef(i,x[1]);
 
                   /* lets find the internal part and internal pricing */
-                  part = OVData.getItemFromCustCItem(e.getOVBillTo(), x[7]);
+                  part = invData.getItemFromCustCItem(e.getOVBillTo(), x[7]);
                   if (part.isEmpty()) {
                       part = x[7];
                       e.setDetItem(i,part);
@@ -190,8 +191,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
 
 
                       /* lets get the internal list price and discounts*/
-                      listprice = OVData.getItemPriceFromCust(e.getOVBillTo(), part, uom, OVData.getCustCurrency(e.getOVBillTo()));
-                      discount = OVData.getItemDiscFromCust(e.getOVBillTo());
+                      listprice = invData.getItemPriceFromCust(e.getOVBillTo(), part, uom, OVData.getCustCurrency(e.getOVBillTo()));
+                      discount = invData.getItemDiscFromCust(e.getOVBillTo());
                       netprice = listprice;
 
                       if (discount != 0)

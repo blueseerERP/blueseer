@@ -28,6 +28,7 @@ package com.blueseer.vdr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -217,7 +218,7 @@ public class VendXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer 
         for (int i = 0; i < myvend.size(); i++) {
             ddvend.addItem(myvend.get(i));
         }
-        ArrayList mypart = OVData.getItemMasterRawlist();
+        ArrayList mypart = invData.getItemMasterRawlist();
         ddpart.removeAllItems();
         for (int i = 0; i < mypart.size(); i++) {
             ddpart.addItem(mypart.get(i));

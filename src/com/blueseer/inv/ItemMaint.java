@@ -397,7 +397,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
        ddrouting.removeAllItems();
        
        
-       ArrayList<String[]> mylist = OVData.getItemMaintInit();
+       ArrayList<String[]> mylist = invData.getItemMaintInit();
        for (String[] code : mylist) {
             if (code[0].equals("prodline"))
             ddprodcode.addItem(code[1]);
@@ -700,7 +700,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<String> images = new ArrayList();
         ddimage.removeAllItems();
         labelmessage.setText("");
-        images = OVData.getItemImagesFile(item);
+        images = invData.getItemImagesFile(item);
         for (String code : images) {
             ddimage.addItem(code);
         }
@@ -953,7 +953,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
     
     public void getstandardcost(String parentpart) {
-    ArrayList<Double> costs = OVData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
+    ArrayList<Double> costs = invData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
     DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
      tbmtlstd.setText(df.format(costs.get(0) + costs.get(5)));
      tblbrstd.setText(df.format(costs.get(1) + costs.get(6)));

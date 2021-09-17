@@ -34,6 +34,7 @@ import java.util.Map;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
 
@@ -143,7 +144,7 @@ public class Generic862i {
               
              
               /* lets find the internal part and internal pricing */
-              part = OVData.getItemFromCustCItem(billto, segarr[5].toString());
+              part = invData.getItemFromCustCItem(billto, segarr[5].toString());
               e.setDetItem(part);
               
            }

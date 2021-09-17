@@ -28,6 +28,7 @@ package com.blueseer.prd;
 
 
 import bsmf.MainFrame;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -67,7 +68,7 @@ public class PlanMiscMaint extends javax.swing.JPanel {
         tbqty.setText("");
         ddpart.removeAllItems();
        // ArrayList myparts = OVData.getItemMasterNitridelist();
-        ArrayList myparts = OVData.getItemMasterSchedlist();
+        ArrayList myparts = invData.getItemMasterSchedlist();
         for (int i = 0; i < myparts.size(); i++) {
             ddpart.addItem(myparts.get(i));
         }

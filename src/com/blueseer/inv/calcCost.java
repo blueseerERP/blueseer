@@ -163,9 +163,9 @@ public class calcCost {
         mylist = OVData.getpsmstrlist(newpart[0]);
        
         if (lastlevel > 1) {
-                    thisovhcost = (parentqty * OVData.getItemOvhCost(mypart));
+                    thisovhcost = (parentqty * invData.getItemOvhCost(mypart));
                     ovhcost = ovhcost + thisovhcost;
-                     thisoutcost = (parentqty * OVData.getItemOvhCost(mypart));
+                     thisoutcost = (parentqty * invData.getItemOvhCost(mypart));
                     outcost = outcost + thisoutcost;
                 //    MainFrame.show(mypart + " / " + thisovhcost + " / " + ovhcost);
         }
@@ -182,9 +182,9 @@ public class calcCost {
             upperbdncost = upperbdncost + OVData.getBurdenAllOps(newpart[0]);
             // all mtl, ovh, out is generally considered 'lower'  ...but mtl, ovh, out 'could be' assigned 
             // for FG and therefore should be totals assigned to mtlcost, ovhcost, outcost variables below
-            uppermtlcost = uppermtlcost + (OVData.getItemMtlCost(newpart[0]));
-            upperovhcost = upperovhcost + (OVData.getItemOvhCost(newpart[0]));
-            upperoutcost = upperoutcost + (OVData.getItemOutCost(newpart[0]));
+            uppermtlcost = uppermtlcost + (invData.getItemMtlCost(newpart[0]));
+            upperovhcost = upperovhcost + (invData.getItemOvhCost(newpart[0]));
+            upperoutcost = upperoutcost + (invData.getItemOutCost(newpart[0]));
            
         }  else {
             lowerlbrcost = lowerlbrcost + (parentqty * OVData.getLaborAllOps(newpart[0]));
@@ -211,11 +211,11 @@ public class calcCost {
                     lastlevel--;
                   } else {
                   parentqty = thisparent * Double.valueOf(value[3]);
-                  thismtlcost = (parentqty * OVData.getItemMtlCost(value[1]));
+                  thismtlcost = (parentqty * invData.getItemMtlCost(value[1]));
                   mtlcost = mtlcost + thismtlcost;
-                  thisovhcost = (parentqty * OVData.getItemOvhCost(value[1]));
+                  thisovhcost = (parentqty * invData.getItemOvhCost(value[1]));
                   ovhcost = ovhcost + thisovhcost;
-                  thisoutcost = (parentqty * OVData.getItemOutCost(value[1]));
+                  thisoutcost = (parentqty * invData.getItemOutCost(value[1]));
                   outcost = outcost + thisoutcost;
                   
                   }
@@ -254,7 +254,7 @@ public class calcCost {
                     lastlevel--;
                   } else {
                   parentqty = thisparent * Double.valueOf(value[3]);
-                  thismtlcost = (parentqty * OVData.getItemMtlCost(value[1]));
+                  thismtlcost = (parentqty * invData.getItemMtlCost(value[1]));
                   mtlcost = mtlcost + thismtlcost;
                   }
            
@@ -309,7 +309,7 @@ public class calcCost {
         mylist = OVData.getpsmstrlist(newpart[0]);
        
         if (lastlevel > 1) {
-                    thisovhcost = (parentqty * OVData.getItemOvhCost(mypart));
+                    thisovhcost = (parentqty * invData.getItemOvhCost(mypart));
                     ovhcost = ovhcost + thisovhcost;
                 //    MainFrame.show(mypart + " / " + thisovhcost + " / " + ovhcost);
         }
@@ -334,7 +334,7 @@ public class calcCost {
                     lastlevel--;
                   } else {
                   parentqty = thisparent * Double.valueOf(value[3]);
-                   thisovhcost = (parentqty * OVData.getItemOvhCost(value[1]));
+                   thisovhcost = (parentqty * invData.getItemOvhCost(value[1]));
                   ovhcost = ovhcost + thisovhcost;
               //   MainFrame.show(value[1] + " / " + thisovhcost + " / " + ovhcost);
                   }
@@ -354,7 +354,7 @@ public class calcCost {
         mylist = OVData.getpsmstrlist(newpart[0]);
        
         if (lastlevel > 1) {
-                    thisoutcost = (parentqty * OVData.getItemOvhCost(mypart));
+                    thisoutcost = (parentqty * invData.getItemOvhCost(mypart));
                     outcost = outcost + thisoutcost;
                 //    MainFrame.show(mypart + " / " + thisovhcost + " / " + ovhcost);
         }
@@ -379,7 +379,7 @@ public class calcCost {
                     lastlevel--;
                   } else {
                   parentqty = thisparent * Double.valueOf(value[3]);
-                   thisoutcost = (parentqty * OVData.getItemOutCost(value[1]));
+                   thisoutcost = (parentqty * invData.getItemOutCost(value[1]));
                   outcost = outcost + thisoutcost;
               //   MainFrame.show(value[1] + " / " + thisovhcost + " / " + ovhcost);
                   }

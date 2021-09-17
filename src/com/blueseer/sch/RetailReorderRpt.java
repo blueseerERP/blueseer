@@ -75,6 +75,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
@@ -340,7 +341,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
          
          ddfromitem.removeAllItems();
          ddtoitem.removeAllItems(); 
-         ArrayList myitems = OVData.getItemMasterAlllist();
+         ArrayList myitems = invData.getItemMasterAlllist();
         for (int i = 0; i < myitems.size(); i++) {
             ddfromitem.addItem(myitems.get(i));
         }

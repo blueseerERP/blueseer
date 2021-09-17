@@ -31,6 +31,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -143,8 +144,8 @@ public class POSMaint extends javax.swing.JPanel {
             String mypart = "";
             if (dditem.getItemCount() > 0) {
                 mypart = dditem.getSelectedItem().toString();
-                tblistprice.setText(df.format(OVData.getItemPOSPrice(dditem.getSelectedItem().toString())));
-                tbdisc.setText(df.format(OVData.getItemPOSDisc(dditem.getSelectedItem().toString())));
+                tblistprice.setText(df.format(invData.getItemPOSPrice(dditem.getSelectedItem().toString())));
+                tbdisc.setText(df.format(invData.getItemPOSDisc(dditem.getSelectedItem().toString())));
                 dditem.setForeground(Color.blue);
                 setnetprice();
                  tbqty.setText("1");
@@ -343,7 +344,7 @@ public class POSMaint extends javax.swing.JPanel {
         
         
          dditem.removeAllItems();
-        mylist = OVData.getItemMasterAlllist();
+        mylist = invData.getItemMasterAlllist();
         for (String item : mylist) {
             dditem.addItem(item);
         }

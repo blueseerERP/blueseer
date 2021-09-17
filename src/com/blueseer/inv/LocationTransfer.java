@@ -539,7 +539,7 @@ public class LocationTransfer extends javax.swing.JPanel {
             return;
         }
         
-        if (qty > OVData.getItemQtyByWarehouseAndLocation(tbpart.getText(), sitefrom, whfrom, locfrom) ) {
+        if (qty > invData.getItemQtyByWarehouseAndLocation(tbpart.getText(), sitefrom, whfrom, locfrom) ) {
             proceed = false;
             bsmf.MainFrame.show(getMessageTag(1074));
             tbqty.requestFocus();

@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -337,7 +338,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          venditemonly = OVData.isVendItemOnly();
         if (! venditemonly) {
             ddpart.removeAllItems();
-            ArrayList<String> items = OVData.getItemMasterAlllist();
+            ArrayList<String> items = invData.getItemMasterAlllist();
             for (String item : items) {
             ddpart.addItem(item);
             }  
@@ -937,7 +938,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     public void setPrice() {
          DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
-                String[] TypeAndPrice = OVData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                String[] TypeAndPrice = invData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
                 Double price = Double.valueOf(TypeAndPrice[1]);
@@ -1057,7 +1058,7 @@ public class POMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             listprice.setText("0.00");
             netprice.setText("0.00");
             qtyshipped.setText("0");
-            tbdesc.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
             vendnumber.setText(OVData.getVendPartFromPart(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
             dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);

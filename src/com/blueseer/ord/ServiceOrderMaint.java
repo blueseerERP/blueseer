@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.dst.*;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -303,7 +304,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
         
          dditem.removeAllItems();
-         ArrayList<String> items = OVData.getItemMasterAlllist();
+         ArrayList<String> items = invData.getItemMasterAlllist();
          for (String item : items) {
          dditem.addItem(item);
          }
@@ -693,8 +694,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     // custom functions
     public void itemChangeEvent(String myitem) {
           
-         lbdesc.setText(OVData.getItemDesc(dditem.getSelectedItem().toString()));
-         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(OVData.getItemPOSPrice(dditem.getSelectedItem().toString())),"2"));
+         lbdesc.setText(invData.getItemDesc(dditem.getSelectedItem().toString()));
+         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(invData.getItemPOSPrice(dditem.getSelectedItem().toString())),"2"));
          dduom.setSelectedItem(OVData.getUOMFromItemSite(myitem, ddsite.getSelectedItem().toString()));
      }
      

@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Component;
@@ -1169,7 +1170,7 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid item" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("item") == 0 && (OVData.getItemCost(rs[j], "standard", rs[j+1]) == 0) ) {
+                if (ld[0].compareTo("item") == 0 && (invData.getItemCost(rs[j], "standard", rs[j+1]) == 0) ) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid item cost" + "\n" );
                        proceed = false;
                 }

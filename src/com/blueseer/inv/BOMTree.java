@@ -177,7 +177,7 @@ DefaultTreeModel levelmodel = null;
     
         
         levelmodel = (DefaultTreeModel)jTree1.getModel();
-        ArrayList parts = OVData.getItemMasterMCodelist();
+        ArrayList parts = invData.getItemMasterMCodelist();
         
         DefaultMutableTreeNode mynode = get_nodes(tbpart.getText(), 0);
         //levelmodel.setRoot(mynode);
@@ -269,8 +269,8 @@ DefaultTreeModel levelmodel = null;
         if ( ! mylist.isEmpty()) {
         for ( String myvalue : mylist) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode(myvalue);   
-                    String mystring = OVData.getItemStatusByPart(myvalue);
-                    String mytype = OVData.getItemTypeByPart(mypart);
+                    String mystring = invData.getItemStatusByPart(myvalue);
+                    String mytype = invData.getItemTypeByPart(mypart);
                     if (! mystring.equals("OBSOLETE")) {
                     mynode.add(mfgnode);
                    if (! myvalue.isEmpty() && ! mytype.equals("FG") ) {
@@ -550,7 +550,7 @@ DefaultTreeModel levelmodel = null;
                     pg.drawString("Parent Item:", 50, 50);
                     pg.drawString(tbpart.getText(), 120, 50);
                     pg.drawString("Description:", 50, 70);
-                    pg.drawString(OVData.getItemDesc(tbpart.getText()), 120, 70);
+                    pg.drawString(invData.getItemDesc(tbpart.getText()), 120, 70);
 
                     pg.drawString("Date: ", 500, 50);
                     pg.drawString(dfdate.format(now), 505, 70);

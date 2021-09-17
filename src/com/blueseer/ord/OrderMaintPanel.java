@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -379,7 +380,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         custitemonly = OVData.isCustItemOnly();
         if (! custitemonly) {
             ddpart.removeAllItems();
-            ArrayList<String> items = OVData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
+            ArrayList<String> items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
             for (String item : items) {
             ddpart.addItem(item);
             }  
@@ -1593,7 +1594,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             listprice.setText("0.0000");
             netprice.setText("0.0000");
             qtyshipped.setText("0");
-            tbdesc.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+            tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
             custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
             dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);
@@ -1633,7 +1634,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
                 DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 
-                TypeAndPrice = OVData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
                 Double price = Double.valueOf(TypeAndPrice[1]);
@@ -1645,7 +1646,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-                discount.setText(df.format(OVData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
+                discount.setText(df.format(invData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
                 // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
         }
@@ -1889,7 +1890,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
          
         
         // check unallocated qty
-        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
+        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
              bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
             canproceed = false;
         }
@@ -3290,7 +3291,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
        
         if (! qtyshipped.getText().isEmpty()) {
-               if (Double.valueOf(qtyshipped.getText()) > OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
+               if (Double.valueOf(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
                    lbqtyavailable.setBackground(Color.red);
                } else {
                    lbqtyavailable.setBackground(Color.green);
@@ -3359,11 +3360,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            String prefix = "";
            if (cbisallocated.isSelected()) {
                prefix = "QOH Unallocated=";
-           qty = OVData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
+           qty = invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
            
            } else {
             prefix = "QOH Available=";
-           qty = OVData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
+           qty = invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
           
            }
            String sqty = String.valueOf(qty);
@@ -3574,7 +3575,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
             if (! isLoad) {
             ddpart.removeAllItems();
-            ArrayList<String> items = OVData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
+            ArrayList<String> items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
             for (String item : items) {
             ddpart.addItem(item);
             }  

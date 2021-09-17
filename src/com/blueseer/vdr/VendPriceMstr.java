@@ -28,6 +28,7 @@ package com.blueseer.vdr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -240,7 +241,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
             ddcurr.addItem(code);
         }
         
-        ArrayList mypart = OVData.getItemMasterRawlist();
+        ArrayList mypart = invData.getItemMasterRawlist();
         ddpart.removeAllItems();
         for (int i = 0; i < mypart.size(); i++) {
             ddpart.addItem(mypart.get(i).toString());
@@ -641,9 +642,9 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
          DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = OVData.getItemPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
+        double myprice = invData.getItemPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
-         lbitem.setText(OVData.getItemDesc(ddpart.getSelectedItem().toString()));
+         lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {
             price.setText("0.00");
             btadd.setEnabled(true);
